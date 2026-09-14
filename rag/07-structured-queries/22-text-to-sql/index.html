@@ -9128,7 +9128,7 @@
 </table>
 <p>“9 月 1 日至 7 日”转成 <code>[开始, 结束)</code>，避免拼一个会漏掉小数秒的 <code>23:59:59</code>。这里由服务端处理上海时区，SQL 不依赖 SQLite <code>now</code> 或机器的本地时区；换到有夏令时的地区，也应按当地日历计算两端，不能一律加固定小时数。</p>
 <p>权限客户较多时，用受控关系或服务端构造的绑定参数集合，不拼接模型返回的客户列表。用户可以申请缩小范围，但不能通过一句“查所有租户”扩大服务端授予的范围。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart TD
     A[业务问题与口径] --&gt; B[模型生成 SQL 草案]
     B --&gt; C[可信服务校验与绑定]
     I[登录身份与授权范围] --&gt; C
@@ -9311,7 +9311,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月14日 12:52:50 CST">2026-09-14</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月14日 12:55:27 CST">2026-09-14</span>
   </span>
 
     

@@ -9260,7 +9260,7 @@
 <p>这不能表述为“DPO 已提升 Agent 总体可靠性”。候选打分只测指定两个回答的相对倾向，自由生成还受到措辞、长度与整个输出空间的影响；二者都不能替代实际执行。这里值得借鉴的是<strong>未完成边界集和正常收尾保留集必须分开</strong>，而不是复用实验数字作为收益承诺。</p>
 <h2 id="256">25.6 多轮训练：把环境真正接进循环<a class="headerlink" href="#256" title="Permanent link">&para;</a></h2>
 <p>上述单步样本直接针对收尾选择，不能据此判断后续修复能力。若助手知道要继续，却读错文件、重复修补或永远验证，就需要观察它在自己的动作之后会走到哪些新状态。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart TD
     Q["训练任务与初始快照"] --&gt; Z["Reset 隔离环境"]
     Z --&gt; S["固定采样版本生成动作"]
     S --&gt; X["权限检查与工具执行"]
@@ -9414,7 +9414,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月14日 12:52:50 CST">2026-09-14</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月14日 12:55:27 CST">2026-09-14</span>
   </span>
 
     

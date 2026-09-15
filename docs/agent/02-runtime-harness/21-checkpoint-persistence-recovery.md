@@ -1,5 +1,5 @@
 ---
-description: 说明 checkpoint 的恢复边界、Temporal 默认重试、分层超时及逻辑操作幂等键，处理工具成功但结果丢失的情况。
+description: 说明 checkpoint 的恢复边界、分层超时与逻辑操作幂等键，用可运行的 LangGraph 示例区分失败恢复、审批恢复和重新提交输入。
 ---
 
 # 第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复
@@ -67,10 +67,69 @@ flowchart TB
 - **"从中断点继续"不等于"从中断的那一行代码继续"。** 恢复重新进入的是状态机某个明确定义的状态（比如"上一次工具调用已完成，等待下一次模型调用"），而不是试图恢复到某个任意的程序计数器位置——这也是为什么 checkpoint 需要保存的是 17.2 节的显式状态字段，而不是整个进程的内存镜像。
 - **checkpoint 与幂等必须配合，否则恢复本身可能重复执行副作用。** 工具已经执行但结果尚未持久化时崩溃，最近快照往往还显示“待执行”。恢复方不能据此断言从未执行；应按 21.6 节查询逻辑操作状态或使用同一幂等键重发。
 
+### 21.7.1 区分失败恢复、审批恢复与新输入
+
+**复用同一个 `thread_id`，不等于每次调用都在恢复失败任务。** 以已配置 checkpointer 的 LangGraph 为例，下面的 `config` 使用原线程 ID，且不指定历史 `checkpoint_id`：
+
+| 当前情况 | 调用方式 | 含义 |
+|---|---|---|
+| 普通节点抛异常，排查后继续未完成工作 | `graph.invoke(None, config)` | 从最新检查点恢复，重新执行未完成的节点 |
+| 节点通过 `interrupt()` 等待人工输入 | `graph.invoke(Command(resume=decision), config)` | 将外部决定传回中断；节点仍从头进入 |
+| 用户提交新一轮消息或任务输入 | `graph.invoke(new_input, config)` | 向现有线程提交新输入，从图入口开始执行；不是故障恢复的替代写法 |
+
+下面把订单 Agent 的只读工具阶段缩成“查订单 → 查物流”两个节点，用固定数据和一次模拟网络错误观察调用次数。安装 `langgraph==1.2.11` 后可直接运行，不需要模型 API 或业务服务。示例不配置节点自动重试，先让异常返回调用方，再显式恢复：
+
+```python
+from typing import TypedDict
+
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.graph import END, START, StateGraph
+
+class OrderState(TypedDict, total=False):
+    order_id: str
+    shipment_id: str
+    delivery_status: str
+
+calls = {"order": 0, "delivery": 0}
+
+def lookup_order(state: OrderState) -> dict:
+    calls["order"] += 1
+    return {"shipment_id": f"S-{state['order_id']}"}
+
+def lookup_delivery(state: OrderState) -> dict:
+    calls["delivery"] += 1
+    if calls["delivery"] == 1:
+        raise ConnectionError("模拟物流服务暂时不可用")
+    return {"delivery_status": f"{state['shipment_id']}：运输中"}
+
+builder = StateGraph(OrderState)
+builder.add_node("order", lookup_order)
+builder.add_node("delivery", lookup_delivery)
+builder.add_edge(START, "order")
+builder.add_edge("order", "delivery")
+builder.add_edge("delivery", END)
+
+graph = builder.compile(checkpointer=InMemorySaver())
+config = {"configurable": {"thread_id": "order-demo"}}
+try:
+    graph.invoke({"order_id": "A100"}, config)
+except ConnectionError:
+    pass  # 仅捕获本例的模拟故障，保留检查点供后续恢复。
+
+print(graph.get_state(config).next)  # ('delivery',)
+result = graph.invoke(None, config)
+print(calls)                      # {'order': 1, 'delivery': 2}
+print(result["delivery_status"])   # S-A100：运输中
+```
+
+订单节点的结果已进入检查点，所以恢复只重跑物流节点。若从头运行示例，并把恢复那一行改成再次传入 `{"order_id": "A100"}`，调用次数会变成 `{'order': 2, 'delivery': 2}`：相同输入被当成新输入，已完成的订单查询也重新执行了。重新提交消息时，追加型 reducer 还可能把同一条消息再次写入状态，不能把重新提交当作通用重试按钮。
+
+`InMemorySaver` 和调用计数只用于同一进程内观察；进程重启后恢复需要持久化 checkpointer。失败节点在抛错前产生的外部副作用，也不会因为传入 `None` 就被撤销或自动去重，仍需按 21.6 节处理。人工审批的身份、参数绑定与恢复校验见[第二十二章](22-human-in-the-loop-and-interruption.md)。
+
 ## 21.8 常见反模式与检查清单
 
 - **只在任务结束时写 checkpoint。** 等于没有恢复能力，任务运行到一半崩溃就必须从零开始。
-- **把"加了 Checkpointer"等同于"不会重复执行"。** 这是[第十章（LangGraph 章）10.11.7 节](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md)专门点出的常见误区，checkpoint 只保证状态能恢复，不自动保证恢复过程不产生重复副作用，幂等仍需要单独设计。
+- **把"加了 Checkpointer"等同于"不会重复执行"。** 这是[第十章（LangGraph 章）10.11.5 节](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md)专门点出的常见误区，checkpoint 只保证状态能恢复，不自动保证恢复过程不产生重复副作用，幂等仍需要单独设计。
 - **重试策略不区分失败类型，一律重试或一律不重试。** 应按 21.4 节的标准显式分类。
 - **超时只设一层。** 会导致局部卡死拖垮全局，必须按 21.5 节分层设置。
 - **每次尝试生成新幂等键。** 同一逻辑操作必须复用已持久化的业务键；只有能证明调用 ID 在所有恢复路径中稳定且符合服务约定时，才可复用它。
@@ -82,8 +141,11 @@ Checkpoint 保存执行状态，不自动保存外部世界，也不保证副作
 ## 参考资料
 
 - [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
+- [LangGraph: Checkpointers](https://docs.langchain.com/oss/python/langgraph/checkpointers)：检查点、线程状态与已完成节点结果的恢复。
 - [LangGraph: Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts)：恢复时重新进入节点，节点内中断之前的代码会再次执行。
 - [LangGraph: Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
 - [Temporal: Retry Policies](https://docs.temporal.io/encyclopedia/retry-policies)
 - [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
 - [LangGraph 第十章：LangGraph 的核心优势](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md)
+
+第 21.7.1 节示例于 2026-09-15 在 Python 3.13.14、LangGraph 1.2.11 下运行验证；分别对照了传入 `None` 恢复和重新提交原输入的调用次数。

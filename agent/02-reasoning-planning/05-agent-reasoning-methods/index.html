@@ -77,7 +77,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：Agent 的模型推理与搜索方法","description":"比较 CoT、Self-Consistency、ToT、程序辅助推理与验证器搜索，区分参数训练和推理时计算，并说明收益的评估条件。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/05-agent-reasoning-methods/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第五章：Agent 的模型推理与搜索方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/05-agent-reasoning-methods/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：Agent 的模型推理与搜索方法","description":"比较 CoT、Self-Consistency、ToT、程序辅助推理与验证器搜索，区分参数训练和推理时计算，并说明收益的评估条件。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/05-agent-reasoning-methods/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第五章：Agent 的模型推理与搜索方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/05-agent-reasoning-methods/"},"datePublished":"2026-08-31","dateModified":"2026-09-16"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"模型推理与搜索方法","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/05-agent-reasoning-methods/"}]}</script>
     
@@ -10652,6 +10652,10 @@ B=(T,N,D,K)
 </ul>
 <p>预算越高不意味着结果必然越好。系统需要根据任务难度动态分配计算，而不是对所有请求使用最大推理强度。</p>
 <p><a href="https://arxiv.org/abs/2408.03314">推理时计算分配研究</a>显示，顺序修订与并行搜索的相对收益随题目难度改变。这个结论支持测量后路由，而不是仅凭模型自报“有信心”缩减预算；更高风险时应先加强验收和审批，并非自动加大搜索树。</p>
+<p>运行时要决定的是：让一个候选多想一会儿，还是多生成几个候选再挑选。增加单次思考预算 <code>T</code> 与增加候选数 <code>N</code> 不是同一件事；前者给一条路径更多思考空间，后者还需要比较和验证候选。具体控制接口见 <a href="../../../llm/04-prompt-reliability/17-cot/">LLM 第 17 章 §17.6.7</a>。选择哪种方案，应按 §5.22 的方法固定总预算，把验证开销也算进去，再比较任务成功率与延迟。</p>
+<p>工具调用前后的状态不能随意丢弃。OpenAI 不公开原始 CoT；Claude 返回的 thinking 内容可能是完整文本，也可能是摘要，取决于模型版本和接口。为继续工具调用，应保留并原样传回协议要求的 reasoning/thinking 状态项，包括不透明项。</p>
+<p>保留这些协议数据，不等于把推理正文写进普通审计日志，更不能把它当作可靠证据。审计按<a href="../../05-production/14-agent-evaluation/">第 14 章 §14.7.1</a>依靠工具调用、可见观察、状态变化和专门生成且允许记录的简短理由，不要求模型暴露接口未公开的私有推理。</p>
+<p>答案只有一句话，不代表这次调用便宜。OpenAI 的 reasoning token 按输出 token 计费，也占用上下文窗口，核算 <code>T</code> 的实际开销时不能漏掉这部分用量。</p>
 <h2 id="518-adaptive-reasoning">5.18 Adaptive Reasoning：按难度分配预算<a class="headerlink" href="#518-adaptive-reasoning" title="Permanent link">&para;</a></h2>
 <p>Adaptive Reasoning 先估计任务难度或置信度，再选择推理策略：</p>
 <pre class="mermaid"><code>flowchart TB
@@ -10945,7 +10949,10 @@ B=(T,N,D,K)
 <li><a href="https://arxiv.org/abs/2305.20050">Let's Verify Step by Step</a></li>
 <li><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a></li>
 <li><a href="https://arxiv.org/abs/2408.03314">Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters</a></li>
+<li><a href="https://arxiv.org/abs/2501.19393">s1: Simple test-time scaling</a></li>
 <li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices</a></li>
+<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning models</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html">Amazon Bedrock: Extended thinking</a>（thinking 返回形式与工具调用时的状态回传要求）</li>
 <li><a href="https://docs.python.org/3.13/library/decimal.html">Python 3.13: decimal — 精度、舍入与十进制计算</a></li>
 </ul>
 
@@ -10970,7 +10977,7 @@ B=(T,N,D,K)
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:53:42 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月16日 11:32:14 CST">2026-09-16</span>
   </span>
 
     

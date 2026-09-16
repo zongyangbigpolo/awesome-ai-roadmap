@@ -77,7 +77,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：CoT 思维链","description":"解释 CoT 中间步骤如何参与生成、Self-Consistency 如何聚合答案，以及推理文本的忠实性、验证方法和计算成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第十七章：CoT 思维链","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：CoT 思维链","description":"解释 CoT 中间步骤如何参与生成、Self-Consistency 如何聚合答案，以及推理文本的忠实性、验证方法和计算成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第十七章：CoT 思维链","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-08-31","dateModified":"2026-09-16"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"CoT 思维链","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"}]}</script>
     
@@ -1907,6 +1907,15 @@
   <a href="#1766" class="md-nav__link">
     <span class="md-ellipsis">
       17.6.6 适用边界
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1767" class="md-nav__link">
+    <span class="md-ellipsis">
+      17.6.7 推理预算由谁控制
     </span>
   </a>
   
@@ -9338,6 +9347,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#1767" class="md-nav__link">
+    <span class="md-ellipsis">
+      17.6.7 推理预算由谁控制
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -9616,6 +9634,38 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 </tr>
 </tbody>
 </table>
+<h3 id="1767">17.6.7 推理预算由谁控制<a class="headerlink" href="#1767" title="Permanent link">&para;</a></h3>
+<p>想让模型多想一会儿，先要看它提供哪种控制方式。推理预算不是所有模型共用的一个参数：</p>
+<table>
+<thead>
+<tr>
+<th>控制方式</th>
+<th>形态</th>
+<th>语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>推理档位（如 OpenAI <code>reasoning.effort</code>）</td>
+<td>离散档位，支持的取值随模型而变</td>
+<td>指导模型投入多少思考，不是精确的 token 上限</td>
+</tr>
+<tr>
+<td>手动数字预算（如 Claude <code>thinking.budget_tokens</code>）</td>
+<td>支持手动 extended thinking 的模型/接口，以 token 数配置</td>
+<td>设定思考预算，不是整次调用的总输出上限</td>
+</tr>
+<tr>
+<td>Budget forcing（s1 论文）</td>
+<td>在解码时强制结束思考，或延迟结束并追加 <code>Wait</code></td>
+<td>训练后的解码干预，不是普通的 effort 档位</td>
+</tr>
+</tbody>
+</table>
+<p>Claude 常规手动模式要求 <code>budget_tokens</code> 至少为 1024，且小于 <code>max_tokens</code>，为回答留出空间。但不能把这条规则照搬到所有模式：Amazon Bedrock 文档明确说明，在受支持的 interleaved thinking 工具调用模式中，思考预算可以超过 <code>max_tokens</code>。使用其他入口时，要查对应模型和模式的要求。</p>
+<p>有些 Claude 模型支持 adaptive thinking，由模型决定思考投入，再通过它支持的 effort 选项调节。配置前看目标模型的文档，不要把手动预算参数直接搬过去。</p>
+<p>预算与温度也不是一回事。effort 引导思考投入；温度影响候选 token 的采样分布，而且推理模型未必允许调整温度。提高 effort 不等于增加采样多样性，也不保证答案更好。简单题可能只多花了 token；是否值得升档，要在相同任务集上比较正确率、用量和延迟。</p>
+<p>effort 的引导作用还要与总输出上限分开。OpenAI Responses API 的 <code>max_output_tokens</code> 涵盖推理、可见输出和不可见的格式化 token，不能只按答案长度设置。若在推理阶段就耗尽这个额度，响应可能一个可见 token 都没有，状态为 <code>incomplete</code>，<code>incomplete_details.reason</code> 为 <code>max_output_tokens</code>，输入与已生成的推理 token 仍会计费。降低 effort 并不等于把推理从中间截断。</p>
 <h2 id="177">17.7 常见错误<a class="headerlink" href="#177" title="Permanent link">&para;</a></h2>
 <h3 id="1771-cot">17.7.1 说不出 CoT 为什么有效的底层机制<a class="headerlink" href="#1771-cot" title="Permanent link">&para;</a></h3>
 <p>可从自回归条件生成解释中间状态如何进入后续上下文，再说明为什么增加步骤不保证增加正确率。</p>
@@ -9651,7 +9701,12 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 <li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2212.10001">Towards Understanding Chain-of-Thought Prompting: An Empirical Study of What Matters</a></li>
 <li><a href="https://arxiv.org/abs/2307.13702">Measuring Faithfulness in Chain-of-Thought Reasoning</a></li>
+<li><a href="https://arxiv.org/abs/2501.19393">s1: Simple test-time scaling</a></li>
+<li><a href="https://arxiv.org/abs/2412.21187">Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs</a></li>
 <li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices</a></li>
+<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning models</a></li>
+<li><a href="https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/thinking_config_enabled_param.py">Anthropic Python SDK: 手动 thinking 配置</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html">Amazon Bedrock: Extended thinking</a>（包含 Bedrock 上的手动预算规则、interleaved thinking 例外及模型差异，不代表所有 Claude 入口行为相同）</li>
 </ul>
 
 
@@ -9675,7 +9730,7 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:50:15 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月16日 11:32:14 CST">2026-09-16</span>
   </span>
 
     

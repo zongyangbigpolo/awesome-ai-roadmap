@@ -77,7 +77,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Function Calling 是什么，原理是什么","description":"解释 Function Calling 的工作流程、工具 Schema、模型决策和执行闭环，并给出参数约束与错误处理的工程要点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/01-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第一章：Function Calling 是什么，原理是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/01-function-calling/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Function Calling 是什么，原理是什么","description":"解释 Function Calling 的工作流程、工具 Schema、模型决策和执行闭环，并给出参数约束与错误处理的工程要点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/01-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第一章：Function Calling 是什么，原理是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/01-function-calling/"},"datePublished":"2026-08-31","dateModified":"2026-09-16"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Function Calling 原理","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/01-function-calling/"}]}</script>
     
@@ -2898,6 +2898,15 @@
   <a href="#152-chat-completions-tool_choice" class="md-nav__link">
     <span class="md-ellipsis">
       1.5.2 Chat Completions 的常见 tool_choice 取值
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#153-responses-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5.3 Responses API 的等价调用流程
     </span>
   </a>
   
@@ -9254,6 +9263,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#153-responses-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5.3 Responses API 的等价调用流程
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -9672,6 +9690,116 @@
 </tbody>
 </table>
 <p>把 <code>tool_choice</code> 锁定到某个工具时，Function Calling 实际上就在充当<strong>结构化输出</strong>接口。这是 Structured Output / JSON Mode 出现之前的通行做法，现在仍然被大量代码沿用。</p>
+<h3 id="153-responses-api">1.5.3 Responses API 的等价调用流程<a class="headerlink" href="#153-responses-api" title="Permanent link">&para;</a></h3>
+<p>Responses API 同样遵循「模型提出调用 → 宿主执行 → 回填结果 → 模型回答」的流程，但<strong>工具定义、调用项和结果回填的结构都不同，不能只换一个 endpoint</strong>。Chat Completions 把调用放在 assistant 消息的 <code>tool_calls</code> 中；Responses 则把消息、函数调用等作为不同类型的项，放在 <code>response.output</code> 列表中。</p>
+<p>两种接口的关键字段可以这样对应：</p>
+<table>
+<thead>
+<tr>
+<th>含义</th>
+<th>Chat Completions</th>
+<th>Responses API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python SDK 入口</td>
+<td><code>client.chat.completions.create(...)</code></td>
+<td><code>client.responses.create(...)</code></td>
+</tr>
+<tr>
+<td>本例的对话输入</td>
+<td><code>messages</code></td>
+<td><code>input</code>，包含消息或工具结果等项</td>
+</tr>
+<tr>
+<td>function tool 定义</td>
+<td><code>{"type": "function", "function": {...}}</code></td>
+<td><code>{"type": "function", "name": ..., "description": ..., "parameters": ...}</code></td>
+</tr>
+<tr>
+<td>查找函数调用</td>
+<td><code>choices[0].message.tool_calls</code></td>
+<td>遍历 <code>response.output</code>，筛选 <code>type == "function_call"</code></td>
+</tr>
+<tr>
+<td>函数名与 JSON 参数字符串</td>
+<td><code>call.function.name</code>、<code>call.function.arguments</code></td>
+<td><code>call.name</code>、<code>call.arguments</code></td>
+</tr>
+<tr>
+<td>调用与结果的关联</td>
+<td>调用的 <code>id</code> → 结果的 <code>tool_call_id</code></td>
+<td>调用的 <code>call_id</code> → 结果的 <code>call_id</code></td>
+</tr>
+<tr>
+<td>回填工具结果</td>
+<td><code>role: "tool"</code> 消息，结果放在 <code>content</code></td>
+<td><code>type: "function_call_output"</code> 项，结果放在 <code>output</code></td>
+</tr>
+<tr>
+<td>读取文本回答</td>
+<td><code>choices[0].message.content</code></td>
+<td><code>response.output_text</code>（SDK 汇总文本的便捷属性）</td>
+</tr>
+</tbody>
+</table>
+<p>Responses 的 function tool schema 是<strong>扁平结构</strong>：<code>name</code>、<code>description</code>、<code>parameters</code>、<code>strict</code> 与 <code>type</code> 同级，没有外层 <code>function</code> 对象；这不表示 <code>parameters</code> 内部不能定义嵌套对象。</p>
+<p>下面沿用 1.4 节的 <code>tools</code> 定义，以及前文由应用实现的 <code>registry</code> 和 <code>validate_and_authorize</code>，仍是单批查询的教学片段。显式设置 <code>strict=False</code>，保留原例中 <code>unit</code> 可选的语义；若开启严格模式，需要同时调整 Schema，不能只改这个开关。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">weather</span> <span class="o">=</span> <span class="n">tools</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"function"</span><span class="p">]</span>  <span class="c1"># 读取前文 Chat Completions 的工具定义</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">responses_tools</span> <span class="o">=</span> <span class="p">[{</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"function"</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="s2">"name"</span><span class="p">:</span> <span class="n">weather</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="s2">"description"</span><span class="p">:</span> <span class="n">weather</span><span class="p">[</span><span class="s2">"description"</span><span class="p">],</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="s2">"parameters"</span><span class="p">:</span> <span class="n">weather</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">],</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="s2">"strict"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}]</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">input_items</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"北京今天天气怎么样？"</span><span class="p">}]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="s2">"completed"</span><span class="p">:</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"响应未正常完成：</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"message"</span><span class="p">:</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"refusal"</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"请求被模型拒绝"</span><span class="p">)</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># 第一轮：从 output 中收集所有函数调用，不能假设第一项就是调用</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4o"</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">input_items</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">responses_tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">"auto"</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="p">)</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="n">check_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="n">calls</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">output</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"function_call"</span><span class="p">]</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="k">if</span> <span class="n">calls</span><span class="p">:</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    <span class="n">input_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>  <span class="c1"># 先保留完整输出，再追加工具结果</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">:</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>        <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">call</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>        <span class="n">validate_and_authorize</span><span class="p">(</span><span class="n">call</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">registry</span><span class="p">[</span><span class="n">call</span><span class="o">.</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>        <span class="n">input_items</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"function_call_output"</span><span class="p">,</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>            <span class="s2">"call_id"</span><span class="p">:</span> <span class="n">call</span><span class="o">.</span><span class="n">call_id</span><span class="p">,</span>  <span class="c1"># 对应调用的 call_id，不是该项的 id</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>            <span class="s2">"output"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>        <span class="p">})</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>    <span class="c1"># 与前例一样，第二轮禁止继续调用工具，收尾生成回答</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>        <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4o"</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">input_items</span><span class="p">,</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>        <span class="n">tools</span><span class="o">=</span><span class="n">responses_tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>    <span class="p">)</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>    <span class="n">check_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+</span></code></pre></div>
+<p>这里手动维护 <code>input_items</code>，所以必须把第一轮完整的 <code>response.output</code> 带回下一轮；若换用推理模型，随调用返回的 <code>reasoning</code> 项也应保留，不能只摘出 <code>function_call</code>。另一种方式是通过 <code>previous_response_id=response.id</code> 关联上一轮，再在 <code>input</code> 中提交本轮工具结果；本例采用前一种方式。</p>
+<p><strong><code>call_id</code> 负责把结果配回具体调用</strong>。即使同一函数被调用两次，也要分别回填，不能只按函数名关联。判断是否需要执行函数，应检查 <code>function_call</code> 项；<code>status == "completed"</code> 只说明这次响应已完成，不代表整个任务已完成，也不替代 Chat Completions 的 <code>finish_reason</code>。本例处理零个或多个调用，但只执行一批；需要多步工具协作时，仍要增加有轮数和时间预算的循环。</p>
 <h2 id="16">1.6 并行工具调用<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <p><code>tool_calls</code> 是数组而不是单个对象，这是一个刻意的设计。</p>
 <p>用户问「帮我查北京、上海、广州的天气」，模型可以在<strong>一次响应</strong>里返回三个调用请求：</p>
@@ -9686,22 +9814,22 @@
     end</code></pre>
 <p>在三个查询彼此独立、每轮推理耗时均近似为 <code>T</code>、不计排队和调度开销的教学模型下：逐次查询加总结约为 <code>4T + IO₁ + IO₂ + IO₃</code>，一批并发加总结约为 <code>2T + max(IO₁, IO₂, IO₃)</code>。实际收益取决于生成长度、并发限制和 API 延迟。</p>
 <p>下面只展示并发调度，输入须已完成解析、参数校验和授权。<code>validated_calls</code> 中每项包含 <code>name</code> 与 <code>arguments</code>，应用另行保留它与原调用 ID 的映射。</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_all</span><span class="p">(</span><span class="n">validated_calls</span><span class="p">):</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">registry</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]],</span> <span class="o">**</span><span class="n">c</span><span class="p">[</span><span class="s2">"arguments"</span><span class="p">])</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">validated_calls</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">]</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_all</span><span class="p">(</span><span class="n">validated_calls</span><span class="p">):</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">registry</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]],</span> <span class="o">**</span><span class="n">c</span><span class="p">[</span><span class="s2">"arguments"</span><span class="p">])</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">validated_calls</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">]</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 <p><code>gather</code> 按输入顺序返回结果，异常也会作为列表项返回；应用必须逐项识别，不能把异常对象序列化成成功结果。这里只示意调度，尚需并发上限与超时；取消等待 <code>to_thread</code> 不会强制停止已运行的同步函数，底层 I/O 也要设置超时。</p>
 <h3 id="161">1.6.1 并行的前提是无依赖<a class="headerlink" href="#161" title="Permanent link">&para;</a></h3>
 <p>「先查订单号，再用订单号查物流」有数据依赖，不能并行。模型可能猜测中间结果；宿主应验证前置步骤已完成及对象归属。多个写操作即便参数独立，也可能竞争同一业务资源，不能只看 JSON 结构决定并发。</p>
 <h3 id="162">1.6.2 部分失败怎么处理<a class="headerlink" href="#162" title="Permanent link">&para;</a></h3>
 <p>并行执行时如果两个成功一个失败，<strong>不要整批丢弃</strong>。把失败的那个也以 <code>role: "tool"</code> 回填，内容写成结构化错误：</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"tool"</span><span class="p">,</span> <span class="s2">"tool_call_id"</span><span class="p">:</span> <span class="n">call</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> <span class="s2">"content"</span><span class="p">:</span> <span class="s1">'{"error": "city_not_found", "message": "未找到城市「广洲」，请确认拼写"}'</span><span class="p">}</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"tool"</span><span class="p">,</span> <span class="s2">"tool_call_id"</span><span class="p">:</span> <span class="n">call</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a> <span class="s2">"content"</span><span class="p">:</span> <span class="s1">'{"error": "city_not_found", "message": "未找到城市「广洲」，请确认拼写"}'</span><span class="p">}</span>
 </span></code></pre></div>
 <p>模型可能据此修正参数，但应设置最大轮数、总 deadline 和重复错误检测。鉴权失败、策略拒绝不应让模型绕过；写操作超时意味着结果未知，先查询业务状态或用持久化幂等键去重，不能盲目重试。<code>tool_call_id</code> 只是消息关联 ID，不自动提供幂等保证。</p>
 <h2 id="17-function-calling">1.7 从 Function Calling 到工具调用生态<a class="headerlink" href="#17-function-calling" title="Permanent link">&para;</a></h2>
@@ -9763,6 +9891,7 @@
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function Calling 指南（2026-09-08 核查）</a></li>
+<li><a href="https://developers.openai.com/api/docs/guides/migrate-to-responses">OpenAI: Responses API 迁移指南（本节字段与示例于 2026-09-16 对照此页及 Function Calling 指南核查）</a></li>
 <li><a href="https://openai.com/index/function-calling-and-other-api-updates/">OpenAI: 2023 年 Function Calling 发布</a></li>
 <li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">Anthropic: Tool Use with Claude</a></li>
 <li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Anthropic: Writing Effective Tools for Agents</a></li>
@@ -9792,7 +9921,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:52:42 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月16日 16:49:23 CST">2026-09-16</span>
   </span>
 
     

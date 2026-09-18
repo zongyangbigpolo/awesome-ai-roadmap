@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-17</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/about/</loc>
@@ -254,15 +254,15 @@
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-17</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-17</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-17</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/</loc>
@@ -478,7 +478,7 @@
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/13-temperature-top-p-top-k/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-18</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/</loc>
@@ -486,7 +486,7 @@
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/</loc>
-         <lastmod>2026-09-15</lastmod>
+         <lastmod>2026-09-18</lastmod>
     </url>
     <url>
          <loc>https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/19-moe/</loc>

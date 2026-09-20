@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="区分模型规划训练与系统规划，讨论动作语义、计划验证、搜索、滚动重规划及外部求解器的适用条件。">
+        <meta name="description" content="Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>LLM 与 Agent 规划能力 - Awesome AI Roadmap</title>
+        <title>Chapter 11: Giving LLMs and Agents the Ability to Plan - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第十一章：如何赋予 LLM 与 Agent 规划能力">
-    <meta property="og:description" content="区分模型规划训练与系统规划，讨论动作语义、计划验证、搜索、滚动重规划及外部求解器的适用条件。">
+    <meta property="og:title" content="Chapter 11: Giving LLMs and Agents the Ability to Plan">
+    <meta property="og:description" content="Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第十一章：如何赋予 LLM 与 Agent 规划能力">
-    <meta name="twitter:description" content="区分模型规划训练与系统规划，讨论动作语义、计划验证、搜索、滚动重规划及外部求解器的适用条件。">
+    <meta name="twitter:title" content="Chapter 11: Giving LLMs and Agents the Ability to Plan">
+    <meta name="twitter:description" content="Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/11-llm-agent-planning/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：如何赋予 LLM 与 Agent 规划能力","description":"区分模型规划训练与系统规划，讨论动作语义、计划验证、搜索、滚动重规划及外部求解器的适用条件。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第十一章：如何赋予 LLM 与 Agent 规划能力","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Giving LLMs and Agents the Ability to Plan","description":"Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Giving LLMs and Agents the Ability to Plan","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"LLM 与 Agent 规划能力","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 11: Giving LLMs and Agents the Ability to Plan","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#llm-agent" class="md-skip">
-          跳转至
+        <a href="#chapter-11-giving-llms-and-agents-the-ability-to-plan" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LLM 与 Agent 规划能力
+              Chapter 11: Giving LLMs and Agents the Ability to Plan
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/agent/02-reasoning-planning/11-llm-agent-planning/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -347,7 +381,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -985,7 +1019,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1002,7 +1036,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1020,7 +1054,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1043,7 +1077,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1066,7 +1100,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1089,7 +1123,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1112,7 +1146,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1178,7 +1212,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1195,7 +1229,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1213,7 +1247,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1236,7 +1270,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1259,7 +1293,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1282,7 +1316,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1305,7 +1339,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1328,7 +1362,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1394,7 +1428,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1411,7 +1445,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1429,7 +1463,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1452,7 +1486,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1475,7 +1509,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1498,7 +1532,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1521,7 +1555,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1544,7 +1578,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1604,7 +1638,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1621,7 +1655,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1639,7 +1673,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1662,7 +1696,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1685,7 +1719,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1743,7 +1777,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -1760,7 +1794,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1778,7 +1812,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -1801,7 +1835,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -1857,7 +1891,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -1874,7 +1908,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1892,7 +1926,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -1963,7 +1997,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -1980,7 +2014,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2023,7 +2057,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2040,7 +2074,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2058,7 +2092,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2118,7 +2152,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2135,7 +2169,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2153,7 +2187,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2176,7 +2210,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2199,7 +2233,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2257,7 +2291,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2274,7 +2308,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2292,7 +2326,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2315,7 +2349,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2373,7 +2407,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2390,7 +2424,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2408,7 +2442,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2431,7 +2465,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2489,7 +2523,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2506,7 +2540,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2524,7 +2558,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2547,7 +2581,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2719,7 +2753,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2742,7 +2776,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -2765,7 +2799,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -2788,7 +2822,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -2887,7 +2921,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -2910,7 +2944,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -2933,7 +2967,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -2956,7 +2990,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -2979,7 +3013,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3074,7 +3108,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3097,7 +3131,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3120,7 +3154,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3176,7 +3210,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3193,7 +3227,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3211,7 +3245,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3269,7 +3303,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3286,7 +3320,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3304,7 +3338,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3327,7 +3361,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3409,7 +3443,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3426,7 +3460,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3476,7 +3510,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3493,7 +3527,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3511,7 +3545,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3534,7 +3568,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3557,7 +3591,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3630,7 +3664,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3647,7 +3681,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3665,7 +3699,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3688,7 +3722,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3711,7 +3745,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -3734,7 +3768,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -3757,7 +3791,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -3780,7 +3814,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -3803,7 +3837,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -3826,7 +3860,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -3895,7 +3929,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -3912,7 +3946,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3930,7 +3964,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -3953,7 +3987,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -3976,7 +4010,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4008,7 +4042,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4021,7 +4055,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4030,7 +4064,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -4039,45 +4073,45 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#111-cot" class="md-nav__link">
+  <a href="#111-planning-is-not-the-same-as-cot" class="md-nav__link">
     <span class="md-ellipsis">
-      11.1 规划不等于 CoT
+      11.1 Planning Is Not the Same as CoT
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#112-reasoning-planning" class="md-nav__link">
+  <a href="#112-reasoning-versus-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.2 Reasoning 与 Planning 的区别
+      11.2 Reasoning versus Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#113" class="md-nav__link">
+  <a href="#113-why-make-plans-explicit" class="md-nav__link">
     <span class="md-ellipsis">
-      11.3 为什么需要显式规划
+      11.3 Why Make Plans Explicit?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#114" class="md-nav__link">
+  <a href="#114-planning-ability-comes-from-two-levels" class="md-nav__link">
     <span class="md-ellipsis">
-      11.4 规划能力来自两个层次
+      11.4 Planning Ability Comes from Two Levels
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.4 规划能力来自两个层次">
+    <nav class="md-nav" aria-label="11.4 Planning Ability Comes from Two Levels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4104,28 +4138,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#115" class="md-nav__link">
+  <a href="#115-the-basic-elements-of-a-planning-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      11.5 规划问题的基本元素
+      11.5 The Basic Elements of a Planning Problem
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#116-cot" class="md-nav__link">
+  <a href="#116-cot-single-path-reasoning-not-a-complete-planner" class="md-nav__link">
     <span class="md-ellipsis">
-      11.6 CoT：单路径推理，不是完整规划器
+      11.6 CoT: Single-path Reasoning, Not a Complete Planner
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.6 CoT：单路径推理，不是完整规划器">
+    <nav class="md-nav" aria-label="11.6 CoT: Single-path Reasoning, Not a Complete Planner">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1161" class="md-nav__link">
+  <a href="#1161-engineering-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
-      11.6.1 工程边界
+      11.6.1 Engineering Boundaries
     </span>
   </a>
   
@@ -4137,46 +4171,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#117-task-decomposition" class="md-nav__link">
+  <a href="#117-task-decomposition-from-a-goal-to-subtasks" class="md-nav__link">
     <span class="md-ellipsis">
-      11.7 Task Decomposition：从目标生成子任务
+      11.7 Task Decomposition: From a Goal to Subtasks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#118-plan-and-solve" class="md-nav__link">
+  <a href="#118-plan-and-solve-form-a-problem-solving-plan-first" class="md-nav__link">
     <span class="md-ellipsis">
-      11.8 Plan-and-Solve：先形成解题计划
+      11.8 Plan-and-Solve: Form a Problem-solving Plan First
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#119-tot" class="md-nav__link">
+  <a href="#119-tot-search-multiple-candidate-directions" class="md-nav__link">
     <span class="md-ellipsis">
-      11.9 ToT：搜索多个候选方向
+      11.9 ToT: Search Multiple Candidate Directions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1110-tot" class="md-nav__link">
+  <a href="#1110-the-cost-of-tot-search" class="md-nav__link">
     <span class="md-ellipsis">
-      11.10 ToT 的搜索成本
+      11.10 The Cost of ToT Search
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.10 ToT 的搜索成本">
+    <nav class="md-nav" aria-label="11.10 The Cost of ToT Search">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11101-tot" class="md-nav__link">
+  <a href="#11101-controlling-tot-costs" class="md-nav__link">
     <span class="md-ellipsis">
-      11.10.1 控制 ToT 成本
+      11.10.1 Controlling ToT Costs
     </span>
   </a>
   
@@ -4188,29 +4222,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1111-got" class="md-nav__link">
+  <a href="#1111-got-merge-and-reuse-intermediate-results" class="md-nav__link">
     <span class="md-ellipsis">
-      11.11 GoT：合并和复用中间结果
+      11.11 GoT: Merge and Reuse Intermediate Results
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.11 GoT：合并和复用中间结果">
+    <nav class="md-nav" aria-label="11.11 GoT: Merge and Reuse Intermediate Results">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11111-got" class="md-nav__link">
+  <a href="#11111-gots-production-maturity" class="md-nav__link">
     <span class="md-ellipsis">
-      11.11.1 GoT 的生产成熟度
+      11.11.1 GoT's Production Maturity
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.11.1 GoT 的生产成熟度">
+    <nav class="md-nav" aria-label="11.11.1 GoT&#39;s Production Maturity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#graph-of-thoughts" class="md-nav__link">
+  <a href="#the-graph-of-thoughts-research-paradigm" class="md-nav__link">
     <span class="md-ellipsis">
-      Graph of Thoughts 研究范式
+      The Graph of Thoughts Research Paradigm
     </span>
   </a>
   
@@ -4236,9 +4270,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1112-task-graph" class="md-nav__link">
+  <a href="#1112-representing-execution-plans-with-task-graphs" class="md-nav__link">
     <span class="md-ellipsis">
-      11.12 用 Task Graph 表示执行计划
+      11.12 Representing Execution Plans with Task Graphs
     </span>
   </a>
   
@@ -4287,19 +4321,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1114" class="md-nav__link">
+  <a href="#1114-dynamic-replanning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.14 动态重规划
+      11.14 Dynamic Replanning
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.14 动态重规划">
+    <nav class="md-nav" aria-label="11.14 Dynamic Replanning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11141" class="md-nav__link">
+  <a href="#11141-do-not-replan-everything-after-every-step" class="md-nav__link">
     <span class="md-ellipsis">
-      11.14.1 不要每一步都完整重规划
+      11.14.1 Do Not Replan Everything after Every Step
     </span>
   </a>
   
@@ -4329,22 +4363,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1117-react" class="md-nav__link">
+  <a href="#1117-reacts-role-in-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.17 ReAct 在规划中的作用
+      11.17 ReAct's Role in Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1118-reflection" class="md-nav__link">
+  <a href="#1118-reflection-and-plan-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      11.18 Reflection 与规划质量
+      11.18 Reflection and Plan Quality
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.18 Reflection 与规划质量">
+    <nav class="md-nav" aria-label="11.18 Reflection and Plan Quality">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4431,13 +4465,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1120" class="md-nav__link">
+  <a href="#1120-using-external-planners" class="md-nav__link">
     <span class="md-ellipsis">
-      11.20 使用外部规划器
+      11.20 Using External Planners
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.20 使用外部规划器">
+    <nav class="md-nav" aria-label="11.20 Using External Planners">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4482,13 +4516,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1121" class="md-nav__link">
+  <a href="#1121-ways-to-represent-a-plan" class="md-nav__link">
     <span class="md-ellipsis">
-      11.21 计划的表示方式
+      11.21 Ways to Represent a Plan
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.21 计划的表示方式">
+    <nav class="md-nav" aria-label="11.21 Ways to Represent a Plan">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4542,9 +4576,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1122" class="md-nav__link">
+  <a href="#1122-plan-granularity" class="md-nav__link">
     <span class="md-ellipsis">
-      11.22 计划粒度
+      11.22 Plan Granularity
     </span>
   </a>
   
@@ -4569,27 +4603,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1125" class="md-nav__link">
+  <a href="#1125-uncertainty-in-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.25 规划中的不确定性
+      11.25 Uncertainty in Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1126" class="md-nav__link">
+  <a href="#1126-risk-aware-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.26 风险感知规划
+      11.26 Risk-aware Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1127" class="md-nav__link">
+  <a href="#1127-planning-budgets" class="md-nav__link">
     <span class="md-ellipsis">
-      11.27 规划预算
+      11.27 Planning Budgets
     </span>
   </a>
   
@@ -4605,13 +4639,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1129" class="md-nav__link">
+  <a href="#1129-adapting-and-training-planning-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
-      11.29 规划能力的适配与训练
+      11.29 Adapting and Training Planning Capabilities
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.29 规划能力的适配与训练">
+    <nav class="md-nav" aria-label="11.29 Adapting and Training Planning Capabilities">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4674,91 +4708,91 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1130" class="md-nav__link">
+  <a href="#1130-how-to-evaluate-planning-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      11.30 规划质量如何评估
+      11.30 How to Evaluate Planning Quality
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1131" class="md-nav__link">
+  <a href="#1131-common-failure-modes" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31 常见失败模式
+      11.31 Common Failure Modes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.31 常见失败模式">
+    <nav class="md-nav" aria-label="11.31 Common Failure Modes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11311" class="md-nav__link">
+  <a href="#11311-the-plan-looks-complete-but-cannot-be-executed" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.1 计划看起来完整但不可执行
+      11.31.1 The Plan Looks Complete but Cannot Be Executed
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11312" class="md-nav__link">
+  <a href="#11312-the-plan-omits-implicit-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.2 计划遗漏隐含依赖
+      11.31.2 The Plan Omits Implicit Dependencies
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11313-planner" class="md-nav__link">
+  <a href="#11313-the-planner-produces-too-many-microtasks" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.3 Planner 产生过多微任务
+      11.31.3 The Planner Produces Too Many Microtasks
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11314" class="md-nav__link">
+  <a href="#11314-initial-assumptions-are-wrong" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.4 初始假设错误
+      11.31.4 Initial Assumptions Are Wrong
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11315" class="md-nav__link">
+  <a href="#11315-frequent-full-replanning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.5 频繁完整重规划
+      11.31.5 Frequent Full Replanning
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11316-planner-executor" class="md-nav__link">
+  <a href="#11316-the-planner-and-executor-interpret-the-plan-differently" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.6 Planner 与 Executor 语义不一致
+      11.31.6 The Planner and Executor Interpret the Plan Differently
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11317" class="md-nav__link">
+  <a href="#11317-self-evaluation-replaces-actual-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.7 自我评价取代真实验证
+      11.31.7 Self-evaluation Replaces Actual Verification
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11318" class="md-nav__link">
+  <a href="#11318-there-are-no-stopping-conditions" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.8 没有停止条件
+      11.31.8 There Are No Stopping Conditions
     </span>
   </a>
   
@@ -4770,100 +4804,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1132" class="md-nav__link">
+  <a href="#1132-a-recommended-production-architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      11.32 推荐的生产架构
+      11.32 A Recommended Production Architecture
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1133" class="md-nav__link">
+  <a href="#1133-implementation-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33 实现步骤
+      11.33 Implementation Steps
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.33 实现步骤">
+    <nav class="md-nav" aria-label="11.33 Implementation Steps">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11331" class="md-nav__link">
+  <a href="#11331-define-the-goal-and-success-criteria" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.1 定义目标与成功标准
+      11.33.1 Define the Goal and Success Criteria
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11332-action-catalog" class="md-nav__link">
+  <a href="#11332-build-an-action-catalog" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.2 建立 Action Catalog
+      11.33.2 Build an Action Catalog
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11333-plan-schema" class="md-nav__link">
+  <a href="#11333-define-a-plan-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.3 定义 Plan Schema
+      11.33.3 Define a Plan Schema
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11334-plan-validator" class="md-nav__link">
+  <a href="#11334-add-a-plan-validator" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.4 添加 Plan Validator
+      11.33.4 Add a Plan Validator
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11335-observation" class="md-nav__link">
+  <a href="#11335-execute-and-save-observations" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.5 执行并保存 Observation
+      11.33.5 Execute and Save Observations
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11336-replanner" class="md-nav__link">
+  <a href="#11336-add-a-replanner" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.6 添加 Replanner
+      11.33.6 Add a Replanner
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11337-verifier" class="md-nav__link">
+  <a href="#11337-add-a-verifier" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.7 添加 Verifier
+      11.33.7 Add a Verifier
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11338-guardrails" class="md-nav__link">
+  <a href="#11338-add-guardrails" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.8 加入 Guardrails
+      11.33.8 Add Guardrails
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11339" class="md-nav__link">
+  <a href="#11339-build-an-evaluation-set" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.9 建立评估集
+      11.33.9 Build an Evaluation Set
     </span>
   </a>
   
@@ -4875,37 +4909,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1134" class="md-nav__link">
+  <a href="#1134-choosing-an-approach" class="md-nav__link">
     <span class="md-ellipsis">
-      11.34 选型表
+      11.34 Choosing an Approach
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1135" class="md-nav__link">
+  <a href="#1135-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35 本章总结
+      11.35 Chapter Summary
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.35 本章总结">
+    <nav class="md-nav" aria-label="11.35 Chapter Summary">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11351" class="md-nav__link">
+  <a href="#11351-model-level" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35.1 模型层
+      11.35.1 Model Level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11352" class="md-nav__link">
+  <a href="#11352-system-level" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35.2 系统层
+      11.35.2 System Level
     </span>
   </a>
   
@@ -4917,9 +4951,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -4946,7 +4980,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -5009,7 +5043,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -5026,7 +5060,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5044,7 +5078,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -5067,7 +5101,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -5090,7 +5124,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -5151,7 +5185,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -5168,7 +5202,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5186,7 +5220,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -5209,7 +5243,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -5270,7 +5304,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -5287,7 +5321,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5305,7 +5339,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -5328,7 +5362,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -5387,7 +5421,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -5404,7 +5438,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5422,7 +5456,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -5481,7 +5515,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -5498,7 +5532,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5516,7 +5550,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -5653,7 +5687,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -5670,7 +5704,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5688,7 +5722,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5711,7 +5745,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5779,7 +5813,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5796,7 +5830,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5814,7 +5848,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5837,7 +5871,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5860,7 +5894,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5883,7 +5917,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5906,7 +5940,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5929,7 +5963,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5952,7 +5986,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -6016,7 +6050,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -6033,7 +6067,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6051,7 +6085,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -6074,7 +6108,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -6097,7 +6131,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -6120,7 +6154,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -6143,7 +6177,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -6203,7 +6237,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -6220,7 +6254,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6238,7 +6272,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -6261,7 +6295,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -6284,7 +6318,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -6342,7 +6376,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -6359,7 +6393,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6377,7 +6411,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -6400,7 +6434,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -6458,7 +6492,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -6475,7 +6509,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6493,7 +6527,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -6516,7 +6550,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -6572,7 +6606,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -6589,7 +6623,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6607,7 +6641,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6680,7 +6714,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6697,7 +6731,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6748,7 +6782,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6765,7 +6799,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6812,7 +6846,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6829,7 +6863,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6847,7 +6881,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6870,7 +6904,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6893,7 +6927,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6953,7 +6987,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6970,7 +7004,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6988,7 +7022,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -7011,7 +7045,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -7034,7 +7068,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -7094,7 +7128,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -7111,7 +7145,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7129,7 +7163,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -7152,7 +7186,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -7175,7 +7209,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -7268,7 +7302,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -7291,7 +7325,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -7349,7 +7383,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -7366,7 +7400,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7384,7 +7418,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -7407,7 +7441,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -7508,7 +7542,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -7531,7 +7565,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -7624,7 +7658,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -7647,7 +7681,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7740,7 +7774,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7763,7 +7797,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7821,7 +7855,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7838,7 +7872,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7856,7 +7890,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7879,7 +7913,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7937,7 +7971,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7954,7 +7988,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7972,7 +8006,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7995,7 +8029,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -8130,7 +8164,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -8147,7 +8181,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8165,7 +8199,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -8188,7 +8222,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -8246,7 +8280,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -8263,7 +8297,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8281,7 +8315,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -8304,7 +8338,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -8362,7 +8396,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -8379,7 +8413,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8397,7 +8431,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -8420,7 +8454,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -8478,7 +8512,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -8495,7 +8529,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8513,7 +8547,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -8536,7 +8570,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -8594,7 +8628,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -8611,7 +8645,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8629,7 +8663,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -8652,7 +8686,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8712,7 +8746,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8729,7 +8763,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8747,7 +8781,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8770,7 +8804,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8793,7 +8827,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8864,7 +8898,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8881,7 +8915,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8924,7 +8958,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8941,7 +8975,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8959,7 +8993,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -9017,7 +9051,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -9034,7 +9068,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9052,7 +9086,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -9075,7 +9109,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -9135,7 +9169,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -9152,7 +9186,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9170,7 +9204,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -9193,7 +9227,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -9216,7 +9250,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -9274,7 +9308,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -9291,7 +9325,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9309,7 +9343,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -9332,7 +9366,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -9390,7 +9424,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -9407,7 +9441,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9425,7 +9459,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -9448,7 +9482,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -9573,7 +9607,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -9590,7 +9624,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9608,7 +9642,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -9664,7 +9698,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9681,7 +9715,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9699,7 +9733,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9738,7 +9772,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9747,45 +9781,45 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#111-cot" class="md-nav__link">
+  <a href="#111-planning-is-not-the-same-as-cot" class="md-nav__link">
     <span class="md-ellipsis">
-      11.1 规划不等于 CoT
+      11.1 Planning Is Not the Same as CoT
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#112-reasoning-planning" class="md-nav__link">
+  <a href="#112-reasoning-versus-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.2 Reasoning 与 Planning 的区别
+      11.2 Reasoning versus Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#113" class="md-nav__link">
+  <a href="#113-why-make-plans-explicit" class="md-nav__link">
     <span class="md-ellipsis">
-      11.3 为什么需要显式规划
+      11.3 Why Make Plans Explicit?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#114" class="md-nav__link">
+  <a href="#114-planning-ability-comes-from-two-levels" class="md-nav__link">
     <span class="md-ellipsis">
-      11.4 规划能力来自两个层次
+      11.4 Planning Ability Comes from Two Levels
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.4 规划能力来自两个层次">
+    <nav class="md-nav" aria-label="11.4 Planning Ability Comes from Two Levels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -9812,28 +9846,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#115" class="md-nav__link">
+  <a href="#115-the-basic-elements-of-a-planning-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      11.5 规划问题的基本元素
+      11.5 The Basic Elements of a Planning Problem
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#116-cot" class="md-nav__link">
+  <a href="#116-cot-single-path-reasoning-not-a-complete-planner" class="md-nav__link">
     <span class="md-ellipsis">
-      11.6 CoT：单路径推理，不是完整规划器
+      11.6 CoT: Single-path Reasoning, Not a Complete Planner
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.6 CoT：单路径推理，不是完整规划器">
+    <nav class="md-nav" aria-label="11.6 CoT: Single-path Reasoning, Not a Complete Planner">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1161" class="md-nav__link">
+  <a href="#1161-engineering-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
-      11.6.1 工程边界
+      11.6.1 Engineering Boundaries
     </span>
   </a>
   
@@ -9845,46 +9879,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#117-task-decomposition" class="md-nav__link">
+  <a href="#117-task-decomposition-from-a-goal-to-subtasks" class="md-nav__link">
     <span class="md-ellipsis">
-      11.7 Task Decomposition：从目标生成子任务
+      11.7 Task Decomposition: From a Goal to Subtasks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#118-plan-and-solve" class="md-nav__link">
+  <a href="#118-plan-and-solve-form-a-problem-solving-plan-first" class="md-nav__link">
     <span class="md-ellipsis">
-      11.8 Plan-and-Solve：先形成解题计划
+      11.8 Plan-and-Solve: Form a Problem-solving Plan First
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#119-tot" class="md-nav__link">
+  <a href="#119-tot-search-multiple-candidate-directions" class="md-nav__link">
     <span class="md-ellipsis">
-      11.9 ToT：搜索多个候选方向
+      11.9 ToT: Search Multiple Candidate Directions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1110-tot" class="md-nav__link">
+  <a href="#1110-the-cost-of-tot-search" class="md-nav__link">
     <span class="md-ellipsis">
-      11.10 ToT 的搜索成本
+      11.10 The Cost of ToT Search
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.10 ToT 的搜索成本">
+    <nav class="md-nav" aria-label="11.10 The Cost of ToT Search">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11101-tot" class="md-nav__link">
+  <a href="#11101-controlling-tot-costs" class="md-nav__link">
     <span class="md-ellipsis">
-      11.10.1 控制 ToT 成本
+      11.10.1 Controlling ToT Costs
     </span>
   </a>
   
@@ -9896,29 +9930,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1111-got" class="md-nav__link">
+  <a href="#1111-got-merge-and-reuse-intermediate-results" class="md-nav__link">
     <span class="md-ellipsis">
-      11.11 GoT：合并和复用中间结果
+      11.11 GoT: Merge and Reuse Intermediate Results
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.11 GoT：合并和复用中间结果">
+    <nav class="md-nav" aria-label="11.11 GoT: Merge and Reuse Intermediate Results">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11111-got" class="md-nav__link">
+  <a href="#11111-gots-production-maturity" class="md-nav__link">
     <span class="md-ellipsis">
-      11.11.1 GoT 的生产成熟度
+      11.11.1 GoT's Production Maturity
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.11.1 GoT 的生产成熟度">
+    <nav class="md-nav" aria-label="11.11.1 GoT&#39;s Production Maturity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#graph-of-thoughts" class="md-nav__link">
+  <a href="#the-graph-of-thoughts-research-paradigm" class="md-nav__link">
     <span class="md-ellipsis">
-      Graph of Thoughts 研究范式
+      The Graph of Thoughts Research Paradigm
     </span>
   </a>
   
@@ -9944,9 +9978,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1112-task-graph" class="md-nav__link">
+  <a href="#1112-representing-execution-plans-with-task-graphs" class="md-nav__link">
     <span class="md-ellipsis">
-      11.12 用 Task Graph 表示执行计划
+      11.12 Representing Execution Plans with Task Graphs
     </span>
   </a>
   
@@ -9995,19 +10029,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1114" class="md-nav__link">
+  <a href="#1114-dynamic-replanning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.14 动态重规划
+      11.14 Dynamic Replanning
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.14 动态重规划">
+    <nav class="md-nav" aria-label="11.14 Dynamic Replanning">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11141" class="md-nav__link">
+  <a href="#11141-do-not-replan-everything-after-every-step" class="md-nav__link">
     <span class="md-ellipsis">
-      11.14.1 不要每一步都完整重规划
+      11.14.1 Do Not Replan Everything after Every Step
     </span>
   </a>
   
@@ -10037,22 +10071,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1117-react" class="md-nav__link">
+  <a href="#1117-reacts-role-in-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.17 ReAct 在规划中的作用
+      11.17 ReAct's Role in Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1118-reflection" class="md-nav__link">
+  <a href="#1118-reflection-and-plan-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      11.18 Reflection 与规划质量
+      11.18 Reflection and Plan Quality
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.18 Reflection 与规划质量">
+    <nav class="md-nav" aria-label="11.18 Reflection and Plan Quality">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -10139,13 +10173,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1120" class="md-nav__link">
+  <a href="#1120-using-external-planners" class="md-nav__link">
     <span class="md-ellipsis">
-      11.20 使用外部规划器
+      11.20 Using External Planners
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.20 使用外部规划器">
+    <nav class="md-nav" aria-label="11.20 Using External Planners">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -10190,13 +10224,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1121" class="md-nav__link">
+  <a href="#1121-ways-to-represent-a-plan" class="md-nav__link">
     <span class="md-ellipsis">
-      11.21 计划的表示方式
+      11.21 Ways to Represent a Plan
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.21 计划的表示方式">
+    <nav class="md-nav" aria-label="11.21 Ways to Represent a Plan">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -10250,9 +10284,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1122" class="md-nav__link">
+  <a href="#1122-plan-granularity" class="md-nav__link">
     <span class="md-ellipsis">
-      11.22 计划粒度
+      11.22 Plan Granularity
     </span>
   </a>
   
@@ -10277,27 +10311,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1125" class="md-nav__link">
+  <a href="#1125-uncertainty-in-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.25 规划中的不确定性
+      11.25 Uncertainty in Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1126" class="md-nav__link">
+  <a href="#1126-risk-aware-planning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.26 风险感知规划
+      11.26 Risk-aware Planning
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1127" class="md-nav__link">
+  <a href="#1127-planning-budgets" class="md-nav__link">
     <span class="md-ellipsis">
-      11.27 规划预算
+      11.27 Planning Budgets
     </span>
   </a>
   
@@ -10313,13 +10347,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1129" class="md-nav__link">
+  <a href="#1129-adapting-and-training-planning-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
-      11.29 规划能力的适配与训练
+      11.29 Adapting and Training Planning Capabilities
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.29 规划能力的适配与训练">
+    <nav class="md-nav" aria-label="11.29 Adapting and Training Planning Capabilities">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -10382,91 +10416,91 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1130" class="md-nav__link">
+  <a href="#1130-how-to-evaluate-planning-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      11.30 规划质量如何评估
+      11.30 How to Evaluate Planning Quality
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1131" class="md-nav__link">
+  <a href="#1131-common-failure-modes" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31 常见失败模式
+      11.31 Common Failure Modes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.31 常见失败模式">
+    <nav class="md-nav" aria-label="11.31 Common Failure Modes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11311" class="md-nav__link">
+  <a href="#11311-the-plan-looks-complete-but-cannot-be-executed" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.1 计划看起来完整但不可执行
+      11.31.1 The Plan Looks Complete but Cannot Be Executed
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11312" class="md-nav__link">
+  <a href="#11312-the-plan-omits-implicit-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.2 计划遗漏隐含依赖
+      11.31.2 The Plan Omits Implicit Dependencies
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11313-planner" class="md-nav__link">
+  <a href="#11313-the-planner-produces-too-many-microtasks" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.3 Planner 产生过多微任务
+      11.31.3 The Planner Produces Too Many Microtasks
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11314" class="md-nav__link">
+  <a href="#11314-initial-assumptions-are-wrong" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.4 初始假设错误
+      11.31.4 Initial Assumptions Are Wrong
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11315" class="md-nav__link">
+  <a href="#11315-frequent-full-replanning" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.5 频繁完整重规划
+      11.31.5 Frequent Full Replanning
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11316-planner-executor" class="md-nav__link">
+  <a href="#11316-the-planner-and-executor-interpret-the-plan-differently" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.6 Planner 与 Executor 语义不一致
+      11.31.6 The Planner and Executor Interpret the Plan Differently
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11317" class="md-nav__link">
+  <a href="#11317-self-evaluation-replaces-actual-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.7 自我评价取代真实验证
+      11.31.7 Self-evaluation Replaces Actual Verification
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11318" class="md-nav__link">
+  <a href="#11318-there-are-no-stopping-conditions" class="md-nav__link">
     <span class="md-ellipsis">
-      11.31.8 没有停止条件
+      11.31.8 There Are No Stopping Conditions
     </span>
   </a>
   
@@ -10478,100 +10512,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1132" class="md-nav__link">
+  <a href="#1132-a-recommended-production-architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      11.32 推荐的生产架构
+      11.32 A Recommended Production Architecture
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1133" class="md-nav__link">
+  <a href="#1133-implementation-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33 实现步骤
+      11.33 Implementation Steps
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.33 实现步骤">
+    <nav class="md-nav" aria-label="11.33 Implementation Steps">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11331" class="md-nav__link">
+  <a href="#11331-define-the-goal-and-success-criteria" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.1 定义目标与成功标准
+      11.33.1 Define the Goal and Success Criteria
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11332-action-catalog" class="md-nav__link">
+  <a href="#11332-build-an-action-catalog" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.2 建立 Action Catalog
+      11.33.2 Build an Action Catalog
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11333-plan-schema" class="md-nav__link">
+  <a href="#11333-define-a-plan-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.3 定义 Plan Schema
+      11.33.3 Define a Plan Schema
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11334-plan-validator" class="md-nav__link">
+  <a href="#11334-add-a-plan-validator" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.4 添加 Plan Validator
+      11.33.4 Add a Plan Validator
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11335-observation" class="md-nav__link">
+  <a href="#11335-execute-and-save-observations" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.5 执行并保存 Observation
+      11.33.5 Execute and Save Observations
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11336-replanner" class="md-nav__link">
+  <a href="#11336-add-a-replanner" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.6 添加 Replanner
+      11.33.6 Add a Replanner
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11337-verifier" class="md-nav__link">
+  <a href="#11337-add-a-verifier" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.7 添加 Verifier
+      11.33.7 Add a Verifier
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11338-guardrails" class="md-nav__link">
+  <a href="#11338-add-guardrails" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.8 加入 Guardrails
+      11.33.8 Add Guardrails
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11339" class="md-nav__link">
+  <a href="#11339-build-an-evaluation-set" class="md-nav__link">
     <span class="md-ellipsis">
-      11.33.9 建立评估集
+      11.33.9 Build an Evaluation Set
     </span>
   </a>
   
@@ -10583,37 +10617,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1134" class="md-nav__link">
+  <a href="#1134-choosing-an-approach" class="md-nav__link">
     <span class="md-ellipsis">
-      11.34 选型表
+      11.34 Choosing an Approach
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#1135" class="md-nav__link">
+  <a href="#1135-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35 本章总结
+      11.35 Chapter Summary
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="11.35 本章总结">
+    <nav class="md-nav" aria-label="11.35 Chapter Summary">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11351" class="md-nav__link">
+  <a href="#11351-model-level" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35.1 模型层
+      11.35.1 Model Level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#11352" class="md-nav__link">
+  <a href="#11352-system-level" class="md-nav__link">
     <span class="md-ellipsis">
-      11.35.2 系统层
+      11.35.2 System Level
     </span>
   </a>
   
@@ -10625,9 +10659,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -10649,7 +10683,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/agent/02-reasoning-planning/11-llm-agent-planning.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/agent/02-reasoning-planning/11-llm-agent-planning.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -10657,178 +10691,178 @@
   
 
 
-<h1 id="llm-agent">第十一章：如何赋予 LLM 与 Agent 规划能力<a class="headerlink" href="#llm-agent" title="Permanent link">&para;</a></h1>
-<h2 id="111-cot">11.1 规划不等于 CoT<a class="headerlink" href="#111-cot" title="Permanent link">&para;</a></h2>
-<p>让模型“先想好步骤再执行”，就有规划能力了吗？还不够。CoT 帮助模型沿一条路径展开中间推理；规划还要把步骤与环境中的动作连接起来，判断什么可以执行、执行后会怎样，以及失败后怎么办。</p>
-<p>例如发布服务，“测试、审批、部署”是一个初步计划。如果审批通过后代码又被修改，原审批不能直接授权部署新代码。可靠的规划系统必须发现版本变化，让受影响的测试和审批重新执行，而不是照着旧列表继续。</p>
-<p>因此，规划需要明确：</p>
+<h1 id="chapter-11-giving-llms-and-agents-the-ability-to-plan"><span id="llm-agent" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 11: Giving LLMs and Agents the Ability to Plan<a class="headerlink" href="#chapter-11-giving-llms-and-agents-the-ability-to-plan" title="Permanent link">&para;</a></h1>
+<h2 id="111-planning-is-not-the-same-as-cot"><span id="111-cot" class="legacy-heading-anchor" aria-hidden="true"></span>11.1 Planning Is Not the Same as CoT<a class="headerlink" href="#111-planning-is-not-the-same-as-cot" title="Permanent link">&para;</a></h2>
+<p>Does asking a model to “think through the steps before executing” give it planning ability? Not by itself. Chain of thought (CoT) helps a model develop intermediate reasoning along one path. Planning also connects those steps to actions in an environment: what can be executed, what will happen afterward, and what to do if something fails.</p>
+<p>Consider releasing a service. “Test, approve, deploy” is an initial plan. If the code changes after approval, the original approval cannot simply authorize deployment of the new code. A reliable planning system must detect the version change and rerun the affected tests and approval process, rather than continue down the old list.</p>
+<p>Planning therefore needs to make the following explicit:</p>
 <ul>
-<li>目标；</li>
-<li>当前状态；</li>
-<li>可用动作；</li>
-<li>依赖关系；</li>
-<li>资源和权限；</li>
-<li>动作可能产生的结果；</li>
-<li>风险和回退；</li>
-<li>完成条件。</li>
+<li>The goal;</li>
+<li>The current state;</li>
+<li>Available actions;</li>
+<li>Dependencies;</li>
+<li>Resources and permissions;</li>
+<li>Possible action outcomes;</li>
+<li>Risks and fallback options;</li>
+<li>Completion conditions.</li>
 </ul>
 <pre class="mermaid"><code>flowchart TB
-    R[Reasoning] --&gt; Q[回答：为什么、是什么、能否推出]
-    P[Planning] --&gt; A[回答：为了目标，接下来做什么]
+    R[Reasoning] --&gt; Q[Answer why, what, and what follows]
+    P[Planning] --&gt; A[Answer what to do next to reach the goal]
 
     Q --&gt; COT[CoT / ToT / GoT]
     A --&gt; PLAN[Plan / DAG / Policy]
     PLAN --&gt; EXEC[Execution]
     EXEC --&gt; OBS[Observation]
     OBS --&gt; PLAN</code></pre>
-<p>推理方法可以帮助生成计划，但不能单独构成可靠规划系统。</p>
-<h2 id="112-reasoning-planning">11.2 Reasoning 与 Planning 的区别<a class="headerlink" href="#112-reasoning-planning" title="Permanent link">&para;</a></h2>
+<p>Reasoning methods can help generate plans, but do not constitute a reliable planning system on their own.</p>
+<h2 id="112-reasoning-versus-planning"><span id="112-reasoning-planning" class="legacy-heading-anchor" aria-hidden="true"></span>11.2 Reasoning versus Planning<a class="headerlink" href="#112-reasoning-versus-planning" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>维度</th>
+<th>Dimension</th>
 <th>Reasoning</th>
 <th>Planning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>核心目标</td>
-<td>推导结论</td>
-<td>选择行动序列</td>
+<td>Primary goal</td>
+<td>Derive a conclusion</td>
+<td>Select a sequence of actions</td>
 </tr>
 <tr>
-<td>输入</td>
-<td>问题、事实、规则</td>
-<td>目标、状态、动作、约束</td>
+<td>Inputs</td>
+<td>Questions, facts, rules</td>
+<td>Goals, state, actions, constraints</td>
 </tr>
 <tr>
-<td>输出</td>
-<td>答案或判断</td>
-<td>可执行计划或策略</td>
+<td>Outputs</td>
+<td>Answers or judgments</td>
+<td>Executable plans or policies</td>
 </tr>
 <tr>
-<td>是否改变环境</td>
-<td>通常不直接改变</td>
-<td>计划由执行器作用于环境</td>
+<td>Does it change the environment?</td>
+<td>Usually not directly</td>
+<td>An executor applies the plan to the environment</td>
 </tr>
 <tr>
-<td>是否需要反馈</td>
-<td>不一定</td>
-<td>通常需要</td>
+<td>Does it need feedback?</td>
+<td>Not necessarily</td>
+<td>Usually</td>
 </tr>
 <tr>
-<td>是否需要重规划</td>
-<td>较少</td>
-<td>环境变化时需要</td>
+<td>Does it need replanning?</td>
+<td>Less often</td>
+<td>When the environment changes</td>
 </tr>
 <tr>
-<td>成功标准</td>
-<td>推理正确</td>
-<td>目标在约束内完成</td>
+<td>Success criterion</td>
+<td>Correct reasoning</td>
+<td>Achieving the goal within the constraints</td>
 </tr>
 </tbody>
 </table>
-<p>例如：</p>
+<p>For example:</p>
 <ul>
-<li>“为什么 API 调用失败？”是 Reasoning；</li>
-<li>“接下来按什么步骤修复 API？”是 Planning；</li>
-<li>“执行修复并根据测试结果调整”是 Agent Control Loop。</li>
+<li>“Why did the API call fail?” is reasoning;</li>
+<li>“What steps should we take next to fix the API?” is planning;</li>
+<li>“Execute the fix and adjust based on test results” is an agent control loop.</li>
 </ul>
-<h2 id="113">11.3 为什么需要显式规划<a class="headerlink" href="#113" title="Permanent link">&para;</a></h2>
-<p>LLM 可以直接生成答案或动作，但复杂任务容易出现：</p>
+<h2 id="113-why-make-plans-explicit"><span id="113" class="legacy-heading-anchor" aria-hidden="true"></span>11.3 Why Make Plans Explicit?<a class="headerlink" href="#113-why-make-plans-explicit" title="Permanent link">&para;</a></h2>
+<p>An LLM can generate answers or actions directly, but complex tasks are prone to:</p>
 <ul>
-<li>跳过关键步骤；</li>
-<li>忽略依赖；</li>
-<li>工具调用顺序错误；</li>
-<li>缺少成功标准；</li>
-<li>过早结束；</li>
-<li>在局部问题上反复循环；</li>
-<li>无法估算成本和风险。</li>
+<li>Skipping essential steps;</li>
+<li>Ignoring dependencies;</li>
+<li>Calling tools in the wrong order;</li>
+<li>Lacking success criteria;</li>
+<li>Stopping too early;</li>
+<li>Repeatedly circling around a local problem;</li>
+<li>Failing to estimate cost and risk.</li>
 </ul>
-<p>显式规划能把这些问题前置暴露出来：</p>
+<p>Explicit planning can expose these problems before execution:</p>
 <ul>
-<li>将目标转化为可执行步骤；</li>
-<li>暴露依赖和并行机会；</li>
-<li>在执行前检查权限与风险；</li>
-<li>为每一步定义验收条件；</li>
-<li>支持局部重试和故障恢复；</li>
-<li>根据真实 Observation 动态调整。</li>
+<li>Turn goals into executable steps;</li>
+<li>Reveal dependencies and opportunities for parallel work;</li>
+<li>Check permissions and risks before execution;</li>
+<li>Define acceptance criteria for each step;</li>
+<li>Support local retries and failure recovery;</li>
+<li>Adjust dynamically based on actual observations.</li>
 </ul>
 <blockquote>
-<p><strong>规划机制要产出可执行、可验证、可更新的控制结构；把思路展开只是其中一种手段。</strong></p>
+<p><strong>A planning mechanism should produce a control structure that can be executed, verified, and updated. Expanding the reasoning is only one way to support that structure.</strong></p>
 </blockquote>
-<h2 id="114">11.4 规划能力来自两个层次<a class="headerlink" href="#114" title="Permanent link">&para;</a></h2>
+<h2 id="114-planning-ability-comes-from-two-levels"><span id="114" class="legacy-heading-anchor" aria-hidden="true"></span>11.4 Planning Ability Comes from Two Levels<a class="headerlink" href="#114-planning-ability-comes-from-two-levels" title="Permanent link">&para;</a></h2>
 <h3 id="1141-model-level-planning">11.4.1 Model-level Planning<a class="headerlink" href="#1141-model-level-planning" title="Permanent link">&para;</a></h3>
-<p>模型层能力包括：</p>
+<p>Model-level capabilities include:</p>
 <ul>
-<li>理解目标；</li>
-<li>分解问题；</li>
-<li>预测动作结果；</li>
-<li>比较候选方案；</li>
-<li>生成步骤；</li>
-<li>识别依赖；</li>
-<li>根据反馈修订。</li>
+<li>Understanding goals;</li>
+<li>Decomposing problems;</li>
+<li>Predicting action outcomes;</li>
+<li>Comparing candidate approaches;</li>
+<li>Generating steps;</li>
+<li>Identifying dependencies;</li>
+<li>Revising based on feedback.</li>
 </ul>
-<p>增强这些能力的方法分属训练与推理两个阶段：</p>
+<p>Methods for strengthening these capabilities belong to either training or inference:</p>
 <ul>
-<li>预训练和后训练；</li>
-<li>高质量规划示例（放入上下文不更新参数，用于训练则更新参数）；</li>
-<li>Instruction Tuning；</li>
-<li>Tool-use Training；</li>
-<li>Reinforcement Learning；</li>
-<li>以可验证结果作为奖励的 RL（训练时更新参数）；</li>
-<li>推理时搜索和验证（通常保持参数不变，改变候选、状态和选择）。</li>
+<li>Pretraining and post-training;</li>
+<li>High-quality planning examples, which do not update parameters when placed in context but do when used for training;</li>
+<li>Instruction tuning;</li>
+<li>Tool-use training;</li>
+<li>Reinforcement learning;</li>
+<li>RL with rewards based on verifiable outcomes, which updates parameters during training;</li>
+<li>Inference-time search and verification, which usually leave parameters unchanged while changing candidates, state, and selection.</li>
 </ul>
-<p>数学或代码奖励上的进步不自动迁移为长程工具规划能力。动作前提、权限、环境变化和失败恢复需要单独评估，不能用一个推理基准分数替代。</p>
+<p>Improvements on math or code rewards do not automatically transfer to long-horizon tool planning. Action preconditions, permissions, environmental changes, and failure recovery need separate evaluation; a single reasoning benchmark score cannot stand in for them.</p>
 <h3 id="1142-system-level-planning">11.4.2 System-level Planning<a class="headerlink" href="#1142-system-level-planning" title="Permanent link">&para;</a></h3>
-<p>系统层负责将模型输出变成可靠计划：</p>
+<p>The system layer turns model outputs into reliable plans through:</p>
 <ul>
-<li>计划 Schema；</li>
-<li>Planner；</li>
-<li>Plan Validator；</li>
-<li>Scheduler；</li>
-<li>Executor；</li>
-<li>State Store；</li>
-<li>Verifier；</li>
-<li>Replanner；</li>
-<li>Budget 与 Guardrails。</li>
+<li>A plan schema;</li>
+<li>A planner;</li>
+<li>A plan validator;</li>
+<li>A scheduler;</li>
+<li>An executor;</li>
+<li>A state store;</li>
+<li>A verifier;</li>
+<li>A replanner;</li>
+<li>Budgets and guardrails.</li>
 </ul>
 <pre class="mermaid"><code>flowchart TB
     G[Goal + Constraints] --&gt; P[LLM Planner]
     P --&gt; S[Structured Plan]
     S --&gt; V[Plan Validator]
-    V --&gt;|不通过| P
-    V --&gt;|通过| SCH[Scheduler]
+    V --&gt;|Fail| P
+    V --&gt;|Pass| SCH[Scheduler]
     SCH --&gt; E[Executor]
     E --&gt; O[Observation]
-    O --&gt; CHECK{验收与计划状态}
-    CHECK --&gt;|步骤通过且仍有任务| SCH
-    CHECK --&gt;|计划失效| RP[Replanner]
-    CHECK --&gt;|目标完成| DONE[完成]
-    CHECK --&gt;|预算耗尽或需审批| STOP[停止或转人工]
+    O --&gt; CHECK{Acceptance and plan status}
+    CHECK --&gt;|Step passes and tasks remain| SCH
+    CHECK --&gt;|Plan invalidated| RP[Replanner]
+    CHECK --&gt;|Goal complete| DONE[Finish]
+    CHECK --&gt;|Budget exhausted or approval needed| STOP[Stop or hand off to a human]
     RP --&gt; S</code></pre>
-<p>一个强模型如果缺少 Runtime 和验证，仍可能生成不可执行计划；一个中等模型配合良好 Schema、Tools 和 Verifier，反而可能更可靠。</p>
-<h2 id="115">11.5 规划问题的基本元素<a class="headerlink" href="#115" title="Permanent link">&para;</a></h2>
-<p>可以将一个规划问题抽象为：</p>
+<p>A strong model can still produce an unexecutable plan without a runtime and verification. A less capable model paired with a well-designed schema, tools, and verifier may be more reliable.</p>
+<h2 id="115-the-basic-elements-of-a-planning-problem"><span id="115" class="legacy-heading-anchor" aria-hidden="true"></span>11.5 The Basic Elements of a Planning Problem<a class="headerlink" href="#115-the-basic-elements-of-a-planning-problem" title="Permanent link">&para;</a></h2>
+<p>A planning problem can be represented by:</p>
 <ul>
-<li><code>G</code>：目标；</li>
-<li><code>S₀</code>：初始状态；</li>
-<li><code>A</code>：可用动作集合；</li>
-<li><code>F</code>：状态转移模型，描述动作在什么条件下产生哪些结果；</li>
-<li><code>C</code>：约束；</li>
-<li><code>B</code>：预算；</li>
-<li><code>T</code>：终止条件。</li>
+<li><code>G</code>: the goal;</li>
+<li><code>S₀</code>: the initial state;</li>
+<li><code>A</code>: the set of available actions;</li>
+<li><code>F</code>: a state-transition model describing the conditions under which actions produce particular outcomes;</li>
+<li><code>C</code>: constraints;</li>
+<li><code>B</code>: the budget;</li>
+<li><code>T</code>: termination conditions.</li>
 </ul>
-<p>一个动作应声明：</p>
+<p>An action should declare:</p>
 <ul>
-<li>前置条件；</li>
-<li>输入；</li>
-<li>预期效果；</li>
-<li>副作用；</li>
-<li>费用和时间；</li>
-<li>风险等级；</li>
-<li>失败方式。</li>
+<li>Preconditions;</li>
+<li>Inputs;</li>
+<li>Expected effects;</li>
+<li>Side effects;</li>
+<li>Cost and duration;</li>
+<li>Risk level;</li>
+<li>Failure modes.</li>
 </ul>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"deploy_service"</span><span class="p">,</span>
@@ -10847,77 +10881,77 @@
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nt">"timeout_seconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>如果 Agent 不知道动作前置条件和效果，就很难真正进行可靠规划。</p>
-<p>经典确定性规划通常假设状态可观测、动作效果已知；网页、机器人或业务 API 往往不满足这些条件。此时应维护已知事实与不确定假设，必要时先执行信息收集动作，或生成依观察分支的策略，而不是把固定行动列表当作必然可达的路径。JSON 中的 <code>human_approval_received</code> 只是字段，Runtime 必须核验真实审批及其绑定的对象、版本和有效期。</p>
-<h2 id="116-cot">11.6 CoT：单路径推理，不是完整规划器<a class="headerlink" href="#116-cot" title="Permanent link">&para;</a></h2>
+<p>An agent that does not know an action's preconditions and effects will struggle to plan reliably.</p>
+<p>Classical deterministic planning typically assumes observable state and known action effects. Web pages, robots, and business APIs often do not satisfy those assumptions. In such cases, maintain known facts separately from uncertain assumptions. When necessary, first gather information or generate a policy that branches on observations, rather than treating a fixed action list as a guaranteed path to the goal. The JSON field <code>human_approval_received</code> is only a field: the runtime must verify the actual approval, including the object and version it covers and its expiration.</p>
+<h2 id="116-cot-single-path-reasoning-not-a-complete-planner"><span id="116-cot" class="legacy-heading-anchor" aria-hidden="true"></span>11.6 CoT: Single-path Reasoning, Not a Complete Planner<a class="headerlink" href="#116-cot-single-path-reasoning-not-a-complete-planner" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>CoT 的机制、适用任务与解释性局限已在<a href="../05-agent-reasoning-methods/">第五章</a>详述；这里仅说明它为何不能替代有状态、可验证的规划器。</p>
+<p><a href="../05-agent-reasoning-methods/">Chapter 5</a> explains CoT's mechanism, suitable tasks, and interpretability limitations in detail. Here, the focus is why it cannot replace a stateful, verifiable planner.</p>
 </blockquote>
-<p>CoT（Chain of Thought）让模型沿一条中间推理链得到结论：</p>
+<p>CoT (chain of thought) leads a model toward a conclusion through a chain of intermediate reasoning:</p>
 <pre class="mermaid"><code>flowchart LR
-    Q[问题] --&gt; S1[步骤 1]
-    S1 --&gt; S2[步骤 2]
-    S2 --&gt; S3[步骤 N]
-    S3 --&gt; A[答案或初步计划]</code></pre>
-<p>它可以帮助模型：</p>
+    Q[Question] --&gt; S1[Step 1]
+    S1 --&gt; S2[Step 2]
+    S2 --&gt; S3[Step N]
+    S3 --&gt; A[Answer or initial plan]</code></pre>
+<p>It can help the model:</p>
 <ul>
-<li>提取约束；</li>
-<li>分解简单步骤；</li>
-<li>减少直接跳到答案；</li>
-<li>生成初步行动列表。</li>
+<li>Extract constraints;</li>
+<li>Decompose simple steps;</li>
+<li>Avoid jumping straight to an answer;</li>
+<li>Generate an initial list of actions.</li>
 </ul>
-<p>单独使用 CoT 提示不提供以下系统机制：</p>
+<p>CoT prompting alone does not provide the following system mechanisms:</p>
 <ul>
-<li>多路径探索；</li>
-<li>回溯；</li>
-<li>真实环境反馈；</li>
-<li>状态持久化；</li>
-<li>计划验证；</li>
-<li>动态重规划；</li>
-<li>权限和资源调度。</li>
+<li>Exploration of multiple paths;</li>
+<li>Backtracking;</li>
+<li>Feedback from the real environment;</li>
+<li>Persistent state;</li>
+<li>Plan validation;</li>
+<li>Dynamic replanning;</li>
+<li>Permission management and resource scheduling.</li>
 </ul>
-<h3 id="1161">11.6.1 工程边界<a class="headerlink" href="#1161" title="Permanent link">&para;</a></h3>
-<p>CoT 文本可以出现“重新考虑”或初步验证，但这不等于控制器真的保存分支、回滚环境或执行了验证器。规划系统应输出可验证的步骤、依赖、成功标准、工具和风险，而不要求公开隐藏 Thought。其成本与可审计轨迹的记录原则分别见<a href="../05-agent-reasoning-methods/">第五章</a>和<a href="../../05-production/14-agent-evaluation/">第十四章</a>。</p>
-<h2 id="117-task-decomposition">11.7 Task Decomposition：从目标生成子任务<a class="headerlink" href="#117-task-decomposition" title="Permanent link">&para;</a></h2>
-<p>规划的第一步通常是将目标分解为可执行任务。</p>
+<h3 id="1161-engineering-boundaries"><span id="1161" class="legacy-heading-anchor" aria-hidden="true"></span>11.6.1 Engineering Boundaries<a class="headerlink" href="#1161-engineering-boundaries" title="Permanent link">&para;</a></h3>
+<p>CoT text may include “reconsidering” or preliminary checks, but that does not mean a controller has actually saved branches, rolled back the environment, or run a verifier. A planning system should output verifiable steps, dependencies, success criteria, tools, and risks without requiring disclosure of hidden reasoning. See <a href="../05-agent-reasoning-methods/">Chapter 5</a> for costs and <a href="../../05-production/14-agent-evaluation/">Chapter 14</a> for principles of recording auditable traces.</p>
+<h2 id="117-task-decomposition-from-a-goal-to-subtasks"><span id="117-task-decomposition" class="legacy-heading-anchor" aria-hidden="true"></span>11.7 Task Decomposition: From a Goal to Subtasks<a class="headerlink" href="#117-task-decomposition-from-a-goal-to-subtasks" title="Permanent link">&para;</a></h2>
+<p>The first step in planning is usually to break a goal into executable tasks.</p>
 <pre class="mermaid"><code>flowchart TB
-    G[复杂目标] --&gt; M1[里程碑 1]
-    G --&gt; M2[里程碑 2]
-    G --&gt; M3[里程碑 3]
-    M1 --&gt; T11[子任务 1.1]
-    M1 --&gt; T12[子任务 1.2]</code></pre>
-<p>高质量子任务应具有：</p>
+    G[Complex goal] --&gt; M1[Milestone 1]
+    G --&gt; M2[Milestone 2]
+    G --&gt; M3[Milestone 3]
+    M1 --&gt; T11[Subtask 1.1]
+    M1 --&gt; T12[Subtask 1.2]</code></pre>
+<p>A well-defined subtask should have:</p>
 <ul>
-<li>明确目标；</li>
-<li>独立输入输出；</li>
-<li>依赖；</li>
-<li>执行器；</li>
-<li>验收条件；</li>
-<li>风险和预算；</li>
-<li>可重试性。</li>
+<li>A clear goal;</li>
+<li>Its own inputs and outputs;</li>
+<li>Dependencies;</li>
+<li>An executor;</li>
+<li>Acceptance criteria;</li>
+<li>Risks and a budget;</li>
+<li>A defined ability to retry.</li>
 </ul>
-<p>分解只是产生计划结构，不代表计划正确。还需要验证依赖、可执行性和完整性。</p>
-<h2 id="118-plan-and-solve">11.8 Plan-and-Solve：先形成解题计划<a class="headerlink" href="#118-plan-and-solve" title="Permanent link">&para;</a></h2>
-<p>Plan-and-Solve 先生成问题求解计划，再沿计划完成推理。</p>
+<p>Decomposition only produces the structure of a plan; it does not make the plan correct. Dependencies, executability, and completeness still need validation.</p>
+<h2 id="118-plan-and-solve-form-a-problem-solving-plan-first"><span id="118-plan-and-solve" class="legacy-heading-anchor" aria-hidden="true"></span>11.8 Plan-and-Solve: Form a Problem-solving Plan First<a class="headerlink" href="#118-plan-and-solve-form-a-problem-solving-plan-first" title="Permanent link">&para;</a></h2>
+<p>Plan-and-Solve first generates a plan for solving a problem, then reasons through that plan.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Plan:
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. 提取目标和约束
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. 识别所需事实
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. 计算中间结果
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4. 检查答案是否满足约束
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. Extract the goal and constraints
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. Identify the facts needed
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. Calculate intermediate results
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4. Check whether the answer satisfies the constraints
 </span></code></pre></div>
-<p>它比简单 CoT 更明确地区分：</p>
+<p>Compared with basic CoT, it distinguishes more explicitly between:</p>
 <ul>
-<li>Planning；</li>
-<li>Solving。</li>
+<li>Planning;</li>
+<li>Solving.</li>
 </ul>
-<p>但它主要仍工作在模型推理层，不一定包含外部 Tool、状态和重规划。</p>
-<h2 id="119-tot">11.9 ToT：搜索多个候选方向<a class="headerlink" href="#119-tot" title="Permanent link">&para;</a></h2>
-<p>ToT（Tree of Thoughts）把中间推理状态组织成树，在每个节点：</p>
+<p>However, it still operates mainly at the model reasoning level and does not necessarily include external tools, state, or replanning.</p>
+<h2 id="119-tot-search-multiple-candidate-directions"><span id="119-tot" class="legacy-heading-anchor" aria-hidden="true"></span>11.9 ToT: Search Multiple Candidate Directions<a class="headerlink" href="#119-tot-search-multiple-candidate-directions" title="Permanent link">&para;</a></h2>
+<p>ToT (Tree of Thoughts) organizes intermediate reasoning states into a tree. At each node, it:</p>
 <ol>
-<li>生成多个候选；</li>
-<li>评价候选；</li>
-<li>选择部分候选继续；</li>
-<li>必要时回溯。</li>
+<li>Generates multiple candidates;</li>
+<li>Evaluates them;</li>
+<li>Selects a subset to continue;</li>
+<li>Backtracks when necessary.</li>
 </ol>
 <pre class="mermaid"><code>flowchart TB
     S0[Initial State] --&gt; A[Candidate A]
@@ -10933,52 +10967,52 @@
     A2 --&gt; E
     B1 --&gt; E
     B2 --&gt; E</code></pre>
-<p>ToT 给系统提供的是一套探索、选择和回溯候选路径的框架：</p>
+<p>ToT provides a framework for exploring, selecting, and backtracking through candidate paths:</p>
 <blockquote>
-<p><strong>允许系统探索多个方向，并在评价函数有效时进行选择和回溯。</strong></p>
+<p><strong>The system can explore multiple directions, then select and backtrack when its evaluation function is effective.</strong></p>
 </blockquote>
-<p>如果候选质量差或 Evaluator 判断错误，ToT 仍可能选择错误路径。</p>
-<p>原论文的节点是任务相关的部分解，评价与 BFS／DFS 由搜索程序组织；不是模型输出一个“树状思路”就完成了搜索。它展示的是 24 点、创意写作和填字等任务上的结果，不保证任意业务计划正确。涉及真实行动时，分支还需要可复制或可重置的环境；不能对支付等不可逆动作做试探式回溯。</p>
-<h2 id="1110-tot">11.10 ToT 的搜索成本<a class="headerlink" href="#1110-tot" title="Permanent link">&para;</a></h2>
-<p>ToT 成本取决于：</p>
+<p>If candidates are poor or the evaluator judges them incorrectly, ToT can still select the wrong path.</p>
+<p>In the original paper, nodes are task-specific partial solutions, and a search program organizes evaluation and BFS or DFS. A model has not performed search merely by producing a “tree of ideas.” The paper reports results on tasks such as Game of 24, creative writing, and crosswords; it does not guarantee correct plans for arbitrary business tasks. When branches involve real actions, the environment must also be clonable or resettable. Irreversible actions such as payments cannot be tried speculatively and then backtracked.</p>
+<h2 id="1110-the-cost-of-tot-search"><span id="1110-tot" class="legacy-heading-anchor" aria-hidden="true"></span>11.10 The Cost of ToT Search<a class="headerlink" href="#1110-the-cost-of-tot-search" title="Permanent link">&para;</a></h2>
+<p>ToT's cost depends on:</p>
 <ul>
-<li>每个节点的分支数 <code>b</code>；</li>
-<li>搜索深度 <code>d</code>；</li>
-<li>保留的 Beam Width <code>k</code>；</li>
-<li>每个节点生成候选的模型调用数；</li>
-<li>Evaluator 调用数；</li>
-<li>是否批处理；</li>
-<li>剪枝和提前终止。</li>
+<li>The branching factor <code>b</code> at each node;</li>
+<li>Search depth <code>d</code>;</li>
+<li>The retained beam width <code>k</code>;</li>
+<li>The number of model calls used to generate candidates at each node;</li>
+<li>The number of evaluator calls;</li>
+<li>Whether calls are batched;</li>
+<li>Pruning and early termination.</li>
 </ul>
-<p>完整树节点数为：</p>
+<p>The number of nodes in a complete tree is:</p>
 <div class="arithmatex">\[
 N=\sum_{i=0}^{d}b^i
 \]</div>
-<p>当分支数大于 1 时，节点数可能随深度快速增长。</p>
-<p>若使用 Beam Search，每层最多保留 <code>k</code> 个状态，每个状态扩展 <code>b</code> 个候选，深度为 <code>d</code>，候选扩展数的量级为：</p>
+<p>When the branching factor exceeds 1, the number of nodes can grow rapidly with depth.</p>
+<p>With beam search, at most <code>k</code> states are retained at each level, each state expands into <code>b</code> candidates, and the depth is <code>d</code>. The order of the number of candidate expansions is:</p>
 <div class="arithmatex">\[
 N_{expand}=O(kbd)
 \]</div>
-<p>这不是模型调用数或 Token 成本公式：一次调用可能批量生成多个候选，而每个候选可能触发额外评价；路径增长还会增加输入长度。只有固定分支数、深度、剪枝、上下文复用和模型调用策略后，才能与 CoT 比较成本。</p>
-<h3 id="11101-tot">11.10.1 控制 ToT 成本<a class="headerlink" href="#11101-tot" title="Permanent link">&para;</a></h3>
+<p>This is not a formula for model-call count or token cost. One call may generate several candidates in a batch, while each candidate may trigger additional evaluations. Longer paths also increase input length. A cost comparison with CoT requires fixing the branching factor, depth, pruning, context reuse, and model-call strategy first.</p>
+<h3 id="11101-controlling-tot-costs"><span id="11101-tot" class="legacy-heading-anchor" aria-hidden="true"></span>11.10.1 Controlling ToT Costs<a class="headerlink" href="#11101-controlling-tot-costs" title="Permanent link">&para;</a></h3>
 <ul>
-<li>限制搜索深度；</li>
-<li>限制 Beam Width；</li>
-<li>批量生成候选；</li>
-<li>使用小模型初筛；</li>
-<li>使用规则或程序验证；</li>
-<li>低分节点提前剪枝；</li>
-<li>通过任务验收或达到预算上限后停止；</li>
-<li>只对有可用评价信号且收益可测的问题启用；高风险首先需要审批与硬约束。</li>
+<li>Limit search depth;</li>
+<li>Limit beam width;</li>
+<li>Generate candidates in batches;</li>
+<li>Use a smaller model for initial screening;</li>
+<li>Verify with rules or programs;</li>
+<li>Prune low-scoring nodes early;</li>
+<li>Stop when the task passes acceptance checks or reaches its budget limit;</li>
+<li>Enable search only where useful evaluation signals exist and benefits can be measured; high-risk tasks need approval and hard constraints first.</li>
 </ul>
-<h2 id="1111-got">11.11 GoT：合并和复用中间结果<a class="headerlink" href="#1111-got" title="Permanent link">&para;</a></h2>
-<p>GoT（Graph of Thoughts）允许多个推理路径：</p>
+<h2 id="1111-got-merge-and-reuse-intermediate-results"><span id="1111-got" class="legacy-heading-anchor" aria-hidden="true"></span>11.11 GoT: Merge and Reuse Intermediate Results<a class="headerlink" href="#1111-got-merge-and-reuse-intermediate-results" title="Permanent link">&para;</a></h2>
+<p>GoT (Graph of Thoughts) allows multiple reasoning paths to:</p>
 <ul>
-<li>分叉；</li>
-<li>合并；</li>
-<li>复用；</li>
-<li>迭代修订；</li>
-<li>建立依赖。</li>
+<li>Branch;</li>
+<li>Merge;</li>
+<li>Reuse results;</li>
+<li>Undergo iterative revision;</li>
+<li>Establish dependencies.</li>
 </ul>
 <pre class="mermaid"><code>flowchart LR
     A[Analysis A] --&gt; M[Merge]
@@ -10986,31 +11020,31 @@ N_{expand}=O(kbd)
     C[Evidence C] --&gt; M
     M --&gt; R[Refine]
     R --&gt; V[Verify]
-    V --&gt;|需要修订| R
-    V --&gt;|通过| O[Output]</code></pre>
-<p>它针对树结构的局限：</p>
+    V --&gt;|Revision needed| R
+    V --&gt;|Pass| O[Output]</code></pre>
+<p>It addresses limitations of tree structures:</p>
 <ul>
-<li>树中不同分支难以共享中间结果；</li>
-<li>相同子问题可能被重复计算；</li>
-<li>多个候选结论无法自然合并。</li>
+<li>Different branches have difficulty sharing intermediate results;</li>
+<li>The same subproblem may be computed repeatedly;</li>
+<li>Multiple candidate conclusions cannot be merged naturally.</li>
 </ul>
-<h3 id="11111-got">11.11.1 GoT 的生产成熟度<a class="headerlink" href="#11111-got" title="Permanent link">&para;</a></h3>
-<p>需要区分两个概念：</p>
-<h4 id="graph-of-thoughts">Graph of Thoughts 研究范式<a class="headerlink" href="#graph-of-thoughts" title="Permanent link">&para;</a></h4>
-<p>将“Thought”作为图节点，由模型生成、聚合和转换。原论文已有代码实现，但不能仅凭使用了图状编排就把系统归类为该论文的 GoT。</p>
+<h3 id="11111-gots-production-maturity"><span id="11111-got" class="legacy-heading-anchor" aria-hidden="true"></span>11.11.1 GoT's Production Maturity<a class="headerlink" href="#11111-gots-production-maturity" title="Permanent link">&para;</a></h3>
+<p>Two concepts need to be distinguished:</p>
+<h4 id="the-graph-of-thoughts-research-paradigm">The Graph of Thoughts Research Paradigm<a class="headerlink" href="#the-graph-of-thoughts-research-paradigm" title="Permanent link">&para;</a></h4>
+<p>“Thoughts” are graph nodes generated, aggregated, and transformed by a model. The original paper has a code implementation, but graph-shaped orchestration alone does not make a system an implementation of that paper's GoT.</p>
 <h4 id="graph-based-agent-orchestration">Graph-based Agent Orchestration<a class="headerlink" href="#graph-based-agent-orchestration" title="Permanent link">&para;</a></h4>
-<p>使用 DAG、状态图、任务图或 Workflow 表示计划，已经广泛用于生产系统。</p>
-<p>两者思想相似，但工程系统通常操作的是：</p>
+<p>DAGs, state graphs, task graphs, and workflows are already widely used to represent plans in production systems.</p>
+<p>The ideas are similar, but engineering systems typically operate on:</p>
 <ul>
-<li>Task；</li>
-<li>State；</li>
-<li>Artifact；</li>
-<li>Dependency；</li>
-<li>Transition。</li>
+<li>Tasks;</li>
+<li>State;</li>
+<li>Artifacts;</li>
+<li>Dependencies;</li>
+<li>Transitions.</li>
 </ul>
-<p>而不是仅靠自由文本 Thought。文本部分解也可以通过程序验证，结构化 Task 也可能语义错误；区别在节点含义和验证机制，不是“文本不可靠、图必然可靠”。</p>
-<h2 id="1112-task-graph">11.12 用 Task Graph 表示执行计划<a class="headerlink" href="#1112-task-graph" title="Permanent link">&para;</a></h2>
-<p>生产系统更适合把图节点定义为可执行 Task：</p>
+<p>They do not rely solely on free-form thought text. A textual partial solution can also be checked by a program, and a structured task can still be semantically wrong. The distinction lies in what the nodes mean and how they are verified—not in a claim that “text is unreliable, whereas graphs are inherently reliable.”</p>
+<h2 id="1112-representing-execution-plans-with-task-graphs"><span id="1112-task-graph" class="legacy-heading-anchor" aria-hidden="true"></span>11.12 Representing Execution Plans with Task Graphs<a class="headerlink" href="#1112-representing-execution-plans-with-task-graphs" title="Permanent link">&para;</a></h2>
+<p>For production systems, it is more useful to define graph nodes as executable tasks:</p>
 <pre class="mermaid"><code>flowchart LR
     A[Collect Product Data] --&gt; D[Compare Products]
     B[Collect Pricing Data] --&gt; D
@@ -11018,93 +11052,93 @@ N_{expand}=O(kbd)
     D --&gt; F[Generate Report]
     E --&gt; F
     F --&gt; V[Verify Sources]</code></pre>
-<p>每个节点应包含：</p>
+<p>Each node should include:</p>
 <ul>
-<li>输入；</li>
-<li>输出；</li>
-<li>依赖；</li>
-<li>Executor；</li>
-<li>Success Criteria；</li>
-<li>Retry Policy；</li>
-<li>Artifact。</li>
+<li>Inputs;</li>
+<li>Outputs;</li>
+<li>Dependencies;</li>
+<li>An executor;</li>
+<li>Success criteria;</li>
+<li>A retry policy;</li>
+<li>An artifact.</li>
 </ul>
-<p>这种图可以被 Scheduler、Verifier 和 Runtime 直接使用。</p>
+<p>A scheduler, verifier, and runtime can use this graph directly.</p>
 <h2 id="1113-planner-executor-replanner">11.13 Planner-Executor-Replanner<a class="headerlink" href="#1113-planner-executor-replanner" title="Permanent link">&para;</a></h2>
-<p>一种可采用的系统架构是：</p>
+<p>One possible system architecture is:</p>
 <pre class="mermaid"><code>flowchart TB
     G[Goal] --&gt; P[Planner]
     P --&gt; PLAN[Structured Plan]
     PLAN --&gt; E[Executor]
     E --&gt; O[Observation]
-    O --&gt; V{计划仍有效?}
-    V --&gt;|是| E
-    V --&gt;|否| RP[Replanner]
+    O --&gt; V{Is the plan still valid?}
+    V --&gt;|Yes| E
+    V --&gt;|No| RP[Replanner]
     RP --&gt; PLAN
-    V --&gt;|目标完成| DONE[Finish]</code></pre>
+    V --&gt;|Goal complete| DONE[Finish]</code></pre>
 <h3 id="11131-planner">11.13.1 Planner<a class="headerlink" href="#11131-planner" title="Permanent link">&para;</a></h3>
-<p>负责：</p>
+<p>Its responsibilities are to:</p>
 <ul>
-<li>理解目标；</li>
-<li>生成里程碑；</li>
-<li>拆分任务；</li>
-<li>建立依赖；</li>
-<li>指定验收条件；</li>
-<li>估算风险和资源。</li>
+<li>Understand the goal;</li>
+<li>Generate milestones;</li>
+<li>Break work into tasks;</li>
+<li>Establish dependencies;</li>
+<li>Specify acceptance criteria;</li>
+<li>Estimate risks and resources.</li>
 </ul>
 <h3 id="11132-executor">11.13.2 Executor<a class="headerlink" href="#11132-executor" title="Permanent link">&para;</a></h3>
-<p>负责：</p>
+<p>Its responsibilities are to:</p>
 <ul>
-<li>执行当前步骤；</li>
-<li>调用 Tool；</li>
-<li>返回真实 Observation；</li>
-<li>保存 Artifact；</li>
-<li>报告结构化错误。</li>
+<li>Execute the current step;</li>
+<li>Invoke tools;</li>
+<li>Return actual observations;</li>
+<li>Save artifacts;</li>
+<li>Report structured errors.</li>
 </ul>
 <h3 id="11133-replanner">11.13.3 Replanner<a class="headerlink" href="#11133-replanner" title="Permanent link">&para;</a></h3>
-<p>负责判断：</p>
+<p>It determines:</p>
 <ul>
-<li>结果是否符合预期；</li>
-<li>哪个假设已经失效；</li>
-<li>是否需要新增、删除或重排步骤；</li>
-<li>是否可以提前结束；</li>
-<li>是否需要人工介入。</li>
+<li>Whether results match expectations;</li>
+<li>Which assumptions no longer hold;</li>
+<li>Whether steps need to be added, removed, or reordered;</li>
+<li>Whether the task can finish early;</li>
+<li>Whether human intervention is needed.</li>
 </ul>
-<h2 id="1114">11.14 动态重规划<a class="headerlink" href="#1114" title="Permanent link">&para;</a></h2>
-<p>原始计划为 <code>Pₜ</code>，执行获得新观察 <code>oₜ₊₁</code> 后，Replanner 更新计划：</p>
+<h2 id="1114-dynamic-replanning"><span id="1114" class="legacy-heading-anchor" aria-hidden="true"></span>11.14 Dynamic Replanning<a class="headerlink" href="#1114-dynamic-replanning" title="Permanent link">&para;</a></h2>
+<p>Given an original plan <code>Pₜ</code> and a new observation <code>oₜ₊₁</code> obtained through execution, the replanner updates the plan:</p>
 <div class="arithmatex">\[
 P_{t+1}=R(P_t,o_{t+1},s_t,g)
 \]</div>
-<p>这里 <code>sₜ</code> 是执行前保存的状态，<code>g</code> 是目标，<code>R</code> 是结合新观察更新计划的过程；Runtime 还应据实更新状态，不能只改计划文本。</p>
-<p>需要触发重规划的常见事件：</p>
+<p>Here, <code>sₜ</code> is the state saved before execution, <code>g</code> is the goal, and <code>R</code> is the process that incorporates the new observation into the plan. The runtime must also update its state record to reflect what actually happened, rather than merely changing the plan text.</p>
+<p>Common events that should trigger replanning include:</p>
 <ul>
-<li>Tool 返回意外结果；</li>
-<li>前置假设错误；</li>
-<li>新约束出现；</li>
-<li>某个任务失败；</li>
-<li>预算变化；</li>
-<li>用户修改目标；</li>
-<li>外部环境变化；</li>
-<li>Verifier 判断计划无法达到目标。</li>
+<li>A tool returning an unexpected result;</li>
+<li>A prerequisite assumption proving false;</li>
+<li>A new constraint appearing;</li>
+<li>A task failing;</li>
+<li>A budget change;</li>
+<li>The user changing the goal;</li>
+<li>The external environment changing;</li>
+<li>A verifier determining that the plan cannot achieve the goal.</li>
 </ul>
-<h3 id="11141">11.14.1 不要每一步都完整重规划<a class="headerlink" href="#11141" title="Permanent link">&para;</a></h3>
-<p>每一步都重写全计划会：</p>
+<h3 id="11141-do-not-replan-everything-after-every-step"><span id="11141" class="legacy-heading-anchor" aria-hidden="true"></span>11.14.1 Do Not Replan Everything after Every Step<a class="headerlink" href="#11141-do-not-replan-everything-after-every-step" title="Permanent link">&para;</a></h3>
+<p>Rewriting the entire plan after every step can:</p>
 <ul>
-<li>增加成本；</li>
-<li>造成计划漂移；</li>
-<li>丢失已验证结构；</li>
-<li>失去全局结构，只剩成本更高的逐步决策。</li>
+<li>Increase cost;</li>
+<li>Cause plan drift;</li>
+<li>Discard validated structure;</li>
+<li>Lose the global structure, leaving only more expensive step-by-step decisions.</li>
 </ul>
-<p>更好的方式是：</p>
+<p>A better approach is to:</p>
 <ul>
-<li>只更新受影响子图；</li>
-<li>保留已完成节点；</li>
-<li>对稳定里程碑加锁；</li>
-<li>记录 Plan Diff；</li>
-<li>重大假设变化才整体重规划。</li>
+<li>Update only the affected subgraph;</li>
+<li>Retain completed nodes;</li>
+<li>Lock stable milestones;</li>
+<li>Record the plan diff;</li>
+<li>Replan globally only when major assumptions change.</li>
 </ul>
-<p>“保留”指保留历史记录，不等于永远复用旧结果。输入、授权或目标变化时，应标记受影响 Artifact 失效；新旧计划要有版本号，并处理运行中任务取消及迟到返回，避免旧执行结果覆盖新计划状态。</p>
+<p>“Retain” means preserving the historical record, not reusing old results forever. When inputs, authorization, or goals change, mark affected artifacts as invalid. Old and new plans need version identifiers, and the system must handle cancellation of running tasks and late results so that old execution results cannot overwrite the new plan's state.</p>
 <h2 id="1115-hierarchical-planning">11.15 Hierarchical Planning<a class="headerlink" href="#1115-hierarchical-planning" title="Permanent link">&para;</a></h2>
-<p>分层规划先确定高层里程碑，再按需展开当前阶段：</p>
+<p>Hierarchical planning establishes high-level milestones first, then expands the current phase as needed:</p>
 <pre class="mermaid"><code>flowchart TB
     G[Global Goal] --&gt; M1[Research]
     G --&gt; M2[Implementation]
@@ -11118,113 +11152,113 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 
     M3 --&gt; T31[Test]
     M3 --&gt; T32[Review]</code></pre>
-<p>优势：</p>
+<p>Advantages:</p>
 <ul>
-<li>保留全局方向；</li>
-<li>避免一次生成过长计划；</li>
-<li>降低远期计划失效；</li>
-<li>支持阶段预算；</li>
-<li>适合长任务。</li>
+<li>Preserves the overall direction;</li>
+<li>Avoids generating an excessively long plan at once;</li>
+<li>Reduces the risk of distant plans becoming obsolete;</li>
+<li>Supports phase-specific budgets;</li>
+<li>Suits long-running tasks.</li>
 </ul>
 <h2 id="1116-rolling-horizon-planning">11.16 Rolling Horizon Planning<a class="headerlink" href="#1116-rolling-horizon-planning" title="Permanent link">&para;</a></h2>
-<p>滚动规划只详细规划近期步骤：</p>
+<p>Rolling horizon planning plans only the near-term steps in detail:</p>
 <pre class="mermaid"><code>flowchart LR
     S[Current State] --&gt; P[Plan Next Horizon]
     P --&gt; E[Execute Next Step]
     E --&gt; O[Observe]
     O --&gt; U[Update State]
     U --&gt; P</code></pre>
-<p>适合：</p>
+<p>It is suitable when:</p>
 <ul>
-<li>环境变化快；</li>
-<li>远期信息不可靠；</li>
-<li>工具结果决定后续路径；</li>
-<li>任务可能随时被用户调整。</li>
+<li>The environment changes quickly;</li>
+<li>Information about the distant future is unreliable;</li>
+<li>Tool results determine the subsequent path;</li>
+<li>The user may adjust the task at any time.</li>
 </ul>
-<p>它可以与分层规划组合：保留全局里程碑，只展开近期动作。与 ReAct 的区别不在于“有没有思考未来”，而在于控制器显式维护多步规划窗口，并在执行后更新它。</p>
-<p>滚动规划也可能短视。例如只顾尽快部署，可能省掉当前窗口之外的兼容性检查。即使远期步骤暂不展开，也必须保留“旧客户端仍可用”这类全局约束和最终验收条件。</p>
-<h2 id="1117-react">11.17 ReAct 在规划中的作用<a class="headerlink" href="#1117-react" title="Permanent link">&para;</a></h2>
-<p>ReAct 可以在推理中制定和更新计划，但本身不要求提供全局 DAG、调度器或形式化验证。它也可以用来执行显式计划中的局部开放任务：</p>
+<p>It can be combined with hierarchical planning: retain the global milestones and expand only near-term actions. Its distinction from ReAct is not whether the agent “thinks about the future,” but whether the controller explicitly maintains a multistep planning horizon and updates it after execution.</p>
+<p>Rolling planning can also be shortsighted. A focus on deploying as quickly as possible might omit compatibility checks that fall outside the current horizon. Even when distant steps have not yet been expanded, global constraints such as “old clients must remain usable” and final acceptance criteria must remain in force.</p>
+<h2 id="1117-reacts-role-in-planning"><span id="1117-react" class="legacy-heading-anchor" aria-hidden="true"></span>11.17 ReAct's Role in Planning<a class="headerlink" href="#1117-reacts-role-in-planning" title="Permanent link">&para;</a></h2>
+<p>ReAct can formulate and update plans within its reasoning, but does not inherently require a global DAG, scheduler, or formal verification. It can also execute local, open-ended tasks within an explicit plan:</p>
 <pre class="mermaid"><code>flowchart TB
     P[Global Plan] --&gt; S[Current Step]
     S --&gt; O[Observe]
     O --&gt; D[Decide]
     D --&gt; A[Act]
     A --&gt; O
-    D --&gt;|局部完成| NEXT[Next Plan Step]</code></pre>
-<p>推荐组合：</p>
+    D --&gt;|Local task complete| NEXT[Next Plan Step]</code></pre>
+<p>A recommended combination is:</p>
 <ul>
-<li>Planner 负责全局结构；</li>
-<li>ReAct 负责局部 Tool 选择；</li>
-<li>Replanner 处理计划失效；</li>
-<li>Verifier 检查步骤结果。</li>
+<li>The planner manages the global structure;</li>
+<li>ReAct selects tools locally;</li>
+<li>The replanner handles invalidated plans;</li>
+<li>The verifier checks step results.</li>
 </ul>
-<h2 id="1118-reflection">11.18 Reflection 与规划质量<a class="headerlink" href="#1118-reflection" title="Permanent link">&para;</a></h2>
-<p>Reflection 可以在规划前后加入质量检查。</p>
+<h2 id="1118-reflection-and-plan-quality"><span id="1118-reflection" class="legacy-heading-anchor" aria-hidden="true"></span>11.18 Reflection and Plan Quality<a class="headerlink" href="#1118-reflection-and-plan-quality" title="Permanent link">&para;</a></h2>
+<p>Reflection can add quality checks before and after planning.</p>
 <h3 id="11181-plan-critique">11.18.1 Plan Critique<a class="headerlink" href="#11181-plan-critique" title="Permanent link">&para;</a></h3>
-<p>检查：</p>
+<p>Check:</p>
 <ul>
-<li>是否遗漏步骤；</li>
-<li>依赖是否正确；</li>
-<li>是否可执行；</li>
-<li>是否存在权限问题；</li>
-<li>是否定义成功条件；</li>
-<li>是否存在更低成本路径。</li>
+<li>Whether any steps are missing;</li>
+<li>Whether dependencies are correct;</li>
+<li>Whether the plan can be executed;</li>
+<li>Whether there are permission issues;</li>
+<li>Whether success conditions are defined;</li>
+<li>Whether a lower-cost path exists.</li>
 </ul>
 <h3 id="11182-execution-reflection">11.18.2 Execution Reflection<a class="headerlink" href="#11182-execution-reflection" title="Permanent link">&para;</a></h3>
-<p>根据执行结果检查：</p>
+<p>Use execution results to check:</p>
 <ul>
-<li>哪个步骤失败；</li>
-<li>原因是计划错误还是执行错误；</li>
-<li>是否需要改变策略；</li>
-<li>哪些经验可以用于后续规划。</li>
+<li>Which step failed;</li>
+<li>Whether the cause was a planning error or an execution error;</li>
+<li>Whether the strategy needs to change;</li>
+<li>Which lessons can inform later planning.</li>
 </ul>
 <pre class="mermaid"><code>flowchart LR
     P[Plan] --&gt; C[Critic]
     C --&gt; V{Plan Valid?}
-    V --&gt;|否| R[Revise]
+    V --&gt;|No| R[Revise]
     R --&gt; P
-    V --&gt;|是| E[Execute]
+    V --&gt;|Yes| E[Execute]
     E --&gt; F[Feedback]
     F --&gt; C</code></pre>
-<p>Reflection 应优先使用真实工具反馈、规则、测试和人工审核，而不是只让同一个模型自我评价。</p>
+<p>Reflection should prioritize actual tool feedback, rules, tests, and human review, rather than relying only on the same model to evaluate itself.</p>
 <h2 id="1119-verifier-guided-planning">11.19 Verifier-guided Planning<a class="headerlink" href="#1119-verifier-guided-planning" title="Permanent link">&para;</a></h2>
-<p>执行前，应从下面五个维度检查计划。“通过”是允许尝试执行，不是目标必然可达。静态校验覆盖可提前判断的条件；实时权限、资源版本及动作前置条件还要在执行前再次检查，不能把计划生成时的许可长期复用。</p>
+<p>Before execution, check a plan along the following five dimensions. “Pass” means an execution attempt is permitted, not that reaching the goal is guaranteed. Static validation covers conditions that can be checked in advance. Current permissions, resource versions, and action preconditions must be checked again immediately before execution; permission granted when the plan was generated cannot be reused indefinitely.</p>
 <h3 id="11191-schema-validation">11.19.1 Schema Validation<a class="headerlink" href="#11191-schema-validation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>字段完整；</li>
-<li>类型正确；</li>
-<li>引用的 Task 存在；</li>
-<li>输出格式合法。</li>
+<li>All required fields are present;</li>
+<li>Types are correct;</li>
+<li>Referenced tasks exist;</li>
+<li>The output format is valid.</li>
 </ul>
 <h3 id="11192-dependency-validation">11.19.2 Dependency Validation<a class="headerlink" href="#11192-dependency-validation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>对任务依赖 DAG 检查无环；若使用允许循环的状态机，则检查循环的预算与退出条件；</li>
-<li>所需输入有来源；</li>
-<li>前置条件可满足；</li>
-<li>并行任务没有写冲突。</li>
+<li>Check that a task-dependency DAG is acyclic; for a state machine that allows cycles, check the cycle budgets and exit conditions;</li>
+<li>Required inputs have sources;</li>
+<li>Preconditions can be satisfied;</li>
+<li>Parallel tasks have no write conflicts.</li>
 </ul>
 <h3 id="11193-capability-validation">11.19.3 Capability Validation<a class="headerlink" href="#11193-capability-validation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>指定 Tool 存在；</li>
-<li>Agent 拥有所需 Skill；</li>
-<li>权限足够；</li>
-<li>参数可以生成。</li>
+<li>The specified tools exist;</li>
+<li>The agent has the required skills;</li>
+<li>Permissions are sufficient;</li>
+<li>Parameters can be produced.</li>
 </ul>
 <h3 id="11194-risk-validation">11.19.4 Risk Validation<a class="headerlink" href="#11194-risk-validation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>高风险操作是否有审批；</li>
-<li>是否使用最小权限；</li>
-<li>是否定义回滚或补偿；</li>
-<li>是否触及敏感数据。</li>
+<li>Do high-risk operations have approval?</li>
+<li>Is least privilege being used?</li>
+<li>Is rollback or compensation defined?</li>
+<li>Does the plan involve sensitive data?</li>
 </ul>
 <h3 id="11195-budget-validation">11.19.5 Budget Validation<a class="headerlink" href="#11195-budget-validation" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Token；</li>
-<li>时间；</li>
-<li>费用；</li>
-<li>最大步骤；</li>
-<li>并发限制。</li>
+<li>Tokens;</li>
+<li>Time;</li>
+<li>Cost;</li>
+<li>Maximum steps;</li>
+<li>Concurrency limits.</li>
 </ul>
 <pre class="mermaid"><code>flowchart LR
     PLAN[Candidate Plan] --&gt; S[Schema]
@@ -11233,34 +11267,34 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
     C --&gt; R[Risk]
     R --&gt; B[Budget]
     B --&gt; EXEC[Executable Plan]</code></pre>
-<h2 id="1120">11.20 使用外部规划器<a class="headerlink" href="#1120" title="Permanent link">&para;</a></h2>
-<p>并非所有规划都应交给 LLM。</p>
+<h2 id="1120-using-external-planners"><span id="1120" class="legacy-heading-anchor" aria-hidden="true"></span>11.20 Using External Planners<a class="headerlink" href="#1120-using-external-planners" title="Permanent link">&para;</a></h2>
+<p>Not all planning should be delegated to an LLM.</p>
 <h3 id="11201-deterministic-workflow">11.20.1 Deterministic Workflow<a class="headerlink" href="#11201-deterministic-workflow" title="Permanent link">&para;</a></h3>
-<p>流程已知时直接使用代码、DAG 或状态机。</p>
+<p>When the process is known, implement it directly in code, a DAG, or a state machine.</p>
 <h3 id="11202-constraint-solver">11.20.2 Constraint Solver<a class="headerlink" href="#11202-constraint-solver" title="Permanent link">&para;</a></h3>
-<p>适合：</p>
+<p>Suitable for:</p>
 <ul>
-<li>排班；</li>
-<li>资源分配；</li>
-<li>路径约束；</li>
-<li>组合优化；</li>
-<li>满足严格规则的问题。</li>
+<li>Shift scheduling;</li>
+<li>Resource allocation;</li>
+<li>Path constraints;</li>
+<li>Combinatorial optimization;</li>
+<li>Problems governed by strict rules.</li>
 </ul>
 <h3 id="11203-classical-planner">11.20.3 Classical Planner<a class="headerlink" href="#11203-classical-planner" title="Permanent link">&para;</a></h3>
-<p>当动作具有清晰前置条件和效果时，可以使用经典规划算法。</p>
+<p>Classical planning algorithms can be used when actions have clearly defined preconditions and effects.</p>
 <h3 id="11204-llm-solver">11.20.4 LLM + Solver<a class="headerlink" href="#11204-llm-solver" title="Permanent link">&para;</a></h3>
-<p>LLM 负责：</p>
+<p>The LLM is responsible for:</p>
 <ul>
-<li>理解自然语言目标；</li>
-<li>提取约束；</li>
-<li>生成 Solver 输入；</li>
-<li>解释结果。</li>
+<li>Understanding the natural-language goal;</li>
+<li>Extracting constraints;</li>
+<li>Generating solver input;</li>
+<li>Explaining the results.</li>
 </ul>
-<p>Solver 在给定形式化模型内负责：</p>
+<p>Within the given formal model, the solver is responsible for:</p>
 <ul>
-<li>精确搜索；</li>
-<li>约束满足；</li>
-<li>在算法、目标函数和预算支持时给出最优性或不可行性证明。</li>
+<li>Exact search;</li>
+<li>Constraint satisfaction;</li>
+<li>Providing a proof of optimality or infeasibility when the algorithm, objective function, and budget support it.</li>
 </ul>
 <pre class="mermaid"><code>sequenceDiagram
     participant U as User
@@ -11268,22 +11302,22 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
     participant S as Solver
     participant R as Runtime
 
-    U-&gt;&gt;M: 自然语言目标
-    M--&gt;&gt;R: 结构化目标与约束
-    R-&gt;&gt;S: 求解
-    S--&gt;&gt;R: 可行计划
-    R-&gt;&gt;M: 计划与约束结果
-    M--&gt;&gt;U: 解释或执行计划</code></pre>
+    U-&gt;&gt;M: Natural-language goal
+    M--&gt;&gt;R: Structured goal and constraints
+    R-&gt;&gt;S: Solve
+    S--&gt;&gt;R: Feasible plan
+    R-&gt;&gt;M: Plan and constraint results
+    M--&gt;&gt;U: Explanation or plan for execution</code></pre>
 <blockquote>
-<p><strong>这类问题更适合让语言模型负责建模和解释，把搜索或求解交给确定性算法。</strong></p>
+<p><strong>For these problems, language models are better used for modeling and explanation, while deterministic algorithms handle search or solving.</strong></p>
 </blockquote>
-<p>要分开检查“求解器求对了模型”和“模型正确表达了用户需求”。遗漏预算、误译单位或错误动作效果时，求解器仍可能给出形式上有效、现实中不可用的计划。以 <a href="https://developers.google.com/optimization/cp/cp_solver">OR-Tools CP-SAT</a> 为例，<code>FEASIBLE</code> 不等于 <code>OPTIMAL</code>，超时后的 <code>UNKNOWN</code> 也不等于已证明无解。</p>
-<p><a href="https://arxiv.org/abs/2402.01817">LLM-Modulo</a>提出更紧密的候选生成—外部验证循环：LLM 不只做格式转换，也可以提出计划或补充模型，Verifier 返回具体违反的约束供修订。该论文对 LLM 规划能力的强判断是其研究立场，不宜当作对所有后续模型的永久结论；可采用的是让生成与独立检查互相反馈的机制。</p>
-<h2 id="1121">11.21 计划的表示方式<a class="headerlink" href="#1121" title="Permanent link">&para;</a></h2>
+<p>Check separately whether “the solver solved the model correctly” and whether “the model correctly represents the user's requirements.” If a budget is omitted, units are mistranslated, or action effects are wrong, a solver may still return a formally valid plan that is unusable in practice. For example, in <a href="https://developers.google.com/optimization/cp/cp_solver">OR-Tools CP-SAT</a>, <code>FEASIBLE</code> is not the same as <code>OPTIMAL</code>, and <code>UNKNOWN</code> after a timeout does not mean infeasibility has been proved.</p>
+<p><a href="https://arxiv.org/abs/2402.01817">LLM-Modulo</a> proposes a more tightly coupled loop of candidate generation and external verification. The LLM does more than convert formats: it can also propose plans or augment the model, while verifiers return specific constraint violations to guide revision. The paper's strong claims about LLM planning abilities reflect its research position, not a permanent conclusion about every subsequent model. The transferable mechanism is the feedback between generation and independent checking.</p>
+<h2 id="1121-ways-to-represent-a-plan"><span id="1121" class="legacy-heading-anchor" aria-hidden="true"></span>11.21 Ways to Represent a Plan<a class="headerlink" href="#1121-ways-to-represent-a-plan" title="Permanent link">&para;</a></h2>
 <h3 id="11211-natural-language-list">11.21.1 Natural Language List<a class="headerlink" href="#11211-natural-language-list" title="Permanent link">&para;</a></h3>
-<p>简单直观，但难以验证和调度。</p>
+<p>Simple and intuitive, but difficult to validate and schedule.</p>
 <h3 id="11212-structured-json">11.21.2 Structured JSON<a class="headerlink" href="#11212-structured-json" title="Permanent link">&para;</a></h3>
-<p>适合任务管理和 API 集成：</p>
+<p>Suitable for task management and API integration. The example's <code>goal</code> means “release a new version”:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"plan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plan-42"</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"goal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"发布新版本"</span><span class="p">,</span>
@@ -11309,47 +11343,47 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 </span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="p">]</span>
 </span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>示例只展示依赖结构，不是可直接执行的部署配置。测试、审批和部署必须绑定同一不可变发布产物；部署前还需复核授权、幂等键和回滚策略，不能用模型生成的审批字符串代替审批记录。</p>
+<p>This example illustrates dependency structure only; it is not a deployment configuration ready for execution. Testing, approval, and deployment must bind to the same immutable release artifact. Authorization, idempotency keys, and rollback strategy must be checked again before deployment. A model-generated approval string cannot replace an approval record.</p>
 <h3 id="11213-dag">11.21.3 DAG<a class="headerlink" href="#11213-dag" title="Permanent link">&para;</a></h3>
-<p>适合依赖和并行调度。</p>
+<p>Suitable for dependencies and parallel scheduling.</p>
 <h3 id="11214-state-machine">11.21.4 State Machine<a class="headerlink" href="#11214-state-machine" title="Permanent link">&para;</a></h3>
-<p>适合状态有限、转移规则明确的业务流程。</p>
+<p>Suitable for business processes with a finite set of states and explicit transition rules.</p>
 <h3 id="11215-policy">11.21.5 Policy<a class="headerlink" href="#11215-policy" title="Permanent link">&para;</a></h3>
-<p>不生成固定步骤，而是根据状态选择下一动作，适合动态环境。</p>
-<h2 id="1122">11.22 计划粒度<a class="headerlink" href="#1122" title="Permanent link">&para;</a></h2>
-<p>计划过粗：</p>
+<p>Rather than generating fixed steps, a policy chooses the next action based on state, making it suitable for dynamic environments.</p>
+<h2 id="1122-plan-granularity"><span id="1122" class="legacy-heading-anchor" aria-hidden="true"></span>11.22 Plan Granularity<a class="headerlink" href="#1122-plan-granularity" title="Permanent link">&para;</a></h2>
+<p>If a plan is too coarse:</p>
 <ul>
-<li>无法执行；</li>
-<li>无法验证；</li>
-<li>失败影响范围大。</li>
+<li>It cannot be executed;</li>
+<li>It cannot be verified;</li>
+<li>Failures affect too much of the task.</li>
 </ul>
-<p>计划过细：</p>
+<p>If a plan is too fine-grained:</p>
 <ul>
-<li>调度成本高；</li>
-<li>模型调用过多；</li>
-<li>状态碎片化；</li>
-<li>容易丢失全局目标。</li>
+<li>Scheduling overhead is high;</li>
+<li>There are too many model calls;</li>
+<li>State becomes fragmented;</li>
+<li>The global goal is easily lost.</li>
 </ul>
-<p>合理任务单元应：</p>
+<p>A useful task unit should:</p>
 <ul>
-<li>独立执行；</li>
-<li>独立验证；</li>
-<li>独立重试；</li>
-<li>输入输出明确；</li>
-<li>副作用有边界；</li>
-<li>产生有意义 Artifact。</li>
+<li>Be independently executable;</li>
+<li>Be independently verifiable;</li>
+<li>Be independently retryable;</li>
+<li>Have explicit inputs and outputs;</li>
+<li>Have bounded side effects;</li>
+<li>Produce a meaningful artifact.</li>
 </ul>
 <h2 id="1123-planning-memory">11.23 Planning Memory<a class="headerlink" href="#1123-planning-memory" title="Permanent link">&para;</a></h2>
-<p>规划需要记住：</p>
+<p>Planning needs to retain:</p>
 <ul>
-<li>当前目标；</li>
-<li>已完成步骤；</li>
-<li>计划版本；</li>
-<li>关键假设；</li>
-<li>Observation；</li>
-<li>失败和重试；</li>
-<li>未解决问题；</li>
-<li>预算。</li>
+<li>The current goal;</li>
+<li>Completed steps;</li>
+<li>The plan version;</li>
+<li>Key assumptions;</li>
+<li>Observations;</li>
+<li>Failures and retries;</li>
+<li>Unresolved issues;</li>
+<li>The budget.</li>
 </ul>
 <pre class="mermaid"><code>flowchart TB
     PLAN[Plan] --&gt; STATE[Planning State]
@@ -11357,34 +11391,35 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
     FAIL[Failures] --&gt; STATE
     BUDGET[Budget] --&gt; STATE
     STATE --&gt; RP[Replanner]</code></pre>
-<p>计划若只留在单次 Prompt 中，执行过程中就很难追踪版本、恢复状态或安全重启。更稳妥的做法是把它存入结构化 State Store，并支持 Checkpoint。</p>
+<p>If a plan lives only in a single prompt, it is difficult to track versions, restore runtime state, or restart safely during execution. A more robust approach is to store it in a structured state store with checkpoint support.</p>
 <h2 id="1124-world-model">11.24 World Model<a class="headerlink" href="#1124-world-model" title="Permanent link">&para;</a></h2>
-<p>规划需要估计动作会如何改变环境。这个预测模型称为 World Model。</p>
-<p>LLM 可以隐式预测：</p>
+<p>Planning requires estimating how actions will change the environment. This predictive model is called a world model.</p>
+<p>An LLM can implicitly predict:</p>
 <ul>
-<li>调用 Tool 后可能得到什么；</li>
-<li>某个动作是否满足前置条件；</li>
-<li>下一步会产生什么副作用。</li>
+<li>What a tool call might return;</li>
+<li>Whether an action's preconditions are satisfied;</li>
+<li>What side effects the next step might produce.</li>
 </ul>
-<p>但在高风险场景里，仅靠语言模型预测还不够，通常还要结合：</p>
+<p>In high-risk settings, however, language-model predictions alone are insufficient. They usually need to be combined with:</p>
 <ul>
-<li>API Schema；</li>
-<li>模拟器；</li>
-<li>测试环境；</li>
-<li>数字孪生；</li>
-<li>规则引擎；</li>
-<li>真实只读查询。</li>
+<li>API schemas;</li>
+<li>Simulators;</li>
+<li>Test environments;</li>
+<li>Digital twins;</li>
+<li>Rule engines;</li>
+<li>Actual read-only queries.</li>
 </ul>
-<p>World Model 的误差会随预测深度累积，尤其是在陌生状态或工具分布变化后。API Schema 描述参数形状，不是完整的环境转移模型；模拟器、只读查询和真实执行反馈也各有覆盖范围。</p>
-<p><a href="https://arxiv.org/abs/2204.01691">SayCan</a>提供了一个具体例子：用语言模型估计技能对目标的适合程度，用技能价值函数估计在当前环境中能否成功，再组合选择。它依赖已有技能库及相应可行性估计，不能由“语言模型能描述动作”推断机器人就具备该动作能力。</p>
-<h2 id="1125">11.25 规划中的不确定性<a class="headerlink" href="#1125" title="Permanent link">&para;</a></h2>
-<p>计划应区分：</p>
+<p>World-model errors accumulate with prediction depth, especially in unfamiliar states or after shifts in the distribution of tools encountered. An API schema describes parameter structure, not a complete environment-transition model. Simulators, read-only queries, and feedback from real execution also have different coverage limits.</p>
+<p><a href="https://arxiv.org/abs/2204.01691">SayCan</a> provides a concrete example. A language model estimates how well a skill fits the goal, while a skill value function estimates whether it can succeed in the current environment; these estimates are combined to select a skill. This depends on an existing skill library and corresponding feasibility estimates. A language model's ability to describe an action does not imply that a robot can perform it.</p>
+<h2 id="1125-uncertainty-in-planning"><span id="1125" class="legacy-heading-anchor" aria-hidden="true"></span>11.25 Uncertainty in Planning<a class="headerlink" href="#1125-uncertainty-in-planning" title="Permanent link">&para;</a></h2>
+<p>A plan should distinguish:</p>
 <ul>
-<li>已知事实；</li>
-<li>假设；</li>
-<li>不确定信息；</li>
-<li>必须通过 Tool 验证的条件。</li>
+<li>Known facts;</li>
+<li>Assumptions;</li>
+<li>Uncertain information;</li>
+<li>Conditions that must be verified through tools.</li>
 </ul>
+<p>In this example, the assumption is “Competitor A still offers a free version”:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"assumption"</span><span class="p">:</span><span class="w"> </span><span class="s2">"竞品 A 仍提供免费版本"</span><span class="p">,</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"confidence_label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unverified"</span><span class="p">,</span>
@@ -11392,302 +11427,302 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">"on_failure"</span><span class="p">:</span><span class="w"> </span><span class="s2">"revise-comparison-plan"</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>优先验证影响后续大量步骤且验证成本可接受的假设。模型自报 <code>0.6</code> 一类数字未经校准时，不应解释为实际成功概率；应记录来源、时间和未确定原因。</p>
-<h2 id="1126">11.26 风险感知规划<a class="headerlink" href="#1126" title="Permanent link">&para;</a></h2>
-<p>不同动作需要不同控制：</p>
+<p>Prioritize assumptions that affect many later steps and are reasonably affordable to verify. An uncalibrated, model-reported number such as <code>0.6</code> should not be interpreted as an actual probability of success. Record the source, timestamp, and reason for uncertainty instead.</p>
+<h2 id="1126-risk-aware-planning"><span id="1126" class="legacy-heading-anchor" aria-hidden="true"></span>11.26 Risk-aware Planning<a class="headerlink" href="#1126-risk-aware-planning" title="Permanent link">&para;</a></h2>
+<p>Different actions need different controls:</p>
 <table>
 <thead>
 <tr>
-<th>风险</th>
-<th>示例</th>
-<th>规划策略</th>
+<th>Risk</th>
+<th>Example</th>
+<th>Planning strategy</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>低</td>
-<td>搜索公开网页</td>
-<td>可自动执行</td>
+<td>Low</td>
+<td>Searching public web pages</td>
+<td>May execute automatically</td>
 </tr>
 <tr>
-<td>中</td>
-<td>修改本地代码</td>
-<td>保留 Diff 和回滚</td>
+<td>Medium</td>
+<td>Editing local code</td>
+<td>Retain a diff and rollback path</td>
 </tr>
 <tr>
-<td>高</td>
-<td>发邮件、发布内容</td>
-<td>执行前确认</td>
+<td>High</td>
+<td>Sending email or publishing content</td>
+<td>Confirm before execution</td>
 </tr>
 <tr>
-<td>极高</td>
-<td>转账、删库、改权限</td>
-<td>强认证、审批和最小权限</td>
+<td>Very high</td>
+<td>Transferring money, deleting databases, changing permissions</td>
+<td>Strong authentication, approval, and least privilege</td>
 </tr>
 </tbody>
 </table>
-<p>规划器应优先选择：</p>
+<p>The planner should favor:</p>
 <ul>
-<li>可逆动作；</li>
-<li>只读探测；</li>
-<li>最小副作用；</li>
-<li>可验证中间步骤；</li>
-<li>明确回滚路径。</li>
+<li>Reversible actions;</li>
+<li>Read-only probes;</li>
+<li>Minimal side effects;</li>
+<li>Verifiable intermediate steps;</li>
+<li>Explicit rollback paths.</li>
 </ul>
-<h2 id="1127">11.27 规划预算<a class="headerlink" href="#1127" title="Permanent link">&para;</a></h2>
-<p>把本节的预算写成五个上限：</p>
+<h2 id="1127-planning-budgets"><span id="1127" class="legacy-heading-anchor" aria-hidden="true"></span>11.27 Planning Budgets<a class="headerlink" href="#1127-planning-budgets" title="Permanent link">&para;</a></h2>
+<p>Represent this section's budget as five upper bounds:</p>
 <div class="arithmatex">\[
 B=(N,D,K,T_{max},C_{max})
 \]</div>
-<p>其中：</p>
+<p>Where:</p>
 <ul>
-<li><code>N</code>：候选计划数量；</li>
-<li><code>D</code>：搜索深度；</li>
-<li><code>K</code>：重规划次数；</li>
-<li><code>T_max</code>：最大时间；</li>
-<li><code>C_max</code>：最大费用。</li>
+<li><code>N</code>: the number of candidate plans;</li>
+<li><code>D</code>: search depth;</li>
+<li><code>K</code>: the number of replanning attempts;</li>
+<li><code>T_max</code>: maximum time;</li>
+<li><code>C_max</code>: maximum cost.</li>
 </ul>
-<p>预算策略可以是：</p>
+<p>Possible budget policies include:</p>
 <ul>
-<li>简单任务只生成一个计划；</li>
-<li>中等任务生成计划并做一次 Critique；</li>
-<li>高风险任务先落实权限、审批和验证，可比较多个候选，但不能用更多搜索替代准入控制；</li>
-<li>预算耗尽时返回部分计划和未解决风险。</li>
+<li>Generate only one plan for simple tasks;</li>
+<li>Generate a plan and run one critique for moderately complex tasks;</li>
+<li>For high-risk tasks, establish permissions, approval, and verification first. Multiple candidates may be compared, but more search cannot replace authorization gates;</li>
+<li>When the budget is exhausted, return the partial plan and unresolved risks.</li>
 </ul>
 <h2 id="1128-adaptive-planning">11.28 Adaptive Planning<a class="headerlink" href="#1128-adaptive-planning" title="Permanent link">&para;</a></h2>
-<p>Adaptive Planner 根据任务难度和风险选择规划强度：</p>
+<p>An adaptive planner chooses planning effort based on task difficulty and risk:</p>
 <pre class="mermaid"><code>flowchart TB
     G[Goal] --&gt; A[Assess Complexity / Risk]
-    A --&gt;|简单| C[CoT / Checklist]
-    A --&gt;|路径明确| W[Workflow]
-    A --&gt;|复杂但可分解| P[Plan-and-Execute]
-    A --&gt;|候选较多| T[ToT / Search]
-    A --&gt;|严格约束| S[External Solver]
-    A --&gt;|动态环境| R[Rolling Replanning]</code></pre>
-<p>对所有任务一律启用昂贵搜索，通常得不偿失。</p>
-<h2 id="1129">11.29 规划能力的适配与训练<a class="headerlink" href="#1129" title="Permanent link">&para;</a></h2>
+    A --&gt;|Simple| C[CoT / Checklist]
+    A --&gt;|Known path| W[Workflow]
+    A --&gt;|Complex but decomposable| P[Plan-and-Execute]
+    A --&gt;|Many candidates| T[ToT / Search]
+    A --&gt;|Strict constraints| S[External Solver]
+    A --&gt;|Dynamic environment| R[Rolling Replanning]</code></pre>
+<p>Applying expensive search indiscriminately to every task is usually not worthwhile.</p>
+<h2 id="1129-adapting-and-training-planning-capabilities"><span id="1129" class="legacy-heading-anchor" aria-hidden="true"></span>11.29 Adapting and Training Planning Capabilities<a class="headerlink" href="#1129-adapting-and-training-planning-capabilities" title="Permanent link">&para;</a></h2>
 <h3 id="11291-in-context-examples">11.29.1 In-context Examples<a class="headerlink" href="#11291-in-context-examples" title="Permanent link">&para;</a></h3>
-<p>提供高质量计划示例，包括依赖、成功标准和失败处理。这是推理时条件化，不是训练，不改变模型参数。</p>
+<p>Provide high-quality example plans, including dependencies, success criteria, and failure handling. This is conditioning at inference time, not training; it does not change model parameters.</p>
 <h3 id="11292-supervised-fine-tuning">11.29.2 Supervised Fine-tuning<a class="headerlink" href="#11292-supervised-fine-tuning" title="Permanent link">&para;</a></h3>
-<p>使用目标到计划、状态到下一动作的轨迹训练模型。</p>
+<p>Train the model on goal-to-plan and state-to-next-action trajectories.</p>
 <h3 id="11293-tool-use-training">11.29.3 Tool-use Training<a class="headerlink" href="#11293-tool-use-training" title="Permanent link">&para;</a></h3>
-<p>训练模型理解 Tool Schema、参数和 Observation。</p>
+<p>Train the model to understand tool schemas, parameters, and observations.</p>
 <h3 id="11294-reinforcement-learning">11.29.4 Reinforcement Learning<a class="headerlink" href="#11294-reinforcement-learning" title="Permanent link">&para;</a></h3>
-<p>根据任务成功、成本、风险和步骤效率优化策略。</p>
+<p>Optimize the policy for task success, cost, risk, and step efficiency.</p>
 <h3 id="11295-verifiable-rewards">11.29.5 Verifiable Rewards<a class="headerlink" href="#11295-verifiable-rewards" title="Permanent link">&para;</a></h3>
-<p>使用测试、模拟器、规则和环境结果提供可验证反馈。这是奖励来源，不是独立训练算法；只有经过优化器更新参数才属于参数学习。如果只是据此重试或筛选计划，则是推理时控制。</p>
+<p>Use tests, simulators, rules, and environmental outcomes to provide verifiable feedback. This is a source of rewards, not a separate training algorithm. It becomes parameter learning only when an optimizer updates the parameters. Using that feedback only to retry or select plans is inference-time control.</p>
 <h3 id="11296-curriculum">11.29.6 Curriculum<a class="headerlink" href="#11296-curriculum" title="Permanent link">&para;</a></h3>
-<p>从短计划逐步训练到长任务和动态环境。</p>
-<p>训练可以增强模型能力，但系统仍需要 Runtime、State、Verifier 和 Guardrails。</p>
-<p>应区分离线轨迹训练、在线 RL 与当前任务的上下文适应。训练或评测时还需防止奖励泄漏、无效测试和“完成目标但违反约束”的奖励投机；数学可验证奖励上的提升，不等于对业务工具长轨迹的提升。</p>
-<h2 id="1130">11.30 规划质量如何评估<a class="headerlink" href="#1130" title="Permanent link">&para;</a></h2>
+<p>Progressively train from short plans to long tasks and dynamic environments.</p>
+<p>Training can strengthen model capabilities, but the system still needs a runtime, state, a verifier, and guardrails.</p>
+<p>Distinguish offline trajectory training, online RL, and in-context adaptation within the current task. Training and evaluation must also guard against reward leakage, invalid tests, and reward hacking that “achieves the goal while violating constraints.” Improvements from verifiable math rewards do not imply improvements on long trajectories involving business tools.</p>
+<h2 id="1130-how-to-evaluate-planning-quality"><span id="1130" class="legacy-heading-anchor" aria-hidden="true"></span>11.30 How to Evaluate Planning Quality<a class="headerlink" href="#1130-how-to-evaluate-planning-quality" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>指标</th>
-<th>含义</th>
+<th>Metric</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Goal Completion</td>
-<td>最终是否完成目标</td>
+<td>Whether the goal is ultimately achieved</td>
 </tr>
 <tr>
 <td>Plan Validity</td>
-<td>计划结构是否合法</td>
+<td>Whether the plan's structure is valid</td>
 </tr>
 <tr>
 <td>Executability</td>
-<td>步骤是否可以实际执行</td>
+<td>Whether the steps can actually be executed</td>
 </tr>
 <tr>
 <td>Completeness</td>
-<td>是否覆盖必要步骤</td>
+<td>Whether all necessary steps are covered</td>
 </tr>
 <tr>
 <td>Dependency Accuracy</td>
-<td>依赖是否正确</td>
+<td>Whether dependencies are correct</td>
 </tr>
 <tr>
 <td>Replan Rate</td>
-<td>计划失效频率</td>
+<td>How often plans become invalid</td>
 </tr>
 <tr>
 <td>Step Efficiency</td>
-<td>是否存在冗余步骤</td>
+<td>Whether redundant steps exist</td>
 </tr>
 <tr>
 <td>Recovery</td>
-<td>失败后是否能局部恢复</td>
+<td>Whether local recovery is possible after failure</td>
 </tr>
 <tr>
 <td>Cost</td>
-<td>规划和执行成本</td>
+<td>Planning and execution costs</td>
 </tr>
 <tr>
 <td>Safety</td>
-<td>是否遵守权限和风险约束</td>
+<td>Whether permission and risk constraints are respected</td>
 </tr>
 </tbody>
 </table>
-<p>还需要与基线比较：</p>
+<p>Compare against baselines as well:</p>
 <ul>
-<li>单次 LLM；</li>
-<li>ReAct；</li>
-<li>固定 Workflow；</li>
-<li>Plan-and-Execute；</li>
-<li>Search-based Planner。</li>
+<li>A single LLM call;</li>
+<li>ReAct;</li>
+<li>A fixed workflow;</li>
+<li>Plan-and-Execute;</li>
+<li>A search-based planner.</li>
 </ul>
-<p>对照应固定模型版本、工具权限、任务输入和成功标准，同时报告预算、延迟、样本量及不确定性。增加搜索后的提升可能来自更多尝试而非计划结构；可以再比较等预算的 ReAct 重试或多候选基线。</p>
-<p>增加规划复杂度应有可测收益：提高成功率、降低总体成本，或满足原方案无法满足的安全与可审计要求。更多节点、更多搜索本身不是收益。</p>
-<h2 id="1131">11.31 常见失败模式<a class="headerlink" href="#1131" title="Permanent link">&para;</a></h2>
-<h3 id="11311">11.31.1 计划看起来完整但不可执行<a class="headerlink" href="#11311" title="Permanent link">&para;</a></h3>
-<p>原因：</p>
+<p>Controlled comparisons should hold the model version, tool permissions, task inputs, and success criteria constant, while reporting budgets, latency, sample size, and uncertainty. Gains after adding search may come from more attempts rather than the plan structure itself. An additional comparison can use ReAct retries or a multiple-candidate baseline under the same budget.</p>
+<p>Greater planning complexity should deliver measurable benefits: higher success rates, lower total costs, or safety and auditability requirements that the original approach could not satisfy. More nodes and more search are not benefits by themselves.</p>
+<h2 id="1131-common-failure-modes"><span id="1131" class="legacy-heading-anchor" aria-hidden="true"></span>11.31 Common Failure Modes<a class="headerlink" href="#1131-common-failure-modes" title="Permanent link">&para;</a></h2>
+<h3 id="11311-the-plan-looks-complete-but-cannot-be-executed"><span id="11311" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.1 The Plan Looks Complete but Cannot Be Executed<a class="headerlink" href="#11311-the-plan-looks-complete-but-cannot-be-executed" title="Permanent link">&para;</a></h3>
+<p>Causes include:</p>
 <ul>
-<li>Tool 不存在；</li>
-<li>参数无法获得；</li>
-<li>权限不足；</li>
-<li>步骤输出没有被后续消费。</li>
+<li>A tool does not exist;</li>
+<li>Parameters cannot be obtained;</li>
+<li>Permissions are insufficient;</li>
+<li>A step's output is not consumed downstream.</li>
 </ul>
-<h3 id="11312">11.31.2 计划遗漏隐含依赖<a class="headerlink" href="#11312" title="Permanent link">&para;</a></h3>
-<p>例如部署前忘记测试或审批。</p>
-<h3 id="11313-planner">11.31.3 Planner 产生过多微任务<a class="headerlink" href="#11313-planner" title="Permanent link">&para;</a></h3>
-<p>调度和通信成本超过收益。</p>
-<h3 id="11314">11.31.4 初始假设错误<a class="headerlink" href="#11314" title="Permanent link">&para;</a></h3>
-<p>后续所有步骤建立在错误方向上。</p>
-<h3 id="11315">11.31.5 频繁完整重规划<a class="headerlink" href="#11315" title="Permanent link">&para;</a></h3>
-<p>产生 Plan Drift 和成本膨胀。</p>
-<h3 id="11316-planner-executor">11.31.6 Planner 与 Executor 语义不一致<a class="headerlink" href="#11316-planner-executor" title="Permanent link">&para;</a></h3>
-<p>Executor 不理解步骤目标或输出格式。</p>
-<h3 id="11317">11.31.7 自我评价取代真实验证<a class="headerlink" href="#11317" title="Permanent link">&para;</a></h3>
-<p>计划逻辑看似合理，但无法通过环境测试。</p>
-<h3 id="11318">11.31.8 没有停止条件<a class="headerlink" href="#11318" title="Permanent link">&para;</a></h3>
-<p>不断拆分、搜索和重规划。</p>
-<h2 id="1132">11.32 推荐的生产架构<a class="headerlink" href="#1132" title="Permanent link">&para;</a></h2>
+<h3 id="11312-the-plan-omits-implicit-dependencies"><span id="11312" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.2 The Plan Omits Implicit Dependencies<a class="headerlink" href="#11312-the-plan-omits-implicit-dependencies" title="Permanent link">&para;</a></h3>
+<p>For example, forgetting tests or approval before deployment.</p>
+<h3 id="11313-the-planner-produces-too-many-microtasks"><span id="11313-planner" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.3 The Planner Produces Too Many Microtasks<a class="headerlink" href="#11313-the-planner-produces-too-many-microtasks" title="Permanent link">&para;</a></h3>
+<p>Scheduling and communication costs exceed the benefits.</p>
+<h3 id="11314-initial-assumptions-are-wrong"><span id="11314" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.4 Initial Assumptions Are Wrong<a class="headerlink" href="#11314-initial-assumptions-are-wrong" title="Permanent link">&para;</a></h3>
+<p>Every subsequent step proceeds in the wrong direction.</p>
+<h3 id="11315-frequent-full-replanning"><span id="11315" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.5 Frequent Full Replanning<a class="headerlink" href="#11315-frequent-full-replanning" title="Permanent link">&para;</a></h3>
+<p>This causes plan drift and escalating costs.</p>
+<h3 id="11316-the-planner-and-executor-interpret-the-plan-differently"><span id="11316-planner-executor" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.6 The Planner and Executor Interpret the Plan Differently<a class="headerlink" href="#11316-the-planner-and-executor-interpret-the-plan-differently" title="Permanent link">&para;</a></h3>
+<p>The executor does not understand a step's goal or output format.</p>
+<h3 id="11317-self-evaluation-replaces-actual-verification"><span id="11317" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.7 Self-evaluation Replaces Actual Verification<a class="headerlink" href="#11317-self-evaluation-replaces-actual-verification" title="Permanent link">&para;</a></h3>
+<p>The plan appears logically plausible but fails environmental tests.</p>
+<h3 id="11318-there-are-no-stopping-conditions"><span id="11318" class="legacy-heading-anchor" aria-hidden="true"></span>11.31.8 There Are No Stopping Conditions<a class="headerlink" href="#11318-there-are-no-stopping-conditions" title="Permanent link">&para;</a></h3>
+<p>Decomposition, search, and replanning continue indefinitely.</p>
+<h2 id="1132-a-recommended-production-architecture"><span id="1132" class="legacy-heading-anchor" aria-hidden="true"></span>11.32 A Recommended Production Architecture<a class="headerlink" href="#1132-a-recommended-production-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
     INPUT[User Goal] --&gt; NORMALIZE[Goal / Constraint Parser]
     NORMALIZE --&gt; ROUTER[Planning Strategy Router]
 
-    ROUTER --&gt;|固定流程| WF[Workflow]
-    ROUTER --&gt;|动态任务| PLANNER[LLM Planner]
-    ROUTER --&gt;|严格约束| SOLVER[External Solver]
+    ROUTER --&gt;|Fixed process| WF[Workflow]
+    ROUTER --&gt;|Dynamic task| PLANNER[LLM Planner]
+    ROUTER --&gt;|Strict constraints| SOLVER[External Solver]
 
     PLANNER --&gt; PLAN[Structured Plan / DAG]
     SOLVER --&gt; PLAN
     WF --&gt; PLAN
 
     PLAN --&gt; VALIDATE[Schema + Dependency + Risk Validation]
-    VALIDATE --&gt;|不通过| PLANNER
-    VALIDATE --&gt;|通过| SCHED[Scheduler]
+    VALIDATE --&gt;|Fail| PLANNER
+    VALIDATE --&gt;|Pass| SCHED[Scheduler]
 
-    SCHED --&gt; GATE{执行前权限与审批有效?}
-    GATE --&gt;|是| EXEC[Executor / ReAct]
-    GATE --&gt;|否| HUMAN[Human Approval / 拒绝]
-    HUMAN --&gt;|获批后重新校验| GATE
+    SCHED --&gt; GATE{Permissions and approval valid before execution?}
+    GATE --&gt;|Yes| EXEC[Executor / ReAct]
+    GATE --&gt;|No| HUMAN[Human Approval / Denial]
+    HUMAN --&gt;|Revalidate after approval| GATE
     EXEC --&gt; OBS[Observation + Artifact]
     OBS --&gt; VERIFY[Verifier]
 
-    VERIFY --&gt;|步骤通过| SCHED
-    VERIFY --&gt;|局部失败重试| GATE
-    VERIFY --&gt;|计划失效| REPLAN[Replanner]
+    VERIFY --&gt;|Step passes| SCHED
+    VERIFY --&gt;|Retry local failure| GATE
+    VERIFY --&gt;|Plan invalidated| REPLAN[Replanner]
     REPLAN --&gt; PLAN
-    VERIFY --&gt;|需人工判断| HUMAN
-    VERIFY --&gt;|目标完成| DONE[Final Result]
+    VERIFY --&gt;|Human judgment needed| HUMAN
+    VERIFY --&gt;|Goal complete| DONE[Final Result]
 
     PLAN --&gt; STATE[Planning State Store]
     OBS --&gt; STATE
     STATE --&gt; REPLAN</code></pre>
-<p>图中的 Scheduler 只派发依赖已验收的任务，Verifier 区分步骤通过与目标完成。校验失败、重试和重规划共用硬性预算；不可修复的失败、审批拒绝或预算耗尽都应有停止出口，不能沿图中的回路无限运行。</p>
-<h2 id="1133">11.33 实现步骤<a class="headerlink" href="#1133" title="Permanent link">&para;</a></h2>
-<h3 id="11331">11.33.1 定义目标与成功标准<a class="headerlink" href="#11331" title="Permanent link">&para;</a></h3>
-<p>不要只传入模糊目标。</p>
-<h3 id="11332-action-catalog">11.33.2 建立 Action Catalog<a class="headerlink" href="#11332-action-catalog" title="Permanent link">&para;</a></h3>
-<p>为每个动作定义前置条件、效果、风险和成本。</p>
-<h3 id="11333-plan-schema">11.33.3 定义 Plan Schema<a class="headerlink" href="#11333-plan-schema" title="Permanent link">&para;</a></h3>
-<p>让计划可以被程序验证和调度。</p>
-<h3 id="11334-plan-validator">11.33.4 添加 Plan Validator<a class="headerlink" href="#11334-plan-validator" title="Permanent link">&para;</a></h3>
-<p>检查依赖、能力、权限和预算。</p>
-<h3 id="11335-observation">11.33.5 执行并保存 Observation<a class="headerlink" href="#11335-observation" title="Permanent link">&para;</a></h3>
-<p>用真实 Tool Result、用户确认或其他可追溯事件更新状态；将模型预测单独标成假设，不要把“预计已部署”写成“已经部署”。</p>
-<h3 id="11336-replanner">11.33.6 添加 Replanner<a class="headerlink" href="#11336-replanner" title="Permanent link">&para;</a></h3>
-<p>定义明确的触发条件和最大重规划次数。</p>
-<h3 id="11337-verifier">11.33.7 添加 Verifier<a class="headerlink" href="#11337-verifier" title="Permanent link">&para;</a></h3>
-<p>优先使用测试、规则、模拟器和真实环境。</p>
-<h3 id="11338-guardrails">11.33.8 加入 Guardrails<a class="headerlink" href="#11338-guardrails" title="Permanent link">&para;</a></h3>
-<p>限制步骤、时间、费用、权限和副作用。</p>
-<h3 id="11339">11.33.9 建立评估集<a class="headerlink" href="#11339" title="Permanent link">&para;</a></h3>
-<p>测量成功率、成本、延迟和恢复能力。</p>
-<h2 id="1134">11.34 选型表<a class="headerlink" href="#1134" title="Permanent link">&para;</a></h2>
+<p>The scheduler dispatches only tasks whose dependencies have passed acceptance checks. The verifier distinguishes a passing step from a completed goal. Validation failures, retries, and replanning share a hard budget. Unrecoverable failures, denied approval, and exhausted budgets must all have stopping paths; the system must not follow the diagram's cycles indefinitely.</p>
+<h2 id="1133-implementation-steps"><span id="1133" class="legacy-heading-anchor" aria-hidden="true"></span>11.33 Implementation Steps<a class="headerlink" href="#1133-implementation-steps" title="Permanent link">&para;</a></h2>
+<h3 id="11331-define-the-goal-and-success-criteria"><span id="11331" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.1 Define the Goal and Success Criteria<a class="headerlink" href="#11331-define-the-goal-and-success-criteria" title="Permanent link">&para;</a></h3>
+<p>Do not provide only a vague goal.</p>
+<h3 id="11332-build-an-action-catalog"><span id="11332-action-catalog" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.2 Build an Action Catalog<a class="headerlink" href="#11332-build-an-action-catalog" title="Permanent link">&para;</a></h3>
+<p>Define preconditions, effects, risks, and costs for every action.</p>
+<h3 id="11333-define-a-plan-schema"><span id="11333-plan-schema" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.3 Define a Plan Schema<a class="headerlink" href="#11333-define-a-plan-schema" title="Permanent link">&para;</a></h3>
+<p>Make plans programmatically validatable and schedulable.</p>
+<h3 id="11334-add-a-plan-validator"><span id="11334-plan-validator" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.4 Add a Plan Validator<a class="headerlink" href="#11334-add-a-plan-validator" title="Permanent link">&para;</a></h3>
+<p>Check dependencies, capabilities, permissions, and budgets.</p>
+<h3 id="11335-execute-and-save-observations"><span id="11335-observation" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.5 Execute and Save Observations<a class="headerlink" href="#11335-execute-and-save-observations" title="Permanent link">&para;</a></h3>
+<p>Update recorded state using actual tool results, user confirmations, or other traceable events. Mark model predictions separately as assumptions; do not record “expected to have deployed” as “deployed.”</p>
+<h3 id="11336-add-a-replanner"><span id="11336-replanner" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.6 Add a Replanner<a class="headerlink" href="#11336-add-a-replanner" title="Permanent link">&para;</a></h3>
+<p>Define explicit triggers and a maximum number of replanning attempts.</p>
+<h3 id="11337-add-a-verifier"><span id="11337-verifier" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.7 Add a Verifier<a class="headerlink" href="#11337-add-a-verifier" title="Permanent link">&para;</a></h3>
+<p>Prioritize tests, rules, simulators, and the real environment.</p>
+<h3 id="11338-add-guardrails"><span id="11338-guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.8 Add Guardrails<a class="headerlink" href="#11338-add-guardrails" title="Permanent link">&para;</a></h3>
+<p>Limit steps, time, cost, permissions, and side effects.</p>
+<h3 id="11339-build-an-evaluation-set"><span id="11339" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.9 Build an Evaluation Set<a class="headerlink" href="#11339-build-an-evaluation-set" title="Permanent link">&para;</a></h3>
+<p>Measure success rate, cost, latency, and recovery capability.</p>
+<h2 id="1134-choosing-an-approach"><span id="1134" class="legacy-heading-anchor" aria-hidden="true"></span>11.34 Choosing an Approach<a class="headerlink" href="#1134-choosing-an-approach" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>场景</th>
-<th>推荐方案</th>
+<th>Scenario</th>
+<th>Recommended approach</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>简单线性问题</td>
+<td>Simple linear problem</td>
 <td>Direct / CoT</td>
 </tr>
 <tr>
-<td>需要先分解再求解</td>
+<td>Decomposition needed before solving</td>
 <td>Plan-and-Solve</td>
 </tr>
 <tr>
-<td>候选方向较多且可评价</td>
+<td>Many candidate directions that can be evaluated</td>
 <td>ToT</td>
 </tr>
 <tr>
-<td>中间结果需要合并复用</td>
+<td>Intermediate results need merging and reuse</td>
 <td>Task Graph / DAG</td>
 </tr>
 <tr>
-<td>长任务且环境变化</td>
+<td>Long task in a changing environment</td>
 <td>Rolling Replanning</td>
 </tr>
 <tr>
-<td>路径固定</td>
+<td>Fixed path</td>
 <td>Workflow</td>
 </tr>
 <tr>
-<td>严格约束优化</td>
+<td>Optimization under strict constraints</td>
 <td>External Solver</td>
 </tr>
 <tr>
-<td>全局计划 + 局部探索</td>
+<td>Global plan with local exploration</td>
 <td>Planner + ReAct</td>
 </tr>
 <tr>
-<td>高质量要求</td>
+<td>Demanding quality requirements</td>
 <td>Planner + Verifier + Reflection</td>
 </tr>
 </tbody>
 </table>
-<h2 id="1135">11.35 本章总结<a class="headerlink" href="#1135" title="Permanent link">&para;</a></h2>
-<p>判断 LLM 有没有规划能力，不能只看它会不会“按步骤思考”，还要看计划能否执行、验证和更新。</p>
-<h3 id="11351">11.35.1 模型层<a class="headerlink" href="#11351" title="Permanent link">&para;</a></h3>
+<h2 id="1135-chapter-summary"><span id="1135" class="legacy-heading-anchor" aria-hidden="true"></span>11.35 Chapter Summary<a class="headerlink" href="#1135-chapter-summary" title="Permanent link">&para;</a></h2>
+<p>To judge whether an LLM can plan, do not look only at whether it can “think step by step.” Ask whether its plans can be executed, verified, and updated.</p>
+<h3 id="11351-model-level"><span id="11351" class="legacy-heading-anchor" aria-hidden="true"></span>11.35.1 Model Level<a class="headerlink" href="#11351-model-level" title="Permanent link">&para;</a></h3>
 <ul>
-<li>CoT 提供单路径中间推理；</li>
-<li>Task Decomposition 生成子问题；</li>
-<li>ToT 搜索多个候选方向；</li>
-<li>GoT 允许合并和复用中间结果；</li>
-<li>训练和 Verifiable Reward 可以增强规划能力。</li>
+<li>CoT provides single-path intermediate reasoning;</li>
+<li>Task decomposition generates subproblems;</li>
+<li>ToT searches multiple candidate directions;</li>
+<li>GoT allows intermediate results to be merged and reused;</li>
+<li>Training and verifiable rewards can strengthen planning capabilities.</li>
 </ul>
-<h3 id="11352">11.35.2 系统层<a class="headerlink" href="#11352" title="Permanent link">&para;</a></h3>
+<h3 id="11352-system-level"><span id="11352" class="legacy-heading-anchor" aria-hidden="true"></span>11.35.2 System Level<a class="headerlink" href="#11352-system-level" title="Permanent link">&para;</a></h3>
 <ul>
-<li>用 Plan Schema 表达可执行任务；</li>
-<li>用 Validator 检查依赖、能力和风险；</li>
-<li>用 Scheduler 与 Executor 执行；</li>
-<li>用 Observation 更新真实状态；</li>
-<li>用 Replanner 动态修改计划；</li>
-<li>用 Verifier 和 Guardrails 检查质量与安全条件，保留未覆盖风险和人工处理出口。</li>
+<li>Express executable tasks with a plan schema;</li>
+<li>Use a validator to check dependencies, capabilities, and risks;</li>
+<li>Execute through a scheduler and executor;</li>
+<li>Update the state record from actual observations;</li>
+<li>Modify plans dynamically through a replanner;</li>
+<li>Use verifiers and guardrails to check quality and safety conditions, while retaining explicit records of uncovered risks and paths for human handling.</li>
 </ul>
 <blockquote>
-<p><strong>落到工程实现，规划应表现为受预算约束的行动结构，能够执行、验证、更新。</strong></p>
+<p><strong>In an engineering implementation, planning should take the form of a budget-constrained action structure that can be executed, verified, and updated.</strong></p>
 </blockquote>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a></li>
@@ -11719,20 +11754,20 @@ B=(N,D,K,T_{max},C_{max})
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:53:42 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -11755,7 +11790,7 @@ B=(N,D,K,T_{max},C_{max})
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -11764,33 +11799,33 @@ B=(N,D,K,T_{max},C_{max})
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-task-decomposition/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 复杂任务拆分与调度">
+          <a href="../06-task-decomposition/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 6: Decomposing and Scheduling Complex Tasks">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                复杂任务拆分与调度
+                Chapter 6: Decomposing and Scheduling Complex Tasks
               </div>
             </div>
           </a>
         
         
           
-          <a href="../12-agent-reflection/" class="md-footer__link md-footer__link--next" aria-label="下一页: 反思、验证与自我改进">
+          <a href="../12-agent-reflection/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 12: Agent Reflection, Verification, and Self-improvement">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                反思、验证与自我改进
+                Chapter 12: Agent Reflection, Verification, and Self-improvement
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -11839,7 +11874,7 @@ B=(N,D,K,T_{max},C_{max})
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

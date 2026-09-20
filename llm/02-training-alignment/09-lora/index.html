@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。">
+        <meta name="description" content="Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>LoRA - Awesome AI Roadmap</title>
+        <title>Chapter 9: LoRA in Depth - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第九章：LoRA 深入解析">
-    <meta property="og:description" content="推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。">
+    <meta property="og:title" content="Chapter 9: LoRA in Depth">
+    <meta property="og:description" content="Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第九章：LoRA 深入解析">
-    <meta name="twitter:description" content="推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。">
+    <meta name="twitter:title" content="Chapter 9: LoRA in Depth">
+    <meta name="twitter:description" content="Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：LoRA 深入解析","description":"推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第九章：LoRA 深入解析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"},"datePublished":"2026-08-31","dateModified":"2026-09-08"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: LoRA in Depth","description":"Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: LoRA in Depth","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"LoRA","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: LoRA in Depth","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#lora" class="md-skip">
-          跳转至
+        <a href="#chapter-9-lora-in-depth" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LoRA
+              Chapter 9: LoRA in Depth
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/llm/02-training-alignment/09-lora/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -349,7 +383,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -993,7 +1027,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1010,7 +1044,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1028,7 +1062,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1051,7 +1085,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1074,7 +1108,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1097,7 +1131,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1120,7 +1154,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1191,7 +1225,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1208,7 +1242,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1226,7 +1260,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1249,7 +1283,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1272,7 +1306,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1304,7 +1338,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1317,7 +1351,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1326,7 +1360,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1335,42 +1369,42 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#91" class="md-nav__link">
+  <a href="#91-background-reduce-trainable-state-not-base-model-computation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.1 背景：减少可训练状态，而不是跳过基座计算
+      9.1 Background: Reduce Trainable State, Not Base-Model Computation
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#92" class="md-nav__link">
+  <a href="#92-the-core-equations-and-implementation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2 核心公式与实现
+      9.2 The Core Equations and Implementation
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.2 核心公式与实现">
+    <nav class="md-nav" aria-label="9.2 The Core Equations and Implementation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#921" class="md-nav__link">
+  <a href="#921-a-consistent-matrix-convention" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2.1 统一矩阵约定
+      9.2.1 A Consistent Matrix Convention
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#922" class="md-nav__link">
+  <a href="#922-why-initialize-one-matrix-randomly-and-the-other-to-zero" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2.2 为什么通常一个矩阵随机、另一个为零
+      9.2.2 Why Initialize One Matrix Randomly and the Other to Zero?
     </span>
   </a>
   
@@ -1382,37 +1416,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#93" class="md-nav__link">
+  <a href="#93-the-low-rank-assumption-and-parameter-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3 低秩假设与参数预算
+      9.3 The Low-Rank Assumption and Parameter Budget
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.3 低秩假设与参数预算">
+    <nav class="md-nav" aria-label="9.3 The Low-Rank Assumption and Parameter Budget">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#931" class="md-nav__link">
+  <a href="#931-the-update-is-constrained-not-the-original-weight" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.1 限制的是更新，不是原权重
+      9.3.1 The Update Is Constrained, Not the Original Weight
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#932" class="md-nav__link">
+  <a href="#932-counting-trainable-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.2 怎么计算可训练参数
+      9.3.2 Counting Trainable Parameters
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#933-rank" class="md-nav__link">
+  <a href="#933-higher-rank-does-not-necessarily-reproduce-full-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.3 Rank 并非越大越接近同一次全量训练
+      9.3.3 Higher Rank Does Not Necessarily Reproduce Full Fine-Tuning
     </span>
   </a>
   
@@ -1424,37 +1458,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#94" class="md-nav__link">
+  <a href="#94-merging-for-inference-when-is-there-no-extra-branch" class="md-nav__link">
     <span class="md-ellipsis">
-      9.4 推理合并：什么时候没有额外分支
+      9.4 Merging for Inference: When Is There No Extra Branch?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#95-adapter" class="md-nav__link">
+  <a href="#95-one-base-multiple-adapters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5 一个基座，多个 adapter
+      9.5 One Base, Multiple Adapters
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.5 一个基座，多个 adapter">
+    <nav class="md-nav" aria-label="9.5 One Base, Multiple Adapters">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#951" class="md-nav__link">
+  <a href="#951-switching-is-not-concurrent-isolation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5.1 切换不等于并发隔离
+      9.5.1 Switching Is Not Concurrent Isolation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#952" class="md-nav__link">
+  <a href="#952-what-is-missing-from-the-memory-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5.2 显存账还缺什么
+      9.5.2 What Is Missing from the Memory Budget?
     </span>
   </a>
   
@@ -1466,63 +1500,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#96" class="md-nav__link">
+  <a href="#96-frozen-bases-and-forgetting-recoverable-does-not-mean-regression-free" class="md-nav__link">
     <span class="md-ellipsis">
-      9.6 冻结基座与遗忘：可恢复，不等于不退化
+      9.6 Frozen Bases and Forgetting: Recoverable Does Not Mean Regression-Free
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#97-rankalpha" class="md-nav__link">
+  <a href="#97-how-rank-alpha-and-learning-rate-interact" class="md-nav__link">
     <span class="md-ellipsis">
-      9.7 Rank、Alpha 与学习率如何共同作用
+      9.7 How Rank, Alpha, and Learning Rate Interact
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#98-lora" class="md-nav__link">
+  <a href="#98-mixing-lora-adapters-additive-weights-do-not-guarantee-additive-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
-      9.8 多 LoRA 混合：权重可加，能力不保证可加
+      9.8 Mixing LoRA Adapters: Additive Weights Do Not Guarantee Additive Capabilities
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#99-adapter" class="md-nav__link">
+  <a href="#99-comparison-with-full-fine-tuning-and-adapters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.9 与全量微调、Adapter 的对比
+      9.9 Comparison with Full Fine-Tuning and Adapters
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#910" class="md-nav__link">
+  <a href="#910-common-follow-up-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      9.10 常见追问
+      9.10 Common Follow-Up Questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#911" class="md-nav__link">
+  <a href="#911-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      9.11 本章总结
+      9.11 Chapter Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -1549,7 +1583,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1572,7 +1606,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1641,7 +1675,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1658,7 +1692,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1676,7 +1710,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1699,7 +1733,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1722,7 +1756,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1745,7 +1779,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1768,7 +1802,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1791,7 +1825,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1854,7 +1888,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1871,7 +1905,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1889,7 +1923,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1912,7 +1946,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1935,7 +1969,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1996,7 +2030,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -2013,7 +2047,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2031,7 +2065,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -2054,7 +2088,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -2113,7 +2147,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -2130,7 +2164,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2148,7 +2182,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -2219,7 +2253,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -2236,7 +2270,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2279,7 +2313,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2296,7 +2330,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2314,7 +2348,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2374,7 +2408,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2391,7 +2425,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2409,7 +2443,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2432,7 +2466,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2455,7 +2489,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2513,7 +2547,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2530,7 +2564,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2548,7 +2582,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2571,7 +2605,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2629,7 +2663,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2646,7 +2680,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2664,7 +2698,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2687,7 +2721,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2745,7 +2779,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2762,7 +2796,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2780,7 +2814,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2803,7 +2837,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2975,7 +3009,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2998,7 +3032,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -3021,7 +3055,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -3044,7 +3078,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -3143,7 +3177,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -3166,7 +3200,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3189,7 +3223,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3212,7 +3246,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3235,7 +3269,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3330,7 +3364,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3353,7 +3387,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3376,7 +3410,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3432,7 +3466,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3449,7 +3483,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3467,7 +3501,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3525,7 +3559,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3542,7 +3576,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3560,7 +3594,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3583,7 +3617,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3660,7 +3694,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3677,7 +3711,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3724,7 +3758,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3741,7 +3775,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3759,7 +3793,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3782,7 +3816,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3805,7 +3839,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3875,7 +3909,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3892,7 +3926,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3910,7 +3944,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3933,7 +3967,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3956,7 +3990,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -3979,7 +4013,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -4002,7 +4036,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -4025,7 +4059,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -4048,7 +4082,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -4071,7 +4105,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4135,7 +4169,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4152,7 +4186,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4170,7 +4204,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4193,7 +4227,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4216,7 +4250,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4239,7 +4273,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4262,7 +4296,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4322,7 +4356,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4339,7 +4373,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4357,7 +4391,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4380,7 +4414,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4403,7 +4437,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4461,7 +4495,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4478,7 +4512,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4496,7 +4530,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4519,7 +4553,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4577,7 +4611,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4594,7 +4628,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4612,7 +4646,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4635,7 +4669,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4691,7 +4725,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4708,7 +4742,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4726,7 +4760,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4782,7 +4816,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4799,7 +4833,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4817,7 +4851,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -4954,7 +4988,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -4971,7 +5005,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4989,7 +5023,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5012,7 +5046,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5080,7 +5114,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5097,7 +5131,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5115,7 +5149,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5138,7 +5172,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5161,7 +5195,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5184,7 +5218,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5207,7 +5241,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5230,7 +5264,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5253,7 +5287,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5317,7 +5351,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5334,7 +5368,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5352,7 +5386,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5375,7 +5409,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5398,7 +5432,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5421,7 +5455,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5444,7 +5478,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5504,7 +5538,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5521,7 +5555,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5539,7 +5573,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5562,7 +5596,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5585,7 +5619,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5643,7 +5677,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5660,7 +5694,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5678,7 +5712,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5701,7 +5735,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5759,7 +5793,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5776,7 +5810,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5794,7 +5828,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5817,7 +5851,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5873,7 +5907,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5890,7 +5924,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5908,7 +5942,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -5981,7 +6015,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -5998,7 +6032,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6049,7 +6083,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6066,7 +6100,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6113,7 +6147,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6130,7 +6164,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6148,7 +6182,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6171,7 +6205,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6194,7 +6228,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6254,7 +6288,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6271,7 +6305,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6289,7 +6323,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6312,7 +6346,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6335,7 +6369,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6395,7 +6429,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6412,7 +6446,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6430,7 +6464,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6453,7 +6487,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6476,7 +6510,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6569,7 +6603,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6592,7 +6626,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6650,7 +6684,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6667,7 +6701,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6685,7 +6719,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6708,7 +6742,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6809,7 +6843,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6832,7 +6866,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6925,7 +6959,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -6948,7 +6982,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7041,7 +7075,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7064,7 +7098,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7122,7 +7156,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7139,7 +7173,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7157,7 +7191,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7180,7 +7214,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7238,7 +7272,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7255,7 +7289,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7273,7 +7307,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7296,7 +7330,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7431,7 +7465,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7448,7 +7482,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7466,7 +7500,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7489,7 +7523,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7547,7 +7581,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7564,7 +7598,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7582,7 +7616,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7605,7 +7639,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7663,7 +7697,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7680,7 +7714,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7698,7 +7732,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7721,7 +7755,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7779,7 +7813,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7796,7 +7830,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7814,7 +7848,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7837,7 +7871,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7895,7 +7929,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7912,7 +7946,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7930,7 +7964,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -7953,7 +7987,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8013,7 +8047,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8030,7 +8064,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8048,7 +8082,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8071,7 +8105,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8094,7 +8128,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8165,7 +8199,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8182,7 +8216,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8225,7 +8259,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8242,7 +8276,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8260,7 +8294,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8318,7 +8352,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8335,7 +8369,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8353,7 +8387,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8376,7 +8410,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8436,7 +8470,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8453,7 +8487,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8471,7 +8505,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8494,7 +8528,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8517,7 +8551,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8575,7 +8609,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8592,7 +8626,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8610,7 +8644,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8633,7 +8667,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8691,7 +8725,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8708,7 +8742,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8726,7 +8760,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8749,7 +8783,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8874,7 +8908,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8891,7 +8925,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8909,7 +8943,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -8965,7 +8999,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -8982,7 +9016,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9000,7 +9034,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9039,7 +9073,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9048,42 +9082,42 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#91" class="md-nav__link">
+  <a href="#91-background-reduce-trainable-state-not-base-model-computation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.1 背景：减少可训练状态，而不是跳过基座计算
+      9.1 Background: Reduce Trainable State, Not Base-Model Computation
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#92" class="md-nav__link">
+  <a href="#92-the-core-equations-and-implementation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2 核心公式与实现
+      9.2 The Core Equations and Implementation
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.2 核心公式与实现">
+    <nav class="md-nav" aria-label="9.2 The Core Equations and Implementation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#921" class="md-nav__link">
+  <a href="#921-a-consistent-matrix-convention" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2.1 统一矩阵约定
+      9.2.1 A Consistent Matrix Convention
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#922" class="md-nav__link">
+  <a href="#922-why-initialize-one-matrix-randomly-and-the-other-to-zero" class="md-nav__link">
     <span class="md-ellipsis">
-      9.2.2 为什么通常一个矩阵随机、另一个为零
+      9.2.2 Why Initialize One Matrix Randomly and the Other to Zero?
     </span>
   </a>
   
@@ -9095,37 +9129,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#93" class="md-nav__link">
+  <a href="#93-the-low-rank-assumption-and-parameter-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3 低秩假设与参数预算
+      9.3 The Low-Rank Assumption and Parameter Budget
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.3 低秩假设与参数预算">
+    <nav class="md-nav" aria-label="9.3 The Low-Rank Assumption and Parameter Budget">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#931" class="md-nav__link">
+  <a href="#931-the-update-is-constrained-not-the-original-weight" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.1 限制的是更新，不是原权重
+      9.3.1 The Update Is Constrained, Not the Original Weight
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#932" class="md-nav__link">
+  <a href="#932-counting-trainable-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.2 怎么计算可训练参数
+      9.3.2 Counting Trainable Parameters
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#933-rank" class="md-nav__link">
+  <a href="#933-higher-rank-does-not-necessarily-reproduce-full-fine-tuning" class="md-nav__link">
     <span class="md-ellipsis">
-      9.3.3 Rank 并非越大越接近同一次全量训练
+      9.3.3 Higher Rank Does Not Necessarily Reproduce Full Fine-Tuning
     </span>
   </a>
   
@@ -9137,37 +9171,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#94" class="md-nav__link">
+  <a href="#94-merging-for-inference-when-is-there-no-extra-branch" class="md-nav__link">
     <span class="md-ellipsis">
-      9.4 推理合并：什么时候没有额外分支
+      9.4 Merging for Inference: When Is There No Extra Branch?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#95-adapter" class="md-nav__link">
+  <a href="#95-one-base-multiple-adapters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5 一个基座，多个 adapter
+      9.5 One Base, Multiple Adapters
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="9.5 一个基座，多个 adapter">
+    <nav class="md-nav" aria-label="9.5 One Base, Multiple Adapters">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#951" class="md-nav__link">
+  <a href="#951-switching-is-not-concurrent-isolation" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5.1 切换不等于并发隔离
+      9.5.1 Switching Is Not Concurrent Isolation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#952" class="md-nav__link">
+  <a href="#952-what-is-missing-from-the-memory-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      9.5.2 显存账还缺什么
+      9.5.2 What Is Missing from the Memory Budget?
     </span>
   </a>
   
@@ -9179,63 +9213,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#96" class="md-nav__link">
+  <a href="#96-frozen-bases-and-forgetting-recoverable-does-not-mean-regression-free" class="md-nav__link">
     <span class="md-ellipsis">
-      9.6 冻结基座与遗忘：可恢复，不等于不退化
+      9.6 Frozen Bases and Forgetting: Recoverable Does Not Mean Regression-Free
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#97-rankalpha" class="md-nav__link">
+  <a href="#97-how-rank-alpha-and-learning-rate-interact" class="md-nav__link">
     <span class="md-ellipsis">
-      9.7 Rank、Alpha 与学习率如何共同作用
+      9.7 How Rank, Alpha, and Learning Rate Interact
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#98-lora" class="md-nav__link">
+  <a href="#98-mixing-lora-adapters-additive-weights-do-not-guarantee-additive-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
-      9.8 多 LoRA 混合：权重可加，能力不保证可加
+      9.8 Mixing LoRA Adapters: Additive Weights Do Not Guarantee Additive Capabilities
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#99-adapter" class="md-nav__link">
+  <a href="#99-comparison-with-full-fine-tuning-and-adapters" class="md-nav__link">
     <span class="md-ellipsis">
-      9.9 与全量微调、Adapter 的对比
+      9.9 Comparison with Full Fine-Tuning and Adapters
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#910" class="md-nav__link">
+  <a href="#910-common-follow-up-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      9.10 常见追问
+      9.10 Common Follow-Up Questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#911" class="md-nav__link">
+  <a href="#911-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      9.11 本章总结
+      9.11 Chapter Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9257,7 +9291,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/02-training-alignment/09-lora.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/02-training-alignment/09-lora.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9265,13 +9299,13 @@
   
 
 
-<h1 id="lora">第九章：LoRA 深入解析<a class="headerlink" href="#lora" title="Permanent link">&para;</a></h1>
-<h2 id="91">9.1 背景：减少可训练状态，而不是跳过基座计算<a class="headerlink" href="#91" title="Permanent link">&para;</a></h2>
-<p>全量微调不仅存权重，还存梯度、优化器状态和激活。<a href="../08-finetuning/">第八章</a> 的显式预算示例中，7B 参数在保留 FP32 主权重、两份 FP32 Adam 状态以及 16-bit 权重和梯度时，持久状态约 <strong>112 GB</strong>，尚未计激活。实现、分片与卸载改变单卡占用。</p>
-<p>LoRA 属于 PEFT（参数高效微调）：冻结基座，在指定矩阵上训练低秩增量。主要节省的是<strong>可训练参数对应的梯度、优化器状态和每任务存储</strong>；基座前向和激活反向传播仍然存在。</p>
-<h2 id="92">9.2 核心公式与实现<a class="headerlink" href="#92" title="Permanent link">&para;</a></h2>
-<h3 id="921">9.2.1 统一矩阵约定<a class="headerlink" href="#921" title="Permanent link">&para;</a></h3>
-<p>采用列向量约定：</p>
+<h1 id="chapter-9-lora-in-depth"><span id="lora" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 9: LoRA in Depth<a class="headerlink" href="#chapter-9-lora-in-depth" title="Permanent link">&para;</a></h1>
+<h2 id="91-background-reduce-trainable-state-not-base-model-computation"><span id="91" class="legacy-heading-anchor" aria-hidden="true"></span>9.1 Background: Reduce Trainable State, Not Base-Model Computation<a class="headerlink" href="#91-background-reduce-trainable-state-not-base-model-computation" title="Permanent link">&para;</a></h2>
+<p>Full fine-tuning stores not just weights but gradients, optimizer states, and activations. In the explicit budget example in <a href="../08-finetuning/">Chapter 8</a>, a 7B model retaining FP32 master weights, two FP32 Adam states, and 16-bit weights and gradients needs approximately <strong>112 GB</strong> of persistent state before activations. Implementation choices, sharding, and offloading change per-device usage.</p>
+<p>LoRA is a parameter-efficient fine-tuning (PEFT) method: freeze the base and train low-rank updates for selected matrices. Its main savings are in <strong>gradients and optimizer states associated with trainable parameters, and per-task storage</strong>. Base-model forward computation and backpropagation through activations remain necessary.</p>
+<h2 id="92-the-core-equations-and-implementation"><span id="92" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 The Core Equations and Implementation<a class="headerlink" href="#92-the-core-equations-and-implementation" title="Permanent link">&para;</a></h2>
+<h3 id="921-a-consistent-matrix-convention"><span id="921" class="legacy-heading-anchor" aria-hidden="true"></span>9.2.1 A Consistent Matrix Convention<a class="headerlink" href="#921-a-consistent-matrix-convention" title="Permanent link">&para;</a></h3>
+<p>Use column vectors:</p>
 <div class="arithmatex">\[
 x\in\mathbb{R}^{d_{\mathrm{in}}},\quad
 W\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}},
@@ -9284,101 +9318,101 @@ B\in\mathbb{R}^{d_{\mathrm{out}}\times r}
 h=Wx+\frac{\alpha}{r}B(Ax),\qquad
 \Delta W=\frac{\alpha}{r}BA
 \]</div>
-<p>对 PyTorch 中按行存储的 batch 输入，等价的前向写法是：</p>
+<p>For batch inputs stored as rows in PyTorch, the equivalent forward pass is:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># W: [out, in]，A: [r, in]，B: [out, r]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># W: [out, in], A: [r, in], B: [out, r]</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">output</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">A</span><span class="p">),</span> <span class="n">B</span><span class="p">)</span>
 </span></code></pre></div>
-<p>训练时应计算两个小投影，而不是每步先物化一个完整的 <code>B @ A</code> 再乘输入；后者会丢掉部分低秩计算优势。上例省略 bias 和 LoRA dropout。</p>
-<h3 id="922">9.2.2 为什么通常一个矩阵随机、另一个为零<a class="headerlink" href="#922" title="Permanent link">&para;</a></h3>
-<p>原始 LoRA 用随机初始化的 <code>A</code> 和零初始化的 <code>B</code>，使训练开始时 <code>ΔW = 0</code>，模型输出与基座一致。PEFT 的默认 <code>A</code> 使用 Kaiming-uniform、<code>B</code> 为零；分布细节与原论文不完全相同。</p>
-<p><strong>不能把 A、B 都初始化为零</strong>：乘积对任一因子的梯度都依赖另一个因子，这会让两个分支在起点都收不到有效梯度。只有 <code>B</code> 为零时，第一步 <code>A</code> 梯度可以为零，但 <code>B</code> 可更新，随后 <code>A</code> 也开始学习。</p>
-<p>这也是低秩乘积参数化与直接训练一个稠密 <code>ΔW</code> 的优化差异之一。</p>
-<h2 id="93">9.3 低秩假设与参数预算<a class="headerlink" href="#93" title="Permanent link">&para;</a></h2>
-<h3 id="931">9.3.1 限制的是更新，不是原权重<a class="headerlink" href="#931" title="Permanent link">&para;</a></h3>
+<p>During training, compute two small projections rather than materializing a full <code>B @ A</code> at every step before multiplying by the input. The latter loses part of the low-rank computation advantage. The example omits bias and LoRA dropout.</p>
+<h3 id="922-why-initialize-one-matrix-randomly-and-the-other-to-zero"><span id="922" class="legacy-heading-anchor" aria-hidden="true"></span>9.2.2 Why Initialize One Matrix Randomly and the Other to Zero?<a class="headerlink" href="#922-why-initialize-one-matrix-randomly-and-the-other-to-zero" title="Permanent link">&para;</a></h3>
+<p>Original LoRA randomly initializes <code>A</code> and zero-initializes <code>B</code>, making <code>ΔW = 0</code> at the start of training so the model matches the base model's output. PEFT's default uses Kaiming-uniform initialization for <code>A</code> and zeros for <code>B</code>; its distribution details are not identical to the original paper's.</p>
+<p><strong>Do not initialize both A and B to zero.</strong> The product's gradient with respect to either factor depends on the other factor, so neither branch receives a useful gradient at the starting point. If only <code>B</code> is zero, <code>A</code> may have zero gradient on the first step, but <code>B</code> can update and <code>A</code> can subsequently begin learning.</p>
+<p>This is one optimization difference between a low-rank product parameterization and directly training a dense <code>ΔW</code>.</p>
+<h2 id="93-the-low-rank-assumption-and-parameter-budget"><span id="93" class="legacy-heading-anchor" aria-hidden="true"></span>9.3 The Low-Rank Assumption and Parameter Budget<a class="headerlink" href="#93-the-low-rank-assumption-and-parameter-budget" title="Permanent link">&para;</a></h2>
+<h3 id="931-the-update-is-constrained-not-the-original-weight"><span id="931" class="legacy-heading-anchor" aria-hidden="true"></span>9.3.1 The Update Is Constrained, Not the Original Weight<a class="headerlink" href="#931-the-update-is-constrained-not-the-original-weight" title="Permanent link">&para;</a></h3>
 <div class="arithmatex">\[
 \mathrm{rank}(\Delta W)\leq r
 \]</div>
-<p>原权重 <code>W</code> 和合并后的 <code>W + ΔW</code> 仍可是满秩矩阵。LoRA 不是先把预训练权重压缩成低秩，也不是先算出全量更新再做 SVD；它直接在低秩参数空间里训练。</p>
-<p>论文在若干模型和任务上发现较低 rank 已有效，但这不证明“所有有效更新秩都在 8–16”。内在维度与某个权重矩阵的代数秩也不能简单视为同一概念。</p>
-<h3 id="932">9.3.2 怎么计算可训练参数<a class="headerlink" href="#932" title="Permanent link">&para;</a></h3>
-<p>单个目标矩阵的新增参数：</p>
+<p>The original <code>W</code> and merged <code>W + ΔW</code> can still be full-rank matrices. LoRA does not first compress pretrained weights to low rank, nor does it compute a full update and then apply SVD. It trains directly in a low-rank parameter space.</p>
+<p>The paper found low ranks effective for several models and tasks, but this does not prove that every useful update has rank 8–16. Intrinsic dimensionality and the algebraic rank of a particular weight matrix are also not interchangeable concepts.</p>
+<h3 id="932-counting-trainable-parameters"><span id="932" class="legacy-heading-anchor" aria-hidden="true"></span>9.3.2 Counting Trainable Parameters<a class="headerlink" href="#932-counting-trainable-parameters" title="Permanent link">&para;</a></h3>
+<p>The added parameters for one target matrix are:</p>
 <div class="arithmatex">\[
 P_{\mathrm{LoRA}}=r(d_{\mathrm{in}}+d_{\mathrm{out}})
 \]</div>
 <table>
 <thead>
 <tr>
-<th>示例</th>
-<th>参数量</th>
+<th>Example</th>
+<th>Parameters</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>原矩阵 <code>4096 × 4096</code></td>
+<td>Original <code>4096 × 4096</code> matrix</td>
 <td>16,777,216</td>
 </tr>
 <tr>
-<td><code>r = 16</code> 的 LoRA</td>
+<td>LoRA with <code>r = 16</code></td>
 <td>131,072</td>
 </tr>
 <tr>
-<td>两者之比</td>
+<td>Ratio</td>
 <td>1/128</td>
 </tr>
 </tbody>
 </table>
-<p>全模型要对目标层逐个求和，再加入 <code>modules_to_save</code>、bias 等实际训练的参数。Attention 的 Q/K/V/O 形状可能不同，尤其 GQA 的 K/V 投影不能默认与 Q 同宽。</p>
-<p><strong>问“LoRA 占基座百分之几”时，应先问 target modules、rank 与是否额外训练输出头。</strong></p>
-<h3 id="933-rank">9.3.3 Rank 并非越大越接近同一次全量训练<a class="headerlink" href="#933-rank" title="Permanent link">&para;</a></h3>
-<p>增大 <code>r</code> 会放宽可表示更新的秩约束，但目标层仍可能只覆盖一部分模型，而且乘积参数化的优化轨迹不同。即使 rank 足够大，也不保证得到全量微调的同一个解。</p>
-<p>更大的 rank 可能改善欠拟合，也可能增加存储和过拟合风险。应比较验证集表现与训练曲线，而不是规定“多数任务 8–16 足够”。</p>
-<h2 id="94">9.4 推理合并：什么时候没有额外分支<a class="headerlink" href="#94" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 训练结束、关闭 dropout 后，只对兼容的浮点权重做一次合并</span>
+<p>For the full model, sum over each target layer, then add other actually trained parameters such as <code>modules_to_save</code> and biases. Attention Q/K/V/O shapes may differ; in particular, GQA K/V projections cannot be assumed to have the same width as Q.</p>
+<p><strong>Before asking what percentage of the base LoRA occupies, specify the target modules, rank, and whether the output head is also trained.</strong></p>
+<h3 id="933-higher-rank-does-not-necessarily-reproduce-full-fine-tuning"><span id="933-rank" class="legacy-heading-anchor" aria-hidden="true"></span>9.3.3 Higher Rank Does Not Necessarily Reproduce Full Fine-Tuning<a class="headerlink" href="#933-higher-rank-does-not-necessarily-reproduce-full-fine-tuning" title="Permanent link">&para;</a></h3>
+<p>Increasing <code>r</code> relaxes the rank constraint on representable updates. However, target layers may still cover only part of the model, and product parameterization follows a different optimization trajectory. Even a sufficiently large rank does not guarantee the same solution as full fine-tuning.</p>
+<p>A higher rank can reduce underfitting, but can also increase storage and overfitting risk. Compare validation performance and training curves instead of assuming that 8–16 is enough for most tasks.</p>
+<h2 id="94-merging-for-inference-when-is-there-no-extra-branch"><span id="94" class="legacy-heading-anchor" aria-hidden="true"></span>9.4 Merging for Inference: When Is There No Extra Branch?<a class="headerlink" href="#94-merging-for-inference-when-is-there-no-extra-branch" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># After training, with dropout disabled, merge compatible floating-point weights once.</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">W_merged</span> <span class="o">=</span> <span class="n">W</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">B</span> <span class="o">@</span> <span class="n">A</span><span class="p">)</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">output</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W_merged</span><span class="p">)</span>
 </span></code></pre></div>
-<p>合并后计算图与原线性层相同，无需再运行 adapter 分支。“零开销”指<strong>合并后没有额外推理算子</strong>，不代表合并没有内存开销，也不代表所有部署形式都零延迟。</p>
+<p>After merging, the computation graph is the same as the original linear layer, with no adapter branch to execute. “Zero overhead” means <strong>no additional inference operators after merging</strong>. It does not mean merging uses no memory, or that every deployment form adds zero latency.</p>
 <table>
 <thead>
 <tr>
-<th>部署形式</th>
-<th>好处</th>
-<th>限制</th>
+<th>Deployment form</th>
+<th>Benefit</th>
+<th>Limitation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>单 adapter 合并成完整模型</td>
-<td>标准推理路径</td>
-<td>每个合并版本需要完整权重，不能再廉价切换</td>
+<td>Merge one adapter into a complete model</td>
+<td>Standard inference path</td>
+<td>Each merged version needs full weights; switching is no longer cheap</td>
 </tr>
 <tr>
-<td>基座 + 未合并 adapter</td>
-<td>多任务共享基座、切换灵活</td>
-<td>有额外矩阵乘法、加载与调度成本</td>
+<td>Base + unmerged adapter</td>
+<td>Share the base across tasks and switch flexibly</td>
+<td>Additional matrix multiplications, loading, and scheduling</td>
 </tr>
 <tr>
-<td>量化基座上的 adapter</td>
-<td>降低基座存储</td>
-<td>合并支持与误差取决于量化后端</td>
+<td>Adapter on a quantized base</td>
+<td>Lower base storage</td>
+<td>Merge support and error depend on the quantization backend</td>
 </tr>
 </tbody>
 </table>
-<p>对 QLoRA，要区分在反量化后的基座上合并与重新载入原浮点基座后合并；这两者权重不同。合并后再量化也会引入舍入误差，需要重新评估。</p>
+<p>For QLoRA, distinguish merging into a dequantized base from reloading the original floating-point base and merging into that. These bases have different weights. Quantizing after merging introduces further rounding error and requires reevaluation.</p>
 <pre class="mermaid"><code>flowchart LR
-    subgraph AD["常见非线性 Adapter"]
-        X1["输入"] --&gt; L1["Transformer 子层"] --&gt; AD1["额外瓶颈网络"] --&gt; O1["输出"]
+    subgraph AD["Typical nonlinear adapter"]
+        X1["Input"] --&gt; L1["Transformer sublayer"] --&gt; AD1["Additional bottleneck network"] --&gt; O1["Output"]
     end
-    subgraph LR2["LoRA 合并后"]
-        X2["输入"] --&gt; M1["原线性层&lt;br/&gt;W + ΔW"] --&gt; O2["输出"]
+    subgraph LR2["Merged LoRA"]
+        X2["Input"] --&gt; M1["Original linear layer&lt;br/&gt;W + ΔW"] --&gt; O2["Output"]
     end
 
     style AD1 fill:#fdecea</code></pre>
-<p>常见瓶颈 Adapter 含非线性，通常不能折叠成同一个线性权重。不能据此给出“每层固定多几毫秒”的延迟，必须实际测量。</p>
-<h2 id="95-adapter">9.5 一个基座，多个 adapter<a class="headerlink" href="#95-adapter" title="Permanent link">&para;</a></h2>
-<p>下面是 <strong>PEFT 的顺序切换示例</strong>，本地 adapter 必须基于同一个兼容 checkpoint 训练。路径是占位符，不是可下载的适配器；若配置未记录精确 revision，需要从训练记录补齐：</p>
+<p>Typical bottleneck adapters contain nonlinearities and generally cannot be folded into the same linear weight matrix. This does not establish a fixed number of extra milliseconds per layer; latency must be measured.</p>
+<h2 id="95-one-base-multiple-adapters"><span id="95-adapter" class="legacy-heading-anchor" aria-hidden="true"></span>9.5 One Base, Multiple Adapters<a class="headerlink" href="#95-one-base-multiple-adapters" title="Permanent link">&para;</a></h2>
+<p>The following is a <strong>sequential switching example using PEFT</strong>. The local adapters must have been trained from the same compatible checkpoint. The paths are placeholders, not downloadable adapters. If the configuration lacks the exact revision, retrieve it from the training records:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">peft</span><span class="w"> </span><span class="kn">import</span> <span class="n">PeftConfig</span><span class="p">,</span> <span class="n">PeftModel</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -9395,68 +9429,68 @@ P_{\mathrm{LoRA}}=r(d_{\mathrm{in}}+d_{\mathrm{out}})
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">model</span><span class="o">.</span><span class="n">load_adapter</span><span class="p">(</span><span class="n">coding_path</span><span class="p">,</span> <span class="n">adapter_name</span><span class="o">=</span><span class="s2">"coding"</span><span class="p">)</span>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">model</span><span class="o">.</span><span class="n">set_adapter</span><span class="p">(</span><span class="s2">"service"</span><span class="p">)</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># 完成本次客服推理后，再切换到代码 adapter</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Finish this customer-service inference request before switching to the coding adapter.</span>
 </span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">model</span><span class="o">.</span><span class="n">set_adapter</span><span class="p">(</span><span class="s2">"coding"</span><span class="p">)</span>
 </span></code></pre></div>
-<p>不要反复把同一个可变 <code>base_model</code> 包装成多个 <code>PeftModel</code>，再假定它们是彼此独立的服务实例。明确使用一个 wrapper、命名加载和切换更容易管理。</p>
-<h3 id="951">9.5.1 切换不等于并发隔离<a class="headerlink" href="#951" title="Permanent link">&para;</a></h3>
-<p><code>set_adapter</code> 修改实例状态，不能在共享实例上让多个请求随意同时调用。并发服务应使用支持请求级 adapter 路由的后端，或明确串行化切换。</p>
-<p>vLLM 支持按请求选择 LoRA，并对批次中 adapter 数、rank、CPU/GPU 缓存等设限制。是否支持具体架构与量化组合，应检查部署版本文档。</p>
-<h3 id="952">9.5.2 显存账还缺什么<a class="headerlink" href="#952" title="Permanent link">&para;</a></h3>
-<p>如果<strong>仅为举例</strong>假设浮点基座权重 14 GB、每个 adapter 权重 50 MB，那么五个任务的权重存储约为 <code>14 + 5 × 0.05 = 14.25 GB</code>，而五份独立 14 GB 权重是 70 GB。</p>
-<p>这只是权重预算。并发生成还要计算 KV cache、激活和运行时 workspace；50 MB 也不是 LoRA 的固定大小。不同基座版本、tokenizer、目标层或新增词表不兼容时，不能强行共享。</p>
-<h2 id="96">9.6 冻结基座与遗忘：可恢复，不等于不退化<a class="headerlink" href="#96" title="Permanent link">&para;</a></h2>
-<p>LoRA 保留了原始 <code>W</code>，因此停用未合并 adapter 可以回到原基座行为（前提是没有另外训练或修改 embedding 等模块）。</p>
-<p>但启用 adapter 时使用的是 <code>W + ΔW</code>。即使 <code>W</code> 不变，输出分布也可能显著改变，出现通用能力下降、过度拒绝或某种模板化风格。数据偏、学习率过大、训练过久都可能导致问题，<strong>小 rank 同样不是保险</strong>。</p>
-<p>可以采用混合通用数据、控制训练步数、验证集早停和通用任务回归。合并之后若要回退，应保留原基座与 adapter，不要依赖低精度“先加再减”恰好恢复。</p>
-<h2 id="97-rankalpha">9.7 Rank、Alpha 与学习率如何共同作用<a class="headerlink" href="#97-rankalpha" title="Permanent link">&para;</a></h2>
-<p>原始缩放为 <code>s = α/r</code>。<code>α</code> 控制 adapter 分支尺度，但它与学习率不是完全可互换：尺度同时影响前向和因子梯度，优化器、初始化和训练过程也参与其中。</p>
+<p>Do not repeatedly wrap the same mutable <code>base_model</code> in multiple <code>PeftModel</code> instances and assume they are independent service instances. An explicit single wrapper with named adapter loading and switching is easier to manage.</p>
+<h3 id="951-switching-is-not-concurrent-isolation"><span id="951" class="legacy-heading-anchor" aria-hidden="true"></span>9.5.1 Switching Is Not Concurrent Isolation<a class="headerlink" href="#951-switching-is-not-concurrent-isolation" title="Permanent link">&para;</a></h3>
+<p><code>set_adapter</code> mutates instance state. Multiple requests must not call it arbitrarily and concurrently on a shared instance. Concurrent serving needs a backend with request-level adapter routing or explicitly serialized switching.</p>
+<p>vLLM supports per-request LoRA selection and limits such as the number of adapters per batch, rank, and CPU/GPU caches. Check the deployed version's documentation for support for a particular architecture and quantization combination.</p>
+<h3 id="952-what-is-missing-from-the-memory-budget"><span id="952" class="legacy-heading-anchor" aria-hidden="true"></span>9.5.2 What Is Missing from the Memory Budget?<a class="headerlink" href="#952-what-is-missing-from-the-memory-budget" title="Permanent link">&para;</a></h3>
+<p>Suppose, <strong>only as an illustration</strong>, that floating-point base weights occupy 14 GB and each adapter occupies 50 MB. Weight storage for five tasks is approximately <code>14 + 5 × 0.05 = 14.25 GB</code>, compared with 70 GB for five independent sets of 14 GB weights.</p>
+<p>This accounts only for weights. Concurrent generation also requires KV caches, activations, and runtime workspace; 50 MB is not a fixed LoRA size. Bases with incompatible versions, tokenizers, target layers, or vocabulary additions cannot simply be forced to share.</p>
+<h2 id="96-frozen-bases-and-forgetting-recoverable-does-not-mean-regression-free"><span id="96" class="legacy-heading-anchor" aria-hidden="true"></span>9.6 Frozen Bases and Forgetting: Recoverable Does Not Mean Regression-Free<a class="headerlink" href="#96-frozen-bases-and-forgetting-recoverable-does-not-mean-regression-free" title="Permanent link">&para;</a></h2>
+<p>LoRA preserves the original <code>W</code>, so disabling an unmerged adapter can restore base-model behavior, provided other modules such as embeddings have not also been trained or modified.</p>
+<p>With an adapter active, however, the model uses <code>W + ΔW</code>. Even with unchanged <code>W</code>, the output distribution can shift substantially, causing reduced general capabilities, excessive refusals, or a formulaic style. Biased data, an overly high learning rate, and too much training can all contribute. <strong>A small rank is no insurance against these problems.</strong></p>
+<p>Mitigations include mixing in general data, limiting training steps, early stopping on validation performance, and regression testing on general tasks. To support rollback after merging, retain the original base and adapter; do not rely on adding and then subtracting in low precision to restore the weights exactly.</p>
+<h2 id="97-how-rank-alpha-and-learning-rate-interact"><span id="97-rankalpha" class="legacy-heading-anchor" aria-hidden="true"></span>9.7 How Rank, Alpha, and Learning Rate Interact<a class="headerlink" href="#97-how-rank-alpha-and-learning-rate-interact" title="Permanent link">&para;</a></h2>
+<p>The original scaling is <code>s = α/r</code>. <code>α</code> controls the adapter branch's scale, but is not fully interchangeable with the learning rate: scaling affects both the forward pass and factor gradients, while the optimizer, initialization, and training process also influence the outcome.</p>
 <table>
 <thead>
 <tr>
-<th>超参数或配置</th>
-<th>主要影响</th>
-<th>排查思路</th>
+<th>Hyperparameter or configuration</th>
+<th>Main effect</th>
+<th>Diagnostic approach</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>r</code></td>
-<td>表达容量、参数与状态大小</td>
-<td>判断欠拟合后再扩大，不靠训练 loss 单独决定</td>
+<td>Expressive capacity, parameter and state sizes</td>
+<td>Increase after diagnosing underfitting, not from training loss alone</td>
 </tr>
 <tr>
 <td><code>lora_alpha</code></td>
-<td>更新尺度</td>
-<td>比较 rank 时记录 <code>α/r</code> 是否也变了</td>
+<td>Update scale</td>
+<td>When comparing ranks, record whether <code>α/r</code> also changes</td>
 </tr>
 <tr>
-<td>学习率、步数</td>
-<td>更新幅度与收敛</td>
-<td>看验证退化、梯度、更新范数</td>
+<td>Learning rate and steps</td>
+<td>Update magnitude and convergence</td>
+<td>Examine validation regressions, gradients, and update norms</td>
 </tr>
 <tr>
 <td><code>target_modules</code></td>
-<td>允许修改哪些映射</td>
-<td>Q/V 不足时比较更多注意力和 MLP 层</td>
+<td>Which mappings may change</td>
+<td>If Q/V is insufficient, compare broader attention and MLP coverage</td>
 </tr>
 <tr>
-<td>dropout、数据混合</td>
-<td>正则化与泛化</td>
-<td>小数据时观察过拟合，不默认越大越好</td>
+<td>Dropout and data mixture</td>
+<td>Regularization and generalization</td>
+<td>Watch for overfitting on small datasets; larger values are not automatically better</td>
 </tr>
 </tbody>
 </table>
-<p>PEFT 支持 rsLoRA 的 <code>α/√r</code> 缩放，和原始 <code>α/r</code> 不是同一配置。<strong>比较 rank 实验时，连缩放规则一起固定或明确报告</strong>。</p>
-<p>LoRA 的参数少不意味着优化必然稳定、超参数不敏感。参数化、数据和优化设置仍可能造成梯度异常、欠拟合或遗忘。</p>
-<h2 id="98-lora">9.8 多 LoRA 混合：权重可加，能力不保证可加<a class="headerlink" href="#98-lora" title="Permanent link">&para;</a></h2>
-<p>对同一兼容基座的两个更新：</p>
+<p>PEFT supports rsLoRA's <code>α/√r</code> scaling, which is not the same configuration as the original <code>α/r</code>. <strong>Hold the scaling rule fixed or report it explicitly when comparing rank experiments.</strong></p>
+<p>Fewer parameters do not guarantee stable optimization or insensitivity to hyperparameters. Parameterization, data, and optimization settings can still cause problematic gradients, underfitting, or forgetting.</p>
+<h2 id="98-mixing-lora-adapters-additive-weights-do-not-guarantee-additive-capabilities"><span id="98-lora" class="legacy-heading-anchor" aria-hidden="true"></span>9.8 Mixing LoRA Adapters: Additive Weights Do Not Guarantee Additive Capabilities<a class="headerlink" href="#98-mixing-lora-adapters-additive-weights-do-not-guarantee-additive-capabilities" title="Permanent link">&para;</a></h2>
+<p>For two updates to the same compatible base:</p>
 <div class="arithmatex">\[
 W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
 \]</div>
-<p>其中每个 <code>ΔWi</code> 已包含各自的 <code>αi/ri</code>。数学上可以求和，不意味着“代码能力 70% + 写作能力 30%”会按比例出现在输出中。</p>
-<p>如果直接分别平均 <code>A</code> 和 <code>B</code> 再相乘，会产生交叉项，通常<strong>不等于平均两个 BA 更新</strong>。按 rank 方向拼接可以表示更新之和，但 rank 与存储会相加；SVD 截断等压缩方案又会引入近似误差。</p>
-<p>PEFT 提供专门的加权合成 API，例如接续上节已加载的 <code>model</code>：</p>
+<p>Each <code>ΔWi</code> already includes its own <code>αi/ri</code>. The updates can be added mathematically, but this does not imply that the output will contain “70% coding ability + 30% writing ability.”</p>
+<p>Averaging <code>A</code> and <code>B</code> separately and then multiplying introduces cross terms and generally <strong>does not equal averaging the two BA updates</strong>. Concatenating along the rank dimension can represent the sum, but the ranks and storage add up. Compression such as truncated SVD introduces approximation error.</p>
+<p>PEFT provides a dedicated weighted-composition API. For example, continue with the <code>model</code> loaded above:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span><span class="o">.</span><span class="n">add_weighted_adapter</span><span class="p">(</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">adapters</span><span class="o">=</span><span class="p">[</span><span class="s2">"service"</span><span class="p">,</span> <span class="s2">"coding"</span><span class="p">],</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
@@ -9465,72 +9499,72 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">model</span><span class="o">.</span><span class="n">set_adapter</span><span class="p">(</span><span class="s2">"mixed"</span><span class="p">)</span>
 </span></code></pre></div>
-<p>这个例子使用拼接表示加权更新，不是把 <code>set_adapter(["a", "b"])</code> 当成通用的加权混合接口。方法支持、额外保存模块的冲突和显存需求都要按所用 PEFT 版本检查。</p>
-<p>两个 adapter 可能产生相反更新，合成后任一任务都退步。应与单 adapter 和重新做多任务训练比较；合成是可评测的候选，不是无需训练就一定获得能力融合。</p>
-<h2 id="99-adapter">9.9 与全量微调、Adapter 的对比<a class="headerlink" href="#99-adapter" title="Permanent link">&para;</a></h2>
+<p>This example represents weighted updates through concatenation. It does not treat <code>set_adapter(["a", "b"])</code> as a general weighted-mixing interface. Check method support, conflicts involving extra saved modules, and memory requirements for the PEFT version in use.</p>
+<p>Two adapters can produce opposing updates, so their combination may regress on either task. Compare against individual adapters and fresh multitask training. Composition is a candidate to evaluate, not a guarantee of combining capabilities without training.</p>
+<h2 id="99-comparison-with-full-fine-tuning-and-adapters"><span id="99-adapter" class="legacy-heading-anchor" aria-hidden="true"></span>9.9 Comparison with Full Fine-Tuning and Adapters<a class="headerlink" href="#99-comparison-with-full-fine-tuning-and-adapters" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>维度</th>
-<th>全量微调</th>
-<th>常见瓶颈 Adapter</th>
+<th>Dimension</th>
+<th>Full fine-tuning</th>
+<th>Typical bottleneck adapter</th>
 <th>LoRA</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>参数化</td>
-<td>直接改原权重</td>
-<td>额外小网络</td>
-<td>线性低秩增量</td>
+<td>Parameterization</td>
+<td>Directly changes original weights</td>
+<td>Adds a small network</td>
+<td>Linear low-rank update</td>
 </tr>
 <tr>
-<td>训练状态</td>
-<td>通常较多</td>
-<td>较少，取决于配置</td>
-<td>较少，取决于 rank / 目标层</td>
+<td>Training state</td>
+<td>Usually larger</td>
+<td>Smaller, configuration-dependent</td>
+<td>Smaller, depending on rank / target layers</td>
 </tr>
 <tr>
-<td>推理额外分支</td>
-<td>无</td>
-<td>通常有</td>
-<td>合并后无，未合并有</td>
+<td>Extra inference branch</td>
+<td>None</td>
+<td>Usually present</td>
+<td>None after merging; present when unmerged</td>
 </tr>
 <tr>
-<td>多任务存储</td>
-<td>通常每任务完整权重</td>
-<td>可共享基座</td>
-<td>可共享基座</td>
+<td>Multitask storage</td>
+<td>Usually full weights per task</td>
+<td>Can share the base</td>
+<td>Can share the base</td>
 </tr>
 <tr>
-<td>退化与稳定性</td>
-<td>都需要验证</td>
-<td>都需要验证</td>
-<td>都需要验证</td>
+<td>Regressions and stability</td>
+<td>Must be validated</td>
+<td>Must be validated</td>
+<td>Must be validated</td>
 </tr>
 </tbody>
 </table>
-<p>不能写成“全量权重无法合并”或“LoRA 全面优于 Adapter”。全量模型也有权重合并方法；不同参数化的质量与优化特性应通过任务评估比较。</p>
-<h2 id="910">9.10 常见追问<a class="headerlink" href="#910" title="Permanent link">&para;</a></h2>
+<p>Do not conclude that fully fine-tuned weights cannot be merged, or that LoRA is universally better than adapters. Weight-merging methods also exist for full models. Compare the quality and optimization properties of different parameterizations through task evaluation.</p>
+<h2 id="910-common-follow-up-questions"><span id="910" class="legacy-heading-anchor" aria-hidden="true"></span>9.10 Common Follow-Up Questions<a class="headerlink" href="#910-common-follow-up-questions" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>W 冻结，为什么还需要反向传播？</strong> 下游损失需要通过冻结层对上游 adapter 求梯度；不计算 <code>W</code> 的梯度，不等于切断计算图。</li>
-<li><strong>把 r 加大能解决所有欠拟合吗？</strong> 不能，目标层、数据缺陷和基座能力也可能是瓶颈。</li>
-<li><strong>Alpha 是最终更新范数吗？</strong> 不是，实际范数还由训练得到的 <code>BA</code> 决定。</li>
-<li><strong>合并后结果为什么略有差别？</strong> 浮点计算顺序、dtype、量化及未关闭 dropout 都可能影响；应比较同一输入下的 logits 与任务指标。</li>
-<li><strong>为什么多 adapter 部署不一定比多个小模型快？</strong> 共享省的是权重，调度、批次碎片、KV cache 和旁路内核仍有成本。</li>
+<li><strong>Why is backpropagation needed when W is frozen?</strong> Downstream losses must propagate through frozen layers to obtain gradients for upstream adapters. Not computing gradients for <code>W</code> does not mean disconnecting the computation graph.</li>
+<li><strong>Can increasing r solve all underfitting?</strong> No. Target-layer coverage, flawed data, and base-model capability can also be bottlenecks.</li>
+<li><strong>Is alpha the final update norm?</strong> No. The actual norm also depends on the learned <code>BA</code>.</li>
+<li><strong>Why can results differ slightly after merging?</strong> Floating-point operation order, dtype, quantization, and dropout left enabled can all matter. Compare logits for identical inputs as well as task metrics.</li>
+<li><strong>Why is multi-adapter serving not necessarily faster than several small models?</strong> Sharing saves weights, but scheduling, batch fragmentation, KV caches, and adapter-branch kernels still have costs.</li>
 </ol>
-<h2 id="911">9.11 本章总结<a class="headerlink" href="#911" title="Permanent link">&para;</a></h2>
-<p>LoRA 的关键是<strong>用低秩参数化约束更新，同时保留可冻结、可共享、可合并的基座</strong>。省显存、低延迟和方便切换分别需要不同条件，不能再推导成“不遗忘、无需调参、混合后能力必然叠加”。</p>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="911-chapter-summary"><span id="911" class="legacy-heading-anchor" aria-hidden="true"></span>9.11 Chapter Summary<a class="headerlink" href="#911-chapter-summary" title="Permanent link">&para;</a></h2>
+<p>LoRA's central idea is to <strong>constrain updates through low-rank parameterization while retaining a base that can be frozen, shared, and merged</strong>. Memory savings, low latency, and convenient switching each require different conditions. They do not imply no forgetting, no tuning, or guaranteed additive capabilities when adapters are mixed.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://arxiv.org/abs/2106.09685">LoRA：公式、初始化与 rank 实验</a></li>
+<li><a href="https://arxiv.org/abs/2106.09685">LoRA: equations, initialization, and rank experiments</a></li>
 <li><a href="https://arxiv.org/abs/2305.14314">QLoRA</a></li>
 <li><a href="https://arxiv.org/abs/1902.00751">Parameter-Efficient Transfer Learning for NLP</a></li>
-<li><a href="https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora">PEFT v0.17.0：LoRA 配置、初始化与缩放</a></li>
-<li><a href="https://huggingface.co/docs/peft/developer_guides/model_merging">PEFT：Model merging 与 add_weighted_adapter</a></li>
-<li><a href="https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py">PEFT v0.17.0：加权 adapter 的实现与限制</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/lora/">vLLM：LoRA adapters</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers：模型训练的内存组成</a></li>
+<li><a href="https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora">PEFT v0.17.0: LoRA configuration, initialization, and scaling</a></li>
+<li><a href="https://huggingface.co/docs/peft/developer_guides/model_merging">PEFT: Model merging and add_weighted_adapter</a></li>
+<li><a href="https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py">PEFT v0.17.0: weighted-adapter implementation and limitations</a></li>
+<li><a href="https://docs.vllm.ai/en/stable/features/lora/">vLLM: LoRA adapters</a></li>
+<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers: memory components of model training</a></li>
 </ul>
 
 
@@ -9551,20 +9585,20 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月8日 11:10:16 CST">2026-09-08</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9587,7 +9621,7 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9596,33 +9630,33 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../08-finetuning/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 大模型微调">
+          <a href="../08-finetuning/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 8: Fine-Tuning Approaches for LLMs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                大模型微调
+                Chapter 8: Fine-Tuning Approaches for LLMs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../10-post-training/" class="md-footer__link md-footer__link--next" aria-label="下一页: Post-Training">
+          <a href="../10-post-training/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 10: A Survey of Post-Training Methods">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                Post-Training
+                Chapter 10: A Survey of Post-Training Methods
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9671,7 +9705,7 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

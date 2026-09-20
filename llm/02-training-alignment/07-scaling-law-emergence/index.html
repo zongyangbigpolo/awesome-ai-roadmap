@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。">
+        <meta name="description" content="Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Scaling Law 与涌现 - Awesome AI Roadmap</title>
+        <title>Chapter 7: Scaling Laws and Emergent Abilities - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第七章：Scaling Law 与涌现能力">
-    <meta property="og:description" content="从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。">
+    <meta property="og:title" content="Chapter 7: Scaling Laws and Emergent Abilities">
+    <meta property="og:description" content="Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第七章：Scaling Law 与涌现能力">
-    <meta name="twitter:description" content="从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。">
+    <meta name="twitter:title" content="Chapter 7: Scaling Laws and Emergent Abilities">
+    <meta name="twitter:description" content="Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Scaling Law 与涌现能力","description":"从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第七章：Scaling Law 与涌现能力","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Scaling Laws and Emergent Abilities","description":"Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Scaling Laws and Emergent Abilities","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Scaling Law 与涌现","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Scaling Laws and Emergent Abilities","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#scaling-law" class="md-skip">
-          跳转至
+        <a href="#chapter-7-scaling-laws-and-emergent-abilities" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Scaling Law 与涌现
+              Chapter 7: Scaling Laws and Emergent Abilities
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/llm/02-training-alignment/07-scaling-law-emergence/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -349,7 +383,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -993,7 +1027,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1010,7 +1044,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1028,7 +1062,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1051,7 +1085,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1074,7 +1108,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1097,7 +1131,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1120,7 +1154,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1191,7 +1225,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1208,7 +1242,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1226,7 +1260,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1258,7 +1292,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1271,7 +1305,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1280,7 +1314,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1289,42 +1323,42 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#71-scaling-law" class="md-nav__link">
+  <a href="#71-what-do-scaling-laws-predict" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 Scaling Law 预测的是什么
+      7.1 What Do Scaling Laws Predict?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.1 Scaling Law 预测的是什么">
+    <nav class="md-nav" aria-label="7.1 What Do Scaling Laws Predict?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#711-kaplan-2020" class="md-nav__link">
+  <a href="#711-findings-from-kaplan-2020" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.1 Kaplan 2020 的发现
+      7.1.1 Findings from Kaplan 2020
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#712" class="md-nav__link">
+  <a href="#712-engineering-uses-and-limits" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.2 它的工程价值与限制
+      7.1.2 Engineering Uses and Limits
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#713-kaplan" class="md-nav__link">
+  <a href="#713-kaplan-already-studied-the-parameterdata-tradeoff" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.3 Kaplan 已经回答过参数与数据配比
+      7.1.3 Kaplan Already Studied the Parameter–Data Tradeoff
     </span>
   </a>
   
@@ -1336,37 +1370,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#72-chinchilla" class="md-nav__link">
+  <a href="#72-chinchilla-allocating-a-fixed-training-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 Chinchilla：固定训练预算如何分配
+      7.2 Chinchilla: Allocating a Fixed Training Budget
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 Chinchilla：固定训练预算如何分配">
+    <nav class="md-nav" aria-label="7.2 Chinchilla: Allocating a Fixed Training Budget">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721" class="md-nav__link">
+  <a href="#721-the-key-is-joint-growth-not-a-fixed-ratio" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 核心不是固定比例，而是共同增长
+      7.2.1 The Key Is Joint Growth, Not a Fixed Ratio
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#722-120" class="md-nav__link">
+  <a href="#722-where-does-120-come-from" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.2 1:20 是怎样来的
+      7.2.2 Where Does 1:20 Come From?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#723-gpt-3-12" class="md-nav__link">
+  <a href="#723-why-gpt-3-was-not-simply-missing-12-times-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.3 为什么不能说 GPT-3 “固定缺 12 倍数据”
+      7.2.3 Why GPT-3 Was Not Simply “Missing 12 Times the Data”
     </span>
   </a>
   
@@ -1378,37 +1412,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#73-20n" class="md-nav__link">
+  <a href="#73-why-train-small-models-on-far-more-than-20n-tokens" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3 为什么小模型可以训练远超 20N 的数据
+      7.3 Why Train Small Models on Far More Than 20N Tokens?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.3 为什么小模型可以训练远超 20N 的数据">
+    <nav class="md-nav" aria-label="7.3 Why Train Small Models on Far More Than 20N Tokens?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#731" class="md-nav__link">
+  <a href="#731-training-optimality-is-not-lifecycle-cost-optimality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.1 训练最优与全生命周期成本不同
+      7.3.1 Training Optimality Is Not Lifecycle Cost Optimality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#732-llama-3-qwen3" class="md-nav__link">
+  <a href="#732-what-the-llama-3-and-qwen3-examples-doand-do-notshow" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.2 Llama 3 与 Qwen3 的案例边界
+      7.3.2 What the Llama 3 and Qwen3 Examples Do—and Do Not—Show
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#733" class="md-nav__link">
+  <a href="#733-smaller-is-not-always-cheaper" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.3 更小不总是更便宜
+      7.3.3 Smaller Is Not Always Cheaper
     </span>
   </a>
   
@@ -1420,28 +1454,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#74" class="md-nav__link">
+  <a href="#74-emergent-abilities-an-observational-definition-is-not-a-physical-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 涌现能力：观察定义不等于物理阈值
+      7.4 Emergent Abilities: An Observational Definition Is Not a Physical Threshold
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.4 涌现能力：观察定义不等于物理阈值">
+    <nav class="md-nav" aria-label="7.4 Emergent Abilities: An Observational Definition Is Not a Physical Threshold">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#741" class="md-nav__link">
+  <a href="#741-three-examples-that-invite-overinterpretation" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.1 三类容易过度解读的例子
+      7.4.1 Three Examples That Invite Overinterpretation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-50b100b" class="md-nav__link">
+  <a href="#742-there-is-no-universal-50b100b-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 不存在通用的 50B–100B 临界点
+      7.4.2 There Is No Universal 50B–100B Threshold
     </span>
   </a>
   
@@ -1453,28 +1487,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#75-mirage" class="md-nav__link">
+  <a href="#75-mirage-how-evaluation-metrics-can-create-abrupt-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5 Mirage：评估指标如何制造陡变
+      7.5 Mirage: How Evaluation Metrics Can Create Abrupt Changes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.5 Mirage：评估指标如何制造陡变">
+    <nav class="md-nav" aria-label="7.5 Mirage: How Evaluation Metrics Can Create Abrupt Changes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#751" class="md-nav__link">
+  <a href="#751-an-example-of-nonlinear-scoring" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5.1 非线性计分的例子
+      7.5.1 An Example of Nonlinear Scoring
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#752" class="md-nav__link">
+  <a href="#752-what-the-paper-does-not-establish" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5.2 论文没有证明什么
+      7.5.2 What the Paper Does Not Establish
     </span>
   </a>
   
@@ -1486,37 +1520,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#76" class="md-nav__link">
+  <a href="#76-engineering-choices-turn-slogans-into-experiments" class="md-nav__link">
     <span class="md-ellipsis">
-      7.6 工程选型：从口号变成实验
+      7.6 Engineering Choices: Turn Slogans into Experiments
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#77" class="md-nav__link">
+  <a href="#77-where-can-extrapolation-fail" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7 外推会在哪里失效
+      7.7 Where Can Extrapolation Fail?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.7 外推会在哪里失效">
+    <nav class="md-nav" aria-label="7.7 Where Can Extrapolation Fail?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#771" class="md-nav__link">
+  <a href="#771-data-constraints" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.1 数据约束
+      7.7.1 Data Constraints
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#772" class="md-nav__link">
+  <a href="#772-compute-and-system-constraints" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.2 计算与系统约束
+      7.7.2 Compute and System Constraints
     </span>
   </a>
   
@@ -1528,27 +1562,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#78" class="md-nav__link">
+  <a href="#78-common-follow-up-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      7.8 常见追问
+      7.8 Common Follow-Up Questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#79" class="md-nav__link">
+  <a href="#79-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      7.9 本章总结
+      7.9 Chapter Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -1575,7 +1609,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1598,7 +1632,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1621,7 +1655,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1644,7 +1678,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1713,7 +1747,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1730,7 +1764,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1748,7 +1782,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1771,7 +1805,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1794,7 +1828,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1817,7 +1851,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1840,7 +1874,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1863,7 +1897,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1926,7 +1960,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1943,7 +1977,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1961,7 +1995,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1984,7 +2018,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -2007,7 +2041,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -2068,7 +2102,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -2085,7 +2119,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2103,7 +2137,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -2126,7 +2160,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -2185,7 +2219,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -2202,7 +2236,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2220,7 +2254,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -2291,7 +2325,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -2308,7 +2342,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2351,7 +2385,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2368,7 +2402,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2386,7 +2420,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2446,7 +2480,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2463,7 +2497,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2481,7 +2515,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2504,7 +2538,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2527,7 +2561,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2585,7 +2619,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2602,7 +2636,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2620,7 +2654,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2643,7 +2677,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2701,7 +2735,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2718,7 +2752,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2736,7 +2770,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2759,7 +2793,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2817,7 +2851,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2834,7 +2868,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2852,7 +2886,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2875,7 +2909,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -3047,7 +3081,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -3070,7 +3104,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -3093,7 +3127,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -3116,7 +3150,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -3215,7 +3249,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -3238,7 +3272,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3261,7 +3295,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3284,7 +3318,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3307,7 +3341,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3402,7 +3436,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3425,7 +3459,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3448,7 +3482,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3504,7 +3538,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3521,7 +3555,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3539,7 +3573,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3597,7 +3631,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3614,7 +3648,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3632,7 +3666,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3655,7 +3689,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3732,7 +3766,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3749,7 +3783,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3796,7 +3830,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3813,7 +3847,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3831,7 +3865,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3854,7 +3888,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3877,7 +3911,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3947,7 +3981,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3964,7 +3998,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3982,7 +4016,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -4005,7 +4039,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -4028,7 +4062,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -4051,7 +4085,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -4074,7 +4108,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -4097,7 +4131,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -4120,7 +4154,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -4143,7 +4177,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4207,7 +4241,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4224,7 +4258,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4242,7 +4276,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4265,7 +4299,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4288,7 +4322,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4311,7 +4345,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4334,7 +4368,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4394,7 +4428,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4411,7 +4445,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4429,7 +4463,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4452,7 +4486,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4475,7 +4509,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4533,7 +4567,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4550,7 +4584,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4568,7 +4602,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4591,7 +4625,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4649,7 +4683,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4666,7 +4700,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4684,7 +4718,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4707,7 +4741,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4763,7 +4797,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4780,7 +4814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4798,7 +4832,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4854,7 +4888,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4871,7 +4905,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4889,7 +4923,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -5026,7 +5060,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -5043,7 +5077,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5061,7 +5095,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5084,7 +5118,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5152,7 +5186,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5169,7 +5203,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5187,7 +5221,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5210,7 +5244,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5233,7 +5267,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5256,7 +5290,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5279,7 +5313,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5302,7 +5336,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5325,7 +5359,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5389,7 +5423,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5406,7 +5440,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5424,7 +5458,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5447,7 +5481,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5470,7 +5504,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5493,7 +5527,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5516,7 +5550,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5576,7 +5610,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5593,7 +5627,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5611,7 +5645,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5634,7 +5668,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5657,7 +5691,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5715,7 +5749,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5732,7 +5766,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5750,7 +5784,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5773,7 +5807,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5831,7 +5865,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5848,7 +5882,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5866,7 +5900,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5889,7 +5923,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5945,7 +5979,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5962,7 +5996,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5980,7 +6014,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6053,7 +6087,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6070,7 +6104,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6121,7 +6155,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6138,7 +6172,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6185,7 +6219,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6202,7 +6236,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6220,7 +6254,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6243,7 +6277,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6266,7 +6300,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6326,7 +6360,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6343,7 +6377,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6361,7 +6395,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6384,7 +6418,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6407,7 +6441,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6467,7 +6501,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6484,7 +6518,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6502,7 +6536,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6525,7 +6559,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6548,7 +6582,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6641,7 +6675,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6664,7 +6698,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6722,7 +6756,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6739,7 +6773,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6757,7 +6791,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6780,7 +6814,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6881,7 +6915,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6904,7 +6938,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6997,7 +7031,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -7020,7 +7054,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7113,7 +7147,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7136,7 +7170,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7194,7 +7228,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7211,7 +7245,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7229,7 +7263,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7252,7 +7286,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7310,7 +7344,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7327,7 +7361,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7345,7 +7379,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7368,7 +7402,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7503,7 +7537,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7520,7 +7554,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7538,7 +7572,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7561,7 +7595,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7619,7 +7653,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7636,7 +7670,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7654,7 +7688,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7677,7 +7711,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7735,7 +7769,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7752,7 +7786,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7770,7 +7804,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7793,7 +7827,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7851,7 +7885,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7868,7 +7902,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7886,7 +7920,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7909,7 +7943,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7967,7 +8001,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7984,7 +8018,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8002,7 +8036,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -8025,7 +8059,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8085,7 +8119,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8102,7 +8136,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8120,7 +8154,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8143,7 +8177,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8166,7 +8200,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8237,7 +8271,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8254,7 +8288,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8297,7 +8331,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8314,7 +8348,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8332,7 +8366,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8390,7 +8424,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8407,7 +8441,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8425,7 +8459,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8448,7 +8482,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8508,7 +8542,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8525,7 +8559,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8543,7 +8577,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8566,7 +8600,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8589,7 +8623,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8647,7 +8681,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8664,7 +8698,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8682,7 +8716,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8705,7 +8739,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8763,7 +8797,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8780,7 +8814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8798,7 +8832,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8821,7 +8855,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8946,7 +8980,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8963,7 +8997,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8981,7 +9015,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -9037,7 +9071,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9054,7 +9088,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9072,7 +9106,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9111,7 +9145,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9120,42 +9154,42 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#71-scaling-law" class="md-nav__link">
+  <a href="#71-what-do-scaling-laws-predict" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 Scaling Law 预测的是什么
+      7.1 What Do Scaling Laws Predict?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.1 Scaling Law 预测的是什么">
+    <nav class="md-nav" aria-label="7.1 What Do Scaling Laws Predict?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#711-kaplan-2020" class="md-nav__link">
+  <a href="#711-findings-from-kaplan-2020" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.1 Kaplan 2020 的发现
+      7.1.1 Findings from Kaplan 2020
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#712" class="md-nav__link">
+  <a href="#712-engineering-uses-and-limits" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.2 它的工程价值与限制
+      7.1.2 Engineering Uses and Limits
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#713-kaplan" class="md-nav__link">
+  <a href="#713-kaplan-already-studied-the-parameterdata-tradeoff" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1.3 Kaplan 已经回答过参数与数据配比
+      7.1.3 Kaplan Already Studied the Parameter–Data Tradeoff
     </span>
   </a>
   
@@ -9167,37 +9201,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#72-chinchilla" class="md-nav__link">
+  <a href="#72-chinchilla-allocating-a-fixed-training-budget" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 Chinchilla：固定训练预算如何分配
+      7.2 Chinchilla: Allocating a Fixed Training Budget
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 Chinchilla：固定训练预算如何分配">
+    <nav class="md-nav" aria-label="7.2 Chinchilla: Allocating a Fixed Training Budget">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721" class="md-nav__link">
+  <a href="#721-the-key-is-joint-growth-not-a-fixed-ratio" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 核心不是固定比例，而是共同增长
+      7.2.1 The Key Is Joint Growth, Not a Fixed Ratio
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#722-120" class="md-nav__link">
+  <a href="#722-where-does-120-come-from" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.2 1:20 是怎样来的
+      7.2.2 Where Does 1:20 Come From?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#723-gpt-3-12" class="md-nav__link">
+  <a href="#723-why-gpt-3-was-not-simply-missing-12-times-the-data" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.3 为什么不能说 GPT-3 “固定缺 12 倍数据”
+      7.2.3 Why GPT-3 Was Not Simply “Missing 12 Times the Data”
     </span>
   </a>
   
@@ -9209,37 +9243,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#73-20n" class="md-nav__link">
+  <a href="#73-why-train-small-models-on-far-more-than-20n-tokens" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3 为什么小模型可以训练远超 20N 的数据
+      7.3 Why Train Small Models on Far More Than 20N Tokens?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.3 为什么小模型可以训练远超 20N 的数据">
+    <nav class="md-nav" aria-label="7.3 Why Train Small Models on Far More Than 20N Tokens?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#731" class="md-nav__link">
+  <a href="#731-training-optimality-is-not-lifecycle-cost-optimality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.1 训练最优与全生命周期成本不同
+      7.3.1 Training Optimality Is Not Lifecycle Cost Optimality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#732-llama-3-qwen3" class="md-nav__link">
+  <a href="#732-what-the-llama-3-and-qwen3-examples-doand-do-notshow" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.2 Llama 3 与 Qwen3 的案例边界
+      7.3.2 What the Llama 3 and Qwen3 Examples Do—and Do Not—Show
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#733" class="md-nav__link">
+  <a href="#733-smaller-is-not-always-cheaper" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.3 更小不总是更便宜
+      7.3.3 Smaller Is Not Always Cheaper
     </span>
   </a>
   
@@ -9251,28 +9285,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#74" class="md-nav__link">
+  <a href="#74-emergent-abilities-an-observational-definition-is-not-a-physical-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 涌现能力：观察定义不等于物理阈值
+      7.4 Emergent Abilities: An Observational Definition Is Not a Physical Threshold
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.4 涌现能力：观察定义不等于物理阈值">
+    <nav class="md-nav" aria-label="7.4 Emergent Abilities: An Observational Definition Is Not a Physical Threshold">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#741" class="md-nav__link">
+  <a href="#741-three-examples-that-invite-overinterpretation" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.1 三类容易过度解读的例子
+      7.4.1 Three Examples That Invite Overinterpretation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-50b100b" class="md-nav__link">
+  <a href="#742-there-is-no-universal-50b100b-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 不存在通用的 50B–100B 临界点
+      7.4.2 There Is No Universal 50B–100B Threshold
     </span>
   </a>
   
@@ -9284,28 +9318,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#75-mirage" class="md-nav__link">
+  <a href="#75-mirage-how-evaluation-metrics-can-create-abrupt-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5 Mirage：评估指标如何制造陡变
+      7.5 Mirage: How Evaluation Metrics Can Create Abrupt Changes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.5 Mirage：评估指标如何制造陡变">
+    <nav class="md-nav" aria-label="7.5 Mirage: How Evaluation Metrics Can Create Abrupt Changes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#751" class="md-nav__link">
+  <a href="#751-an-example-of-nonlinear-scoring" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5.1 非线性计分的例子
+      7.5.1 An Example of Nonlinear Scoring
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#752" class="md-nav__link">
+  <a href="#752-what-the-paper-does-not-establish" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5.2 论文没有证明什么
+      7.5.2 What the Paper Does Not Establish
     </span>
   </a>
   
@@ -9317,37 +9351,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#76" class="md-nav__link">
+  <a href="#76-engineering-choices-turn-slogans-into-experiments" class="md-nav__link">
     <span class="md-ellipsis">
-      7.6 工程选型：从口号变成实验
+      7.6 Engineering Choices: Turn Slogans into Experiments
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#77" class="md-nav__link">
+  <a href="#77-where-can-extrapolation-fail" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7 外推会在哪里失效
+      7.7 Where Can Extrapolation Fail?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.7 外推会在哪里失效">
+    <nav class="md-nav" aria-label="7.7 Where Can Extrapolation Fail?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#771" class="md-nav__link">
+  <a href="#771-data-constraints" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.1 数据约束
+      7.7.1 Data Constraints
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#772" class="md-nav__link">
+  <a href="#772-compute-and-system-constraints" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.2 计算与系统约束
+      7.7.2 Compute and System Constraints
     </span>
   </a>
   
@@ -9359,27 +9393,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#78" class="md-nav__link">
+  <a href="#78-common-follow-up-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      7.8 常见追问
+      7.8 Common Follow-Up Questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#79" class="md-nav__link">
+  <a href="#79-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      7.9 本章总结
+      7.9 Chapter Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9401,7 +9435,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/02-training-alignment/07-scaling-law-emergence.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/02-training-alignment/07-scaling-law-emergence.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9409,73 +9443,73 @@
   
 
 
-<h1 id="scaling-law">第七章：Scaling Law 与涌现能力<a class="headerlink" href="#scaling-law" title="Permanent link">&para;</a></h1>
-<h2 id="71-scaling-law">7.1 Scaling Law 预测的是什么<a class="headerlink" href="#71-scaling-law" title="Permanent link">&para;</a></h2>
-<p>语言模型的 scaling law 描述在一定架构、数据分布和训练设定下，<strong>损失如何随参数、数据或计算量变化</strong>。它是经验规律，不是模型越大就必然更聪明的定理，更不能直接预测产品收入。</p>
-<h3 id="711-kaplan-2020">7.1.1 Kaplan 2020 的发现<a class="headerlink" href="#711-kaplan-2020" title="Permanent link">&para;</a></h3>
-<p>Kaplan 等人系统研究了自回归语言模型交叉熵与参数量 <code>N</code>、数据量 <code>D</code>、计算量 <code>C</code> 的关系。其他瓶颈足够宽松时，参数方向可以近似写成：</p>
+<h1 id="chapter-7-scaling-laws-and-emergent-abilities"><span id="scaling-law" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 7: Scaling Laws and Emergent Abilities<a class="headerlink" href="#chapter-7-scaling-laws-and-emergent-abilities" title="Permanent link">&para;</a></h1>
+<h2 id="71-what-do-scaling-laws-predict"><span id="71-scaling-law" class="legacy-heading-anchor" aria-hidden="true"></span>7.1 What Do Scaling Laws Predict?<a class="headerlink" href="#71-what-do-scaling-laws-predict" title="Permanent link">&para;</a></h2>
+<p>Language-model scaling laws describe <strong>how loss changes with parameters, data, or compute</strong> under particular architectures, data distributions, and training settings. They are empirical relationships—not a theorem that larger models must be smarter, and certainly not a direct predictor of product revenue.</p>
+<h3 id="711-findings-from-kaplan-2020"><span id="711-kaplan-2020" class="legacy-heading-anchor" aria-hidden="true"></span>7.1.1 Findings from Kaplan 2020<a class="headerlink" href="#711-findings-from-kaplan-2020" title="Permanent link">&para;</a></h3>
+<p>Kaplan and colleagues systematically studied the relationship between autoregressive language-model cross-entropy and parameter count <code>N</code>, data volume <code>D</code>, and compute <code>C</code>. When other resources are not major bottlenecks, the parameter-scaling relationship can be approximated as:</p>
 <div class="arithmatex">\[
 L(N) \approx \left(\frac{N_c}{N}\right)^{\alpha_N}
 \]</div>
-<p><code>N_c</code> 和指数来自拟合，不是自然常数。这里是论文的简化关系；不能忽略数据不足或训练不充分，直接套用到任意模型。</p>
-<p>如果考虑损失下限，更直观的形式是：</p>
+<p><code>N_c</code> and the exponent are fitted quantities, not constants of nature. This is a simplified relationship from the paper. It cannot be applied to arbitrary models while ignoring insufficient data or incomplete training.</p>
+<p>With a loss floor, a more intuitive form is:</p>
 <div class="arithmatex">\[
 L(N) = L_\infty + aN^{-\alpha}
 \]</div>
-<p>翻倍参数时按固定比例缩小的是 <code>L − L∞</code> 这一项，<strong>不是每次都减掉固定 loss，也不是准确率固定增加若干百分点</strong>。</p>
-<h3 id="712">7.1.2 它的工程价值与限制<a class="headerlink" href="#712" title="Permanent link">&para;</a></h3>
+<p>Doubling the parameters reduces the <code>L − L∞</code> term by a fixed proportion. <strong>It does not subtract a fixed amount of loss each time, or add a fixed number of percentage points to accuracy.</strong></p>
+<h3 id="712-engineering-uses-and-limits"><span id="712" class="legacy-heading-anchor" aria-hidden="true"></span>7.1.2 Engineering Uses and Limits<a class="headerlink" href="#712-engineering-uses-and-limits" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>可以做什么</th>
-<th>不能直接推出什么</th>
+<th>What scaling laws can help with</th>
+<th>What they do not directly establish</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>用小规模实验预测较大训练的 loss 趋势</td>
-<td>某业务任务准确率会同步提高多少</td>
+<td>Predicting larger-run loss trends from small experiments</td>
+<td>How much accuracy will improve on a business task</td>
 </tr>
 <tr>
-<td>对比预算下的模型、数据配比</td>
-<td>数据分布改变后仍沿用同一组系数</td>
+<td>Comparing model and data allocations under a budget</td>
+<td>That the same coefficients remain valid after the data distribution changes</td>
 </tr>
 <tr>
-<td>检查实际训练是否偏离预期曲线</td>
-<td>越过已测规模后永远不饱和</td>
+<td>Checking whether a run deviates from its expected curve</td>
+<td>That gains never saturate beyond the measured scales</td>
 </tr>
 </tbody>
 </table>
-<p>Kaplan 之前已有神经网络 scaling 的实证研究，不能说“此前没有量化证据”。这篇工作的重点是语言模型上的系统拟合与计算预算分配。</p>
-<h3 id="713-kaplan">7.1.3 Kaplan 已经回答过参数与数据配比<a class="headerlink" href="#713-kaplan" title="Permanent link">&para;</a></h3>
-<p>原文并非只讨论“加大参数有没有用”。其计算最优分析倾向于更大的模型、相对较少的数据，并在收敛前停止训练。Chinchilla 后来重新估计了这个配比，而不是首次提出配比问题。</p>
-<h2 id="72-chinchilla">7.2 Chinchilla：固定训练预算如何分配<a class="headerlink" href="#72-chinchilla" title="Permanent link">&para;</a></h2>
-<p>Hoffmann 等人训练了 <strong>400 多个</strong>语言模型，参数从 70M 到超过 16B，训练数据从 5B 到 500B token，并用不同拟合方法交叉检验。</p>
-<h3 id="721">7.2.1 核心不是固定比例，而是共同增长<a class="headerlink" href="#721" title="Permanent link">&para;</a></h3>
-<p>对常规稠密 Transformer，先采用粗略计算约束：</p>
+<p>Empirical research on neural-network scaling predates Kaplan, so it would be wrong to say there had been no quantitative evidence before this paper. Its contribution centers on systematic language-model fits and compute-budget allocation.</p>
+<h3 id="713-kaplan-already-studied-the-parameterdata-tradeoff"><span id="713-kaplan" class="legacy-heading-anchor" aria-hidden="true"></span>7.1.3 Kaplan Already Studied the Parameter–Data Tradeoff<a class="headerlink" href="#713-kaplan-already-studied-the-parameterdata-tradeoff" title="Permanent link">&para;</a></h3>
+<p>The paper did not merely ask whether adding parameters helps. Its compute-optimal analysis favored larger models trained on relatively less data, stopping before convergence. Chinchilla later re-estimated this allocation; it did not introduce the allocation question for the first time.</p>
+<h2 id="72-chinchilla-allocating-a-fixed-training-budget"><span id="72-chinchilla" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 Chinchilla: Allocating a Fixed Training Budget<a class="headerlink" href="#72-chinchilla-allocating-a-fixed-training-budget" title="Permanent link">&para;</a></h2>
+<p>Hoffmann and colleagues trained <strong>more than 400</strong> language models, ranging from 70M to over 16B parameters and from 5B to 500B training tokens, and cross-checked their findings with different fitting methods.</p>
+<h3 id="721-the-key-is-joint-growth-not-a-fixed-ratio"><span id="721" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.1 The Key Is Joint Growth, Not a Fixed Ratio<a class="headerlink" href="#721-the-key-is-joint-growth-not-a-fixed-ratio" title="Permanent link">&para;</a></h3>
+<p>For conventional dense Transformers, start with a rough compute constraint:</p>
 <div class="arithmatex">\[
 C \approx 6ND
 \]</div>
-<p>再用参数化损失模型：</p>
+<p>Then use a parametric loss model:</p>
 <div class="arithmatex">\[
 L(N,D) \approx E+\frac{A}{N^\alpha}+\frac{B}{D^\beta}
 \]</div>
-<p>把 <code>D = C/(6N)</code> 代入并求最小值，可得到：</p>
+<p>Substituting <code>D = C/(6N)</code> and minimizing gives:</p>
 <div class="arithmatex">\[
 N_{\mathrm{opt}} \propto C^{\frac{\beta}{\alpha+\beta}},
 \qquad
 D_{\mathrm{opt}} \propto C^{\frac{\alpha}{\alpha+\beta}}
 \]</div>
-<p>解释是：参数太小会受到容量限制；参数太大则在同一预算下读不到足够数据。最优点需要平衡两项，而不是只把一种资源用满。</p>
-<p>Chinchilla 的多种拟合都支持 <code>N</code> 与 <code>D</code> 随预算<strong>近似等比例增长</strong>。论文对比中，Kaplan 的指数约为 <code>0.73 / 0.27</code>；Chinchilla 一种拟合为 <code>0.50 / 0.50</code>，另一些拟合并不恰好各为一半。</p>
-<h3 id="722-120">7.2.2 1:20 是怎样来的<a class="headerlink" href="#722-120" title="Permanent link">&para;</a></h3>
+<p>A model that is too small is capacity-limited; a model that is too large cannot process enough data within the same budget. The optimum balances these two terms instead of maximizing only one resource.</p>
+<p>Chinchilla's different fits support scaling <code>N</code> and <code>D</code> in <strong>approximately equal proportions</strong> as the budget grows. The paper's comparison gives Kaplan's exponents as approximately <code>0.73 / 0.27</code>. One Chinchilla fit gives <code>0.50 / 0.50</code>; other fits are not exactly one-half each.</p>
+<h3 id="722-where-does-120-come-from"><span id="722-120" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.2 Where Does 1:20 Come From?<a class="headerlink" href="#722-where-does-120-come-from" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>模型</th>
-<th>参数量</th>
-<th>训练 token 数</th>
-<th>对比口径</th>
+<th>Model</th>
+<th>Parameters</th>
+<th>Training tokens</th>
+<th>Basis of comparison</th>
 </tr>
 </thead>
 <tbody>
@@ -9483,150 +9517,150 @@ D_{\mathrm{opt}} \propto C^{\frac{\alpha}{\alpha+\beta}}
 <td>Gopher</td>
 <td>280B</td>
 <td>300B</td>
-<td>Chinchilla 的主要训练预算对照</td>
+<td>Chinchilla's main training-budget comparison</td>
 </tr>
 <tr>
 <td>Chinchilla</td>
 <td>70B</td>
 <td>1.4T</td>
-<td>与 Gopher 使用大致相同训练预算</td>
+<td>Approximately the same training budget as Gopher</td>
 </tr>
 </tbody>
 </table>
-<p>Chinchilla 的 <code>D/N = 20</code>，在论文的大量下游评估中超过 Gopher，说明相近预算可以通过更小模型、更多数据得到更好的结果。</p>
-<p><strong>“每个参数约 20 个 token”是这一设置的经验标尺，不是永远成立的最优比例。</strong> 数据质量、去重与重复采样、tokenizer、架构、训练 schedule 和目标都可能改变拟合。</p>
-<h3 id="723-gpt-3-12">7.2.3 为什么不能说 GPT-3 “固定缺 12 倍数据”<a class="headerlink" href="#723-gpt-3-12" title="Permanent link">&para;</a></h3>
-<p>GPT-3 175B 训练了 300B token，<code>D/N</code> 约为 1.7。按 <code>20N</code> 算 3.5T token 只是一个比例外推，<strong>固定参数再加约 12 倍 token，也把训练计算加了约 12 倍</strong>，不再是原预算下的最优解。</p>
-<p>在固定预算问题里，应该重新选择更小的 <code>N</code> 与更大的 <code>D</code>；在固定模型问题里，才是在问继续训练的边际收益。两种问题不能混在一起。</p>
-<h2 id="73-20n">7.3 为什么小模型可以训练远超 20N 的数据<a class="headerlink" href="#73-20n" title="Permanent link">&para;</a></h2>
-<h3 id="731">7.3.1 训练最优与全生命周期成本不同<a class="headerlink" href="#731" title="Permanent link">&para;</a></h3>
+<p>Chinchilla has <code>D/N = 20</code> and outperformed Gopher on many downstream evaluations in the paper. This shows that a smaller model trained on more data can deliver better results at a similar budget.</p>
+<p><strong>“About 20 tokens per parameter” is an empirical reference point for this setting, not an eternally optimal ratio.</strong> Data quality, deduplication and repeated sampling, the tokenizer, architecture, training schedule, and objective can all change the fit.</p>
+<h3 id="723-why-gpt-3-was-not-simply-missing-12-times-the-data"><span id="723-gpt-3-12" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.3 Why GPT-3 Was Not Simply “Missing 12 Times the Data”<a class="headerlink" href="#723-why-gpt-3-was-not-simply-missing-12-times-the-data" title="Permanent link">&para;</a></h3>
+<p>GPT-3 175B was trained on 300B tokens, giving <code>D/N</code> of about 1.7. Calculating 3.5T tokens from <code>20N</code> is only a ratio-based extrapolation. <strong>Holding parameters fixed and using roughly 12 times as many tokens also uses roughly 12 times as much training compute.</strong> That is no longer the optimum under the original budget.</p>
+<p>Under a fixed budget, the question is how to choose a smaller <code>N</code> and a larger <code>D</code>. With a fixed model, the question is the marginal return from continued training. These are different problems.</p>
+<h2 id="73-why-train-small-models-on-far-more-than-20n-tokens"><span id="73-20n" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 Why Train Small Models on Far More Than 20N Tokens?<a class="headerlink" href="#73-why-train-small-models-on-far-more-than-20n-tokens" title="Permanent link">&para;</a></h2>
+<h3 id="731-training-optimality-is-not-lifecycle-cost-optimality"><span id="731" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.1 Training Optimality Is Not Lifecycle Cost Optimality<a class="headerlink" href="#731-training-optimality-is-not-lifecycle-cost-optimality" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
-    A["训练预算固定&lt;br/&gt;选择 N 与 D&lt;br/&gt;最小化验证损失"]
-    B["服务需求固定&lt;br/&gt;权衡训练与推理成本&lt;br/&gt;满足质量和延迟"]
-    A -.-&gt;|目标函数不同| B</code></pre>
-<p>如果模型会处理大量请求，多花一些一次性的训练计算，换成更小且够用的模型，可能降低总成本：</p>
+    A["Fixed training budget&lt;br/&gt;Choose N and D&lt;br/&gt;Minimize validation loss"]
+    B["Fixed serving demand&lt;br/&gt;Balance training&lt;br/&gt;and inference costs&lt;br/&gt;Meet quality and&lt;br/&gt;latency requirements"]
+    A -.-&gt;|Different objectives| B</code></pre>
+<p>If a model will serve many requests, spending more one-time training compute to obtain a smaller, sufficiently capable model may reduce total cost:</p>
 <div class="arithmatex">\[
 C_{\mathrm{total}} =
 C_{\mathrm{train}} + QC_{\mathrm{serve}}
 \]</div>
-<p><code>Q</code> 表示同一服务口径下的请求量，<code>Cserve</code> 是单次请求成本。两项必须采用同一单位：若都用 FLOPs，比较的是总计算量；若要计入显存、运维等经济成本，则应统一折算为货币成本，不能把 FLOPs 与费用相加。实际还需要纳入输入输出长度、吞吐和延迟，不能只比参数量。</p>
-<h3 id="732-llama-3-qwen3">7.3.2 Llama 3 与 Qwen3 的案例边界<a class="headerlink" href="#732-llama-3-qwen3" title="Permanent link">&para;</a></h3>
-<p>Llama 3 技术报告明确区分：<strong>405B 旗舰模型在其训练预算下接近 compute-optimal，小模型则训练得远超其训练计算最优点</strong>。因此，不能把整个 Llama 3 系列都概括成“只追求推理最优”。</p>
-<p>Qwen3 初版技术报告描述约 36T token 的预训练数据及分阶段训练，也介绍了小模型的 strong-to-weak distillation。它说明数据、训练策略和后训练共同影响效果，不宜把某个小型号的能力全部归因于一个 <code>token / 参数</code> 比例。</p>
-<p><strong>超过 Chinchilla 配比不自动等于过拟合。</strong> 增加新而有用的数据与反复记忆同一批数据不同；收益递减也不意味着收益已经为零。是否过拟合应观察同分布与目标分布验证损失，而不是检查比例是否超过 20。</p>
-<h3 id="733">7.3.3 更小不总是更便宜<a class="headerlink" href="#733" title="Permanent link">&para;</a></h3>
+<p><code>Q</code> is the request volume under a consistent serving definition, and <code>Cserve</code> is the cost per request. Both terms must use the same units: FLOPs compare total computation; including economic costs such as memory and operations requires converting both terms to monetary costs. FLOPs cannot be added to money. Input and output lengths, throughput, and latency also matter; parameter count alone is insufficient.</p>
+<h3 id="732-what-the-llama-3-and-qwen3-examples-doand-do-notshow"><span id="732-llama-3-qwen3" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.2 What the Llama 3 and Qwen3 Examples Do—and Do Not—Show<a class="headerlink" href="#732-what-the-llama-3-and-qwen3-examples-doand-do-notshow" title="Permanent link">&para;</a></h3>
+<p>The Llama 3 technical report explicitly distinguishes its models: <strong>the 405B flagship is approximately compute-optimal for its training budget, while the smaller models are trained far beyond their training-compute-optimal points</strong>. It is therefore incorrect to describe the entire Llama 3 family as pursuing only inference optimality.</p>
+<p>The initial Qwen3 technical report describes approximately 36T tokens of pretraining data, staged training, and strong-to-weak distillation for smaller models. It illustrates the combined effects of data, training strategies, and post-training. A small model's capabilities should not be attributed entirely to a single tokens-per-parameter ratio.</p>
+<p><strong>Exceeding the Chinchilla ratio does not automatically mean overfitting.</strong> Adding new, useful data differs from repeatedly memorizing the same data; diminishing returns do not mean returns have reached zero. Diagnose overfitting through validation loss on both the training distribution and the target distribution, not by checking whether a ratio exceeds 20.</p>
+<h3 id="733-smaller-is-not-always-cheaper"><span id="733" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.3 Smaller Is Not Always Cheaper<a class="headerlink" href="#733-smaller-is-not-always-cheaper" title="Permanent link">&para;</a></h3>
 <ul>
-<li>稠密模型参数量影响权重显存和矩阵计算，但长上下文 KV cache、带宽和批量大小同样重要。</li>
-<li>MoE 的总参数量与每 token 激活参数量不同，不能按总参数直接比较 FLOPs。</li>
-<li>小模型若需要更多采样、更长思维链或频繁调用大模型兜底，端到端成本优势可能缩小。</li>
-<li>数据清洗、授权和合成也有成本；“数据总比算力便宜”没有通用依据。</li>
+<li>Dense-model parameter counts affect weight memory and matrix computation, but long-context KV caches, bandwidth, and batch size matter too.</li>
+<li>MoE total parameters differ from active parameters per token; total parameter count cannot directly determine comparative FLOPs.</li>
+<li>A small model may need more samples, longer chains of thought, or frequent fallback calls to a larger model, reducing its end-to-end cost advantage.</li>
+<li>Data cleaning, licensing, and synthesis also cost money. There is no general rule that data is always cheaper than compute.</li>
 </ul>
-<h2 id="74">7.4 涌现能力：观察定义不等于物理阈值<a class="headerlink" href="#74" title="Permanent link">&para;</a></h2>
-<p>Wei 等人把“小规模模型中不显现、较大模型中出现，且难以由小模型表现简单外推”的能力称为涌现。论文讨论了部分算术、少样本任务和提示策略随规模变化的表现。</p>
-<p>但观察对象是<strong>任务、模型族、提示和评估指标共同决定的曲线</strong>，不是一条只由参数量决定的能力开关。</p>
-<h3 id="741">7.4.1 三类容易过度解读的例子<a class="headerlink" href="#741" title="Permanent link">&para;</a></h3>
+<h2 id="74-emergent-abilities-an-observational-definition-is-not-a-physical-threshold"><span id="74" class="legacy-heading-anchor" aria-hidden="true"></span>7.4 Emergent Abilities: An Observational Definition Is Not a Physical Threshold<a class="headerlink" href="#74-emergent-abilities-an-observational-definition-is-not-a-physical-threshold" title="Permanent link">&para;</a></h2>
+<p>Wei and colleagues describe an ability as emergent when it is absent in smaller models, appears in larger models, and is difficult to predict by straightforward extrapolation from smaller-model performance. Their paper discusses how some arithmetic tasks, few-shot tasks, and prompting strategies behave as scale increases.</p>
+<p>However, the observed curve depends jointly on <strong>the task, model family, prompt, and evaluation metric</strong>. It is not a capability switch controlled only by parameter count.</p>
+<h3 id="741-three-examples-that-invite-overinterpretation"><span id="741" class="legacy-heading-anchor" aria-hidden="true"></span>7.4.1 Three Examples That Invite Overinterpretation<a class="headerlink" href="#741-three-examples-that-invite-overinterpretation" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>现象</th>
-<th>需要补上的条件</th>
+<th>Observation</th>
+<th>Conditions that need to be specified</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>多步算术 exact match 突然改善</td>
-<td>样本是否充足？是否使用 CoT？是否只有几个稀疏规模点？</td>
+<td>A sudden improvement in multistep arithmetic exact match</td>
+<td>Are there enough samples? Is CoT used? Are only a few widely spaced model sizes tested?</td>
 </tr>
 <tr>
-<td>Few-shot / ICL 随规模变强</td>
-<td>小模型也可能利用示例；不是所有任务都在同一规模出现</td>
+<td>Stronger few-shot / ICL performance at larger scales</td>
+<td>Small models may also use examples; different tasks do not all appear at the same scale</td>
 </tr>
 <tr>
-<td>跨语言任务表现提升</td>
-<td>训练中是否已有目标语言、平行文本或代码？不能写成“从未接触该语言”</td>
+<td>Better cross-lingual performance</td>
+<td>Did training already include the target language, parallel text, or code? Do not describe this as never having encountered the language</td>
 </tr>
 </tbody>
 </table>
-<p>ICL 是推理时通过上下文改变行为，不更新模型参数；它不必意味着永久学会了一项新技能。跨语言迁移也不能仅凭“英文占多数”证明完全零样本的语言习得。</p>
-<h3 id="742-50b100b">7.4.2 不存在通用的 50B–100B 临界点<a class="headerlink" href="#742-50b100b" title="Permanent link">&para;</a></h3>
-<p>原先常见的“30B 才能推理”“100B 才能 ICL”把特定年代的实验观察误写成架构定律。模型族、数据、蒸馏和后训练改变后，更小模型也可能完成这些任务。</p>
-<p>只有几个规模点的评估无法证明中间没有渐进过程。报告拐点时，应给出具体基准、提示、解码方法、误差范围和模型训练差异。</p>
-<h2 id="75-mirage">7.5 Mirage：评估指标如何制造陡变<a class="headerlink" href="#75-mirage" title="Permanent link">&para;</a></h2>
-<h3 id="751">7.5.1 非线性计分的例子<a class="headerlink" href="#751" title="Permanent link">&para;</a></h3>
-<p>假设某项任务要求 <code>k</code> 个位置全部正确，且为说明问题而假设各位置独立、正确率均为 <code>p</code>，那么：</p>
+<p>ICL changes behavior through inference-time context without updating model parameters. It need not imply permanently learning a new skill. Likewise, a predominantly English training corpus is not sufficient evidence for entirely zero-shot acquisition of another language.</p>
+<h3 id="742-there-is-no-universal-50b100b-threshold"><span id="742-50b100b" class="legacy-heading-anchor" aria-hidden="true"></span>7.4.2 There Is No Universal 50B–100B Threshold<a class="headerlink" href="#742-there-is-no-universal-50b100b-threshold" title="Permanent link">&para;</a></h3>
+<p>Claims such as “reasoning requires 30B” or “ICL requires 100B” misrepresent experiments from a particular period as architectural laws. Changes in model families, data, distillation, and post-training can let smaller models perform those tasks.</p>
+<p>Evaluation at only a few scales cannot rule out gradual improvement between them. When reporting an inflection point, specify the benchmark, prompts, decoding method, uncertainty, and differences in model training.</p>
+<h2 id="75-mirage-how-evaluation-metrics-can-create-abrupt-changes"><span id="75-mirage" class="legacy-heading-anchor" aria-hidden="true"></span>7.5 Mirage: How Evaluation Metrics Can Create Abrupt Changes<a class="headerlink" href="#75-mirage-how-evaluation-metrics-can-create-abrupt-changes" title="Permanent link">&para;</a></h2>
+<h3 id="751-an-example-of-nonlinear-scoring"><span id="751" class="legacy-heading-anchor" aria-hidden="true"></span>7.5.1 An Example of Nonlinear Scoring<a class="headerlink" href="#751-an-example-of-nonlinear-scoring" title="Permanent link">&para;</a></h3>
+<p>Suppose a task requires all <code>k</code> positions to be correct. For illustration, assume the positions are independent and each has accuracy <code>p</code>. Then:</p>
 <div class="arithmatex">\[
 P_{\mathrm{exact}} = p^k
 \]</div>
-<p>即使 <code>p</code> 平滑增长，整串全对概率也可能长期接近零，再在有限采样中看似突然可见。这不是严格的数学不连续，却容易在图表中表现为“能力突然出现”。</p>
-<p>Schaeffer 等人的 Mirage 论文通过数学模型和实验说明，<strong>非线性或不连续指标可以产生表观涌现</strong>。对固定模型输出，改用 token 级编辑距离、概率等更细粒度指标，有时会呈现更平滑的趋势。</p>
+<p>Even if <code>p</code> improves smoothly, the probability of getting the entire sequence right can remain near zero for a long time and then appear suddenly in a finite sample. This is not a mathematical discontinuity, but a chart can easily make it look as though an ability has abruptly appeared.</p>
+<p>Schaeffer and colleagues' Mirage paper uses mathematical models and experiments to show that <strong>nonlinear or discontinuous metrics can produce apparent emergence</strong>. For the same model outputs, finer-grained measures such as token-level edit distance or probabilities can sometimes reveal smoother trends.</p>
 <pre class="mermaid"><code>flowchart TB
-    OUT["同一批模型输出"] --&gt; EXACT["整题全对计分&lt;br/&gt;可能呈现陡变"]
-    OUT --&gt; FINE["细粒度距离或概率指标&lt;br/&gt;可能显示渐进改善"]
-    EXACT --&gt; CHECK["同时报告多种指标&lt;br/&gt;增加规模点与样本量"]
+    OUT["The same model outputs"] --&gt; EXACT["All-or-nothing scoring&lt;br/&gt;May show an abrupt change"]
+    OUT --&gt; FINE["Fine-grained distance&lt;br/&gt;or probability metrics&lt;br/&gt;May show gradual improvement"]
+    EXACT --&gt; CHECK["Report multiple metrics&lt;br/&gt;Add model scales and samples"]
     FINE --&gt; CHECK</code></pre>
-<h3 id="752">7.5.2 论文没有证明什么<a class="headerlink" href="#752" title="Permanent link">&para;</a></h3>
+<h3 id="752-what-the-paper-does-not-establish"><span id="752" class="legacy-heading-anchor" aria-hidden="true"></span>7.5.2 What the Paper Does Not Establish<a class="headerlink" href="#752-what-the-paper-does-not-establish" title="Permanent link">&para;</a></h3>
 <ul>
-<li>没有证明一切能力变化都只是测量假象。</li>
-<li>没有证明任意连续指标下所有任务都必然平滑。</li>
-<li>没有否定 exact match 的业务价值：编译、支付或数学答案可能确实需要全对。</li>
+<li>It does not prove that every change in capability is a measurement artifact.</li>
+<li>It does not prove that every task must be smooth under every continuous metric.</li>
+<li>It does not negate the practical value of exact match: compilation, payments, or mathematical answers may genuinely require complete correctness.</li>
 </ul>
-<p>因此要同时区分“业务成功率出现可用门槛”和“模型内部机制发生相变”。前者可以直接测量，后者需要额外证据。</p>
-<h2 id="76">7.6 工程选型：从口号变成实验<a class="headerlink" href="#76" title="Permanent link">&para;</a></h2>
+<p>Distinguish a threshold at which task success becomes practically useful from a phase transition in the model's internal mechanisms. The former is directly measurable; the latter requires additional evidence.</p>
+<h2 id="76-engineering-choices-turn-slogans-into-experiments"><span id="76" class="legacy-heading-anchor" aria-hidden="true"></span>7.6 Engineering Choices: Turn Slogans into Experiments<a class="headerlink" href="#76-engineering-choices-turn-slogans-into-experiments" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>先固定评测口径。</strong> 任务、模板、解码与推理预算不一致时，不宜把分数差归因于参数。</li>
-<li><strong>重新拟合，而不是机械套 20N。</strong> 在自己的数据混合上做较小预算实验，检查外推误差。</li>
-<li><strong>比较成本曲线。</strong> 包括预训练、后训练、评估和预计服务量，避免只优化一次性训练 FLOPs。</li>
-<li><strong>选最小达标模型，而非“有涌现的型号”。</strong> 对准确率、尾部错误、上下文长度、延迟与安全分别设门槛。</li>
+<li><strong>Fix the evaluation conditions first.</strong> If tasks, templates, decoding, and inference budgets differ, score differences cannot safely be attributed to parameter counts.</li>
+<li><strong>Refit rather than mechanically applying 20N.</strong> Run smaller-budget experiments on your own data mixture and check extrapolation error.</li>
+<li><strong>Compare cost curves.</strong> Include pretraining, post-training, evaluation, and expected serving volume rather than optimizing only one-time training FLOPs.</li>
+<li><strong>Choose the smallest model that meets requirements, not a model “with emergence.”</strong> Set separate thresholds for accuracy, tail errors, context length, latency, and safety.</li>
 </ol>
-<p>例如，“7B + 100B token 不如 3B + 250B token”不能无条件成立：两者预算本就不完全相等，而且最终结果依赖数据和优化。正确做法是在同一预算与协议下验证候选组合。</p>
-<h2 id="77">7.7 外推会在哪里失效<a class="headerlink" href="#77" title="Permanent link">&para;</a></h2>
-<h3 id="771">7.7.1 数据约束<a class="headerlink" href="#771" title="Permanent link">&para;</a></h3>
-<p>可获得、可授权、足够高质量且不过度重复的数据是有限的；但不同来源对“高质量公开文本”的统计口径不同。<strong>训练 token 数不能直接当成互联网剩余数据量的倒计时</strong>。</p>
+<p>For example, “7B + 100B tokens is worse than 3B + 250B tokens” is not universally true. Their compute budgets are not exactly equal to begin with, and the outcome depends on data and optimization. Test candidate combinations under the same budget and protocol.</p>
+<h2 id="77-where-can-extrapolation-fail"><span id="77" class="legacy-heading-anchor" aria-hidden="true"></span>7.7 Where Can Extrapolation Fail?<a class="headerlink" href="#77-where-can-extrapolation-fail" title="Permanent link">&para;</a></h2>
+<h3 id="771-data-constraints"><span id="771" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.1 Data Constraints<a class="headerlink" href="#771-data-constraints" title="Permanent link">&para;</a></h3>
+<p>Data that is available, licensable, sufficiently high-quality, and not excessively repetitive is finite. However, sources use different definitions when estimating “high-quality public text.” <strong>Training token counts are not a direct countdown to exhausting the remaining internet data.</strong></p>
 <table>
 <thead>
 <tr>
-<th>方向</th>
-<th>收益与代价</th>
+<th>Direction</th>
+<th>Benefits and costs</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>合成数据</td>
-<td>可增加任务覆盖，但可能放大教师错误、降低多样性，需要筛选与独立验证</td>
+<td>Synthetic data</td>
+<td>Can expand task coverage, but may amplify teacher errors and reduce diversity; filtering and independent validation are needed</td>
 </tr>
 <tr>
-<td>多模态数据</td>
-<td>扩展信息来源，但并非与文本 token 一一等价，编码与训练目标也改变</td>
+<td>Multimodal data</td>
+<td>Expands information sources, but is not equivalent one-for-one to text tokens; encoding and training objectives also change</td>
 </tr>
 <tr>
-<td>可验证反馈或环境交互</td>
-<td>可筛选策略、生成新轨迹，但依赖题目、验证器、探索覆盖与反馈质量</td>
+<td>Verifiable feedback or environment interaction</td>
+<td>Can select strategies and generate new trajectories, but depends on problems, verifiers, exploration coverage, and feedback quality</td>
 </tr>
 </tbody>
 </table>
-<p>DeepSeekMath 的一个重要来源是筛选的网页数学数据，不能把它笼统列作“主要依靠合成数据”的例证。R1 的可验证任务 RL 也不等于开放环境中无限获得新知识。</p>
-<h3 id="772">7.7.2 计算与系统约束<a class="headerlink" href="#772" title="Permanent link">&para;</a></h3>
-<p>电力、互连、显存、可靠性、部署预算都会限制扩展。无需用未经核验的 GPU 价格或集群卡数来支持这个结论。</p>
-<p>测试时计算把更多预算用于推理中的采样、搜索、验证或更长生成。它与训练计算是不同轴，收益取决于模型和任务；不是只要延长回答就能弥补训练不足。</p>
-<h2 id="78">7.8 常见追问<a class="headerlink" href="#78" title="Permanent link">&para;</a></h2>
+<p>Filtered mathematical web data is an important source for DeepSeekMath, so it should not be casually cited as a model relying primarily on synthetic data. RL on verifiable tasks in R1 is likewise not an unlimited source of new knowledge from an open environment.</p>
+<h3 id="772-compute-and-system-constraints"><span id="772" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.2 Compute and System Constraints<a class="headerlink" href="#772-compute-and-system-constraints" title="Permanent link">&para;</a></h3>
+<p>Power, interconnects, memory, reliability, and deployment budgets all limit scaling. Unverified GPU prices or cluster sizes are unnecessary to support that conclusion.</p>
+<p>Test-time compute allocates more resources to sampling, search, verification, or longer generation during inference. It is a different axis from training compute, and its benefits depend on the model and task. Simply making an answer longer does not compensate for insufficient training.</p>
+<h2 id="78-common-follow-up-questions"><span id="78" class="legacy-heading-anchor" aria-hidden="true"></span>7.8 Common Follow-Up Questions<a class="headerlink" href="#78-common-follow-up-questions" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Loss 更低为什么 benchmark 未必更高？</strong> 训练分布平均预测更好，不一定改善测试任务所需的尾部能力。</li>
-<li><strong>多读重复数据等于多收集新数据吗？</strong> 不等价；重复次数、过拟合与数据新颖性改变有效收益。</li>
-<li><strong>如何比较 MoE 与稠密模型？</strong> 同时报总参数、激活参数、实际训练/推理 FLOPs、内存和通信成本。</li>
-<li><strong>什么时候可信地谈涌现？</strong> 明确指标和观察范围，并排查评测噪声、稀疏采样及训练配方变化。</li>
+<li><strong>Why might lower loss fail to improve benchmark scores?</strong> Better average prediction on the training distribution need not improve the tail capabilities required by a test task.</li>
+<li><strong>Is rereading data equivalent to collecting new data?</strong> No. Repetition, overfitting, and data novelty change the effective return.</li>
+<li><strong>How should MoE and dense models be compared?</strong> Report total and active parameters, actual training and inference FLOPs, memory, and communication costs.</li>
+<li><strong>When is a claim of emergence credible?</strong> Define the metric and observation range, and check evaluation noise, sparse scale sampling, and changes in training recipes.</li>
 </ul>
-<h2 id="79">7.9 本章总结<a class="headerlink" href="#79" title="Permanent link">&para;</a></h2>
-<p>Scaling law 是预算规划工具，Chinchilla 是特定条件下的训练预算分配研究。延长小模型训练可以服务于部署成本目标，未推翻其结论。涌现争议提醒我们：<strong>可用性门槛、评估曲线和内部能力机制是三件不同的事</strong>。</p>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="79-chapter-summary"><span id="79" class="legacy-heading-anchor" aria-hidden="true"></span>7.9 Chapter Summary<a class="headerlink" href="#79-chapter-summary" title="Permanent link">&para;</a></h2>
+<p>Scaling laws are tools for budget planning. Chinchilla studies training-budget allocation under particular conditions. Training smaller models longer can serve deployment-cost objectives without contradicting its conclusions. The emergence debate reminds us that <strong>practical usability thresholds, evaluation curves, and internal capability mechanisms are three different things</strong>.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a></li>
-<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla：§3、表 2 与计算最优推导</a></li>
+<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla: §3, Table 2, and the compute-optimal derivation</a></li>
 <li><a href="https://arxiv.org/abs/2206.07682">Emergent Abilities of Large Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2304.15004">Are Emergent Abilities of Large Language Models a Mirage?</a></li>
 <li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models</a></li>
-<li><a href="https://arxiv.org/html/2505.09388v1">Qwen3 Technical Report，初版</a></li>
-<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath：数据构建与 GRPO</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1，初版</a></li>
+<li><a href="https://arxiv.org/html/2505.09388v1">Qwen3 Technical Report, initial version</a></li>
+<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath: data construction and GRPO</a></li>
+<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1, initial version</a></li>
 </ul>
 
 
@@ -9647,20 +9681,20 @@ P_{\mathrm{exact}} = p^k
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:50:15 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9683,7 +9717,7 @@ P_{\mathrm{exact}} = p^k
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9692,33 +9726,33 @@ P_{\mathrm{exact}} = p^k
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-llm-training/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 三阶段训练流程">
+          <a href="../06-llm-training/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 6: The Three-Stage Training Framework for LLMs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                三阶段训练流程
+                Chapter 6: The Three-Stage Training Framework for LLMs
               </div>
             </div>
           </a>
         
         
           
-          <a href="../08-finetuning/" class="md-footer__link md-footer__link--next" aria-label="下一页: 大模型微调">
+          <a href="../08-finetuning/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 8: Fine-Tuning Approaches for LLMs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                大模型微调
+                Chapter 8: Fine-Tuning Approaches for LLMs
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9767,7 +9801,7 @@ P_{\mathrm{exact}} = p^k
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

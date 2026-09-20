@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="说明 RRF 的排名贡献、窗口与平滑常数，比较 cross-encoder 和 listwise 重排，并讨论校准拒答、去重和版本选择。">
+        <meta name="description" content="How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>多路召回、RRF 与 Rerank - Awesome AI Roadmap</title>
+        <title>Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第十三章：多路召回、RRF 融合与 Rerank">
-    <meta property="og:description" content="说明 RRF 的排名贡献、窗口与平滑常数，比较 cross-encoder 和 listwise 重排，并讨论校准拒答、去重和版本选择。">
+    <meta property="og:title" content="Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking">
+    <meta property="og:description" content="How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第十三章：多路召回、RRF 融合与 Rerank">
-    <meta name="twitter:description" content="说明 RRF 的排名贡献、窗口与平滑常数，比较 cross-encoder 和 listwise 重排，并讨论校准拒答、去重和版本选择。">
+    <meta name="twitter:title" content="Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking">
+    <meta name="twitter:description" content="How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/13-hybrid-retrieval-rerank/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：多路召回、RRF 融合与 Rerank","description":"说明 RRF 的排名贡献、窗口与平滑常数，比较 cross-encoder 和 listwise 重排，并讨论校准拒答、去重和版本选择。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第十三章：多路召回、RRF 融合与 Rerank","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","description":"How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"多路召回、RRF 与 Rerank","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#rrf-rerank" class="md-skip">
-          跳转至
+        <a href="#chapter-13-multi-path-retrieval-rrf-fusion-and-reranking" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              多路召回、RRF 与 Rerank
+              Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/rag/03-retrieval/13-hybrid-retrieval-rerank/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -347,7 +381,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -391,7 +425,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -985,7 +1019,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1002,7 +1036,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1020,7 +1054,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1043,7 +1077,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1066,7 +1100,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1089,7 +1123,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1112,7 +1146,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1178,7 +1212,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1195,7 +1229,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1213,7 +1247,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1236,7 +1270,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1259,7 +1293,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1282,7 +1316,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1305,7 +1339,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1328,7 +1362,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1394,7 +1428,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1411,7 +1445,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1429,7 +1463,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1452,7 +1486,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1475,7 +1509,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1498,7 +1532,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1521,7 +1555,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1544,7 +1578,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1604,7 +1638,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1621,7 +1655,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1639,7 +1673,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1662,7 +1696,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1685,7 +1719,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1743,7 +1777,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -1760,7 +1794,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1778,7 +1812,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -1801,7 +1835,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -1857,7 +1891,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -1874,7 +1908,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1892,7 +1926,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -1963,7 +1997,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -1980,7 +2014,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2023,7 +2057,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2040,7 +2074,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2058,7 +2092,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2118,7 +2152,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2135,7 +2169,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2153,7 +2187,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2176,7 +2210,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2199,7 +2233,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2257,7 +2291,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2274,7 +2308,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2292,7 +2326,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2315,7 +2349,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2373,7 +2407,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2390,7 +2424,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2408,7 +2442,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2431,7 +2465,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2489,7 +2523,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2506,7 +2540,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2524,7 +2558,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2547,7 +2581,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2719,7 +2753,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2742,7 +2776,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -2765,7 +2799,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -2788,7 +2822,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -2887,7 +2921,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -2910,7 +2944,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -2933,7 +2967,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -2956,7 +2990,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -2979,7 +3013,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3074,7 +3108,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3097,7 +3131,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3120,7 +3154,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3176,7 +3210,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3193,7 +3227,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3211,7 +3245,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3269,7 +3303,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3286,7 +3320,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3304,7 +3338,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3327,7 +3361,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3404,7 +3438,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3421,7 +3455,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3468,7 +3502,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3485,7 +3519,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3503,7 +3537,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3526,7 +3560,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3549,7 +3583,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3619,7 +3653,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3636,7 +3670,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3654,7 +3688,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3677,7 +3711,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3700,7 +3734,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -3723,7 +3757,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -3746,7 +3780,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -3769,7 +3803,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -3792,7 +3826,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -3815,7 +3849,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -3879,7 +3913,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -3896,7 +3930,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3914,7 +3948,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -3937,7 +3971,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -3960,7 +3994,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -3983,7 +4017,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4006,7 +4040,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4066,7 +4100,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4083,7 +4117,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4101,7 +4135,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4124,7 +4158,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4147,7 +4181,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4205,7 +4239,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4222,7 +4256,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4240,7 +4274,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4263,7 +4297,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4321,7 +4355,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4338,7 +4372,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4356,7 +4390,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4379,7 +4413,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4435,7 +4469,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4452,7 +4486,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4470,7 +4504,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4526,7 +4560,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4543,7 +4577,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4561,7 +4595,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -4706,7 +4740,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -4723,7 +4757,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4741,7 +4775,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -4764,7 +4798,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -4835,7 +4869,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -4852,7 +4886,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4870,7 +4904,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -4893,7 +4927,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -4916,7 +4950,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -4939,7 +4973,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -4962,7 +4996,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -4985,7 +5019,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5008,7 +5042,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5077,7 +5111,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5094,7 +5128,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5112,7 +5146,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5135,7 +5169,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5158,7 +5192,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5190,7 +5224,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5203,7 +5237,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5212,7 +5246,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -5221,51 +5255,51 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#131" class="md-nav__link">
+  <a href="#131-why-consider-multiple-retrieval-paths" class="md-nav__link">
     <span class="md-ellipsis">
-      13.1 为什么考虑多路召回
+      13.1 Why consider multiple retrieval paths?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#132" class="md-nav__link">
+  <a href="#132-scores-cannot-be-compared-directly" class="md-nav__link">
     <span class="md-ellipsis">
-      13.2 分数没法直接比较
+      13.2 Scores cannot be compared directly
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#133-rrf" class="md-nav__link">
+  <a href="#133-rrf-ranks-instead-of-scores" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3 RRF：用排名代替分数
+      13.3 RRF: ranks instead of scores
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.3 RRF：用排名代替分数">
+    <nav class="md-nav" aria-label="13.3 RRF: ranks instead of scores">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1331" class="md-nav__link">
+  <a href="#1331-why-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3.1 为什么它管用
+      13.3.1 Why it works
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1332" class="md-nav__link">
+  <a href="#1332-its-limitations" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3.2 它的局限
+      13.3.2 Its limitations
     </span>
   </a>
   
@@ -5277,37 +5311,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#134-rerank" class="md-nav__link">
+  <a href="#134-reranking-improve-ordering-after-candidate-coverage" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4 Rerank：在候选覆盖之后改善排序
+      13.4 Reranking: improve ordering after candidate coverage
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.4 Rerank：在候选覆盖之后改善排序">
+    <nav class="md-nav" aria-label="13.4 Reranking: improve ordering after candidate coverage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1341" class="md-nav__link">
+  <a href="#1341-why-use-it" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.1 为什么需要它
+      13.4.1 Why use it?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1342-reranker" class="md-nav__link">
+  <a href="#1342-three-types-of-reranker" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.2 三类 Reranker
+      13.4.2 Three types of reranker
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1343" class="md-nav__link">
+  <a href="#1343-engineering-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.3 工程要点
+      13.4.3 Engineering considerations
     </span>
   </a>
   
@@ -5319,100 +5353,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#135-" class="md-nav__link">
+  <a href="#135-the-complete-retrieval-and-ranking-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      13.5 完整的召回-排序链路
+      13.5 The complete retrieval-and-ranking pipeline
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#136" class="md-nav__link">
+  <a href="#136-deduplication-matters-too" class="md-nav__link">
     <span class="md-ellipsis">
-      13.6 去重也很重要
+      13.6 Deduplication matters too
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#137" class="md-nav__link">
+  <a href="#137-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7 常见错误
+      13.7 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.7 常见错误">
+    <nav class="md-nav" aria-label="13.7 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1371" class="md-nav__link">
+  <a href="#1371-directly-combining-scores-on-incompatible-scales" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.1 直接加权融合不同量纲的分数
+      13.7.1 Directly combining scores on incompatible scales
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1372-rrf" class="md-nav__link">
+  <a href="#1372-not-understanding-why-rrf-uses-ranks" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.2 不知道 RRF 为什么用排名
+      13.7.2 Not understanding why RRF uses ranks
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1373-k60" class="md-nav__link">
+  <a href="#1373-not-understanding-the-role-of-k60" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.3 不知道 \(k=60\) 的作用
+      13.7.3 Not understanding the role of \(k=60\)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1374-rerank-top-k" class="md-nav__link">
+  <a href="#1374-unconditionally-selecting-top-k-after-reranking" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.4 Rerank 后无条件取 Top-K
+      13.7.4 Unconditionally selecting Top-K after reranking
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1375-query" class="md-nav__link">
+  <a href="#1375-comparing-queries-with-a-fixed-raw-score-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.5 用固定裸分阈值跨 Query 比较
+      13.7.5 Comparing queries with a fixed raw-score threshold
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1376-llm-listwise-rerank" class="md-nav__link">
+  <a href="#1376-defaulting-to-llm-listwise-reranking" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.6 默认上 LLM listwise rerank
+      13.7.6 Defaulting to LLM listwise reranking
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1377" class="md-nav__link">
+  <a href="#1377-forgetting-deduplication-especially-across-versions" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.7 忘记去重，尤其是新旧版本
+      13.7.7 Forgetting deduplication, especially across versions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1378-rerank" class="md-nav__link">
+  <a href="#1378-providing-no-reranking-fallback" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.8 没有 Rerank 的降级路径
+      13.7.8 Providing no reranking fallback
     </span>
   </a>
   
@@ -5424,18 +5458,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#138" class="md-nav__link">
+  <a href="#138-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      13.8 本章总结
+      13.8 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -5462,7 +5496,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5525,7 +5559,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5542,7 +5576,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5560,7 +5594,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5583,7 +5617,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5606,7 +5640,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5667,7 +5701,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5684,7 +5718,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5702,7 +5736,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5725,7 +5759,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5786,7 +5820,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5803,7 +5837,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5821,7 +5855,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5844,7 +5878,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5903,7 +5937,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5920,7 +5954,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5938,7 +5972,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6011,7 +6045,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6028,7 +6062,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6079,7 +6113,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6096,7 +6130,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6143,7 +6177,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6160,7 +6194,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6178,7 +6212,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6201,7 +6235,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6224,7 +6258,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6284,7 +6318,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6301,7 +6335,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6319,7 +6353,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6342,7 +6376,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6365,7 +6399,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6425,7 +6459,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6442,7 +6476,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6460,7 +6494,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6483,7 +6517,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6506,7 +6540,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6599,7 +6633,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6622,7 +6656,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6680,7 +6714,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6697,7 +6731,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6715,7 +6749,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6738,7 +6772,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6839,7 +6873,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6862,7 +6896,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6955,7 +6989,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -6978,7 +7012,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7071,7 +7105,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7094,7 +7128,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7152,7 +7186,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7169,7 +7203,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7187,7 +7221,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7210,7 +7244,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7268,7 +7302,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7285,7 +7319,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7303,7 +7337,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7326,7 +7360,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7461,7 +7495,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7478,7 +7512,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7496,7 +7530,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7519,7 +7553,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7577,7 +7611,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7594,7 +7628,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7612,7 +7646,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7635,7 +7669,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7693,7 +7727,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7710,7 +7744,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7728,7 +7762,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7751,7 +7785,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7809,7 +7843,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7826,7 +7860,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7844,7 +7878,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7867,7 +7901,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7925,7 +7959,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7942,7 +7976,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7960,7 +7994,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -7983,7 +8017,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8043,7 +8077,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8060,7 +8094,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8078,7 +8112,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8101,7 +8135,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8124,7 +8158,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8195,7 +8229,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8212,7 +8246,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8255,7 +8289,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8272,7 +8306,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8290,7 +8324,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8348,7 +8382,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8365,7 +8399,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8383,7 +8417,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8406,7 +8440,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8466,7 +8500,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8483,7 +8517,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8501,7 +8535,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8524,7 +8558,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8547,7 +8581,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8605,7 +8639,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8622,7 +8656,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8640,7 +8674,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8663,7 +8697,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8721,7 +8755,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8738,7 +8772,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8756,7 +8790,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8779,7 +8813,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8904,7 +8938,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8921,7 +8955,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8939,7 +8973,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -8995,7 +9029,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9012,7 +9046,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9030,7 +9064,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9069,7 +9103,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9078,51 +9112,51 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#131" class="md-nav__link">
+  <a href="#131-why-consider-multiple-retrieval-paths" class="md-nav__link">
     <span class="md-ellipsis">
-      13.1 为什么考虑多路召回
+      13.1 Why consider multiple retrieval paths?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#132" class="md-nav__link">
+  <a href="#132-scores-cannot-be-compared-directly" class="md-nav__link">
     <span class="md-ellipsis">
-      13.2 分数没法直接比较
+      13.2 Scores cannot be compared directly
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#133-rrf" class="md-nav__link">
+  <a href="#133-rrf-ranks-instead-of-scores" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3 RRF：用排名代替分数
+      13.3 RRF: ranks instead of scores
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.3 RRF：用排名代替分数">
+    <nav class="md-nav" aria-label="13.3 RRF: ranks instead of scores">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1331" class="md-nav__link">
+  <a href="#1331-why-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3.1 为什么它管用
+      13.3.1 Why it works
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1332" class="md-nav__link">
+  <a href="#1332-its-limitations" class="md-nav__link">
     <span class="md-ellipsis">
-      13.3.2 它的局限
+      13.3.2 Its limitations
     </span>
   </a>
   
@@ -9134,37 +9168,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#134-rerank" class="md-nav__link">
+  <a href="#134-reranking-improve-ordering-after-candidate-coverage" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4 Rerank：在候选覆盖之后改善排序
+      13.4 Reranking: improve ordering after candidate coverage
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.4 Rerank：在候选覆盖之后改善排序">
+    <nav class="md-nav" aria-label="13.4 Reranking: improve ordering after candidate coverage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1341" class="md-nav__link">
+  <a href="#1341-why-use-it" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.1 为什么需要它
+      13.4.1 Why use it?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1342-reranker" class="md-nav__link">
+  <a href="#1342-three-types-of-reranker" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.2 三类 Reranker
+      13.4.2 Three types of reranker
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1343" class="md-nav__link">
+  <a href="#1343-engineering-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      13.4.3 工程要点
+      13.4.3 Engineering considerations
     </span>
   </a>
   
@@ -9176,100 +9210,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#135-" class="md-nav__link">
+  <a href="#135-the-complete-retrieval-and-ranking-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
-      13.5 完整的召回-排序链路
+      13.5 The complete retrieval-and-ranking pipeline
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#136" class="md-nav__link">
+  <a href="#136-deduplication-matters-too" class="md-nav__link">
     <span class="md-ellipsis">
-      13.6 去重也很重要
+      13.6 Deduplication matters too
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#137" class="md-nav__link">
+  <a href="#137-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7 常见错误
+      13.7 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13.7 常见错误">
+    <nav class="md-nav" aria-label="13.7 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1371" class="md-nav__link">
+  <a href="#1371-directly-combining-scores-on-incompatible-scales" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.1 直接加权融合不同量纲的分数
+      13.7.1 Directly combining scores on incompatible scales
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1372-rrf" class="md-nav__link">
+  <a href="#1372-not-understanding-why-rrf-uses-ranks" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.2 不知道 RRF 为什么用排名
+      13.7.2 Not understanding why RRF uses ranks
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1373-k60" class="md-nav__link">
+  <a href="#1373-not-understanding-the-role-of-k60" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.3 不知道 \(k=60\) 的作用
+      13.7.3 Not understanding the role of \(k=60\)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1374-rerank-top-k" class="md-nav__link">
+  <a href="#1374-unconditionally-selecting-top-k-after-reranking" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.4 Rerank 后无条件取 Top-K
+      13.7.4 Unconditionally selecting Top-K after reranking
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1375-query" class="md-nav__link">
+  <a href="#1375-comparing-queries-with-a-fixed-raw-score-threshold" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.5 用固定裸分阈值跨 Query 比较
+      13.7.5 Comparing queries with a fixed raw-score threshold
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1376-llm-listwise-rerank" class="md-nav__link">
+  <a href="#1376-defaulting-to-llm-listwise-reranking" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.6 默认上 LLM listwise rerank
+      13.7.6 Defaulting to LLM listwise reranking
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1377" class="md-nav__link">
+  <a href="#1377-forgetting-deduplication-especially-across-versions" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.7 忘记去重，尤其是新旧版本
+      13.7.7 Forgetting deduplication, especially across versions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1378-rerank" class="md-nav__link">
+  <a href="#1378-providing-no-reranking-fallback" class="md-nav__link">
     <span class="md-ellipsis">
-      13.7.8 没有 Rerank 的降级路径
+      13.7.8 Providing no reranking fallback
     </span>
   </a>
   
@@ -9281,18 +9315,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#138" class="md-nav__link">
+  <a href="#138-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      13.8 本章总结
+      13.8 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9314,7 +9348,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/rag/03-retrieval/13-hybrid-retrieval-rerank.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/rag/03-retrieval/13-hybrid-retrieval-rerank.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9322,74 +9356,74 @@
   
 
 
-<h1 id="rrf-rerank">第十三章：多路召回、RRF 融合与 Rerank<a class="headerlink" href="#rrf-rerank" title="Permanent link">&para;</a></h1>
-<h2 id="131">13.1 为什么考虑多路召回<a class="headerlink" href="#131" title="Permanent link">&para;</a></h2>
-<p>第十一章已经展开过理论依据，这里先压缩成一句话：</p>
+<h1 id="chapter-13-multi-path-retrieval-rrf-fusion-and-reranking"><span id="rrf-rerank" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking<a class="headerlink" href="#chapter-13-multi-path-retrieval-rrf-fusion-and-reranking" title="Permanent link">&para;</a></h1>
+<h2 id="131-why-consider-multiple-retrieval-paths"><span id="131" class="legacy-heading-anchor" aria-hidden="true"></span>13.1 Why consider multiple retrieval paths?<a class="headerlink" href="#131-why-consider-multiple-retrieval-paths" title="Permanent link">&para;</a></h2>
+<p>Chapter 11 developed the rationale. In one sentence:</p>
 <blockquote>
-<p><strong>不同表示常有互补弱项；先测各路独占的证据覆盖，再决定是否组合，而不是假定每个系统都必须多路。</strong></p>
+<p><strong>Different representations often have complementary weaknesses. Measure the evidence uniquely covered by each path before combining them, rather than assuming every system needs multiple paths.</strong></p>
 </blockquote>
 <table>
 <thead>
 <tr>
-<th>单路方案</th>
-<th>系统性盲区</th>
+<th>Single-path design</th>
+<th>Systematic weak spots</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>只用向量</td>
-<td>型号、错误码、人名、专有名词、否定语义、数值条件</td>
+<td>Vectors only</td>
+<td>Model numbers, error codes, names, proper nouns, negation, numerical constraints</td>
 </tr>
 <tr>
-<td>只用 BM25</td>
-<td>同义表述、概念性问题、跨语言</td>
+<td>BM25 only</td>
+<td>Synonymous wording, conceptual questions, cross-language matching</td>
 </tr>
 </tbody>
 </table>
-<p>这些是常见弱项，不是某类 Query 永远不可能召回。提高 K 有时能补覆盖，但增加成本；提高 <code>ef_search</code> 主要减少 ANN 近似误差，不能保证修复表示本身的相关性排序。</p>
-<h2 id="132">13.2 分数没法直接比较<a class="headerlink" href="#132" title="Permanent link">&para;</a></h2>
-<p>多路召回的第一个技术问题是<strong>融合</strong>。</p>
+<p>These are common weaknesses, not claims that a method can never retrieve a particular type of query. Increasing K can sometimes improve coverage at additional cost. Increasing <code>ef_search</code> mainly reduces ANN approximation error; it does not guarantee a fix for relevance ordering in the representation itself.</p>
+<h2 id="132-scores-cannot-be-compared-directly"><span id="132" class="legacy-heading-anchor" aria-hidden="true"></span>13.2 Scores cannot be compared directly<a class="headerlink" href="#132-scores-cannot-be-compared-directly" title="Permanent link">&para;</a></h2>
+<p>The first technical problem in multi-path retrieval is <strong>fusion</strong>.</p>
 <table>
 <thead>
 <tr>
-<th>召回路</th>
-<th>分数形式</th>
-<th>典型范围</th>
+<th>Retrieval path</th>
+<th>Score form</th>
+<th>Typical range</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>向量检索</td>
-<td>余弦相似度</td>
-<td>−1 到 1；产品可能返回变换后的分数</td>
+<td>Vector retrieval</td>
+<td>Cosine similarity</td>
+<td>−1 to 1; a product may return a transformed score</td>
 </tr>
 <tr>
 <td>BM25</td>
-<td>累加的词项得分</td>
-<td>不归一化到固定区间；范围依 IDF 变体、语料、查询与字段配置</td>
+<td>Sum of term scores</td>
+<td>Not normalized to a fixed interval; depends on the IDF variant, corpus, query, and field configuration</td>
 </tr>
 </tbody>
 </table>
-<p><strong>这两组分数根本不在同一个量纲上。</strong> 简单加权融合需要先归一化，而归一化本身又有问题：</p>
+<p><strong>These scores are not on the same scale.</strong> A simple weighted sum first needs normalization, which brings its own problems:</p>
 <ul>
-<li><strong>min-max 归一化依赖当前批次的极值</strong>，同一个文档在不同 Query 下的归一化分数会剧烈波动；</li>
-<li><strong>分数分布形状不同</strong>：余弦可能集中在窄区间，但具体区间依模型与数据而定；线性归一化不等于把两路校准成同一种相关性概率；</li>
-<li><strong>权重需要针对每个数据集调</strong>，换语料就要重调。</li>
+<li><strong>Min–max normalization depends on the current batch's extremes.</strong> The same document's normalized score may vary sharply across queries.</li>
+<li><strong>The distributions have different shapes.</strong> Cosine scores may cluster within a narrow interval, but that interval depends on the model and data. Linear normalization does not calibrate both paths to the same relevance probability.</li>
+<li><strong>Weights need dataset-specific tuning.</strong> Changing the corpus requires retuning.</li>
 </ul>
-<h2 id="133-rrf">13.3 RRF：用排名代替分数<a class="headerlink" href="#133-rrf" title="Permanent link">&para;</a></h2>
-<p><strong>倒数排名融合（Reciprocal Rank Fusion）的思路极其简单：只用排名，完全不用原始分数。</strong></p>
+<h2 id="133-rrf-ranks-instead-of-scores"><span id="133-rrf" class="legacy-heading-anchor" aria-hidden="true"></span>13.3 RRF: ranks instead of scores<a class="headerlink" href="#133-rrf-ranks-instead-of-scores" title="Permanent link">&para;</a></h2>
+<p><strong>Reciprocal rank fusion has a very simple idea: use only ranks, not the raw scores.</strong></p>
 <div class="arithmatex">\[
 \mathrm{RRF}(d) = \sum_{r \in R} \frac{1}{k + \mathrm{rank}_r(d)}
 \]</div>
-<p>其中 <span class="arithmatex">\(R\)</span> 是召回路集合，排名从 1 开始；未出现在某路候选窗口中的文档，该路贡献为 0。 <span class="arithmatex">\(k\)</span> 是平滑常数，常用起点为 60，<strong>不是最终 Top-K</strong>。融合前确保每路同一 ID 只出现一次，再累加跨路贡献。</p>
-<h3 id="1331">13.3.1 为什么它管用<a class="headerlink" href="#1331" title="Permanent link">&para;</a></h3>
-<p>排名本身没有量纲，第 1 名就是第 1 名，不管原始分数是 0.92 还是 34.7，这让 RRF 能直接绕开不同分数体系不可比的问题。</p>
-<p><span class="arithmatex">\(k\)</span> 则起到削峰作用。当 <span class="arithmatex">\(k = 60\)</span> 时：</p>
+<p>Here, <span class="arithmatex">\(R\)</span> is the set of retrieval paths, and ranks start at 1. A document outside a path's candidate window contributes zero from that path. The smoothing constant <span class="arithmatex">\(k\)</span> commonly starts at 60; <strong>it is not the final Top-K</strong>. Ensure that each ID appears only once within each path before summing contributions across paths.</p>
+<h3 id="1331-why-it-works"><span id="1331" class="legacy-heading-anchor" aria-hidden="true"></span>13.3.1 Why it works<a class="headerlink" href="#1331-why-it-works" title="Permanent link">&para;</a></h3>
+<p>Ranks have no score scale. First place is first place, whether the raw score is 0.92 or 34.7, so RRF sidesteps the incompatibility of different scoring systems.</p>
+<p>The constant <span class="arithmatex">\(k\)</span> dampens the influence of the highest ranks. With <span class="arithmatex">\(k = 60\)</span>:</p>
 <table>
 <thead>
 <tr>
-<th>排名</th>
-<th>贡献值</th>
+<th>Rank</th>
+<th>Contribution</th>
 </tr>
 </thead>
 <tbody>
@@ -9407,146 +9441,146 @@
 </tr>
 </tbody>
 </table>
-<p>第 1 名和第 2 名的差距很小。<strong>这意味着：某一路把某文档排第 1，不足以让它压过“在两路里都排前十”的文档。</strong></p>
+<p>The gap between first and second place is small. <strong>A first-place contribution from one path alone therefore cannot outweigh a document ranked in the top ten by both paths.</strong></p>
 <blockquote>
-<p><strong>RRF 天然偏好「多路共识」而非「单路极端自信」。</strong> 因为单路的高分可能来自该路特有的偏见，而多路都认可的结果通常更可靠。</p>
+<p><strong>RRF naturally favors agreement across paths over extreme confidence from one path.</strong> A high score from one path may reflect that path's own bias, whereas agreement across paths is usually more reliable.</p>
 </blockquote>
-<p><span class="arithmatex">\(k=60\)</span> 来自原论文的经验设置，RRF 无需训练，但每路候选窗口、权重、平滑常数和融合后截断仍要调。多个高度相似的 Query 扩展结果并非独立证据，可能重复放大某一路偏见。</p>
-<h3 id="1332">13.3.2 它的局限<a class="headerlink" href="#1332" title="Permanent link">&para;</a></h3>
+<p>The setting <span class="arithmatex">\(k=60\)</span> comes from the original paper's experiments. RRF needs no training, but candidate windows, weights, the smoothing constant, and post-fusion truncation still need tuning. Highly similar query expansions are not independent evidence and can repeatedly amplify the same path's bias.</p>
+<h3 id="1332-its-limitations"><span id="1332" class="legacy-heading-anchor" aria-hidden="true"></span>13.3.2 Its limitations<a class="headerlink" href="#1332-its-limitations" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>丢弃了分数的绝对信息</strong>：一个相似度 0.95 和一个 0.5 的结果，只要排名相同，贡献就相同；</li>
-<li><strong>无法表达"这一路整体都不靠谱"</strong>：即使某路的所有结果都很差，它的第 1 名仍然贡献满额；</li>
-<li><strong>不同路的可信度无法直接表达</strong>（可通过给每路加权部分缓解）。</li>
+<li><strong>It discards absolute score information.</strong> Results with similarities of 0.95 and 0.5 contribute equally if they have the same rank.</li>
+<li><strong>It cannot express that an entire path is unreliable.</strong> Even if all of a path's results are poor, its first-ranked result still contributes the full amount for that rank.</li>
+<li><strong>It does not directly express differences in path reliability</strong>, although per-path weights can partly address this.</li>
 </ul>
-<p>RRF 是混合检索中广泛采用、值得先建立的<strong>强基线</strong>，因为它鲁棒且少调参；它不是所有语料的“事实标准”。若有带标签的业务数据，应将 RRF 与归一化加权、学习排序或单路检索一起比较，再按效果、延迟和可维护性选择。</p>
-<h2 id="134-rerank">13.4 Rerank：在候选覆盖之后改善排序<a class="headerlink" href="#134-rerank" title="Permanent link">&para;</a></h2>
-<h3 id="1341">13.4.1 为什么需要它<a class="headerlink" href="#1341" title="Permanent link">&para;</a></h3>
-<p>典型稠密粗排把 Query 与文档独立编码，再比较两个压缩表示，在线没有跨文本注意力。因此可以尝试重排补足细粒度交互，但不意味着双塔在每个任务上一定更差（第六章 6.3.3）。</p>
-<p>常见的 Rerank 实现采用 cross-encoder：<strong>把 Query 和候选文档拼在一起</strong>送进模型，让两者充分交互后输出相关性分数。重排也可用多向量打分或 LLM 排序，不只这一种架构。</p>
+<p>RRF is a widely used <strong>strong baseline</strong> for hybrid retrieval because it is robust and needs relatively little tuning. It is not the universal standard for every corpus. With labeled application data, compare it against normalized weighted fusion, learning to rank, and single-path retrieval, then choose based on quality, latency, and maintainability.</p>
+<h2 id="134-reranking-improve-ordering-after-candidate-coverage"><span id="134-rerank" class="legacy-heading-anchor" aria-hidden="true"></span>13.4 Reranking: improve ordering after candidate coverage<a class="headerlink" href="#134-reranking-improve-ordering-after-candidate-coverage" title="Permanent link">&para;</a></h2>
+<h3 id="1341-why-use-it"><span id="1341" class="legacy-heading-anchor" aria-hidden="true"></span>13.4.1 Why use it?<a class="headerlink" href="#1341-why-use-it" title="Permanent link">&para;</a></h3>
+<p>Typical dense first-stage retrieval encodes queries and documents independently and compares their compressed representations, with no cross-text attention at query time. Reranking can add finer-grained interaction, though this does not mean dual encoders are worse on every task (Section 6.3.3).</p>
+<p>A common reranker is a cross-encoder: <strong>concatenate the query and candidate document</strong> and feed them into a model that allows full interaction before producing a relevance score. Reranking can also use multi-vector scoring or LLM-based ordering; it is not restricted to one architecture.</p>
 <pre class="mermaid"><code>flowchart LR
-    subgraph 粗排
-        Q1[Query] --&gt; E1[编码]
-        D1[文档] --&gt; E2[编码&lt;br/&gt;离线完成]
-        E1 --&gt; S1[向量距离]
+    subgraph 粗排["First-stage ranking"]
+        Q1[Query] --&gt; E1[Encode]
+        D1[Document] --&gt; E2[Encode&lt;br/&gt;Offline]
+        E1 --&gt; S1[Vector distance]
         E2 --&gt; S1
     end
-    subgraph 精排
-        Q2[Query] --&gt; CAT[拼接]
-        D2[候选文档] --&gt; CAT
-        CAT --&gt; M[交互式模型] --&gt; S2[相关性分数]
+    subgraph 精排["Reranking"]
+        Q2[Query] --&gt; CAT[Concatenate]
+        D2[Candidate document] --&gt; CAT
+        CAT --&gt; M[Joint-interaction model] --&gt; S2[Relevance score]
     end</code></pre>
-<p><strong>效果提升通常很明显</strong>，也是单点投入产出比很高的优化，因此往往会早于更复杂的改造进入链路。</p>
-<h3 id="1342-reranker">13.4.2 三类 Reranker<a class="headerlink" href="#1342-reranker" title="Permanent link">&para;</a></h3>
+<p><strong>The quality improvement is often substantial</strong>, making reranking a high-return, focused optimization that commonly enters the pipeline before more complex changes.</p>
+<h3 id="1342-three-types-of-reranker"><span id="1342-reranker" class="legacy-heading-anchor" aria-hidden="true"></span>13.4.2 Three types of reranker<a class="headerlink" href="#1342-three-types-of-reranker" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>类型</th>
-<th>比较重点</th>
+<th>Type</th>
+<th>What to compare</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>轻量成对重排</td>
-<td>如基于 MiniLM 的 cross-encoder；资源较少，但要核对语言、领域与输入长度</td>
+<td>Lightweight query–document pair scoring</td>
+<td>For example, a MiniLM-based cross-encoder; modest resource use, but check language, domain, and input-length support</td>
 </tr>
 <tr>
-<td>较大成对模型或托管重排服务</td>
-<td>如 BGE/Jina 的具体重排模型、Cohere Rerank 服务；按型号核验架构、截断规则、计费与批处理，不能由系列名推断成本</td>
+<td>Larger pair-scoring models or hosted reranking services</td>
+<td>Examples include specific BGE/Jina rerankers and Cohere Rerank. Verify architecture, truncation, pricing, and batching for the actual model or service; a family name does not determine cost.</td>
 </tr>
 <tr>
-<td>LLM listwise</td>
-<td>对候选列表做相对排序，可利用候选间关系；需检查位置偏置、ID 遗漏与超窗口分组</td>
+<td>LLM listwise ranking</td>
+<td>Orders a candidate list relatively and can exploit relationships among candidates; check position bias, missing IDs, and grouping when the input exceeds the context window</td>
 </tr>
 </tbody>
 </table>
-<p><strong>LLM listwise 的额外价值</strong>在于它一次看到所有候选，能做<strong>相对比较</strong>和去冗余（识别出「这两条说的是同一件事」），而 cross-encoder 是<strong>逐条独立打分</strong>的，看不到候选之间的关系。</p>
-<p>Listwise 只有在候选装入同一输入时才能一起比较；超预算时需滑动窗口或分组排序。应在相同候选数、长度、硬件和负载下测各方案延迟，并检查 ID 是否遗漏、重复，以及候选顺序扰动是否改变结果。</p>
-<h3 id="1343">13.4.3 工程要点<a class="headerlink" href="#1343" title="Permanent link">&para;</a></h3>
-<p>候选数与长度共同决定计算量；批处理、padding 和排队使墙钟延迟不一定线性。普通全注意力编码器还受单对输入长度的平方项影响。应在不同候选数与长度下测覆盖、排序、吞吐和尾延迟，而非预设从 100 减到 50 就快一倍。</p>
-<p>同时要有经校准的拒答策略。</p>
+<p><strong>The additional value of LLM listwise ranking</strong> is that it can see all candidates together, make <strong>relative comparisons</strong>, and identify redundancy—for example, recognizing that two passages say the same thing. A cross-encoder <strong>scores each query–document pair independently</strong> and cannot see relationships between candidates.</p>
+<p>Listwise ranking can compare candidates together only when they fit in the same input. Beyond that budget, it needs sliding windows or grouped ranking. Measure latency with the same candidate count, lengths, hardware, and load. Check for omitted or duplicated IDs and whether changing the input order changes the output.</p>
+<h3 id="1343-engineering-considerations"><span id="1343" class="legacy-heading-anchor" aria-hidden="true"></span>13.4.3 Engineering considerations<a class="headerlink" href="#1343-engineering-considerations" title="Permanent link">&para;</a></h3>
+<p>Candidate count and length jointly determine computation. Batching, padding, and queuing mean wall-clock latency need not scale linearly. Standard full-attention encoders also have a quadratic term in the length of each query–document input. Measure coverage, ranking, throughput, and tail latency across candidate counts and lengths; do not assume that reducing 100 candidates to 50 halves latency.</p>
+<p>A calibrated abstention policy is also necessary.</p>
 <blockquote>
-<p><strong>Rerank 之后不得无条件取 Top-K；但也不能把一个固定绝对分数当作所有 Query 的通用阈值。</strong></p>
+<p><strong>Do not unconditionally take Top-K after reranking, but do not treat a fixed absolute score as a universal threshold across all queries either.</strong></p>
 </blockquote>
-<p>不同 Query、语言、候选集和模型版本的分数分布不同。应在带“有依据/无依据”标注的业务评测集上校准置信度或拒答规则，例如结合首位分数、首二名间隔、候选一致性、来源质量和 Query 类型，并分别报告覆盖率与错误接受率。低置信度时返回空、请求澄清或走人工/外部检索路径，而不是硬凑不相关上下文。</p>
-<p>更换 reranker、语料、语言分布或召回策略都会使校准失效。将拒答规则版本化，在评测集和线上抽样上重校准；不要把来自一个 Query 的裸分数直接同另一个 Query 比较。</p>
-<p>Rerank 超时可以回退到粗排，但必须使用针对粗排校准的证据规则，并继续执行 ACL、版本和引用校验。若该路径没有通过业务验收，就返回暂时无法回答，不能把“仍有 Top-K”当作可发布依据。</p>
-<h2 id="135-">13.5 完整的召回-排序链路<a class="headerlink" href="#135-" title="Permanent link">&para;</a></h2>
+<p>Score distributions vary by query, language, candidate set, and model version. Calibrate confidence or abstention rules on an application evaluation set labeled for evidence support. For example, combine the top score, the gap between the first two scores, candidate consistency, source quality, and query type. Report coverage and false acceptance separately. When confidence is low, return no results, request clarification, or use a human-review or external-retrieval path instead of padding the context with irrelevant material.</p>
+<p>Changing the reranker, corpus, language distribution, or retrieval strategy can invalidate calibration. Version the abstention rules and recalibrate against the evaluation set and production samples. Do not directly compare one query's raw scores with another's.</p>
+<p>A reranking timeout can fall back to first-stage results, but it must use evidence rules calibrated for that stage and still enforce ACLs, version checks, and citation validation. If that path has not passed application acceptance tests, report temporary inability to answer. “We still have Top-K” is not a sufficient basis for release.</p>
+<h2 id="135-the-complete-retrieval-and-ranking-pipeline"><span id="135-" class="legacy-heading-anchor" aria-hidden="true"></span>13.5 The complete retrieval-and-ranking pipeline<a class="headerlink" href="#135-the-complete-retrieval-and-ranking-pipeline" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    Q[Query] --&gt; RW[Query 改写]
-    RW --&gt; P1[BM25 召回 top-50]
-    RW --&gt; P2[向量召回 top-50]
-    RW --&gt; P3[可选: 其他路]
-    P1 --&gt; RRF[RRF 融合]
+    Q[Query] --&gt; RW[Query rewriting]
+    RW --&gt; P1[BM25 retrieval: top-50]
+    RW --&gt; P2[Vector retrieval: top-50]
+    RW --&gt; P3[Optional: other paths]
+    P1 --&gt; RRF[RRF fusion]
     P2 --&gt; RRF
     P3 --&gt; RRF
-    RRF --&gt; DEDUP[去重与合并]
-    DEDUP --&gt; RR[Rerank top-50 到 top-5]
-    RR --&gt; TH{校准后置信度足够?}
-    TH --&gt;|是| CTX[组装上下文]
-    TH --&gt;|否| REJ[拒答、澄清或降级]</code></pre>
-<p><strong>各阶段的数量收缩参考</strong>：每路召回 50–100 → 融合去重后 50–150 → Rerank 输入 50 → 最终 3–10。</p>
-<p>最后一档不是越大越好（第二章 2.6 节），必须实测。</p>
-<h2 id="136">13.6 去重也很重要<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
-<p>融合之后必须去重，否则会浪费 Prompt 预算：</p>
+    RRF --&gt; DEDUP[Deduplicate and merge]
+    DEDUP --&gt; RR[Rerank: top-50 to top-5]
+    RR --&gt; TH{Sufficient calibrated&lt;br/&gt;confidence?}
+    TH --&gt;|Yes| CTX[Assemble context]
+    TH --&gt;|No| REJ[Abstain, clarify,&lt;br/&gt;or degrade gracefully]</code></pre>
+<p><strong>Illustrative candidate counts by stage</strong>: 50–100 per retrieval path → 50–150 after fusion and deduplication → 50 reranker inputs → 3–10 final results.</p>
+<p>A larger final count is not always better (Section 2.6); measure it.</p>
+<h2 id="136-deduplication-matters-too"><span id="136" class="legacy-heading-anchor" aria-hidden="true"></span>13.6 Deduplication matters too<a class="headerlink" href="#136-deduplication-matters-too" title="Permanent link">&para;</a></h2>
+<p>Deduplicate after fusion to avoid wasting the prompt budget:</p>
 <table>
 <thead>
 <tr>
-<th>重复来源</th>
-<th>处理</th>
+<th>Source of duplication</th>
+<th>Treatment</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>多路召回同一 chunk</td>
-<td>按 chunk ID 合并</td>
+<td>The same chunk retrieved by several paths</td>
+<td>Merge by chunk ID</td>
 </tr>
 <tr>
-<td>多个子块命中同一父块</td>
-<td>合并为一个父块（第五章 5.3.2）</td>
+<td>Several child chunks pointing to the same parent</td>
+<td>Merge into one parent chunk (Section 5.3.2)</td>
 </tr>
 <tr>
-<td>内容高度相似的不同 chunk</td>
-<td>相似度筛候选，再核对实体、数字、否定、版本与适用范围；保留会改变结论的差异</td>
+<td>Different chunks with highly similar content</td>
+<td>Use similarity to identify candidates, then check entities, numbers, negation, versions, and applicability; retain differences that change the conclusion</td>
 </tr>
 <tr>
-<td>同一文档的新旧版本</td>
-<td>按查询时刻、生效区间和适用范围选择；历史查询保留对应旧版，对比查询可保留两版</td>
+<td>Old and new versions of the same document</td>
+<td>Select by query time, effective interval, and applicability; retain the relevant old version for historical questions and both versions when comparing them</td>
 </tr>
 </tbody>
 </table>
-<p>最后一行尤其容易漏掉：新旧版本同时进入上下文，会让模型面对矛盾信息，产出错误或含糊的答案。</p>
-<h2 id="137">13.7 常见错误<a class="headerlink" href="#137" title="Permanent link">&para;</a></h2>
-<h3 id="1371">13.7.1 直接加权融合不同量纲的分数<a class="headerlink" href="#1371" title="Permanent link">&para;</a></h3>
-<p>需要归一化，而归一化本身不稳定。RRF 是更好的默认选择。</p>
-<h3 id="1372-rrf">13.7.2 不知道 RRF 为什么用排名<a class="headerlink" href="#1372-rrf" title="Permanent link">&para;</a></h3>
-<p>如果只知道 RRF 这个名词，却说不出「规避量纲问题」和「偏好多路共识」，通常也很难判断它是否适合当前链路。</p>
-<h3 id="1373-k60">13.7.3 不知道 <span class="arithmatex">\(k=60\)</span> 的作用<a class="headerlink" href="#1373-k60" title="Permanent link">&para;</a></h3>
-<p>它起削峰作用，让排名靠前的差距变小，从而更看重多路共识。</p>
-<h3 id="1374-rerank-top-k">13.7.4 Rerank 后无条件取 Top-K<a class="headerlink" href="#1374-rerank-top-k" title="Permanent link">&para;</a></h3>
-<p>这会放弃拒答能力；低置信度候选应触发拒答、澄清或降级路径。</p>
-<h3 id="1375-query">13.7.5 用固定裸分阈值跨 Query 比较<a class="headerlink" href="#1375-query" title="Permanent link">&para;</a></h3>
-<p>分数分布因 Query、模型和语料而异。应在业务评测集上校准可回归的置信度/拒答策略，并在变更后重校准。</p>
-<h3 id="1376-llm-listwise-rerank">13.7.6 默认上 LLM listwise rerank<a class="headerlink" href="#1376-llm-listwise-rerank" title="Permanent link">&para;</a></h3>
-<p>计算量、调用方式、位置偏置与输入窗口都需要验证，不应预设它一定最准或固定贵多少倍。</p>
-<h3 id="1377">13.7.7 忘记去重，尤其是新旧版本<a class="headerlink" href="#1377" title="Permanent link">&para;</a></h3>
-<p>矛盾的上下文会直接导致错误答案。</p>
-<h3 id="1378-rerank">13.7.8 没有 Rerank 的降级路径<a class="headerlink" href="#1378-rerank" title="Permanent link">&para;</a></h3>
-<p>经验证的粗排降级可提高可用性，但不能绕过证据与权限闸门；安全回退不可用时应明确失败。</p>
-<h2 id="138">13.8 本章总结<a class="headerlink" href="#138" title="Permanent link">&para;</a></h2>
+<p>The final row is particularly easy to overlook. Supplying old and new versions together can expose the model to contradictory information and produce incorrect or ambiguous answers.</p>
+<h2 id="137-common-mistakes"><span id="137" class="legacy-heading-anchor" aria-hidden="true"></span>13.7 Common mistakes<a class="headerlink" href="#137-common-mistakes" title="Permanent link">&para;</a></h2>
+<h3 id="1371-directly-combining-scores-on-incompatible-scales"><span id="1371" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.1 Directly combining scores on incompatible scales<a class="headerlink" href="#1371-directly-combining-scores-on-incompatible-scales" title="Permanent link">&para;</a></h3>
+<p>Normalization is required, and normalization itself can be unstable. RRF is a better default.</p>
+<h3 id="1372-not-understanding-why-rrf-uses-ranks"><span id="1372-rrf" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.2 Not understanding why RRF uses ranks<a class="headerlink" href="#1372-not-understanding-why-rrf-uses-ranks" title="Permanent link">&para;</a></h3>
+<p>Knowing the name without understanding “avoid incompatible score scales” and “favor agreement across paths” makes it difficult to judge whether RRF fits the current pipeline.</p>
+<h3 id="1373-not-understanding-the-role-of-k60"><span id="1373-k60" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.3 Not understanding the role of <span class="arithmatex">\(k=60\)</span><a class="headerlink" href="#1373-not-understanding-the-role-of-k60" title="Permanent link">&para;</a></h3>
+<p>It dampens the top ranks, shrinking their differences and giving more importance to agreement across paths.</p>
+<h3 id="1374-unconditionally-selecting-top-k-after-reranking"><span id="1374-rerank-top-k" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.4 Unconditionally selecting Top-K after reranking<a class="headerlink" href="#1374-unconditionally-selecting-top-k-after-reranking" title="Permanent link">&para;</a></h3>
+<p>This removes the ability to abstain. Low-confidence candidates should trigger abstention, clarification, or graceful degradation.</p>
+<h3 id="1375-comparing-queries-with-a-fixed-raw-score-threshold"><span id="1375-query" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.5 Comparing queries with a fixed raw-score threshold<a class="headerlink" href="#1375-comparing-queries-with-a-fixed-raw-score-threshold" title="Permanent link">&para;</a></h3>
+<p>Score distributions depend on the query, model, and corpus. Calibrate a confidence/abstention policy on application data, make it regression-testable, and recalibrate after changes.</p>
+<h3 id="1376-defaulting-to-llm-listwise-reranking"><span id="1376-llm-listwise-rerank" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.6 Defaulting to LLM listwise reranking<a class="headerlink" href="#1376-defaulting-to-llm-listwise-reranking" title="Permanent link">&para;</a></h3>
+<p>Validate computational cost, calling patterns, position bias, and input-window limits. Do not assume it is always the most accurate or costs a fixed multiple of alternatives.</p>
+<h3 id="1377-forgetting-deduplication-especially-across-versions"><span id="1377" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.7 Forgetting deduplication, especially across versions<a class="headerlink" href="#1377-forgetting-deduplication-especially-across-versions" title="Permanent link">&para;</a></h3>
+<p>Contradictory context can directly produce incorrect answers.</p>
+<h3 id="1378-providing-no-reranking-fallback"><span id="1378-rerank" class="legacy-heading-anchor" aria-hidden="true"></span>13.7.8 Providing no reranking fallback<a class="headerlink" href="#1378-providing-no-reranking-fallback" title="Permanent link">&para;</a></h3>
+<p>A validated fallback to first-stage results can improve availability, but it must not bypass evidence or authorization gates. If no safe fallback is available, fail explicitly.</p>
+<h2 id="138-summary"><span id="138" class="legacy-heading-anchor" aria-hidden="true"></span>13.8 Summary<a class="headerlink" href="#138-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>多路召回的理由是实测互补</strong>，不是只要链路更多就一定更可靠；</li>
-<li><strong>不同召回路的分数量纲不同</strong>，直接加权需要归一化，而归一化本身不稳定；</li>
-<li><strong>RRF 只用排名不用分数</strong>，无需训练但仍需设置窗口与权重；平滑常数不等于 Top-K；</li>
-<li><strong>RRF 的局限</strong>：丢弃分数绝对信息、无法表达“某路整体不靠谱”；它是常用强基线，不能替代业务实测；</li>
-<li><strong>Rerank 可改善候选排序</strong>，但找不回候选集外的证据；</li>
-<li><strong>Cross-encoder 与 listwise 应在相同候选与预算下比较</strong>，不预设最优模型或固定成本倍数；</li>
-<li><strong>必须采用经评测集校准的置信度/拒答策略并允许返回空</strong>，不能用固定裸分一刀切；</li>
-<li><strong>去重要覆盖多路重复、父块重复、内容冗余和新旧版本</strong>，其中新旧版本冲突后果最严重。</li>
+<li><strong>Measured complementarity justifies multiple retrieval paths</strong>; more paths do not automatically make a system more reliable.</li>
+<li><strong>Retrieval scores have incompatible scales.</strong> Direct weighting requires normalization, which can itself be unstable.</li>
+<li><strong>RRF uses ranks, not raw scores.</strong> It needs no training, but windows and weights still need configuration; its smoothing constant is not Top-K.</li>
+<li><strong>RRF discards absolute score information and cannot express that an entire path is unreliable.</strong> It is a common strong baseline, not a substitute for application-specific measurement.</li>
+<li><strong>Reranking can improve candidate ordering</strong>, but cannot recover evidence outside the candidate set.</li>
+<li><strong>Compare cross-encoders and listwise methods on the same candidates and budgets</strong>, without assuming a universally best model or fixed cost ratio.</li>
+<li><strong>Use a confidence/abstention policy calibrated on an evaluation set and allow empty results.</strong> A fixed raw-score cutoff is not a universal solution.</li>
+<li><strong>Deduplication must cover cross-path duplicates, repeated parents, redundant content, and old/new versions.</strong> Conflicting versions have the most serious consequences.</li>
 </ol>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf">Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR 2009)</a></li>
-<li><a href="https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html">Lucene 9.12：BM25Similarity 的具体计分实现</a></li>
+<li><a href="https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html">Lucene 9.12: the BM25Similarity scoring implementation</a></li>
 <li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
 <li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction</a></li>
 <li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
@@ -9571,20 +9605,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:55:33 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9607,7 +9641,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9616,33 +9650,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../12-query-rewriting/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Query 理解与改写">
+          <a href="../12-query-rewriting/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 12: Query Understanding and Rewriting">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                Query 理解与改写
+                Chapter 12: Query Understanding and Rewriting
               </div>
             </div>
           </a>
         
         
           
-          <a href="../14-retrieval-optimization/" class="md-footer__link md-footer__link--next" aria-label="下一页: RAG 优化五层框架">
+          <a href="../14-retrieval-optimization/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 14: A Five-Layer Framework for RAG Optimization">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                RAG 优化五层框架
+                Chapter 14: A Five-Layer Framework for RAG Optimization
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9691,7 +9725,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

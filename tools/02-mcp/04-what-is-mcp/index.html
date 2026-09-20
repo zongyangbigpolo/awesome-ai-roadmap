@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="解释 MCP 模型上下文协议解决的问题、Host-Client-Server 架构，以及它与 Function Calling 的职责边界。">
+        <meta name="description" content="Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>MCP 核心内容 - Awesome AI Roadmap</title>
+        <title>Chapter 4: The Core of the Model Context Protocol - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第四章：MCP 模型上下文协议的核心内容">
-    <meta property="og:description" content="解释 MCP 模型上下文协议解决的问题、Host-Client-Server 架构，以及它与 Function Calling 的职责边界。">
+    <meta property="og:title" content="Chapter 4: The Core of the Model Context Protocol">
+    <meta property="og:description" content="Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第四章：MCP 模型上下文协议的核心内容">
-    <meta name="twitter:description" content="解释 MCP 模型上下文协议解决的问题、Host-Client-Server 架构，以及它与 Function Calling 的职责边界。">
+    <meta name="twitter:title" content="Chapter 4: The Core of the Model Context Protocol">
+    <meta name="twitter:description" content="Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/04-what-is-mcp/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：MCP 模型上下文协议的核心内容","description":"解释 MCP 模型上下文协议解决的问题、Host-Client-Server 架构，以及它与 Function Calling 的职责边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第四章：MCP 模型上下文协议的核心内容","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: The Core of the Model Context Protocol","description":"Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: The Core of the Model Context Protocol","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"MCP 核心内容","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: The Core of the Model Context Protocol","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#mcp" class="md-skip">
-          跳转至
+        <a href="#chapter-4-the-core-of-the-model-context-protocol" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              MCP 核心内容
+              Chapter 4: The Core of the Model Context Protocol
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/tools/02-mcp/04-what-is-mcp/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -347,7 +381,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -985,7 +1019,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1002,7 +1036,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1020,7 +1054,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1043,7 +1077,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1066,7 +1100,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1089,7 +1123,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1112,7 +1146,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1178,7 +1212,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1195,7 +1229,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1213,7 +1247,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1236,7 +1270,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1259,7 +1293,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1282,7 +1316,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1305,7 +1339,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1328,7 +1362,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1394,7 +1428,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1411,7 +1445,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1429,7 +1463,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1452,7 +1486,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1475,7 +1509,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1498,7 +1532,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1521,7 +1555,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1544,7 +1578,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1604,7 +1638,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1621,7 +1655,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1639,7 +1673,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1662,7 +1696,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1685,7 +1719,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1743,7 +1777,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -1760,7 +1794,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1778,7 +1812,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -1801,7 +1835,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -1857,7 +1891,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -1874,7 +1908,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1892,7 +1926,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -1963,7 +1997,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -1980,7 +2014,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2023,7 +2057,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2040,7 +2074,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2058,7 +2092,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2118,7 +2152,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2135,7 +2169,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2153,7 +2187,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2176,7 +2210,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2199,7 +2233,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2257,7 +2291,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2274,7 +2308,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2292,7 +2326,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2315,7 +2349,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2373,7 +2407,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2390,7 +2424,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2408,7 +2442,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2431,7 +2465,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2489,7 +2523,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2506,7 +2540,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2524,7 +2558,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2547,7 +2581,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2727,7 +2761,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2750,7 +2784,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -2773,7 +2807,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -2796,7 +2830,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -2909,7 +2943,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -2922,7 +2956,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -2931,7 +2965,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -2940,78 +2974,78 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#41-mcp-function-calling" class="md-nav__link">
+  <a href="#41-mcp-does-not-solve-the-same-problem-as-function-calling" class="md-nav__link">
     <span class="md-ellipsis">
-      4.1 MCP 解决的不是 Function Calling 解决的问题
+      4.1 MCP does not solve the same problem as function calling
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#42-mn" class="md-nav__link">
+  <a href="#42-the-mn-cost-model-of-repeated-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      4.2 重复适配的 M×N 成本模型
+      4.2 The M×N cost model of repeated integration
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#43-mcp-mn-mn" class="md-nav__link">
+  <a href="#43-mcps-central-idea-turn-mn-into-mn" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 MCP 的核心思路：把 M×N 变成 M+N
+      4.3 MCP's central idea: turn M×N into M+N
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#44-hostclientserver" class="md-nav__link">
+  <a href="#44-the-three-roles-host-client-and-server" class="md-nav__link">
     <span class="md-ellipsis">
-      4.4 Host、Client、Server 三个角色
+      4.4 The three roles: Host, Client, and Server
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#45-toolsresourcesprompts" class="md-nav__link">
+  <a href="#45-three-core-capabilities-tools-resources-and-prompts" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5 三类核心能力：Tools、Resources、Prompts
+      4.5 Three core capabilities: Tools, Resources, and Prompts
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.5 三类核心能力：Tools、Resources、Prompts">
+    <nav class="md-nav" aria-label="4.5 Three core capabilities: Tools, Resources, and Prompts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#451-tools" class="md-nav__link">
+  <a href="#451-tools-model-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.1 Tools：模型控制
+      4.5.1 Tools: model-controlled
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#452-resources" class="md-nav__link">
+  <a href="#452-resources-application-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.2 Resources：应用控制
+      4.5.2 Resources: application-controlled
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#453-prompts" class="md-nav__link">
+  <a href="#453-prompts-user-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.3 Prompts：用户控制
+      4.5.3 Prompts: user-controlled
     </span>
   </a>
   
@@ -3023,46 +3057,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#46-json-rpc-20" class="md-nav__link">
+  <a href="#46-the-message-format-json-rpc-20" class="md-nav__link">
     <span class="md-ellipsis">
-      4.6 底层通信：JSON-RPC 2.0
+      4.6 The message format: JSON-RPC 2.0
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#47" class="md-nav__link">
+  <a href="#47-lifecycle-and-version-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7 生命周期与版本兼容
+      4.7 Lifecycle and version compatibility
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.7 生命周期与版本兼容">
+    <nav class="md-nav" aria-label="4.7 Lifecycle and version compatibility">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#471" class="md-nav__link">
+  <a href="#471-version-timeline" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.1 版本时间线
+      4.7.1 Version timeline
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#472" class="md-nav__link">
+  <a href="#472-per-request-negotiation-and-legacy-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.2 每请求协商与旧版兼容
+      4.7.2 Per-request negotiation and legacy compatibility
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#473" class="md-nav__link">
+  <a href="#473-engineering-implications" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.3 工程上要注意什么
+      4.7.3 Engineering implications
     </span>
   </a>
   
@@ -3074,73 +3108,73 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#48-mcp" class="md-nav__link">
+  <a href="#48-why-the-mcp-ecosystem-grew-quickly" class="md-nav__link">
     <span class="md-ellipsis">
-      4.8 MCP 生态为什么起得这么快
+      4.8 Why the MCP ecosystem grew quickly
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#49" class="md-nav__link">
+  <a href="#49-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9 常见错误
+      4.9 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.9 常见错误">
+    <nav class="md-nav" aria-label="4.9 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#491-mcp-function-calling" class="md-nav__link">
+  <a href="#491-assuming-mcp-replaces-function-calling" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.1 认为 MCP 取代了 Function Calling
+      4.9.1 Assuming MCP replaces function calling
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#492-host-client" class="md-nav__link">
+  <a href="#492-confusing-host-and-client" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.2 把 Host 和 Client 混为一谈
+      4.9.2 Confusing Host and Client
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#493-tool" class="md-nav__link">
+  <a href="#493-assuming-a-read-only-query-cannot-be-a-tool" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.3 认为只读查询不能是 Tool
+      4.9.3 Assuming a read-only query cannot be a Tool
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#494-resources" class="md-nav__link">
+  <a href="#494-assuming-the-model-reads-resources-directly" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.4 以为 Resources 是模型主动读的
+      4.9.4 Assuming the model reads Resources directly
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#495-mcp" class="md-nav__link">
+  <a href="#495-applying-an-old-state-model-to-current-mcp" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.5 按旧规范理解 MCP 的状态模型
+      4.9.5 Applying an old state model to current MCP
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#496-mcp-server" class="md-nav__link">
+  <a href="#496-ignoring-the-mcp-server-trust-boundary" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.6 忽视 MCP Server 的信任边界
+      4.9.6 Ignoring the MCP Server trust boundary
     </span>
   </a>
   
@@ -3152,18 +3186,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#410" class="md-nav__link">
+  <a href="#410-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      4.10 本章总结
+      4.10 Chapter summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -3190,7 +3224,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3213,7 +3247,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3236,7 +3270,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3259,7 +3293,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3357,7 +3391,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3380,7 +3414,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3403,7 +3437,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3462,7 +3496,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3479,7 +3513,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3497,7 +3531,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3558,7 +3592,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3575,7 +3609,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3593,7 +3627,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3616,7 +3650,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3693,7 +3727,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3710,7 +3744,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3757,7 +3791,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3774,7 +3808,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3792,7 +3826,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3815,7 +3849,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3838,7 +3872,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3908,7 +3942,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3925,7 +3959,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3943,7 +3977,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3966,7 +4000,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3989,7 +4023,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -4012,7 +4046,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -4035,7 +4069,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -4058,7 +4092,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -4081,7 +4115,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -4104,7 +4138,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4168,7 +4202,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4185,7 +4219,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4203,7 +4237,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4226,7 +4260,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4249,7 +4283,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4272,7 +4306,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4295,7 +4329,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4355,7 +4389,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4372,7 +4406,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4390,7 +4424,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4413,7 +4447,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4436,7 +4470,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4494,7 +4528,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4511,7 +4545,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4529,7 +4563,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4552,7 +4586,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4610,7 +4644,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4627,7 +4661,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4645,7 +4679,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4668,7 +4702,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4724,7 +4758,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4741,7 +4775,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4759,7 +4793,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4815,7 +4849,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4832,7 +4866,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4850,7 +4884,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -4987,7 +5021,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -5004,7 +5038,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5022,7 +5056,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5045,7 +5079,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5113,7 +5147,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5130,7 +5164,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5148,7 +5182,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5171,7 +5205,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5194,7 +5228,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5217,7 +5251,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5240,7 +5274,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5263,7 +5297,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5286,7 +5320,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5350,7 +5384,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5367,7 +5401,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5385,7 +5419,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5408,7 +5442,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5431,7 +5465,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5454,7 +5488,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5477,7 +5511,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5537,7 +5571,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5554,7 +5588,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5572,7 +5606,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5595,7 +5629,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5618,7 +5652,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5676,7 +5710,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5693,7 +5727,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5711,7 +5745,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5734,7 +5768,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5792,7 +5826,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5809,7 +5843,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5827,7 +5861,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5850,7 +5884,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5906,7 +5940,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5923,7 +5957,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5941,7 +5975,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6014,7 +6048,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6031,7 +6065,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6082,7 +6116,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6099,7 +6133,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6146,7 +6180,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6163,7 +6197,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6181,7 +6215,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6204,7 +6238,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6227,7 +6261,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6287,7 +6321,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6304,7 +6338,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6322,7 +6356,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6345,7 +6379,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6368,7 +6402,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6428,7 +6462,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6445,7 +6479,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6463,7 +6497,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6486,7 +6520,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6509,7 +6543,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6602,7 +6636,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6625,7 +6659,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6683,7 +6717,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6700,7 +6734,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6718,7 +6752,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6741,7 +6775,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6842,7 +6876,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6865,7 +6899,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6958,7 +6992,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -6981,7 +7015,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7074,7 +7108,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7097,7 +7131,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7155,7 +7189,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7172,7 +7206,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7190,7 +7224,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7213,7 +7247,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7271,7 +7305,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7288,7 +7322,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7306,7 +7340,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7329,7 +7363,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7464,7 +7498,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7481,7 +7515,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7499,7 +7533,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7522,7 +7556,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7580,7 +7614,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7597,7 +7631,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7615,7 +7649,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7638,7 +7672,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7696,7 +7730,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7713,7 +7747,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7731,7 +7765,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7754,7 +7788,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7812,7 +7846,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7829,7 +7863,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7847,7 +7881,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7870,7 +7904,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7928,7 +7962,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7945,7 +7979,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7963,7 +7997,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -7986,7 +8020,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8046,7 +8080,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8063,7 +8097,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8081,7 +8115,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8104,7 +8138,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8127,7 +8161,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8198,7 +8232,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8215,7 +8249,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8258,7 +8292,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8275,7 +8309,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8293,7 +8327,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8351,7 +8385,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8368,7 +8402,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8386,7 +8420,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8409,7 +8443,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8469,7 +8503,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8486,7 +8520,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8504,7 +8538,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8527,7 +8561,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8550,7 +8584,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8608,7 +8642,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8625,7 +8659,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8643,7 +8677,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8666,7 +8700,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8724,7 +8758,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8741,7 +8775,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8759,7 +8793,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8782,7 +8816,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8907,7 +8941,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8924,7 +8958,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8942,7 +8976,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -8998,7 +9032,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9015,7 +9049,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9033,7 +9067,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9072,7 +9106,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9081,78 +9115,78 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#41-mcp-function-calling" class="md-nav__link">
+  <a href="#41-mcp-does-not-solve-the-same-problem-as-function-calling" class="md-nav__link">
     <span class="md-ellipsis">
-      4.1 MCP 解决的不是 Function Calling 解决的问题
+      4.1 MCP does not solve the same problem as function calling
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#42-mn" class="md-nav__link">
+  <a href="#42-the-mn-cost-model-of-repeated-integration" class="md-nav__link">
     <span class="md-ellipsis">
-      4.2 重复适配的 M×N 成本模型
+      4.2 The M×N cost model of repeated integration
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#43-mcp-mn-mn" class="md-nav__link">
+  <a href="#43-mcps-central-idea-turn-mn-into-mn" class="md-nav__link">
     <span class="md-ellipsis">
-      4.3 MCP 的核心思路：把 M×N 变成 M+N
+      4.3 MCP's central idea: turn M×N into M+N
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#44-hostclientserver" class="md-nav__link">
+  <a href="#44-the-three-roles-host-client-and-server" class="md-nav__link">
     <span class="md-ellipsis">
-      4.4 Host、Client、Server 三个角色
+      4.4 The three roles: Host, Client, and Server
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#45-toolsresourcesprompts" class="md-nav__link">
+  <a href="#45-three-core-capabilities-tools-resources-and-prompts" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5 三类核心能力：Tools、Resources、Prompts
+      4.5 Three core capabilities: Tools, Resources, and Prompts
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.5 三类核心能力：Tools、Resources、Prompts">
+    <nav class="md-nav" aria-label="4.5 Three core capabilities: Tools, Resources, and Prompts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#451-tools" class="md-nav__link">
+  <a href="#451-tools-model-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.1 Tools：模型控制
+      4.5.1 Tools: model-controlled
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#452-resources" class="md-nav__link">
+  <a href="#452-resources-application-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.2 Resources：应用控制
+      4.5.2 Resources: application-controlled
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#453-prompts" class="md-nav__link">
+  <a href="#453-prompts-user-controlled" class="md-nav__link">
     <span class="md-ellipsis">
-      4.5.3 Prompts：用户控制
+      4.5.3 Prompts: user-controlled
     </span>
   </a>
   
@@ -9164,46 +9198,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#46-json-rpc-20" class="md-nav__link">
+  <a href="#46-the-message-format-json-rpc-20" class="md-nav__link">
     <span class="md-ellipsis">
-      4.6 底层通信：JSON-RPC 2.0
+      4.6 The message format: JSON-RPC 2.0
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#47" class="md-nav__link">
+  <a href="#47-lifecycle-and-version-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7 生命周期与版本兼容
+      4.7 Lifecycle and version compatibility
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.7 生命周期与版本兼容">
+    <nav class="md-nav" aria-label="4.7 Lifecycle and version compatibility">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#471" class="md-nav__link">
+  <a href="#471-version-timeline" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.1 版本时间线
+      4.7.1 Version timeline
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#472" class="md-nav__link">
+  <a href="#472-per-request-negotiation-and-legacy-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.2 每请求协商与旧版兼容
+      4.7.2 Per-request negotiation and legacy compatibility
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#473" class="md-nav__link">
+  <a href="#473-engineering-implications" class="md-nav__link">
     <span class="md-ellipsis">
-      4.7.3 工程上要注意什么
+      4.7.3 Engineering implications
     </span>
   </a>
   
@@ -9215,73 +9249,73 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#48-mcp" class="md-nav__link">
+  <a href="#48-why-the-mcp-ecosystem-grew-quickly" class="md-nav__link">
     <span class="md-ellipsis">
-      4.8 MCP 生态为什么起得这么快
+      4.8 Why the MCP ecosystem grew quickly
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#49" class="md-nav__link">
+  <a href="#49-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9 常见错误
+      4.9 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="4.9 常见错误">
+    <nav class="md-nav" aria-label="4.9 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#491-mcp-function-calling" class="md-nav__link">
+  <a href="#491-assuming-mcp-replaces-function-calling" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.1 认为 MCP 取代了 Function Calling
+      4.9.1 Assuming MCP replaces function calling
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#492-host-client" class="md-nav__link">
+  <a href="#492-confusing-host-and-client" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.2 把 Host 和 Client 混为一谈
+      4.9.2 Confusing Host and Client
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#493-tool" class="md-nav__link">
+  <a href="#493-assuming-a-read-only-query-cannot-be-a-tool" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.3 认为只读查询不能是 Tool
+      4.9.3 Assuming a read-only query cannot be a Tool
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#494-resources" class="md-nav__link">
+  <a href="#494-assuming-the-model-reads-resources-directly" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.4 以为 Resources 是模型主动读的
+      4.9.4 Assuming the model reads Resources directly
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#495-mcp" class="md-nav__link">
+  <a href="#495-applying-an-old-state-model-to-current-mcp" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.5 按旧规范理解 MCP 的状态模型
+      4.9.5 Applying an old state model to current MCP
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#496-mcp-server" class="md-nav__link">
+  <a href="#496-ignoring-the-mcp-server-trust-boundary" class="md-nav__link">
     <span class="md-ellipsis">
-      4.9.6 忽视 MCP Server 的信任边界
+      4.9.6 Ignoring the MCP Server trust boundary
     </span>
   </a>
   
@@ -9293,18 +9327,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#410" class="md-nav__link">
+  <a href="#410-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      4.10 本章总结
+      4.10 Chapter summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9326,7 +9360,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/tools/02-mcp/04-what-is-mcp.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/tools/02-mcp/04-what-is-mcp.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9334,60 +9368,60 @@
   
 
 
-<h1 id="mcp">第四章：MCP 模型上下文协议的核心内容<a class="headerlink" href="#mcp" title="Permanent link">&para;</a></h1>
-<h2 id="41-mcp-function-calling">4.1 MCP 解决的不是 Function Calling 解决的问题<a class="headerlink" href="#41-mcp-function-calling" title="Permanent link">&para;</a></h2>
-<p>MCP 要先和 Function Calling 分开看。</p>
-<p><a href="../../01-function-calling/01-function-calling/">Function Calling</a> 解决的是「<strong>模型怎么表达调用意图</strong>」——一个模型层的输出格式约定。</p>
-<p>MCP 解决的是完全不同的一组问题：</p>
+<h1 id="chapter-4-the-core-of-the-model-context-protocol"><span id="mcp" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 4: The Core of the Model Context Protocol<a class="headerlink" href="#chapter-4-the-core-of-the-model-context-protocol" title="Permanent link">&para;</a></h1>
+<h2 id="41-mcp-does-not-solve-the-same-problem-as-function-calling"><span id="41-mcp-function-calling" class="legacy-heading-anchor" aria-hidden="true"></span>4.1 MCP does not solve the same problem as function calling<a class="headerlink" href="#41-mcp-does-not-solve-the-same-problem-as-function-calling" title="Permanent link">&para;</a></h2>
+<p>Start by separating MCP from function calling.</p>
+<p><a href="../../01-function-calling/01-function-calling/">Function calling</a> answers <strong>how a model expresses its intent to call a tool</strong>. It is a model-level output-format convention.</p>
+<p>MCP addresses a different set of questions:</p>
 <ul>
-<li>工具<strong>在哪里</strong>？怎么被发现，而不是硬编码在应用代码里；</li>
-<li>工具<strong>怎么跨进程提供</strong>？能不能装在另一台机器上；</li>
-<li>同一个工具，<strong>能不能被不同的 AI 应用复用</strong>？</li>
-<li>工具变更了，<strong>接入方要不要改代码</strong>？</li>
+<li><strong>Where are the tools?</strong> How can an application discover them rather than hard-code them?</li>
+<li><strong>How are tools provided across processes?</strong> Can they run on another machine?</li>
+<li>Can <strong>different AI applications reuse the same tool</strong>?</li>
+<li>When a tool changes, <strong>must every consuming application change its code</strong>?</li>
 </ul>
-<p>边界可以概括成：</p>
+<p>The boundary is:</p>
 <blockquote>
-<p><strong>Function Calling 是一种常见的模型—应用接口；MCP 是 Host/Client—Server 的开放协议。二者可在同一应用中配合，但 MCP 本身不规定、更不必然依赖某家模型的 Function Calling。</strong></p>
+<p><strong>Function calling is a common model–application interface; MCP is an open Host/Client–Server protocol. They can work together in one application, but MCP neither specifies nor necessarily depends on a particular model provider's function-calling interface.</strong></p>
 </blockquote>
-<h2 id="42-mn">4.2 重复适配的 M×N 成本模型<a class="headerlink" href="#42-mn" title="Permanent link">&para;</a></h2>
-<p>假设你要把 GitHub 接进一个 AI 应用。你得自己写 GitHub API 的调用代码、处理 OAuth 认证、把各种返回格式转成模型能理解的 Schema、写错误处理。好不容易接完了，接下来会发生三件事：</p>
+<h2 id="42-the-mn-cost-model-of-repeated-integration"><span id="42-mn" class="legacy-heading-anchor" aria-hidden="true"></span>4.2 The M×N cost model of repeated integration<a class="headerlink" href="#42-the-mn-cost-model-of-repeated-integration" title="Permanent link">&para;</a></h2>
+<p>Suppose you want to connect GitHub to an AI application. You write the GitHub API calls, handle OAuth authentication, map response formats into schemas the model can understand, and implement error handling. Once that works, three things happen:</p>
 <ol>
-<li><strong>同一个应用接第二个工具</strong>：Slack 的认证方式、返回格式、错误码跟 GitHub 完全不同，整套逻辑重写一遍；</li>
-<li><strong>同一个工具给第二个应用用</strong>：Cursor 的接入方式和你原来那个应用完全不同，再重写一遍；</li>
-<li><strong>工具方升级 API</strong>：所有接入方各自改代码。</li>
+<li><strong>The same application needs a second tool.</strong> Slack has different authentication, response formats, and error codes, so you implement another integration.</li>
+<li><strong>A second application needs the same tool.</strong> Cursor's integration differs from that of your original application, so you do the work again.</li>
+<li><strong>The tool provider upgrades its API.</strong> Every consuming application updates its own code.</li>
 </ol>
 <pre class="mermaid"><code>flowchart LR
-    subgraph BEFORE["分别适配的简化模型：M×N 条对接关系"]
+    subgraph BEFORE["Separate integrations: a simplified model with M×N relationships"]
         A1[Claude Desktop] --- T1[GitHub]
         A1 --- T2[Slack]
         A1 --- T3[Postgres]
         A2[Cursor] --- T1
         A2 --- T2
         A2 --- T3
-        A3[自研 Agent] --- T1
+        A3[Custom agent] --- T1
         A3 --- T2
         A3 --- T3
     end</code></pre>
-<p>如果每个应用都独立适配每个工具，接口组合数为 M×N。这是说明重复劳动的简化模型，不是历史统计；共享 SDK、内部 API 和适配层本来也能减少重复实现。</p>
-<h2 id="43-mcp-mn-mn">4.3 MCP 的核心思路：把 M×N 变成 M+N<a class="headerlink" href="#43-mcp-mn-mn" title="Permanent link">&para;</a></h2>
-<p>可以把 MCP 类比为 <strong>USB 这样的通用接口</strong>：参与方遵守共同约定，就能减少专用适配。不过 USB 仍有驱动、版本和设备能力差异，MCP 也一样。</p>
-<p>MCP 为「AI 接工具」定了同一种标准：</p>
+<p>If every application independently integrates every tool, there are M×N interface combinations. This is a simplified model of duplicated work, not a historical measurement. Shared SDKs, internal APIs, and adapter layers can also reduce duplication.</p>
+<h2 id="43-mcps-central-idea-turn-mn-into-mn"><span id="43-mcp-mn-mn" class="legacy-heading-anchor" aria-hidden="true"></span>4.3 MCP's central idea: turn M×N into M+N<a class="headerlink" href="#43-mcps-central-idea-turn-mn-into-mn" title="Permanent link">&para;</a></h2>
+<p>Think of MCP as a <strong>common interface such as USB</strong>: shared conventions reduce the need for bespoke adapters. USB still has drivers, versions, and differences in device capabilities; MCP has comparable limitations.</p>
+<p>MCP gives AI applications and tool providers a common standard:</p>
 <pre class="mermaid"><code>flowchart LR
-    subgraph AFTER["共享协议的简化模型：M 个 Client + N 个 Server"]
-        A1[Claude Desktop] --&gt; P((MCP 协议))
+    subgraph AFTER["Shared protocol: a simplified model with M Clients + N Servers"]
+        A1[Claude Desktop] --&gt; P((MCP))
         A2[Cursor] --&gt; P
-        A3[自研 Agent] --&gt; P
+        A3[Custom agent] --&gt; P
         P --&gt; S1[GitHub MCP Server]
         P --&gt; S2[Slack MCP Server]
         P --&gt; S3[Postgres MCP Server]
     end</code></pre>
-<p>工具方实现 Server 后，支持相同版本、传输和能力的应用可复用接入。认证、数据映射、权限和部署仍要配置，不能承诺“任意客户端零代码接入”。</p>
-<p><code>tools/list</code> 用于发现<strong>已知 Server</strong> 的工具，不负责在互联网寻找 Server。结果可能分页；工具更新后还需刷新缓存、审阅描述及权限、重新测试模型路由，而不是自动信任新增工具。</p>
-<h2 id="44-hostclientserver">4.4 Host、Client、Server 三个角色<a class="headerlink" href="#44-hostclientserver" title="Permanent link">&para;</a></h2>
-<p>MCP 采用 client-host-server 架构，注意是三个角色而不是两个——这里最容易被讲错。</p>
+<p>Once a provider implements a Server, applications supporting compatible versions, transports, and capabilities can reuse that integration. Authentication, data mapping, permissions, and deployment still need configuration. This is not a promise of “zero-code integration with any client.”</p>
+<p><code>tools/list</code> discovers tools on a <strong>known Server</strong>; it does not find Servers on the internet. Results may be paginated. Tool updates also require cache refreshes, review of descriptions and permissions, and new model-routing tests—not automatic trust in newly added tools.</p>
+<h2 id="44-the-three-roles-host-client-and-server"><span id="44-hostclientserver" class="legacy-heading-anchor" aria-hidden="true"></span>4.4 The three roles: Host, Client, and Server<a class="headerlink" href="#44-the-three-roles-host-client-and-server" title="Permanent link">&para;</a></h2>
+<p>MCP uses a client-host-server architecture. There are three roles, not two—an easy distinction to miss.</p>
 <pre class="mermaid"><code>flowchart TB
-    subgraph HOST["Host 进程（如 Claude Desktop / Cursor / 你的 Agent）"]
-        H["Host&lt;br/&gt;协调者：管理生命周期、执行安全策略、处理用户授权"]
+    subgraph HOST["Host process: Claude Desktop / Cursor / your agent"]
+        H["Host&lt;br/&gt;Coordinator: lifecycle, security policies, user authorization"]
         C1["Client 1"]
         C2["Client 2"]
         C3["Client 3"]
@@ -9396,13 +9430,13 @@
         H --&gt; C3
     end
 
-    subgraph LOCAL["本地"]
-        S1["Server 1&lt;br/&gt;文件系统"]
-        S2["Server 2&lt;br/&gt;数据库"]
+    subgraph LOCAL["Local"]
+        S1["Server 1&lt;br/&gt;Filesystem"]
+        S2["Server 2&lt;br/&gt;Database"]
     end
 
-    subgraph REMOTE["远程"]
-        S3["Server 3&lt;br/&gt;外部 API"]
+    subgraph REMOTE["Remote"]
+        S3["Server 3&lt;br/&gt;External API"]
     end
 
     C1 --&gt; S1
@@ -9411,79 +9445,79 @@
 <table>
 <thead>
 <tr>
-<th>角色</th>
-<th>职责</th>
-<th>数量关系</th>
+<th>Role</th>
+<th>Responsibilities</th>
+<th>Typical count</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Host</strong></td>
-<td>AI 应用本身。管理 Client 生命周期、执行安全策略、处理用户授权、协调 LLM 调用、聚合多个 Server 的上下文</td>
+<td>The AI application itself. Manages Client lifecycles, enforces security policies, handles user authorization, coordinates LLM calls, and aggregates context from multiple Servers</td>
 <td>1</td>
 </tr>
 <tr>
 <td><strong>Client</strong></td>
-<td>Host 内的协议连接器，通常对应一个 Server 连接</td>
+<td>A protocol connector inside the Host, usually corresponding to one Server connection</td>
 <td>N</td>
 </tr>
 <tr>
 <td><strong>Server</strong></td>
-<td>工具实现方。独立运行，职责聚焦，暴露 Tools / Resources / Prompts</td>
+<td>The tool provider. Runs independently with a focused responsibility and exposes Tools / Resources / Prompts</td>
 <td>N</td>
 </tr>
 </tbody>
 </table>
-<p>Host 通常为每个 Server 维护独立 Client/连接，便于生命周期和错误隔离；但这不是协议自动提供的安全沙箱。Server 能看到什么仍取决于 Host 传入的参数、进程与网络权限，隔离必须由 Host、操作系统和网络策略共同实现。</p>
-<p><strong>Host 与 Server 都要授权</strong>。Host 决定工具可见性、用户确认和数据分享；Server 仍必须校验令牌、租户和对象级权限，不能相信 Client 已经检查过。</p>
-<h2 id="45-toolsresourcesprompts">4.5 三类核心能力：Tools、Resources、Prompts<a class="headerlink" href="#45-toolsresourcesprompts" title="Permanent link">&para;</a></h2>
-<p>MCP Server 可以暴露三类能力。规范强调的是<strong>默认发起方/控制路径</strong>，而不是以副作用给能力定性；实际调用始终由 Host 许可、执行与审计。</p>
+<p>A Host typically maintains a separate Client/connection for each Server to manage lifecycles and isolate failures. This is not a security sandbox supplied by the protocol. What a Server can see still depends on the arguments the Host sends and on process and network permissions. Isolation requires the Host, operating system, and network policies to work together.</p>
+<p><strong>Both Host and Server must enforce authorization.</strong> The Host controls tool visibility, user confirmation, and data sharing. The Server must still validate tokens, tenants, and object-level permissions; it cannot assume that the Client already checked them.</p>
+<h2 id="45-three-core-capabilities-tools-resources-and-prompts"><span id="45-toolsresourcesprompts" class="legacy-heading-anchor" aria-hidden="true"></span>4.5 Three core capabilities: Tools, Resources, and Prompts<a class="headerlink" href="#45-three-core-capabilities-tools-resources-and-prompts" title="Permanent link">&para;</a></h2>
+<p>An MCP Server can expose three kinds of capabilities. The specification distinguishes their <strong>default initiator or control path</strong>, not their side effects. Actual invocations remain subject to Host permission, execution, and auditing.</p>
 <table>
 <thead>
 <tr>
-<th>能力</th>
-<th>有副作用吗</th>
-<th>谁来触发</th>
-<th>类比</th>
+<th>Capability</th>
+<th>Side effects</th>
+<th>Who initiates it</th>
+<th>Analogy</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Tools</strong></td>
-<td>可读、可写或有外部副作用，取决于实现</td>
-<td>模型或 Host 工作流可建议调用，Host 最终决定</td>
-<td>手</td>
+<td>May read, write, or cause external side effects, depending on implementation</td>
+<td>A model or Host workflow may propose a call; the Host makes the final decision</td>
+<td>Hands</td>
 </tr>
 <tr>
 <td><strong>Resources</strong></td>
-<td>面向应用提供可读取的上下文；通常应设计为安全读取</td>
-<td>Host/Client 决定何时列出、读取或注入</td>
-<td>资料室</td>
+<td>Readable context for applications; normally designed for safe reads</td>
+<td>The Host/Client decides when to list, read, or inject them</td>
+<td>Reference room</td>
 </tr>
 <tr>
 <td><strong>Prompts</strong></td>
-<td>返回提示模板或消息</td>
-<td>用户或 Host 选择并取得</td>
-<td>模板库</td>
+<td>Return prompt templates or messages</td>
+<td>The user or Host selects and retrieves them</td>
+<td>Template library</td>
 </tr>
 </tbody>
 </table>
-<h3 id="451-tools">4.5.1 Tools：模型控制<a class="headerlink" href="#451-tools" title="Permanent link">&para;</a></h3>
-<p>Tools 是可由模型或工作流选择的可执行能力：可以是只读搜索，也可以是创建文件、提交代码、发消息等写操作。是否有副作用<strong>不能</strong>从 <code>tools/call</code> 这一类型本身推断。</p>
-<p>对转账、删除、发布等高风险 Tool，Host 应在执行前要求明确授权或审批；Server 执行前再次验证实际参数与权限。低风险读取也要遵循最小权限。</p>
-<h3 id="452-resources">4.5.2 Resources：应用控制<a class="headerlink" href="#452-resources" title="Permanent link">&para;</a></h3>
-<p>Resources 是 Server 暴露给 Client 的、由 URI 标识的上下文数据。它们通常用于读取文档、日志或记录；“Resource”不是对底层实现绝无副作用的安全保证，Host 不应仅凭类别跳过信任与访问控制。</p>
-<p>Resource 的协议读取由 Client 执行，内容是否进入上下文由 Host 决定。Host 可以接受模型建议去读资源；“应用控制”是默认交互模型，不是禁止模型参与选择。</p>
-<h3 id="453-prompts">4.5.3 Prompts：用户控制<a class="headerlink" href="#453-prompts" title="Permanent link">&para;</a></h3>
-<p>带参数占位符的预定义提示词模板。团队有一套固定的代码审查标准 Prompt，接受「编程语言」和「代码内容」两个参数，调用时传参就能展开成完整提示词。</p>
-<p>Prompts 通常以「斜杠命令」或菜单项的形式暴露给用户，由<strong>用户</strong>主动选择触发，而不是模型自己决定用哪个。把公司积累的优质 Prompt 封装成 MCP Prompts，全团队复用同一套标准，这在实际工程里比想象中有用。</p>
-<h2 id="46-json-rpc-20">4.6 底层通信：JSON-RPC 2.0<a class="headerlink" href="#46-json-rpc-20" title="Permanent link">&para;</a></h2>
-<p>MCP 的消息格式是 JSON-RPC 2.0——一种用 JSON 表达「远程函数调用」的轻量协议。</p>
-<p>以下仅展示方法与数据关系，省略当前版本必需的 <code>_meta</code>、<code>resultType</code> 及列表缓存字段，不是完整报文；完整请求见<a href="../12-mcp-transport/">第十二章</a>。</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>// 请求：客户端列出所有工具
+<h3 id="451-tools-model-controlled"><span id="451-tools" class="legacy-heading-anchor" aria-hidden="true"></span>4.5.1 Tools: model-controlled<a class="headerlink" href="#451-tools-model-controlled" title="Permanent link">&para;</a></h3>
+<p>Tools are executable capabilities that a model or workflow can select. A Tool may perform a read-only search, or write by creating files, committing code, or sending messages. You <strong>cannot</strong> infer side effects from the <code>tools/call</code> method alone.</p>
+<p>For high-risk Tools such as transfers, deletion, or publishing, the Host should require explicit authorization or approval before execution. The Server must then revalidate the actual arguments and permissions. Even low-risk reads need least-privilege access.</p>
+<h3 id="452-resources-application-controlled"><span id="452-resources" class="legacy-heading-anchor" aria-hidden="true"></span>4.5.2 Resources: application-controlled<a class="headerlink" href="#452-resources-application-controlled" title="Permanent link">&para;</a></h3>
+<p>Resources are URI-identified context data that a Server exposes to a Client. They commonly provide documents, logs, or records. “Resource” is not a security guarantee that the underlying implementation has no side effects; the Host must not skip trust and access checks just because of the category.</p>
+<p>The Client performs the protocol read, and the Host decides whether the content enters the model's context. A Host may accept a model's suggestion to read a resource. “Application-controlled” describes the default interaction model; it does not prohibit model involvement in selection.</p>
+<h3 id="453-prompts-user-controlled"><span id="453-prompts" class="legacy-heading-anchor" aria-hidden="true"></span>4.5.3 Prompts: user-controlled<a class="headerlink" href="#453-prompts-user-controlled" title="Permanent link">&para;</a></h3>
+<p>Prompts are predefined prompt templates with parameter placeholders. For example, a team's standard code-review prompt may take “programming language” and “code” as arguments. Supplying those arguments expands it into a complete prompt.</p>
+<p>Prompts are often exposed as slash commands or menu items that the <strong>user</strong> selects, rather than something the model chooses on its own. Packaging a company's useful prompts as MCP Prompts lets the whole team reuse the same standards—a practical benefit that is easy to overlook.</p>
+<h2 id="46-the-message-format-json-rpc-20"><span id="46-json-rpc-20" class="legacy-heading-anchor" aria-hidden="true"></span>4.6 The message format: JSON-RPC 2.0<a class="headerlink" href="#46-the-message-format-json-rpc-20" title="Permanent link">&para;</a></h2>
+<p>MCP messages use JSON-RPC 2.0, a lightweight protocol for expressing remote procedure calls in JSON.</p>
+<p>The following example shows only the relationship between methods and data. It omits the <code>_meta</code>, <code>resultType</code>, and list-cache fields required by the current version, so these are not complete wire messages. See <a href="../12-mcp-transport/">Chapter 12</a> for a complete request.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>// Request: the Client lists all tools
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>// 响应
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>// Response
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>{"jsonrpc": "2.0", "id": 1, "result": {"tools": [
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  {"name": "create_issue", "inputSchema": {
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    "type": "object",
@@ -9492,69 +9526,69 @@
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  }}
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>]}}
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>// 请求：调用某个工具
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>// Request: call a tool
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>{"jsonrpc": "2.0", "id": 2, "method": "tools/call",
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a> "params": {"name": "create_issue", "arguments": {"title": "Bug", "body": "..."}}}
 </span></code></pre></div>
-<p>JSON-RPC 使用可读的 JSON 和统一的请求、结果、错误结构，便于跨语言调试。但解析几条 JSON 只是起点，完整 Client 还要处理版本、能力、授权、取消和故障恢复；不能用教学代码行数衡量实现成本。</p>
-<p>传输方式（stdio / Streamable HTTP）的细节见 <a href="../12-mcp-transport/">第十二章</a>。</p>
-<h2 id="47">4.7 生命周期与版本兼容<a class="headerlink" href="#47" title="Permanent link">&para;</a></h2>
-<p>本章固定采用 <strong>2026-07-28</strong> 规范。此版改为无状态、请求自包含：每个请求携带协议版本与 Client capabilities；Server 必须实现 <code>server/discover</code>，Client 可选调用。旧版 <code>initialize</code> 属于兼容路径，不是本版核心握手。</p>
-<p>官方将 Current 定义为“ready for use”，仍可接收向后兼容修改；Draft 是尚未可供使用的修订，Final 则指不再修改的历史版本。因此这里的 Current 既不是草案，也不意味着规范已冻结。</p>
-<h3 id="471">4.7.1 版本时间线<a class="headerlink" href="#471" title="Permanent link">&para;</a></h3>
+<p>JSON-RPC combines readable JSON with consistent request, result, and error structures, making cross-language debugging easier. Parsing a few JSON messages is only the start: a complete Client must also handle versions, capabilities, authorization, cancellation, and recovery. A teaching example's line count is not a measure of implementation cost.</p>
+<p>For the details of stdio and Streamable HTTP, see <a href="../12-mcp-transport/">Chapter 12</a>.</p>
+<h2 id="47-lifecycle-and-version-compatibility"><span id="47" class="legacy-heading-anchor" aria-hidden="true"></span>4.7 Lifecycle and version compatibility<a class="headerlink" href="#47-lifecycle-and-version-compatibility" title="Permanent link">&para;</a></h2>
+<p>This chapter is pinned to specification <strong>2026-07-28</strong>. This version is stateless, with self-contained requests: every request carries the protocol version and Client capabilities. Servers must implement <code>server/discover</code>, which Clients may optionally call. The old <code>initialize</code> method belongs to a compatibility path, not the core handshake for this version.</p>
+<p>The official status <strong>Current</strong> means “ready for use” and still allows backward-compatible changes. <strong>Draft</strong> denotes an in-progress revision not yet ready for use; <strong>Final</strong> denotes a historical version that will no longer change. Current therefore means neither draft nor frozen.</p>
+<h3 id="471-version-timeline"><span id="471" class="legacy-heading-anchor" aria-hidden="true"></span>4.7.1 Version timeline<a class="headerlink" href="#471-version-timeline" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>版本</th>
-<th>关键变化</th>
+<th>Version</th>
+<th>Key changes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>2024-11-05</td>
-<td>初版。HTTP + SSE 双端点传输</td>
+<td>Initial version, with a two-endpoint HTTP + SSE transport</td>
 </tr>
 <tr>
 <td>2025-03-26</td>
-<td>Streamable HTTP 取代 HTTP+SSE 双端点</td>
+<td>Streamable HTTP replaces the two-endpoint HTTP + SSE transport</td>
 </tr>
 <tr>
 <td>2025-06-18</td>
-<td>授权规范完善，结构化工具输出</td>
+<td>Authorization improvements and structured tool output</td>
 </tr>
 <tr>
 <td>2025-11-25</td>
-<td>引入实验性 Tasks 等能力，仍采用初始化和会话模型</td>
+<td>Introduces capabilities such as experimental Tasks; still uses initialization and sessions</td>
 </tr>
 <tr>
 <td>2026-07-28</td>
-<td>改为无状态、每请求携带版本与能力；引入 <code>server/discover</code> 和订阅流，旧初始化模型进入兼容路径</td>
+<td>Becomes stateless, with versions and capabilities on each request; introduces <code>server/discover</code> and subscription streams; moves the old initialization model to a compatibility path</td>
 </tr>
 </tbody>
 </table>
-<h3 id="472">4.7.2 每请求协商与旧版兼容<a class="headerlink" href="#472" title="Permanent link">&para;</a></h3>
-<p>新规范中，请求通过 <code>_meta.io.modelcontextprotocol/*</code> 携带协议版本和 Client capabilities。Client 可先调用 <code>server/discover</code> 获取 Server 支持的版本与能力，也可直接发起带元数据的业务请求。需要持续通知时，Client 显式建立 subscription；需要模型或用户补充输入时，Server 在响应中返回 <code>InputRequiredResult</code>，Client 补齐输入后重发原请求。</p>
-<p>与旧版 Server 互操作时，只有明确支持新旧两代协议的实现（dual-era）才能按兼容矩阵回退到 <code>initialize</code>、<code>notifications/initialized</code> 和旧版会话语义。现代协议专用 SDK 不一定具备这条路径，不能把旧握手继续写成所有 MCP 调用的必经步骤。</p>
-<p>2026-07-28 所有结果还要求 <code>resultType</code>；读取与列表结果有 <code>ttlMs</code>、<code>cacheScope</code>。Sampling、Roots、Logging 已 <strong>Deprecated</strong>，仍保留兼容但新实现不应再采用；Tasks 已移到 <code>io.modelcontextprotocol/tasks</code> 官方可选扩展。扩展、草案 SEP 和核心协议不是同一发布层级，详见<a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">变更记录</a>。</p>
-<h3 id="473">4.7.3 工程上要注意什么<a class="headerlink" href="#473" title="Permanent link">&para;</a></h3>
-<p><strong>多版本共存是常态</strong>。涉及 transports、authorization、sampling 或任务等特性时，应核对 Client、Server 与目标发布版本的兼容性，不能凭教程假定其存在或不存在。</p>
-<h2 id="48-mcp">4.8 MCP 生态为什么起得这么快<a class="headerlink" href="#48-mcp" title="Permanent link">&para;</a></h2>
-<p>MCP 由 Anthropic 在 2024 年 11 月发布。SDK 与可复用 Server 降低了适配门槛，但生态采用度不能替代版本和安全核查。</p>
-<p><strong>SDK 简化协议代码</strong>。下面保留 FastMCP 风格的教学示例；运行时应固定 SDK 发布版并核对它支持的协议版本，函数可运行不代表已实现完整授权和治理：</p>
+<h3 id="472-per-request-negotiation-and-legacy-compatibility"><span id="472" class="legacy-heading-anchor" aria-hidden="true"></span>4.7.2 Per-request negotiation and legacy compatibility<a class="headerlink" href="#472-per-request-negotiation-and-legacy-compatibility" title="Permanent link">&para;</a></h3>
+<p>In the new specification, requests carry the protocol version and Client capabilities through <code>_meta.io.modelcontextprotocol/*</code>. A Client may first call <code>server/discover</code> to learn the Server's supported versions and capabilities, or send an application request with that metadata directly. For ongoing notifications, the Client explicitly establishes a subscription. When the Server needs model or user input, it returns an <code>InputRequiredResult</code>; the Client supplies the missing input and resubmits the original request.</p>
+<p>Interoperating with legacy Servers requires a <strong>dual-era</strong> implementation that explicitly supports both generations. Only such implementations can follow the compatibility matrix to fall back to <code>initialize</code>, <code>notifications/initialized</code>, and legacy session semantics. A modern-only SDK may have no such path. Do not describe the old handshake as a mandatory step in every MCP interaction.</p>
+<p>In 2026-07-28, all results also require <code>resultType</code>; read and list results carry <code>ttlMs</code> and <code>cacheScope</code>. Sampling, Roots, and Logging are <strong>Deprecated</strong>: retained for compatibility, but not recommended for new implementations. Tasks have moved to the official optional extension <code>io.modelcontextprotocol/tasks</code>. Extensions, draft SEPs, and the core protocol are different release categories; see the <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">changelog</a>.</p>
+<h3 id="473-engineering-implications"><span id="473" class="legacy-heading-anchor" aria-hidden="true"></span>4.7.3 Engineering implications<a class="headerlink" href="#473-engineering-implications" title="Permanent link">&para;</a></h3>
+<p><strong>Multiple versions routinely coexist.</strong> For features such as transports, authorization, sampling, or tasks, check the Client, Server, and target protocol revision together. A tutorial is not evidence that a feature is either present or absent.</p>
+<h2 id="48-why-the-mcp-ecosystem-grew-quickly"><span id="48-mcp" class="legacy-heading-anchor" aria-hidden="true"></span>4.8 Why the MCP ecosystem grew quickly<a class="headerlink" href="#48-why-the-mcp-ecosystem-grew-quickly" title="Permanent link">&para;</a></h2>
+<p>Anthropic introduced MCP in November 2024. SDKs and reusable Servers lowered integration costs, but adoption is no substitute for version and security checks.</p>
+<p><strong>SDKs simplify protocol code.</strong> This FastMCP-style example is for teaching. Pin the SDK release when running it and verify its supported protocol versions. A working function does not establish complete authorization or governance:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s2">"demo"</span><span class="p">)</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">()</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="sd">"""将两个整数相加"""</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="sd">"""Add two integers."""</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">mcp</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></code></pre></div>
-<p>这里的工具参数类型用于生成输入 JSON Schema，docstring 用于工具描述。SDK 省去了部分报文构造，但不代替业务权限检查和部署配置。</p>
-<p><strong>工具接入可复用</strong>。要区分官方维护、社区实现和归档示例。旧 <code>@modelcontextprotocol/server-github</code> 已归档，GitHub 官方实现是 <a href="https://github.com/github/github-mcp-server">github/github-mcp-server</a>。下面用本地自有 Server 示意宿主配置，而不是安装归档包：</p>
+<p>The parameter types generate the input JSON Schema, and the docstring supplies the tool description. The SDK saves some message-construction work, but does not replace business permission checks or deployment configuration.</p>
+<p><strong>Tool integrations can be reused.</strong> Distinguish officially maintained Servers, community implementations, and archived examples. The old <code>@modelcontextprotocol/server-github</code> is archived; GitHub's official implementation is <a href="https://github.com/github/github-mcp-server">github/github-mcp-server</a>. The following Host configuration uses a locally owned Server rather than installing an archived package:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"demo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -9564,42 +9598,42 @@
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><code>mcpServers</code> 是一些宿主使用的配置约定，不是 MCP 线上报文。安装目录、热加载、密钥注入和模型端桥接方式均须查宿主文档。</p>
-<h2 id="49">4.9 常见错误<a class="headerlink" href="#49" title="Permanent link">&para;</a></h2>
-<h3 id="491-mcp-function-calling">4.9.1 认为 MCP 取代了 Function Calling<a class="headerlink" href="#491-mcp-function-calling" title="Permanent link">&para;</a></h3>
-<p>许多 LLM Host 会把 MCP Tool 转为该模型的 Function Calling schema，再将模型输出路由为 <code>tools/call</code>。但这只是常见适配方式：Host 也可用结构化输出、规则工作流或人工选择调用 MCP。<strong>MCP 不把 Function Calling 作为协议前提。</strong></p>
-<h3 id="492-host-client">4.9.2 把 Host 和 Client 混为一谈<a class="headerlink" href="#492-host-client" title="Permanent link">&para;</a></h3>
-<p>Client 是 Host 内的协议连接器，不是安全沙箱。Host 控制用户同意与数据共享；Server 验证调用者和资源访问权限，二者不可相互替代。</p>
-<h3 id="493-tool">4.9.3 认为只读查询不能是 Tool<a class="headerlink" href="#493-tool" title="Permanent link">&para;</a></h3>
-<p>只读数据常适合用 Resources 提供，而需要模型选择并执行的查询也可以是 Tool。不要从类别推导「无副作用」或「无需授权」：按数据敏感度、调用者身份与实际动作做最小授权和审批。</p>
-<h3 id="494-resources">4.9.4 以为 Resources 是模型主动读的<a class="headerlink" href="#494-resources" title="Permanent link">&para;</a></h3>
-<p>协议调用由 Client 发起；Host 可以让用户、固定工作流或模型决策触发 <code>resources/read</code>，再决定哪些内容进入上下文。MCP 不规定某种 UI，也不能据此假定 Resource 天然可信或无需授权。</p>
-<h3 id="495-mcp">4.9.5 按旧规范理解 MCP 的状态模型<a class="headerlink" href="#495-mcp" title="Permanent link">&para;</a></h3>
-<p>2026-07-28 规范是每请求自包含的无状态模型；<code>initialize</code> 和连接级 session 属于旧版兼容语义。应固定目标协议版本并按官方兼容矩阵实现，不能混用不同年代的消息流。</p>
-<h3 id="496-mcp-server">4.9.6 忽视 MCP Server 的信任边界<a class="headerlink" href="#496-mcp-server" title="Permanent link">&para;</a></h3>
-<p>启动本地 Server 会运行第三方代码；连接远程 Server 则会向对端传递数据，两者风险不同。工具描述可能被投毒，详见<a href="../15-tool-protocol-security/">工具协议安全</a>。</p>
-<h2 id="410">4.10 本章总结<a class="headerlink" href="#410" title="Permanent link">&para;</a></h2>
+<p><code>mcpServers</code> is a configuration convention used by some Hosts, not an MCP wire message. Consult the Host's documentation for installation paths, hot reload, credential injection, and the model-side bridge.</p>
+<h2 id="49-common-mistakes"><span id="49" class="legacy-heading-anchor" aria-hidden="true"></span>4.9 Common mistakes<a class="headerlink" href="#49-common-mistakes" title="Permanent link">&para;</a></h2>
+<h3 id="491-assuming-mcp-replaces-function-calling"><span id="491-mcp-function-calling" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.1 Assuming MCP replaces function calling<a class="headerlink" href="#491-assuming-mcp-replaces-function-calling" title="Permanent link">&para;</a></h3>
+<p>Many LLM Hosts convert MCP Tools into a model's function-calling schema, then route the model's output to <code>tools/call</code>. This is just one common adaptation. A Host can also invoke MCP through structured output, rule-based workflows, or human selection. <strong>Function calling is not a prerequisite of MCP.</strong></p>
+<h3 id="492-confusing-host-and-client"><span id="492-host-client" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.2 Confusing Host and Client<a class="headerlink" href="#492-confusing-host-and-client" title="Permanent link">&para;</a></h3>
+<p>A Client is a protocol connector within the Host, not a security sandbox. The Host controls user consent and data sharing; the Server verifies the caller and resource permissions. Neither responsibility replaces the other.</p>
+<h3 id="493-assuming-a-read-only-query-cannot-be-a-tool"><span id="493-tool" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.3 Assuming a read-only query cannot be a Tool<a class="headerlink" href="#493-assuming-a-read-only-query-cannot-be-a-tool" title="Permanent link">&para;</a></h3>
+<p>Read-only data often fits Resources, but a query that the model selects and executes can also be a Tool. Do not infer “no side effects” or “no authorization needed” from the category. Apply least privilege and approval according to data sensitivity, caller identity, and the actual action.</p>
+<h3 id="494-assuming-the-model-reads-resources-directly"><span id="494-resources" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.4 Assuming the model reads Resources directly<a class="headerlink" href="#494-assuming-the-model-reads-resources-directly" title="Permanent link">&para;</a></h3>
+<p>The Client initiates the protocol call. The Host may let a user, fixed workflow, or model decision trigger <code>resources/read</code>, then decide what enters context. MCP does not mandate a particular UI, nor does the Resource category establish trust or remove authorization requirements.</p>
+<h3 id="495-applying-an-old-state-model-to-current-mcp"><span id="495-mcp" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.5 Applying an old state model to current MCP<a class="headerlink" href="#495-applying-an-old-state-model-to-current-mcp" title="Permanent link">&para;</a></h3>
+<p>The 2026-07-28 specification uses stateless, self-contained requests. <code>initialize</code> and connection-level sessions are legacy compatibility semantics. Pin the target protocol version and implement the official compatibility matrix rather than combining message flows from different eras.</p>
+<h3 id="496-ignoring-the-mcp-server-trust-boundary"><span id="496-mcp-server" class="legacy-heading-anchor" aria-hidden="true"></span>4.9.6 Ignoring the MCP Server trust boundary<a class="headerlink" href="#496-ignoring-the-mcp-server-trust-boundary" title="Permanent link">&para;</a></h3>
+<p>Starting a local Server executes third-party code; connecting to a remote Server sends data to another party. These are different risks. Tool descriptions can also be poisoned; see <a href="../15-tool-protocol-security/">tool protocol security</a>.</p>
+<h2 id="410-chapter-summary"><span id="410" class="legacy-heading-anchor" aria-hidden="true"></span>4.10 Chapter summary<a class="headerlink" href="#410-chapter-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>MCP 与 Function Calling 可以配合但并非依赖关系</strong>：前者定义 Host/Client 与 Server 的互操作，后者是常见的模型调用接口；</li>
-<li><strong>M×N 到 M+N 是适配成本模型</strong>，不消除认证、业务映射与互操作测试；</li>
-<li><strong>工具发现面向已知 Server</strong>，要处理分页、缓存更新和新增工具审查；</li>
-<li><strong>三个角色</strong>：Host 管策略与生命周期，Client 连接 Server，Server 提供能力并复核调用权限；独立连接不替代运行时隔离；</li>
-<li><strong>三类能力按默认控制路径区分</strong>：Tools 可由模型/工作流选择，Resources 由 Client 加载，Prompts 由用户/Host 取得；副作用须逐项声明和治理；</li>
-<li><strong>消息格式是 JSON-RPC 2.0</strong>，标准传输为 stdio 与 Streamable HTTP；</li>
-<li><strong>版本语义发生过结构性变化</strong>：当前版本按请求携带版本与能力，旧初始化/会话模型只在兼容路径出现；</li>
-<li><strong>核查规范、SDK 和宿主三个层面</strong>，不要用归档示例代替维护中的实现。</li>
+<li><strong>MCP and function calling can cooperate without depending on each other.</strong> MCP defines Host/Client–Server interoperability; function calling is a common model interface.</li>
+<li><strong>M×N to M+N is an integration-cost model.</strong> It does not eliminate authentication, business mapping, or interoperability tests.</li>
+<li><strong>Tool discovery targets known Servers.</strong> Handle pagination, cache updates, and review of new tools.</li>
+<li><strong>There are three roles.</strong> The Host manages policies and lifecycles; Clients connect to Servers; Servers provide capabilities and recheck invocation permissions. Separate connections do not replace runtime isolation.</li>
+<li><strong>The three capabilities differ by default control path.</strong> Models/workflows may select Tools, Clients load Resources, and users/Hosts retrieve Prompts. Declare and govern side effects individually.</li>
+<li><strong>The message format is JSON-RPC 2.0.</strong> The standard transports are stdio and Streamable HTTP.</li>
+<li><strong>Version semantics have changed structurally.</strong> The current version carries versions and capabilities on each request; the old initialization/session model appears only in compatibility paths.</li>
+<li><strong>Check the specification, SDK, and Host separately.</strong> Archived examples are not substitutes for maintained implementations.</li>
 </ol>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>版本状态核对：2026-09-15 复核下列固定版变更与兼容说明；采用固定协议基准，不将动态页面的“最新”当作 SDK 已支持的证明。</li>
-<li><a href="https://modelcontextprotocol.io/specification/versioning">MCP 版本状态</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">MCP 2026-07-28 变更记录</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol 官方文档</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP 规范 2026-07-28</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">MCP 版本兼容说明</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture">MCP 架构说明</a></li>
+<li>Version-status review: the original manuscript rechecked the following pinned-version changes and compatibility notes on 2026-09-15. It uses a fixed protocol baseline; a dynamic page saying “latest” is not evidence of SDK support.</li>
+<li><a href="https://modelcontextprotocol.io/specification/versioning">MCP version status</a></li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">MCP 2026-07-28 changelog</a></li>
+<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol documentation</a></li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP specification 2026-07-28</a></li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">MCP version compatibility</a></li>
+<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture">MCP architecture</a></li>
 <li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
-<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 规范</a></li>
+<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 specification</a></li>
 </ul>
 
 
@@ -9620,20 +9654,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:52:42 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9656,7 +9690,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9665,33 +9699,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="上一页: 模块导览">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tools · Model Context Protocol">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                模块导览
+                Tools · Model Context Protocol
               </div>
             </div>
           </a>
         
         
           
-          <a href="../05-mcp-components/" class="md-footer__link md-footer__link--next" aria-label="下一页: MCP 三层组成">
+          <a href="../05-mcp-components/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 5: The Three Layers of MCP">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                MCP 三层组成
+                Chapter 5: The Three Layers of MCP
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9740,7 +9774,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

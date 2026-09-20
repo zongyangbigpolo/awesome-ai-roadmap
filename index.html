@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="面向 AI 工程面试准备的中文知识图谱，按模型、协议、应用架构、框架、生产治理和现场交付组织，共 9 个主题、143 个章节。">
+        <meta name="description" content="An English-first bilingual handbook covering models, protocols, application architectures, frameworks, production governance, and field delivery across nine topics and 143 chapters.">
       
       
         <meta name="author" content="Polo Li">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Awesome AI Roadmap：中文 AI 工程知识图谱 - Awesome AI Roadmap</title>
+        <title>Awesome AI Roadmap: AI Engineering Interview Handbook - Awesome AI Roadmap</title>
       
     
     
@@ -61,23 +61,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="文档主题索引">
-    <meta property="og:description" content="面向 AI 工程面试准备的中文知识图谱，按模型、协议、应用架构、框架、生产治理和现场交付组织，共 9 个主题、143 个章节。">
+    <meta property="og:title" content="Handbook Topic Index">
+    <meta property="og:description" content="An English-first bilingual handbook covering models, protocols, application architectures, frameworks, production governance, and field delivery across nine topics and 143 chapters.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="文档主题索引">
-    <meta name="twitter:description" content="面向 AI 工程面试准备的中文知识图谱，按模型、协议、应用架构、框架、生产治理和现场交付组织，共 9 个主题、143 个章节。">
+    <meta name="twitter:title" content="Handbook Topic Index">
+    <meta name="twitter:description" content="An English-first bilingual handbook covering models, protocols, application architectures, frameworks, production governance, and field delivery across nine topics and 143 chapters.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Awesome AI Roadmap","description":"面向 AI 工程面试准备的中文知识图谱，按模型、协议、应用架构、框架、生产治理和现场交付组织，共 9 个主题、143 个章节。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"}}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Awesome AI Roadmap","description":"An English-first bilingual handbook covering models, protocols, application architectures, frameworks, production governance, and field delivery across nine topics and 143 chapters.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"}}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"这份路线图适合什么读者？","acceptedAnswer":{"@type":"Answer","text":"它主要面向准备 AI 应用开发、Agent/RAG、模型工程和 FDE 等岗位面试的读者。初学者可以按推荐路径理解原理；有项目经验的读者可以从实际问题出发，沿交叉链接补齐评测、可靠性和权限等容易漏掉的环节。"}},{"@type":"Question","name":"应该从 LLM、Agent 还是 RAG 开始？","acceptedAnswer":{"@type":"Answer","text":"想理解模型能力边界，应先读 LLM；想构建能调用工具并持续执行任务的系统，从 Agent 和 Tools 开始；想让模型使用私有或持续更新的知识，从 RAG 开始。设计方案时就应结合 AI Engineering 和安全治理确定评测、权限与可靠性要求。"}},{"@type":"Question","name":"内容多久更新一次？","acceptedAnswer":{"@type":"Answer","text":"项目不采用固定发布周期。协议、框架或模型能力出现重要变化时更新对应章节，页面日期来自当前文件路径的 Git 历史，不一定对应内容最初公开的日期。高时效性结论仍应结合正文标注的版本与官方链接核验。"}}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/","mainEntity":[{"@type":"Question","name":"Who is this handbook for?","acceptedAnswer":{"@type":"Answer","text":"It is primarily for readers preparing for roles in AI application development, agents and RAG, model engineering, and FDE. Beginners can follow the suggested paths to learn the foundations. Experienced readers can start with a practical problem and use the links to revisit evaluation, reliability, permissions, and other easily missed concerns."}},{"@type":"Question","name":"Should I start with LLMs, agents, or RAG?","acceptedAnswer":{"@type":"Answer","text":"Start with LLMs to understand model capabilities and limitations. Start with Agents and Tools to build systems that call tools and carry tasks across multiple steps. Start with RAG for private or changing knowledge. Bring in production engineering and safety during design to establish evaluation, permission, and reliability requirements."}},{"@type":"Question","name":"How often is the content updated?","acceptedAnswer":{"@type":"Answer","text":"There is no fixed release schedule. Significant changes to protocols, frameworks, or model capabilities lead to updates in the relevant chapters. Page dates come from the history of their current file paths and may not indicate the original publication date. Check time-sensitive claims against the versions and official references cited in the text."}}]}</script>
     
   
 
@@ -100,8 +108,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
-          跳转至
+        <a href="#handbook-topic-index" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -113,7 +121,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -134,7 +142,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Awesome AI Roadmap：中文 AI 工程知识图谱
+              Awesome AI Roadmap: AI Engineering Interview Handbook
             
           </span>
         </div>
@@ -147,9 +155,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -157,9 +165,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -170,6 +178,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/awesome-ai-roadmap/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/awesome-ai-roadmap/zh/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -182,21 +216,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -209,7 +243,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -221,7 +255,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -242,7 +276,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -347,7 +381,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -391,7 +425,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -435,7 +469,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -479,7 +513,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -529,7 +563,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -541,7 +575,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -575,7 +609,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -588,7 +622,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -597,7 +631,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -606,87 +640,87 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#the-overall-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      总体分层
+      The overall structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#topics" class="md-nav__link">
     <span class="md-ellipsis">
-      主题目录
+      Topics
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#where-shared-concepts-are-explained" class="md-nav__link">
     <span class="md-ellipsis">
-      主题之间的关系
+      Where shared concepts are explained
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#suggested-reading-paths" class="md-nav__link">
     <span class="md-ellipsis">
-      阅读建议
+      Suggested reading paths
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#connecting-topics-through-interview-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      按面试题型串联知识
+      Connecting topics through interview questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#frequently-asked-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      常见问题
+      Frequently asked questions
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="常见问题">
+    <nav class="md-nav" aria-label="Frequently asked questions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#who-is-this-handbook-for" class="md-nav__link">
     <span class="md-ellipsis">
-      这份路线图适合什么读者？
+      Who is this handbook for?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#llmagent-rag" class="md-nav__link">
+  <a href="#should-i-start-with-llms-agents-or-rag" class="md-nav__link">
     <span class="md-ellipsis">
-      应该从 LLM、Agent 还是 RAG 开始？
+      Should I start with LLMs, agents, or RAG?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#how-often-is-the-content-updated" class="md-nav__link">
     <span class="md-ellipsis">
-      内容多久更新一次？
+      How often is the content updated?
     </span>
   </a>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -767,7 +801,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -785,7 +819,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -808,7 +842,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -831,7 +865,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -854,7 +888,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -877,7 +911,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -929,7 +963,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -940,7 +974,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -956,7 +990,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -979,7 +1013,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -1112,7 +1146,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1129,7 +1163,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1147,7 +1181,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1170,7 +1204,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1193,7 +1227,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1216,7 +1250,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1239,7 +1273,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1305,7 +1339,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1322,7 +1356,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1340,7 +1374,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1363,7 +1397,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1386,7 +1420,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1409,7 +1443,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1432,7 +1466,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1455,7 +1489,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1521,7 +1555,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1538,7 +1572,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1556,7 +1590,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1579,7 +1613,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1602,7 +1636,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1625,7 +1659,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1648,7 +1682,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1671,7 +1705,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1731,7 +1765,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1748,7 +1782,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1766,7 +1800,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1789,7 +1823,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1812,7 +1846,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1870,7 +1904,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -1887,7 +1921,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1905,7 +1939,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -1928,7 +1962,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -1984,7 +2018,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -2001,7 +2035,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2019,7 +2053,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -2090,7 +2124,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -2107,7 +2141,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2150,7 +2184,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2167,7 +2201,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2185,7 +2219,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2245,7 +2279,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2262,7 +2296,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2280,7 +2314,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2303,7 +2337,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2326,7 +2360,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2384,7 +2418,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2401,7 +2435,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2419,7 +2453,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2442,7 +2476,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2500,7 +2534,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2517,7 +2551,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2535,7 +2569,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2558,7 +2592,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2616,7 +2650,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2633,7 +2667,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2651,7 +2685,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2674,7 +2708,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2846,7 +2880,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2869,7 +2903,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -2892,7 +2926,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -2915,7 +2949,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -3014,7 +3048,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -3037,7 +3071,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3060,7 +3094,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3083,7 +3117,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3106,7 +3140,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3201,7 +3235,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3224,7 +3258,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3247,7 +3281,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3303,7 +3337,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3320,7 +3354,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3338,7 +3372,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3396,7 +3430,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3413,7 +3447,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3431,7 +3465,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3454,7 +3488,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3531,7 +3565,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3548,7 +3582,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3595,7 +3629,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3612,7 +3646,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3630,7 +3664,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3653,7 +3687,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3676,7 +3710,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3746,7 +3780,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3763,7 +3797,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3781,7 +3815,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3804,7 +3838,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3827,7 +3861,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -3850,7 +3884,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -3873,7 +3907,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -3896,7 +3930,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -3919,7 +3953,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -3942,7 +3976,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4006,7 +4040,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4023,7 +4057,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4041,7 +4075,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4064,7 +4098,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4087,7 +4121,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4110,7 +4144,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4133,7 +4167,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4193,7 +4227,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4210,7 +4244,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4228,7 +4262,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4251,7 +4285,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4274,7 +4308,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4332,7 +4366,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4349,7 +4383,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4367,7 +4401,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4390,7 +4424,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4448,7 +4482,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4465,7 +4499,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4483,7 +4517,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4506,7 +4540,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4562,7 +4596,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4579,7 +4613,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4597,7 +4631,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4653,7 +4687,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4670,7 +4704,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4688,7 +4722,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -4825,7 +4859,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -4842,7 +4876,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4860,7 +4894,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -4883,7 +4917,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -4951,7 +4985,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -4968,7 +5002,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4986,7 +5020,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5009,7 +5043,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5032,7 +5066,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5055,7 +5089,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5078,7 +5112,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5101,7 +5135,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5124,7 +5158,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5188,7 +5222,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5205,7 +5239,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5223,7 +5257,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5246,7 +5280,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5269,7 +5303,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5292,7 +5326,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5315,7 +5349,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5375,7 +5409,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5392,7 +5426,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5410,7 +5444,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5433,7 +5467,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5456,7 +5490,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5514,7 +5548,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5531,7 +5565,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5549,7 +5583,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5572,7 +5606,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5630,7 +5664,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5647,7 +5681,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5665,7 +5699,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5688,7 +5722,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5744,7 +5778,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5761,7 +5795,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5779,7 +5813,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -5852,7 +5886,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -5869,7 +5903,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5920,7 +5954,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -5937,7 +5971,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5984,7 +6018,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6001,7 +6035,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6019,7 +6053,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6042,7 +6076,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6065,7 +6099,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6125,7 +6159,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6142,7 +6176,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6160,7 +6194,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6183,7 +6217,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6206,7 +6240,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6266,7 +6300,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6283,7 +6317,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6301,7 +6335,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6324,7 +6358,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6347,7 +6381,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6440,7 +6474,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6463,7 +6497,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6521,7 +6555,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6538,7 +6572,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6556,7 +6590,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6579,7 +6613,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6680,7 +6714,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6703,7 +6737,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6796,7 +6830,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -6819,7 +6853,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -6912,7 +6946,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -6935,7 +6969,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -6993,7 +7027,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7010,7 +7044,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7028,7 +7062,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7051,7 +7085,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7109,7 +7143,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7126,7 +7160,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7144,7 +7178,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7167,7 +7201,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7302,7 +7336,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7319,7 +7353,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7337,7 +7371,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7360,7 +7394,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7418,7 +7452,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7435,7 +7469,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7453,7 +7487,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7476,7 +7510,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7534,7 +7568,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7551,7 +7585,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7569,7 +7603,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7592,7 +7626,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7650,7 +7684,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7667,7 +7701,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7685,7 +7719,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7708,7 +7742,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7766,7 +7800,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7783,7 +7817,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7801,7 +7835,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -7824,7 +7858,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -7884,7 +7918,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -7901,7 +7935,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7919,7 +7953,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -7942,7 +7976,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -7965,7 +7999,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8036,7 +8070,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8053,7 +8087,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8096,7 +8130,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8113,7 +8147,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8131,7 +8165,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8189,7 +8223,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8206,7 +8240,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8224,7 +8258,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8247,7 +8281,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8307,7 +8341,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8324,7 +8358,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8342,7 +8376,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8365,7 +8399,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8388,7 +8422,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8446,7 +8480,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8463,7 +8497,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8481,7 +8515,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8504,7 +8538,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8562,7 +8596,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8579,7 +8613,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8597,7 +8631,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8620,7 +8654,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8745,7 +8779,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8762,7 +8796,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8780,7 +8814,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -8836,7 +8870,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -8853,7 +8887,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8871,7 +8905,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -8910,7 +8944,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -8919,87 +8953,87 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#the-overall-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      总体分层
+      The overall structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#topics" class="md-nav__link">
     <span class="md-ellipsis">
-      主题目录
+      Topics
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#where-shared-concepts-are-explained" class="md-nav__link">
     <span class="md-ellipsis">
-      主题之间的关系
+      Where shared concepts are explained
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#suggested-reading-paths" class="md-nav__link">
     <span class="md-ellipsis">
-      阅读建议
+      Suggested reading paths
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#connecting-topics-through-interview-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      按面试题型串联知识
+      Connecting topics through interview questions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#frequently-asked-questions" class="md-nav__link">
     <span class="md-ellipsis">
-      常见问题
+      Frequently asked questions
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="常见问题">
+    <nav class="md-nav" aria-label="Frequently asked questions">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#who-is-this-handbook-for" class="md-nav__link">
     <span class="md-ellipsis">
-      这份路线图适合什么读者？
+      Who is this handbook for?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#llmagent-rag" class="md-nav__link">
+  <a href="#should-i-start-with-llms-agents-or-rag" class="md-nav__link">
     <span class="md-ellipsis">
-      应该从 LLM、Agent 还是 RAG 开始？
+      Should I start with LLMs, agents, or RAG?
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#how-often-is-the-content-updated" class="md-nav__link">
     <span class="md-ellipsis">
-      内容多久更新一次？
+      How often is the content updated?
     </span>
   </a>
   
@@ -9026,7 +9060,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/README.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/README.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9034,37 +9068,37 @@
   
 
 
-<h1 id="_1">文档主题索引<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>这份知识图谱用于 AI 工程面试准备，按技术层次而非产品清单组织。九个主题覆盖模型原理、多模态能力、协议接口、应用架构、框架实现、生产工程、安全治理与现场交付；复习时既要能解释机制，也要能说明方案的限制。</p>
-<p>目录采用三级结构：<strong>主题 → 子模块 → 章节</strong>。主题 README 负责展示模块关系，子模块 README 负责维护具体章节顺序，章节之间通过相对链接形成跨主题知识图谱。</p>
-<p>如果希望像读一本书一样从头学习，请从<a href="book/">中文书稿目录</a>开始。书稿按九篇连续编排，篇内沿用原有章号；扉页、前言、阅读说明和致谢单独安排，不打断技术正文。</p>
-<h2 id="_2">总体分层<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h1 id="handbook-topic-index"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Handbook Topic Index<a class="headerlink" href="#handbook-topic-index" title="Permanent link">&para;</a></h1>
+<p>This handbook prepares you for AI engineering interviews through the layers of a system, not a catalog of products. Its nine topics cover model foundations, multimodal capabilities, protocols, application architectures, frameworks, production engineering, safety and governance, and field delivery. A useful answer explains both how a mechanism works and what limits the design.</p>
+<p>The hierarchy is <strong>topic, module, chapter</strong>. A topic index shows how its modules relate; a module index lists its chapters. Relative links connect related explanations across topics. English is the primary manuscript, and every reader-facing page has a Simplified Chinese companion.</p>
+<p>For a continuous reading path, start with the <a href="book/">book contents</a>. The book has nine parts and preserves chapter numbering within each part. The title page, preface, reading guide, and acknowledgments are separate from the technical chapters. Choose a language on the website or download that language's EPUB; neither format has its own independently maintained prose.</p>
+<h2 id="the-overall-structure">The overall structure<a class="headerlink" href="#the-overall-structure" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    subgraph L1["第一层 · 模型与多模态能力"]
-        LLM["LLM&lt;br/&gt;Transformer / 训练 / 推理 / 部署"]
-        MM["多模态 AI&lt;br/&gt;视觉 / 语音 / 图像与视频生成"]
+    subgraph L1["Layer 1: Models and multimodal capabilities"]
+        LLM["LLM&lt;br/&gt;Transformers / training / inference / serving"]
+        MM["Multimodal AI&lt;br/&gt;Vision / speech / image and video generation"]
     end
 
-    subgraph L2["第二层 · 协议与接口"]
-        TOOLS["Tools&lt;br/&gt;Function Calling / MCP / Skill / A2A"]
+    subgraph L2["Layer 2: Protocols and interfaces"]
+        TOOLS["Tools&lt;br/&gt;Function calling / MCP / skills / A2A"]
     end
 
-    subgraph L3["第三层 · 应用架构"]
-        AGENT["Agent&lt;br/&gt;Harness / 规划 / 记忆 / 多智能体"]
-        RAG["RAG&lt;br/&gt;索引 / 检索 / 重排 / 生成"]
+    subgraph L3["Layer 3: Application architectures"]
+        AGENT["Agents&lt;br/&gt;Harnesses / planning / memory / multi-agent systems"]
+        RAG["RAG&lt;br/&gt;Indexing / retrieval / reranking / generation"]
     end
 
-    subgraph L4["第四层 · 框架实现"]
-        FW["框架与编排&lt;br/&gt;LangChain / LlamaIndex / DSPy / Semantic Kernel"]
+    subgraph L4["Layer 4: Framework implementations"]
+        FW["Frameworks and orchestration&lt;br/&gt;LangChain / LlamaIndex / DSPy / Semantic Kernel"]
     end
 
-    subgraph L5["第五层 · 生产与治理"]
-        ENG["AI Engineering / LLMOps&lt;br/&gt;评测 / 观测 / 发布 / 可靠性"]
-        SAFE["AI 安全与治理&lt;br/&gt;威胁 / 隔离 / 红队 / 审计"]
+    subgraph L5["Layer 5: Production and governance"]
+        ENG["AI Engineering / LLMOps&lt;br/&gt;Evaluation / observability / releases / reliability"]
+        SAFE["AI safety and governance&lt;br/&gt;Threats / isolation / red teaming / audit"]
     end
 
-    subgraph L6["第六层 · 现场交付"]
-        FDE["FDE&lt;br/&gt;发现 / 验收 / 集成 / 交付 / 复用"]
+    subgraph L6["Layer 6: Field delivery"]
+        FDE["FDE&lt;br/&gt;Discovery / acceptance / integration / delivery / reuse"]
     end
 
     LLM --&gt; MM
@@ -9079,246 +9113,246 @@
     ENG --&gt; SAFE
     ENG --&gt; FDE
     SAFE --&gt; FDE
-    FDE -.现场反馈.-&gt; FW
-    AGENT -.风险输入.-&gt; SAFE
-    RAG -.风险输入.-&gt; SAFE
-    RAG -.知识增强.-&gt; AGENT</code></pre>
-<p>图中的层次用于组织知识，不代表项目必须采用全部组件。评测、安全和客户验收贯穿设计与交付；简单任务可以直接使用模型 API，不必先搭建 Agent 或引入编排框架。</p>
-<h2 id="_3">主题目录<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+    FDE -.field feedback.-&gt; FW
+    AGENT -.risk inputs.-&gt; SAFE
+    RAG -.risk inputs.-&gt; SAFE
+    RAG -.knowledge augmentation.-&gt; AGENT</code></pre>
+<p>The layers organize the material; they do not require a project to adopt every component. Evaluation, safety, and customer acceptance run through design and delivery. A simple task may need only a model API call, not an agent or an orchestration framework.</p>
+<h2 id="topics">Topics<a class="headerlink" href="#topics" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>层次</th>
-<th>主题</th>
-<th>内容范围</th>
-<th>章数</th>
-<th>入口</th>
+<th>Layer</th>
+<th>Topic</th>
+<th>Coverage</th>
+<th>Chapters</th>
+<th>Start here</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>底层原理</td>
+<td>Foundations</td>
 <td>LLM</td>
-<td>Transformer、训练与对齐、解码、量化、MoE、部署与评测选型</td>
+<td>Transformers, training and alignment, decoding, quantization, MoE, serving, evaluation, and model selection</td>
 <td>23</td>
-<td><a href="llm/">进入 LLM</a></td>
+<td><a href="llm/">LLM</a></td>
 </tr>
 <tr>
-<td>模型能力</td>
-<td>多模态 AI</td>
-<td>融合架构、VLM、Document AI、语音、图像与视频生成、评测与服务</td>
+<td>Model capabilities</td>
+<td>Multimodal AI</td>
+<td>Fusion, VLMs, Document AI, speech, image and video generation, evaluation, and serving</td>
 <td>10</td>
-<td><a href="multimodal/">进入多模态 AI</a></td>
+<td><a href="multimodal/">Multimodal AI</a></td>
 </tr>
 <tr>
-<td>协议接口</td>
+<td>Protocols and interfaces</td>
 <td>Tools</td>
-<td>Function Calling、工具学习、MCP、Skill、A2A、传输协议、安全与 LLM 网关</td>
+<td>Function calling, tool learning, MCP, skills, A2A, transports, security, and model gateways</td>
 <td>15</td>
-<td><a href="tools/">进入 Tools</a></td>
+<td><a href="tools/">Tools</a></td>
 </tr>
 <tr>
-<td>应用架构</td>
-<td>Agent</td>
-<td>架构、Harness、记忆、规划、多 Agent、评估与安全，以及代码编辑和后训练工程</td>
+<td>Application architectures</td>
+<td>Agents</td>
+<td>Architecture, harnesses, memory, planning, multi-agent systems, evaluation, safety, code editing, and post-training</td>
 <td>25</td>
-<td><a href="agent/">进入 Agent</a></td>
+<td><a href="agent/">Agents</a></td>
 </tr>
 <tr>
-<td>应用架构</td>
+<td>Application architectures</td>
 <td>RAG</td>
-<td>文档处理、索引、检索重排、多模态、生成评估、更新与安全，以及 Text-to-SQL</td>
+<td>Document processing, indexing, retrieval and reranking, multimodal data, generation, evaluation, updates, security, and Text-to-SQL</td>
 <td>22</td>
-<td><a href="rag/">进入 RAG</a></td>
+<td><a href="rag/">RAG</a></td>
 </tr>
 <tr>
-<td>框架实现</td>
-<td>框架与编排</td>
-<td>LangChain、LangGraph、LlamaIndex、DSPy、Semantic Kernel、轻量 Agent 框架与迁移</td>
+<td>Framework implementations</td>
+<td>Frameworks and orchestration</td>
+<td>LangChain, LangGraph, LlamaIndex, DSPy, Semantic Kernel, lightweight agent frameworks, and migration</td>
 <td>23</td>
-<td><a href="frameworks/">进入框架与编排</a></td>
+<td><a href="frameworks/">Frameworks</a></td>
 </tr>
 <tr>
-<td>生产工程</td>
+<td>Production engineering</td>
 <td>AI Engineering</td>
-<td>LLMOps、网关与回退、评测、可观测性、CI/CD、SLO、成本与数据飞轮</td>
+<td>LLMOps, gateways and fallback, evaluation, observability, CI/CD, SLOs, cost, and feedback data</td>
 <td>13</td>
-<td><a href="engineering/">进入 AI Engineering</a></td>
+<td><a href="engineering/">AI Engineering</a></td>
 </tr>
 <tr>
-<td>安全治理</td>
-<td>AI 安全与治理</td>
-<td>威胁建模、Prompt 攻击、供应链、隐私、执行隔离、红队、治理与审计</td>
+<td>Safety and governance</td>
+<td>AI safety and governance</td>
+<td>Threat modeling, prompt attacks, supply chains, privacy, execution isolation, red teaming, governance, and audit</td>
 <td>10</td>
-<td><a href="safety/">进入 AI 安全与治理</a></td>
+<td><a href="safety/">Safety and governance</a></td>
 </tr>
 <tr>
-<td>现场交付</td>
+<td>Field delivery</td>
 <td>FDE</td>
-<td>需求发现、产品协作、评测验收、系统集成与交付，以及范围变更、PoC、项目记忆与交接经验</td>
+<td>Discovery, product collaboration, acceptance, integration, delivery, scope changes, proofs of concept, project memory, and handover</td>
 <td>2</td>
-<td><a href="fde/">进入 FDE</a></td>
+<td><a href="fde/">FDE</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="_4">主题之间的关系<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>同一个概念在不同层次会被反复提到，但视角不同。仓库通过「详解归属地」避免重复维护：</p>
+<h2 id="where-shared-concepts-are-explained">Where shared concepts are explained<a class="headerlink" href="#where-shared-concepts-are-explained" title="Permanent link">&para;</a></h2>
+<p>A concept can appear at several layers without needing several copies of its full explanation. The following ownership keeps those explanations consistent:</p>
 <table>
 <thead>
 <tr>
-<th>概念</th>
-<th>详解归属</th>
-<th>引用方</th>
-<th>视角差异</th>
+<th>Concept</th>
+<th>Main explanation</th>
+<th>Referenced by</th>
+<th>Difference in focus</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CoT 思维链</td>
+<td>Chain of thought</td>
 <td>LLM</td>
-<td>Agent 规划章、RAG 生成章</td>
-<td>LLM 讲机制，Agent 讲如何转化为规划能力</td>
+<td>Agent planning, RAG generation</td>
+<td>LLM covers mechanisms; Agents explains their role in planning</td>
 </tr>
 <tr>
-<td>幻觉</td>
+<td>Hallucination</td>
 <td>LLM</td>
-<td>RAG 生成章、Agent 安全章</td>
-<td>LLM 讲根因，RAG 讲如何通过知识约束生成</td>
+<td>RAG generation, Agent safety</td>
+<td>LLM covers causes; RAG covers generation constrained by retrieved evidence</td>
 </tr>
 <tr>
-<td>KV Cache / Prompt Caching</td>
+<td>KV cache / prompt caching</td>
 <td>LLM</td>
-<td>Agent 上下文、AI Engineering</td>
-<td>LLM 讲缓存机制，应用与工程层讲使用策略</td>
+<td>Agent context, AI Engineering</td>
+<td>LLM covers mechanisms; application and engineering chapters cover usage</td>
 </tr>
 <tr>
-<td>VLM / 语音 / 生成模型</td>
-<td>多模态 AI</td>
-<td>Agent Computer Use、RAG 多模态章</td>
-<td>多模态讲模型能力，应用层讲如何进入任务链路</td>
+<td>VLMs / speech / generative models</td>
+<td>Multimodal AI</td>
+<td>Agent computer use, multimodal RAG</td>
+<td>Multimodal AI covers model capabilities; applications show how they fit into tasks</td>
 </tr>
 <tr>
-<td>Function Calling / MCP</td>
+<td>Function calling / MCP</td>
 <td>Tools</td>
-<td>Agent Harness、框架与编排</td>
-<td>Tools 讲调用接口与协议，Agent 讲运行时，框架讲具体封装</td>
+<td>Agent harnesses, frameworks</td>
+<td>Tools covers interfaces and protocols; Agents covers execution; frameworks provide implementations</td>
 </tr>
 <tr>
-<td>Runtime / Harness</td>
-<td>Agent</td>
-<td>框架与编排、AI Engineering</td>
-<td>Agent 讲通用运行时，框架讲实现，工程层讲生产运营</td>
+<td>Runtime / harness</td>
+<td>Agents</td>
+<td>Frameworks, AI Engineering</td>
+<td>Agents covers the general runtime; frameworks cover implementations; engineering covers operations</td>
 </tr>
 <tr>
-<td>记忆</td>
-<td>Agent</td>
-<td>框架与编排的 LangChain 模块</td>
-<td>Agent 讲分层与取舍，框架主题讲具体实现</td>
+<td>Memory</td>
+<td>Agents</td>
+<td>LangChain modules</td>
+<td>Agents explains layers and trade-offs; framework chapters show specific implementations</td>
 </tr>
 <tr>
-<td>向量检索</td>
+<td>Vector retrieval</td>
 <td>RAG</td>
-<td>框架与编排</td>
-<td>RAG 讲索引与召回原理，框架主题讲组件封装</td>
+<td>Frameworks</td>
+<td>RAG covers indexing and retrieval; frameworks cover component abstractions</td>
 </tr>
 <tr>
-<td>可观测性与发布</td>
+<td>Observability and releases</td>
 <td>AI Engineering</td>
-<td>各应用主题</td>
-<td>工程层讲跨应用生产闭环，应用主题定义领域信号</td>
+<td>Application topics</td>
+<td>Engineering connects production feedback to change management; applications define domain signals</td>
 </tr>
 <tr>
-<td>跨层安全治理</td>
-<td>AI 安全与治理</td>
-<td>LLM、Tools、Agent、RAG</td>
-<td>各层讲局部控制，治理主题统一威胁模型、红队和审计</td>
+<td>Cross-layer safety governance</td>
+<td>AI safety and governance</td>
+<td>LLM, Tools, Agents, RAG</td>
+<td>Local controls belong to each layer; governance connects threat models, red teaming, and audit</td>
 </tr>
 <tr>
-<td>客户现场交付</td>
+<td>Delivery in customer environments</td>
 <td>FDE</td>
-<td>全部技术主题</td>
-<td>技术主题讲能力，FDE 讲如何组合能力并交付可衡量结果</td>
+<td>All technical topics</td>
+<td>Technical topics explain capabilities; FDE combines them to deliver measurable outcomes</td>
 </tr>
 <tr>
-<td>Agent 后训练</td>
-<td>Agent 第 25 章</td>
-<td>LLM、Tools、AI Engineering</td>
-<td>LLM 讲优化算法，Tools 讲调用数据，Agent 串起失败归因、训练样本与任务验收</td>
+<td>Agent post-training</td>
+<td>Agents, Chapter 25</td>
+<td>LLM, Tools, AI Engineering</td>
+<td>LLM covers optimization; Tools covers call data; Agents connects failure analysis, training examples, and acceptance</td>
 </tr>
 <tr>
-<td>结构化数据问答</td>
-<td>RAG 第 22 章</td>
-<td>Tools、FDE</td>
-<td>需要全量统计时改用受限 SQL 查询，不靠检索几个片段估算总数</td>
+<td>Structured-data questions</td>
+<td>RAG, Chapter 22</td>
+<td>Tools, FDE</td>
+<td>Complete-data aggregation calls for a constrained query, not a total guessed from a few retrieved chunks</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_5">阅读建议<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="suggested-reading-paths">Suggested reading paths<a class="headerlink" href="#suggested-reading-paths" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>零基础入门</strong>：LLM 第 1–5 章 → Tools 第 1、4 章 → Agent 第 1–2 章 → RAG 第 1 章；</li>
-<li><strong>Agent / Harness 工程</strong>：Agent 全部 → Tools 全部 → 框架与编排 → AI Engineering；</li>
-<li><strong>RAG / 知识系统</strong>：RAG 全部 → LLM 第 5、18、21、23 章 → 框架与编排第 14–15 章；</li>
-<li><strong>多模态应用</strong>：多模态 AI → Agent 第 16–23 章或 RAG 第 21 章 → AI Engineering；</li>
-<li><strong>生产平台与 SRE</strong>：AI Engineering → LLM 推理部署 → Tools 网关 → AI 安全与治理；</li>
-<li><strong>安全与治理</strong>：AI 安全与治理 → Agent、Tools、RAG 各自的安全章节。</li>
-<li><strong>客户交付与解决方案</strong>：FDE → AI Engineering → 按项目需要回查 Agent、RAG、Harness 与安全治理。</li>
+<li><strong>Getting started:</strong> LLM Chapters 1-5, Tools Chapters 1 and 4, Agent Chapters 1-2, then RAG Chapter 1.</li>
+<li><strong>Agent and harness engineering:</strong> Agents, Tools, Frameworks and orchestration, then AI Engineering.</li>
+<li><strong>RAG and knowledge systems:</strong> RAG, LLM Chapters 5, 18, 21, and 23, then Frameworks Chapters 14-15.</li>
+<li><strong>Multimodal applications:</strong> Multimodal AI, Agent Chapters 16-23 or RAG Chapter 21, then AI Engineering.</li>
+<li><strong>Production platforms and SRE:</strong> AI Engineering, LLM inference and serving, Tools gateways, then safety and governance.</li>
+<li><strong>Safety and governance:</strong> the safety topic, followed by the relevant Agent, Tools, and RAG safety chapters.</li>
+<li><strong>Customer delivery and solutions:</strong> FDE, AI Engineering, then Agents, RAG, harnesses, and governance as the project requires.</li>
 </ul>
-<h2 id="_6">按面试题型串联知识<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<p>基础题先把概念解释准确，系统设计题再把数据从哪里来、谁能执行动作、出错后怎么办讲清楚。下面几条路径适合练习跨章节的问题。</p>
+<h2 id="connecting-topics-through-interview-questions">Connecting topics through interview questions<a class="headerlink" href="#connecting-topics-through-interview-questions" title="Permanent link">&para;</a></h2>
+<p>For foundational questions, explain the concept accurately. For system design, also explain where data comes from, who may take an action, and what happens after a failure. These paths help practice questions that span chapters.</p>
 <table>
 <thead>
 <tr>
-<th>练习题</th>
-<th>建议串联的章节</th>
-<th>需要说清楚的取舍</th>
+<th>Practice question</th>
+<th>Suggested chapters</th>
+<th>What the answer should distinguish</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>如何给企业内部知识助手选方案？</td>
-<td><a href="rag/01-foundations/02-rag-finetune-longcontext/">RAG、微调与长上下文</a> → <a href="rag/05-generation-evaluation/18-rag-evaluation/">RAG 评测</a> → <a href="engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">离线 Eval</a></td>
-<td>知识缺失和行为问题如何区分，如何用业务查询集证明改动有效</td>
+<td>How would you choose an approach for an internal knowledge assistant?</td>
+<td><a href="rag/01-foundations/02-rag-finetune-longcontext/">RAG, fine-tuning, and long context</a>, <a href="rag/05-generation-evaluation/18-rag-evaluation/">RAG evaluation</a>, <a href="engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">offline evaluation</a></td>
+<td>Missing knowledge versus unwanted behavior, and evidence from a representative business query set</td>
 </tr>
 <tr>
-<td>如何让 Agent 在工具超时后继续执行？</td>
-<td><a href="agent/02-runtime-harness/16-harness-definition-and-boundaries/">Harness 边界</a> → <a href="agent/02-runtime-harness/21-checkpoint-persistence-recovery/">Checkpoint 与恢复</a> → <a href="engineering/02-request-reliability/04-retry-timeout-idempotency-circuit-breaker/">重试与幂等</a></td>
-<td>恢复计算状态与避免重复业务写入不是同一个问题</td>
+<td>How can an agent continue after a tool timeout?</td>
+<td><a href="agent/02-runtime-harness/16-harness-definition-and-boundaries/">Harness responsibilities</a>, <a href="agent/02-runtime-harness/21-checkpoint-persistence-recovery/">checkpointing and recovery</a>, <a href="engineering/02-request-reliability/04-retry-timeout-idempotency-circuit-breaker/">retries and idempotency</a></td>
+<td>Restoring computation is not the same as preventing duplicate business writes</td>
 </tr>
 <tr>
-<td>MCP 接入后，权限由谁负责？</td>
-<td><a href="tools/02-mcp/06-mcp-vs-function-calling/">MCP 与 Function Calling</a> → <a href="tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全</a> → <a href="safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/">最小权限与身份</a></td>
-<td>协议能力、模型调用意图与服务端授权的边界</td>
+<td>Who is responsible for permissions after MCP is connected?</td>
+<td><a href="tools/02-mcp/06-mcp-vs-function-calling/">MCP and function calling</a>, <a href="tools/02-mcp/15-tool-protocol-security/">tool protocol security</a>, <a href="safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/">least privilege and identity</a></td>
+<td>Protocol capabilities, proposed calls, and backend authorization</td>
 </tr>
 <tr>
-<td>模型效果不错，为什么线上还是不能用？</td>
-<td><a href="llm/05-evaluation-selection/21-evaluation-metrics/">模型评测</a> → <a href="engineering/03-output-safety/05-structured-output-contracts/">输出契约</a> → <a href="engineering/06-performance-operations/12-slo-capacity-incident-response/">SLO 与故障响应</a></td>
-<td>榜单成绩、结构合法、业务正确和服务可靠分别如何衡量</td>
+<td>Why might a high-scoring model still be unsuitable for production?</td>
+<td><a href="llm/05-evaluation-selection/21-evaluation-metrics/">Model evaluation</a>, <a href="engineering/03-output-safety/05-structured-output-contracts/">output contracts</a>, <a href="engineering/06-performance-operations/12-slo-capacity-incident-response/">SLOs and incident response</a></td>
+<td>Benchmark scores, structural validity, business correctness, and service reliability</td>
 </tr>
 <tr>
-<td>如何把客户的模糊需求变成可交付项目？</td>
-<td><a href="fde/01-foundations/01-forward-deployed-engineering/">FDE 基础</a> → <a href="fde/02-field-practice/02-delivery-lessons/">现场经验与踩坑</a> → <a href="engineering/05-release-pipeline/09-prompt-model-data-versioning/">版本管理</a></td>
-<td>需求调整由谁确认，PoC 结论怎样保留，客户如何验收和接手</td>
+<td>How do you turn a vague customer request into a deliverable project?</td>
+<td><a href="fde/01-foundations/01-forward-deployed-engineering/">FDE foundations</a>, <a href="fde/02-field-practice/02-delivery-lessons/">field lessons</a>, <a href="engineering/05-release-pipeline/09-prompt-model-data-versioning/">versioning</a></td>
+<td>Who approves changes, what a proof of concept establishes, and how the customer accepts and takes over the system</td>
 </tr>
 <tr>
-<td>Agent 改了代码，为什么问题还没解决？</td>
-<td><a href="agent/06-coding-agents/24-code-search-edit-verification/">代码搜索、编辑与验证</a> → <a href="agent/07-post-training/25-agent-post-training/">Agent 后训练</a></td>
-<td>区分搜索遗漏、编辑失败、验证不足和模型错误，再决定是否值得训练</td>
+<td>Why can an agent change code without fixing the problem?</td>
+<td><a href="agent/06-coding-agents/24-code-search-edit-verification/">Code search, editing, and verification</a>, <a href="agent/07-post-training/25-agent-post-training/">agent post-training</a></td>
+<td>Search omissions, edit failures, weak verification, and model errors before deciding whether training is appropriate</td>
 </tr>
 <tr>
-<td>怎样让助手准确统计订单，而不是猜一个总数？</td>
-<td><a href="rag/07-structured-queries/22-text-to-sql/">Text-to-SQL</a> → <a href="tools/01-function-calling/03-tool-schema-design/">工具 Schema</a> → <a href="engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">离线评测</a></td>
-<td>业务口径、表关联、查询权限和独立结果验收</td>
+<td>How can an assistant count orders accurately rather than guess a total?</td>
+<td><a href="rag/07-structured-queries/22-text-to-sql/">Text-to-SQL</a>, <a href="tools/01-function-calling/03-tool-schema-design/">tool schemas</a>, <a href="engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">offline evaluation</a></td>
+<td>Business definitions, table relationships, query authorization, and independent result checks</td>
 </tr>
 </tbody>
 </table>
-<p>准备项目题时，可以挑一次具体改动来讲：原来哪里不好用，试过哪些办法，最后为什么这样改。把相关代码、失败样本和前后结果一起看，比背一遍架构图更容易发现自己没想清楚的地方。</p>
-<h2 id="_7">常见问题<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<h3 id="_8">这份路线图适合什么读者？<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p>它主要面向准备 AI 应用开发、Agent/RAG、模型工程和 FDE 等岗位面试的读者。初学者可以按推荐路径理解原理；有项目经验的读者可以从实际问题出发，沿交叉链接补齐评测、可靠性和权限等容易漏掉的环节。</p>
-<h3 id="llmagent-rag">应该从 LLM、Agent 还是 RAG 开始？<a class="headerlink" href="#llmagent-rag" title="Permanent link">&para;</a></h3>
-<p>想理解模型能力边界，应先读 LLM；想构建能调用工具并持续执行任务的系统，从 Agent 和 Tools 开始；想让模型使用私有或持续更新的知识，从 RAG 开始。设计方案时就应结合 AI Engineering 和安全治理确定评测、权限与可靠性要求。</p>
-<h3 id="_9">内容多久更新一次？<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>项目不采用固定发布周期。协议、框架或模型能力出现重要变化时更新对应章节，页面日期来自当前文件路径的 Git 历史，不一定对应内容最初公开的日期。高时效性结论仍应结合正文标注的版本与官方链接核验。</p>
+<p>For project questions, choose a concrete change: what was not working, which alternatives you tried, and why you made that decision. Reviewing the code, failure examples, and before-and-after results together reveals gaps in your understanding more effectively than memorizing an architecture diagram.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions<a class="headerlink" href="#frequently-asked-questions" title="Permanent link">&para;</a></h2>
+<h3 id="who-is-this-handbook-for">Who is this handbook for?<a class="headerlink" href="#who-is-this-handbook-for" title="Permanent link">&para;</a></h3>
+<p>It is primarily for readers preparing for roles in AI application development, agents and RAG, model engineering, and FDE. Beginners can follow the suggested paths to learn the foundations. Experienced readers can start with a practical problem and use the links to revisit evaluation, reliability, permissions, and other easily missed concerns.</p>
+<h3 id="should-i-start-with-llms-agents-or-rag">Should I start with LLMs, agents, or RAG?<a class="headerlink" href="#should-i-start-with-llms-agents-or-rag" title="Permanent link">&para;</a></h3>
+<p>Start with LLMs to understand model capabilities and limitations. Start with Agents and Tools to build systems that call tools and carry tasks across multiple steps. Start with RAG for private or changing knowledge. Bring in production engineering and safety during design to establish evaluation, permission, and reliability requirements.</p>
+<h3 id="how-often-is-the-content-updated">How often is the content updated?<a class="headerlink" href="#how-often-is-the-content-updated" title="Permanent link">&para;</a></h3>
+<p>There is no fixed release schedule. Significant changes to protocols, frameworks, or model capabilities lead to updates in the relevant chapters. Page dates come from the history of their current file paths and may not indicate the original publication date. Check time-sensitive claims against the versions and official references cited in the text.</p>
 
 
 
@@ -9338,20 +9372,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月17日 10:15:27 CST">2026-09-17</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:50:17 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 12:22:30 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 12:22:30 CST">2026-08-31</span>
   </span>
 
     
@@ -9374,7 +9408,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9383,17 +9417,17 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
         
           
-          <a href="book/" class="md-footer__link md-footer__link--next" aria-label="下一页: 阅读目录">
+          <a href="book/" class="md-footer__link md-footer__link--next" aria-label="Next: English manuscript: reading order">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                阅读目录
+                English manuscript: reading order
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9442,7 +9476,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>

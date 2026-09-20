@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="从 KV 管理、连续批处理和前缀复用比较推理运行时，澄清 TGI 维护状态、llama.cpp 与 TensorRT-LLM 能力，并给出基于 SLO 的压测方法。">
+        <meta name="description" content="Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>部署框架选型 - Awesome AI Roadmap</title>
+        <title>Chapter 20: Choosing a Serving Framework - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第二十章：部署框架选型">
-    <meta property="og:description" content="从 KV 管理、连续批处理和前缀复用比较推理运行时，澄清 TGI 维护状态、llama.cpp 与 TensorRT-LLM 能力，并给出基于 SLO 的压测方法。">
+    <meta property="og:title" content="Chapter 20: Choosing a Serving Framework">
+    <meta property="og:description" content="Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第二十章：部署框架选型">
-    <meta name="twitter:description" content="从 KV 管理、连续批处理和前缀复用比较推理运行时，澄清 TGI 维护状态、llama.cpp 与 TensorRT-LLM 能力，并给出基于 SLO 的压测方法。">
+    <meta name="twitter:title" content="Chapter 20: Choosing a Serving Framework">
+    <meta name="twitter:description" content="Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/20-deployment-frameworks/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十章：部署框架选型","description":"从 KV 管理、连续批处理和前缀复用比较推理运行时，澄清 TGI 维护状态、llama.cpp 与 TensorRT-LLM 能力，并给出基于 SLO 的压测方法。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第二十章：部署框架选型","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Choosing a Serving Framework","description":"Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Choosing a Serving Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"部署框架选型","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 20: Choosing a Serving Framework","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
-          跳转至
+        <a href="#chapter-20-choosing-a-serving-framework" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              部署框架选型
+              Chapter 20: Choosing a Serving Framework
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/llm/03-inference-serving/20-deployment-frameworks/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -349,7 +383,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -993,7 +1027,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1010,7 +1044,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1028,7 +1062,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1051,7 +1085,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1074,7 +1108,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1097,7 +1131,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1120,7 +1154,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1189,7 +1223,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1206,7 +1240,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1224,7 +1258,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1247,7 +1281,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1270,7 +1304,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1293,7 +1327,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1316,7 +1350,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1339,7 +1373,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1410,7 +1444,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1427,7 +1461,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1445,7 +1479,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1468,7 +1502,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1491,7 +1525,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1514,7 +1548,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1537,7 +1571,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1569,7 +1603,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1582,7 +1616,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1591,7 +1625,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1600,24 +1634,24 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201" class="md-nav__link">
+  <a href="#201-what-problems-does-a-serving-framework-solve" class="md-nav__link">
     <span class="md-ellipsis">
-      20.1 部署框架到底解决什么问题
+      20.1 What problems does a serving framework solve?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.1 部署框架到底解决什么问题">
+    <nav class="md-nav" aria-label="20.1 What problems does a serving framework solve?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2011" class="md-nav__link">
+  <a href="#2011-three-major-pain-points" class="md-nav__link">
     <span class="md-ellipsis">
-      20.1.1 三大痛点
+      20.1.1 Three major pain points
     </span>
   </a>
   
@@ -1629,37 +1663,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#202-vllmpagedattention-continuous-batching" class="md-nav__link">
+  <a href="#202-vllm-pagedattention-and-continuous-batching" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2 vLLM：PagedAttention + Continuous Batching
+      20.2 vLLM: PagedAttention and continuous batching
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.2 vLLM：PagedAttention + Continuous Batching">
+    <nav class="md-nav" aria-label="20.2 vLLM: PagedAttention and continuous batching">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2021-pagedattention" class="md-nav__link">
+  <a href="#2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.1 PagedAttention 的灵感来自操作系统虚拟内存
+      20.2.1 PagedAttention takes inspiration from operating-system virtual memory
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2022-continuous-batching" class="md-nav__link">
+  <a href="#2022-continuous-batching-regrouping-at-iteration-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.2 Continuous Batching：在迭代边界重组
+      20.2.2 Continuous batching: regrouping at iteration boundaries
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2023-prefill" class="md-nav__link">
+  <a href="#2023-can-a-long-prefill-block-requests-that-are-already-streaming" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.3 长 prefill 会不会阻塞正在输出的请求
+      20.2.3 Can a long prefill block requests that are already streaming?
     </span>
   </a>
   
@@ -1671,37 +1705,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#203-sglang-radixattention" class="md-nav__link">
+  <a href="#203-sglang-prefix-reuse-with-radixattention" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3 SGLang：用 RadixAttention 复用前缀
+      20.3 SGLang: prefix reuse with RadixAttention
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.3 SGLang：用 RadixAttention 复用前缀">
+    <nav class="md-nav" aria-label="20.3 SGLang: prefix reuse with RadixAttention">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2031" class="md-nav__link">
+  <a href="#2031-where-repeated-prefixes-are-common" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.1 哪些场景前缀重复率高
+      20.3.1 Where repeated prefixes are common
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2032-radixattention-kv-cache" class="md-nav__link">
+  <a href="#2032-radixattention-organizing-the-kv-cache-with-a-radix-tree" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.2 RadixAttention：用基数树组织 KV Cache
+      20.3.2 RadixAttention: organizing the KV cache with a radix tree
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2033" class="md-nav__link">
+  <a href="#2033-automatically-reusing-earlier-requests" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.3 自动复用历史请求
+      20.3.3 Automatically reusing earlier requests
     </span>
   </a>
   
@@ -1713,37 +1747,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#204-tgi-huggingface" class="md-nav__link">
+  <a href="#204-tgi-hugging-face-serving-in-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
-      20.4 TGI：处于维护模式的 HuggingFace 服务方案
+      20.4 TGI: Hugging Face serving in maintenance mode
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#205-llamacppcpu" class="md-nav__link">
+  <a href="#205-llamacpp-a-common-choice-for-cpus-and-edge-devices" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5 llama.cpp：CPU / 边缘设备的常用方案
+      20.5 llama.cpp: a common choice for CPUs and edge devices
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.5 llama.cpp：CPU / 边缘设备的常用方案">
+    <nav class="md-nav" aria-label="20.5 llama.cpp: a common choice for CPUs and edge devices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2051" class="md-nav__link">
+  <a href="#2051-three-key-technologies" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5.1 三个关键技术
+      20.5.1 Three key technologies
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2052" class="md-nav__link">
+  <a href="#2052-suitable-uses-and-their-limits" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5.2 适用边界
+      20.5.2 Suitable uses and their limits
     </span>
   </a>
   
@@ -1755,28 +1789,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#206-tensorrt-llm-nvidia" class="md-nav__link">
+  <a href="#206-tensorrt-llm-an-nvidia-focused-inference-stack" class="md-nav__link">
     <span class="md-ellipsis">
-      20.6 TensorRT-LLM：针对 NVIDIA 的推理栈
+      20.6 TensorRT-LLM: an NVIDIA-focused inference stack
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#207" class="md-nav__link">
+  <a href="#207-how-should-a-workload-guide-runtime-selection" class="md-nav__link">
     <span class="md-ellipsis">
-      20.7 怎样按工作负载筛选运行时？
+      20.7 How should a workload guide runtime selection?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.7 怎样按工作负载筛选运行时？">
+    <nav class="md-nav" aria-label="20.7 How should a workload guide runtime selection?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2071" class="md-nav__link">
+  <a href="#2071-four-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      20.7.1 四个常见误用
+      20.7.1 Four common mistakes
     </span>
   </a>
   
@@ -1788,37 +1822,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#208" class="md-nav__link">
+  <a href="#208-three-less-obvious-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8 三大隐藏陷阱
+      20.8 Three less obvious pitfalls
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.8 三大隐藏陷阱">
+    <nav class="md-nav" aria-label="20.8 Three less obvious pitfalls">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2081" class="md-nav__link">
+  <a href="#2081-paging-does-not-solve-every-capacity-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.1 分页没有解决所有容量问题
+      20.8.1 Paging does not solve every capacity problem
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2082-kv-cache" class="md-nav__link">
+  <a href="#2082-kv-cache-quantization-support-varies-widely" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.2 KV Cache 量化的支持差异大
+      20.8.2 KV cache quantization support varies widely
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2083-moe" class="md-nav__link">
+  <a href="#2083-moe-deployment-support-differs" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.3 MoE 模型的部署支持差异
+      20.8.3 MoE deployment support differs
     </span>
   </a>
   
@@ -1830,55 +1864,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#209" class="md-nav__link">
+  <a href="#209-designing-load-tests-that-support-a-selection-decision" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9 如何设计能用于选型的压测
+      20.9 Designing load tests that support a selection decision
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.9 如何设计能用于选型的压测">
+    <nav class="md-nav" aria-label="20.9 Designing load tests that support a selection decision">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2091" class="md-nav__link">
+  <a href="#2091-standardize-the-conditions-first" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.1 先统一条件
+      20.9.1 Standardize the conditions first
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2092" class="md-nav__link">
+  <a href="#2092-separate-latency-and-throughput-metrics" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.2 分清延迟与吞吐指标
+      20.9.2 Separate latency and throughput metrics
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2093" class="md-nav__link">
+  <a href="#2093-cover-real-arrival-patterns-and-cache-states" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.3 覆盖真实到达流量与缓存状态
+      20.9.3 Cover real arrival patterns and cache states
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2094" class="md-nav__link">
+  <a href="#2094-why-one-optimization-can-worsen-another-metric" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.4 为什么优化可能让另一项指标变差
+      20.9.4 Why one optimization can worsen another metric
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2095" class="md-nav__link">
+  <a href="#2095-what-is-still-needed-between-an-experiment-and-production" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.5 从实验走向上线还缺什么
+      20.9.5 What is still needed between an experiment and production?
     </span>
   </a>
   
@@ -1890,18 +1924,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2010" class="md-nav__link">
+  <a href="#2010-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      20.10 本章总结
+      20.10 Chapter summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -1968,7 +2002,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1985,7 +2019,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2003,7 +2037,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -2026,7 +2060,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -2049,7 +2083,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -2110,7 +2144,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -2127,7 +2161,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2145,7 +2179,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -2168,7 +2202,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -2227,7 +2261,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -2244,7 +2278,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2262,7 +2296,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -2333,7 +2367,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -2350,7 +2384,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2393,7 +2427,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2410,7 +2444,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2428,7 +2462,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2488,7 +2522,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2505,7 +2539,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2523,7 +2557,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2546,7 +2580,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2569,7 +2603,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2627,7 +2661,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2644,7 +2678,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2662,7 +2696,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2685,7 +2719,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2743,7 +2777,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2760,7 +2794,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2778,7 +2812,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2801,7 +2835,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2859,7 +2893,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2876,7 +2910,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2894,7 +2928,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2917,7 +2951,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -3089,7 +3123,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -3112,7 +3146,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -3135,7 +3169,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -3158,7 +3192,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -3257,7 +3291,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -3280,7 +3314,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3303,7 +3337,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3326,7 +3360,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3349,7 +3383,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3444,7 +3478,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3467,7 +3501,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3490,7 +3524,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3546,7 +3580,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3563,7 +3597,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3581,7 +3615,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3639,7 +3673,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3656,7 +3690,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3674,7 +3708,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3697,7 +3731,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3774,7 +3808,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3791,7 +3825,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3838,7 +3872,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3855,7 +3889,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3873,7 +3907,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3896,7 +3930,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3919,7 +3953,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3989,7 +4023,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -4006,7 +4040,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4024,7 +4058,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -4047,7 +4081,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -4070,7 +4104,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -4093,7 +4127,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -4116,7 +4150,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -4139,7 +4173,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -4162,7 +4196,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -4185,7 +4219,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4249,7 +4283,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4266,7 +4300,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4284,7 +4318,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4307,7 +4341,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4330,7 +4364,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4353,7 +4387,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4376,7 +4410,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4436,7 +4470,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4453,7 +4487,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4471,7 +4505,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4494,7 +4528,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4517,7 +4551,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4575,7 +4609,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4592,7 +4626,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4610,7 +4644,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4633,7 +4667,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4691,7 +4725,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4708,7 +4742,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4726,7 +4760,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4749,7 +4783,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4805,7 +4839,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4822,7 +4856,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4840,7 +4874,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4896,7 +4930,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4913,7 +4947,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4931,7 +4965,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -5068,7 +5102,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -5085,7 +5119,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5103,7 +5137,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5126,7 +5160,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5194,7 +5228,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5211,7 +5245,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5229,7 +5263,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5252,7 +5286,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5275,7 +5309,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5298,7 +5332,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5321,7 +5355,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5344,7 +5378,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5367,7 +5401,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5431,7 +5465,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5448,7 +5482,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5466,7 +5500,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5489,7 +5523,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5512,7 +5546,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5535,7 +5569,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5558,7 +5592,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5618,7 +5652,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5635,7 +5669,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5653,7 +5687,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5676,7 +5710,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5699,7 +5733,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5757,7 +5791,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5774,7 +5808,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5792,7 +5826,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5815,7 +5849,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5873,7 +5907,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5890,7 +5924,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5908,7 +5942,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5931,7 +5965,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5987,7 +6021,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -6004,7 +6038,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6022,7 +6056,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6095,7 +6129,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6112,7 +6146,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6163,7 +6197,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6180,7 +6214,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6227,7 +6261,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6244,7 +6278,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6262,7 +6296,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6285,7 +6319,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6308,7 +6342,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6368,7 +6402,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6385,7 +6419,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6403,7 +6437,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6426,7 +6460,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6449,7 +6483,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6509,7 +6543,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6526,7 +6560,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6544,7 +6578,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6567,7 +6601,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6590,7 +6624,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6683,7 +6717,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6706,7 +6740,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6764,7 +6798,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6781,7 +6815,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6799,7 +6833,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6822,7 +6856,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6923,7 +6957,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6946,7 +6980,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -7039,7 +7073,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -7062,7 +7096,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7155,7 +7189,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7178,7 +7212,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7236,7 +7270,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7253,7 +7287,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7271,7 +7305,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7294,7 +7328,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7352,7 +7386,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7369,7 +7403,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7387,7 +7421,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7410,7 +7444,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7545,7 +7579,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7562,7 +7596,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7580,7 +7614,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7603,7 +7637,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7661,7 +7695,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7678,7 +7712,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7696,7 +7730,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7719,7 +7753,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7777,7 +7811,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7794,7 +7828,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7812,7 +7846,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7835,7 +7869,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7893,7 +7927,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7910,7 +7944,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7928,7 +7962,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7951,7 +7985,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -8009,7 +8043,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -8026,7 +8060,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8044,7 +8078,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -8067,7 +8101,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8127,7 +8161,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8144,7 +8178,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8162,7 +8196,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8185,7 +8219,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8208,7 +8242,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8279,7 +8313,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8296,7 +8330,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8339,7 +8373,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8356,7 +8390,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8374,7 +8408,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8432,7 +8466,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8449,7 +8483,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8467,7 +8501,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8490,7 +8524,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8550,7 +8584,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8567,7 +8601,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8585,7 +8619,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8608,7 +8642,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8631,7 +8665,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8689,7 +8723,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8706,7 +8740,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8724,7 +8758,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8747,7 +8781,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8805,7 +8839,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8822,7 +8856,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8840,7 +8874,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8863,7 +8897,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8988,7 +9022,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -9005,7 +9039,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9023,7 +9057,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -9079,7 +9113,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9096,7 +9130,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9114,7 +9148,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9153,7 +9187,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9162,24 +9196,24 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#201" class="md-nav__link">
+  <a href="#201-what-problems-does-a-serving-framework-solve" class="md-nav__link">
     <span class="md-ellipsis">
-      20.1 部署框架到底解决什么问题
+      20.1 What problems does a serving framework solve?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.1 部署框架到底解决什么问题">
+    <nav class="md-nav" aria-label="20.1 What problems does a serving framework solve?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2011" class="md-nav__link">
+  <a href="#2011-three-major-pain-points" class="md-nav__link">
     <span class="md-ellipsis">
-      20.1.1 三大痛点
+      20.1.1 Three major pain points
     </span>
   </a>
   
@@ -9191,37 +9225,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#202-vllmpagedattention-continuous-batching" class="md-nav__link">
+  <a href="#202-vllm-pagedattention-and-continuous-batching" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2 vLLM：PagedAttention + Continuous Batching
+      20.2 vLLM: PagedAttention and continuous batching
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.2 vLLM：PagedAttention + Continuous Batching">
+    <nav class="md-nav" aria-label="20.2 vLLM: PagedAttention and continuous batching">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2021-pagedattention" class="md-nav__link">
+  <a href="#2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.1 PagedAttention 的灵感来自操作系统虚拟内存
+      20.2.1 PagedAttention takes inspiration from operating-system virtual memory
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2022-continuous-batching" class="md-nav__link">
+  <a href="#2022-continuous-batching-regrouping-at-iteration-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.2 Continuous Batching：在迭代边界重组
+      20.2.2 Continuous batching: regrouping at iteration boundaries
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2023-prefill" class="md-nav__link">
+  <a href="#2023-can-a-long-prefill-block-requests-that-are-already-streaming" class="md-nav__link">
     <span class="md-ellipsis">
-      20.2.3 长 prefill 会不会阻塞正在输出的请求
+      20.2.3 Can a long prefill block requests that are already streaming?
     </span>
   </a>
   
@@ -9233,37 +9267,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#203-sglang-radixattention" class="md-nav__link">
+  <a href="#203-sglang-prefix-reuse-with-radixattention" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3 SGLang：用 RadixAttention 复用前缀
+      20.3 SGLang: prefix reuse with RadixAttention
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.3 SGLang：用 RadixAttention 复用前缀">
+    <nav class="md-nav" aria-label="20.3 SGLang: prefix reuse with RadixAttention">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2031" class="md-nav__link">
+  <a href="#2031-where-repeated-prefixes-are-common" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.1 哪些场景前缀重复率高
+      20.3.1 Where repeated prefixes are common
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2032-radixattention-kv-cache" class="md-nav__link">
+  <a href="#2032-radixattention-organizing-the-kv-cache-with-a-radix-tree" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.2 RadixAttention：用基数树组织 KV Cache
+      20.3.2 RadixAttention: organizing the KV cache with a radix tree
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2033" class="md-nav__link">
+  <a href="#2033-automatically-reusing-earlier-requests" class="md-nav__link">
     <span class="md-ellipsis">
-      20.3.3 自动复用历史请求
+      20.3.3 Automatically reusing earlier requests
     </span>
   </a>
   
@@ -9275,37 +9309,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#204-tgi-huggingface" class="md-nav__link">
+  <a href="#204-tgi-hugging-face-serving-in-maintenance-mode" class="md-nav__link">
     <span class="md-ellipsis">
-      20.4 TGI：处于维护模式的 HuggingFace 服务方案
+      20.4 TGI: Hugging Face serving in maintenance mode
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#205-llamacppcpu" class="md-nav__link">
+  <a href="#205-llamacpp-a-common-choice-for-cpus-and-edge-devices" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5 llama.cpp：CPU / 边缘设备的常用方案
+      20.5 llama.cpp: a common choice for CPUs and edge devices
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.5 llama.cpp：CPU / 边缘设备的常用方案">
+    <nav class="md-nav" aria-label="20.5 llama.cpp: a common choice for CPUs and edge devices">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2051" class="md-nav__link">
+  <a href="#2051-three-key-technologies" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5.1 三个关键技术
+      20.5.1 Three key technologies
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2052" class="md-nav__link">
+  <a href="#2052-suitable-uses-and-their-limits" class="md-nav__link">
     <span class="md-ellipsis">
-      20.5.2 适用边界
+      20.5.2 Suitable uses and their limits
     </span>
   </a>
   
@@ -9317,28 +9351,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#206-tensorrt-llm-nvidia" class="md-nav__link">
+  <a href="#206-tensorrt-llm-an-nvidia-focused-inference-stack" class="md-nav__link">
     <span class="md-ellipsis">
-      20.6 TensorRT-LLM：针对 NVIDIA 的推理栈
+      20.6 TensorRT-LLM: an NVIDIA-focused inference stack
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#207" class="md-nav__link">
+  <a href="#207-how-should-a-workload-guide-runtime-selection" class="md-nav__link">
     <span class="md-ellipsis">
-      20.7 怎样按工作负载筛选运行时？
+      20.7 How should a workload guide runtime selection?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.7 怎样按工作负载筛选运行时？">
+    <nav class="md-nav" aria-label="20.7 How should a workload guide runtime selection?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2071" class="md-nav__link">
+  <a href="#2071-four-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      20.7.1 四个常见误用
+      20.7.1 Four common mistakes
     </span>
   </a>
   
@@ -9350,37 +9384,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#208" class="md-nav__link">
+  <a href="#208-three-less-obvious-pitfalls" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8 三大隐藏陷阱
+      20.8 Three less obvious pitfalls
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.8 三大隐藏陷阱">
+    <nav class="md-nav" aria-label="20.8 Three less obvious pitfalls">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2081" class="md-nav__link">
+  <a href="#2081-paging-does-not-solve-every-capacity-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.1 分页没有解决所有容量问题
+      20.8.1 Paging does not solve every capacity problem
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2082-kv-cache" class="md-nav__link">
+  <a href="#2082-kv-cache-quantization-support-varies-widely" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.2 KV Cache 量化的支持差异大
+      20.8.2 KV cache quantization support varies widely
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2083-moe" class="md-nav__link">
+  <a href="#2083-moe-deployment-support-differs" class="md-nav__link">
     <span class="md-ellipsis">
-      20.8.3 MoE 模型的部署支持差异
+      20.8.3 MoE deployment support differs
     </span>
   </a>
   
@@ -9392,55 +9426,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#209" class="md-nav__link">
+  <a href="#209-designing-load-tests-that-support-a-selection-decision" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9 如何设计能用于选型的压测
+      20.9 Designing load tests that support a selection decision
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="20.9 如何设计能用于选型的压测">
+    <nav class="md-nav" aria-label="20.9 Designing load tests that support a selection decision">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#2091" class="md-nav__link">
+  <a href="#2091-standardize-the-conditions-first" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.1 先统一条件
+      20.9.1 Standardize the conditions first
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2092" class="md-nav__link">
+  <a href="#2092-separate-latency-and-throughput-metrics" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.2 分清延迟与吞吐指标
+      20.9.2 Separate latency and throughput metrics
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2093" class="md-nav__link">
+  <a href="#2093-cover-real-arrival-patterns-and-cache-states" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.3 覆盖真实到达流量与缓存状态
+      20.9.3 Cover real arrival patterns and cache states
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2094" class="md-nav__link">
+  <a href="#2094-why-one-optimization-can-worsen-another-metric" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.4 为什么优化可能让另一项指标变差
+      20.9.4 Why one optimization can worsen another metric
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2095" class="md-nav__link">
+  <a href="#2095-what-is-still-needed-between-an-experiment-and-production" class="md-nav__link">
     <span class="md-ellipsis">
-      20.9.5 从实验走向上线还缺什么
+      20.9.5 What is still needed between an experiment and production?
     </span>
   </a>
   
@@ -9452,18 +9486,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2010" class="md-nav__link">
+  <a href="#2010-chapter-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      20.10 本章总结
+      20.10 Chapter summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9485,7 +9519,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/03-inference-serving/20-deployment-frameworks.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/03-inference-serving/20-deployment-frameworks.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9493,373 +9527,373 @@
   
 
 
-<h1 id="_1">第二十章：部署框架选型<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="201">20.1 部署框架到底解决什么问题<a class="headerlink" href="#201" title="Permanent link">&para;</a></h2>
-<p><code>transformers</code> 的 <code>model.generate()</code> 可以作为正确性基线，也支持多种缓存与 attention 优化；它本身不是一个完整的多租户在线调度服务。下面讨论朴素服务封装可能遇到的瓶颈，而不是把它们当成 Transformers 所有配置的固有缺陷。</p>
-<h3 id="2011">20.1.1 三大痛点<a class="headerlink" href="#2011" title="Permanent link">&para;</a></h3>
+<h1 id="chapter-20-choosing-a-serving-framework"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 20: Choosing a Serving Framework<a class="headerlink" href="#chapter-20-choosing-a-serving-framework" title="Permanent link">&para;</a></h1>
+<h2 id="201-what-problems-does-a-serving-framework-solve"><span id="201" class="legacy-heading-anchor" aria-hidden="true"></span>20.1 What problems does a serving framework solve?<a class="headerlink" href="#201-what-problems-does-a-serving-framework-solve" title="Permanent link">&para;</a></h2>
+<p>The <code>transformers</code> method <code>model.generate()</code> can serve as a correctness baseline and supports various cache and attention optimizations. By itself, it is not a complete multi-tenant online scheduling service. The following bottlenecks concern naive serving wrappers, not inherent defects in every Transformers configuration.</p>
+<h3 id="2011-three-major-pain-points"><span id="2011" class="legacy-heading-anchor" aria-hidden="true"></span>20.1.1 Three major pain points<a class="headerlink" href="#2011-three-major-pain-points" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>痛点</th>
-<th>表现</th>
+<th>Pain point</th>
+<th>Symptoms</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>① KV Cache 显存碎片严重</strong></td>
-<td>朴素实现可能为请求预留接近最大长度的连续空间，而实际长度短得多，导致可用并发下降</td>
+<td><strong>① Severe KV cache memory fragmentation</strong></td>
+<td>A naive implementation may reserve contiguous space near the maximum request length even when actual sequences are much shorter, reducing available concurrency</td>
 </tr>
 <tr>
-<td><strong>② 批量推理调度低效</strong></td>
-<td>静态 batch 的成员通常保持不变；短请求完成后可能留下空槽或 padding，无法立刻纳入新请求，长度不均时利用率下降</td>
+<td><strong>② Inefficient batch scheduling</strong></td>
+<td>Static batches usually keep the same members; completed short requests may leave empty slots or padding that cannot immediately accept new requests, reducing utilization when lengths vary</td>
 </tr>
 <tr>
-<td><strong>③ 重复计算</strong></td>
-<td>例如用户共享同一段系统提示，但服务没有跨请求缓存，每次仍需计算相同前缀的 KV</td>
+<td><strong>③ Repeated computation</strong></td>
+<td>Users may share the same system prompt, but without cross-request caching, the service recomputes the prefix's KV state every time</td>
 </tr>
 </tbody>
 </table>
-<p><strong>因此常见优化方向是</strong>：内存高效（缓解碎片）+ 批量调度（提高利用率）+ 缓存复用（避免重复计算）。各框架的覆盖与实现随版本变化。</p>
-<p>还要区分 <strong>prefill</strong> 与 <strong>decode</strong>：前者批量处理输入，通常有较高算术强度；低批量 decode 常受权重或 KV 带宽限制。高并发、长上下文和不同架构会改变瓶颈，不能把全部推理都称为 memory-bound。</p>
-<p>服务选型最终要满足服务级别目标（SLO），例如首 token 延迟（TTFT）和相邻输出 token 的时间间隔（ITL）上限。后文比较缓存和调度时，既看总吞吐，也看用户等待和流式输出是否卡顿。</p>
-<h2 id="202-vllmpagedattention-continuous-batching">20.2 vLLM：PagedAttention + Continuous Batching<a class="headerlink" href="#202-vllmpagedattention-continuous-batching" title="Permanent link">&para;</a></h2>
-<h3 id="2021-pagedattention">20.2.1 PagedAttention 的灵感来自操作系统虚拟内存<a class="headerlink" href="#2021-pagedattention" title="Permanent link">&para;</a></h3>
-<p><strong>操作系统怎么管内存</strong>？不是给每个进程预分配大块连续物理内存（那会有大量碎片），而是把物理内存切成固定大小的「页」，进程拿到「逻辑地址」，通过页表映射到真实物理页。</p>
-<p><strong>PagedAttention 把这个思路搬到 KV Cache 上</strong>：</p>
+<p><strong>Common optimization directions are therefore</strong> memory efficiency to reduce fragmentation, batch scheduling to improve utilization, and cache reuse to avoid redundant computation. Each framework's coverage and implementation change over time.</p>
+<p>Also distinguish <strong>prefill</strong> from <strong>decode</strong>. Prefill processes input in bulk and usually has higher arithmetic intensity; low-batch decode is often limited by weight or KV bandwidth. High concurrency, long contexts, and different architectures change the bottleneck, so not all inference is memory-bound.</p>
+<p>Framework selection must ultimately satisfy service-level objectives (SLOs), such as limits on time to first token (TTFT) and inter-token latency (ITL). When comparing caching and scheduling below, consider not only aggregate throughput but also user waiting time and stalls in streamed output.</p>
+<h2 id="202-vllm-pagedattention-and-continuous-batching"><span id="202-vllmpagedattention-continuous-batching" class="legacy-heading-anchor" aria-hidden="true"></span>20.2 vLLM: PagedAttention and continuous batching<a class="headerlink" href="#202-vllm-pagedattention-and-continuous-batching" title="Permanent link">&para;</a></h2>
+<h3 id="2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory"><span id="2021-pagedattention" class="legacy-heading-anchor" aria-hidden="true"></span>20.2.1 PagedAttention takes inspiration from operating-system virtual memory<a class="headerlink" href="#2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory" title="Permanent link">&para;</a></h3>
+<p><strong>How does an operating system manage memory?</strong> Rather than preallocating a large contiguous physical region for every process, which would create substantial fragmentation, it divides physical memory into fixed-size pages. Processes use logical addresses mapped to physical pages through page tables.</p>
+<p><strong>PagedAttention applies that idea to KV caching</strong>:</p>
 <pre class="mermaid"><code>flowchart LR
-    subgraph L["请求的逻辑 KV 序列"]
-        A1["块 0"] --&gt; A2["块 1"] --&gt; A3["块 2"]
+    subgraph L["A request's logical KV sequence"]
+        A1["Block 0"] --&gt; A2["Block 1"] --&gt; A3["Block 2"]
     end
-    L --&gt; BT["Block Table&lt;br/&gt;逻辑 → 物理映射"]
-    BT --&gt; P["物理显存池&lt;br/&gt;固定大小 Block&lt;br/&gt;可非连续分布，按引用回收"]
+    L --&gt; BT["Block Table&lt;br/&gt;Logical → physical mapping"]
+    BT --&gt; P["Physical GPU memory pool&lt;br/&gt;Fixed-size blocks&lt;br/&gt;Noncontiguous placement&lt;br/&gt;Reference-based reclamation"]
 
     style BT fill:#e8f0fe</code></pre>
-<p>假设块大小为 16 token，一个请求的 200 token 需要 <code>ceil(200/16)=13</code> 块，总容量为 208 token，尾块空 8 个位置。它避免了为该请求预留整段 4096-token 连续空间；真实块大小受后端和配置约束。</p>
-<p>请求结束后，引用计数为零的块可以回收到池中，也可能为前缀缓存保留到被逐出。回收不等于立刻将显存归还 CUDA，所以 <code>nvidia-smi</code> 占用不下降未必是泄漏。</p>
+<p>With a block size of 16 tokens, a 200-token request needs <code>ceil(200/16)=13</code> blocks, providing capacity for 208 tokens with 8 unused positions in the last block. This avoids reserving a contiguous 4096-token region for the request. Actual block sizes depend on the backend and configuration.</p>
+<p>When a request finishes, blocks with zero references can return to the pool or remain available for prefix caching until eviction. Reclamation does not necessarily return memory to CUDA immediately, so unchanged <code>nvidia-smi</code> usage is not by itself evidence of a leak.</p>
 <blockquote>
-<p>实际收益取决于请求长度分布、block 大小、模型、并发限制和 KV-cache 预算；应使用生产形态的 trace 压测，而非套用固定百分比。</p>
+<p>Actual gains depend on request-length distribution, block size, model, concurrency limits, and KV-cache budget. Use production-like traces for load testing rather than assuming a fixed percentage improvement.</p>
 </blockquote>
-<h3 id="2022-continuous-batching">20.2.2 Continuous Batching：在迭代边界重组<a class="headerlink" href="#2022-continuous-batching" title="Permanent link">&para;</a></h3>
-<p><strong>Static batching</strong>：一批请求的成员在执行期间基本固定；短请求可以提前返回，但空出的执行槽未必能被新请求复用。</p>
-<p><strong>Continuous Batching</strong>：在调度迭代边界让已完成请求退出、让新请求加入。不是在任意 GPU kernel 执行到一半时插入请求；每轮可包含 decode token、prefill chunk 或推测验证等工作。</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>t1: 请求 A、B、C 同时在跑
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>t5: A 生成完退出 → 新请求 D 立刻加入
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>t8: B 生成完退出 → 新请求 E 加入
+<h3 id="2022-continuous-batching-regrouping-at-iteration-boundaries"><span id="2022-continuous-batching" class="legacy-heading-anchor" aria-hidden="true"></span>20.2.2 Continuous batching: regrouping at iteration boundaries<a class="headerlink" href="#2022-continuous-batching-regrouping-at-iteration-boundaries" title="Permanent link">&para;</a></h3>
+<p><strong>Static batching</strong>: batch membership remains largely fixed during execution. Short requests may return early, but new requests cannot necessarily reuse the vacated execution slots.</p>
+<p><strong>Continuous batching</strong>: completed requests leave and new requests enter at scheduling iteration boundaries—not halfway through an arbitrary GPU kernel. An iteration may contain decode tokens, prefill chunks, or speculative verification.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>t1: requests A, B, and C are running
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>t5: A finishes and leaves → new request D joins immediately
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>t8: B finishes and leaves → new request E joins
 </span></code></pre></div>
-<p>它可减少由长度不均造成的空槽时间；吞吐增益取决于到达率、输出长度和调度策略。</p>
-<p>vLLM 同时提供 KV 管理、调度和 APC 等能力，不能只凭 PagedAttention 一个术语判定性能。最大 batch token 预算、并发限制和 KV 容量共同决定可调度的工作量。</p>
-<h3 id="2023-prefill">20.2.3 长 prefill 会不会阻塞正在输出的请求<a class="headerlink" href="#2023-prefill" title="Permanent link">&para;</a></h3>
-<p>会，若长 prompt 独占一次调度迭代，现有请求的下一 token 可能被延后。<strong>Chunked prefill</strong> 把长输入拆成若干块，与 decode 工作交错，调节 TTFT 与逐 token 延迟之间的取舍。</p>
-<p><strong>Prefill/decode 分离</strong>则将两阶段放在不同执行实例或设备池，分别扩缩容，但需要传输 KV 并管理跨实例路由。传输成本、带宽和负载规模不合适时，分离反而更慢；它不等于连续批处理或前缀缓存。</p>
-<h2 id="203-sglang-radixattention">20.3 SGLang：用 RadixAttention 复用前缀<a class="headerlink" href="#203-sglang-radixattention" title="Permanent link">&para;</a></h2>
-<p>SGLang 的 RadixAttention 是解释跨请求前缀复用的一个实现实例。SGLang 也包含调度、量化、分布式等能力，不能仅凭是否有共享前缀判定它与其他框架的胜负。</p>
-<h3 id="2031">20.3.1 哪些场景前缀重复率高<a class="headerlink" href="#2031" title="Permanent link">&para;</a></h3>
+<p>This can reduce idle slot time caused by uneven sequence lengths. Throughput gains depend on arrival rate, output lengths, and scheduling policy.</p>
+<p>vLLM provides KV management, scheduling, APC, and other capabilities. PagedAttention alone is not enough to predict performance. The maximum batch-token budget, concurrency limit, and KV capacity jointly determine schedulable work.</p>
+<h3 id="2023-can-a-long-prefill-block-requests-that-are-already-streaming"><span id="2023-prefill" class="legacy-heading-anchor" aria-hidden="true"></span>20.2.3 Can a long prefill block requests that are already streaming?<a class="headerlink" href="#2023-can-a-long-prefill-block-requests-that-are-already-streaming" title="Permanent link">&para;</a></h3>
+<p>Yes. If a long prompt monopolizes a scheduling iteration, the next token of an existing request can be delayed. <strong>Chunked prefill</strong> splits long inputs into chunks and interleaves them with decode work, adjusting the tradeoff between TTFT and per-token latency.</p>
+<p><strong>Prefill/decode disaggregation</strong> instead places the phases on different execution instances or device pools so they can scale separately. It requires KV transfer and cross-instance routing. Unsuitable transfer costs, bandwidth, or load can make disaggregation slower; it is not the same as continuous batching or prefix caching.</p>
+<h2 id="203-sglang-prefix-reuse-with-radixattention"><span id="203-sglang-radixattention" class="legacy-heading-anchor" aria-hidden="true"></span>20.3 SGLang: prefix reuse with RadixAttention<a class="headerlink" href="#203-sglang-prefix-reuse-with-radixattention" title="Permanent link">&para;</a></h2>
+<p>SGLang's RadixAttention is one implementation of cross-request prefix reuse. SGLang also includes scheduling, quantization, and distributed execution. Shared-prefix presence alone cannot determine whether it outperforms another framework.</p>
+<h3 id="2031-where-repeated-prefixes-are-common"><span id="2031" class="legacy-heading-anchor" aria-hidden="true"></span>20.3.1 Where repeated prefixes are common<a class="headerlink" href="#2031-where-repeated-prefixes-are-common" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>System Prompt 共享</strong>：所有用户调同一个 API，System Prompt 完全一样；</li>
-<li><strong>Few-shot 示例共享</strong>：Prompt 里有 5–10 个固定示例；</li>
-<li><strong>多轮对话历史</strong>：每轮都包含前 N 轮的完整历史；</li>
-<li><strong>Agent 工作流</strong>：Agent 多次调用 LLM，每次上下文都从同一个 System Prompt 开始。</li>
+<li><strong>Shared system prompts</strong>: all users call the same API with an identical system prompt.</li>
+<li><strong>Shared few-shot examples</strong>: prompts contain 5–10 fixed examples.</li>
+<li><strong>Multi-turn conversation history</strong>: each turn includes the full history of the preceding N turns.</li>
+<li><strong>Agent workflows</strong>: an agent repeatedly calls an LLM with context beginning with the same system prompt.</li>
 </ul>
-<p>vLLM 不只有 PagedAttention，也提供 <strong>Automatic Prefix Caching（APC）</strong>，可复用相同 token 前缀的 KV block。是否开启、命中和收益依版本、配置及缓存压力而定；不能把「跨请求前缀复用」说成 SGLang 独有。</p>
-<h3 id="2032-radixattention-kv-cache">20.3.2 RadixAttention：用基数树组织 KV Cache<a class="headerlink" href="#2032-radixattention-kv-cache" title="Permanent link">&para;</a></h3>
+<p>vLLM offers not only PagedAttention but also <strong>Automatic Prefix Caching (APC)</strong> to reuse KV blocks for identical token prefixes. Enablement, hits, and benefits depend on version, configuration, and cache pressure. Cross-request prefix reuse is not exclusive to SGLang.</p>
+<h3 id="2032-radixattention-organizing-the-kv-cache-with-a-radix-tree"><span id="2032-radixattention-kv-cache" class="legacy-heading-anchor" aria-hidden="true"></span>20.3.2 RadixAttention: organizing the KV cache with a radix tree<a class="headerlink" href="#2032-radixattention-organizing-the-kv-cache-with-a-radix-tree" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TB
-    ROOT["根节点（空）"] --&gt; SP["共享的 System Prompt&lt;br/&gt;1000 token —— 只存一份"]
-    SP --&gt; U1["用户 A 的问题"]
-    SP --&gt; U2["用户 B 的问题"]
-    SP --&gt; U3["用户 C 的问题"]
+    ROOT["Root: empty"] --&gt; SP["Shared system prompt&lt;br/&gt;1000 tokens — stored once"]
+    SP --&gt; U1["User A's question"]
+    SP --&gt; U2["User B's question"]
+    SP --&gt; U3["User C's question"]
 
     style SP fill:#e6f4ea</code></pre>
-<p><strong>多个请求可复用相同的 token 前缀路径，在第一个不同 token 处分叉</strong>。Radix tree 的一条边可压缩存储一段 token，不必一个 token 对应树的一层。</p>
+<p><strong>Requests reuse the same token-prefix path and branch at the first differing token</strong>. A radix-tree edge can compactly represent a sequence of tokens; a separate tree level per token is unnecessary.</p>
 <blockquote>
-<p>前缀树可让共享部分只保留一份；实际节省由前缀重合、驱逐策略和并发共同决定。</p>
+<p>A prefix tree can retain one copy of the shared portion. Actual savings depend on prefix overlap, eviction policy, and concurrency.</p>
 </blockquote>
-<h3 id="2033">20.3.3 自动复用历史请求<a class="headerlink" href="#2033" title="Permanent link">&para;</a></h3>
-<p>若相同前缀的 KV block 尚未被逐出，后来的请求可复用它们；缓存驻留时长和首 token 延迟收益都由部署配置与负载决定。</p>
-<p>SGLang 的 RadixAttention 对高前缀复用工作负载尤其值得评估；vLLM APC、SGLang 与其他运行时都应在同一模型、硬件、并发和 trace 下比较。</p>
-<p>无共享前缀时，只能说前缀缓存这一项不能带来收益；其他 kernel、调度和模型实现仍可能产生差异。SGLang 与 vLLM 可以作为同一服务的候选运行时，既不是必须一起部署的互补组件，也没有脱离负载的固定排序。</p>
-<h2 id="204-tgi-huggingface">20.4 TGI：处于维护模式的 HuggingFace 服务方案<a class="headerlink" href="#204-tgi-huggingface" title="Permanent link">&para;</a></h2>
-<p>Hugging Face 已在官方文档中声明 TGI 进入<strong>维护模式</strong>：接受小型修复、文档和轻量维护工作，并推荐后续评估 vLLM、SGLang 或本地兼容运行时。现有 TGI 用户仍应按自身版本的支持矩阵维护部署；维护模式不等于既有服务立即不可用。</p>
+<h3 id="2033-automatically-reusing-earlier-requests"><span id="2033" class="legacy-heading-anchor" aria-hidden="true"></span>20.3.3 Automatically reusing earlier requests<a class="headerlink" href="#2033-automatically-reusing-earlier-requests" title="Permanent link">&para;</a></h3>
+<p>Later requests can reuse KV blocks for an identical prefix while those blocks remain unevicted. Cache residency and TTFT benefits both depend on deployment settings and load.</p>
+<p>SGLang's RadixAttention is particularly worth evaluating for workloads with high prefix reuse. Compare vLLM APC, SGLang, and other runtimes using the same model, hardware, concurrency, and trace.</p>
+<p>With no shared prefixes, prefix caching itself provides no benefit; other kernels, scheduling policies, and model implementations can still differ. SGLang and vLLM can be alternative runtimes for the same service. They are not necessarily complementary components that must be deployed together, nor do they have a fixed ranking independent of workload.</p>
+<h2 id="204-tgi-hugging-face-serving-in-maintenance-mode"><span id="204-tgi-huggingface" class="legacy-heading-anchor" aria-hidden="true"></span>20.4 TGI: Hugging Face serving in maintenance mode<a class="headerlink" href="#204-tgi-hugging-face-serving-in-maintenance-mode" title="Permanent link">&para;</a></h2>
+<p>Hugging Face's official documentation states that TGI is in <strong>maintenance mode</strong>, accepting minor fixes, documentation, and lightweight maintenance, and recommends evaluating vLLM, SGLang, or compatible local runtimes going forward. Existing TGI users should continue to maintain deployments against their version's support matrix; maintenance mode does not make a running service immediately unusable.</p>
 <table>
 <thead>
 <tr>
-<th>维度</th>
-<th>说明</th>
+<th>Dimension</th>
+<th>Details</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>生态集成</strong></td>
-<td>可通过 HF Hub 模型 ID 加载支持的模型；需核对架构、权重格式、量化配置、tokenizer 和 chat template</td>
+<td><strong>Ecosystem integration</strong></td>
+<td>Load supported models by HF Hub ID; verify architecture, weight format, quantization configuration, tokenizer, and chat template</td>
 </tr>
 <tr>
-<td><strong>服务与观测</strong></td>
-<td>HTTP 服务与 SSE 流式输出、Prometheus 指标、OpenTelemetry tracing；内部组件的 gRPC 通信不等于通用的外部双协议 API</td>
+<td><strong>Serving and observability</strong></td>
+<td>HTTP serving, SSE streaming, Prometheus metrics, and OpenTelemetry tracing; internal gRPC communication does not imply a general external dual-protocol API</td>
 </tr>
 <tr>
-<td><strong>能力</strong></td>
-<td>提供连续批处理、量化和 SSE 流式输出；新项目需将维护状态和目标模型支持纳入选型</td>
+<td><strong>Capabilities</strong></td>
+<td>Continuous batching, quantization, and SSE streaming; new projects must include maintenance status and target-model support in their decision</td>
 </tr>
 </tbody>
 </table>
-<p>既有部署应评估继续维护与迁移成本。HF Hub 集成和指标能力不是 TGI 独有，新项目不应只因为模型来自 Hub 就选 TGI。鉴权、JWT、配额、TLS 和审计需要分别确认运行时与网关的职责，不能用「企业级」一词概括为开箱即用。</p>
-<h2 id="205-llamacppcpu">20.5 llama.cpp：CPU / 边缘设备的常用方案<a class="headerlink" href="#205-llamacppcpu" title="Permanent link">&para;</a></h2>
-<p>使用 C/C++ 实现轻量推理栈，支持 CPU、Metal、CUDA 等后端及 CPU/GPU 混合执行，常用于本地、Apple Silicon 和边缘场景；并非只支持 CPU。</p>
-<p>这类设备的内存、带宽、功耗与部署环境差异很大，轻量依赖和多后端支持比单一服务器 GPU 的最优吞吐更重要。</p>
-<h3 id="2051">20.5.1 三个关键技术<a class="headerlink" href="#2051" title="Permanent link">&para;</a></h3>
-<p><strong>① GGUF 文件格式</strong></p>
-<p>把张量及 tokenizer 等元数据存入 GGUF，也可分片存储。常见量化预设：</p>
+<p>Existing deployments should compare ongoing maintenance with migration costs. HF Hub integration and metrics are not exclusive to TGI, and a new project should not choose it just because its model is on the Hub. Confirm the runtime and gateway responsibilities for authentication, JWT, quotas, TLS, and auditing separately; “enterprise-grade” does not mean all are provided out of the box.</p>
+<h2 id="205-llamacpp-a-common-choice-for-cpus-and-edge-devices"><span id="205-llamacppcpu" class="legacy-heading-anchor" aria-hidden="true"></span>20.5 llama.cpp: a common choice for CPUs and edge devices<a class="headerlink" href="#205-llamacpp-a-common-choice-for-cpus-and-edge-devices" title="Permanent link">&para;</a></h2>
+<p>llama.cpp is a lightweight C/C++ inference stack supporting CPU, Metal, CUDA, and other backends, plus hybrid CPU/GPU execution. It is commonly used locally, on Apple Silicon, and at the edge—not only on CPUs.</p>
+<p>Memory, bandwidth, power, and deployment environments differ widely on these devices. Lightweight dependencies and multiple backends can matter more than maximizing throughput on one server GPU.</p>
+<h3 id="2051-three-key-technologies"><span id="2051" class="legacy-heading-anchor" aria-hidden="true"></span>20.5.1 Three key technologies<a class="headerlink" href="#2051-three-key-technologies" title="Permanent link">&para;</a></h3>
+<p><strong>① The GGUF file format</strong></p>
+<p>GGUF stores tensors and metadata such as tokenizer information, and can use sharded files. Common quantization presets include:</p>
 <table>
 <thead>
 <tr>
-<th>档位</th>
-<th>说明</th>
+<th>Preset</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Q8_0</td>
-<td>8-bit，通常比更低比特格式保留更多质量</td>
+<td>8-bit; usually retains more quality than lower-bit formats</td>
 </tr>
 <tr>
 <td>Q5_K_M</td>
-<td>以 5-bit 为主的混合量化预设，实际平均位宽包含元数据和不同张量格式</td>
+<td>A mostly 5-bit mixed-quantization preset; actual average bit width includes metadata and different tensor formats</td>
 </tr>
 <tr>
 <td><strong>Q4_K_M</strong></td>
-<td>以 4-bit 为主的混合量化预设，不表示文件中每个参数恰好占 4 bit</td>
+<td>A mostly 4-bit mixed-quantization preset, not exactly 4 bits for every parameter in the file</td>
 </tr>
 <tr>
 <td>Q3_K_S</td>
-<td>3-bit，极端压缩，精度有损</td>
+<td>3-bit, aggressive compression with quality loss</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>再强调一次：GGUF 是文件格式不是量化算法</strong>（见 <a href="../15-quantization/">第十五章</a>）。</p>
+<p><strong>GGUF is a file format, not a quantization algorithm</strong>; see <a href="../15-quantization/">Chapter 15</a>.</p>
 </blockquote>
-<p><strong>② SIMD 优化</strong></p>
-<p>针对 AVX2、AVX512、ARM NEON 等指令集提供优化 kernel。CPU 与 GPU 的速度比较高度依赖模型、量化、内存带宽和批量大小，不应使用固定比例。</p>
-<p><strong>③ Metal 后端（Apple Silicon）</strong></p>
-<p>Metal 可利用 Apple GPU；统一内存减少部分 CPU/GPU 间显式复制，但不消除带宽限制。能否运行 70B 要结合量化、可用内存、KV 与系统预留判断，不能用「统一内存」承诺速度。</p>
-<h3 id="2052">20.5.2 适用边界<a class="headerlink" href="#2052" title="Permanent link">&para;</a></h3>
+<p><strong>② SIMD optimization</strong></p>
+<p>Optimized kernels target instruction sets such as AVX2, AVX512, and ARM NEON. CPU/GPU speed comparisons depend heavily on model, quantization, memory bandwidth, and batch size; no fixed ratio applies.</p>
+<p><strong>③ The Metal backend on Apple Silicon</strong></p>
+<p>Metal uses the Apple GPU. Unified memory avoids some explicit CPU/GPU copies but does not eliminate bandwidth limits. Whether a 70B model can run depends on quantization, available memory, KV state, and system reserves. Unified memory alone promises no particular speed.</p>
+<h3 id="2052-suitable-uses-and-their-limits"><span id="2052" class="legacy-heading-anchor" aria-hidden="true"></span>20.5.2 Suitable uses and their limits<a class="headerlink" href="#2052-suitable-uses-and-their-limits" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>常见用途</th>
-<th>需要额外验证</th>
+<th>Common use</th>
+<th>Additional validation needed</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>本地或嵌入式推理</td>
-<td>高并发时的排队、KV 容量和目标设备吞吐</td>
+<td>Local or embedded inference</td>
+<td>Queuing, KV capacity, and target-device throughput at high concurrency</td>
 </tr>
 <tr>
-<td>Mac 上使用 Metal</td>
-<td>模型格式、量化与硬件带宽</td>
+<td>Metal on a Mac</td>
+<td>Model format, quantization, and hardware bandwidth</td>
 </tr>
 <tr>
-<td>资源受限的 CPU/GPU 混合运行</td>
-<td>offload 与跨设备传输的延迟代价</td>
+<td>Resource-constrained hybrid CPU/GPU execution</td>
+<td>Latency from offload and cross-device transfers</td>
 </tr>
 <tr>
-<td>离线或隐私敏感场景</td>
-<td>核查模型下载、遥测、日志与外部工具调用；本地推理本身不保证整个应用的数据都不出设备</td>
+<td>Offline or privacy-sensitive applications</td>
+<td>Check model downloads, telemetry, logs, and external tool calls; local inference alone does not keep all application data on-device</td>
 </tr>
 </tbody>
 </table>
-<p>官方 <code>llama-server</code> 已列出多用户并行解码和 continuous batching，也提供多 GPU 分配选项。因此「不支持 batch」「不能多卡」都不准确。分布式规模和运维能力仍要按具体版本验证，不能从支持某个选项推成适合所有集群。</p>
-<h2 id="206-tensorrt-llm-nvidia">20.6 TensorRT-LLM：针对 NVIDIA 的推理栈<a class="headerlink" href="#206-tensorrt-llm-nvidia" title="Permanent link">&para;</a></h2>
-<p>TensorRT-LLM 针对 NVIDIA GPU 的 kernel、运行时与服务调度进行优化。要区分传统 TensorRT engine 路线与 PyTorch backend / 高层 LLM API，不能继续概括成「所有模型都必须先手动编译 engine」。</p>
+<p>The official <code>llama-server</code> documents multi-user parallel decoding and continuous batching, along with multi-GPU allocation options. Claims that it cannot batch or use multiple GPUs are therefore inaccurate. Distributed scale and operational capabilities still need version-specific validation; an available option does not prove suitability for every cluster.</p>
+<h2 id="206-tensorrt-llm-an-nvidia-focused-inference-stack"><span id="206-tensorrt-llm-nvidia" class="legacy-heading-anchor" aria-hidden="true"></span>20.6 TensorRT-LLM: an NVIDIA-focused inference stack<a class="headerlink" href="#206-tensorrt-llm-an-nvidia-focused-inference-stack" title="Permanent link">&para;</a></h2>
+<p>TensorRT-LLM optimizes kernels, runtime execution, and serving schedules for NVIDIA GPUs. Distinguish its traditional TensorRT engine workflow from the PyTorch backend and high-level LLM API. It is no longer accurate to say that every model requires a manually compiled engine first.</p>
 <table>
 <thead>
 <tr>
-<th>特点</th>
-<th>代价</th>
+<th>Feature</th>
+<th>Cost or constraint</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>提供针对硬件和模型的 kernel、量化及并行优化</td>
-<td>需核对 CUDA、GPU、模型、精度与后端支持矩阵</td>
+<td>Hardware- and model-specific kernels, quantization, and parallelism optimizations</td>
+<td>Verify the CUDA, GPU, model, precision, and backend support matrix</td>
 </tr>
 <tr>
-<td>集成 NVIDIA 自家内核库</td>
-<td><strong>只支持 NVIDIA GPU</strong></td>
+<td>Integration with NVIDIA's kernel libraries</td>
+<td><strong>NVIDIA GPUs only</strong></td>
 </tr>
 <tr>
-<td>支持若干 FP8、INT4 等路径，依模型与 GPU 而异</td>
-<td>硬件支持某格式不意味着所有算子和模型都支持</td>
+<td>Several FP8, INT4, and other paths, depending on model and GPU</td>
+<td>Hardware support for a format does not mean every operator and model supports it</td>
 </tr>
 <tr>
-<td><code>trtllm-serve</code> 和 LLM API 可简化加载与部署</td>
-<td>engine 路线仍需考虑构建配置与兼容性，高层 API 也有加载和优化成本</td>
+<td><code>trtllm-serve</code> and the LLM API simplify loading and deployment</td>
+<td>Engine workflows still have build and compatibility requirements; high-level APIs also incur loading and optimization costs</td>
 </tr>
 </tbody>
 </table>
-<p>适合在 NVIDIA 环境中评估，不限于大集群。是否值得采用，取决于模型支持、实际 SLO 收益和团队承担的运维成本，而不是框架名称暗示的「极致性能」。</p>
-<h2 id="207">20.7 怎样按工作负载筛选运行时？<a class="headerlink" href="#207" title="Permanent link">&para;</a></h2>
-<p>先用模型、硬件和维护要求排除不支持的组合，再用真实请求比较满足 SLO 的吞吐。下面是候选方向，不是性能排名：</p>
+<p>It is worth evaluating in NVIDIA environments, not only large clusters. Adoption depends on model support, measured SLO benefits, and operational costs the team can sustain—not on an assumption of maximum performance implied by the name.</p>
+<h2 id="207-how-should-a-workload-guide-runtime-selection"><span id="207" class="legacy-heading-anchor" aria-hidden="true"></span>20.7 How should a workload guide runtime selection?<a class="headerlink" href="#207-how-should-a-workload-guide-runtime-selection" title="Permanent link">&para;</a></h2>
+<p>First eliminate unsupported combinations using model, hardware, and maintenance requirements. Then compare SLO-compliant throughput on real requests. The following are candidate directions, not performance rankings:</p>
 <table>
 <thead>
 <tr>
-<th>框架</th>
-<th>可重点评估的机制</th>
-<th>常见评估场景与限制</th>
+<th>Framework</th>
+<th>Mechanisms to evaluate</th>
+<th>Common evaluation scenarios and limits</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>vLLM</strong></td>
-<td>PagedAttention、连续批处理、APC</td>
-<td>高吞吐 LLM API 与重复前缀工作负载</td>
+<td>PagedAttention, continuous batching, APC</td>
+<td>High-throughput LLM APIs and repeated-prefix workloads</td>
 </tr>
 <tr>
 <td><strong>SGLang</strong></td>
-<td>RadixAttention 与服务调度</td>
-<td>Agent、多轮、Few-shot；高前缀复用时尤其值得评估</td>
+<td>RadixAttention and serving schedules</td>
+<td>Agents, multi-turn conversations, and few-shot prompts; especially worth evaluating with high prefix reuse</td>
 </tr>
 <tr>
 <td><strong>TGI</strong></td>
-<td>HF 服务生态</td>
-<td>既有部署维护与迁移；已进入维护模式</td>
+<td>HF serving ecosystem</td>
+<td>Maintaining and migrating existing deployments; now in maintenance mode</td>
 </tr>
 <tr>
 <td><strong>llama.cpp</strong></td>
-<td>C/C++ 多后端推理与 GGUF</td>
-<td>CPU、Mac、边缘；性能受具体设备约束</td>
+<td>C/C++ multi-backend inference and GGUF</td>
+<td>CPUs, Macs, and edge devices; performance is device-dependent</td>
 </tr>
 <tr>
 <td><strong>TensorRT-LLM</strong></td>
-<td>NVIDIA 运行时优化</td>
-<td>NVIDIA 环境；按后端和模型支持矩阵选型</td>
+<td>NVIDIA runtime optimizations</td>
+<td>NVIDIA environments; select against backend and model support matrices</td>
 </tr>
 </tbody>
 </table>
-<p>这些运行时都提供公开实现，但生态归属或活跃程度不能替代目标版本的支持矩阵；最终性能仍需在相同硬件、质量和负载下测量。</p>
-<h3 id="2071">20.7.1 四个常见误用<a class="headerlink" href="#2071" title="Permanent link">&para;</a></h3>
+<p>All these runtimes have public implementations, but ecosystem affiliation or activity level cannot replace the support matrix for the target version. Measure performance with the same hardware, quality, and load.</p>
+<h3 id="2071-four-common-mistakes"><span id="2071" class="legacy-heading-anchor" aria-hidden="true"></span>20.7.1 Four common mistakes<a class="headerlink" href="#2071-four-common-mistakes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>误用</th>
-<th>后果</th>
-<th>正确做法</th>
+<th>Mistake</th>
+<th>Consequence</th>
+<th>Better approach</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>认为 vLLM 没有前缀复用</strong></td>
-<td>忽略 APC，导致错误的架构判断</td>
-<td>查目标版本 APC 配置，并用真实 trace 比较 vLLM 与 SGLang</td>
+<td><strong>Assuming vLLM has no prefix reuse</strong></td>
+<td>Overlooking APC leads to an incorrect architectural judgment</td>
+<td>Check target-version APC settings and compare vLLM and SGLang with real traces</td>
 </tr>
 <tr>
-<td><strong>把 llama.cpp 当成没有批处理的 CPU 工具</strong></td>
-<td>漏掉 GPU 后端与服务器能力</td>
-<td>用目标设备和并发压测，而非按标签排除</td>
+<td><strong>Treating llama.cpp as a CPU tool without batching</strong></td>
+<td>Missing GPU backends and server capabilities</td>
+<td>Load-test the target device and concurrency instead of excluding it by label</td>
 </tr>
 <tr>
-<td><strong>新部署忽略 TGI 维护模式</strong></td>
-<td>新模型或功能支持不符合预期</td>
-<td>比较维护成本和替代运行时，保留迁移与回退方案</td>
+<td><strong>Ignoring TGI maintenance mode for a new deployment</strong></td>
+<td>New-model or feature support may fall short of expectations</td>
+<td>Compare maintenance costs and alternatives, retaining migration and fallback plans</td>
 </tr>
 <tr>
-<td><strong>假设 TensorRT-LLM 必须手工构建 engine</strong></td>
-<td>错估 POC 与维护成本</td>
-<td>明确使用的后端、LLM API 或 engine 工作流</td>
+<td><strong>Assuming TensorRT-LLM requires manual engine building</strong></td>
+<td>Misestimating proof-of-concept and maintenance costs</td>
+<td>Specify the backend, LLM API, or engine workflow being used</td>
 </tr>
 </tbody>
 </table>
-<h2 id="208">20.8 三大隐藏陷阱<a class="headerlink" href="#208" title="Permanent link">&para;</a></h2>
-<h3 id="2081">20.8.1 分页没有解决所有容量问题<a class="headerlink" href="#2081" title="Permanent link">&para;</a></h3>
-<p>固定块分配主要缓解外部碎片和过度预留；每条序列可能留下未填满的尾块。长上下文还会真实增加 KV 容量，不能把所有 OOM 都叫「碎片」。</p>
-<p><strong>应对</strong>：分别监控活动 KV 块、缓存驻留、预留池、抢占/重算、GPU 峰值和排队延迟。再结合 trace 调整上下文限制、batch token 预算与并发；不要把总显存利用率等同于有效工作量。</p>
-<h3 id="2082-kv-cache">20.8.2 KV Cache 量化的支持差异大<a class="headerlink" href="#2082-kv-cache" title="Permanent link">&para;</a></h3>
-<p>权重量化很多框架都支持，<strong>但 KV Cache 量化的支持差异很大，而且版本迭代很快</strong>。</p>
+<h2 id="208-three-less-obvious-pitfalls"><span id="208" class="legacy-heading-anchor" aria-hidden="true"></span>20.8 Three less obvious pitfalls<a class="headerlink" href="#208-three-less-obvious-pitfalls" title="Permanent link">&para;</a></h2>
+<h3 id="2081-paging-does-not-solve-every-capacity-problem"><span id="2081" class="legacy-heading-anchor" aria-hidden="true"></span>20.8.1 Paging does not solve every capacity problem<a class="headerlink" href="#2081-paging-does-not-solve-every-capacity-problem" title="Permanent link">&para;</a></h3>
+<p>Fixed-block allocation mainly reduces external fragmentation and over-reservation. Each sequence may leave a partly empty final block. Long contexts also genuinely require more KV storage; not every OOM is fragmentation.</p>
+<p><strong>Response</strong>: monitor active KV blocks, cache residency, reserved pools, preemption/recomputation, peak GPU memory, and queuing latency separately. Use traces to adjust context limits, batch-token budgets, and concurrency. Total memory utilization is not the same as useful work.</p>
+<h3 id="2082-kv-cache-quantization-support-varies-widely"><span id="2082-kv-cache" class="legacy-heading-anchor" aria-hidden="true"></span>20.8.2 KV cache quantization support varies widely<a class="headerlink" href="#2082-kv-cache-quantization-support-varies-widely" title="Permanent link">&para;</a></h3>
+<p>Many frameworks support weight quantization, <strong>but KV cache quantization support differs considerably and changes rapidly between versions</strong>.</p>
 <blockquote>
-<p><strong>如果你的瓶颈是长上下文 KV Cache 显存，选型前一定要查当前版本文档，别只听别人说「支持」。</strong></p>
+<p><strong>If long-context KV memory is your bottleneck, check current version documentation before choosing a runtime. A generic claim of “support” is not enough.</strong></p>
 </blockquote>
-<h3 id="2083-moe">20.8.3 MoE 模型的部署支持差异<a class="headerlink" href="#2083-moe" title="Permanent link">&para;</a></h3>
-<p>跨设备 MoE 部署需检查专家并行与 dispatch/combine 通信（见<a href="../19-moe/">第十九章</a>）；单设备 MoE 不一定需要跨卡 All-to-All：</p>
+<h3 id="2083-moe-deployment-support-differs"><span id="2083-moe" class="legacy-heading-anchor" aria-hidden="true"></span>20.8.3 MoE deployment support differs<a class="headerlink" href="#2083-moe-deployment-support-differs" title="Permanent link">&para;</a></h3>
+<p>Cross-device MoE deployment requires checking expert parallelism and dispatch/combine communication; see <a href="../19-moe/">Chapter 19</a>. Single-device MoE does not necessarily require cross-GPU All-to-All:</p>
 <ul>
-<li>目标模型的具体路由、共享专家与 attention 结构是否支持；</li>
-<li>量化格式、专家并行拓扑、通信后端能否一起使用；</li>
-<li>热点专家、offload 与 batch 变化下的实际性能。</li>
+<li>Is the target model's exact routing, shared-expert, and attention structure supported?</li>
+<li>Can the quantization format, expert-parallel topology, and communication backend be used together?</li>
+<li>What happens to performance with hot experts, offload, and changing batches?</li>
 </ul>
-<p>没有「TensorRT-LLM 支持最好」或「llama.cpp 性能一般」的跨模型结论；功能能运行与符合服务 SLO 是两项不同验证。</p>
-<h2 id="209">20.9 如何设计能用于选型的压测<a class="headerlink" href="#209" title="Permanent link">&para;</a></h2>
-<h3 id="2091">20.9.1 先统一条件<a class="headerlink" href="#2091" title="Permanent link">&para;</a></h3>
-<p>固定模型/tokenizer 修订、chat template、量化精度、输入输出长度分布、采样、硬件拓扑与实际并发。记录框架版本、attention 后端、batch token 预算、KV 配置和是否开启推测解码，不能把不同质量或不同输出长度的结果直接排榜。</p>
-<h3 id="2092">20.9.2 分清延迟与吞吐指标<a class="headerlink" href="#2092" title="Permanent link">&para;</a></h3>
+<p>There is no cross-model verdict that TensorRT-LLM always has the best support or llama.cpp has mediocre performance. Functional execution and compliance with serving SLOs are separate validations.</p>
+<h2 id="209-designing-load-tests-that-support-a-selection-decision"><span id="209" class="legacy-heading-anchor" aria-hidden="true"></span>20.9 Designing load tests that support a selection decision<a class="headerlink" href="#209-designing-load-tests-that-support-a-selection-decision" title="Permanent link">&para;</a></h2>
+<h3 id="2091-standardize-the-conditions-first"><span id="2091" class="legacy-heading-anchor" aria-hidden="true"></span>20.9.1 Standardize the conditions first<a class="headerlink" href="#2091-standardize-the-conditions-first" title="Permanent link">&para;</a></h3>
+<p>Fix model/tokenizer revisions, chat template, quantization precision, input/output length distributions, sampling, hardware topology, and actual concurrency. Record framework version, attention backend, batch-token budget, KV settings, and speculative-decoding status. Do not rank results obtained at different quality levels or output lengths as though they were directly comparable.</p>
+<h3 id="2092-separate-latency-and-throughput-metrics"><span id="2092" class="legacy-heading-anchor" aria-hidden="true"></span>20.9.2 Separate latency and throughput metrics<a class="headerlink" href="#2092-separate-latency-and-throughput-metrics" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>指标</th>
-<th>含义与读法</th>
+<th>Metric</th>
+<th>Meaning and interpretation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>TTFT</td>
-<td>从发出请求到第一个输出 token；需说明是否含网络、排队和 prefill</td>
+<td>Time from sending a request to its first output token; specify whether network, queuing, and prefill are included</td>
 </tr>
 <tr>
 <td>ITL</td>
-<td>相邻输出 token 的时间间隔；可反映流式输出卡顿</td>
+<td>Time between adjacent output tokens; reveals streaming stalls</td>
 </tr>
 <tr>
 <td>TPOT</td>
-<td>常按首 token 后耗时除以其余输出 token 数计算；均值会掩盖停顿</td>
+<td>Commonly elapsed time after the first token divided by remaining output tokens; the mean can hide pauses</td>
 </tr>
 <tr>
-<td>端到端延迟</td>
-<td>完整请求耗时，受输出长度显著影响</td>
+<td>End-to-end latency</td>
+<td>Time for the complete request, strongly affected by output length</td>
 </tr>
 <tr>
-<td>输出 tokens/s</td>
-<td>总输出吞吐，与单用户生成速度不是同一个数</td>
+<td>Output tokens/s</td>
+<td>Aggregate output throughput, not the same as one user's generation speed</td>
 </tr>
 <tr>
 <td>SLO goodput</td>
-<td>在 TTFT、ITL/TPOT 等约束内完成的有效请求或 token 吞吐</td>
+<td>Useful request or token throughput completed within TTFT, ITL/TPOT, and other constraints</td>
 </tr>
 </tbody>
 </table>
-<h3 id="2093">20.9.3 覆盖真实到达流量与缓存状态<a class="headerlink" href="#2093" title="Permanent link">&para;</a></h3>
-<p>只固定并发的闭环压测，会在服务变慢时自动降低请求到达率，可能掩盖过载排队。还应使用带到达时间的 trace 或开放式负载，覆盖冷/热缓存、长短混合输入输出、多租户和突发流量，并报告 p50/p95/p99 与失败率。</p>
-<h3 id="2094">20.9.4 为什么优化可能让另一项指标变差<a class="headerlink" href="#2094" title="Permanent link">&para;</a></h3>
-<p>增加 batch 往往提高吞吐，但可能增大 TTFT 和 ITL；保留更多前缀能减少重算，却可能挤压活动 KV；分离 prefill/decode 可以减少干扰，却会增加 KV 传输。需要沿 SLO 约束寻找可接受配置，而不是最大化一个离线 tokens/s 数字。</p>
-<h3 id="2095">20.9.5 从实验走向上线还缺什么<a class="headerlink" href="#2095" title="Permanent link">&para;</a></h3>
-<p>验证取消与超时能否释放资源、过载限流与背压、模型加载就绪探针、多副本路由、租户配额及版本回滚。API “OpenAI-compatible” 通常只覆盖部分接口语义，还要测试流式结束、工具调用、错误码和 usage 字段，而不是仅测请求返回 200。</p>
-<h2 id="2010">20.10 本章总结<a class="headerlink" href="#2010" title="Permanent link">&para;</a></h2>
+<h3 id="2093-cover-real-arrival-patterns-and-cache-states"><span id="2093" class="legacy-heading-anchor" aria-hidden="true"></span>20.9.3 Cover real arrival patterns and cache states<a class="headerlink" href="#2093-cover-real-arrival-patterns-and-cache-states" title="Permanent link">&para;</a></h3>
+<p>A closed-loop test at fixed concurrency automatically lowers its arrival rate when the service slows down, potentially hiding overload-induced queues. Also use timestamped traces or open-loop loads, covering cold/warm caches, mixed short/long inputs and outputs, multiple tenants, and bursts. Report p50/p95/p99 and failure rates.</p>
+<h3 id="2094-why-one-optimization-can-worsen-another-metric"><span id="2094" class="legacy-heading-anchor" aria-hidden="true"></span>20.9.4 Why one optimization can worsen another metric<a class="headerlink" href="#2094-why-one-optimization-can-worsen-another-metric" title="Permanent link">&para;</a></h3>
+<p>Larger batches often raise throughput but may increase TTFT and ITL. Retaining more prefixes reduces recomputation but may displace active KV state. Prefill/decode disaggregation reduces interference but adds KV transfers. Find acceptable configurations within SLO constraints rather than maximizing one offline tokens/s figure.</p>
+<h3 id="2095-what-is-still-needed-between-an-experiment-and-production"><span id="2095" class="legacy-heading-anchor" aria-hidden="true"></span>20.9.5 What is still needed between an experiment and production?<a class="headerlink" href="#2095-what-is-still-needed-between-an-experiment-and-production" title="Permanent link">&para;</a></h3>
+<p>Verify resource release on cancellation and timeout, overload rate limiting and backpressure, model readiness probes, multi-replica routing, tenant quotas, and version rollback. An “OpenAI-compatible” API usually covers only part of the interface semantics. Test stream termination, tool calls, error codes, and usage fields—not just whether a request returns 200.</p>
+<h2 id="2010-chapter-summary"><span id="2010" class="legacy-heading-anchor" aria-hidden="true"></span>20.10 Chapter summary<a class="headerlink" href="#2010-chapter-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>部署框架解决三大痛点</strong>：KV Cache 显存碎片、批量调度低效、共享前缀重复计算；</li>
-<li><strong>vLLM 的 PagedAttention 借鉴操作系统虚拟内存</strong>，Block Table 映射逻辑到物理；APC 可自动复用匹配前缀的 KV block；</li>
-<li><strong>Continuous Batching 让请求异步进出</strong>，可改善长度不均工作负载的利用率；</li>
-<li><strong>SGLang 的 RadixAttention 用基数树共享前缀</strong>，高前缀复用时可减少缓存和 prefill 重算；</li>
-<li><strong>vLLM APC 与 SGLang 都应按实际 trace 评估</strong>，不存在脱离版本与负载的固定胜负；</li>
-<li><strong>TGI 已进入维护模式</strong>；新项目需优先检查目标模型与运行时的当前支持；</li>
-<li><strong>llama.cpp 是 C/C++ 多后端推理栈 + GGUF</strong>，包含连续批处理与多 GPU 选项；适用规模应实测；</li>
-<li><strong>TensorRT-LLM 针对 NVIDIA 硬件优化</strong>，应区分 PyTorch/LLM API 与 engine 工作流；并非都要手工预编译；</li>
-<li><strong>三大隐藏陷阱</strong>：长上下文仍有碎片与调度开销、KV Cache 量化支持差异大、MoE 部署复杂度通常高于 Dense。</li>
+<li><strong>Serving frameworks address three major pain points</strong>: KV memory fragmentation, inefficient batch scheduling, and redundant shared-prefix computation.</li>
+<li><strong>vLLM's PagedAttention borrows from operating-system virtual memory</strong>, using block tables for logical-to-physical mapping; APC reuses KV blocks for matching prefixes.</li>
+<li><strong>Continuous batching allows requests to enter and leave asynchronously</strong>, improving utilization for workloads with uneven lengths.</li>
+<li><strong>SGLang's RadixAttention shares prefixes through a radix tree</strong>, reducing cache storage and prefill recomputation when reuse is high.</li>
+<li><strong>Evaluate vLLM APC and SGLang with actual traces</strong>; there is no fixed winner independent of versions and workloads.</li>
+<li><strong>TGI is in maintenance mode</strong>. New projects should first check current target-model and runtime support.</li>
+<li><strong>llama.cpp combines a C/C++ multi-backend inference stack with GGUF</strong>, including continuous batching and multi-GPU options. Measure its suitable operating scale.</li>
+<li><strong>TensorRT-LLM optimizes for NVIDIA hardware</strong>. Distinguish PyTorch/LLM API workflows from engine workflows; manual precompilation is not always required.</li>
+<li><strong>Three less obvious pitfalls</strong>: long contexts still incur fragmentation and scheduling overhead, KV quantization support varies, and MoE deployment is usually more complex than dense deployment.</li>
 </ol>
-<h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention（vLLM）</a></li>
-<li><a href="https://arxiv.org/abs/2312.07104">SGLang: Efficient Execution of Structured Language Model Programs（RadixAttention）</a></li>
-<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models（Continuous Batching）</a></li>
-<li><a href="https://docs.vllm.ai/">vLLM 文档</a></li>
+<li><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM)</a></li>
+<li><a href="https://arxiv.org/abs/2312.07104">SGLang: Efficient Execution of Structured Language Model Programs (RadixAttention)</a></li>
+<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models (continuous batching)</a></li>
+<li><a href="https://docs.vllm.ai/">vLLM documentation</a></li>
 <li><a href="https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/">vLLM: Automatic Prefix Caching</a></li>
-<li><a href="https://github.com/sgl-project/sglang">SGLang 仓库</a></li>
-<li><a href="https://github.com/huggingface/text-generation-inference">Text Generation Inference 仓库</a></li>
-<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/index">TGI 官方文档（维护模式说明，2026-09-15 核对）</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp 仓库</a></li>
-<li><a href="https://github.com/NVIDIA/TensorRT-LLM">TensorRT-LLM 仓库</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md">llama.cpp：HTTP Server 能力与参数</a></li>
-<li><a href="https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html">TensorRT-LLM：Quick Start</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/configuration/optimization/">vLLM：Chunked Prefill 与配置调优</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/disagg_prefill/">vLLM：Disaggregated Prefilling</a></li>
-<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/architecture">TGI：组件与 HTTP/gRPC 边界</a></li>
-<li><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/llm-api/index.md">TensorRT-LLM：LLM API 与 PyTorch backend</a></li>
+<li><a href="https://github.com/sgl-project/sglang">SGLang repository</a></li>
+<li><a href="https://github.com/huggingface/text-generation-inference">Text Generation Inference repository</a></li>
+<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/index">TGI official documentation: maintenance-mode notice, checked in the source manuscript on 2026-09-15</a></li>
+<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp repository</a></li>
+<li><a href="https://github.com/NVIDIA/TensorRT-LLM">TensorRT-LLM repository</a></li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md">llama.cpp: HTTP server capabilities and parameters</a></li>
+<li><a href="https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html">TensorRT-LLM: Quick Start</a></li>
+<li><a href="https://docs.vllm.ai/en/stable/configuration/optimization/">vLLM: Chunked Prefill and configuration tuning</a></li>
+<li><a href="https://docs.vllm.ai/en/stable/features/disagg_prefill/">vLLM: Disaggregated Prefilling</a></li>
+<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/architecture">TGI: components and HTTP/gRPC boundaries</a></li>
+<li><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/llm-api/index.md">TensorRT-LLM: LLM API and PyTorch backend</a></li>
 </ul>
 
 
@@ -9880,20 +9914,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:50:15 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9916,7 +9950,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9925,33 +9959,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../19-moe/" class="md-footer__link md-footer__link--prev" aria-label="上一页: MoE">
+          <a href="../19-moe/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 19: Mixture-of-Experts Models">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                MoE
+                Chapter 19: Mixture-of-Experts Models
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../04-prompt-reliability/" class="md-footer__link md-footer__link--next" aria-label="下一页: 模块导览">
+          <a href="../../04-prompt-reliability/" class="md-footer__link md-footer__link--next" aria-label="Next: LLM · Prompting and Reliability">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                模块导览
+                LLM · Prompting and Reliability
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -10000,7 +10034,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

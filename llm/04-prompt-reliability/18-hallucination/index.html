@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。">
+        <meta name="description" content="Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>幻觉的成因与缓解 - Awesome AI Roadmap</title>
+        <title>Chapter 18: Hallucinations—Causes and Mitigation - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第十八章：幻觉的成因与缓解">
-    <meta property="og:description" content="区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。">
+    <meta property="og:title" content="Chapter 18: Hallucinations—Causes and Mitigation">
+    <meta property="og:description" content="Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第十八章：幻觉的成因与缓解">
-    <meta name="twitter:description" content="区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。">
+    <meta name="twitter:title" content="Chapter 18: Hallucinations—Causes and Mitigation">
+    <meta name="twitter:description" content="Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十八章：幻觉的成因与缓解","description":"区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第十八章：幻觉的成因与缓解","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-09-08"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Hallucinations—Causes and Mitigation","description":"Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Hallucinations—Causes and Mitigation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"幻觉的成因与缓解","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 18: Hallucinations—Causes and Mitigation","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
-          跳转至
+        <a href="#chapter-18-hallucinationscauses-and-mitigation" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              幻觉的成因与缓解
+              Chapter 18: Hallucinations—Causes and Mitigation
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/llm/04-prompt-reliability/18-hallucination/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -349,7 +383,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -393,7 +427,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -993,7 +1027,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1010,7 +1044,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1028,7 +1062,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1051,7 +1085,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1074,7 +1108,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1097,7 +1131,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1120,7 +1154,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1189,7 +1223,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1206,7 +1240,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1224,7 +1258,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1247,7 +1281,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1270,7 +1304,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1293,7 +1327,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1316,7 +1350,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1339,7 +1373,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1408,7 +1442,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1425,7 +1459,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1443,7 +1477,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1466,7 +1500,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1489,7 +1523,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1512,7 +1546,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1535,7 +1569,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1558,7 +1592,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1623,7 +1657,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1640,7 +1674,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1658,7 +1692,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1681,7 +1715,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1713,7 +1747,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1726,7 +1760,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1735,7 +1769,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1744,24 +1778,24 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#181" class="md-nav__link">
+  <a href="#181-what-is-a-hallucination" class="md-nav__link">
     <span class="md-ellipsis">
-      18.1 幻觉到底是什么
+      18.1 What is a hallucination?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.1 幻觉到底是什么">
+    <nav class="md-nav" aria-label="18.1 What is a hallucination?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1811" class="md-nav__link">
+  <a href="#1811-typical-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      18.1.1 几个典型例子
+      18.1.1 Typical examples
     </span>
   </a>
   
@@ -1773,55 +1807,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#182" class="md-nav__link">
+  <a href="#182-generation-probability-is-not-fact-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      18.2 生成概率不是事实验证
+      18.2 Generation probability is not fact verification
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#183" class="md-nav__link">
+  <a href="#183-root-cause-one-errors-in-training-data" class="md-nav__link">
     <span class="md-ellipsis">
-      18.3 根因一：训练数据本身就有错
+      18.3 Root cause one: errors in training data
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#184" class="md-nav__link">
+  <a href="#184-root-cause-two-generation-continues-text-rather-than-querying-records" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4 根因二：生成机制是「续写」不是「查询」
+      18.4 Root cause two: generation continues text rather than querying records
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.4 根因二：生成机制是「续写」不是「查询」">
+    <nav class="md-nav" aria-label="18.4 Root cause two: generation continues text rather than querying records">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1841" class="md-nav__link">
+  <a href="#1841-uncertainty-signals-may-exist-without-being-calibrated" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.1 不确定性信号存在，但未必校准
+      18.4.1 Uncertainty signals may exist without being calibrated
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1842-temperature0" class="md-nav__link">
+  <a href="#1842-a-counterintuitive-consequence-temperature0-can-still-hallucinate" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.2 反直觉的推论：Temperature=0 也会幻觉
+      18.4.2 A counterintuitive consequence: Temperature=0 can still hallucinate
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1843-vs" class="md-nav__link">
+  <a href="#1843-parametric-knowledge-versus-retrieved-knowledge" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.3 参数化知识 vs 检索式知识
+      18.4.3 Parametric knowledge versus retrieved knowledge
     </span>
   </a>
   
@@ -1833,19 +1867,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#185" class="md-nav__link">
+  <a href="#185-root-cause-three-side-effects-of-alignment-objectives" class="md-nav__link">
     <span class="md-ellipsis">
-      18.5 根因三：对齐目标的副作用
+      18.5 Root cause three: side effects of alignment objectives
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.5 根因三：对齐目标的副作用">
+    <nav class="md-nav" aria-label="18.5 Root cause three: side effects of alignment objectives">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1851" class="md-nav__link">
+  <a href="#1851-calibration-and-selective-answering" class="md-nav__link">
     <span class="md-ellipsis">
-      18.5.1 校准与选择性回答
+      18.5.1 Calibration and selective answering
     </span>
   </a>
   
@@ -1857,46 +1891,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#186" class="md-nav__link">
+  <a href="#186-distinguishing-factuality-faithfulness-and-other-errors" class="md-nav__link">
     <span class="md-ellipsis">
-      18.6 区分事实、忠实性与其他错误
+      18.6 Distinguishing factuality, faithfulness, and other errors
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#187" class="md-nav__link">
+  <a href="#187-mitigation-at-three-levels" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7 缓解方案：三层组合
+      18.7 Mitigation at three levels
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.7 缓解方案：三层组合">
+    <nav class="md-nav" aria-label="18.7 Mitigation at three levels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1871" class="md-nav__link">
+  <a href="#1871-training-level" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.1 训练层
+      18.7.1 Training level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1872" class="md-nav__link">
+  <a href="#1872-inference-level-without-changing-the-model" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.2 推理层（不改模型）
+      18.7.2 Inference level: without changing the model
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1873-llm" class="md-nav__link">
+  <a href="#1873-system-level-guardrails-around-a-fallible-component" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.3 系统层（把 LLM 当成会犯错的组件，外面加防护栏）
+      18.7.3 System level: guardrails around a fallible component
     </span>
   </a>
   
@@ -1908,19 +1942,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#188" class="md-nav__link">
+  <a href="#188-why-zero-errors-cannot-be-promised-for-open-domain-answers" class="md-nav__link">
     <span class="md-ellipsis">
-      18.8 为什么不能对开放域回答承诺零错误
+      18.8 Why zero errors cannot be promised for open-domain answers
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.8 为什么不能对开放域回答承诺零错误">
+    <nav class="md-nav" aria-label="18.8 Why zero errors cannot be promised for open-domain answers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1881" class="md-nav__link">
+  <a href="#1881-realistic-engineering-goals" class="md-nav__link">
     <span class="md-ellipsis">
-      18.8.1 现实的工程目标
+      18.8.1 Realistic engineering goals
     </span>
   </a>
   
@@ -1932,82 +1966,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#189" class="md-nav__link">
+  <a href="#189-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9 常见错误
+      18.9 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.9 常见错误">
+    <nav class="md-nav" aria-label="18.9 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1891" class="md-nav__link">
+  <a href="#1891-defining-hallucination-as-any-model-error" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.1 把幻觉说成「模型出错」
+      18.9.1 Defining hallucination as any model error
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1892" class="md-nav__link">
+  <a href="#1892-blaming-only-noisy-training-data" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.2 只说训练数据有噪声
+      18.9.2 Blaming only noisy training data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1893-temperature-0" class="md-nav__link">
+  <a href="#1893-assuming-temperature0-solves-the-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.3 认为把 Temperature 调到 0 就能解决
+      18.9.3 Assuming Temperature=0 solves the problem
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1894" class="md-nav__link">
+  <a href="#1894-ignoring-side-effects-of-alignment-training" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.4 忽略对齐训练的副作用
+      18.9.4 Ignoring side effects of alignment training
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1895-rag" class="md-nav__link">
+  <a href="#1895-assuming-rag-eliminates-hallucinations" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.5 认为 RAG 能根除幻觉
+      18.9.5 Assuming RAG eliminates hallucinations
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1896" class="md-nav__link">
+  <a href="#1896-discussing-mitigation-at-only-one-level" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.6 只讲一层缓解方案
+      18.9.6 Discussing mitigation at only one level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1897" class="md-nav__link">
+  <a href="#1897-claiming-a-closed-model-uses-a-specific-unpublished-process" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.7 断言某闭源模型用了某套具体流程
+      18.9.7 Claiming a closed model uses a specific unpublished process
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1898" class="md-nav__link">
+  <a href="#1898-promising-to-eliminate-hallucinations-completely" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.8 承诺「能彻底消除幻觉」
+      18.9.8 Promising to eliminate hallucinations completely
     </span>
   </a>
   
@@ -2019,18 +2053,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1810" class="md-nav__link">
+  <a href="#1810-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      18.10 本章总结
+      18.10 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -2095,7 +2129,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -2112,7 +2146,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2130,7 +2164,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -2153,7 +2187,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -2212,7 +2246,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -2229,7 +2263,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2247,7 +2281,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -2318,7 +2352,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -2335,7 +2369,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2378,7 +2412,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2395,7 +2429,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2413,7 +2447,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2473,7 +2507,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2490,7 +2524,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2508,7 +2542,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2531,7 +2565,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2554,7 +2588,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2612,7 +2646,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2629,7 +2663,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2647,7 +2681,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2670,7 +2704,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2728,7 +2762,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2745,7 +2779,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2763,7 +2797,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2786,7 +2820,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2844,7 +2878,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2861,7 +2895,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2879,7 +2913,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2902,7 +2936,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -3074,7 +3108,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -3097,7 +3131,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -3120,7 +3154,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -3143,7 +3177,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -3242,7 +3276,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -3265,7 +3299,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -3288,7 +3322,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -3311,7 +3345,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -3334,7 +3368,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3429,7 +3463,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3452,7 +3486,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3475,7 +3509,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3531,7 +3565,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3548,7 +3582,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3566,7 +3600,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3624,7 +3658,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3641,7 +3675,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3659,7 +3693,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3682,7 +3716,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3759,7 +3793,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3776,7 +3810,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3823,7 +3857,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3840,7 +3874,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3858,7 +3892,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3881,7 +3915,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3904,7 +3938,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3974,7 +4008,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3991,7 +4025,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4009,7 +4043,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -4032,7 +4066,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -4055,7 +4089,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -4078,7 +4112,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -4101,7 +4135,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -4124,7 +4158,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -4147,7 +4181,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -4170,7 +4204,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -4234,7 +4268,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -4251,7 +4285,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4269,7 +4303,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -4292,7 +4326,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -4315,7 +4349,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -4338,7 +4372,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4361,7 +4395,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4421,7 +4455,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4438,7 +4472,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4456,7 +4490,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4479,7 +4513,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4502,7 +4536,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4560,7 +4594,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4577,7 +4611,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4595,7 +4629,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4618,7 +4652,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4676,7 +4710,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4693,7 +4727,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4711,7 +4745,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4734,7 +4768,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4790,7 +4824,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4807,7 +4841,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4825,7 +4859,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4881,7 +4915,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4898,7 +4932,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4916,7 +4950,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -5053,7 +5087,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -5070,7 +5104,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5088,7 +5122,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -5111,7 +5145,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -5179,7 +5213,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -5196,7 +5230,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5214,7 +5248,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -5237,7 +5271,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -5260,7 +5294,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -5283,7 +5317,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -5306,7 +5340,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -5329,7 +5363,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5352,7 +5386,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5416,7 +5450,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5433,7 +5467,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5451,7 +5485,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5474,7 +5508,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5497,7 +5531,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5520,7 +5554,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5543,7 +5577,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5603,7 +5637,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5620,7 +5654,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5638,7 +5672,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5661,7 +5695,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5684,7 +5718,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5742,7 +5776,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5759,7 +5793,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5777,7 +5811,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5800,7 +5834,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5858,7 +5892,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5875,7 +5909,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5893,7 +5927,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5916,7 +5950,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5972,7 +6006,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5989,7 +6023,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6007,7 +6041,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6080,7 +6114,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6097,7 +6131,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6148,7 +6182,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6165,7 +6199,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6212,7 +6246,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6229,7 +6263,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6247,7 +6281,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6270,7 +6304,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6293,7 +6327,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6353,7 +6387,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6370,7 +6404,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6388,7 +6422,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6411,7 +6445,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6434,7 +6468,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6494,7 +6528,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6511,7 +6545,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6529,7 +6563,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6552,7 +6586,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6575,7 +6609,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6668,7 +6702,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6691,7 +6725,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6749,7 +6783,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6766,7 +6800,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6784,7 +6818,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6807,7 +6841,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6908,7 +6942,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6931,7 +6965,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -7024,7 +7058,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -7047,7 +7081,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7140,7 +7174,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7163,7 +7197,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7221,7 +7255,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7238,7 +7272,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7256,7 +7290,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7279,7 +7313,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7337,7 +7371,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7354,7 +7388,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7372,7 +7406,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7395,7 +7429,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7530,7 +7564,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7547,7 +7581,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7565,7 +7599,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7588,7 +7622,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7646,7 +7680,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7663,7 +7697,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7681,7 +7715,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7704,7 +7738,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7762,7 +7796,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7779,7 +7813,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7797,7 +7831,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7820,7 +7854,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7878,7 +7912,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7895,7 +7929,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7913,7 +7947,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7936,7 +7970,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7994,7 +8028,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -8011,7 +8045,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8029,7 +8063,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -8052,7 +8086,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8112,7 +8146,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8129,7 +8163,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8147,7 +8181,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8170,7 +8204,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8193,7 +8227,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8264,7 +8298,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8281,7 +8315,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8324,7 +8358,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8341,7 +8375,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8359,7 +8393,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8417,7 +8451,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8434,7 +8468,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8452,7 +8486,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8475,7 +8509,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8535,7 +8569,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8552,7 +8586,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8570,7 +8604,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8593,7 +8627,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8616,7 +8650,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8674,7 +8708,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8691,7 +8725,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8709,7 +8743,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8732,7 +8766,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8790,7 +8824,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8807,7 +8841,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8825,7 +8859,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8848,7 +8882,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8973,7 +9007,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8990,7 +9024,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9008,7 +9042,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -9064,7 +9098,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9081,7 +9115,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9099,7 +9133,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9138,7 +9172,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9147,24 +9181,24 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#181" class="md-nav__link">
+  <a href="#181-what-is-a-hallucination" class="md-nav__link">
     <span class="md-ellipsis">
-      18.1 幻觉到底是什么
+      18.1 What is a hallucination?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.1 幻觉到底是什么">
+    <nav class="md-nav" aria-label="18.1 What is a hallucination?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1811" class="md-nav__link">
+  <a href="#1811-typical-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      18.1.1 几个典型例子
+      18.1.1 Typical examples
     </span>
   </a>
   
@@ -9176,55 +9210,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#182" class="md-nav__link">
+  <a href="#182-generation-probability-is-not-fact-verification" class="md-nav__link">
     <span class="md-ellipsis">
-      18.2 生成概率不是事实验证
+      18.2 Generation probability is not fact verification
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#183" class="md-nav__link">
+  <a href="#183-root-cause-one-errors-in-training-data" class="md-nav__link">
     <span class="md-ellipsis">
-      18.3 根因一：训练数据本身就有错
+      18.3 Root cause one: errors in training data
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#184" class="md-nav__link">
+  <a href="#184-root-cause-two-generation-continues-text-rather-than-querying-records" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4 根因二：生成机制是「续写」不是「查询」
+      18.4 Root cause two: generation continues text rather than querying records
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.4 根因二：生成机制是「续写」不是「查询」">
+    <nav class="md-nav" aria-label="18.4 Root cause two: generation continues text rather than querying records">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1841" class="md-nav__link">
+  <a href="#1841-uncertainty-signals-may-exist-without-being-calibrated" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.1 不确定性信号存在，但未必校准
+      18.4.1 Uncertainty signals may exist without being calibrated
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1842-temperature0" class="md-nav__link">
+  <a href="#1842-a-counterintuitive-consequence-temperature0-can-still-hallucinate" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.2 反直觉的推论：Temperature=0 也会幻觉
+      18.4.2 A counterintuitive consequence: Temperature=0 can still hallucinate
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1843-vs" class="md-nav__link">
+  <a href="#1843-parametric-knowledge-versus-retrieved-knowledge" class="md-nav__link">
     <span class="md-ellipsis">
-      18.4.3 参数化知识 vs 检索式知识
+      18.4.3 Parametric knowledge versus retrieved knowledge
     </span>
   </a>
   
@@ -9236,19 +9270,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#185" class="md-nav__link">
+  <a href="#185-root-cause-three-side-effects-of-alignment-objectives" class="md-nav__link">
     <span class="md-ellipsis">
-      18.5 根因三：对齐目标的副作用
+      18.5 Root cause three: side effects of alignment objectives
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.5 根因三：对齐目标的副作用">
+    <nav class="md-nav" aria-label="18.5 Root cause three: side effects of alignment objectives">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1851" class="md-nav__link">
+  <a href="#1851-calibration-and-selective-answering" class="md-nav__link">
     <span class="md-ellipsis">
-      18.5.1 校准与选择性回答
+      18.5.1 Calibration and selective answering
     </span>
   </a>
   
@@ -9260,46 +9294,46 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#186" class="md-nav__link">
+  <a href="#186-distinguishing-factuality-faithfulness-and-other-errors" class="md-nav__link">
     <span class="md-ellipsis">
-      18.6 区分事实、忠实性与其他错误
+      18.6 Distinguishing factuality, faithfulness, and other errors
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#187" class="md-nav__link">
+  <a href="#187-mitigation-at-three-levels" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7 缓解方案：三层组合
+      18.7 Mitigation at three levels
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.7 缓解方案：三层组合">
+    <nav class="md-nav" aria-label="18.7 Mitigation at three levels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1871" class="md-nav__link">
+  <a href="#1871-training-level" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.1 训练层
+      18.7.1 Training level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1872" class="md-nav__link">
+  <a href="#1872-inference-level-without-changing-the-model" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.2 推理层（不改模型）
+      18.7.2 Inference level: without changing the model
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1873-llm" class="md-nav__link">
+  <a href="#1873-system-level-guardrails-around-a-fallible-component" class="md-nav__link">
     <span class="md-ellipsis">
-      18.7.3 系统层（把 LLM 当成会犯错的组件，外面加防护栏）
+      18.7.3 System level: guardrails around a fallible component
     </span>
   </a>
   
@@ -9311,19 +9345,19 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#188" class="md-nav__link">
+  <a href="#188-why-zero-errors-cannot-be-promised-for-open-domain-answers" class="md-nav__link">
     <span class="md-ellipsis">
-      18.8 为什么不能对开放域回答承诺零错误
+      18.8 Why zero errors cannot be promised for open-domain answers
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.8 为什么不能对开放域回答承诺零错误">
+    <nav class="md-nav" aria-label="18.8 Why zero errors cannot be promised for open-domain answers">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1881" class="md-nav__link">
+  <a href="#1881-realistic-engineering-goals" class="md-nav__link">
     <span class="md-ellipsis">
-      18.8.1 现实的工程目标
+      18.8.1 Realistic engineering goals
     </span>
   </a>
   
@@ -9335,82 +9369,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#189" class="md-nav__link">
+  <a href="#189-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9 常见错误
+      18.9 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="18.9 常见错误">
+    <nav class="md-nav" aria-label="18.9 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1891" class="md-nav__link">
+  <a href="#1891-defining-hallucination-as-any-model-error" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.1 把幻觉说成「模型出错」
+      18.9.1 Defining hallucination as any model error
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1892" class="md-nav__link">
+  <a href="#1892-blaming-only-noisy-training-data" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.2 只说训练数据有噪声
+      18.9.2 Blaming only noisy training data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1893-temperature-0" class="md-nav__link">
+  <a href="#1893-assuming-temperature0-solves-the-problem" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.3 认为把 Temperature 调到 0 就能解决
+      18.9.3 Assuming Temperature=0 solves the problem
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1894" class="md-nav__link">
+  <a href="#1894-ignoring-side-effects-of-alignment-training" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.4 忽略对齐训练的副作用
+      18.9.4 Ignoring side effects of alignment training
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1895-rag" class="md-nav__link">
+  <a href="#1895-assuming-rag-eliminates-hallucinations" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.5 认为 RAG 能根除幻觉
+      18.9.5 Assuming RAG eliminates hallucinations
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1896" class="md-nav__link">
+  <a href="#1896-discussing-mitigation-at-only-one-level" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.6 只讲一层缓解方案
+      18.9.6 Discussing mitigation at only one level
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1897" class="md-nav__link">
+  <a href="#1897-claiming-a-closed-model-uses-a-specific-unpublished-process" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.7 断言某闭源模型用了某套具体流程
+      18.9.7 Claiming a closed model uses a specific unpublished process
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#1898" class="md-nav__link">
+  <a href="#1898-promising-to-eliminate-hallucinations-completely" class="md-nav__link">
     <span class="md-ellipsis">
-      18.9.8 承诺「能彻底消除幻觉」
+      18.9.8 Promising to eliminate hallucinations completely
     </span>
   </a>
   
@@ -9422,18 +9456,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1810" class="md-nav__link">
+  <a href="#1810-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      18.10 本章总结
+      18.10 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9455,7 +9489,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/04-prompt-reliability/18-hallucination.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/llm/04-prompt-reliability/18-hallucination.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9463,285 +9497,285 @@
   
 
 
-<h1 id="_1">第十八章：幻觉的成因与缓解<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="181">18.1 幻觉到底是什么<a class="headerlink" href="#181" title="Permanent link">&para;</a></h2>
-<p>幻觉通常指生成内容不受给定来源支持，或与可核实事实不符。不同研究对边界的划分不完全一致；评测前要明确是检查「对外部事实正确」，还是「忠实于输入材料」。</p>
-<p>两者可能分离：</p>
+<h1 id="chapter-18-hallucinationscauses-and-mitigation"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 18: Hallucinations—Causes and Mitigation<a class="headerlink" href="#chapter-18-hallucinationscauses-and-mitigation" title="Permanent link">&para;</a></h1>
+<h2 id="181-what-is-a-hallucination"><span id="181" class="legacy-heading-anchor" aria-hidden="true"></span>18.1 What is a hallucination?<a class="headerlink" href="#181-what-is-a-hallucination" title="Permanent link">&para;</a></h2>
+<p>A hallucination usually means generated content that is unsupported by a supplied source or inconsistent with verifiable facts. Research does not use a single boundary for the term. Before evaluating, specify whether you are checking correctness against external facts or faithfulness to the input material.</p>
+<p>These properties can diverge:</p>
 <ol>
-<li>摘要忠实转述了一份过时报告，但该报告的结论已不符合当前事实；</li>
-<li>回答补充了真实的常识，但任务要求「只根据给定资料」，资料并不支持这条补充。</li>
+<li>A summary faithfully restates an outdated report whose conclusions no longer match current facts.</li>
+<li>An answer adds true general knowledge, but the task requires using only the supplied material, which does not support that addition.</li>
 </ol>
-<p>语言流畅会增加误信风险，但不是判定幻觉的必要条件。「训练数据里写过」也不等于事实正确。本文将算术和逻辑错误单独列为可靠性问题，不把所有输出错误都统称为幻觉。</p>
-<h3 id="1811">18.1.1 几个典型例子<a class="headerlink" href="#1811" title="Permanent link">&para;</a></h3>
+<p>Fluency can make an error more convincing, but it is not a necessary condition for hallucination. Appearing in training data does not make a statement true either. This chapter treats arithmetic and logical errors as separate reliability problems rather than calling every output error a hallucination.</p>
+<h3 id="1811-typical-examples"><span id="1811" class="legacy-heading-anchor" aria-hidden="true"></span>18.1.1 Typical examples<a class="headerlink" href="#1811-typical-examples" title="Permanent link">&para;</a></h3>
 <ul>
-<li>推荐一本书，给出书名和作者，听起来像那么回事，但那位作者从没写过这本书；</li>
-<li>让模型解释某个从未举办过的赛事有哪些项目，模型一本正经列出十几项；</li>
-<li>写医学综述时引用「Smith et al., 2018」，去 PubMed 查根本不存在。</li>
+<li>A book recommendation gives a plausible title and author, but that author never wrote the book.</li>
+<li>Asked to describe the events in a competition that never took place, the model confidently lists more than a dozen.</li>
+<li>A medical review cites “Smith et al., 2018,” but no such reference exists in PubMed.</li>
 </ul>
-<h2 id="182">18.2 生成概率不是事实验证<a class="headerlink" href="#182" title="Permanent link">&para;</a></h2>
+<h2 id="182-generation-probability-is-not-fact-verification"><span id="182" class="legacy-heading-anchor" aria-hidden="true"></span>18.2 Generation probability is not fact verification<a class="headerlink" href="#182-generation-probability-is-not-fact-verification" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    subgraph DB["数据库"]
-        D1["输入查询"] --&gt; D2["返回精确匹配的记录"]
-        D2 --&gt; D3["按接口契约返回记录或空结果&lt;br/&gt;记录本身也可能过时"]
+    subgraph DB["Database"]
+        D1["Input query"] --&gt; D2["Return exact-match records"]
+        D2 --&gt; D3["Return records or an empty result&lt;br/&gt;under the API contract&lt;br/&gt;The records themselves may be outdated"]
     end
     subgraph LLM["LLM"]
-        L1["输入上下文"] --&gt; L2["根据学习到的条件分布生成 token"]
-        L2 --&gt; L3["可生成回答或拒答&lt;br/&gt;但概率不等于事实真实性"]
+        L1["Input context"] --&gt; L2["Generate tokens from a learned&lt;br/&gt;conditional distribution"]
+        L2 --&gt; L3["May answer or decline&lt;br/&gt;Probability is not factual truth"]
     end
 
     style D3 fill:#e6f4ea
     style L3 fill:#fdecea</code></pre>
-<p>自回归生成没有内置的外部事实证明；但模型可以学会输出「不知道」、调用工具，应用也可以在证据不足时阻止生成。不能由「预测下一个 token」推出「永远会编一个答案」。</p>
-<p>需要区分三个环节：模型掌握了什么、生成目标鼓励什么、系统允许哪些未经验证的结论到达用户。单独解释训练数据或采样机制，都不足以覆盖所有失败。</p>
-<h2 id="183">18.3 根因一：训练数据本身就有错<a class="headerlink" href="#183" title="Permanent link">&para;</a></h2>
-<p>训练数据可能来自网页、书籍、代码或专门采集的数据，具体规模与配方因模型而异。常见问题包括：</p>
+<p>Autoregressive generation has no built-in proof of external facts. Yet a model can learn to say “I don't know” or call tools, and an application can block generation when evidence is insufficient. “Predicts the next token” does not imply “always makes up an answer.”</p>
+<p>Distinguish three stages: what the model knows, what the generation objective encourages, and which unverified conclusions the system allows to reach the user. Training data or sampling mechanisms alone cannot explain every failure.</p>
+<h2 id="183-root-cause-one-errors-in-training-data"><span id="183" class="legacy-heading-anchor" aria-hidden="true"></span>18.3 Root cause one: errors in training data<a class="headerlink" href="#183-root-cause-one-errors-in-training-data" title="Permanent link">&para;</a></h2>
+<p>Training data may come from web pages, books, code, or purpose-built collections; scale and composition vary by model. Common problems include:</p>
 <ul>
-<li>百科里有过时的、错误的、被破坏的版本；</li>
-<li>新闻里有谣言、虚假报道、带立场的扭曲叙述；</li>
-<li>论坛和博客可能包含未经验证的推断或常见误解；</li>
-<li><strong>不同来源互相矛盾</strong>（同一事件的不同说法、同一数据的不同版本）；</li>
-<li><strong>时间过期的信息</strong>（十年前的「最新研究」）。</li>
+<li>Outdated, incorrect, or vandalized encyclopedia versions.</li>
+<li>Rumors, false reporting, and biased accounts in news.</li>
+<li>Unverified inferences or common misconceptions in forums and blogs.</li>
+<li><strong>Conflicting sources</strong>, such as different accounts of one event or different versions of the same data.</li>
+<li><strong>Stale information</strong>, such as “the latest research” from ten years ago.</li>
 </ul>
-<p>预训练优化文本预测，不会逐条验证来源。模型也可能学到事实辨别能力，但没有把所有语料原样存入参数，更不保证从冲突材料中学到正确版本。</p>
-<p>即使数据经过认真清洗，有限覆盖、有限模型容量、泛化误差和问题歧义仍会造成无依据回答。不能把「清洗训练集」当成充分解决方案。</p>
-<h2 id="184">18.4 根因二：生成机制是「续写」不是「查询」<a class="headerlink" href="#184" title="Permanent link">&para;</a></h2>
-<p>模型需要从分布式表示中生成具体答案。预测一个常见、合理的续接，与证明某条事实成立是不同目标。</p>
-<h3 id="1841">18.4.1 不确定性信号存在，但未必校准<a class="headerlink" href="#1841" title="Permanent link">&para;</a></h3>
-<p>问「鲁迅是谁的笔名」时，纯参数化回答通常不是在一个显式人名表里做数据库查询，而是由上下文与模型权重共同决定输出分布。</p>
+<p>Pretraining optimizes text prediction; it does not verify every source. Models may learn to distinguish facts, but they do not store the entire corpus verbatim in their parameters, nor are they guaranteed to learn the correct account from conflicting material.</p>
+<p>Even careful cleaning leaves limited coverage, finite model capacity, generalization error, and ambiguous questions that can produce unsupported answers. Cleaning the training set is not a sufficient solution.</p>
+<h2 id="184-root-cause-two-generation-continues-text-rather-than-querying-records"><span id="184" class="legacy-heading-anchor" aria-hidden="true"></span>18.4 Root cause two: generation continues text rather than querying records<a class="headerlink" href="#184-root-cause-two-generation-continues-text-rather-than-querying-records" title="Permanent link">&para;</a></h2>
+<p>The model must generate a specific answer from distributed representations. Predicting a common, plausible continuation is a different objective from proving a fact.</p>
+<h3 id="1841-uncertainty-signals-may-exist-without-being-calibrated"><span id="1841" class="legacy-heading-anchor" aria-hidden="true"></span>18.4.1 Uncertainty signals may exist without being calibrated<a class="headerlink" href="#1841-uncertainty-signals-may-exist-without-being-calibrated" title="Permanent link">&para;</a></h3>
+<p>For the question “鲁迅是谁的笔名” (“Whose pen name is Lu Xun?”), a purely parametric answer usually does not query an explicit table of names. Instead, the context and model weights jointly determine the output distribution.</p>
 <ul>
-<li>信息频次、语境、来源冲突和训练方式都会影响答案，不能用「出现一两次」推断必然记不住；</li>
-<li>token 概率衡量局部续接可能性，不直接等于整条事实正确的概率；</li>
-<li>模型自报的「90% 把握」也要在同类任务上做校准，不能直接当可信概率。</li>
+<li>Information frequency, context, conflicting sources, and training all affect the answer. Seeing a fact “once or twice” does not establish that the model must fail to retain it.</li>
+<li>Token probability measures the likelihood of a local continuation, not directly the probability that an entire factual claim is correct.</li>
+<li>A model's self-reported “90% confidence” also needs calibration on comparable tasks before it can be treated as a trustworthy probability.</li>
 </ul>
-<h3 id="1842-temperature0">18.4.2 反直觉的推论：Temperature=0 也会幻觉<a class="headerlink" href="#1842-temperature0" title="Permanent link">&para;</a></h3>
-<p>在采用贪心语义的解码实现中，Temperature=0 取最高概率 token。<strong>概率最高不等于事实正确</strong>；概率还受后训练、当前上下文和约束影响，不只是训练词频。部分推理接口不接受温度设置，应以实际 API 为准。</p>
-<p>下面是仅用于解释机制的假设分布，不是模型实测值，也不代表真实 tokenizer 的切分：</p>
+<h3 id="1842-a-counterintuitive-consequence-temperature0-can-still-hallucinate"><span id="1842-temperature0" class="legacy-heading-anchor" aria-hidden="true"></span>18.4.2 A counterintuitive consequence: Temperature=0 can still hallucinate<a class="headerlink" href="#1842-a-counterintuitive-consequence-temperature0-can-still-hallucinate" title="Permanent link">&para;</a></h3>
+<p>In decoding implementations where zero temperature means greedy selection, Temperature=0 selects the highest-probability token. <strong>Highest probability does not mean factual correctness.</strong> Probabilities also depend on post-training, the current context, and constraints—not just training frequencies. Some reasoning interfaces do not accept a temperature setting; follow the actual API.</p>
+<p>The following hypothetical distribution illustrates the mechanism. It is not a model measurement and does not represent the segmentation of a real tokenizer. The original Chinese character candidates are retained:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>茅 35%  |  周 32%  |  鲁 18%  |  巴 15%
 </span></code></pre></div>
-<p>若候选与分布确实如此，贪心会选「茅」。这说明局部概率最大仍可出错，而不是证明模型有人的「自信」体验。</p>
-<p>降低温度会改变候选分布，可能减少某些错误，也可能稳定复现错误，不是事实核查。即使温度为零，服务端模型版本、批处理和数值实现也可能影响可复现性。</p>
-<h3 id="1843-vs">18.4.3 参数化知识 vs 检索式知识<a class="headerlink" href="#1843-vs" title="Permanent link">&para;</a></h3>
+<p>If these were the candidates and probabilities, greedy decoding would select <code>茅</code>. The point is that the highest local probability can still be wrong, not that the model experiences human-like confidence.</p>
+<p>Lowering temperature changes the candidate distribution. It may reduce some errors or reproduce an error more consistently, but it is not fact-checking. Even at zero temperature, server-side model versions, batching, and numerical implementations can affect reproducibility.</p>
+<h3 id="1843-parametric-knowledge-versus-retrieved-knowledge"><span id="1843-vs" class="legacy-heading-anchor" aria-hidden="true"></span>18.4.3 Parametric knowledge versus retrieved knowledge<a class="headerlink" href="#1843-parametric-knowledge-versus-retrieved-knowledge" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th></th>
-<th>参数化知识（LLM 权重）</th>
-<th>检索式知识（RAG）</th>
+<th>Parametric knowledge: LLM weights</th>
+<th>Retrieved knowledge: RAG</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>精确度</strong></td>
-<td>可以准确回忆，也可能混淆、过时；精度不是只由频次决定</td>
-<td>可能召回无关、过时或错误文档，生成器也可能误读</td>
+<td><strong>Accuracy</strong></td>
+<td>May recall facts correctly, confuse them, or be outdated; accuracy is not determined solely by frequency</td>
+<td>May retrieve irrelevant, outdated, or incorrect documents, and the generator may misread them</td>
 </tr>
 <tr>
-<td><strong>更新方式</strong></td>
-<td>通常依赖训练或其他模型更新方法</td>
-<td>可更新文档和索引，但需要版本与权限管理</td>
+<td><strong>Updates</strong></td>
+<td>Usually requires training or another model-update method</td>
+<td>Documents and indexes can be updated, but need version and permission management</td>
 </tr>
 <tr>
-<td><strong>可验证性</strong></td>
-<td>可用外部来源验证答案，但一般无法仅凭输出确定训练出处</td>
-<td>可保存检索片段及版本，进一步验证声明是否被支持</td>
+<td><strong>Verifiability</strong></td>
+<td>External sources can verify answers, but output alone generally cannot identify the training source</td>
+<td>Retrieved passages and versions can be retained to check whether claims are supported</td>
 </tr>
 <tr>
-<td><strong>证据不足</strong></td>
-<td>可以回答、表达不确定或拒答，取决于训练与系统策略</td>
-<td>Top-k 搜索仍可能返回若干低相关结果；需额外判定证据是否足够</td>
+<td><strong>Insufficient evidence</strong></td>
+<td>May answer, express uncertainty, or decline, depending on training and system policy</td>
+<td>Top-k search may still return several weakly relevant results; evidence sufficiency needs a separate check</td>
 </tr>
 </tbody>
 </table>
-<p>RAG 为生成增加可更新、可追溯的证据，不是把参数记忆完全「换掉」。模型仍可能优先使用内部知识，因此要同时检查检索召回与回答对证据的忠实性。</p>
-<h2 id="185">18.5 根因三：对齐目标的副作用<a class="headerlink" href="#185" title="Permanent link">&para;</a></h2>
-<p>对齐训练可以改善真实性与拒答，也可能放大不良偏好，取决于示例、奖励与评估方式。不能笼统地说 SFT 或 RLHF 必然使幻觉增加。</p>
+<p>RAG adds updatable, traceable evidence to generation; it does not completely replace parametric memory. A model may still prioritize internal knowledge, so assess both retrieval recall and answer faithfulness to the evidence.</p>
+<h2 id="185-root-cause-three-side-effects-of-alignment-objectives"><span id="185" class="legacy-heading-anchor" aria-hidden="true"></span>18.5 Root cause three: side effects of alignment objectives<a class="headerlink" href="#185-root-cause-three-side-effects-of-alignment-objectives" title="Permanent link">&para;</a></h2>
+<p>Alignment training can improve truthfulness and refusals, or amplify undesirable preferences, depending on examples, rewards, and evaluation. It is inaccurate to claim that SFT or RLHF necessarily increases hallucinations.</p>
 <pre class="mermaid"><code>flowchart TB
-    A["训练或评价中&lt;br/&gt;未充分奖励证据与恰当弃答"]
-    A --&gt; B["流畅、迎合用户的错误回答&lt;br/&gt;有时获得较高偏好分"]
-    B --&gt; C["奖励或偏好优化&lt;br/&gt;可能强化这些代理特征"]
-    C --&gt; F["在部分任务上&lt;br/&gt;出现迎合或无依据断言"]
+    A["Training or evaluation&lt;br/&gt;Under-rewards evidence&lt;br/&gt;and appropriate abstention"]
+    A --&gt; B["Fluent but incorrect answers&lt;br/&gt;that agree with the user&lt;br/&gt;Sometimes receive higher&lt;br/&gt;preference scores"]
+    B --&gt; C["Reward or preference optimization&lt;br/&gt;May reinforce these proxy features"]
+    C --&gt; F["On some tasks&lt;br/&gt;Sycophancy or unsupported assertions"]
 
     style F fill:#fdecea</code></pre>
-<p>《Towards Understanding Sycophancy in Language Models》观察到，人类与偏好模型有时偏爱迎合用户观点的回答，即便回答错误。它支持「存在此风险」，并不支持「谨慎回答几乎永远得低分」或某种优化算法必然造成幻觉。</p>
-<h3 id="1851">18.5.1 校准与选择性回答<a class="headerlink" href="#1851" title="Permanent link">&para;</a></h3>
-<p>《Language Models (Mostly) Know What They Know》研究了对候选答案正确性的 <code>P(True)</code>，以及不依赖特定候选的 <code>P(IK)</code>（知道答案的概率）。结果显示某些设置下存在有用的自评信号，但跨新任务的校准仍困难；它不是一个直接命名为「Calibrated Refusal」的通用生产流程。</p>
-<p>选择性回答是在验证集上选定阈值，证据或置信不足时弃答、澄清或转人工。要同时报告<strong>回答覆盖率</strong>与<strong>已回答部分的错误率</strong>：全部拒答可以让错误输出很少，却没有实用价值。知识不足的弃答与安全政策拒答，也应分开统计。</p>
-<h2 id="186">18.6 区分事实、忠实性与其他错误<a class="headerlink" href="#186" title="Permanent link">&para;</a></h2>
+<p><em>Towards Understanding Sycophancy in Language Models</em> observed that humans and preference models sometimes prefer answers that agree with users' views even when those answers are wrong. This supports the existence of a risk—not the claim that cautious answers almost always score poorly, or that a particular optimization algorithm inevitably causes hallucinations.</p>
+<h3 id="1851-calibration-and-selective-answering"><span id="1851" class="legacy-heading-anchor" aria-hidden="true"></span>18.5.1 Calibration and selective answering<a class="headerlink" href="#1851-calibration-and-selective-answering" title="Permanent link">&para;</a></h3>
+<p><em>Language Models (Mostly) Know What They Know</em> studied <code>P(True)</code>, the probability that a candidate answer is correct, and <code>P(IK)</code>, the probability of knowing the answer independently of a specific candidate. Useful self-evaluation signals appeared in some settings, but calibration on new tasks remained difficult. The paper does not define a universal production workflow specifically named “Calibrated Refusal.”</p>
+<p>Selective answering chooses thresholds on a validation set and abstains, asks for clarification, or hands off to a person when evidence or confidence is insufficient. Report both <strong>answer coverage</strong> and <strong>error rate among answered questions</strong>. Refusing everything produces few erroneous answers but little practical value. Track abstention due to insufficient knowledge separately from safety-policy refusals.</p>
+<h2 id="186-distinguishing-factuality-faithfulness-and-other-errors"><span id="186" class="legacy-heading-anchor" aria-hidden="true"></span>18.6 Distinguishing factuality, faithfulness, and other errors<a class="headerlink" href="#186-distinguishing-factuality-faithfulness-and-other-errors" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>类型</th>
-<th>特征</th>
-<th>例子</th>
+<th>Type</th>
+<th>Characteristic</th>
+<th>Examples</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>事实性问题</strong></td>
-<td>与可核实的外部事实冲突</td>
-<td>编造论文；错写作者、时间或地点</td>
+<td><strong>Factuality problem</strong></td>
+<td>Conflicts with verifiable external facts</td>
+<td>Fabricated papers; incorrect authors, dates, or places</td>
 </tr>
 <tr>
-<td><strong>忠实性问题</strong></td>
-<td>与输入矛盾，或加入来源不支持的内容</td>
-<td>原文说「可能增长」，摘要写成「已增长」；文档未提价格却补出数字</td>
+<td><strong>Faithfulness problem</strong></td>
+<td>Contradicts the input or adds unsupported content</td>
+<td>The source says “may grow,” but the summary says “has grown”; the document gives no price, yet the answer supplies one</td>
 </tr>
 <tr>
-<td><strong>推理、指令与安全错误</strong></td>
-<td>不一定属于同一种幻觉，需要单独验收</td>
-<td>算术错误用计算核查；字段缺失用 schema 检查；泄密用权限与信息流控制</td>
+<td><strong>Reasoning, instruction-following, and safety errors</strong></td>
+<td>Not necessarily the same kind of hallucination; require separate acceptance checks</td>
+<td>Verify arithmetic with computation, missing fields with schema checks, and information leaks with authorization and information-flow controls</td>
 </tr>
 </tbody>
 </table>
-<h2 id="187">18.7 缓解方案：三层组合<a class="headerlink" href="#187" title="Permanent link">&para;</a></h2>
+<h2 id="187-mitigation-at-three-levels"><span id="187" class="legacy-heading-anchor" aria-hidden="true"></span>18.7 Mitigation at three levels<a class="headerlink" href="#187-mitigation-at-three-levels" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
-    T["训练层&lt;br/&gt;改进数据与学习目标"] --&gt; I["推理层&lt;br/&gt;分配采样与验证预算"] --&gt; S["系统层&lt;br/&gt;检索、证据校验与风险控制"]
+    T["Training&lt;br/&gt;Improve data&lt;br/&gt;and learning objectives"] --&gt; I["Inference&lt;br/&gt;Allocate sampling&lt;br/&gt;and verification budgets"] --&gt; S["System&lt;br/&gt;Retrieval, evidence checks,&lt;br/&gt;and risk controls"]
 
     style S fill:#e6f4ea</code></pre>
-<h3 id="1871">18.7.1 训练层<a class="headerlink" href="#1871" title="Permanent link">&para;</a></h3>
+<h3 id="1871-training-level"><span id="1871" class="legacy-heading-anchor" aria-hidden="true"></span>18.7.1 Training level<a class="headerlink" href="#1871-training-level" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>做法</th>
-<th>说明</th>
+<th>Approach</th>
+<th>Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>改进训练数据</strong></td>
-<td>修正来源冲突和过时信息；同时提供可回答、应澄清与证据不足的案例，防止一味拒答</td>
+<td><strong>Improve training data</strong></td>
+<td>Correct conflicting sources and stale information; include answerable cases, cases needing clarification, and cases with insufficient evidence to avoid blanket refusal</td>
 </tr>
 <tr>
-<td><strong>真实性与校准目标</strong></td>
-<td>使用经核实的标签，区分正确回答、错误断言与恰当弃答；仍需在目标分布验证校准</td>
+<td><strong>Truthfulness and calibration objectives</strong></td>
+<td>Use verified labels and distinguish correct answers, false assertions, and appropriate abstention; calibration still needs validation on the target distribution</td>
 </tr>
 <tr>
-<td><strong>筛选与偏好训练</strong></td>
-<td>以检索、规则或人工核查形成反馈；普通奖励模型分数本身不是事实证明</td>
+<td><strong>Filtering and preference training</strong></td>
+<td>Build feedback from retrieval, rules, or human checks; a standard reward-model score is not itself proof of a fact</td>
 </tr>
 </tbody>
 </table>
-<p>这些方法改变模型行为，但不能保证消除知识盲区；成本、标签质量与分布变化都会限制收益。</p>
-<h3 id="1872">18.7.2 推理层（不改模型）<a class="headerlink" href="#1872" title="Permanent link">&para;</a></h3>
+<p>These methods change model behavior but cannot guarantee the elimination of knowledge gaps. Cost, label quality, and distribution shifts all limit their benefits.</p>
+<h3 id="1872-inference-level-without-changing-the-model"><span id="1872" class="legacy-heading-anchor" aria-hidden="true"></span>18.7.2 Inference level: without changing the model<a class="headerlink" href="#1872-inference-level-without-changing-the-model" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>做法</th>
-<th>针对</th>
-<th>说明</th>
+<th>Approach</th>
+<th>Target</th>
+<th>Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>分步处理 + 外部验证</strong></td>
-<td>多步推导或计算</td>
-<td>中间结果便于工具核查；CoT 文本本身不保证正确或忠实（见 <a href="../17-cot/">第十七章</a>）</td>
+<td><strong>Stepwise processing plus external verification</strong></td>
+<td>Multistep reasoning or calculation</td>
+<td>Intermediate results make tool checks easier; CoT text does not itself guarantee correctness or faithfulness; see <a href="../17-cot/">Chapter 17</a></td>
 </tr>
 <tr>
-<td><strong>解码参数调整</strong></td>
-<td>采样引入的部分错误</td>
-<td>用业务集比较温度和截断参数；没有通用的事实问答温度区间（见 <a href="../../03-inference-serving/13-temperature-top-p-top-k/">第十三章</a>）</td>
+<td><strong>Adjust decoding parameters</strong></td>
+<td>Some errors introduced by sampling</td>
+<td>Compare temperature and truncation settings on task-specific data; there is no universal temperature range for factual question answering; see <a href="../../03-inference-serving/13-temperature-top-p-top-k/">Chapter 13</a></td>
 </tr>
 <tr>
-<td><strong>Self-Consistency</strong></td>
-<td>有可聚合答案的推理任务</td>
-<td>多路径聚合可能改善结果，但相关错误也会得到高票</td>
+<td><strong>Self-consistency</strong></td>
+<td>Reasoning tasks whose answers can be aggregated</td>
+<td>Aggregating paths may improve results, but correlated errors can also win many votes</td>
 </tr>
 <tr>
-<td><strong>约束解码</strong></td>
-<td>语法与结构错误</td>
-<td>按语法或 schema 动态限制合法 token；只能约束支持范围内的结构，不能保证值正确，并需处理拒答和截断</td>
+<td><strong>Constrained decoding</strong></td>
+<td>Syntax and structure errors</td>
+<td>Dynamically restrict valid tokens according to a grammar or schema; only supported structures are constrained, values are not guaranteed correct, and refusals and truncation still need handling</td>
 </tr>
 </tbody>
 </table>
-<p>这些做法不直接更新参数知识；若缺少事实依据，优先补充证据，而不是仅增加采样次数。</p>
-<h3 id="1873-llm">18.7.3 系统层（把 LLM 当成会犯错的组件，外面加防护栏）<a class="headerlink" href="#1873-llm" title="Permanent link">&para;</a></h3>
+<p>These methods do not directly update parametric knowledge. If factual evidence is missing, add evidence before merely increasing the sample count.</p>
+<h3 id="1873-system-level-guardrails-around-a-fallible-component"><span id="1873-llm" class="legacy-heading-anchor" aria-hidden="true"></span>18.7.3 System level: guardrails around a fallible component<a class="headerlink" href="#1873-system-level-guardrails-around-a-fallible-component" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>做法</th>
-<th>说明</th>
+<th>Approach</th>
+<th>Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>RAG</strong></td>
-<td>提供可追溯证据；分别评估检索是否覆盖答案、材料是否可靠、生成是否忠实（详见 <a href="../../../rag/">RAG 主题</a>）</td>
+<td>Supply traceable evidence; separately assess whether retrieval covers the answer, whether the material is reliable, and whether generation is faithful; see the <a href="../../../rag/">RAG topic</a></td>
 </tr>
 <tr>
-<td><strong>工具与事实核查</strong></td>
-<td>数值用计算器、状态用权威业务 API；将文本拆成原子声明，逐条检查证据。核查模型可能共享同样的错误，不能只换一个 LLM 就视为独立证明</td>
+<td><strong>Tools and fact-checking</strong></td>
+<td>Use calculators for numbers and authoritative business APIs for state; split text into atomic claims and check their evidence individually. A checking model may share the same errors, so switching to another LLM is not independent proof</td>
 </tr>
 <tr>
-<td><strong>引用与证据绑定</strong></td>
-<td>校验来源存在、片段可定位、版本适用、片段确实支持声明；引用编号合法不等于内容被支持</td>
+<td><strong>Binding citations to evidence</strong></td>
+<td>Verify that the source exists, the passage can be located, the version applies, and the passage actually supports the claim; a valid citation number does not establish support</td>
 </tr>
 <tr>
-<td><strong>选择性回答</strong></td>
-<td>找不到充分证据时给出可回答部分、请求澄清或转人工，避免强行补全</td>
+<td><strong>Selective answering</strong></td>
+<td>When evidence is insufficient, return the answerable part, ask for clarification, or hand off to a person instead of forcing a complete answer</td>
 </tr>
 </tbody>
 </table>
-<p>系统措施能增加可观测性和控制点，但也引入检索噪声、延迟、访问控制与提示注入风险。SelfCheckGPT 的多次采样一致性适合用作筛查信号；CoVe 的独立验证问题可减少草稿对核查的影响，但两者都不是外部事实真值。</p>
-<p>例如报告声称「公司去年营收增长 12%」，应检查公司主体、财年、币种、增长口径和对应表格，再复算数字。如果只找到同公司另一个年度的文档，即使模型附上了真实链接，也不算验证通过。</p>
-<h2 id="188">18.8 为什么不能对开放域回答承诺零错误<a class="headerlink" href="#188" title="Permanent link">&para;</a></h2>
-<p>开放域问题涉及未知事实、资料冲突、时间变化和评估盲区，有限测试无法证明所有未来输入都正确。这里是保证范围的问题，而不是仅凭「概率生成」就证明任何系统必然出错。</p>
-<p>受限任务可以提供更强保证：只允许输出经过验证的数据库记录、对形式化命题给出可检查证明，或在无法验证时拒绝输出。保证仍取决于数据库、验证器与规格是否正确，不能扩展成对所有自然语言事实的承诺。</p>
-<h3 id="1881">18.8.1 现实的工程目标<a class="headerlink" href="#1881" title="Permanent link">&para;</a></h3>
+<p>System measures add observability and control points, but also introduce retrieval noise, latency, access-control concerns, and prompt-injection risks. SelfCheckGPT's agreement across samples can serve as a screening signal. CoVe's independent verification questions can reduce the draft's influence on checking. Neither supplies external ground truth.</p>
+<p>For example, a report claiming that a company's revenue grew 12% last year should be checked against the company entity, fiscal year, currency, growth definition, and relevant table, followed by recalculation. A genuine link to the same company's report for a different year does not make the claim verified.</p>
+<h2 id="188-why-zero-errors-cannot-be-promised-for-open-domain-answers"><span id="188" class="legacy-heading-anchor" aria-hidden="true"></span>18.8 Why zero errors cannot be promised for open-domain answers<a class="headerlink" href="#188-why-zero-errors-cannot-be-promised-for-open-domain-answers" title="Permanent link">&para;</a></h2>
+<p>Open-domain questions involve unknown facts, conflicting sources, changing information, and blind spots in evaluation. Finite tests cannot prove correctness for every future input. This is a question of the scope of a guarantee; probabilistic generation alone is not proof that every conceivable system must fail.</p>
+<p>Restricted tasks can provide stronger guarantees: return only verified database records, supply checkable proofs of formal statements, or decline to produce unverifiable output. Such guarantees still depend on the database, verifier, and specification being correct. They cannot be extended to every natural-language fact.</p>
+<h3 id="1881-realistic-engineering-goals"><span id="1881" class="legacy-heading-anchor" aria-hidden="true"></span>18.8.1 Realistic engineering goals<a class="headerlink" href="#1881-realistic-engineering-goals" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>目标</th>
-<th>说明</th>
+<th>Goal</th>
+<th>Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>测量并降低风险</strong></td>
-<td>明确按回答还是按原子声明计错，报告分母、样本量、严重性与置信区间</td>
+<td><strong>Measure and reduce risk</strong></td>
+<td>Specify whether errors are counted per answer or per atomic claim; report the denominator, sample size, severity, and confidence intervals</td>
 </tr>
 <tr>
-<td><strong>保留可核查证据</strong></td>
-<td>引用需验证支持关系；未经校准的可信度标记不能当保证</td>
+<td><strong>Retain verifiable evidence</strong></td>
+<td>Check that citations support claims; uncalibrated confidence labels are not guarantees</td>
 </tr>
 <tr>
-<td><strong>限制高影响动作</strong></td>
-<td>医疗、法律、财务等场景按风险与适用规则设置专业复核和操作权限，人工复核本身也需质量控制</td>
+<td><strong>Limit high-impact actions</strong></td>
+<td>In medical, legal, financial, and similar settings, set professional review and action permissions according to risk and applicable rules; human review itself also needs quality control</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
-<p>工程上更实际的目标是：把幻觉率压低，让用户看得出哪些内容需要核查，并在高风险场景加人工复核。</p>
+<p>A more practical engineering goal is to reduce the hallucination rate, make it clear which content needs checking, and add human review in high-risk situations.</p>
 </blockquote>
-<h2 id="189">18.9 常见错误<a class="headerlink" href="#189" title="Permanent link">&para;</a></h2>
-<h3 id="1891">18.9.1 把幻觉说成「模型出错」<a class="headerlink" href="#1891" title="Permanent link">&para;</a></h3>
-<p>先说明事实性与来源忠实性的判定口径；不要用流畅与否作为唯一边界，也不要把泄密、格式和算术问题混成一个指标。</p>
-<h3 id="1892">18.9.2 只说训练数据有噪声<a class="headerlink" href="#1892" title="Permanent link">&para;</a></h3>
-<p>还要考虑知识覆盖、目标函数、泛化、输入证据和系统是否允许无依据输出。</p>
-<h3 id="1893-temperature-0">18.9.3 认为把 Temperature 调到 0 就能解决<a class="headerlink" href="#1893-temperature-0" title="Permanent link">&para;</a></h3>
-<p>概率最高的 token 不等于正确的 token。最高概率路径本身错误时，Temperature=0 也可能稳定复现该错误。</p>
-<h3 id="1894">18.9.4 忽略对齐训练的副作用<a class="headerlink" href="#1894" title="Permanent link">&para;</a></h3>
-<p>偏好反馈可能鼓励迎合，也可以奖励真实性和恰当弃答；应说明数据与奖励条件，而不是断言 RLHF 必然有害。</p>
-<h3 id="1895-rag">18.9.5 认为 RAG 能根除幻觉<a class="headerlink" href="#1895-rag" title="Permanent link">&para;</a></h3>
-<p>RAG 可能召回错误资料，生成器也可能违背资料；引用存在、引用支持与回答覆盖要分别检查。</p>
-<h3 id="1896">18.9.6 只讲一层缓解方案<a class="headerlink" href="#1896" title="Permanent link">&para;</a></h3>
-<p>按失败类型选措施；使用托管 API 的团队也可只在推理和系统层改进，不必为了形式完整而训练模型。</p>
-<h3 id="1897">18.9.7 断言某闭源模型用了某套具体流程<a class="headerlink" href="#1897" title="Permanent link">&para;</a></h3>
-<p>未公开的流程不推断；「更强的拒答校准」也需要同条件的评测证据，不能换一种措辞继续猜测。</p>
-<h3 id="1898">18.9.8 承诺「能彻底消除幻觉」<a class="headerlink" href="#1898" title="Permanent link">&para;</a></h3>
-<p>限定任务、输出空间和验证条件后可以讨论保证；对开放域所有事实承诺零错误则缺乏依据。</p>
-<h2 id="1810">18.10 本章总结<a class="headerlink" href="#1810" title="Permanent link">&para;</a></h2>
+<h2 id="189-common-mistakes"><span id="189" class="legacy-heading-anchor" aria-hidden="true"></span>18.9 Common mistakes<a class="headerlink" href="#189-common-mistakes" title="Permanent link">&para;</a></h2>
+<h3 id="1891-defining-hallucination-as-any-model-error"><span id="1891" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.1 Defining hallucination as any model error<a class="headerlink" href="#1891-defining-hallucination-as-any-model-error" title="Permanent link">&para;</a></h3>
+<p>Specify the criteria for factuality and source faithfulness first. Do not use fluency as the sole boundary or merge information leaks, format errors, and arithmetic errors into one metric.</p>
+<h3 id="1892-blaming-only-noisy-training-data"><span id="1892" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.2 Blaming only noisy training data<a class="headerlink" href="#1892-blaming-only-noisy-training-data" title="Permanent link">&para;</a></h3>
+<p>Also consider knowledge coverage, objectives, generalization, input evidence, and whether the system permits unsupported output.</p>
+<h3 id="1893-assuming-temperature0-solves-the-problem"><span id="1893-temperature-0" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.3 Assuming Temperature=0 solves the problem<a class="headerlink" href="#1893-assuming-temperature0-solves-the-problem" title="Permanent link">&para;</a></h3>
+<p>The most probable token need not be the correct one. If the highest-probability path is wrong, Temperature=0 may reproduce that error consistently.</p>
+<h3 id="1894-ignoring-side-effects-of-alignment-training"><span id="1894" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.4 Ignoring side effects of alignment training<a class="headerlink" href="#1894-ignoring-side-effects-of-alignment-training" title="Permanent link">&para;</a></h3>
+<p>Preference feedback can encourage sycophancy, but it can also reward truthfulness and appropriate abstention. Explain the relevant data and reward conditions instead of claiming that RLHF is inherently harmful.</p>
+<h3 id="1895-assuming-rag-eliminates-hallucinations"><span id="1895-rag" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.5 Assuming RAG eliminates hallucinations<a class="headerlink" href="#1895-assuming-rag-eliminates-hallucinations" title="Permanent link">&para;</a></h3>
+<p>RAG may retrieve incorrect material, and the generator may contradict it. Check citation existence, citation support, and answer coverage separately.</p>
+<h3 id="1896-discussing-mitigation-at-only-one-level"><span id="1896" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.6 Discussing mitigation at only one level<a class="headerlink" href="#1896-discussing-mitigation-at-only-one-level" title="Permanent link">&para;</a></h3>
+<p>Choose measures based on the failure type. Teams using hosted APIs may improve only inference and system behavior; they need not train a model just to complete a three-level template.</p>
+<h3 id="1897-claiming-a-closed-model-uses-a-specific-unpublished-process"><span id="1897" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.7 Claiming a closed model uses a specific unpublished process<a class="headerlink" href="#1897-claiming-a-closed-model-uses-a-specific-unpublished-process" title="Permanent link">&para;</a></h3>
+<p>Do not infer undisclosed processes. Claims of “better refusal calibration” also require evaluations under comparable conditions; rephrasing speculation does not make it evidence.</p>
+<h3 id="1898-promising-to-eliminate-hallucinations-completely"><span id="1898" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.8 Promising to eliminate hallucinations completely<a class="headerlink" href="#1898-promising-to-eliminate-hallucinations-completely" title="Permanent link">&para;</a></h3>
+<p>Guarantees can be discussed after defining the task, output space, and verification conditions. A zero-error promise for all open-domain facts is unsupported.</p>
+<h2 id="1810-summary"><span id="1810" class="legacy-heading-anchor" aria-hidden="true"></span>18.10 Summary<a class="headerlink" href="#1810-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li>先确定事实性、来源忠实性与其他可靠性错误的边界。</li>
-<li>生成概率不是事实证明，但模型可以具备不确定性信号并学会弃答。</li>
-<li>数据、学习目标与系统证据链都会影响幻觉；低温、RLHF 或 RAG 都没有无条件结论。</li>
-<li>引用与自我核查必须验证支持关系，样本一致不等于真实。</li>
-<li>同时衡量回答覆盖率、错误率和严重性，在明确任务边界内提供可审计的保证。</li>
+<li>Define the boundaries between factuality, source faithfulness, and other reliability errors.</li>
+<li>Generation probability is not proof of a fact, but models may have uncertainty signals and can learn to abstain.</li>
+<li>Data, learning objectives, and the system's evidence chain all affect hallucinations. Low temperature, RLHF, and RAG offer no unconditional conclusions.</li>
+<li>Citations and self-checks require verification of evidential support. Agreement across samples does not establish truth.</li>
+<li>Measure answer coverage, error rate, and severity together, and offer auditable guarantees within explicit task boundaries.</li>
 </ol>
 <blockquote>
-<p>面对一个错误回答，先找出是哪条声明缺证据、证据在哪一步丢失，再决定修改数据、推理流程还是系统校验。</p>
+<p>When an answer is wrong, identify the unsupported claim and the point where evidence was lost before deciding whether to change the data, reasoning process, or system checks.</p>
 </blockquote>
-<h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2005.00661">On Faithfulness and Factuality in Abstractive Summarization</a></li>
 <li><a href="https://arxiv.org/abs/2202.03629">Survey of Hallucination in Natural Language Generation</a></li>
@@ -9753,7 +9787,7 @@
 <li><a href="https://arxiv.org/abs/2309.11495">Chain-of-Verification Reduces Hallucination in Large Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2212.08073">Constitutional AI: Harmlessness from AI Feedback</a></li>
 <li><a href="https://arxiv.org/abs/2310.13548">Towards Understanding Sycophancy in Language Models</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs（结构保证与内容错误的区别）</a></li>
+<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs (structural guarantees versus content errors)</a></li>
 </ul>
 
 
@@ -9774,20 +9808,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月8日 11:10:16 CST">2026-09-08</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9810,7 +9844,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9819,33 +9853,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../17-cot/" class="md-footer__link md-footer__link--prev" aria-label="上一页: CoT 思维链">
+          <a href="../17-cot/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 17: Chain of Thought">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                CoT 思维链
+                Chapter 17: Chain of Thought
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../05-evaluation-selection/" class="md-footer__link md-footer__link--next" aria-label="下一页: 模块导览">
+          <a href="../../05-evaluation-selection/" class="md-footer__link md-footer__link--next" aria-label="Next: LLM · Evaluation and Model Selection">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                模块导览
+                LLM · Evaluation and Model Selection
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9894,7 +9928,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

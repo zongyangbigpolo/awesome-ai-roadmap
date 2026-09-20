@@ -1,12 +1,12 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。">
+        <meta name="description" content="Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.">
       
       
         <meta name="author" content="Polo Li">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Embedding 选型与评估 - Awesome AI Roadmap</title>
+        <title>Chapter 7: Selecting and Evaluating Embedding Models - Awesome AI Roadmap</title>
       
     
     
@@ -63,23 +63,31 @@
     
   
   
-    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Awesome AI Roadmap">
-    <meta property="og:title" content="第七章：Embedding 模型选型与评估">
-    <meta property="og:description" content="用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。">
+    <meta property="og:title" content="Chapter 7: Selecting and Evaluating Embedding Models">
+    <meta property="og:description" content="Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="第七章：Embedding 模型选型与评估">
-    <meta name="twitter:description" content="用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。">
+    <meta name="twitter:title" content="Chapter 7: Selecting and Evaluating Embedding Models">
+    <meta name="twitter:description" content="Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.">
+    
+      <link rel="alternate" hreflang="en" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/">
+    
+      <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/">
+    
+      <link rel="alternate" hreflang="x-default" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/">
+    
     
       <meta name="google-site-verification" content="Tbgg-w7R1iywQ8r0Mp868731_XNo6up5vWyclB5GVBw">
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Embedding 模型选型与评估","description":"用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"第七章：Embedding 模型选型与评估","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-08-31","dateModified":"2026-09-15"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Selecting and Evaluating Embedding Models","description":"Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Selecting and Evaluating Embedding Models","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Embedding 选型与评估","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"}]}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Selecting and Evaluating Embedding Models","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"}]}</script>
     
   
 
@@ -102,8 +110,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#embedding" class="md-skip">
-          跳转至
+        <a href="#chapter-7-selecting-and-evaluating-embedding-models" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -115,7 +123,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Awesome AI Roadmap" class="md-header__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
   
@@ -136,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Embedding 选型与评估
+              Chapter 7: Selecting and Evaluating Embedding Models
             
           </span>
         </div>
@@ -149,9 +157,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -159,9 +167,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
       </label>
     
@@ -172,6 +180,32 @@
     
       <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/rag/02-ingestion-indexing/07-embedding-selection/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
     
     
       
@@ -184,21 +218,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
           </a>
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -211,7 +245,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -223,7 +257,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -244,7 +278,7 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -260,7 +294,7 @@
   
     
   
-  首页
+  Awesome AI Roadmap: AI Engineering Interview Handbook
 
       </a>
     </li>
@@ -281,7 +315,7 @@
   
     
   
-  中文书稿
+  Book
 
         </a>
       </li>
@@ -303,7 +337,7 @@
   
     
   
-  关于
+  About
 
         </a>
       </li>
@@ -347,7 +381,7 @@
   
     
   
-  多模态 AI
+  Multimodal AI
 
         </a>
       </li>
@@ -391,7 +425,7 @@
   
     
   
-  Agent
+  Agents
 
         </a>
       </li>
@@ -437,7 +471,7 @@
   
     
   
-  框架与编排
+  Frameworks and orchestration
 
         </a>
       </li>
@@ -481,7 +515,7 @@
   
     
   
-  AI 安全与治理
+  AI safety and governance
 
         </a>
       </li>
@@ -531,7 +565,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Awesome AI Roadmap" class="md-nav__button md-logo" aria-label="Awesome AI Roadmap" data-md-component="logo">
       
@@ -543,7 +577,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -568,7 +602,7 @@
   
   
   <span class="md-ellipsis">
-    首页
+    Awesome AI Roadmap: AI Engineering Interview Handbook
     
   </span>
   
@@ -623,7 +657,7 @@
   
   
   <span class="md-ellipsis">
-    中文书稿
+    Book
     
   </span>
   
@@ -640,7 +674,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            中文书稿
+            Book
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -658,7 +692,7 @@
   
   
   <span class="md-ellipsis">
-    扉页
+    AI Engineering Interviews: From Model Foundations to Field Delivery
     
   </span>
   
@@ -681,7 +715,7 @@
   
   
   <span class="md-ellipsis">
-    前言
+    Preface
     
   </span>
   
@@ -704,7 +738,7 @@
   
   
   <span class="md-ellipsis">
-    阅读说明
+    How to Read This Book
     
   </span>
   
@@ -727,7 +761,7 @@
   
   
   <span class="md-ellipsis">
-    致谢
+    Acknowledgments
     
   </span>
   
@@ -750,7 +784,7 @@
   
   
   <span class="md-ellipsis">
-    书末说明
+    Author and License
     
   </span>
   
@@ -802,7 +836,7 @@
   
   
   <span class="md-ellipsis">
-    关于
+    About
     
   </span>
   
@@ -813,7 +847,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            关于
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -829,7 +863,7 @@
   
   
   <span class="md-ellipsis">
-    作者与项目
+    About the author and Awesome AI Roadmap
     
   </span>
   
@@ -852,7 +886,7 @@
   
   
   <span class="md-ellipsis">
-    编辑、引用与纠错规范
+    Editorial, citation, and correction policy
     
   </span>
   
@@ -985,7 +1019,7 @@
   
   
   <span class="md-ellipsis">
-    基础原理
+    Foundations
     
   </span>
   
@@ -1002,7 +1036,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            基础原理
+            Foundations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1020,7 +1054,7 @@
   
   
   <span class="md-ellipsis">
-    大语言模型与传统 NLP
+    Chapter 1: How Large Language Models Differ from Traditional NLP
     
   </span>
   
@@ -1043,7 +1077,7 @@
   
   
   <span class="md-ellipsis">
-    Transformer 架构
+    Chapter 2: Transformer Architecture
     
   </span>
   
@@ -1066,7 +1100,7 @@
   
   
   <span class="md-ellipsis">
-    Attention 变体
+    Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention
     
   </span>
   
@@ -1089,7 +1123,7 @@
   
   
   <span class="md-ellipsis">
-    位置编码
+    Chapter 4: Positional Encoding
     
   </span>
   
@@ -1112,7 +1146,7 @@
   
   
   <span class="md-ellipsis">
-    Tokenizer
+    Chapter 5: Tokenizers
     
   </span>
   
@@ -1178,7 +1212,7 @@
   
   
   <span class="md-ellipsis">
-    训练与对齐
+    Training and alignment
     
   </span>
   
@@ -1195,7 +1229,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            训练与对齐
+            Training and alignment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1213,7 +1247,7 @@
   
   
   <span class="md-ellipsis">
-    三阶段训练流程
+    Chapter 6: The Three-Stage Training Framework for LLMs
     
   </span>
   
@@ -1236,7 +1270,7 @@
   
   
   <span class="md-ellipsis">
-    Scaling Law 与涌现
+    Chapter 7: Scaling Laws and Emergent Abilities
     
   </span>
   
@@ -1259,7 +1293,7 @@
   
   
   <span class="md-ellipsis">
-    大模型微调
+    Chapter 8: Fine-Tuning Approaches for LLMs
     
   </span>
   
@@ -1282,7 +1316,7 @@
   
   
   <span class="md-ellipsis">
-    LoRA
+    Chapter 9: LoRA in Depth
     
   </span>
   
@@ -1305,7 +1339,7 @@
   
   
   <span class="md-ellipsis">
-    Post-Training
+    Chapter 10: A Survey of Post-Training Methods
     
   </span>
   
@@ -1328,7 +1362,7 @@
   
   
   <span class="md-ellipsis">
-    DPO vs PPO
+    Chapter 11: DPO vs. PPO in Depth
     
   </span>
   
@@ -1394,7 +1428,7 @@
   
   
   <span class="md-ellipsis">
-    推理与部署
+    Inference and serving
     
   </span>
   
@@ -1411,7 +1445,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            推理与部署
+            Inference and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1429,7 +1463,7 @@
   
   
   <span class="md-ellipsis">
-    解码策略
+    Chapter 12: Decoding Strategies
     
   </span>
   
@@ -1452,7 +1486,7 @@
   
   
   <span class="md-ellipsis">
-    Temperature、Top-P、Top-K
+    Chapter 13: Tuning Temperature, Top-P, and Top-K
     
   </span>
   
@@ -1475,7 +1509,7 @@
   
   
   <span class="md-ellipsis">
-    KV Cache 与 Prompt Caching
+    Chapter 14: KV Cache and Prompt Caching
     
   </span>
   
@@ -1498,7 +1532,7 @@
   
   
   <span class="md-ellipsis">
-    模型量化
+    Chapter 15: Model Quantization
     
   </span>
   
@@ -1521,7 +1555,7 @@
   
   
   <span class="md-ellipsis">
-    MoE
+    Chapter 19: Mixture-of-Experts Models
     
   </span>
   
@@ -1544,7 +1578,7 @@
   
   
   <span class="md-ellipsis">
-    部署框架选型
+    Chapter 20: Choosing a Serving Framework
     
   </span>
   
@@ -1604,7 +1638,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 与可靠性
+    Prompting and reliability
     
   </span>
   
@@ -1621,7 +1655,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_5">
             <span class="md-nav__icon md-icon"></span>
-            Prompt 与可靠性
+            Prompting and reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1639,7 +1673,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt 工程
+    Chapter 16: Prompt Engineering
     
   </span>
   
@@ -1662,7 +1696,7 @@
   
   
   <span class="md-ellipsis">
-    CoT 思维链
+    Chapter 17: Chain of Thought
     
   </span>
   
@@ -1685,7 +1719,7 @@
   
   
   <span class="md-ellipsis">
-    幻觉的成因与缓解
+    Chapter 18: Hallucinations—Causes and Mitigation
     
   </span>
   
@@ -1743,7 +1777,7 @@
   
   
   <span class="md-ellipsis">
-    评测与选型
+    Evaluation and selection
     
   </span>
   
@@ -1760,7 +1794,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
-            评测与选型
+            Evaluation and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1778,7 +1812,7 @@
   
   
   <span class="md-ellipsis">
-    能力评测指标
+    Chapter 21: Capability Evaluation Metrics
     
   </span>
   
@@ -1801,7 +1835,7 @@
   
   
   <span class="md-ellipsis">
-    模型选型实践
+    Chapter 22: Practical Model Selection
     
   </span>
   
@@ -1857,7 +1891,7 @@
   
   
   <span class="md-ellipsis">
-    多模态
+    Multimodal
     
   </span>
   
@@ -1874,7 +1908,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
-            多模态
+            Multimodal
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1892,7 +1926,7 @@
   
   
   <span class="md-ellipsis">
-    多模态模型
+    Chapter 23: Multimodal Models
     
   </span>
   
@@ -1963,7 +1997,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 AI
+    Multimodal AI
     
   </span>
   
@@ -1980,7 +2014,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态 AI
+            Multimodal AI
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2023,7 +2057,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -2040,7 +2074,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2058,7 +2092,7 @@
   
   
   <span class="md-ellipsis">
-    多模态表征与融合架构
+    Chapter 1: Multimodal Representations and Fusion Architectures
     
   </span>
   
@@ -2118,7 +2152,7 @@
   
   
   <span class="md-ellipsis">
-    视觉与文档智能
+    Vision and document intelligence
     
   </span>
   
@@ -2135,7 +2169,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
-            视觉与文档智能
+            Vision and document intelligence
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2153,7 +2187,7 @@
   
   
   <span class="md-ellipsis">
-    视觉语言模型与 Grounding
+    Chapter 2: Vision–Language Models and Visual Grounding
     
   </span>
   
@@ -2176,7 +2210,7 @@
   
   
   <span class="md-ellipsis">
-    OCR 与 Document AI
+    Chapter 3: OCR and Document AI
     
   </span>
   
@@ -2199,7 +2233,7 @@
   
   
   <span class="md-ellipsis">
-    Computer Use 与 GUI Agent
+    Chapter 4: Computer Use and GUI Agents
     
   </span>
   
@@ -2257,7 +2291,7 @@
   
   
   <span class="md-ellipsis">
-    语音与音频
+    Speech and audio
     
   </span>
   
@@ -2274,7 +2308,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_4">
             <span class="md-nav__icon md-icon"></span>
-            语音与音频
+            Speech and audio
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2292,7 +2326,7 @@
   
   
   <span class="md-ellipsis">
-    ASR、TTS 与音频语言模型
+    Chapter 5: Speech Recognition, Synthesis, and Audio Language Models
     
   </span>
   
@@ -2315,7 +2349,7 @@
   
   
   <span class="md-ellipsis">
-    实时全双工语音
+    Chapter 6: Real-Time Full-Duplex Voice Interaction
     
   </span>
   
@@ -2373,7 +2407,7 @@
   
   
   <span class="md-ellipsis">
-    多模态生成
+    Multimodal generation
     
   </span>
   
@@ -2390,7 +2424,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_5">
             <span class="md-nav__icon md-icon"></span>
-            多模态生成
+            Multimodal generation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2408,7 +2442,7 @@
   
   
   <span class="md-ellipsis">
-    扩散、Flow Matching 与图像生成
+    Chapter 7: Diffusion Models, Flow Matching, and Image Generation
     
   </span>
   
@@ -2431,7 +2465,7 @@
   
   
   <span class="md-ellipsis">
-    视频生成模型
+    Chapter 8: Video Generation Models
     
   </span>
   
@@ -2489,7 +2523,7 @@
   
   
   <span class="md-ellipsis">
-    训练、评测与服务
+    Training, evaluation, and serving
     
   </span>
   
@@ -2506,7 +2540,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_6">
             <span class="md-nav__icon md-icon"></span>
-            训练、评测与服务
+            Training, evaluation, and serving
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2524,7 +2558,7 @@
   
   
   <span class="md-ellipsis">
-    多模态训练数据与对齐
+    Chapter 9: Multimodal Training Data and Alignment
     
   </span>
   
@@ -2547,7 +2581,7 @@
   
   
   <span class="md-ellipsis">
-    多模态评测、安全与服务
+    Chapter 10: Multimodal Evaluation, Safety, and Inference Serving
     
   </span>
   
@@ -2719,7 +2753,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling 原理
+    Chapter 1: What Function Calling Is and How It Works
     
   </span>
   
@@ -2742,7 +2776,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 如何学会调用工具
+    Chapter 2: How LLMs Learn to Use Tools
     
   </span>
   
@@ -2765,7 +2799,7 @@
   
   
   <span class="md-ellipsis">
-    工具定义与 Schema 工程
+    Chapter 3: Tool Definitions and Schema Engineering
     
   </span>
   
@@ -2788,7 +2822,7 @@
   
   
   <span class="md-ellipsis">
-    推理模型与 MCP
+    Chapter 7: Why Some Reasoning Models Seem Not to Support MCP
     
   </span>
   
@@ -2887,7 +2921,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 核心内容
+    Chapter 4: The Core of the Model Context Protocol
     
   </span>
   
@@ -2910,7 +2944,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 三层组成
+    Chapter 5: The Three Layers of MCP
     
   </span>
   
@@ -2933,7 +2967,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 与 Function Calling
+    Chapter 6: MCP and Function Calling—Differences and Tradeoffs
     
   </span>
   
@@ -2956,7 +2990,7 @@
   
   
   <span class="md-ellipsis">
-    MCP 传输层
+    Chapter 12: MCP Transports
     
   </span>
   
@@ -2979,7 +3013,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Protocol 安全
+    Chapter 15: Tool Protocol Security
     
   </span>
   
@@ -3074,7 +3108,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 是什么
+    Chapter 8: What Is a Skill?
     
   </span>
   
@@ -3097,7 +3131,7 @@
   
   
   <span class="md-ellipsis">
-    Skill 与 MCP
+    Chapter 9: Skills and MCP
     
   </span>
   
@@ -3120,7 +3154,7 @@
   
   
   <span class="md-ellipsis">
-    Function Calling、MCP、Skill
+    Chapter 10: How Function Calling, MCP, and Skills Fit Together
     
   </span>
   
@@ -3176,7 +3210,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 通信
+    Agent communication
     
   </span>
   
@@ -3193,7 +3227,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 通信
+            Agent communication
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3211,7 +3245,7 @@
   
   
   <span class="md-ellipsis">
-    A2A 协议
+    Chapter 11: The A2A Protocol
     
   </span>
   
@@ -3269,7 +3303,7 @@
   
   
   <span class="md-ellipsis">
-    传输与网关
+    Transports and gateways
     
   </span>
   
@@ -3286,7 +3320,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6_6">
             <span class="md-nav__icon md-icon"></span>
-            传输与网关
+            Transports and gateways
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3304,7 +3338,7 @@
   
   
   <span class="md-ellipsis">
-    SSE、WebSocket 与 WebRTC
+    Chapter 13: SSE, WebSocket, and WebRTC
     
   </span>
   
@@ -3327,7 +3361,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 网关
+    Chapter 14: LLM Gateways
     
   </span>
   
@@ -3404,7 +3438,7 @@
   
   
   <span class="md-ellipsis">
-    Agent
+    Agents
     
   </span>
   
@@ -3421,7 +3455,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Agent
+            Agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3468,7 +3502,7 @@
   
   
   <span class="md-ellipsis">
-    基础与架构
+    Foundations and architecture
     
   </span>
   
@@ -3485,7 +3519,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与架构
+            Foundations and architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3503,7 +3537,7 @@
   
   
   <span class="md-ellipsis">
-    从大模型到 AI Agent
+    Chapter 1: From Large Language Models to AI Agents
     
   </span>
   
@@ -3526,7 +3560,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 现代系统架构
+    Chapter 2: Modern Agent System Architecture
     
   </span>
   
@@ -3549,7 +3583,7 @@
   
   
   <span class="md-ellipsis">
-    Agentic Building Blocks
+    Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md
     
   </span>
   
@@ -3619,7 +3653,7 @@
   
   
   <span class="md-ellipsis">
-    Runtime 与 Harness
+    Runtime and harness
     
   </span>
   
@@ -3636,7 +3670,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Runtime 与 Harness
+            Runtime and harness
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3654,7 +3688,7 @@
   
   
   <span class="md-ellipsis">
-    Harness 定义、边界与分层
+    Chapter 16: Agent Harnesses—Definitions, Boundaries, and Layers
     
   </span>
   
@@ -3677,7 +3711,7 @@
   
   
   <span class="md-ellipsis">
-    Agent Loop 与运行时状态机
+    Chapter 17: The Agent Loop and Runtime State Machine
     
   </span>
   
@@ -3700,7 +3734,7 @@
   
   
   <span class="md-ellipsis">
-    Context Engineering 与装配
+    Chapter 18: Context Engineering and Context Assembly
     
   </span>
   
@@ -3723,7 +3757,7 @@
   
   
   <span class="md-ellipsis">
-    Tool Registry 与执行管线
+    Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines
     
   </span>
   
@@ -3746,7 +3780,7 @@
   
   
   <span class="md-ellipsis">
-    权限、沙箱与隔离
+    Chapter 20: Permissions, Sandboxing, and Isolation
     
   </span>
   
@@ -3769,7 +3803,7 @@
   
   
   <span class="md-ellipsis">
-    Checkpoint、持久化与恢复
+    Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery
     
   </span>
   
@@ -3792,7 +3826,7 @@
   
   
   <span class="md-ellipsis">
-    Human-in-the-loop 与中断
+    Chapter 22: Human-in-the-Loop Approval and Interruptible Execution
     
   </span>
   
@@ -3815,7 +3849,7 @@
   
   
   <span class="md-ellipsis">
-    Tracing、评测与 Coding Agent
+    Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies
     
   </span>
   
@@ -3879,7 +3913,7 @@
   
   
   <span class="md-ellipsis">
-    推理、规划与反思
+    Reasoning, planning, and reflection
     
   </span>
   
@@ -3896,7 +3930,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_4">
             <span class="md-nav__icon md-icon"></span>
-            推理、规划与反思
+            Reasoning, planning, and reflection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3914,7 +3948,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 设计范式
+    Chapter 4: Agent Design Patterns
     
   </span>
   
@@ -3937,7 +3971,7 @@
   
   
   <span class="md-ellipsis">
-    模型推理与搜索方法
+    Chapter 5: Model Reasoning and Search Methods for Agents
     
   </span>
   
@@ -3960,7 +3994,7 @@
   
   
   <span class="md-ellipsis">
-    复杂任务拆分与调度
+    Chapter 6: Decomposing and Scheduling Complex Tasks
     
   </span>
   
@@ -3983,7 +4017,7 @@
   
   
   <span class="md-ellipsis">
-    LLM 与 Agent 规划能力
+    Chapter 11: Giving LLMs and Agents the Ability to Plan
     
   </span>
   
@@ -4006,7 +4040,7 @@
   
   
   <span class="md-ellipsis">
-    反思、验证与自我改进
+    Chapter 12: Agent Reflection, Verification, and Self-improvement
     
   </span>
   
@@ -4066,7 +4100,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文
+    Memory and context
     
   </span>
   
@@ -4083,7 +4117,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_5">
             <span class="md-nav__icon md-icon"></span>
-            记忆与上下文
+            Memory and context
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4101,7 +4135,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 记忆机制
+    Chapter 7: Memory Mechanisms in AI Agents
     
   </span>
   
@@ -4124,7 +4158,7 @@
   
   
   <span class="md-ellipsis">
-    长短期记忆工程实现
+    Chapter 8: Implementing Short- and Long-Term Agent Memory
     
   </span>
   
@@ -4147,7 +4181,7 @@
   
   
   <span class="md-ellipsis">
-    记忆与上下文压缩
+    Chapter 10: Agent Memory and Context Compression
     
   </span>
   
@@ -4205,7 +4239,7 @@
   
   
   <span class="md-ellipsis">
-    多智能体系统
+    Multi-agent systems
     
   </span>
   
@@ -4222,7 +4256,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_6">
             <span class="md-nav__icon md-icon"></span>
-            多智能体系统
+            Multi-agent systems
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4240,7 +4274,7 @@
   
   
   <span class="md-ellipsis">
-    Single-Agent 与 Multi-Agent
+    Chapter 9: Single-Agent and Multi-Agent Systems
     
   </span>
   
@@ -4263,7 +4297,7 @@
   
   
   <span class="md-ellipsis">
-    Multi-Agent 协作与路由
+    Chapter 13: Multi-Agent Coordination, Routing, and Dynamic Switching
     
   </span>
   
@@ -4321,7 +4355,7 @@
   
   
   <span class="md-ellipsis">
-    评估与安全
+    Evaluation and safety
     
   </span>
   
@@ -4338,7 +4372,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_7">
             <span class="md-nav__icon md-icon"></span>
-            评估与安全
+            Evaluation and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4356,7 +4390,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 评估与 Benchmark
+    Chapter 14: Agent Evaluation and Benchmarks
     
   </span>
   
@@ -4379,7 +4413,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 安全与 Prompt Injection
+    Chapter 15: Agent Security and Prompt Injection
     
   </span>
   
@@ -4435,7 +4469,7 @@
   
   
   <span class="md-ellipsis">
-    Coding Agent 工程
+    Coding agents
     
   </span>
   
@@ -4452,7 +4486,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_8">
             <span class="md-nav__icon md-icon"></span>
-            Coding Agent 工程
+            Coding agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4470,7 +4504,7 @@
   
   
   <span class="md-ellipsis">
-    代码搜索、编辑与验证
+    Chapter 24: Code Search, Editing, and Verification for Coding Agents
     
   </span>
   
@@ -4526,7 +4560,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 后训练
+    Agent post-training
     
   </span>
   
@@ -4543,7 +4577,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_9">
             <span class="md-nav__icon md-icon"></span>
-            Agent 后训练
+            Agent post-training
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4561,7 +4595,7 @@
   
   
   <span class="md-ellipsis">
-    从失败轨迹到可靠策略
+    Chapter 25: Agent Post-Training: From Failed Trajectories to Reliable Policies
     
   </span>
   
@@ -4706,7 +4740,7 @@
   
   
   <span class="md-ellipsis">
-    基础与选型
+    Foundations and selection
     
   </span>
   
@@ -4723,7 +4757,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与选型
+            Foundations and selection
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4741,7 +4775,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 是什么
+    Chapter 1: What RAG Is and What Problems It Solves
     
   </span>
   
@@ -4764,7 +4798,7 @@
   
   
   <span class="md-ellipsis">
-    RAG、微调与长上下文
+    Chapter 2: Tradeoffs Between RAG, Fine-Tuning, and Long Context
     
   </span>
   
@@ -4837,7 +4871,7 @@
   
   
   <span class="md-ellipsis">
-    摄取与索引
+    Ingestion and indexing
     
   </span>
   
@@ -4854,7 +4888,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8_3">
             <span class="md-nav__icon md-icon"></span>
-            摄取与索引
+            Ingestion and indexing
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4872,7 +4906,7 @@
   
   
   <span class="md-ellipsis">
-    文档解析与预处理
+    Chapter 3: Document Parsing and Preprocessing
     
   </span>
   
@@ -4895,7 +4929,7 @@
   
   
   <span class="md-ellipsis">
-    Chunking 策略
+    Chapter 4: Chunking Strategies and Granularity
     
   </span>
   
@@ -4918,7 +4952,7 @@
   
   
   <span class="md-ellipsis">
-    语义被切断怎么办
+    Chapter 5: When Chunking Breaks the Meaning
     
   </span>
   
@@ -4941,7 +4975,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 原理
+    Chapter 6: Embedding Principles and Technical Evolution
     
   </span>
   
@@ -4973,7 +5007,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -4986,7 +5020,7 @@
   
   
   <span class="md-ellipsis">
-    Embedding 选型与评估
+    Chapter 7: Selecting and Evaluating Embedding Models
     
   </span>
   
@@ -4995,7 +5029,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -5004,60 +5038,60 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#71" class="md-nav__link">
+  <a href="#71-the-first-principle-of-model-selection" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 选型的第一原则
+      7.1 The first principle of model selection
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#72" class="md-nav__link">
+  <a href="#72-why-leaderboards-are-not-enough" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 为什么不能只看榜单
+      7.2 Why leaderboards are not enough
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 为什么不能只看榜单">
+    <nav class="md-nav" aria-label="7.2 Why leaderboards are not enough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721" class="md-nav__link">
+  <a href="#721-leaderboard-overfitting" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 榜单过拟合
+      7.2.1 Leaderboard overfitting
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#722" class="md-nav__link">
+  <a href="#722-retrieval-scores-are-not-end-to-end-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.2 检索分数不等于端到端质量
+      7.2.2 Retrieval scores are not end-to-end quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#723" class="md-nav__link">
+  <a href="#723-language-and-domain-bias" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.3 语言与领域偏置
+      7.2.3 Language and domain bias
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#724" class="md-nav__link">
+  <a href="#724-length-and-text-form-bias" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.4 长度与形态偏置
+      7.2.4 Length and text-form bias
     </span>
   </a>
   
@@ -5069,28 +5103,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#73" class="md-nav__link">
+  <a href="#73-a-sound-selection-process" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3 正确的选型流程
+      7.3 A sound selection process
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.3 正确的选型流程">
+    <nav class="md-nav" aria-label="7.3 A sound selection process">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#731" class="md-nav__link">
+  <a href="#731-how-to-build-the-evaluation-set" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.1 评测集怎么构造
+      7.3.1 How to build the evaluation set
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#732" class="md-nav__link">
+  <a href="#732-the-essential-baseline" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.2 必测的对照组
+      7.3.2 The essential baseline
     </span>
   </a>
   
@@ -5102,28 +5136,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#74" class="md-nav__link">
+  <a href="#74-what-matters-besides-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 除了效果，还要看什么
+      7.4 What matters besides quality?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.4 除了效果，还要看什么">
+    <nav class="md-nav" aria-label="7.4 What matters besides quality?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#741" class="md-nav__link">
+  <a href="#741-more-dimensions-are-not-always-better" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.1 维度不是越高越好
+      7.4.1 More dimensions are not always better
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-api" class="md-nav__link">
+  <a href="#742-the-hidden-risk-of-api-models" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 API 模型的隐性风险
+      7.4.2 The hidden risk of API models
     </span>
   </a>
   
@@ -5135,100 +5169,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#75" class="md-nav__link">
+  <a href="#75-common-model-candidates" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5 常见候选模型
+      7.5 Common model candidates
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#76-embedding" class="md-nav__link">
+  <a href="#76-is-fine-tuning-an-embedding-model-worthwhile" class="md-nav__link">
     <span class="md-ellipsis">
-      7.6 微调 Embedding 模型值不值
+      7.6 Is fine-tuning an embedding model worthwhile?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#77" class="md-nav__link">
+  <a href="#77-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7 常见错误
+      7.7 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.7 常见错误">
+    <nav class="md-nav" aria-label="7.7 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#771" class="md-nav__link">
+  <a href="#771-looking-only-at-leaderboard-rankings" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.1 只看榜单排名
+      7.7.1 Looking only at leaderboard rankings
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#772" class="md-nav__link">
+  <a href="#772-skipping-tests-on-application-data" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.2 不做业务数据实测
+      7.7.2 Skipping tests on application data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#773-bm25" class="md-nav__link">
+  <a href="#773-omitting-the-bm25-baseline" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.3 不设 BM25 对照组
+      7.7.3 Omitting the BM25 baseline
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#774" class="md-nav__link">
+  <a href="#774-measuring-retrieval-but-not-end-to-end-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.4 只测检索指标不测端到端
+      7.7.4 Measuring retrieval but not end-to-end quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#775" class="md-nav__link">
+  <a href="#775-pursuing-higher-dimensionality-blindly" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.5 盲目追求高维度
+      7.7.5 Pursuing higher dimensionality blindly
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#776-chunk" class="md-nav__link">
+  <a href="#776-ignoring-the-relationship-between-input-limits-and-chunk-size" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.6 忘记模型输入长度与 chunk 大小的匹配
+      7.7.6 Ignoring the relationship between input limits and chunk size
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#777-api" class="md-nav__link">
+  <a href="#777-not-pinning-api-model-versions" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.7 不锁定 API 模型版本
+      7.7.7 Not pinning API model versions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#778-embedding" class="md-nav__link">
+  <a href="#778-treating-embedding-fine-tuning-as-the-first-optimization" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.8 把微调 Embedding 当成首选优化项
+      7.7.8 Treating embedding fine-tuning as the first optimization
     </span>
   </a>
   
@@ -5240,18 +5274,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#78" class="md-nav__link">
+  <a href="#78-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      7.8 本章总结
+      7.8 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -5278,7 +5312,7 @@
   
   
   <span class="md-ellipsis">
-    向量数据库与 ANN
+    Chapter 8: Vector Databases and ANN Indexes
     
   </span>
   
@@ -5301,7 +5335,7 @@
   
   
   <span class="md-ellipsis">
-    向量库生产实践
+    Chapter 9: Vector Databases in Production and Performance Tuning
     
   </span>
   
@@ -5368,7 +5402,7 @@
   
   
   <span class="md-ellipsis">
-    在线检索
+    Online retrieval
     
   </span>
   
@@ -5385,7 +5419,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_4">
             <span class="md-nav__icon md-icon"></span>
-            在线检索
+            Online retrieval
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5403,7 +5437,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 在线链路
+    Chapter 10: The Complete Online RAG Pipeline
     
   </span>
   
@@ -5426,7 +5460,7 @@
   
   
   <span class="md-ellipsis">
-    检索范式
+    Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction
     
   </span>
   
@@ -5449,7 +5483,7 @@
   
   
   <span class="md-ellipsis">
-    Query 理解与改写
+    Chapter 12: Query Understanding and Rewriting
     
   </span>
   
@@ -5472,7 +5506,7 @@
   
   
   <span class="md-ellipsis">
-    多路召回、RRF 与 Rerank
+    Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking
     
   </span>
   
@@ -5495,7 +5529,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 优化五层框架
+    Chapter 14: A Five-Layer Framework for RAG Optimization
     
   </span>
   
@@ -5558,7 +5592,7 @@
   
   
   <span class="md-ellipsis">
-    高级与多模态
+    Advanced and multimodal RAG
     
   </span>
   
@@ -5575,7 +5609,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_5">
             <span class="md-nav__icon md-icon"></span>
-            高级与多模态
+            Advanced and multimodal RAG
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5593,7 +5627,7 @@
   
   
   <span class="md-ellipsis">
-    高级 RAG 范式
+    Chapter 15: Advanced RAG Paradigms
     
   </span>
   
@@ -5616,7 +5650,7 @@
   
   
   <span class="md-ellipsis">
-    GraphRAG 与图检索
+    Chapter 16: GraphRAG and Graph Retrieval
     
   </span>
   
@@ -5639,7 +5673,7 @@
   
   
   <span class="md-ellipsis">
-    多模态 RAG
+    Chapter 21: Multimodal RAG
     
   </span>
   
@@ -5700,7 +5734,7 @@
   
   
   <span class="md-ellipsis">
-    生成与评估
+    Generation and evaluation
     
   </span>
   
@@ -5717,7 +5751,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_6">
             <span class="md-nav__icon md-icon"></span>
-            生成与评估
+            Generation and evaluation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5735,7 +5769,7 @@
   
   
   <span class="md-ellipsis">
-    生成、Grounding 与幻觉
+    Chapter 17: Generation, Grounding, and Hallucination Mitigation
     
   </span>
   
@@ -5758,7 +5792,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 评估体系
+    Chapter 18: A Framework for Evaluating RAG
     
   </span>
   
@@ -5819,7 +5853,7 @@
   
   
   <span class="md-ellipsis">
-    运维与安全
+    Operations and security
     
   </span>
   
@@ -5836,7 +5870,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_7">
             <span class="md-nav__icon md-icon"></span>
-            运维与安全
+            Operations and security
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5854,7 +5888,7 @@
   
   
   <span class="md-ellipsis">
-    动态更新与增量索引
+    Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing
     
   </span>
   
@@ -5877,7 +5911,7 @@
   
   
   <span class="md-ellipsis">
-    RAG 落地难点与安全
+    Chapter 20: RAG Deployment Challenges and Security
     
   </span>
   
@@ -5936,7 +5970,7 @@
   
   
   <span class="md-ellipsis">
-    结构化查询
+    Structured queries
     
   </span>
   
@@ -5953,7 +5987,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_8">
             <span class="md-nav__icon md-icon"></span>
-            结构化查询
+            Structured queries
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5971,7 +6005,7 @@
   
   
   <span class="md-ellipsis">
-    Text-to-SQL 业务问答
+    Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries
     
   </span>
   
@@ -6044,7 +6078,7 @@
   
   
   <span class="md-ellipsis">
-    框架与编排
+    Frameworks and orchestration
     
   </span>
   
@@ -6061,7 +6095,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
-            框架与编排
+            Frameworks and orchestration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6112,7 +6146,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 生态
+    LangChain ecosystem
     
   </span>
   
@@ -6129,7 +6163,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2">
             <span class="md-nav__icon md-icon"></span>
-            LangChain 生态
+            LangChain ecosystem
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6176,7 +6210,7 @@
   
   
   <span class="md-ellipsis">
-    基础架构
+    Core architecture
     
   </span>
   
@@ -6193,7 +6227,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_2">
             <span class="md-nav__icon md-icon"></span>
-            基础架构
+            Core architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6211,7 +6245,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 框架概览
+    Chapter 1: An Overview of Major AI Agent Development Frameworks
     
   </span>
   
@@ -6234,7 +6268,7 @@
   
   
   <span class="md-ellipsis">
-    Chain 与 LCEL
+    Chapter 2: Chain Design and LCEL
     
   </span>
   
@@ -6257,7 +6291,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain v1 架构
+    Chapter 3: The Underlying Architecture of LangChain v1
     
   </span>
   
@@ -6317,7 +6351,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 构建
+    Building agents
     
   </span>
   
@@ -6334,7 +6368,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Agent 构建
+            Building agents
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6352,7 +6386,7 @@
   
   
   <span class="md-ellipsis">
-    构建生产级 Agent
+    Chapter 4: Seven Steps to a Production-Ready LangChain Agent
     
   </span>
   
@@ -6375,7 +6409,7 @@
   
   
   <span class="md-ellipsis">
-    Tool 注册与工具契约
+    Chapter 5: Tool Registration and Tool Contracts
     
   </span>
   
@@ -6398,7 +6432,7 @@
   
   
   <span class="md-ellipsis">
-    短期与长期记忆
+    Chapter 6: Short-Term and Long-Term Memory in LangChain
     
   </span>
   
@@ -6458,7 +6492,7 @@
   
   
   <span class="md-ellipsis">
-    生态与演进
+    Ecosystem and evolution
     
   </span>
   
@@ -6475,7 +6509,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_4">
             <span class="md-nav__icon md-icon"></span>
-            生态与演进
+            Ecosystem and evolution
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6493,7 +6527,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LlamaIndex
+    Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex
     
   </span>
   
@@ -6516,7 +6550,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain4j
+    Chapter 8: LangChain4j and the Java Ecosystem
     
   </span>
   
@@ -6539,7 +6573,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 版本演进
+    Chapter 11: LangChain's Version Evolution
     
   </span>
   
@@ -6632,7 +6666,7 @@
   
   
   <span class="md-ellipsis">
-    LangChain 与 LangGraph
+    Chapter 9: The Layered Relationship Between LangChain and LangGraph
     
   </span>
   
@@ -6655,7 +6689,7 @@
   
   
   <span class="md-ellipsis">
-    LangGraph 核心优势
+    Chapter 10: LangGraph's Core Advantages
     
   </span>
   
@@ -6713,7 +6747,7 @@
   
   
   <span class="md-ellipsis">
-    生产闭环
+    Production feedback loop
     
   </span>
   
@@ -6730,7 +6764,7 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_9_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_2_6">
             <span class="md-nav__icon md-icon"></span>
-            生产闭环
+            Production feedback loop
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6748,7 +6782,7 @@
   
   
   <span class="md-ellipsis">
-    Deep Research 实现逻辑
+    Chapter 12: How Deep Research Works
     
   </span>
   
@@ -6771,7 +6805,7 @@
   
   
   <span class="md-ellipsis">
-    LangSmith 生产质量闭环
+    Chapter 13: Building a Production Quality Feedback Loop with LangSmith
     
   </span>
   
@@ -6872,7 +6906,7 @@
   
   
   <span class="md-ellipsis">
-    数据与索引抽象
+    Chapter 14: LlamaIndex Data and Index Abstractions
     
   </span>
   
@@ -6895,7 +6929,7 @@
   
   
   <span class="md-ellipsis">
-    查询引擎与 Workflows
+    Chapter 15: LlamaIndex Query Engines and Workflow Orchestration
     
   </span>
   
@@ -6988,7 +7022,7 @@
   
   
   <span class="md-ellipsis">
-    声明式编程模型
+    Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs
     
   </span>
   
@@ -7011,7 +7045,7 @@
   
   
   <span class="md-ellipsis">
-    编译器与优化器
+    Chapter 17: DSPy's Compiler and Optimizers
     
   </span>
   
@@ -7104,7 +7138,7 @@
   
   
   <span class="md-ellipsis">
-    Kernel、Plugin 与 Planner
+    Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner
     
   </span>
   
@@ -7127,7 +7161,7 @@
   
   
   <span class="md-ellipsis">
-    Process 与 Agent Framework
+    Chapter 19: Semantic Kernel's Process Framework and Agent Framework
     
   </span>
   
@@ -7185,7 +7219,7 @@
   
   
   <span class="md-ellipsis">
-    轻量级 Agent 框架
+    Lightweight agent frameworks
     
   </span>
   
@@ -7202,7 +7236,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_6">
             <span class="md-nav__icon md-icon"></span>
-            轻量级 Agent 框架
+            Lightweight agent frameworks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7220,7 +7254,7 @@
   
   
   <span class="md-ellipsis">
-    AutoGen 与 CrewAI
+    Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI
     
   </span>
   
@@ -7243,7 +7277,7 @@
   
   
   <span class="md-ellipsis">
-    PydanticAI 与选型矩阵
+    Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit
     
   </span>
   
@@ -7301,7 +7335,7 @@
   
   
   <span class="md-ellipsis">
-    选型与可移植架构
+    Selection and portability
     
   </span>
   
@@ -7318,7 +7352,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_9_7">
             <span class="md-nav__icon md-icon"></span>
-            选型与可移植架构
+            Selection and portability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7336,7 +7370,7 @@
   
   
   <span class="md-ellipsis">
-    跨框架技术解构
+    Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability
     
   </span>
   
@@ -7359,7 +7393,7 @@
   
   
   <span class="md-ellipsis">
-    Lock-in 与迁移策略
+    Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations
     
   </span>
   
@@ -7494,7 +7528,7 @@
   
   
   <span class="md-ellipsis">
-    基础与生产架构
+    Foundations and production architecture
     
   </span>
   
@@ -7511,7 +7545,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与生产架构
+            Foundations and production architecture
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7529,7 +7563,7 @@
   
   
   <span class="md-ellipsis">
-    LLMOps、MLOps 与 DevOps
+    Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps
     
   </span>
   
@@ -7552,7 +7586,7 @@
   
   
   <span class="md-ellipsis">
-    AI 应用生产架构
+    Chapter 2: A Production Architecture for AI Applications
     
   </span>
   
@@ -7610,7 +7644,7 @@
   
   
   <span class="md-ellipsis">
-    请求路径可靠性
+    Request reliability
     
   </span>
   
@@ -7627,7 +7661,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_3">
             <span class="md-nav__icon md-icon"></span>
-            请求路径可靠性
+            Request reliability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7645,7 +7679,7 @@
   
   
   <span class="md-ellipsis">
-    模型网关、路由与回退
+    Chapter 3: Model Gateways, Routing, and Fallback
     
   </span>
   
@@ -7668,7 +7702,7 @@
   
   
   <span class="md-ellipsis">
-    重试、超时、幂等与熔断
+    Chapter 4: Retries, Timeouts, Idempotency, and Circuit Breakers
     
   </span>
   
@@ -7726,7 +7760,7 @@
   
   
   <span class="md-ellipsis">
-    输出质量与安全
+    Output quality and safety
     
   </span>
   
@@ -7743,7 +7777,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_4">
             <span class="md-nav__icon md-icon"></span>
-            输出质量与安全
+            Output quality and safety
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7761,7 +7795,7 @@
   
   
   <span class="md-ellipsis">
-    结构化输出与契约校验
+    Chapter 5: Structured Outputs and Contract Validation
     
   </span>
   
@@ -7784,7 +7818,7 @@
   
   
   <span class="md-ellipsis">
-    Guardrails 与降级
+    Chapter 6: Guardrails and Graceful Degradation
     
   </span>
   
@@ -7842,7 +7876,7 @@
   
   
   <span class="md-ellipsis">
-    评测与可观测性
+    Evaluation and observability
     
   </span>
   
@@ -7859,7 +7893,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_5">
             <span class="md-nav__icon md-icon"></span>
-            评测与可观测性
+            Evaluation and observability
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7877,7 +7911,7 @@
   
   
   <span class="md-ellipsis">
-    离线评测与 EDD
+    Chapter 7: Offline Evaluation and Eval-Driven Development
     
   </span>
   
@@ -7900,7 +7934,7 @@
   
   
   <span class="md-ellipsis">
-    在线可观测性与 Tracing
+    Chapter 8: Production Observability and Tracing
     
   </span>
   
@@ -7958,7 +7992,7 @@
   
   
   <span class="md-ellipsis">
-    版本管理与发布
+    Versioning and releases
     
   </span>
   
@@ -7975,7 +8009,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_6">
             <span class="md-nav__icon md-icon"></span>
-            版本管理与发布
+            Versioning and releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7993,7 +8027,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt、模型与数据版本
+    Chapter 9: Prompt, Model, and Data Versioning
     
   </span>
   
@@ -8016,7 +8050,7 @@
   
   
   <span class="md-ellipsis">
-    LLM CI/CD 与灰度发布
+    Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests
     
   </span>
   
@@ -8076,7 +8110,7 @@
   
   
   <span class="md-ellipsis">
-    性能、成本与运营
+    Performance, cost, and operations
     
   </span>
   
@@ -8093,7 +8127,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10_7">
             <span class="md-nav__icon md-icon"></span>
-            性能、成本与运营
+            Performance, cost, and operations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8111,7 +8145,7 @@
   
   
   <span class="md-ellipsis">
-    缓存、批处理与成本
+    Chapter 11: Caching, Batching, Throughput, and Cost Optimization
     
   </span>
   
@@ -8134,7 +8168,7 @@
   
   
   <span class="md-ellipsis">
-    SLO、容量与事故响应
+    Chapter 12: SLOs, Capacity Planning, and Incident Response
     
   </span>
   
@@ -8157,7 +8191,7 @@
   
   
   <span class="md-ellipsis">
-    反馈闭环与数据飞轮
+    Chapter 13: Feedback Loops and the Data Flywheel
     
   </span>
   
@@ -8228,7 +8262,7 @@
   
   
   <span class="md-ellipsis">
-    AI 安全与治理
+    AI safety and governance
     
   </span>
   
@@ -8245,7 +8279,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            AI 安全与治理
+            AI safety and governance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8288,7 +8322,7 @@
   
   
   <span class="md-ellipsis">
-    威胁建模
+    Threat modeling
     
   </span>
   
@@ -8305,7 +8339,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_2">
             <span class="md-nav__icon md-icon"></span>
-            威胁建模
+            Threat modeling
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8323,7 +8357,7 @@
   
   
   <span class="md-ellipsis">
-    AI 威胁建模与攻击面
+    Chapter 1: AI System Threat Modeling and the Attack Surface
     
   </span>
   
@@ -8381,7 +8415,7 @@
   
   
   <span class="md-ellipsis">
-    提示与内容层攻击
+    Prompt and content attacks
     
   </span>
   
@@ -8398,7 +8432,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_3">
             <span class="md-nav__icon md-icon"></span>
-            提示与内容层攻击
+            Prompt and content attacks
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8416,7 +8450,7 @@
   
   
   <span class="md-ellipsis">
-    Prompt Injection 与 Jailbreak
+    Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage
     
   </span>
   
@@ -8439,7 +8473,7 @@
   
   
   <span class="md-ellipsis">
-    输出处理与 Secret Exfiltration
+    Chapter 3: Output Handling and Secret Exfiltration
     
   </span>
   
@@ -8499,7 +8533,7 @@
   
   
   <span class="md-ellipsis">
-    数据与模型供应链
+    Data and model supply chains
     
   </span>
   
@@ -8516,7 +8550,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_4">
             <span class="md-nav__icon md-icon"></span>
-            数据与模型供应链
+            Data and model supply chains
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8534,7 +8568,7 @@
   
   
   <span class="md-ellipsis">
-    训练、微调与 RAG 投毒
+    Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning
     
   </span>
   
@@ -8557,7 +8591,7 @@
   
   
   <span class="md-ellipsis">
-    模型供应链与序列化风险
+    Chapter 5: Model Supply Chains and Serialization Risks
     
   </span>
   
@@ -8580,7 +8614,7 @@
   
   
   <span class="md-ellipsis">
-    隐私、PII 与记忆泄漏
+    Chapter 6: Privacy, PII, and Memory Leakage
     
   </span>
   
@@ -8638,7 +8672,7 @@
   
   
   <span class="md-ellipsis">
-    Agent 与执行环境
+    Agents and execution environments
     
   </span>
   
@@ -8655,7 +8689,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_5">
             <span class="md-nav__icon md-icon"></span>
-            Agent 与执行环境
+            Agents and execution environments
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8673,7 +8707,7 @@
   
   
   <span class="md-ellipsis">
-    最小权限与身份治理
+    Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A
     
   </span>
   
@@ -8696,7 +8730,7 @@
   
   
   <span class="md-ellipsis">
-    代码与浏览器沙箱
+    Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use
     
   </span>
   
@@ -8754,7 +8788,7 @@
   
   
   <span class="md-ellipsis">
-    评测、治理与保障
+    Evaluation, governance, and assurance
     
   </span>
   
@@ -8771,7 +8805,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_11_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11_6">
             <span class="md-nav__icon md-icon"></span>
-            评测、治理与保障
+            Evaluation, governance, and assurance
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8789,7 +8823,7 @@
   
   
   <span class="md-ellipsis">
-    安全评测、红队与持续保障
+    Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance
     
   </span>
   
@@ -8812,7 +8846,7 @@
   
   
   <span class="md-ellipsis">
-    风险分级、审计与内容出处
+    Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance
     
   </span>
   
@@ -8937,7 +8971,7 @@
   
   
   <span class="md-ellipsis">
-    基础与交付方法
+    Foundations and delivery
     
   </span>
   
@@ -8954,7 +8988,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_2">
             <span class="md-nav__icon md-icon"></span>
-            基础与交付方法
+            Foundations and delivery
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8972,7 +9006,7 @@
   
   
   <span class="md-ellipsis">
-    从业务问题到可复用生产系统
+    Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems
     
   </span>
   
@@ -9028,7 +9062,7 @@
   
   
   <span class="md-ellipsis">
-    现场经验与踩坑
+    Field practice and lessons
     
   </span>
   
@@ -9045,7 +9079,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_12_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_12_3">
             <span class="md-nav__icon md-icon"></span>
-            现场经验与踩坑
+            Field practice and lessons
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9063,7 +9097,7 @@
   
   
   <span class="md-ellipsis">
-    FDE 项目踩坑与交付经验
+    Chapter 2: FDE Delivery Pitfalls and Lessons
     
   </span>
   
@@ -9102,7 +9136,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -9111,60 +9145,60 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#71" class="md-nav__link">
+  <a href="#71-the-first-principle-of-model-selection" class="md-nav__link">
     <span class="md-ellipsis">
-      7.1 选型的第一原则
+      7.1 The first principle of model selection
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#72" class="md-nav__link">
+  <a href="#72-why-leaderboards-are-not-enough" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2 为什么不能只看榜单
+      7.2 Why leaderboards are not enough
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.2 为什么不能只看榜单">
+    <nav class="md-nav" aria-label="7.2 Why leaderboards are not enough">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#721" class="md-nav__link">
+  <a href="#721-leaderboard-overfitting" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.1 榜单过拟合
+      7.2.1 Leaderboard overfitting
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#722" class="md-nav__link">
+  <a href="#722-retrieval-scores-are-not-end-to-end-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.2 检索分数不等于端到端质量
+      7.2.2 Retrieval scores are not end-to-end quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#723" class="md-nav__link">
+  <a href="#723-language-and-domain-bias" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.3 语言与领域偏置
+      7.2.3 Language and domain bias
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#724" class="md-nav__link">
+  <a href="#724-length-and-text-form-bias" class="md-nav__link">
     <span class="md-ellipsis">
-      7.2.4 长度与形态偏置
+      7.2.4 Length and text-form bias
     </span>
   </a>
   
@@ -9176,28 +9210,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#73" class="md-nav__link">
+  <a href="#73-a-sound-selection-process" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3 正确的选型流程
+      7.3 A sound selection process
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.3 正确的选型流程">
+    <nav class="md-nav" aria-label="7.3 A sound selection process">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#731" class="md-nav__link">
+  <a href="#731-how-to-build-the-evaluation-set" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.1 评测集怎么构造
+      7.3.1 How to build the evaluation set
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#732" class="md-nav__link">
+  <a href="#732-the-essential-baseline" class="md-nav__link">
     <span class="md-ellipsis">
-      7.3.2 必测的对照组
+      7.3.2 The essential baseline
     </span>
   </a>
   
@@ -9209,28 +9243,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#74" class="md-nav__link">
+  <a href="#74-what-matters-besides-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4 除了效果，还要看什么
+      7.4 What matters besides quality?
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.4 除了效果，还要看什么">
+    <nav class="md-nav" aria-label="7.4 What matters besides quality?">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#741" class="md-nav__link">
+  <a href="#741-more-dimensions-are-not-always-better" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.1 维度不是越高越好
+      7.4.1 More dimensions are not always better
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#742-api" class="md-nav__link">
+  <a href="#742-the-hidden-risk-of-api-models" class="md-nav__link">
     <span class="md-ellipsis">
-      7.4.2 API 模型的隐性风险
+      7.4.2 The hidden risk of API models
     </span>
   </a>
   
@@ -9242,100 +9276,100 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#75" class="md-nav__link">
+  <a href="#75-common-model-candidates" class="md-nav__link">
     <span class="md-ellipsis">
-      7.5 常见候选模型
+      7.5 Common model candidates
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#76-embedding" class="md-nav__link">
+  <a href="#76-is-fine-tuning-an-embedding-model-worthwhile" class="md-nav__link">
     <span class="md-ellipsis">
-      7.6 微调 Embedding 模型值不值
+      7.6 Is fine-tuning an embedding model worthwhile?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#77" class="md-nav__link">
+  <a href="#77-common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7 常见错误
+      7.7 Common mistakes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="7.7 常见错误">
+    <nav class="md-nav" aria-label="7.7 Common mistakes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#771" class="md-nav__link">
+  <a href="#771-looking-only-at-leaderboard-rankings" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.1 只看榜单排名
+      7.7.1 Looking only at leaderboard rankings
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#772" class="md-nav__link">
+  <a href="#772-skipping-tests-on-application-data" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.2 不做业务数据实测
+      7.7.2 Skipping tests on application data
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#773-bm25" class="md-nav__link">
+  <a href="#773-omitting-the-bm25-baseline" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.3 不设 BM25 对照组
+      7.7.3 Omitting the BM25 baseline
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#774" class="md-nav__link">
+  <a href="#774-measuring-retrieval-but-not-end-to-end-quality" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.4 只测检索指标不测端到端
+      7.7.4 Measuring retrieval but not end-to-end quality
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#775" class="md-nav__link">
+  <a href="#775-pursuing-higher-dimensionality-blindly" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.5 盲目追求高维度
+      7.7.5 Pursuing higher dimensionality blindly
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#776-chunk" class="md-nav__link">
+  <a href="#776-ignoring-the-relationship-between-input-limits-and-chunk-size" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.6 忘记模型输入长度与 chunk 大小的匹配
+      7.7.6 Ignoring the relationship between input limits and chunk size
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#777-api" class="md-nav__link">
+  <a href="#777-not-pinning-api-model-versions" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.7 不锁定 API 模型版本
+      7.7.7 Not pinning API model versions
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#778-embedding" class="md-nav__link">
+  <a href="#778-treating-embedding-fine-tuning-as-the-first-optimization" class="md-nav__link">
     <span class="md-ellipsis">
-      7.7.8 把微调 Embedding 当成首选优化项
+      7.7.8 Treating embedding fine-tuning as the first optimization
     </span>
   </a>
   
@@ -9347,18 +9381,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#78" class="md-nav__link">
+  <a href="#78-summary" class="md-nav__link">
     <span class="md-ellipsis">
-      7.8 本章总结
+      7.8 Summary
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
-      参考资料
+      References
     </span>
   </a>
   
@@ -9380,7 +9414,7 @@
 
 
   
-    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/rag/02-ingestion-indexing/07-embedding-selection.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/zongyangbigpolo/awesome-ai-roadmap/edit/main/docs/rag/02-ingestion-indexing/07-embedding-selection.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -9388,195 +9422,195 @@
   
 
 
-<h1 id="embedding">第七章：Embedding 模型选型与评估<a class="headerlink" href="#embedding" title="Permanent link">&para;</a></h1>
-<h2 id="71">7.1 选型的第一原则<a class="headerlink" href="#71" title="Permanent link">&para;</a></h2>
-<p>结论很直接：</p>
+<h1 id="chapter-7-selecting-and-evaluating-embedding-models"><span id="embedding" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 7: Selecting and Evaluating Embedding Models<a class="headerlink" href="#chapter-7-selecting-and-evaluating-embedding-models" title="Permanent link">&para;</a></h1>
+<h2 id="71-the-first-principle-of-model-selection"><span id="71" class="legacy-heading-anchor" aria-hidden="true"></span>7.1 The first principle of model selection<a class="headerlink" href="#71-the-first-principle-of-model-selection" title="Permanent link">&para;</a></h2>
+<p>The conclusion is straightforward:</p>
 <blockquote>
-<p><strong>不要照着公开榜单排名直接选模型，要在你自己的业务数据上实测。</strong></p>
+<p><strong>Do not choose a model directly from public leaderboard rankings. Test it on your own application data.</strong></p>
 </blockquote>
-<p>榜单适合缩小候选范围，不适合直接替代选型。原因下一节展开。</p>
-<h2 id="72">7.2 为什么不能只看榜单<a class="headerlink" href="#72" title="Permanent link">&para;</a></h2>
-<p>MTEB 是当前最常用的文本嵌入评测基准，覆盖分类、聚类、检索、重排等多类任务。它很有价值，但<strong>有四个常见局限</strong>：</p>
+<p>Leaderboards help narrow the field, but cannot replace the selection process. The next section explains why.</p>
+<h2 id="72-why-leaderboards-are-not-enough"><span id="72" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 Why leaderboards are not enough<a class="headerlink" href="#72-why-leaderboards-are-not-enough" title="Permanent link">&para;</a></h2>
+<p>MTEB is currently the most widely used text embedding benchmark, covering tasks such as classification, clustering, retrieval, and reranking. It is valuable, but has <strong>four common limitations</strong>:</p>
 <pre class="mermaid"><code>flowchart TB
-    M[只看 MTEB 排名] --&gt; P1[榜单过拟合]
-    M --&gt; P2[检索分数不预测端到端质量]
-    M --&gt; P3[语言与文体偏置]
-    M --&gt; P4[长度分布偏置]
+    M[Rely only on&lt;br/&gt;MTEB rankings] --&gt; P1[Leaderboard overfitting]
+    M --&gt; P2[Retrieval scores do not predict&lt;br/&gt;end-to-end quality]
+    M --&gt; P3[Language and text-style bias]
+    M --&gt; P4[Length-distribution bias]
 
-    P1 --&gt; D1[模型针对公开集调优&lt;br/&gt;分数虚高]
-    P2 --&gt; D2[召回好 不等于 答案好]
-    P3 --&gt; D3[所选子榜的语言与领域&lt;br/&gt;未必匹配业务]
-    P4 --&gt; D4[检查子任务长度分布&lt;br/&gt;而非只看总分]</code></pre>
-<h3 id="721">7.2.1 榜单过拟合<a class="headerlink" href="#721" title="Permanent link">&para;</a></h3>
-<p>MTEB 的数据集是公开的。模型开发者可以针对这些数据集反复调优，导致榜单分数<strong>高估了在未见过的数据上的真实表现</strong>。这是所有公开榜单的通病，不是 MTEB 独有。</p>
-<h3 id="722">7.2.2 检索分数不等于端到端质量<a class="headerlink" href="#722" title="Permanent link">&para;</a></h3>
-<p><strong>这是最重要的一条。</strong> RAG 的最终目标是答案质量，而检索指标只是中间环节。</p>
-<p>检索指标提升不必然带来答案质量提升——比如召回了更多相关但重复的内容，检索指标上升，但对生成没有帮助，反而挤占了 Prompt 预算（第二章 2.6 节）。</p>
-<h3 id="723">7.2.3 语言与领域偏置<a class="headerlink" href="#723" title="Permanent link">&para;</a></h3>
-<p>MTEB 原始版本以英语和通用文本为主。你的场景可能是中文的法律条款、医疗病历或代码——这些领域的表现<strong>与榜单排名的相关性可能很弱</strong>。</p>
-<p>后续的多语言扩展版本（MMTEB）改善了语言覆盖，但<strong>领域特异性的问题依然存在</strong>。</p>
-<h3 id="724">7.2.4 长度与形态偏置<a class="headerlink" href="#724" title="Permanent link">&para;</a></h3>
-<p>要检查实际使用的子榜和数据集。MMTEB 已包含长文档与代码检索等任务，不能笼统说整个榜单都只测短文本；若所选任务的长度分布与业务不同，总分就不足以判断长文档或整段错误日志的检索能力。</p>
-<h2 id="73">7.3 正确的选型流程<a class="headerlink" href="#73" title="Permanent link">&para;</a></h2>
+    P1 --&gt; D1[Tuning for public datasets&lt;br/&gt;can inflate scores]
+    P2 --&gt; D2[Good recall does not imply&lt;br/&gt;good answers]
+    P3 --&gt; D3[Languages and domains in a sub-leaderboard&lt;br/&gt;may not match the application]
+    P4 --&gt; D4[Check subtask length distributions,&lt;br/&gt;not just the aggregate score]</code></pre>
+<h3 id="721-leaderboard-overfitting"><span id="721" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.1 Leaderboard overfitting<a class="headerlink" href="#721-leaderboard-overfitting" title="Permanent link">&para;</a></h3>
+<p>MTEB datasets are public. Model developers can repeatedly tune against them, causing leaderboard scores to <strong>overestimate performance on unseen data</strong>. This is a general problem with public benchmarks, not something unique to MTEB.</p>
+<h3 id="722-retrieval-scores-are-not-end-to-end-quality"><span id="722" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.2 Retrieval scores are not end-to-end quality<a class="headerlink" href="#722-retrieval-scores-are-not-end-to-end-quality" title="Permanent link">&para;</a></h3>
+<p><strong>This is the most important limitation.</strong> RAG ultimately aims for good answers; retrieval metrics measure only an intermediate stage.</p>
+<p>Better retrieval metrics do not necessarily produce better answers. For example, retrieving more relevant but redundant content can improve a retrieval metric without helping generation, while consuming the prompt budget discussed in Chapter 2, Section 2.6.</p>
+<h3 id="723-language-and-domain-bias"><span id="723" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.3 Language and domain bias<a class="headerlink" href="#723-language-and-domain-bias" title="Permanent link">&para;</a></h3>
+<p>The original MTEB focused primarily on English and general-purpose text. Your application might involve Chinese legal clauses, medical records, or code; performance in these domains <strong>may correlate only weakly with leaderboard rankings</strong>.</p>
+<p>The later multilingual expansion, MMTEB, improves language coverage, but <strong>domain-specific limitations remain</strong>.</p>
+<h3 id="724-length-and-text-form-bias"><span id="724" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.4 Length and text-form bias<a class="headerlink" href="#724-length-and-text-form-bias" title="Permanent link">&para;</a></h3>
+<p>Inspect the actual sub-leaderboard and datasets you use. MMTEB already includes long-document and code retrieval tasks, so it is inaccurate to say the entire benchmark tests only short text. If the selected tasks have a different length distribution from your application, the aggregate score is insufficient to judge retrieval of long documents or complete error logs.</p>
+<h2 id="73-a-sound-selection-process"><span id="73" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 A sound selection process<a class="headerlink" href="#73-a-sound-selection-process" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    S1[1. 用榜单圈定候选&lt;br/&gt;3-5 个模型] --&gt; S2[2. 构造业务评测集]
-    S2 --&gt; S3[3. 同一套切分和参数下&lt;br/&gt;分别建库]
-    S3 --&gt; S4[4. 测检索指标&lt;br/&gt;Hit@K MRR NDCG]
-    S4 --&gt; S5[5. 测端到端答案质量]
-    S5 --&gt; S6[6. 评估成本 延迟 部署约束]
-    S6 --&gt; S7[7. 决策]</code></pre>
-<p><strong>榜单的正确用法是「筛选候选池」，而不是「给出答案」。</strong></p>
-<h3 id="731">7.3.1 评测集怎么构造<a class="headerlink" href="#731" title="Permanent link">&para;</a></h3>
-<p>这是整个流程里最花时间但最有价值的一步。</p>
+    S1[1. Use leaderboards to shortlist&lt;br/&gt;3-5 models] --&gt; S2[2. Build an application-specific&lt;br/&gt;evaluation set]
+    S2 --&gt; S3[3. Build a separate index for each model&lt;br/&gt;with the same chunking and settings]
+    S3 --&gt; S4[4. Measure retrieval metrics&lt;br/&gt;Hit@K MRR NDCG]
+    S4 --&gt; S5[5. Evaluate end-to-end&lt;br/&gt;answer quality]
+    S5 --&gt; S6[6. Assess cost, latency,&lt;br/&gt;and deployment constraints]
+    S6 --&gt; S7[7. Decide]</code></pre>
+<p><strong>A leaderboard should define the candidate pool, not make the decision.</strong></p>
+<h3 id="731-how-to-build-the-evaluation-set"><span id="731" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.1 How to build the evaluation set<a class="headerlink" href="#731-how-to-build-the-evaluation-set" title="Permanent link">&para;</a></h3>
+<p>This is the most time-consuming step, and the most valuable.</p>
 <ul>
-<li><strong>规模</strong>：先用少量样例发现大问题，再按目标差异、置信区间和业务分组补样本；几十或几百条都不自动保证能区分模型；</li>
-<li><strong>来源</strong>：<strong>优先用真实用户问题</strong>，其次是业务专家出题，最后才是 LLM 生成；</li>
-<li><strong>标注</strong>：每个问题标注哪些 chunk 是正确依据（<strong>可以多个</strong>）；</li>
-<li><strong>覆盖</strong>：要包含简单事实查询、同义表述、专业术语、多跳问题、以及<strong>知识库里根本没有答案的问题</strong>。</li>
+<li><strong>Size</strong>: start with a small set to expose major problems, then add examples according to the differences you need to detect, confidence intervals, and application segments. Neither dozens nor hundreds of examples automatically guarantee that models can be distinguished.</li>
+<li><strong>Sources</strong>: <strong>prioritize real user questions</strong>, followed by questions from domain experts; use LLM-generated questions last.</li>
+<li><strong>Labels</strong>: annotate which chunks provide valid evidence for each question; <strong>there may be more than one</strong>.</li>
+<li><strong>Coverage</strong>: include simple fact lookups, paraphrases, specialized terminology, multi-hop questions, and <strong>questions whose answers are absent from the knowledge base</strong>.</li>
 </ul>
-<p>无答案问题用于测试错误接受和拒答，但有答案问题同样可能出现误读、数字错误和错引；两类都应标注（第十七章展开）。</p>
-<p>如果比较不同切分策略，应将标签锚定到原文证据 span 和版本，再映射到各自 chunk，避免把某一版 chunk ID 当作永久真值。按文档、主题或时间划分开发与测试集，同一文档的近重复问题不能跨集合泄漏；候选模型用各自官方前缀和 tokenizer，但共享语料快照与评测预算。</p>
-<h3 id="732">7.3.2 必测的对照组<a class="headerlink" href="#732" title="Permanent link">&para;</a></h3>
-<p>评测时<strong>一定要把 BM25 关键词检索作为对照组</strong>。</p>
-<p>原因是：<strong>在专业术语密集的领域（医疗、法律、代码、含大量型号和错误码的技术文档），稠密向量检索经常打不过 BM25。</strong> 如果不设这个对照组，你可能花大力气选了个"最好的"向量模型，却不知道最简单的关键词检索效果更好。</p>
-<h2 id="74">7.4 除了效果，还要看什么<a class="headerlink" href="#74" title="Permanent link">&para;</a></h2>
+<p>Unanswerable questions test incorrect acceptance and abstention. Answerable questions can also produce misinterpretations, numerical errors, and incorrect citations, so both types need labels, as Chapter 17 explains.</p>
+<p>When comparing chunking strategies, anchor labels to evidence spans and versions in the original documents, then map them to each strategy's chunks. Do not treat one version's chunk IDs as permanent ground truth. Split development and test sets by document, topic, or time; near-duplicate questions about the same document must not leak across sets. Each candidate model should use its own official prefixes and tokenizer, while sharing the same corpus snapshot and evaluation budget.</p>
+<h3 id="732-the-essential-baseline"><span id="732" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.2 The essential baseline<a class="headerlink" href="#732-the-essential-baseline" title="Permanent link">&para;</a></h3>
+<p><strong>Always include BM25 keyword retrieval as a baseline.</strong></p>
+<p>The reason is practical: <strong>dense vector retrieval often loses to BM25 in terminology-heavy domains</strong>, including medicine, law, code, and technical documentation rich in model numbers and error codes. Without this baseline, you may spend considerable effort selecting the “best” vector model without discovering that simple keyword retrieval works better.</p>
+<h2 id="74-what-matters-besides-quality"><span id="74" class="legacy-heading-anchor" aria-hidden="true"></span>7.4 What matters besides quality?<a class="headerlink" href="#74-what-matters-besides-quality" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>维度</th>
-<th>关注点</th>
+<th>Dimension</th>
+<th>What to check</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>向量维度</strong></td>
-<td>影响原始向量载荷与距离计算量，完整检索延迟还受索引和硬件影响</td>
+<td><strong>Vector dimensions</strong></td>
+<td>Affect raw vector payload and distance-computation cost; total retrieval latency also depends on the index and hardware</td>
 </tr>
 <tr>
-<td><strong>最大输入长度</strong></td>
-<td>必须容纳你的 chunk 大小（第四章）</td>
+<td><strong>Maximum input length</strong></td>
+<td>Must accommodate your chunk size, as discussed in Chapter 4</td>
 </tr>
 <tr>
-<td><strong>多语言能力</strong></td>
-<td>中英混排、跨语言检索是否需要</td>
+<td><strong>Multilingual capability</strong></td>
+<td>Whether mixed Chinese–English text or cross-language retrieval is needed</td>
 </tr>
 <tr>
-<td><strong>推理成本</strong></td>
-<td>自部署需要多少 GPU；API 按量计费多少</td>
+<td><strong>Inference cost</strong></td>
+<td>GPU requirements for self-hosting; usage-based charges for an API</td>
 </tr>
 <tr>
-<td><strong>部署方式</strong></td>
-<td>数据能否出境/出内网，是否必须私有化</td>
+<td><strong>Deployment model</strong></td>
+<td>Whether data may cross national or private-network boundaries; whether private deployment is mandatory</td>
 </tr>
 <tr>
-<td><strong>许可证</strong></td>
-<td>商用是否受限</td>
+<td><strong>License</strong></td>
+<td>Restrictions on commercial use</td>
 </tr>
 <tr>
-<td><strong>模型对与向量空间兼容性</strong></td>
-<td>Query/Document 编码器是否是模型卡声明的兼容对，且输出维度、归一化和相似度度量一致</td>
+<td><strong>Encoder-pair and vector-space compatibility</strong></td>
+<td>Whether query and document encoders are a compatible pair declared by the model card, with consistent output dimensions, normalization, and similarity metrics</td>
 </tr>
 <tr>
-<td><strong>稳定性</strong></td>
-<td>API 模型是否会静默升级导致向量空间漂移</td>
+<td><strong>Stability</strong></td>
+<td>Whether an API model might be silently upgraded, causing vector-space drift</td>
 </tr>
 </tbody>
 </table>
-<h3 id="741">7.4.1 维度不是越高越好<a class="headerlink" href="#741" title="Permanent link">&para;</a></h3>
-<p>同数据类型下，原始向量存储随维度线性增长；单次距离计算也近似线性，但完整 ANN 延迟还受遍历、缓存和 I/O 影响，不能直接说延迟翻倍。</p>
-<p><strong>这里有一个重要的现代技术：Matryoshka 表示学习（MRL）。</strong></p>
-<p>MRL 训练让指定的前缀维度也承担表示目标。只有声明支持这种用法的模型才能按其契约降维；截断后通常需重新归一化，效果损失必须实测，不能任意截取普通向量。</p>
+<h3 id="741-more-dimensions-are-not-always-better"><span id="741" class="legacy-heading-anchor" aria-hidden="true"></span>7.4.1 More dimensions are not always better<a class="headerlink" href="#741-more-dimensions-are-not-always-better" title="Permanent link">&para;</a></h3>
+<p>For a fixed data type, raw vector storage grows linearly with dimensionality, as does approximately the cost of a single distance calculation. Total ANN latency also depends on traversal, caching, and I/O, so doubling dimensions does not simply mean doubling latency.</p>
+<p><strong>An important modern technique is Matryoshka Representation Learning (MRL).</strong></p>
+<p>MRL trains designated prefixes of a vector to satisfy representation objectives too. Only models that explicitly support this use can be shortened according to their contract. Truncation usually requires renormalization, and quality loss must be measured. Arbitrarily taking the first dimensions of an ordinary vector is not equivalent.</p>
 <pre class="mermaid"><code>flowchart LR
-    V[3072 维向量] --&gt; C1[取前 256 维&lt;br/&gt;粗排 极省存储]
-    V --&gt; C2[取前 1024 维&lt;br/&gt;常规检索]
-    V --&gt; C3[完整 3072 维&lt;br/&gt;重打分对照]</code></pre>
-<p>可用低维表示粗筛、全维表示重打分，但后者要求仍存有全维向量。OpenAI 在 2024 年发布的 <code>text-embedding-3</code> 系列支持 <code>dimensions</code> 参数缩短表示；这不是所有 Embedding API 的通用参数，需依官方接口与模型能力使用。</p>
-<h3 id="742-api">7.4.2 API 模型的隐性风险<a class="headerlink" href="#742-api" title="Permanent link">&para;</a></h3>
-<p>调用 API 的 Embedding 模型有一个自部署没有的风险：<strong>服务方可能在你不知情的情况下更新模型版本</strong>。</p>
-<p>一旦向量空间发生变化，<strong>新写入的向量和历史向量就不在同一个空间了</strong>，检索结果会莫名其妙地劣化，而且极难排查。双塔检索也不必要求 Query 与 Document 使用同一个权重：可以使用模型发布者明确声明为一对、共同训练并可比较的 query/document encoder；不能把任意两个“维度相同”的模型混用。</p>
-<p><strong>应对措施</strong>：锁定模型对及其版本、归一化方式和相似度度量；在索引元数据记录这组契约；服务启动时校验 Query 编码器与索引的 Document 编码器兼容，不兼容则重建或拒绝查询，并定期运行固定检索回归集。</p>
-<h2 id="75">7.5 常见候选模型<a class="headerlink" href="#75" title="Permanent link">&para;</a></h2>
-<p><strong>注意：模型迭代很快，下表是选型思路而非推荐清单，实际选型请以当时的实测为准。</strong></p>
+    V[3072-dimensional vector] --&gt; C1[First 256 dimensions&lt;br/&gt;Coarse ranking with very low storage]
+    V --&gt; C2[First 1024 dimensions&lt;br/&gt;Standard retrieval]
+    V --&gt; C3[Full 3072 dimensions&lt;br/&gt;Rescoring comparison]</code></pre>
+<p>Low-dimensional representations can filter candidates before full-dimensional rescoring, but the latter still requires retaining the full vectors. OpenAI's <code>text-embedding-3</code> family, released in 2024, supports shortening representations with the <code>dimensions</code> parameter. This is not a universal embedding API parameter; use it according to the official interface and model capabilities.</p>
+<h3 id="742-the-hidden-risk-of-api-models"><span id="742-api" class="legacy-heading-anchor" aria-hidden="true"></span>7.4.2 The hidden risk of API models<a class="headerlink" href="#742-the-hidden-risk-of-api-models" title="Permanent link">&para;</a></h3>
+<p>API-based embedding models introduce a risk absent from self-hosted models: <strong>the provider may update the model version without your knowledge</strong>.</p>
+<p>If the vector space changes, <strong>newly written vectors and historical vectors no longer occupy the same space</strong>. Retrieval quality can deteriorate for no obvious reason, making diagnosis extremely difficult. A bi-encoder also need not use identical weights for the query and document: the publisher may explicitly provide a jointly trained, comparable query/document encoder pair. What you cannot do is mix arbitrary models merely because their dimensions match.</p>
+<p><strong>Mitigation</strong>: pin the encoder pair, versions, normalization, and similarity metric. Record this contract in index metadata. At service startup, verify that the query encoder is compatible with the index's document encoder; rebuild or reject queries if it is not. Run a fixed retrieval regression set periodically.</p>
+<h2 id="75-common-model-candidates"><span id="75" class="legacy-heading-anchor" aria-hidden="true"></span>7.5 Common model candidates<a class="headerlink" href="#75-common-model-candidates" title="Permanent link">&para;</a></h2>
+<p><strong>Models evolve quickly. This table illustrates selection considerations, not a recommendation list; choose based on measurements available at the time.</strong></p>
 <table>
 <thead>
 <tr>
-<th>类别</th>
-<th>代表</th>
-<th>特点</th>
+<th>Category</th>
+<th>Examples</th>
+<th>Characteristics</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>中文/多语言开放权重</td>
-<td>BGE 系列、Qwen3-Embedding 系列</td>
-<td>可纳入中文候选池，按具体型号核对语言、许可证和部署要求</td>
+<td>Chinese/multilingual open-weight models</td>
+<td>BGE and Qwen3-Embedding families</td>
+<td>Candidates for Chinese applications; verify language support, license, and deployment requirements for the specific model</td>
 </tr>
 <tr>
-<td>多语言长文本开源</td>
-<td>bge-m3 类</td>
-<td>支持长输入，且可同时输出稠密与稀疏表示</td>
+<td>Multilingual long-text open-source models</td>
+<td>Models such as bge-m3</td>
+<td>Support long inputs and can output both dense and sparse representations</td>
 </tr>
 <tr>
-<td>通用开源</td>
-<td>E5、GTE 系列</td>
-<td>通用性好，社区成熟</td>
+<td>General-purpose open-source models</td>
+<td>E5 and GTE families</td>
+<td>Broad applicability and established communities</td>
 </tr>
 <tr>
-<td>商用 API</td>
-<td>OpenAI text-embedding-3 系列</td>
-<td>通过官方 <code>dimensions</code> 参数缩短输出，评测所选维度</td>
+<td>Commercial APIs</td>
+<td>OpenAI text-embedding-3 family</td>
+<td>Shorten outputs through the official <code>dimensions</code> parameter and evaluate the chosen dimensionality</td>
 </tr>
 </tbody>
 </table>
-<p>BGE-M3 可输出稠密、学习式稀疏和多向量表示，一次编码可服务多种检索；但不同表示通常仍需各自索引与查询路径，不会自动免除融合、容量规划和运维成本。</p>
-<h2 id="76-embedding">7.6 微调 Embedding 模型值不值<a class="headerlink" href="#76-embedding" title="Permanent link">&para;</a></h2>
-<p><strong>先说结论：在多数场景里，这不是第一优先级的优化项。</strong></p>
-<p>优先级更高的通常是：切分策略（第四、五章）、混合检索（第十三章）、Rerank（第十三章）。这三个的投入产出比通常都高于微调 Embedding。</p>
-<p><strong>什么情况下值得微调</strong>：</p>
+<p>BGE-M3 can produce dense, learned sparse, and multi-vector representations, allowing one encoding pass to serve several retrieval methods. Different representations generally still require their own indexes and query paths; this does not automatically eliminate fusion, capacity planning, or operational costs.</p>
+<h2 id="76-is-fine-tuning-an-embedding-model-worthwhile"><span id="76-embedding" class="legacy-heading-anchor" aria-hidden="true"></span>7.6 Is fine-tuning an embedding model worthwhile?<a class="headerlink" href="#76-is-fine-tuning-an-embedding-model-worthwhile" title="Permanent link">&para;</a></h2>
+<p><strong>In most applications, it should not be the first optimization priority.</strong></p>
+<p>Chunking strategy (Chapters 4 and 5), hybrid retrieval (Chapter 13), and reranking (Chapter 13) usually deserve priority. Their return on effort is often higher than that of embedding fine-tuning.</p>
+<p><strong>Fine-tuning becomes worthwhile when:</strong></p>
 <ul>
-<li>领域术语与通用语义<strong>差异极大</strong>（如专业医学、特定企业黑话）；</li>
-<li>已有经过审核的真实 Query—文档配对数据，数量、难负例与覆盖足以支撑训练和独立验证；</li>
-<li>上述三个更简单的优化都做完了，效果仍不达标。</li>
+<li>Domain terminology <strong>differs sharply from general semantics</strong>, as in specialized medicine or company-specific jargon.</li>
+<li>Reviewed, real query–document pairs are available, with enough examples, hard negatives, and coverage for training and independent validation.</li>
+<li>The three simpler improvements above are already in place, yet quality remains below requirements.</li>
 </ul>
-<p><strong>微调的隐性成本必须说清楚</strong>：</p>
-<p>若微调改变 Document 表示，历史文档通常需重嵌入和重建索引。固定 Document 编码器、只训练兼容 Query 侧是例外，但必须验证未破坏向量契约。训练还要处理 hard negatives 中的假负例，并保留域外回归集，防止只优化一个领域后整体退化。</p>
-<h2 id="77">7.7 常见错误<a class="headerlink" href="#77" title="Permanent link">&para;</a></h2>
-<h3 id="771">7.7.1 只看榜单排名<a class="headerlink" href="#771" title="Permanent link">&para;</a></h3>
-<p>榜单有过拟合、领域偏置、与端到端质量脱节三重问题。</p>
-<h3 id="772">7.7.2 不做业务数据实测<a class="headerlink" href="#772" title="Permanent link">&para;</a></h3>
-<p>选型的唯一可靠依据是自己数据上的表现。</p>
-<h3 id="773-bm25">7.7.3 不设 BM25 对照组<a class="headerlink" href="#773-bm25" title="Permanent link">&para;</a></h3>
-<p>术语密集领域里 BM25 常常更强，不测就不知道。</p>
-<h3 id="774">7.7.4 只测检索指标不测端到端<a class="headerlink" href="#774" title="Permanent link">&para;</a></h3>
-<p>检索指标提升不必然带来答案质量提升。</p>
-<h3 id="775">7.7.5 盲目追求高维度<a class="headerlink" href="#775" title="Permanent link">&para;</a></h3>
-<p>原始载荷与单次距离计算量随维度增长，完整查询延迟和质量变化未必线性。支持 MRL 的模型提供了可评测的降维方案。</p>
-<h3 id="776-chunk">7.7.6 忘记模型输入长度与 chunk 大小的匹配<a class="headerlink" href="#776-chunk" title="Permanent link">&para;</a></h3>
-<p>超长可能被截断或报错；实际行为由 tokenizer 与服务配置决定。</p>
-<h3 id="777-api">7.7.7 不锁定 API 模型版本<a class="headerlink" href="#777-api" title="Permanent link">&para;</a></h3>
-<p>静默升级会导致向量空间漂移，是最难排查的故障之一。</p>
-<h3 id="778-embedding">7.7.8 把微调 Embedding 当成首选优化项<a class="headerlink" href="#778-embedding" title="Permanent link">&para;</a></h3>
-<p>先用失败样例确认表示是否是瓶颈。改变文档编码器会带来重嵌入和迁移成本；只调整兼容 Query 编码器不必自动重建文档向量。</p>
-<h2 id="78">7.8 本章总结<a class="headerlink" href="#78" title="Permanent link">&para;</a></h2>
+<p><strong>The hidden costs of fine-tuning must be explicit:</strong></p>
+<p>If fine-tuning changes document representations, historical documents usually need re-embedding and the index must be rebuilt. Keeping the document encoder fixed and training only a compatible query encoder is an exception, but the vector contract must be verified. Training also needs to handle false negatives among hard negatives and retain out-of-domain regression sets, so optimizing one domain does not degrade overall performance.</p>
+<h2 id="77-common-mistakes"><span id="77" class="legacy-heading-anchor" aria-hidden="true"></span>7.7 Common mistakes<a class="headerlink" href="#77-common-mistakes" title="Permanent link">&para;</a></h2>
+<h3 id="771-looking-only-at-leaderboard-rankings"><span id="771" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.1 Looking only at leaderboard rankings<a class="headerlink" href="#771-looking-only-at-leaderboard-rankings" title="Permanent link">&para;</a></h3>
+<p>Leaderboards can suffer from overfitting, domain bias, and a disconnect from end-to-end quality.</p>
+<h3 id="772-skipping-tests-on-application-data"><span id="772" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.2 Skipping tests on application data<a class="headerlink" href="#772-skipping-tests-on-application-data" title="Permanent link">&para;</a></h3>
+<p>Performance on your own data is the only reliable basis for selection.</p>
+<h3 id="773-omitting-the-bm25-baseline"><span id="773-bm25" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.3 Omitting the BM25 baseline<a class="headerlink" href="#773-omitting-the-bm25-baseline" title="Permanent link">&para;</a></h3>
+<p>BM25 is often stronger in terminology-heavy domains. Without testing it, you will not know.</p>
+<h3 id="774-measuring-retrieval-but-not-end-to-end-quality"><span id="774" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.4 Measuring retrieval but not end-to-end quality<a class="headerlink" href="#774-measuring-retrieval-but-not-end-to-end-quality" title="Permanent link">&para;</a></h3>
+<p>Better retrieval metrics do not necessarily produce better answers.</p>
+<h3 id="775-pursuing-higher-dimensionality-blindly"><span id="775" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.5 Pursuing higher dimensionality blindly<a class="headerlink" href="#775-pursuing-higher-dimensionality-blindly" title="Permanent link">&para;</a></h3>
+<p>Raw payload and single-distance computation grow with dimensionality; total query latency and quality need not change linearly. MRL-compatible models provide a dimension-reduction option that can be evaluated.</p>
+<h3 id="776-ignoring-the-relationship-between-input-limits-and-chunk-size"><span id="776-chunk" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.6 Ignoring the relationship between input limits and chunk size<a class="headerlink" href="#776-ignoring-the-relationship-between-input-limits-and-chunk-size" title="Permanent link">&para;</a></h3>
+<p>Overlong inputs may be truncated or rejected. Actual behavior depends on the tokenizer and service configuration.</p>
+<h3 id="777-not-pinning-api-model-versions"><span id="777-api" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.7 Not pinning API model versions<a class="headerlink" href="#777-not-pinning-api-model-versions" title="Permanent link">&para;</a></h3>
+<p>Silent upgrades can cause vector-space drift, one of the hardest failures to diagnose.</p>
+<h3 id="778-treating-embedding-fine-tuning-as-the-first-optimization"><span id="778-embedding" class="legacy-heading-anchor" aria-hidden="true"></span>7.7.8 Treating embedding fine-tuning as the first optimization<a class="headerlink" href="#778-treating-embedding-fine-tuning-as-the-first-optimization" title="Permanent link">&para;</a></h3>
+<p>Use failure cases to determine whether representation quality is the bottleneck. Changing the document encoder incurs re-embedding and migration costs; adjusting only a compatible query encoder does not automatically require rebuilding document vectors.</p>
+<h2 id="78-summary"><span id="78" class="legacy-heading-anchor" aria-hidden="true"></span>7.8 Summary<a class="headerlink" href="#78-summary" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>选型第一原则：榜单用来圈候选，实测用来做决策</strong>；</li>
-<li><strong>MTEB 的四个局限</strong>：榜单过拟合、检索分数不预测端到端质量、语言与领域偏置、长度形态偏置；</li>
-<li><strong>选型流程</strong>：圈候选 → 建业务评测集 → 同参数建库 → 测检索指标 → 测端到端 → 评估成本部署 → 决策；</li>
-<li><strong>评测集必须包含「知识库里没有答案」的问题</strong>，用来检验拒答能力；</li>
-<li><strong>必须设 BM25 对照组</strong>，术语密集领域向量检索常常打不过它；</li>
-<li><strong>效果之外还要看</strong>维度、输入长度、多语言、成本、部署约束、许可证、版本稳定性；</li>
-<li><strong>MRL 让一份向量支持多种维度</strong>，是现代选型的重要考量；</li>
-<li><strong>Query/Document 必须是兼容模型对并处于同一可比较向量空间</strong>；API 模型还要锁版本，发生漂移必须重建；</li>
-<li><strong>微调应由失败样例驱动</strong>，文档表示变化带来重嵌入、双索引迁移和回归成本。</li>
+<li><strong>The first principle: use leaderboards to shortlist and measurements to decide.</strong></li>
+<li><strong>Four MTEB limitations</strong> are leaderboard overfitting, retrieval scores that do not predict end-to-end quality, language/domain bias, and length/text-form bias.</li>
+<li><strong>The selection process</strong> is shortlist → build an application evaluation set → build indexes with matched settings → measure retrieval → measure end-to-end quality → assess cost and deployment → decide.</li>
+<li><strong>Include questions whose answers are absent from the knowledge base</strong> to test abstention.</li>
+<li><strong>Include a BM25 baseline</strong>: vector retrieval often loses to it in terminology-heavy domains.</li>
+<li><strong>Beyond quality, consider</strong> dimensions, input length, multilingual capability, cost, deployment constraints, licensing, and version stability.</li>
+<li><strong>MRL supports multiple dimensionalities within one vector</strong>, making it an important selection consideration.</li>
+<li><strong>Query and document encoders must form a compatible pair in a shared, comparable vector space</strong>. API model versions also need to be pinned; vector-space drift requires rebuilding.</li>
+<li><strong>Fine-tuning should be driven by failure cases</strong>. Changing document representations brings re-embedding, dual-index migration, and regression costs.</li>
 </ol>
-<h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2210.07316">MTEB: Massive Text Embedding Benchmark</a></li>
 <li><a href="https://arxiv.org/abs/2502.13595">MMTEB: Massive Multilingual Text Embedding Benchmark</a></li>
 <li><a href="https://arxiv.org/abs/2205.13147">Matryoshka Representation Learning</a></li>
-<li><a href="https://openai.com/index/new-embedding-models-and-api-updates/">OpenAI：New embedding models and API updates（2024-01-25）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/embeddings">OpenAI：Embedding API 与 dimensions 参数</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B 模型卡</a></li>
+<li><a href="https://openai.com/index/new-embedding-models-and-api-updates/">OpenAI: New embedding models and API updates (2024-01-25)</a></li>
+<li><a href="https://developers.openai.com/api/docs/guides/embeddings">OpenAI: Embedding API and the dimensions parameter</a></li>
+<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B model card</a></li>
 <li><a href="https://arxiv.org/abs/2402.03216">M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation</a></li>
 <li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
 </ul>
@@ -9599,20 +9633,20 @@
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="最后更新">
+    <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月15日 09:55:33 CST">2026-09-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
   </span>
 
     
     
       
   <span class="md-source-file__fact">
-    <span class="md-icon" title="创建日期">
+    <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年8月31日 16:17:00 CST">2026-08-31</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="August 31, 2026 16:17:00 CST">2026-08-31</span>
   </span>
 
     
@@ -9635,7 +9669,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  回到页面顶部
+  Back to top
 </button>
         
       </main>
@@ -9644,33 +9678,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../06-embedding-principles/" class="md-footer__link md-footer__link--prev" aria-label="上一页: Embedding 原理">
+          <a href="../06-embedding-principles/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chapter 6: Embedding Principles and Technical Evolution">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                上一页
+                Previous
               </span>
               <div class="md-ellipsis">
-                Embedding 原理
+                Chapter 6: Embedding Principles and Technical Evolution
               </div>
             </div>
           </a>
         
         
           
-          <a href="../08-vector-database/" class="md-footer__link md-footer__link--next" aria-label="下一页: 向量数据库与 ANN">
+          <a href="../08-vector-database/" class="md-footer__link md-footer__link--next" aria-label="Next: Chapter 8: Vector Databases and ANN Indexes">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                下一页
+                Next
               </span>
               <div class="md-ellipsis">
-                向量数据库与 ANN
+                Chapter 8: Vector Databases and ANN Indexes
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -9719,7 +9753,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>

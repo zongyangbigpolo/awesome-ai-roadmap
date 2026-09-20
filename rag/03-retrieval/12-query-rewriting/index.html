@@ -9361,9 +9361,9 @@
 <p>The cost is an additional generation call. Its latency depends on the model, generated length, service load, and other configuration details, so measure it in the intended setup. If the question concerns a domain the model knows almost nothing about—internal company jargon or a brand-new product name—the hypothetical document may differ greatly from real documents and <strong>make retrieval worse</strong>.</p>
 <h2 id="126-step-back-questions"><span id="126-step-back" class="legacy-heading-anchor" aria-hidden="true"></span>12.6 Step-back questions<a class="headerlink" href="#126-step-back-questions" title="Permanent link">&para;</a></h2>
 <p>Step-back questioning first <strong>abstracts a specific question into a broader one</strong>, retrieves background knowledge, and then returns to the original question.</p>
-<p>“XX 型号电池在零下 20 度的续航衰减多少”
+<p>“XX 型号电池在零下 20 摄氏度的续航衰减多少”
 → First ask “锂电池在低温下的性能特性是什么”</p>
-<p>In English: “How much does the battery runtime of model XX decline at −20 degrees?” → “How do lithium batteries perform at low temperatures?”</p>
+<p>In English: “How much does the battery runtime of model XX decline at −20 °C?” → “How do lithium batteries perform at low temperatures?” This example explicitly uses Celsius; if a user gives only “degrees” and the scale is not established by context, clarify it rather than guessing during rewriting.</p>
 <p>General principles can explain contributing factors, but “cold affects lithium batteries” cannot establish the exact decline for a particular model. A numerical answer still requires data for the relevant model, temperature, and test conditions. Without that data, explain that the value cannot be determined rather than presenting a general principle as a product-specific fact.</p>
 <p>This is suitable for questions requiring reasoning rather than direct lookup, and for knowledge bases rich in explanatory principles. The risk is that excessive abstraction retrieves a large amount of irrelevant general material. <strong>Usually, retrieve with the original query as well and merge the results.</strong></p>
 <h2 id="127-query-decomposition"><span id="127" class="legacy-heading-anchor" aria-hidden="true"></span>12.7 Query decomposition<a class="headerlink" href="#127-query-decomposition" title="Permanent link">&para;</a></h2>
@@ -9528,7 +9528,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

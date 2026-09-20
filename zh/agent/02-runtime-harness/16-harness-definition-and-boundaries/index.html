@@ -9251,7 +9251,7 @@
 <p>面对一个具体功能，判断它属于 Harness 还是属于 Agent/Model 层，可以用三条规则：</p>
 <ol>
 <li><strong>区分策略与执行。</strong> CoT 提示是推理策略；经典 ToT 通常由外部程序多次调用模型、评分和搜索，不是一次模型调用内部的能力。选择候选属于策略，调度、预算和保存搜索状态属于运行时，两者会交叉。</li>
-<li><strong>是否需要在没有模型参与的情况下也能运行。</strong> 权限校验、超时熔断、checkpoint 写入即使模型完全不参与也要执行，这是 Harness 职责；任务分解、反思批评需要模型参与，属于 Agent 层。</li>
+<li><strong>是否需要在没有模型参与的情况下也能运行。</strong> 权限校验、超时熔断、checkpoint 写入即使模型完全不参与也要执行，这是 Harness 职责。由模型生成的任务分解和反思批评属于 Agent 策略决策；分解也可以预先定义在工作流中，或由外部规划器提供，见 6.6 和 11.20 节。调度、持久化这些计划仍是运行时职责。</li>
 <li><strong>区分恢复保证与记忆使用。</strong> 会话能否在崩溃后恢复，由 Harness 和持久化设施保证；要保留、检索哪些经验，由记忆策略决定。长期记忆同样要跨进程存在，因此“需要持久化”不是把所有记忆能力都归入 Harness 的充分条件。</li>
 </ol>
 <h2 id="165-harness">16.5 Harness 的七类子系统（本模块地图）<a class="headerlink" href="#165-harness" title="Permanent link">&para;</a></h2>
@@ -9317,7 +9317,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
   </span>
 
     

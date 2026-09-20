@@ -9312,7 +9312,7 @@
 <h3 id="322">3.2.2 能力优先路由<a class="headerlink" href="#322" title="Permanent link">&para;</a></h3>
 <p>某些任务(代码生成、多步推理)只有少数模型能稳定完成,路由策略需要维护一张「模型-能力」映射表,而不是简单的成本阈值判断。这张表本身要跟随<a href="../../04-evaluation-observability/07-offline-eval-eval-driven-development/">第 7 章</a>的评测结果持续更新——模型能力会随供应商升级而变化。</p>
 <p>能力映射还要覆盖推理档位。同一个模型换了 effort 档位，成功率、延迟和成本都可能变化，因此应把「模型 × 档位」作为路由候选。简单任务可以比较低档位与非推理模型，高难任务再考虑升档；选择要有第 7 章的评测数据支持，不能只凭模型对这一次请求的难度自报。</p>
-<p>模型名没变，也不等于上一轮的推理会自动接上。OpenAI 的 reasoning 项只能在兼容的同一模型族内复用，还要确认当前模式支持，并通过 <code>previous_response_id</code> 或完整重放会话输出项显式传递状态。同模型降档也要满足这些条件。请求失败后，若没有收到可用状态，也没有可引用的已保存响应，就不能把重试当作从中断处续跑。</p>
+<p>模型名没变，也不等于上一轮的推理会自动接上。OpenAI 的 reasoning 项只能在兼容的同一模型族内复用，还要确认当前模式支持，并通过 <code>previous_response_id</code>、关联的 <code>conversation</code>，或手动重放完整响应历史，让当前请求获得先前的响应项。这些是可选的状态管理路径，不是需要一起传入的参数。同模型降档也要满足这些条件。请求失败后，若所选路径没有收到或保存可用状态，就不能把重试当作从中断处续跑。</p>
 <p>换模型时，应按新候选重新检查输出契约和剩余预算；跨供应商切换尤其不能假定内部推理状态可以通用。每次尝试都要记录档位和实际用量：OpenAI 的推理 token 按输出 token 计费，也占用上下文窗口，只看可见答案长度会低估开销。</p>
 <h3 id="323">3.2.3 灰度路由<a class="headerlink" href="#323" title="Permanent link">&para;</a></h3>
 <p>发布新 Prompt 或切换模型版本时,按用户 ID 哈希或请求比例分流一部分流量到新版本,这是<a href="../../05-release-pipeline/10-llm-cicd-canary-ab/">第 10 章</a>灰度发布的路由层实现基础。</p>
@@ -9440,7 +9440,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
   </span>
 
     

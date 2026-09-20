@@ -9381,11 +9381,12 @@
 <p><strong>检索用小的，生成用大的</strong>——这就是方向二的核心范式。</p>
 <p>适合叙述性、上下文连贯的文本。缺点是固定窗口大小不适应变化的语义单元长度。</p>
 <h3 id="532-parent-child">5.3.2 父子切分（Parent-Child）<a class="headerlink" href="#532-parent-child" title="Permanent link">&para;</a></h3>
-<p>句子窗口的结构化版本。把文档切成两级：</p>
+<p>与命中后扩展固定窗口不同，这种方法通过明确的子片段到父片段映射查找上下文：</p>
 <ul>
 <li><strong>子片段</strong>（小）：参与向量化和检索；</li>
-<li><strong>父片段</strong>（大，通常是子片段所属的段落或章节）：命中子片段后，实际返回它的父片段。</li>
+<li><strong>父片段</strong>（大）：命中子片段后实际返回的单元，可以是整篇原文、一个章节，也可以是按长度或递归分隔生成的大块。</li>
 </ul>
+<p>原文不必已有标题层级。例如，<a href="https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py">LangChain 的 <code>ParentDocumentRetriever</code></a> 既支持直接以原文档为父片段，也支持先切出较大的父块。</p>
 <table>
 <thead>
 <tr>
@@ -9398,17 +9399,17 @@
 <tr>
 <td>扩展依据</td>
 <td>位置（前后 N 个）</td>
-<td>结构（所属父块）</td>
+<td>映射到所属父文档或父块</td>
 </tr>
 <tr>
 <td>边界是否语义完整</td>
 <td>不保证</td>
-<td>更贴近结构，但仍可能依赖章节外定义</td>
+<td>不保证；按真实结构构造的父块可能保留完整章节，但仍可能需要外部定义</td>
 </tr>
 <tr>
-<td>是否依赖文档结构</td>
+<td>是否依赖原文已有结构</td>
 <td>否</td>
-<td>是</td>
+<td>否，但需要明确的子片段到父片段映射</td>
 </tr>
 </tbody>
 </table>
@@ -9608,7 +9609,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
   </span>
 
     

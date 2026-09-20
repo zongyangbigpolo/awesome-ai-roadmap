@@ -9331,7 +9331,8 @@ p_\theta(y\mid x_m,x_t)
 <li><strong>Generative pretraining</strong>: predict text, discrete modality tokens, or cross-modal targets.</li>
 <li><strong>Multimodal instruction tuning and preference alignment</strong>: use appropriate data to learn question following, evidence citation, or refusal; adding a modality does not automatically confer these behaviors.</li>
 </ol>
-<p>Specify which parameters are updated at each stage. Original LLaVA first freezes the vision encoder and LLM and trains the projection layer for feature alignment. Its instruction stage trains the projection and LLM while keeping the vision encoder frozen. BLIP-2 pretraining instead uses a Q-Former with frozen models at both ends. Freezing backbones saves training resources and preserves existing capabilities, but a connector alone may not overcome domain differences. Unfreezing more parameters increases adaptation capacity while also increasing resource usage, overfitting, and forgetting risks.</p>
+<p>Specify which parameters are updated at each stage. Original LLaVA first freezes the vision encoder and LLM and trains the projection layer for feature alignment. Its instruction stage trains the projection and LLM while keeping the vision encoder frozen. BLIP-2 pretraining instead uses a Q-Former with frozen models at both ends.</p>
+<p>Freezing backbones saves training resources and leaves their pretrained parameters unchanged. It can reduce forgetting, but trainable connectors or inserted branches still change the combined system's behavior, so retention of existing capabilities needs evaluation. A connector alone may also be insufficient to overcome domain differences. Unfreezing more parameters increases adaptation capacity while also increasing resource usage, overfitting, and forgetting risks.</p>
 <p>Record training-data sources, licenses, languages, sampling methods, and annotation processes. Mismatched image–text pairs, ASR noise, misaligned video timing, and synthetic-data biases can teach incorrect associations. A model that uses only language priors in the question and ignores the image may still score well on a biased dataset.</p>
 <h2 id="235-inference-and-deployment"><span id="235" class="legacy-heading-anchor" aria-hidden="true"></span>23.5 Inference and deployment<a class="headerlink" href="#235-inference-and-deployment" title="Permanent link">&para;</a></h2>
 <p>Inference cost includes media downloading and decoding, encoders, LLM prefill, and output decoding. High resolution or long video may make perception the bottleneck, but long answers, internal reasoning, or audio output may also dominate latency. Measure each stage rather than assuming the bottleneck.</p>
@@ -9429,7 +9430,7 @@ p_\theta(y\mid x_m,x_t)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

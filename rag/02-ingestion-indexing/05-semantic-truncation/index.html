@@ -9381,11 +9381,12 @@
 <p><strong>Retrieve small units; generate with larger context.</strong> This is the core pattern behind the second approach.</p>
 <p>It suits narrative text with continuous context. Its weakness is that a fixed window cannot adapt to variations in the length of meaningful units.</p>
 <h3 id="532-parent-child-chunking"><span id="532-parent-child" class="legacy-heading-anchor" aria-hidden="true"></span>5.3.2 Parent-Child Chunking<a class="headerlink" href="#532-parent-child-chunking" title="Permanent link">&para;</a></h3>
-<p>This is a structured version of a sentence window. Split the document into two levels:</p>
+<p>Instead of expanding a fixed window around a hit, this method looks up its parent through an explicit child-to-parent mapping:</p>
 <ul>
 <li><strong>Child chunks</strong>, which are small, are embedded and used for retrieval.</li>
-<li><strong>Parent chunks</strong>, which are larger and usually correspond to the paragraph or section containing a child, are what the system actually returns when that child is retrieved.</li>
+<li><strong>Parent chunks</strong> are the larger units returned when a child is retrieved. A parent can be the whole source document, a section, or a larger chunk created by a length-based or recursive splitter.</li>
 </ul>
+<p>The source does not need an existing heading hierarchy. For example, <a href="https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py">LangChain's <code>ParentDocumentRetriever</code></a> supports either raw documents or larger split chunks as parents.</p>
 <table>
 <thead>
 <tr>
@@ -9398,17 +9399,17 @@
 <tr>
 <td>Basis for expansion</td>
 <td>Position: N units before and after</td>
-<td>Structure: the enclosing parent chunk</td>
+<td>Explicit mapping to a parent document or chunk</td>
 </tr>
 <tr>
 <td>Semantically complete boundaries?</td>
 <td>Not guaranteed</td>
-<td>Better aligned with structure, but may still depend on definitions outside the section</td>
+<td>Not guaranteed; structure-aware parents may preserve a section, but outside definitions can still be needed</td>
 </tr>
 <tr>
-<td>Requires document structure?</td>
+<td>Requires existing document structure?</td>
 <td>No</td>
-<td>Yes</td>
+<td>No; requires a child-to-parent mapping</td>
 </tr>
 </tbody>
 </table>
@@ -9609,7 +9610,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

@@ -9746,8 +9746,8 @@
 <p>WebSocket often carries bidirectional commands, rooms, and broadcasts, so it usually needs more application-level coordination. SSE implementations are often simpler when they only push server-to-client events. Still, SSE does not let an arbitrary instance write directly to a TCP connection held by another instance.</p>
 <p>Redis Pub/Sub is only one option. A dedicated gateway, broker, or platform-provided WebSocket/SSE service can also work. Load-test candidates against requirements for connection counts, broadcast patterns, ordering, reconnection, and latency.</p>
 <h3 id="1352-getting-through-proxies-and-firewalls"><span id="1352" class="legacy-heading-anchor" aria-hidden="true"></span>13.5.2 Getting through Proxies and Firewalls<a class="headerlink" href="#1352-getting-through-proxies-and-firewalls" title="Permanent link">&para;</a></h3>
-<p>Many enterprise HTTP proxies, such as Squid, older CDNs, and some security gateways <strong>do not support the WebSocket Upgrade handshake</strong> and reject the request as abnormal.</p>
-<p>SSE usually avoids this particular class of Upgrade rejection: it remains an ordinary HTTP request that most proxies can forward.</p>
+<p>Some older proxies and enterprise gateway configurations <strong>block or strip WebSocket Upgrade requests</strong>. Support depends on the deployed version and policy. For example, <a href="https://www.squid-cache.org/Versions/v5/cfgman/http_upgrade_request_protocols.html">Squid v5 supports controlled upgrades</a>, although its default configuration drops the Upgrade header. A default restriction is not the same as a missing protocol capability.</p>
+<p>SSE usually avoids this particular class of Upgrade rejection: it remains an ordinary HTTP request that most proxies can forward. It is still subject to access policies, buffering, and idle timeouts.</p>
 <p>This is a deployment tradeoff. Without a first-party design record, it should not be asserted as the sole reason MCP chose its transports.</p>
 <h3 id="1353-no-built-in-requestresponse-pairing"><span id="1353-" class="legacy-heading-anchor" aria-hidden="true"></span>13.5.3 No Built-In Request–Response Pairing<a class="headerlink" href="#1353-no-built-in-requestresponse-pairing" title="Permanent link">&para;</a></h3>
 <p>In HTTP, each request has its own response, giving a natural one-to-one association. In WebSocket, a message is just a message: when the server sends one, <strong>the transport does not tell you which request it belongs to</strong>.</p>
@@ -10090,7 +10090,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

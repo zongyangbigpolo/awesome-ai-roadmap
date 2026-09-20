@@ -9369,7 +9369,7 @@
 <p><strong>Principle:</strong> whenever executable code is model-generated and generation may be influenced by prompt injection or jailbreaking (see Chapter 2), apply the strongest isolation standards for untrusted code. Do not rely on the optimistic assumption that “our own agent generated it, so it should be fine.”</p>
 <h3 id="822-resource-and-lifecycle-limits"><span id="822" class="legacy-heading-anchor" aria-hidden="true"></span>8.2.2 Resource and Lifecycle Limits<a class="headerlink" href="#822-resource-and-lifecycle-limits" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>A short-lived, disposable environment for each execution:</strong> destroy it when execution finishes. Do not reuse sandboxes containing prior state, which could contaminate later tasks or expose residual data.</li>
+<li><strong>A bounded, disposable environment for each authorized task or session:</strong> define its owner, permissions, and lifetime. Related code calls may retain files and interpreter state within that scope; independent executions should use fresh environments. Destroy the environment when the task/session ends or its authorization boundary changes, rather than passing residual state to another user or unrelated task.</li>
 <li><strong>Hard limits on CPU, memory, disk, and execution time:</strong> prevent resource-exhaustion attacks such as infinite loops, excessive disk writes, and fork bombs.</li>
 <li><strong>A minimal filesystem:</strong> do not mount the host's actual filesystem or include unrelated credential files in the sandbox. Environment variables should contain no cloud credentials by default, consistent with Chapter 3's principle of keeping secrets out of context.</li>
 <li><strong>No outbound networking, or only the minimum needed:</strong> deny external network access by default. When networking is necessary, use the egress controls in Section 8.5 instead of granting direct internet access.</li>
@@ -9445,7 +9445,7 @@
 <h2 id="86-release-checklist"><span id="86" class="legacy-heading-anchor" aria-hidden="true"></span>8.6 Release Checklist<a class="headerlink" href="#86-release-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Untrusted code runs by default in a microVM or user-space-kernel sandbox, not merely a language-level sandbox.</li>
-<li>[ ] Execution environments are short-lived and disposable, destroyed after use without reusing prior state.</li>
+<li>[ ] Each execution environment has a defined task/session owner and bounded lifetime; state stays within that authorization scope, and the environment is destroyed when the scope ends or changes.</li>
 <li>[ ] Sandboxes have hard limits on CPU, memory, disk, and execution time.</li>
 <li>[ ] Browser login state is limited to the task's minimum requirements and destroyed when the task ends.</li>
 <li>[ ] Deterministic rules require human confirmation for high-risk browser or computer-use actions such as payments and password changes; they do not rely on the model's own judgment.</li>
@@ -9501,7 +9501,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

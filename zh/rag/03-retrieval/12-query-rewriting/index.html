@@ -9358,8 +9358,9 @@
 <p>代价是一次额外的生成调用；延迟取决于模型、生成长度和服务负载等，应在目标配置下实测。如果问题涉及模型几乎没有先验知识的领域（企业内部黑话、全新的产品名），生成的假想文档可能与真实文档差得很远，<strong>反而降低效果</strong>。</p>
 <h2 id="126-step-back">12.6 Step-back 提问<a class="headerlink" href="#126-step-back" title="Permanent link">&para;</a></h2>
 <p>Step-back 提问会先把具体问题<strong>抽象成一个更宽泛的问题</strong>，先检索背景知识，再回来回答原问题。</p>
-<p>「XX 型号电池在零下 20 度的续航衰减多少」
+<p>「XX 型号电池在零下 20 摄氏度的续航衰减多少」
 → 先问「锂电池在低温下的性能特性是什么」</p>
+<p>本例明确使用摄氏温标。若用户只说“度”，且上下文没有确定温标，应先澄清，而不是在改写时猜测。</p>
 <p>背景原理有助于解释影响因素，但不能仅凭“低温影响锂电池”推导某型号的确切衰减值。数值回答仍需对应型号、温度和测试条件的数据；缺少时应说明不能确定，而非把通用原理包装成产品事实。</p>
 <p>它适合需要推理而非直接查找的问题，也适合原理性内容较多的知识库。风险在于抽象过头后会召回大量无关的通用内容，所以<strong>通常要与原始 Query 一起检索并合并结果</strong>。</p>
 <h2 id="127">12.7 查询分解<a class="headerlink" href="#127" title="Permanent link">&para;</a></h2>
@@ -9523,7 +9524,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
   </span>
 
     

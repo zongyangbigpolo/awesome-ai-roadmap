@@ -9841,7 +9841,7 @@
 <p><strong>SWE-Lancer</strong> uses software tasks from a real freelance marketplace, including both independent-contributor tasks and managerial tasks that require choosing an implementation proposal. Amounts aggregated from historical task payments are a proxy for value within the benchmark, not actual agent earnings, and cannot be directly extrapolated to production ROI.</p>
 <p><strong>Terminal-Bench</strong> evaluates task completion in terminal-only environments, covering scenarios such as compilation, debugging, and system configuration.</p>
 <h3 id="1432-web-and-retrieval"><span id="1432" class="legacy-heading-anchor" aria-hidden="true"></span>14.3.2 Web and Retrieval<a class="headerlink" href="#1432-web-and-retrieval" title="Permanent link">&para;</a></h3>
-<p><strong>WebArena</strong> provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Tasks are judged with programmatic state assertions, not by what the model says.</p>
+<p><strong>WebArena</strong> provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Its <a href="https://github.com/web-arena-x/webarena/blob/73d9de71c25af3f5037c722ede9cabe25a8c77c2/evaluation_harness/evaluators.py">official evaluators</a> check answers, URLs, or page content according to the task. Information-seeking tasks can use exact answer matching, required phrases, or model-based fuzzy matching. An answer is a legitimate task output to grade; an agent merely saying “I completed the action” is not evidence that the required website state changed.</p>
 <p><strong>BrowseComp</strong> takes a different approach: answers are short and easy to verify, but finding them requires <strong>deep, multi-hop web retrieval</strong>. It specifically measures the ability to keep searching and cross-check information.</p>
 <h3 id="1433-operating-systems-and-guis"><span id="1433-gui" class="legacy-heading-anchor" aria-hidden="true"></span>14.3.3 Operating Systems and GUIs<a class="headerlink" href="#1433-operating-systems-and-guis" title="Permanent link">&para;</a></h3>
 <p><strong>OSWorld</strong> evaluates multimodal agents in real operating systems. Tasks involve operations across applications, and evaluation checks the resulting files and system state. This adds challenges in visual grounding, action execution, and asynchronous interfaces, but it does not justify claiming that OSWorld is necessarily harder than every text-only benchmark across different models and task sets.</p>
@@ -9884,7 +9884,7 @@
 <tr>
 <td>WebArena</td>
 <td>Web operations</td>
-<td>State assertions</td>
+<td>Answer, URL, or page-content checks, depending on the task</td>
 <td>Multistep web interaction</td>
 </tr>
 <tr>
@@ -10315,7 +10315,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

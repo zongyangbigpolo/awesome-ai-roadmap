@@ -9213,16 +9213,18 @@
 <p>If an existing system is deeply tied to one framework, a wholesale rewrite is a risky way to reduce lock-in or switch frameworks. A safer approach draws on established system-migration patterns:</p>
 <ol>
 <li><strong>Write contract tests first.</strong> Before migrating code, capture the existing system's input/output behavior in framework-independent tests, reusing the evaluation dataset described in Section 23.2. Make behavior before and after migration comparable.</li>
-<li><strong>Use the Strangler Fig pattern.</strong> Rather than switching the entire system at once, route a small share of new traffic to equivalent functionality implemented in the new framework while the old implementation handles the rest. Increase that share gradually instead of scheduling a big-bang cutover.</li>
+<li><strong>Replace one business capability at a time with the Strangler Fig pattern.</strong> Identify a boundary where a routing facade or adapter can direct that capability to the new implementation; leave unmigrated capabilities on the old system. Repeat until the old dependencies can be retired. This is incremental functional replacement, not merely a traffic-percentage change. Each migrated capability can also use a <strong>canary release</strong> to increase its new implementation's traffic gradually.</li>
 <li><strong>Align observability while both implementations run.</strong> Compare quality, cost, latency, and errors using the same data, model configuration, and metrics. Shadow runs should default to read-only operations, recorded replay, or simulated tools; the old and new implementations must not both send emails, charge accounts, or create orders.</li>
 <li><strong>Design state migration separately.</strong> Distinguish completed history, active tasks, and externally hosted sessions. Active tasks can often finish on the old runtime. If they must move, re-enter from confirmed business state and check approvals, idempotency keys, and pending events. A format-conversion script alone does not make migration safe.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>flowchart TB
     A["Old implementation&lt;br/&gt;Handles all traffic"] --&gt; B["Capture the behavior baseline&lt;br/&gt;in contract tests"]
-    B --&gt; C["New implementation&lt;br/&gt;Handles a small traffic share"]
-    C --&gt; D["Compare both implementations&lt;br/&gt;using the same evaluation criteria"]
-    D --&gt; E["Gradually increase the new traffic share"]
-    E --&gt; F["Drain or migrate active tasks under control&lt;br/&gt;Retire the old system only after&lt;br/&gt;rollback conditions are satisfied"]</code></pre>
+    B --&gt; C["Implement one capability&lt;br/&gt;behind a facade or adapter"]
+    C --&gt; D["Validate and release that capability&lt;br/&gt;Use canary traffic if appropriate"]
+    D --&gt; E["Route the accepted capability to the new system&lt;br/&gt;Keep unmigrated capabilities on the old system"]
+    E --&gt; G{"More capabilities to migrate?"}
+    G --&gt;|Yes| C
+    G --&gt;|No| F["Drain or migrate active tasks under control&lt;br/&gt;Retire old dependencies only when&lt;br/&gt;acceptance and rollback conditions are satisfied"]</code></pre>
 <h2 id="235-common-mistakes"><span id="235" class="legacy-heading-anchor" aria-hidden="true"></span>23.5 Common mistakes<a class="headerlink" href="#235-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="2351-making-a-framework-independent-adapter-architecture-the-default"><span id="2351" class="legacy-heading-anchor" aria-hidden="true"></span>23.5.1 Making a framework-independent adapter architecture the default<a class="headerlink" href="#2351-making-a-framework-independent-adapter-architecture-the-default" title="Permanent link">&para;</a></h3>
 <p>For short-lived experiments with uncertain requirements, building a complete adapter layer upfront is overengineering that slows prototype validation. Start with one framework, learn quickly, and invest in portability once the system demonstrates lasting value.</p>
@@ -9246,7 +9248,7 @@
 <li><strong>Common technical lock-in falls into three groups</strong>: state formats, orchestration contracts, and operational assets. Include service dependencies and the team's migration costs as well.</li>
 <li><strong>Portable architecture separates the business core—tool definitions and evaluation criteria—from framework details such as the orchestration engine.</strong> Adapters isolate framework-specific code, but the investment should be proportionate to the system's expected lifetime; not every project needs it.</li>
 <li><strong>Filter by business constraints, then verify maintenance status and actual runtime behavior.</strong> Combining frameworks also needs a clear additional benefit.</li>
-<li><strong>Contract tests should precede migration.</strong> Use staged Strangler Fig migration when traffic can be split, or a controlled downtime-based cutover for small systems. Historical state and rollback still need separate designs.</li>
+<li><strong>Contract tests should precede migration.</strong> Strangler Fig replaces business capabilities incrementally; canary releases can control traffic within each migrated capability. A small system may instead use a controlled downtime-based cutover. Historical state and rollback still need separate designs.</li>
 <li><strong>Selection ultimately returns to the same engineering dimensions.</strong> Decide from state models, persistence granularity, tool-contract portability, evaluation, and observability—together with project lifetime and team constraints—not framework names and feature lists.</li>
 </ol>
 <blockquote>
@@ -9262,6 +9264,7 @@
 <li><a href="https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/">PydanticAI: Durable Execution</a></li>
 <li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry Generative AI semantic-conventions repository</a></li>
 <li><a href="https://martinfowler.com/bliki/StranglerFigApplication.html">Martin Fowler: StranglerFigApplication</a></li>
+<li><a href="https://martinfowler.com/bliki/CanaryRelease.html">Martin Fowler: CanaryRelease</a></li>
 <li><a href="https://alistair.cockburn.us/hexagonal-architecture/">Alistair Cockburn: Hexagonal Architecture</a></li>
 </ul>
 
@@ -9286,7 +9289,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
   </span>
 
     

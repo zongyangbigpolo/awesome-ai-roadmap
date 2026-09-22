@@ -103,7 +103,7 @@ Agent 可以使用的工具包括：
 
 > **LLM + Tools → 可执行能力**
 
-大模型负责理解目标、选择工具和生成参数，运行时校验请求并调用工具；工具负责查询信息或产生外部副作用。用户要求“先写一封邮件让我看”，只授权了草稿生成，并没有授权发送。模型即使生成了发送请求，执行层也应拦住它。
+在允许模型动态决策的 Agent 中，大模型负责理解目标、在允许的工具范围内选择工具并生成参数，运行时负责校验请求、执行工具并返回结果；工具负责查询信息或产生外部副作用。用户要求“先写一封邮件让我看”，只授权了草稿生成，并没有授权发送。模型即使生成了发送请求，执行层也应拦住它。
 
 ### 1.3.2 记忆机制（Memory）
 
@@ -111,7 +111,7 @@ Agent 可以使用的工具包括：
 
 #### 短期记忆
 
-短期记忆保存当前任务中的状态，例如：
+短期记忆用于在当前任务的多个步骤之间保留后续决策仍需使用的状态信息，例如：
 
 - 当前目标；
 - 已完成的步骤；
@@ -209,12 +209,13 @@ Google 在 2025 年 4 月推出了 A2A。2025 年 6 月，A2A 项目进入 Linux
 
 如果说 MCP 解决的是“Agent 如何调用外部工具”，那么 A2A 解决的就是“Agent 如何发现并与另一个 Agent 协作”。
 
-以 A2A 0.3.0 的核心对象为例：
+以 A2A v1.0 的核心对象为例：
 
 - **Agent Card**：描述 Agent 的身份、能力、技能、服务地址和认证要求；
-- **Task**：需要协作完成的任务及其生命周期；
-- **Message**：Agent 之间交换的消息；
-- **Artifact**：任务产生的交付物，可由文本、文件或结构化数据等内容部分组成。
+- **Task**：需要持续跟踪的工作单元及其生命周期；
+- **Message**：Agent 之间交换的一轮消息；
+- **Part**：Message 和 Artifact 中承载实际内容的基本单元，可包含文本、文件内容或结构化数据；
+- **Artifact**：任务产生的实际交付物，由一个或多个 Part 组成。
 
 > Agent Card 更像一份“能力名片”，而“正在做什么”和执行进度主要由 Task 等对象表达。
 
@@ -230,7 +231,7 @@ sequenceDiagram
     B-->>A: 按所选交互方式返回后续状态与 Artifact
 ```
 
-图中展示需要持续跟踪的任务。A2A 0.3.0 的消息发送也允许直接返回 Message，不是每次交互都必须创建 Task；具体消息字段和传输方式应按双方实现的版本核对。
+图中展示的是需要持续跟踪的任务。A2A v1.0 的消息发送也允许直接返回 `Message`，不是每次交互都必须创建 `Task`；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。
 
 ## 1.7 MCP 与 A2A 的关系
 
@@ -238,7 +239,7 @@ sequenceDiagram
 |---|---|---|
 | 连接对象 | Agent 与工具 | Agent 与 Agent |
 | 核心问题 | 如何使用外部能力 | 如何发现、委派和协作 |
-| 主要抽象 | Tools、Resources、Prompts | Agent Card、Task、Message、Artifact |
+| 主要抽象 | Tools、Resources、Prompts | Agent Card、Task、Message、Part、Artifact |
 | 典型场景 | 查询数据库、执行代码 | 多 Agent 分工与结果传递 |
 | 类比 | 使用工具 | 与同事协作 |
 
@@ -267,8 +268,10 @@ MCP 让每个 Agent 能够方便地“伸手拿工具”，A2A 则让多个 Agen
 ## 参考资料
 
 - [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+- [OpenAI Agents SDK: Agents](https://openai.github.io/openai-agents-python/agents/)
+- [LangChain: Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
 - [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
 - [Linux Foundation: Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
 - [A2A Protocol Specification](https://a2a-protocol.org/latest/specification/)
-- [A2A Protocol Specification 0.3.0：核心对象与消息发送](https://a2a-protocol.org/v0.3.0/specification/)
+- [A2A Protocol: Core Concepts](https://a2a-protocol.org/latest/topics/key-concepts/)
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)

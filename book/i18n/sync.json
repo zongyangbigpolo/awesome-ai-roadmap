@@ -855,11 +855,11 @@
       "translation_sha256": "a5783464e2383b3ff8d9e02cdb0f7c5d66cf788a3c186e1f6dd731f4fc6c5648"
     },
     "docs/llm/03-inference-serving/15-quantization.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "9c5ae9e8ef0d0e77eca8fee43f3e61074d03dc166e6f4ae0717c4ee5c1cc9635",
+      "note": "Paired review of new section 15.2.3 (integer vs FP8/FP4 formats), summary item 2, description, and references. Format properties checked against the FP8 paper, OCP MX v1.0 spec, NVIDIA NVFP4 blog and Transformer Engine FP8 primer, gpt-oss model card, AMD ROCm CDNA3/CDNA4 blog, and vLLM w8a8_utils.",
+      "reviewed_at": "2026-09-24T09:42:53+00:00",
+      "source_sha256": "9e8c3418840bbac3085725fb7b32729a1d57e49b5622abcded428da389ed313a",
       "translation": "docs/llm/03-inference-serving/15-quantization.zh.md",
-      "translation_sha256": "4057226fa78691cfa6cce0c2fdef8ec1e5f5c0c1e56a4cf432a3f70b1050c7ce"
+      "translation_sha256": "13656524089a8d3714e29565e1b6784fcf4b2c0f2345fffa07eea1e4ccfb28c1"
     },
     "docs/llm/03-inference-serving/19-moe.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

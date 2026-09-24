@@ -1,5 +1,5 @@
 ---
-description: Compare LLM quantization methods including PTQ, QAT, GPTQ, and AWQ, explaining tradeoffs among quality, GPU memory, throughput, hardware support, and calibration data.
+description: Compare LLM quantization methods including PTQ, QAT, GPTQ, and AWQ, and integer, FP8, and block-scaled FP4 formats, explaining tradeoffs among quality, GPU memory, throughput, hardware support, and calibration data.
 ---
 
 # Chapter 15: Model Quantization
@@ -92,6 +92,54 @@ def quantize_int4(x, absmax):
 W4A16 means 4-bit weights and 16-bit activations. It does not mean every matrix multiplication uses INT4 arithmetic, and it does not specify KV precision. W8A8, FP8, and NF4 have different numerical encodings and computation paths; equal bit widths do not make them interchangeable.
 
 For example, one 16-bit scale per 128 4-bit weights raises the average bit width to `4 + 16/128 = 4.125` bit from that metadata alone. Zero points, alignment, and layers retained at high precision increase file size further. This is a storage example, not the layout of a particular checkpoint.
+
+### 15.2.3 How do FP8 and FP4 differ from INT8 and INT4?
+
+An integer format places its levels on a uniform grid. Once the scale `s` is fixed, every in-range value has the same maximum absolute rounding error, `s/2`. A floating-point format spends some bits on an exponent, so the spacing between levels grows with magnitude; across the normal range, the **relative** rounding error stays roughly constant. At the same bit width, a floating-point format gives up some resolution near the top of its range in exchange for covering a much wider dynamic range. Neither is uniformly more accurate.
+
+The FP8 paper defines two 8-bit encodings:
+
+| Property                              | E4M3                                         | E5M2                           |
+| ------------------------------------- | -------------------------------------------- | ------------------------------ |
+| Exponent / mantissa bits              | 4 / 3                                        | 5 / 2                          |
+| Exponent bias                         | 7                                            | 15                             |
+| Largest finite value                  | 448                                          | 57,344                         |
+| Smallest normal / subnormal magnitude | `2^-6` / `2^-9`                              | `2^-14` / `2^-16`              |
+| Special values                        | No infinities; a single NaN mantissa pattern | IEEE-style infinities and NaNs |
+| Use recommended by the paper          | Weights and activations                      | Gradients                      |
+
+E4M3 gives up infinities to extend its largest value to 448. E5M2 keeps an extra exponent bit for the wide range of gradients at the cost of one mantissa bit. NVIDIA Transformer Engine's `HYBRID` recipe follows the same split: E4M3 in the forward pass and E5M2 in the backward pass.
+
+FP8 still needs scaling. Neither range fits arbitrary tensors, so implementations use a higher-precision scale factor to map a tensor's or block's absolute maximum near the format's largest value, as integer quantization does. Transformer Engine, for example, supports per-tensor scales and delayed scaling, which estimates the scale from absolute maxima seen in recent iterations.
+
+For a hand-calculable comparison, reuse the range `[-2.5, 2.5]` from the example above. Symmetric INT8 uses `s = 2.5/127`; E4M3 uses a per-tensor scale `s = 2.5/448` and rounds to the nearest representable value:
+
+| Value | INT8: integer code → dequantized value | E4M3: scaled value → nearest level → dequantized value |
+| ----- | -------------------------------------- | ------------------------------------------------------ |
+| 0.7   | 36 → 0.7087, 1.2% relative error       | 125.44 → 128 → 0.7143, 2.0% relative error             |
+| 0.01  | 1 → 0.0197, 97% relative error         | 1.792 → 1.75 → 0.00977, 2.3% relative error            |
+
+Near the top of the range, INT8's uniform steps are finer than E4M3's three mantissa bits. For small values, INT8 has only a few codes left, while E4M3 keeps its relative precision. This is why FP8 handles wide dynamic ranges, such as activations with outliers, more gracefully than INT8 at the same width, while an INT8 grid fitted to a narrow, well-behaved range can be more accurate. Decide with the target tensors' distributions and task evaluation, not a rule of thumb.
+
+**Block-scaled FP4.** A 4-bit E2M1 float can represent only the magnitudes `0, 0.5, 1, 1.5, 2, 3, 4, 6`. One scale for an entire tensor is far too coarse, so FP4 formats attach a scale to each small block:
+
+| Format             | Element type | Block size | Block scale                         | Average bits per value, counting only scales |
+| ------------------ | ------------ | ---------- | ----------------------------------- | -------------------------------------------- |
+| MXFP4, OCP MX v1.0 | E2M1         | 32         | E8M0: a power of two                | `4 + 8/32 = 4.25`                            |
+| NVFP4, NVIDIA      | E2M1         | 16         | E4M3, plus an FP32 per-tensor scale | `4 + 8/16 = 4.5`                             |
+
+The OCP MX specification also defines MXFP8, MXFP6, and MXINT8 with the same 32-element E8M0 block scale. Its reference conversion sets the block scale `X` to the largest power of two not exceeding the block's absolute maximum, divided by the largest power of two in the element format, which is 4 for E2M1. Each element is divided by `X`, rounded to nearest with ties to even, and clamped to ±6. For a block whose absolute maximum is 2.5, `X = 2/4 = 0.5`:
+
+- `0.7 / 0.5 = 1.4` rounds to 1.5, which dequantizes to 0.75.
+- `2.5 / 0.5 = 5` is a tie between 4 and 6. Ties-to-even selects 4, so the block's largest value dequantizes to 2.0, a 20% error.
+- `0.01 / 0.5 = 0.02` rounds to 0 and is lost.
+
+Because this scale is a power of two, the scaled block maximum can land anywhere in `[4, 8)`, where the E2M1 grid is coarsest or where values are clamped. NVFP4's smaller blocks and fractional E4M3 scales are designed to fit each block's range more closely, at the cost of more scale metadata and a second scaling level. Neither design removes the need to evaluate quality.
+
+Two practical consequences follow:
+
+- **A format is not a quantization method.** FP8 or MXFP4 fixes the encoding; choosing scales, calibrating, and deciding whether the model must train with that error are still separate decisions. OpenAI's gpt-oss model card reports that the MoE weights, over 90% of all parameters, were quantized to MXFP4 at 4.25 bits per parameter and that the models were post-trained with this quantization, which lets the 120B model fit on one 80 GB GPU. That result belongs to that model and training process; it is not evidence that any BF16 checkpoint converts to FP4 without loss.
+- **Check the exact variant and the hardware path.** NVIDIA introduced FP8 Tensor Core support with H100 and added NVFP4 and MXFP8 with Blackwell. AMD's CDNA3 (MI300 series) uses the FNUZ variants of FP8, whereas CDNA4 uses the OCP E4M3FN and E5M2 variants. E4M3FNUZ has a largest value of 240, no negative zero, and a single NaN. For the same bit pattern, its value is half the E4M3FN value, and `0x80` is negative zero in E4M3FN but NaN in E4M3FNUZ. Checkpoints must therefore be converted, for example by clearing that pattern and doubling the scale, rather than reinterpreted. Without native kernels, a runtime may dequantize to higher precision, which saves memory but not necessarily time.
 
 ## 15.3 Quality limits at different bit widths
 
@@ -320,16 +368,17 @@ QLoRA trains adapters. Its frozen low-bit base participates in forward computati
 ## 15.10 Chapter summary
 
 1. **Linear uniform integer quantization** commonly uses scale and zero-point mappings; nonuniform formats such as NF4 use codebooks. Do not generalize one mechanism to all formats.
-2. **Two potential benefits**: raw 4-bit weight storage and weight traffic can be one-quarter of FP16; end-to-end speed depends on kernels and workload.
-3. **Symmetric quantization is common for weights and asymmetric quantization for activations, but neither is a hard rule**. Follow the format, kernel, calibration data, and task evaluation.
-4. **Lower bit widths usually require more careful evaluation**. Practical INT8, INT4, and INT3 limits depend on the model, format, and task.
-5. **Average metrics hide task differences**. Test math, code, long contexts, and structured output separately.
-6. **GPTQ compensates quantization error with second-order information from a layer-wise reconstruction objective**. It does not default to quantizing unimportant weights first.
-7. **AWQ improves weight quantization through activation-aware scaling and clipping**. An equivalent pre-quantization transformation does not imply lossless quantization.
-8. **QLoRA uses a frozen NF4 base and trainable adapters**, with double quantization and paged optimizers to lower fine-tuning memory use.
-9. **GGUF is a file format, not an algorithm**, an especially common source of confusion.
-10. **Selection depends on the framework and GPU kernels**. Final performance depends on the format–kernel match.
-11. **Four pitfalls**: outliers, KV precision and backend limitations, calibration/task distribution differences, and compatibility with other optimizations.
+2. **FP8 and FP4 are floating-point grids**: roughly constant relative error over a wider dynamic range, still paired with per-tensor or per-block scales. MXFP4 and NVFP4 differ in block size and scale encoding, and FP8 variants such as E4M3FN and E4M3FNUZ are not bit-compatible.
+3. **Two potential benefits**: raw 4-bit weight storage and weight traffic can be one-quarter of FP16; end-to-end speed depends on kernels and workload.
+4. **Symmetric quantization is common for weights and asymmetric quantization for activations, but neither is a hard rule**. Follow the format, kernel, calibration data, and task evaluation.
+5. **Lower bit widths usually require more careful evaluation**. Practical INT8, INT4, and INT3 limits depend on the model, format, and task.
+6. **Average metrics hide task differences**. Test math, code, long contexts, and structured output separately.
+7. **GPTQ compensates quantization error with second-order information from a layer-wise reconstruction objective**. It does not default to quantizing unimportant weights first.
+8. **AWQ improves weight quantization through activation-aware scaling and clipping**. An equivalent pre-quantization transformation does not imply lossless quantization.
+9. **QLoRA uses a frozen NF4 base and trainable adapters**, with double quantization and paged optimizers to lower fine-tuning memory use.
+10. **GGUF is a file format, not an algorithm**, an especially common source of confusion.
+11. **Selection depends on the framework and GPU kernels**. Final performance depends on the format–kernel match.
+12. **Four pitfalls**: outliers, KV precision and backend limitations, calibration/task distribution differences, and compatibility with other optimizations.
 
 
 ## References
@@ -345,3 +394,10 @@ QLoRA trains adapters. Its frozen low-bit base participates in forward computati
 - [GPTQ authors' implementation: column order, act-order, and grouping](https://github.com/IST-DASLab/gptq)
 - [AWQ paper: per-channel scaling and search](https://arxiv.org/html/2306.00978v5)
 - [PyTorch AO: Quantization-Aware Training](https://docs.pytorch.org/ao/main/workflows/qat.html)
+- [FP8 Formats for Deep Learning](https://arxiv.org/abs/2209.05433)
+- [OCP Microscaling Formats (MX) Specification v1.0](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)
+- [NVIDIA: Introducing NVFP4 for Efficient and Accurate Low-Precision Inference](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/)
+- [NVIDIA Transformer Engine: FP8 primer, scaling recipes, and MXFP8/NVFP4](https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html)
+- [gpt-oss-120b & gpt-oss-20b model card: MXFP4 MoE weights](https://arxiv.org/abs/2508.10925)
+- [AMD ROCm blog: FP8 FNUZ and OCP variants on CDNA3 and CDNA4](https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html)
+- [vLLM: converting E4M3FN weights to E4M3FNUZ](https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/layers/quantization/utils/w8a8_utils.py)

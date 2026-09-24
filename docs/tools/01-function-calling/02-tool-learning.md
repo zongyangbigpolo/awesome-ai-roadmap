@@ -216,6 +216,22 @@ BFCL includes categories such as relevance judgments. Report the leaderboard ver
 
 Apply the same principle when building a test set: **include questions that should not trigger a tool call**. Otherwise, you cannot measure overcalling.
 
+### 2.7.1 Starting with a small evaluation set
+
+You do not need a complete evaluation platform to start. **A set of 20–30 cases can be a useful smoke test and starting point for regression testing**, not evidence of production reliability. For example, start with 4–6 cases for each scenario in Section 2.2.2: single-tool calls, independent parallel calls, failure recovery, direct answers without tools, and reuse of earlier results. These categories can overlap; choose the no-call coverage according to business risks and expected traffic, not a universal quota.
+
+| Step | Practical approach |
+|---|---|
+| 1. Build cases | Use authorized, de-identified business examples or construct boundary cases from business requirements; production logs are not a prerequisite. Include necessary conversation history, existing tool results, permissions, and fixed test data or simulated failures. |
+| 2. Define expected behavior | Specify whether to call, answer directly, clarify missing information, or refuse an unauthorized action. State which decision point or whole interaction is being judged. Check argument meaning, target objects, and business rules; accept equivalent valid calls and different orderings of independent parallel calls, rather than matching one JSON string. Resolve annotation disagreements before scoring. |
+| 3. Record the setup | Pin the model snapshot where available; otherwise record the API used and returned version information, if exposed, without claiming to control provider internals. Version the system prompt, controllable chat template, generation parameters, tool schemas and runtime, fixtures or external responses, budgets, retry policy, and grader. |
+| 4. Run and inspect | Reset fixtures between runs. Keep traces and report tool selection, semantic argument correctness, target correctness, task completion, unnecessary or repeated calls, unauthorized attempts and executed actions, and cost separately. For multi-turn or stochastic tasks, repeat runs and state how many; repeated runs are not additional independent cases. |
+| 5. Reuse for regression | Rerun after prompt, model, or schema changes, holding other conditions fixed where possible. Compare traces to locate regressions rather than presuming either the runtime or model is at fault. Once cases guide tuning, treat them as development/regression data; keep a separate holdout out of both tuning and training, grouping related conversations and source examples to prevent near-duplicate leakage. |
+
+Make the denominators explicit. **No-call overcalling rate** is the number of evaluated case-runs that emit at least one tool call where none is permitted, divided by all evaluated case-runs with that no-call expectation. Count emitted calls even if the runtime blocks execution. For clarification, judge the step before the missing information arrives; a later authorized call is not an error. **End-to-end task success rate** is the number of full-task case-runs meeting the annotated outcome and constraints within budget, divided by all evaluated full-task case-runs, including failures and timeouts. Check the final answer and, where relevant, business state—not just HTTP success. Report results by scenario as well as overall.
+
+Use isolated fixtures or mocks for payments, email, and other side effects, never live business writes. Label schema-only checks separately from controlled execution checks: neither passing JSON validation nor success in a mock establishes production integration correctness. This small set can uncover faults, but cannot guarantee coverage of rare failures. Expand scenario diversity rather than copying similar questions; see [Offline Evaluation and Eval-Driven Development](../../engineering/04-evaluation-observability/07-offline-eval-eval-driven-development.md) for dataset splits and interpreting small-sample results.
+
 ## 2.8 Common mistakes
 
 ### 2.8.1 Inferring interface capability from model size

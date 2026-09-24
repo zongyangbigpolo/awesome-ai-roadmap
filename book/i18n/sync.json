@@ -1394,11 +1394,11 @@
       "translation_sha256": "27fb54877a6e8f7e015d8eb32bc476ec8130cfc328a3ebab84f4ed015e12ed66"
     },
     "docs/tools/01-function-calling/02-tool-learning.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "c6267424b29d3dcbbb43110faea30eb36d6ba0c23e8abafe2d070b8ac11b8f73",
+      "note": "Reviewed the complete English and Simplified Chinese chapter pair; added matching Section 2.7.1 on a small smoke/regression set, context-aware expected behavior, semantic and outcome checks, configuration records, explicit case-run denominators, holdout separation, and isolated side-effect testing. Existing chapter content outside Section 2.7.1 remains unchanged.",
+      "reviewed_at": "2026-09-22T02:52:40+00:00",
+      "source_sha256": "552154986ff369cb67c4e6913784e92b63f503affeff70d9566d8c841b6d9bb1",
       "translation": "docs/tools/01-function-calling/02-tool-learning.zh.md",
-      "translation_sha256": "436f5fdc79a7d4f03226cf464089b4ae9d4200857b50964580c5b70699427d14"
+      "translation_sha256": "1d8aa25cb4b15254f7448da9d1532a639a90a00f69012b1bde141919605d4c0a"
     },
     "docs/tools/01-function-calling/03-tool-schema-design.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

@@ -103,7 +103,7 @@ Tools available to an agent may include:
 
 > **LLM + Tools → Ability to execute**
 
-The model interprets the goal, selects tools, and generates arguments. The runtime validates requests and invokes the tools, which query information or produce external side effects. A user who says “Draft an email for me to review first” has authorized drafting, not sending. Even if the model generates a send request, the execution layer should block it.
+In an agent that allows the model to make dynamic decisions, the model interprets the goal, selects from the permitted tools, and generates arguments. The runtime validates requests, executes tools, and returns results; the tools query information or produce external side effects. A user who says “Draft an email for me to review first” has authorized drafting, not sending. Even if the model generates a send request, the execution layer should block it.
 
 ### 1.3.2 Memory
 
@@ -111,7 +111,7 @@ The model itself does not permanently retain conversations. An agent's memory co
 
 #### Short-Term Memory
 
-Short-term memory holds state for the current task, such as:
+Short-term memory preserves the state needed for later decisions across steps of the current task. Examples include:
 
 - The current goal;
 - Completed steps;
@@ -209,12 +209,13 @@ Google introduced A2A in April 2025. In June 2025, the project joined the Linux 
 
 If MCP addresses “How does an agent invoke external tools?”, A2A addresses “How does an agent discover and collaborate with another agent?”
 
-Consider the core objects in A2A 0.3.0:
+Consider the core objects in the A2A v1.0.1 release specification:
 
 - **Agent Card**: describes the agent's identity, capabilities, skills, service endpoint, and authentication requirements;
-- **Task**: the work to be completed collaboratively and its lifecycle;
-- **Message**: a message exchanged between agents;
-- **Artifact**: a task deliverable, composed of content parts such as text, files, or structured data.
+- **Task**: a unit of work that requires ongoing tracking, together with its lifecycle;
+- **Message**: a single communication message between a client and a remote agent;
+- **Part**: a content unit within a Message or Artifact, containing one of text, inline file bytes, a file URL, or structured data;
+- **Artifact**: a task deliverable composed of one or more Parts.
 
 > An Agent Card is more like a capability profile. Objects such as Task primarily describe what the agent is doing and its execution progress.
 
@@ -230,7 +231,7 @@ sequenceDiagram
     B-->>A: Return subsequent status and Artifact through the chosen interaction mode
 ```
 
-The diagram shows a task that requires ongoing tracking. In A2A 0.3.0, sending a message can also return a Message directly; not every interaction has to create a Task. Check the exact message fields and transports against the versions implemented by both parties.
+The diagram shows a task that requires ongoing tracking. Under the A2A v1.0.1 release specification, sending a message can also return a `Message` directly; not every interaction has to create a `Task`. Check the exact message fields and transports against the A2A versions actually supported by both parties.
 
 ## 1.7 How MCP and A2A Relate
 
@@ -238,7 +239,7 @@ The diagram shows a task that requires ongoing tracking. In A2A 0.3.0, sending a
 |---|---|---|
 | Participants connected | Agents and tools | Agents and agents |
 | Core question | How to use external capabilities | How to discover, delegate, and collaborate |
-| Main abstractions | Tools, Resources, Prompts | Agent Card, Task, Message, Artifact |
+| Main abstractions | Tools, Resources, Prompts | Agent Card, Task, Message, Part, Artifact |
 | Typical uses | Database queries, code execution | Dividing work among agents and exchanging results |
 | Analogy | Using tools | Collaborating with colleagues |
 
@@ -267,8 +268,10 @@ MCP helps individual agents reach for tools, while A2A helps multiple agents com
 ## References
 
 - [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+- [OpenAI Agents SDK: Agents](https://openai.github.io/openai-agents-python/agents/)
+- [LangChain: Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
 - [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
 - [Linux Foundation: Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [A2A Protocol Specification](https://a2a-protocol.org/latest/specification/)
-- [A2A Protocol Specification 0.3.0: Core objects and message sending](https://a2a-protocol.org/v0.3.0/specification/)
+- [A2A v1.0.1 release specification: Core objects and message sending](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
+- [A2A Protocol: Core Concepts](https://a2a-protocol.org/latest/topics/key-concepts/)
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)

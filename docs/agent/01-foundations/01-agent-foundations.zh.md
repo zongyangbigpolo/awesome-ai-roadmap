@@ -209,12 +209,12 @@ Google 在 2025 年 4 月推出了 A2A。2025 年 6 月，A2A 项目进入 Linux
 
 如果说 MCP 解决的是“Agent 如何调用外部工具”，那么 A2A 解决的就是“Agent 如何发现并与另一个 Agent 协作”。
 
-以 A2A v1.0 的核心对象为例：
+以 A2A v1.0.1 发布规范中的核心对象为例：
 
 - **Agent Card**：描述 Agent 的身份、能力、技能、服务地址和认证要求；
 - **Task**：需要持续跟踪的工作单元及其生命周期；
-- **Message**：Agent 之间交换的一轮消息；
-- **Part**：Message 和 Artifact 中承载实际内容的基本单元，可包含文本、文件内容或结构化数据；
+- **Message**：客户端与远端 Agent 之间的一条通信消息；
+- **Part**：Message 和 Artifact 中承载实际内容的基本单元，每个 Part 的内容在文本、内联文件字节、文件 URL 或结构化数据中择一；
 - **Artifact**：任务产生的实际交付物，由一个或多个 Part 组成。
 
 > Agent Card 更像一份“能力名片”，而“正在做什么”和执行进度主要由 Task 等对象表达。
@@ -231,7 +231,7 @@ sequenceDiagram
     B-->>A: 按所选交互方式返回后续状态与 Artifact
 ```
 
-图中展示的是需要持续跟踪的任务。A2A v1.0 的消息发送也允许直接返回 `Message`，不是每次交互都必须创建 `Task`；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。
+图中展示的是需要持续跟踪的任务。A2A v1.0.1 发布规范中的消息发送也允许直接返回 `Message`，不是每次交互都必须创建 `Task`；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。
 
 ## 1.7 MCP 与 A2A 的关系
 
@@ -272,6 +272,6 @@ MCP 让每个 Agent 能够方便地“伸手拿工具”，A2A 则让多个 Agen
 - [LangChain: Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
 - [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
 - [Linux Foundation: Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [A2A Protocol Specification](https://a2a-protocol.org/latest/specification/)
+- [A2A v1.0.1 发布规范：核心对象与消息发送](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
 - [A2A Protocol: Core Concepts](https://a2a-protocol.org/latest/topics/key-concepts/)
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)

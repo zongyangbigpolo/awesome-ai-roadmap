@@ -36,11 +36,11 @@
       "translation_sha256": "f5ced968f60ba2a28fdad4a08e9e36a62837bd6d8020912f363c60716528bb65"
     },
     "docs/agent/01-foundations/01-agent-foundations.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "4d2825962220f38c02df19412ee6350268092201dac1c7d2f078dbd948a7b4cc",
+      "note": "Reviewed the complete English and Simplified Chinese Agent Chapter 1 pair; synchronized the PR tool-selection and short-term-memory clarifications and references, and checked Message, Part, Artifact, and SendMessage semantics against the tagged A2A v1.0.1 specification.",
+      "reviewed_at": "2026-09-24T01:41:48+00:00",
+      "source_sha256": "12561872693609f5881471d4380a6125ad9423861261516b66e8573689f38283",
       "translation": "docs/agent/01-foundations/01-agent-foundations.zh.md",
-      "translation_sha256": "1dcfbbd245b582217208eb76237906860f27084dd57a06b4dfac0dc778e00355"
+      "translation_sha256": "2bf2a528b5e0ffe80094c622af0c4a62022338a48103014ec98250ae9186cad5"
     },
     "docs/agent/01-foundations/02-agent-architecture.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

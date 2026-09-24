@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: How LLMs Learn to Use Tools","description":"Tool-calling training data, loss masks, supervised fine-tuning, reinforcement learning, and why execution feedback still needs business and safety validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/02-tool-learning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: How LLMs Learn to Use Tools","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/02-tool-learning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: How LLMs Learn to Use Tools","description":"Tool-calling training data, loss masks, supervised fine-tuning, reinforcement learning, and why execution feedback still needs business and safety validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/02-tool-learning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: How LLMs Learn to Use Tools","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/02-tool-learning/"},"datePublished":"2026-08-31","dateModified":"2026-09-22"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: How LLMs Learn to Use Tools","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/02-tool-learning/"}]}</script>
     
@@ -2998,6 +2998,21 @@
       2.7 How do you evaluate a model's tool use?
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="2.7 How do you evaluate a model&#39;s tool use?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271-starting-with-a-small-evaluation-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7.1 Starting with a small evaluation set
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9321,6 +9336,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.7 How do you evaluate a model&#39;s tool use?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271-starting-with-a-small-evaluation-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7.1 Starting with a small evaluation set
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -9701,6 +9731,40 @@
 </table>
 <p>BFCL includes categories such as relevance judgments. Report the leaderboard version, model snapshot, native function-calling or prompt-based mode, and runtime configuration. In your own evaluation, record tool selection, argument validity, correct target objects, final success, repeated calls, unauthorized actions, and cost separately.</p>
 <p>Apply the same principle when building a test set: <strong>include questions that should not trigger a tool call</strong>. Otherwise, you cannot measure overcalling.</p>
+<h3 id="271-starting-with-a-small-evaluation-set"><span id="271" class="legacy-heading-anchor" aria-hidden="true"></span>2.7.1 Starting with a small evaluation set<a class="headerlink" href="#271-starting-with-a-small-evaluation-set" title="Permanent link">&para;</a></h3>
+<p>You do not need a complete evaluation platform to start. <strong>A set of 20–30 cases can be a useful smoke test and starting point for regression testing</strong>, not evidence of production reliability. For example, start with 4–6 cases for each scenario in Section 2.2.2: single-tool calls, independent parallel calls, failure recovery, direct answers without tools, and reuse of earlier results. These categories can overlap; choose the no-call coverage according to business risks and expected traffic, not a universal quota.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Practical approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Build cases</td>
+<td>Use authorized, de-identified business examples or construct boundary cases from business requirements; production logs are not a prerequisite. Include necessary conversation history, existing tool results, permissions, and fixed test data or simulated failures.</td>
+</tr>
+<tr>
+<td>2. Define expected behavior</td>
+<td>Specify whether to call, answer directly, clarify missing information, or refuse an unauthorized action. State which decision point or whole interaction is being judged. Check argument meaning, target objects, and business rules; accept equivalent valid calls and different orderings of independent parallel calls, rather than matching one JSON string. Resolve annotation disagreements before scoring.</td>
+</tr>
+<tr>
+<td>3. Record the setup</td>
+<td>Pin the model snapshot where available; otherwise record the API used and returned version information, if exposed, without claiming to control provider internals. Version the system prompt, controllable chat template, generation parameters, tool schemas and runtime, fixtures or external responses, budgets, retry policy, and grader.</td>
+</tr>
+<tr>
+<td>4. Run and inspect</td>
+<td>Reset fixtures between runs. Keep traces and report tool selection, semantic argument correctness, target correctness, task completion, unnecessary or repeated calls, unauthorized attempts and executed actions, and cost separately. For multi-turn or stochastic tasks, repeat runs and state how many; repeated runs are not additional independent cases.</td>
+</tr>
+<tr>
+<td>5. Reuse for regression</td>
+<td>Rerun after prompt, model, or schema changes, holding other conditions fixed where possible. Compare traces to locate regressions rather than presuming either the runtime or model is at fault. Once cases guide tuning, treat them as development/regression data; keep a separate holdout out of both tuning and training, grouping related conversations and source examples to prevent near-duplicate leakage.</td>
+</tr>
+</tbody>
+</table>
+<p>Make the denominators explicit. <strong>No-call overcalling rate</strong> is the number of evaluated case-runs that emit at least one tool call where none is permitted, divided by all evaluated case-runs with that no-call expectation. Count emitted calls even if the runtime blocks execution. For clarification, judge the step before the missing information arrives; a later authorized call is not an error. <strong>End-to-end task success rate</strong> is the number of full-task case-runs meeting the annotated outcome and constraints within budget, divided by all evaluated full-task case-runs, including failures and timeouts. Check the final answer and, where relevant, business state—not just HTTP success. Report results by scenario as well as overall.</p>
+<p>Use isolated fixtures or mocks for payments, email, and other side effects, never live business writes. Label schema-only checks separately from controlled execution checks: neither passing JSON validation nor success in a mock establishes production integration correctness. This small set can uncover faults, but cannot guarantee coverage of rare failures. Expand scenario diversity rather than copying similar questions; see <a href="../../../engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">Offline Evaluation and Eval-Driven Development</a> for dataset splits and interpreting small-sample results.</p>
 <h2 id="28-common-mistakes"><span id="28" class="legacy-heading-anchor" aria-hidden="true"></span>2.8 Common mistakes<a class="headerlink" href="#28-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="281-inferring-interface-capability-from-model-size"><span id="281" class="legacy-heading-anchor" aria-hidden="true"></span>2.8.1 Inferring interface capability from model size<a class="headerlink" href="#281-inferring-interface-capability-from-model-size" title="Permanent link">&para;</a></h3>
 <p>Size is not sufficient, and dedicated post-training is not the only possible route. A mismatch between the interface, prompt format, and parser can also appear as an inability to call tools.</p>
@@ -9761,7 +9825,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 22, 2026 10:54:10 CST">2026-09-22</span>
   </span>
 
     

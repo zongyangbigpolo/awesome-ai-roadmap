@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：LLM 如何学会调用工具","description":"解释工具调用的训练数据、损失掩码、SFT 与强化学习，以及执行反馈为何仍需业务和安全校验。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/02-tool-learning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：LLM 如何学会调用工具","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/02-tool-learning/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：LLM 如何学会调用工具","description":"解释工具调用的训练数据、损失掩码、SFT 与强化学习，以及执行反馈为何仍需业务和安全校验。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/02-tool-learning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：LLM 如何学会调用工具","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/02-tool-learning/"},"datePublished":"2026-09-20","dateModified":"2026-09-22"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二章：LLM 如何学会调用工具","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/02-tool-learning/"}]}</script>
     
@@ -2998,6 +2998,21 @@
       2.7 怎么衡量一个模型的工具调用能力
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="2.7 怎么衡量一个模型的工具调用能力">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7.1 从小型评测集起步
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9321,6 +9336,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.7 怎么衡量一个模型的工具调用能力">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#271" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.7.1 从小型评测集起步
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -9701,6 +9731,40 @@
 </table>
 <p>BFCL 包含相关性判断等类别；结果应注明榜单版本、模型快照、原生 FC 或提示模式及运行配置。自建评测还应分别记录：工具选择、参数有效性、对象正确性、最终成功、重复调用、越权与费用。</p>
 <p>自建评测集时也应该照抄这个思路：<strong>测试集里必须有一批不该调工具的问题</strong>，否则你测不出过度调用。</p>
+<h3 id="271">2.7.1 从小型评测集起步<a class="headerlink" href="#271" title="Permanent link">&para;</a></h3>
+<p>不必等评测平台完备才开始测。<strong>20–30 个用例可以作为冒烟测试和回归测试的起点</strong>，但不能据此证明上线可靠性。例如，先为 2.2.2 的每类场景准备 4–6 个用例：单工具调用、无依赖的并行调用、失败恢复、无需工具的直接回答，以及历史结果复用。这些类别可以重叠；不调用工具的覆盖范围应按业务风险与预期流量分布确定，而不是套用统一比例。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>具体做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 构造用例</td>
+<td>使用经授权且脱敏的业务案例，或根据业务需求构造边界案例，不必先有生产日志。补齐必要的对话历史、已有工具结果、权限，以及固定测试数据或模拟故障。</td>
+</tr>
+<tr>
+<td>2. 标注期望</td>
+<td>写明应该调用、直接回答、澄清缺失信息，还是拒绝未授权操作，并明确检查的是哪个决策点或整段交互。按参数语义、目标对象和业务规则判断，接受等价的有效调用及独立并行调用的不同排列，不要只匹配唯一的 JSON 字符串。标注分歧应在评分前解决。</td>
+</tr>
+<tr>
+<td>3. 记录配置</td>
+<td>能固定模型快照时就固定；托管接口未提供快照时，记录所用接口及其返回的版本信息（若有），不声称能够控制供应商内部版本。记录系统提示、可控的 chat template、生成参数、工具 Schema 与运行时、测试夹具或外部响应、预算、重试策略和评分器的版本或配置。</td>
+</tr>
+<tr>
+<td>4. 运行与分析</td>
+<td>每次运行前重置测试夹具。保留调用轨迹，分别报告工具选择、参数语义正确性、目标对象正确性、任务完成、不必要或重复调用、越权尝试与实际执行，以及费用。多轮或有随机性的任务应重复运行并注明次数；重复运行不等于增加了独立用例。</td>
+</tr>
+<tr>
+<td>5. 用于回归</td>
+<td>修改提示、模型或 Schema 后重跑，尽量保持其他条件不变。对照轨迹定位退化，不预先认定是运行时或模型的问题。用例一旦用于指导调优，就属于开发或回归数据；另留不参与调优和训练的独立保留集，按相关会话和案例来源分组，避免近重复样本跨集合泄漏。</td>
+</tr>
+</tbody>
+</table>
+<p>统计时写清分母。<strong>不应调用场景的过度调用率</strong>是：在规定不允许调用的检查范围内，至少发出一次工具调用的用例运行数，除以所有具有该不调用要求的用例运行数。即使运行时拦截了执行，也计入已发出的调用。澄清场景检查的是缺失信息补齐前的步骤，用户补齐信息后的合法调用不算错误。<strong>端到端任务成功率</strong>针对整项任务统计：在预算内满足标注的结果与约束的用例运行数，除以所有参与整项任务评测的用例运行数，失败和超时也计入分母。检查最终回答，必要时核对业务状态，而不只看 HTTP 成功码。除总体结果外，还应按场景分项报告。</p>
+<p>支付、发信等有副作用的操作只在隔离的测试夹具或模拟工具中进行，不触发真实业务写操作。仅检查 Schema 和在受控环境中执行应分别标注：JSON 校验通过或模拟执行成功，都不能证明生产集成正确。这种小型评测集可以帮助发现故障，但不能保证覆盖罕见失败。扩充时优先增加场景多样性，而不是复制相似问题；数据集划分与小样本结果的解读，见<a href="../../../engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/">离线评测与 Eval 驱动开发</a>。</p>
 <h2 id="28">2.8 常见错误<a class="headerlink" href="#28" title="Permanent link">&para;</a></h2>
 <h3 id="281">2.8.1 从模型规模推断接口能力<a class="headerlink" href="#281" title="Permanent link">&para;</a></h3>
 <p>规模不是充分条件，专门后训练也不是唯一可能路径。接口、提示格式和解析器不匹配，同样会表现为“不会调用”。</p>
@@ -9761,7 +9825,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月22日 10:54:10 CST">2026-09-22</span>
   </span>
 
     

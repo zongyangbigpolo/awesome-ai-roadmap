@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: From Large Language Models to AI Agents","description":"Defines AI agents through the limits of model knowledge, state, and action, explaining how models, tools, memory, and control loops form an executable system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: From Large Language Models to AI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: From Large Language Models to AI Agents","description":"Defines AI agents through the limits of model knowledge, state, and action, explaining how models, tools, memory, and control loops form an executable system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: From Large Language Models to AI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-08-31","dateModified":"2026-09-24"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: From Large Language Models to AI Agents","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"}]}</script>
     
@@ -9328,11 +9328,11 @@ S_{t+1}=\mathrm{Update}(S_t,A_t,O_{t+1})
 <blockquote>
 <p><strong>LLM + Tools → Ability to execute</strong></p>
 </blockquote>
-<p>The model interprets the goal, selects tools, and generates arguments. The runtime validates requests and invokes the tools, which query information or produce external side effects. A user who says “Draft an email for me to review first” has authorized drafting, not sending. Even if the model generates a send request, the execution layer should block it.</p>
+<p>In an agent that allows the model to make dynamic decisions, the model interprets the goal, selects from the permitted tools, and generates arguments. The runtime validates requests, executes tools, and returns results; the tools query information or produce external side effects. A user who says “Draft an email for me to review first” has authorized drafting, not sending. Even if the model generates a send request, the execution layer should block it.</p>
 <h3 id="132-memory">1.3.2 Memory<a class="headerlink" href="#132-memory" title="Permanent link">&para;</a></h3>
 <p>The model itself does not permanently retain conversations. An agent's memory comes from systems designed around the model.</p>
 <h4 id="short-term-memory">Short-Term Memory<a class="headerlink" href="#short-term-memory" title="Permanent link">&para;</a></h4>
-<p>Short-term memory holds state for the current task, such as:</p>
+<p>Short-term memory preserves the state needed for later decisions across steps of the current task. Examples include:</p>
 <ul>
 <li>The current goal;</li>
 <li>Completed steps;</li>
@@ -9409,12 +9409,13 @@ N \times M
 <p>Google introduced A2A in April 2025. In June 2025, the project joined the Linux Foundation to continue its governance and development on a vendor-neutral basis:</p>
 <p><strong>A2A = Agent2Agent Protocol</strong></p>
 <p>If MCP addresses “How does an agent invoke external tools?”, A2A addresses “How does an agent discover and collaborate with another agent?”</p>
-<p>Consider the core objects in A2A 0.3.0:</p>
+<p>Consider the core objects in the A2A v1.0.1 release specification:</p>
 <ul>
 <li><strong>Agent Card</strong>: describes the agent's identity, capabilities, skills, service endpoint, and authentication requirements;</li>
-<li><strong>Task</strong>: the work to be completed collaboratively and its lifecycle;</li>
-<li><strong>Message</strong>: a message exchanged between agents;</li>
-<li><strong>Artifact</strong>: a task deliverable, composed of content parts such as text, files, or structured data.</li>
+<li><strong>Task</strong>: a unit of work that requires ongoing tracking, together with its lifecycle;</li>
+<li><strong>Message</strong>: a single communication message between a client and a remote agent;</li>
+<li><strong>Part</strong>: a content unit within a Message or Artifact, containing one of text, inline file bytes, a file URL, or structured data;</li>
+<li><strong>Artifact</strong>: a task deliverable composed of one or more Parts.</li>
 </ul>
 <blockquote>
 <p>An Agent Card is more like a capability profile. Objects such as Task primarily describe what the agent is doing and its execution progress.</p>
@@ -9428,7 +9429,7 @@ N \times M
     A-&gt;&gt;B: Send a task request message
     B--&gt;&gt;A: Return Task and current status
     B--&gt;&gt;A: Return subsequent status and Artifact through the chosen interaction mode</code></pre>
-<p>The diagram shows a task that requires ongoing tracking. In A2A 0.3.0, sending a message can also return a Message directly; not every interaction has to create a Task. Check the exact message fields and transports against the versions implemented by both parties.</p>
+<p>The diagram shows a task that requires ongoing tracking. Under the A2A v1.0.1 release specification, sending a message can also return a <code>Message</code> directly; not every interaction has to create a <code>Task</code>. Check the exact message fields and transports against the A2A versions actually supported by both parties.</p>
 <h2 id="17-how-mcp-and-a2a-relate"><span id="17-mcp-a2a" class="legacy-heading-anchor" aria-hidden="true"></span>1.7 How MCP and A2A Relate<a class="headerlink" href="#17-how-mcp-and-a2a-relate" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9452,7 +9453,7 @@ N \times M
 <tr>
 <td>Main abstractions</td>
 <td>Tools, Resources, Prompts</td>
-<td>Agent Card, Task, Message, Artifact</td>
+<td>Agent Card, Task, Message, Part, Artifact</td>
 </tr>
 <tr>
 <td>Typical uses</td>
@@ -9486,10 +9487,12 @@ N \times M
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
+<li><a href="https://openai.github.io/openai-agents-python/agents/">OpenAI Agents SDK: Agents</a></li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term memory</a></li>
 <li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
 <li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Linux Foundation: Agent2Agent Protocol Project</a></li>
-<li><a href="https://a2a-protocol.org/latest/specification/">A2A Protocol Specification</a></li>
-<li><a href="https://a2a-protocol.org/v0.3.0/specification/">A2A Protocol Specification 0.3.0: Core objects and message sending</a></li>
+<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto">A2A v1.0.1 release specification: Core objects and message sending</a></li>
+<li><a href="https://a2a-protocol.org/latest/topics/key-concepts/">A2A Protocol: Core Concepts</a></li>
 <li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
 </ul>
 
@@ -9514,7 +9517,7 @@ N \times M
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 24, 2026 09:43:25 CST">2026-09-24</span>
   </span>
 
     

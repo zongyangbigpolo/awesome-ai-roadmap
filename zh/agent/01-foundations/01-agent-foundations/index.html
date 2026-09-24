@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：从大模型到 AI Agent","description":"从大模型的知识、状态和行动限制出发定义 AI Agent，解释模型、工具、记忆与控制循环如何组成可执行系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：从大模型到 AI Agent","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：从大模型到 AI Agent","description":"从大模型的知识、状态和行动限制出发定义 AI Agent，解释模型、工具、记忆与控制循环如何组成可执行系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：从大模型到 AI Agent","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-09-20","dateModified":"2026-09-24"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：从大模型到 AI Agent","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"}]}</script>
     
@@ -9328,11 +9328,11 @@ S_{t+1}=\mathrm{Update}(S_t,A_t,O_{t+1})
 <blockquote>
 <p><strong>LLM + Tools → 可执行能力</strong></p>
 </blockquote>
-<p>大模型负责理解目标、选择工具和生成参数，运行时校验请求并调用工具；工具负责查询信息或产生外部副作用。用户要求“先写一封邮件让我看”，只授权了草稿生成，并没有授权发送。模型即使生成了发送请求，执行层也应拦住它。</p>
+<p>在允许模型动态决策的 Agent 中，大模型负责理解目标、在允许的工具范围内选择工具并生成参数，运行时负责校验请求、执行工具并返回结果；工具负责查询信息或产生外部副作用。用户要求“先写一封邮件让我看”，只授权了草稿生成，并没有授权发送。模型即使生成了发送请求，执行层也应拦住它。</p>
 <h3 id="132-memory">1.3.2 记忆机制（Memory）<a class="headerlink" href="#132-memory" title="Permanent link">&para;</a></h3>
 <p>模型本身不会永久保存对话。Agent 的记忆能力来自模型之外的系统设计。</p>
 <h4 id="_1">短期记忆<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h4>
-<p>短期记忆保存当前任务中的状态，例如：</p>
+<p>短期记忆用于在当前任务的多个步骤之间保留后续决策仍需使用的状态信息，例如：</p>
 <ul>
 <li>当前目标；</li>
 <li>已完成的步骤；</li>
@@ -9409,12 +9409,13 @@ N \times M
 <p>Google 在 2025 年 4 月推出了 A2A。2025 年 6 月，A2A 项目进入 Linux 基金会，以厂商中立的方式继续治理和发展：</p>
 <p><strong>A2A = Agent2Agent Protocol（Agent 间通信协议）</strong></p>
 <p>如果说 MCP 解决的是“Agent 如何调用外部工具”，那么 A2A 解决的就是“Agent 如何发现并与另一个 Agent 协作”。</p>
-<p>以 A2A 0.3.0 的核心对象为例：</p>
+<p>以 A2A v1.0.1 发布规范中的核心对象为例：</p>
 <ul>
 <li><strong>Agent Card</strong>：描述 Agent 的身份、能力、技能、服务地址和认证要求；</li>
-<li><strong>Task</strong>：需要协作完成的任务及其生命周期；</li>
-<li><strong>Message</strong>：Agent 之间交换的消息；</li>
-<li><strong>Artifact</strong>：任务产生的交付物，可由文本、文件或结构化数据等内容部分组成。</li>
+<li><strong>Task</strong>：需要持续跟踪的工作单元及其生命周期；</li>
+<li><strong>Message</strong>：客户端与远端 Agent 之间的一条通信消息；</li>
+<li><strong>Part</strong>：Message 和 Artifact 中承载实际内容的基本单元，每个 Part 的内容在文本、内联文件字节、文件 URL 或结构化数据中择一；</li>
+<li><strong>Artifact</strong>：任务产生的实际交付物，由一个或多个 Part 组成。</li>
 </ul>
 <blockquote>
 <p>Agent Card 更像一份“能力名片”，而“正在做什么”和执行进度主要由 Task 等对象表达。</p>
@@ -9428,7 +9429,7 @@ N \times M
     A-&gt;&gt;B: 发送任务请求消息
     B--&gt;&gt;A: 返回 Task 及当前状态
     B--&gt;&gt;A: 按所选交互方式返回后续状态与 Artifact</code></pre>
-<p>图中展示需要持续跟踪的任务。A2A 0.3.0 的消息发送也允许直接返回 Message，不是每次交互都必须创建 Task；具体消息字段和传输方式应按双方实现的版本核对。</p>
+<p>图中展示的是需要持续跟踪的任务。A2A v1.0.1 发布规范中的消息发送也允许直接返回 <code>Message</code>，不是每次交互都必须创建 <code>Task</code>；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。</p>
 <h2 id="17-mcp-a2a">1.7 MCP 与 A2A 的关系<a class="headerlink" href="#17-mcp-a2a" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9452,7 +9453,7 @@ N \times M
 <tr>
 <td>主要抽象</td>
 <td>Tools、Resources、Prompts</td>
-<td>Agent Card、Task、Message、Artifact</td>
+<td>Agent Card、Task、Message、Part、Artifact</td>
 </tr>
 <tr>
 <td>典型场景</td>
@@ -9486,10 +9487,12 @@ N \times M
 <h2 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
+<li><a href="https://openai.github.io/openai-agents-python/agents/">OpenAI Agents SDK: Agents</a></li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term memory</a></li>
 <li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
 <li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Linux Foundation: Agent2Agent Protocol Project</a></li>
-<li><a href="https://a2a-protocol.org/latest/specification/">A2A Protocol Specification</a></li>
-<li><a href="https://a2a-protocol.org/v0.3.0/specification/">A2A Protocol Specification 0.3.0：核心对象与消息发送</a></li>
+<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto">A2A v1.0.1 发布规范：核心对象与消息发送</a></li>
+<li><a href="https://a2a-protocol.org/latest/topics/key-concepts/">A2A Protocol: Core Concepts</a></li>
 <li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
 </ul>
 
@@ -9514,7 +9517,7 @@ N \times M
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月24日 09:43:25 CST">2026-09-24</span>
   </span>
 
     

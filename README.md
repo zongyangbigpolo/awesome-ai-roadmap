@@ -2,6 +2,8 @@
 
 **English** | [简体中文](README.zh.md)
 
+> **2026 National Day holiday collaboration:** We will organize a contributor group after the holiday. During the break, contributors with merge access may merge changes without waiting for individual confirmation from the maintainer. Please keep both language editions in sync and complete the existing review and checks before merging.
+
 An English-first, bilingual handbook for AI engineering interviews, covering model foundations, application development, and production operations. Each topic explains mechanisms, design choices, failure cases, and practical trade-offs so you can move from foundational questions to system design. The searchable MkDocs site organizes the material as topics, modules, and chapters.
 
 For a continuous reading path, start with the [book contents](docs/book/README.md): front matter, nine parts, and closing matter. Every chapter has an English source and a complete Simplified Chinese companion. Each language uses the same source text for its website and EPUB editions.

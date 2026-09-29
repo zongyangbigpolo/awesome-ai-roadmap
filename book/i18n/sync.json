@@ -1254,11 +1254,11 @@
       "translation_sha256": "8eb347c0b80c31296519b963955dabf41cc4099a579dc5243a0071e9e681e886"
     },
     "docs/rag/07-structured-queries/22-text-to-sql.md": {
-      "note": "Reviewed paired English and Chinese corrections for the 12 findings from the full English audit at 91950f6: evaluator types, static planning, parent mappings, explicit PostgreSQL URLs, functional migration versus canary traffic, Squid version/policy, text-video metrics, frozen weights versus behavior, conversation state, sandbox scope, grouped DISTINCT, and Celsius. Checked affected prose, tables, diagram, summary and cited primary sources; no chapter inventory or formula changes.",
-      "reviewed_at": "2026-09-20T06:43:50+00:00",
-      "source_sha256": "127dc0f8c702fbe593851737f556345750a83b71b981b613c60dbc4502577a1f",
+      "note": "Reviewed the complete English/Chinese Text-to-SQL pair and the cited ACL PDFs: SchemaGraphSQL sections 2.1-2.4, 3.4, 5.2 and Appendix E; Rethinking Schema Linking sections 3.2-3.3, 4.2 and Limitations. Clarified permission-preserving graph expansion, business semantics and join cardinality, per-strategy recall without requiring alternative-path unions, and the trusted-binding subsection in both languages. SQL, fixtures, execution restrictions and chapter inventory are unchanged.",
+      "reviewed_at": "2026-09-29T04:22:40+00:00",
+      "source_sha256": "d7d2a5f634f0a59de8135464b48897f379d34effe335e0323a8d08fac5f680c9",
       "translation": "docs/rag/07-structured-queries/22-text-to-sql.zh.md",
-      "translation_sha256": "5cdd4b7f16124846410ce16877b4a1e894f10ba141c8d439037fca1f35075b10"
+      "translation_sha256": "33ffd3765e2b7758995aaa0711f0a1c238e57b47b289f87c682ee7056f64d7ab"
     },
     "docs/rag/07-structured-queries/README.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

@@ -115,6 +115,25 @@ O105 在快照中已经存在，但恰好落在下单窗口的右端点，不进
 
 给模型的上下文应包含相关表与字段、联合主外键、一行的粒度、单位、状态含义、时间约定和返回列，而不是整个数据库的数据字典。表多时可检索 schema，但要补齐必要关联路径；检索漏表不能被解释成“数据库没有这项数据”。
 
+### 22.4.1 先检索候选，再补齐关联路径
+
+面对大规模 Schema，检索应该生成候选，而不是把相似度低于阈值的内容一次性永久删掉。先按权限排除不可访问的表和列，再用问题、已确认的业务术语、Schema 描述，以及策略允许时的非敏感值摘要，对剩余对象排序。这一步优先保证召回：少一个必要字段，后续生成的查询可能全部错误；多一些候选主要增加上下文成本和选择混淆。精度仍然重要，因此候选预算和回退方式要通过评测确定，不能把同一个固定 top-k 套到所有数据库。
+
+“未发金额”在字面上最接近三个明细度量，但只保留它们还不能回答本章的问题：
+
+| 需要保留的 Schema 元素 | 为什么需要 |
+|---|---|
+| `ordered_qty`、`shipped_qty`、`unit_price_cents` | 计算未发数量和金额 |
+| `orders`、`order_lines` | 保留订单头与订单明细的粒度 |
+| `tenant_id`、`order_id` | 补齐联合关联键，并显式保留租户身份 |
+| `customer_id`、`created_at`、`status` | 表达授权客户范围、时间窗口、取消规则和分组 |
+
+选出锚点表后，还要沿**可信 Schema 图**扩展：补入已批准关联路径需要的主外键列，以及路径实际经过的中间表。扩展必须保持在同一授权范围内，不能重新引入初始权限检查已排除的表或列。[SchemaGraphSQL](https://aclanthology.org/2026.findings-eacl.134/)研究了面向大规模 Schema 的图搜索与路径发现，也把外键缺失或不一致时的可关联性发现单独处理。因此，推断出的边只能作为查询规划候选，不能当作权威数据库元数据。即使路径由已声明的外键组成，也要核对每段关系的业务含义与基数，尤其是多对多关联是否会在聚合前把数量重复展开。最短连通路径不一定就是正确路径。若仍存在多条合理路径，或锚点之间没有已声明关系，应在授权范围内扩大候选集合、查询经过维护的关系元数据，或请人澄清，不能凭字段名臆造关联。
+
+这一步要和 SQL 生成分开评测。测试集可记录可接受查询策略需要的表、列和关系路径，再衡量必要元素召回、候选集合大小，以及下游执行正确率和业务正确率。[上下文感知双向检索研究](https://aclanthology.org/2026.findings-eacl.236/)也把 Schema Linking 作为独立检索问题，同时考察召回与误选。等价 SQL 不必匹配同一个参考字符串；如果数据模型允许多种正确策略，标签也要容纳它们。应分别按各个可接受策略计算召回率，报告覆盖最好的一种；完整覆盖是指保留至少一种有效策略的全部必要元素，不是要求覆盖所有备选策略的并集。安全测试仍应独立进行：Schema 选择能减少上下文和混淆，只有可信授权与受限执行层才能阻止访问被排除的数据。
+
+### 22.4.2 由可信服务端绑定日期和权限值
+
 模型输出含命名占位符的 SQL。可信服务端负责把已确认的日期转为 UTC，并根据当前登录身份绑定权限值：
 
 | 绑定名 | 本次值 | 值从哪里来 |
@@ -245,5 +264,7 @@ SQLite 没有服务型数据库那样的内置用户角色和行级授权。本�
 - 同一固定提交的 ERP 示例：[README](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/README.md)、[agent.py](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py)、[demo.py](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py)。书中实验描述使用 PostgreSQL，配套运行示例使用 SQLite；这里核读源码，不运行上游程序，不引用其通过率为本章实验结论或客户收益。
 - SQLite 官方：[聚合函数](https://www.sqlite.org/lang_aggfunc.html)、[URI 只读模式](https://www.sqlite.org/uri.html)、[授权回调](https://www.sqlite.org/c3ref/set_authorizer.html)、[不可信 SQL 的安全措施](https://www.sqlite.org/security.html)、[应用函数安全](https://www.sqlite.org/appfunc.html#security_implications)、[执行计划](https://www.sqlite.org/eqp.html)。
 - SQLite 官方：[类型亲和性](https://www.sqlite.org/datatype3.html)、[STRICT 表及版本要求](https://www.sqlite.org/stricttables.html)。
+- Safdarian 等，[《SchemaGraphSQL：使用寻路图算法高效完成大规模数据库 Text-to-SQL Schema Linking》](https://aclanthology.org/2026.findings-eacl.134/)，Findings of EACL 2026。本章采用它对 Schema 图寻路与可关联性发现的区分，不把论文基准结果当作生产保证。
+- Nahid 等，[《重新思考 Schema Linking：面向 Text-to-SQL 的上下文感知双向检索方法》](https://aclanthology.org/2026.findings-eacl.236/)，Findings of EACL 2026。该研究支持把 Schema 检索单独评测，同时关注召回和误选。
 
-资料查阅于 2026-09-14，2026-09-15 复核固定提交与 SQLite 类型、聚合及执行限制。
+资料查阅于 2026-09-14，2026-09-15 复核固定提交与 SQLite 类型、聚合及执行限制；英译于 2026-09-20 核查，Schema Linking 资料于 2026-09-29 复核。

@@ -115,6 +115,25 @@ Storage types also need validation. In an ordinary SQLite table, `INTEGER` speci
 
 The model's context should contain the relevant tables and columns, composite primary and foreign keys, row granularity, units, status definitions, time conventions, and expected output columns—not the entire database's data dictionary. With many tables, schema retrieval can help, but it must include the necessary join paths. Missing a table during retrieval does not mean “the database has no such data.”
 
+### 22.4.1 Retrieve candidates, then complete the join path
+
+On a large schema, retrieval should generate candidates rather than irreversibly delete everything below a similarity threshold. Apply table and column permissions first, then rank the remaining objects using the question, approved business terms, schema descriptions, and—where policy allows—non-sensitive value summaries. Favor recall at this stage: one missing required column can make every generated query wrong, while extra candidates primarily add context cost and selection ambiguity. Precision still matters, so the candidate budget and fallback behavior need evaluation rather than a fixed top-k copied across databases.
+
+The phrase “remaining amount” appears closest to three line-level measures, but those are not enough to answer this chapter's question:
+
+| Schema elements to retain | Why they are required |
+|---|---|
+| `ordered_qty`, `shipped_qty`, `unit_price_cents` | Compute remaining quantity and amount |
+| `orders`, `order_lines` | Preserve the order-header and line-item grains |
+| `tenant_id`, `order_id` | Complete the composite join and keep tenant identity explicit |
+| `customer_id`, `created_at`, `status` | Express the authorized customer scope, time window, cancellation rule, and grouping |
+
+After choosing anchor tables, expand them through a **trusted schema graph**: add the primary and foreign key columns needed for an approved join path, along with intermediate tables that the path actually crosses. Expansion must stay within the same authorized scope; it must not reintroduce a table or column excluded by the initial permission check. [SchemaGraphSQL](https://aclanthology.org/2026.findings-eacl.134/) studies this graph-and-pathfinding approach for large schemas. It also treats missing or inconsistent foreign keys as a separate joinability-discovery problem; an inferred edge is therefore a query-planning candidate, not authoritative database metadata. Even a declared foreign-key path needs a business check: confirm what each relationship means and its cardinality, especially whether a many-to-many join would multiply quantities before aggregation. The shortest connected path is not necessarily the right one. If several join paths remain plausible, or no declared path connects the anchors, expand the authorized candidates, consult curated relationship metadata, or ask for clarification instead of inventing a join.
+
+Evaluate this stage separately from SQL generation. A useful test set records the tables, columns, and relationship paths required by accepted query strategies, then measures required-element recall, candidate-set size, and downstream execution and business correctness. [Context-aware bidirectional retrieval research](https://aclanthology.org/2026.findings-eacl.236/) likewise treats schema linking as a separate retrieval problem and examines both recall and false positives. Equivalent SQL need not match one reference string, so labels should allow more than one valid strategy where the data model permits it. Compute recall against each accepted strategy separately and report the best-covered one; complete coverage means retaining every required element of at least one valid strategy, not the union of all alternatives. Security tests remain separate: schema selection reduces context and confusion, but only trusted authorization and the restricted execution layer can prevent access to excluded data.
+
+### 22.4.2 Bind dates and authorization values on the trusted server
+
 The model outputs SQL containing named placeholders. The trusted server converts confirmed dates to UTC and binds authorization values derived from the current signed-in identity:
 
 | Binding | Value for this request | Source of the value |
@@ -245,5 +264,7 @@ When explaining this design in an interview, the point is not to recite complex 
 - ERP example at the same pinned commit: [README](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/README.md), [agent.py](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py), and [demo.py](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py). The book's experiment description uses PostgreSQL, while the runnable companion uses SQLite. The review here inspects source code without running the upstream program; its reported pass rates are not presented as this chapter's experimental results or customer benefits.
 - Official SQLite documentation: [aggregate functions](https://www.sqlite.org/lang_aggfunc.html), [read-only URI mode](https://www.sqlite.org/uri.html), [authorization callbacks](https://www.sqlite.org/c3ref/set_authorizer.html), [defenses for untrusted SQL](https://www.sqlite.org/security.html), [application-defined function security](https://www.sqlite.org/appfunc.html#security_implications), and [query plans](https://www.sqlite.org/eqp.html).
 - Official SQLite documentation: [type affinity](https://www.sqlite.org/datatype3.html) and [STRICT tables and version requirements](https://www.sqlite.org/stricttables.html).
+- Safdarian et al., [“SchemaGraphSQL: Efficient Schema Linking with Pathfinding Graph Algorithms for Text-to-SQL on Large-Scale Databases”](https://aclanthology.org/2026.findings-eacl.134/), Findings of EACL 2026. This chapter uses its distinction between schema-graph pathfinding and joinability discovery, not its benchmark results as a production guarantee.
+- Nahid et al., [“Rethinking Schema Linking: A Context-Aware Bidirectional Retrieval Approach for Text-to-SQL”](https://aclanthology.org/2026.findings-eacl.236/), Findings of EACL 2026. It motivates evaluating schema retrieval as a separate stage with both recall and false positives.
 
-Sources were consulted on 2026-09-14; the pinned commit and SQLite typing, aggregation, and execution limits were rechecked on 2026-09-15. The English migration rechecked these cited sources on 2026-09-20.
+Sources were consulted on 2026-09-14; the pinned commit and SQLite typing, aggregation, and execution limits were rechecked on 2026-09-15. The English migration was checked on 2026-09-20; the schema-linking sources were rechecked on 2026-09-29.

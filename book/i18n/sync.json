@@ -8,11 +8,11 @@
       "translation_sha256": "fd5d0d53e3a10c75d0fecce1e27d8f6c57ff6fcc212f41d12fe5a8e7833b3435"
     },
     "README.md": {
-      "note": "Reviewed paired English and Chinese 2026 National Day collaboration notice: group organized after the holiday; contributors with merge access can merge without individual maintainer confirmation, while existing review, bilingual synchronization and checks remain in place.",
-      "reviewed_at": "2026-09-29T04:24:30+00:00",
-      "source_sha256": "d07aa0b51cff719cb64ba5671dfd613786d70a818ebf10d6a5cece006844733f",
+      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
+      "reviewed_at": "2026-09-20T03:42:34+00:00",
+      "source_sha256": "5fa0853da51ab00d49f9d3b087cea976ddeadaea3078ae5dee11eda60f558483",
       "translation": "README.zh.md",
-      "translation_sha256": "bfcee5f0d6a856bd1fc9eb102bf539461868b181d5cd50f96dcaa1971d08e97f"
+      "translation_sha256": "9d5c2fc05ace52a57e9fb598914a28c47eeb84d18e72ca5507f44ba881e9bdd9"
     },
     "book/README.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

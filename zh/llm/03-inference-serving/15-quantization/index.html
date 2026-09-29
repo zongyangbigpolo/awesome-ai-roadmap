@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
+        <meta name="description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
       
       
         <meta name="author" content="Polo Li">
@@ -68,11 +68,11 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="AI 工程学习路线">
     <meta property="og:title" content="第十五章：模型量化">
-    <meta property="og:description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
+    <meta property="og:description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
     <meta property="og:url" content="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="第十五章：模型量化">
-    <meta name="twitter:description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
+    <meta name="twitter:description" content="比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。">
     
       <link rel="alternate" hreflang="zh-CN" href="https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/">
     
@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：模型量化","description":"比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：模型量化","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：模型量化","description":"比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：模型量化","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-09-20","dateModified":"2026-09-29"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十五章：模型量化","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"}]}</script>
     
@@ -1648,6 +1648,15 @@
   <a href="#1522" class="md-nav__link">
     <span class="md-ellipsis">
       15.2.2 粒度与训练方式是另外两条轴
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1523-fp8fp4-int8int4" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.2.3 FP8、FP4 与 INT8、INT4 有什么不同？
     </span>
   </a>
   
@@ -9345,6 +9354,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#1523-fp8fp4-int8int4" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.2.3 FP8、FP4 与 INT8、INT4 有什么不同？
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -9813,6 +9831,118 @@ q=\mathrm{clip}\left(\mathrm{round}\left(\frac{x}{s}\right)+z,q_{\min},q_{\max}\
 </table>
 <p>W4A16 表示 4-bit 权重、16-bit 激活，不等于所有矩阵乘法都用 INT4 算术，也不包含 KV 精度。W8A8、FP8、NF4 的数值编码与计算路径不同，不能只按「几 bit」认定可互换。</p>
 <p>例如每 128 个 4-bit 权重共用一个 16-bit scale，仅这一项元数据就使平均位宽变为 <code>4 + 16/128 = 4.125</code> bit；再加零点、对齐和保留高精度的层，实际文件会更大。这是存储示例，不指定某个 checkpoint 的布局。</p>
+<h3 id="1523-fp8fp4-int8int4">15.2.3 FP8、FP4 与 INT8、INT4 有什么不同？<a class="headerlink" href="#1523-fp8fp4-int8int4" title="Permanent link">&para;</a></h3>
+<p>线性整数格式的量化级别是均匀网格：scale <code>s</code> 为正、采用就近舍入且不发生截断时，绝对误差上界为 <code>s/2</code>；这不是截断误差的上界，也不适用于所有舍入模式。浮点格式把一部分位分给指数，级别间距随数值大小增长。在就近舍入且不发生溢出的条件下，正规数范围内的<strong>相对</strong>舍入误差上界大致恒定。次正规数的绝对间距固定，因此接近零时相对误差可能增大，甚至把非零小值舍入为零。位宽相同时，浮点格式牺牲范围上端的一部分分辨率，换来大得多的动态范围。两者没有谁在所有情况下都更精确。</p>
+<p>FP8 论文定义了两种 8-bit 编码：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>E4M3</th>
+<th>E5M2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>指数位 / 尾数位</td>
+<td>4 / 3</td>
+<td>5 / 2</td>
+</tr>
+<tr>
+<td>指数偏置</td>
+<td>7</td>
+<td>15</td>
+</tr>
+<tr>
+<td>最大有限值</td>
+<td>448</td>
+<td>57,344</td>
+</tr>
+<tr>
+<td>最小正规数 / 次正规数绝对值</td>
+<td><code>2^-6</code> / <code>2^-9</code></td>
+<td><code>2^-14</code> / <code>2^-16</code></td>
+</tr>
+<tr>
+<td>特殊值</td>
+<td>不表示无穷大；NaN 只占一个尾数位模式</td>
+<td>沿用 IEEE 风格的无穷大与 NaN</td>
+</tr>
+<tr>
+<td>论文建议用途</td>
+<td>权重与激活值</td>
+<td>梯度</td>
+</tr>
+</tbody>
+</table>
+<p>E4M3 放弃无穷大，把最大值扩展到 448；E5M2 多留一位指数，以一位尾数为代价覆盖梯度的宽范围。NVIDIA Transformer Engine 的 <code>HYBRID</code> 配方采用同样的分工：前向用 E4M3，反向用 E5M2。</p>
+<p>FP8 通常需要缩放，因为两种格式的范围都装不下任意张量。一种选择是把当前张量或块的绝对值最大值映射到格式最大值附近，但配方不止这一种。Transformer Engine 还支持逐张量的延迟缩放（delayed scaling），使用此前迭代的绝对值最大值，并可通过可配置的 margin 留出余量，不一定精确贴合当前最大值。这里的 <code>s</code> 指反量化乘数：量化时计算 <code>x/s</code>，重构时计算 <code>s*q</code>；有些 API 则把它的倒数称为 scaling factor。</p>
+<p>下面沿用前面示例的范围 <code>[-2.5, 2.5]</code> 做一个可以手算的对比，两种格式都选择按当前最大值缩放。对称 INT8 取 <code>s = 2.5/127</code>；E4M3 取逐张量 scale <code>s = 2.5/448</code>，两者都舍入到最近的可表示值：</p>
+<table>
+<thead>
+<tr>
+<th>原值</th>
+<th>INT8：整数码 → 反量化值</th>
+<th>E4M3：缩放后的值 → 最近级别 → 反量化值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.7</td>
+<td>36 → 0.7087，相对误差 1.2%</td>
+<td>125.44 → 128 → 0.7143，相对误差 2.0%</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>1 → 0.0197，相对误差 97%</td>
+<td>1.792 → 1.75 → 0.00977，相对误差 2.3%</td>
+</tr>
+</tbody>
+</table>
+<p>在这个范围的上端，INT8 的均匀步长比 E4M3 的 3 位尾数更细；对仍处于 E4M3 缩放后正规数范围内的小数值，INT8 只剩寥寥几个整数码，E4M3 则保持相近的相对精度。所以同样 8 bit，FP8 可能更能容忍带离群值的激活等宽动态范围数据，而贴合窄且规整分布的 INT8 网格可能更精确。应按目标张量的实际分布和任务评测来选，不要套经验口诀。</p>
+<p><strong>块缩放 FP4。</strong> 4-bit 的 E2M1 浮点只能表示 <code>0, 0.5, 1, 1.5, 2, 3, 4, 6</code> 这几个绝对值。当不同局部的数值范围差异较大时，整个张量共用一个 scale 可能丢失过多信息。E2M1 本身并不要求块缩放；MXFP4 和 NVFP4 为每个小块配置 scale，以缓解这一问题：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>元素类型</th>
+<th>块大小</th>
+<th>块 scale</th>
+<th>平均位宽（数据 + scale）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MXFP4，OCP MX v1.0</td>
+<td>E2M1</td>
+<td>32</td>
+<td>E8M0：2 的整数次幂</td>
+<td><code>4 + 8/32 = 4.25</code></td>
+</tr>
+<tr>
+<td>NVFP4，NVIDIA</td>
+<td>E2M1</td>
+<td>16</td>
+<td>E4M3，另加一个 FP32 逐张量 scale</td>
+<td><code>4 + 8/16 + 32/N = 4.5 + 32/N</code></td>
+</tr>
+</tbody>
+</table>
+<p>这里的 <code>N</code> 是一个 NVFP4 张量中共用一个 FP32 scale 的数值个数。上述计算假设每个块都填满，不计填充、对齐和其他元数据。</p>
+<p>OCP MX 规范还用同样的 32 元素 E8M0 块 scale 定义了 MXFP8、MXFP6 和 MXINT8。下面的示例采用微软 MX 库实现的最大指数缩放方法，并明确选择「就近舍入、平局取偶」（<code>round="even"</code>）。这是一个转换配方，并不要求所有 MX 实现都采用相同的 scale 选择和舍入方式。</p>
+<p>对只含有限 FP32 数且不全为零的块，记绝对值最大值为 <code>amax</code>，则 E2M1 的块 scale 为 <code>X = 2^max(floor(log2(amax)) - 2, -127)</code>。未触及 scale 下限时，它等于不超过 <code>amax</code> 的最大 2 的幂，再除以 E2M1 中最大的 2 的幂，即 4。E8M0 的有限 scale 范围为 <code>2^-127</code> 到 <code>2^127</code>，极小数值块需要钳制到 scale 下限。全零块需要一个非零 scale；NaN 和无穷大的处理应遵循转换器策略，不能套用这个有限输入公式。每个元素除以 <code>X</code> 后舍入到 E2M1 网格，并饱和到 ±6。若某块的绝对值最大值为 2.5，则 <code>X = 2/4 = 0.5</code>：</p>
+<ul>
+<li><code>0.7 / 0.5 = 1.4</code> 舍入为 1.5，反量化为 0.75；</li>
+<li><code>2.5 / 0.5 = 5</code> 恰好落在 4 和 6 中间，平局取偶选 4：4 的 E2M1 编码为 <code>0110</code>，有效数最低位为 0，而 6 的编码为 <code>0111</code>，最低位为 1；不是看十进制数值是否为偶整数。块内最大值反量化为 2.0，误差 20%；</li>
+<li><code>0.01 / 0.5 = 0.02</code> 舍入为 0，信息丢失。</li>
+</ul>
+<p>在这个最大指数缩放配方下，未触及 scale 下限时，缩放后的块最大值落在 <code>[4, 8)</code>：要么处在 E2M1 网格最稀疏的一段，要么被饱和处理。NVFP4 用更小的块和可取小数的 E4M3 scale 更贴合每块的范围，代价是更多 scale 元数据和第二级缩放。两种设计都不能免去质量评测。</p>
+<p>由此有两点实践结论：</p>
+<ul>
+<li><strong>格式不等于量化方法。</strong> FP8、MXFP4 只规定编码方式；如何选 scale、如何校准、模型是否需要在该误差下训练，仍是独立的决策。OpenAI 的 gpt-oss 模型卡报告：占全部参数 90% 以上的 MoE 权重被量化为 MXFP4，每参数 4.25 bit，模型在后训练阶段就带着这种量化。模型卡称 gpt-oss-120b 可放进一张 80 GB GPU，其 checkpoint 为 60.8 GiB；4.25 bit 不是所有模型参数的平均位宽，checkpoint 大小也不包含运行时的 KV Cache 和 workspace。这个结果属于该模型及其训练流程，不适用于任意上下文长度或并发，也不能说明任意 BF16 checkpoint 都能无损转成 FP4。</li>
+<li><strong>核对具体变体与硬件路径。</strong> NVIDIA 从 H100 开始提供 FP8 Tensor Core 支持，Blackwell 又加入 NVFP4 和 MXFP8。AMD CDNA3（MI300 系列）使用 FP8 的 FNUZ 变体，CDNA4 则改用 OCP 的 E4M3FN 与 E5M2。E4M3FNUZ 最大值为 240，没有负零，只有一个 NaN。除负零外，每个表示有限 E4M3FN 数的字节按 E4M3FNUZ 解读时，数值都减半，包括次正规数和最高范围的有限值。但 <code>0x80</code> 在 E4M3FN 中是负零，在 E4M3FNUZ 中是 NaN；FN 的 NaN 编码 <code>0x7F</code> 和 <code>0xFF</code> 在 FNUZ 中则分别表示 +240 和 −240。</li>
+</ul>
+<p>对于<strong>从 FN 转为 FNUZ 的有限权重</strong>，所引用的固定版本 vLLM 实现会把 <code>0x80</code> 改为 <code>0x00</code>，按 FNUZ 解读其余字节，并将反量化 scale <code>s</code> 加倍。只要加倍后的 scale 仍能表示，这样就能保持数值不变，包括次正规数，但会丢失零的符号。源数据中的 NaN 则必须拒绝或显式映射到 FNUZ 的 <code>0x80</code>，不能悄悄变成有限权重。这不是通用的数值类型转换，也不是可逆的字节复制配方：反向转换时，FNUZ 中表示有限值 ±240 的编码在 FN 中是 NaN。缺少原生 kernel 时，运行时可能先反量化到更高精度；是否节省显存或时间取决于实际执行路径。</p>
 <h2 id="153">15.3 各位数的精度边界<a class="headerlink" href="#153" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -10093,6 +10223,7 @@ WX=(WS)(S^{-1}X)
 <h2 id="1510">15.10 本章总结<a class="headerlink" href="#1510" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>线性整数均匀量化</strong>常用 scale + zero point 映射；NF4 等非均匀格式使用 codebook，不能一概而论；</li>
+<li><strong>FP8 与 FP4 是浮点网格</strong>：就近舍入在正规数范围内具有大致恒定的相对误差上界，不能推广到下溢或溢出附近；缩放配方仍需单独选择。MXFP4 与 NVFP4 的块大小和 scale 编码不同，E4M3FN 与 E4M3FNUZ 等 FP8 变体也不能按位互换；</li>
 <li><strong>两个潜在收益</strong>：4-bit 权重裸存储与权重访存量可降至 FP16 的四分之一；端到端速度取决于 kernel 和工作负载；</li>
 <li><strong>对称量化常用于权重，非对称量化常用于激活，但不是硬规则</strong>；应以格式、kernel、校准数据和任务评测为准；</li>
 <li><strong>位宽越低通常越需谨慎评测</strong>；INT8、INT4、INT3 的实际边界不能脱离模型、格式与任务；</li>
@@ -10117,6 +10248,16 @@ WX=(WS)(S^{-1}X)
 <li><a href="https://github.com/IST-DASLab/gptq">GPTQ 作者实现：列顺序、act-order 与分组</a></li>
 <li><a href="https://arxiv.org/html/2306.00978v5">AWQ 原论文：逐通道缩放与搜索</a></li>
 <li><a href="https://docs.pytorch.org/ao/main/workflows/qat.html">PyTorch AO：Quantization-Aware Training</a></li>
+<li><a href="https://arxiv.org/abs/2209.05433v1">FP8 Formats for Deep Learning，v1，第 2–3 节与表 1</a></li>
+<li><a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP Microscaling Formats (MX) Specification v1.0</a></li>
+<li><a href="https://github.com/microsoft/microxcaling/blob/7bc41952de394f5cc5e782baf132e7c7542eb4e4/mx/mx_ops.py">微软 MX 库：最大指数缩放与 scale 边界，固定版本</a></li>
+<li><a href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">NVIDIA：Introducing NVFP4 for Efficient and Accurate Low-Precision Inference</a></li>
+<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/docs/examples/fp8_primer.ipynb">NVIDIA Transformer Engine：FP8 入门与 MXFP8/NVFP4，固定版本 notebook</a></li>
+<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/transformer_engine/common/recipe/__init__.py">NVIDIA Transformer Engine：缩放配方、历史最大值与 margin，固定版本源码</a></li>
+<li><a href="https://arxiv.org/abs/2508.10925v1">gpt-oss-120b 与 gpt-oss-20b 模型卡，v1，第 2.1 节与表 1：MXFP4 MoE 权重与 checkpoint 大小</a></li>
+<li><a href="https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html">AMD ROCm 博客：CDNA3 与 CDNA4 上的 FP8 FNUZ 与 OCP 变体</a></li>
+<li><a href="https://onnx.ai/onnx/technical/float8.html">ONNX：FP8 正规数／次正规数解码与特殊值编码</a></li>
+<li><a href="https://github.com/vllm-project/vllm/blob/01efc7ef781391e744ed08c3292817a773d654e6/vllm/model_executor/layers/quantization/utils/w8a8_utils.py#L437-L458">vLLM v0.10.2：E4M3FN 到 E4M3FNUZ 的规范化，固定版本实现</a></li>
 </ul>
 
 
@@ -10140,7 +10281,7 @@ WX=(WS)(S^{-1}X)
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月29日 12:32:01 CST">2026-09-29</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-09-29"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"}]}</script>
     
@@ -5792,6 +5792,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="22.4 The model submits a query proposal, not an authorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2241-retrieve-candidates-then-complete-the-join-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      22.4.1 Retrieve candidates, then complete the join path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2242-bind-dates-and-authorization-values-on-the-trusted-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      22.4.2 Bind dates and authorization values on the trusted server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -9015,6 +9039,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="22.4 The model submits a query proposal, not an authorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2241-retrieve-candidates-then-complete-the-join-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      22.4.1 Retrieve candidates, then complete the join path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2242-bind-dates-and-authorization-values-on-the-trusted-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      22.4.2 Bind dates and authorization values on the trusted server
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -9345,6 +9393,38 @@
 <p>Storage types also need validation. In an ordinary SQLite table, <code>INTEGER</code> specifies type affinity; the column declaration alone does not reject every fractional value. Here, the maintenance program is assumed to have validated the types of quantities, amounts in fen, and IDs. To enforce integer storage in the database, add <code>typeof</code> checks or use <code>STRICT</code> tables in SQLite 3.37.0 or later. Both per-line products and aggregate amounts must remain within the safe integer range. A floating-point approximation after overflow must not be described as “exact to the fen.”</p>
 <h2 id="224-the-model-submits-a-query-proposal-not-an-authorization"><span id="224" class="legacy-heading-anchor" aria-hidden="true"></span>22.4 The model submits a query proposal, not an authorization<a class="headerlink" href="#224-the-model-submits-a-query-proposal-not-an-authorization" title="Permanent link">&para;</a></h2>
 <p>The model's context should contain the relevant tables and columns, composite primary and foreign keys, row granularity, units, status definitions, time conventions, and expected output columns—not the entire database's data dictionary. With many tables, schema retrieval can help, but it must include the necessary join paths. Missing a table during retrieval does not mean “the database has no such data.”</p>
+<h3 id="2241-retrieve-candidates-then-complete-the-join-path"><span id="2241" class="legacy-heading-anchor" aria-hidden="true"></span>22.4.1 Retrieve candidates, then complete the join path<a class="headerlink" href="#2241-retrieve-candidates-then-complete-the-join-path" title="Permanent link">&para;</a></h3>
+<p>On a large schema, retrieval should generate candidates rather than irreversibly delete everything below a similarity threshold. Apply table and column permissions first, then rank the remaining objects using the question, approved business terms, schema descriptions, and—where policy allows—non-sensitive value summaries. Favor recall at this stage: one missing required column can make every generated query wrong, while extra candidates primarily add context cost and selection ambiguity. Precision still matters, so the candidate budget and fallback behavior need evaluation rather than a fixed top-k copied across databases.</p>
+<p>The phrase “remaining amount” appears closest to three line-level measures, but those are not enough to answer this chapter's question:</p>
+<table>
+<thead>
+<tr>
+<th>Schema elements to retain</th>
+<th>Why they are required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ordered_qty</code>, <code>shipped_qty</code>, <code>unit_price_cents</code></td>
+<td>Compute remaining quantity and amount</td>
+</tr>
+<tr>
+<td><code>orders</code>, <code>order_lines</code></td>
+<td>Preserve the order-header and line-item grains</td>
+</tr>
+<tr>
+<td><code>tenant_id</code>, <code>order_id</code></td>
+<td>Complete the composite join and keep tenant identity explicit</td>
+</tr>
+<tr>
+<td><code>customer_id</code>, <code>created_at</code>, <code>status</code></td>
+<td>Express the authorized customer scope, time window, cancellation rule, and grouping</td>
+</tr>
+</tbody>
+</table>
+<p>After choosing anchor tables, expand them through a <strong>trusted schema graph</strong>: add the primary and foreign key columns needed for an approved join path, along with intermediate tables that the path actually crosses. Expansion must stay within the same authorized scope; it must not reintroduce a table or column excluded by the initial permission check. <a href="https://aclanthology.org/2026.findings-eacl.134/">SchemaGraphSQL</a> studies this graph-and-pathfinding approach for large schemas. It also treats missing or inconsistent foreign keys as a separate joinability-discovery problem; an inferred edge is therefore a query-planning candidate, not authoritative database metadata. Even a declared foreign-key path needs a business check: confirm what each relationship means and its cardinality, especially whether a many-to-many join would multiply quantities before aggregation. The shortest connected path is not necessarily the right one. If several join paths remain plausible, or no declared path connects the anchors, expand the authorized candidates, consult curated relationship metadata, or ask for clarification instead of inventing a join.</p>
+<p>Evaluate this stage separately from SQL generation. A useful test set records the tables, columns, and relationship paths required by accepted query strategies, then measures required-element recall, candidate-set size, and downstream execution and business correctness. <a href="https://aclanthology.org/2026.findings-eacl.236/">Context-aware bidirectional retrieval research</a> likewise treats schema linking as a separate retrieval problem and examines both recall and false positives. Equivalent SQL need not match one reference string, so labels should allow more than one valid strategy where the data model permits it. Compute recall against each accepted strategy separately and report the best-covered one; complete coverage means retaining every required element of at least one valid strategy, not the union of all alternatives. Security tests remain separate: schema selection reduces context and confusion, but only trusted authorization and the restricted execution layer can prevent access to excluded data.</p>
+<h3 id="2242-bind-dates-and-authorization-values-on-the-trusted-server"><span id="2242" class="legacy-heading-anchor" aria-hidden="true"></span>22.4.2 Bind dates and authorization values on the trusted server<a class="headerlink" href="#2242-bind-dates-and-authorization-values-on-the-trusted-server" title="Permanent link">&para;</a></h3>
 <p>The model outputs SQL containing named placeholders. The trusted server converts confirmed dates to UTC and binds authorization values derived from the current signed-in identity:</p>
 <table>
 <thead>
@@ -9539,8 +9619,10 @@
 <li>ERP example at the same pinned commit: <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/README.md">README</a>, <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py">agent.py</a>, and <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py">demo.py</a>. The book's experiment description uses PostgreSQL, while the runnable companion uses SQLite. The review here inspects source code without running the upstream program; its reported pass rates are not presented as this chapter's experimental results or customer benefits.</li>
 <li>Official SQLite documentation: <a href="https://www.sqlite.org/lang_aggfunc.html">aggregate functions</a>, <a href="https://www.sqlite.org/uri.html">read-only URI mode</a>, <a href="https://www.sqlite.org/c3ref/set_authorizer.html">authorization callbacks</a>, <a href="https://www.sqlite.org/security.html">defenses for untrusted SQL</a>, <a href="https://www.sqlite.org/appfunc.html#security_implications">application-defined function security</a>, and <a href="https://www.sqlite.org/eqp.html">query plans</a>.</li>
 <li>Official SQLite documentation: <a href="https://www.sqlite.org/datatype3.html">type affinity</a> and <a href="https://www.sqlite.org/stricttables.html">STRICT tables and version requirements</a>.</li>
+<li>Safdarian et al., <a href="https://aclanthology.org/2026.findings-eacl.134/">“SchemaGraphSQL: Efficient Schema Linking with Pathfinding Graph Algorithms for Text-to-SQL on Large-Scale Databases”</a>, Findings of EACL 2026. This chapter uses its distinction between schema-graph pathfinding and joinability discovery, not its benchmark results as a production guarantee.</li>
+<li>Nahid et al., <a href="https://aclanthology.org/2026.findings-eacl.236/">“Rethinking Schema Linking: A Context-Aware Bidirectional Retrieval Approach for Text-to-SQL”</a>, Findings of EACL 2026. It motivates evaluating schema retrieval as a separate stage with both recall and false positives.</li>
 </ul>
-<p>Sources were consulted on 2026-09-14; the pinned commit and SQLite typing, aggregation, and execution limits were rechecked on 2026-09-15. The English migration rechecked these cited sources on 2026-09-20.</p>
+<p>Sources were consulted on 2026-09-14; the pinned commit and SQLite typing, aggregation, and execution limits were rechecked on 2026-09-15. The English migration was checked on 2026-09-20; the schema-linking sources were rechecked on 2026-09-29.</p>
 
 
 
@@ -9563,7 +9645,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 29, 2026 12:24:30 CST">2026-09-29</span>
   </span>
 
     

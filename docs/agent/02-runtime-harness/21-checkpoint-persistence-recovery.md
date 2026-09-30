@@ -70,7 +70,7 @@ Yes. Recovery preserves confirmed state and business effects, not a guarantee th
 ## 21.8 Common anti-patterns and a checklist
 
 - **Writing a checkpoint only when the task ends.** This provides no recovery point during the task: a crash halfway through forces a restart from zero.
-- **Equating “has a checkpointer” with “will not execute twice.”** [Section 10.11.7 of the LangGraph chapter](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md) calls out this misconception. Checkpoints restore state; they do not automatically prevent duplicate side effects during recovery. Idempotency needs its own design.
+- **Equating “has a checkpointer” with “will not execute twice.”** [Section 10.11.5 of the LangGraph chapter](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md) calls out this misconception. Checkpoints restore state; they do not automatically prevent duplicate side effects during recovery. Idempotency needs its own design.
 - **Retrying every failure, or none, without classifying it.** Classify failures explicitly using the criteria in Section 21.4.
 - **Setting only one timeout level.** A local stall can then block the whole task. Use the hierarchy in Section 21.5.
 - **Generating a new idempotency key for every attempt.** The same logical operation must reuse its persisted business key. A call ID can serve that purpose only if it is demonstrably stable across every recovery path and satisfies the service's contract.

@@ -106,7 +106,7 @@ Both products let developers reuse an existing loop through configuration and ex
 
 ## 16.7 Common confusions and mistakes
 
-- **Equating a framework with a harness.** Using LangGraph does not automatically give you persistence, human-in-the-loop handling, or observability. These are **capabilities** it offers; checkpointers, interrupts, and tracers still need explicit configuration. This echoes the warning in [Section 10.11.1 of the LangGraph chapter](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md).
+- **Equating a framework with a harness.** Using LangGraph does not automatically give you persistence, human-in-the-loop handling, or observability. These are **capabilities** it offers; checkpointers, interrupts, and tracers still need explicit configuration.
 - **Confusing two kinds of retries.** A runtime can retry transmission of a request that is safe to resend. An agent can also inspect a failure observation, change the arguments, and try again. The latter is a new decision, may create a new operation ID, and requires renewed checks on permissions and side effects.
 - **Conflating runtime and control plane.** A runtime concerns how one session runs; a control plane concerns how many sessions run, who may run them, and where they run. Hard-coding organizational policy into an individual agent's loop means permission changes require code changes rather than configuration changes.
 - **Treating a harness as mere “glue code” that does not deserve deliberate design.** Chapters 20–22 show why permission evaluation order, checkpoint timing, and interruption points are architectural decisions that directly affect safety and correctness, not arbitrary boilerplate.

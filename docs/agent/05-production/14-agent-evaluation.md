@@ -106,7 +106,7 @@ Some instances in the original dataset had underspecified issue descriptions or 
 
 **GAIA** is built around questions that are “easy for humans, difficult for AI.” They require a combination of web browsing, multimodal understanding, file processing, and reasoning. Short responses with clearly defined reference answers allow automated grading under specified normalization rules.
 
-**AgentBench** spans eight environments, including operating systems, databases, knowledge graphs, and games, to compare the agent capabilities of different models.
+**AgentBench** spans eight environments, including operating systems, databases, knowledge graphs, and games, to compare the agent capabilities of different models. Its paper scores each environment separately: success rate, F1, reward, game progress, or step success rate.
 
 **Humanity's Last Exam (HLE)** is not an agent benchmark. It is an exceptionally difficult academic-knowledge benchmark, often evaluated alongside tool-use capabilities.
 
@@ -123,7 +123,9 @@ Some instances in the original dataset had underspecified issue descriptions or 
 | tau-bench | Customer-support conversations | Primarily final database-state comparison | Tools + clarification + handling requests under policy constraints |
 | tau²-bench | Dual-control conversations | State assertions | Guiding users through actions |
 | GAIA | General assistants | Exact answer matching | Multimodal understanding + combinations of tools |
-| AgentDojo | Security | Task success + attack success | Resistance to prompt injection |
+| AgentBench | General assistants | Per environment: success rate, F1, reward, game progress, or step success rate | Eight environments, including operating systems, databases, knowledge graphs, and games |
+
+AgentDojo evaluates prompt-injection resistance. [Section 15.13.2 of the security chapter](15-agent-security.md) covers that evaluation, so this capability comparison does not include it.
 
 ### 14.3.7 Limitations of Academic Benchmarks
 

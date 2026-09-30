@@ -71,11 +71,11 @@
       "translation_sha256": "171a8aaa97b59d2be7665b603866136ea645a9280c85c3a92b041f7336e86fe8"
     },
     "docs/agent/02-reasoning-planning/05-agent-reasoning-methods.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
+      "note": "Chinese Game of 24 sentence now includes the English conditions: BFS, b=5, games 901-1000, and CoT as average sampled performance. English already matched the paper and was left unchanged.",
+      "reviewed_at": "2026-09-30T18:04:41+00:00",
       "source_sha256": "b3f88128639b693940444d77d6c0b149834cf66178db4ec10fa115176d60983f",
       "translation": "docs/agent/02-reasoning-planning/05-agent-reasoning-methods.zh.md",
-      "translation_sha256": "d08b5644f36a1aabb311dd0d68123dc093bacbbf689fec961f228001820a1f94"
+      "translation_sha256": "f89af301f72c30126a6a243ee5e454b57d210b114a3d6c151ada53d4fbaeab03"
     },
     "docs/agent/02-reasoning-planning/06-task-decomposition.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -106,11 +106,11 @@
       "translation_sha256": "64cf5f279c9dc7562e7bb901622bb0f74dead77760a007ea42d297d15acbaa07"
     },
     "docs/agent/02-runtime-harness/16-harness-definition-and-boundaries.md": {
-      "note": "Reviewed paired English and Chinese corrections for the 12 findings from the full English audit at 91950f6: evaluator types, static planning, parent mappings, explicit PostgreSQL URLs, functional migration versus canary traffic, Squid version/policy, text-video metrics, frozen weights versus behavior, conversation state, sandbox scope, grouped DISTINCT, and Celsius. Checked affected prose, tables, diagram, summary and cited primary sources; no chapter inventory or formula changes.",
-      "reviewed_at": "2026-09-20T06:43:50+00:00",
-      "source_sha256": "b5946690a52e62cf5c890f5d17b415035d894eaa3c3f735caec263eb354dfae5",
+      "note": "Removed the incorrect cross-reference to LangGraph 10.11.1. That subsection only says LangChain agents use the same runtime; it does not say that checkpointers, interrupts, and tracers configure themselves. The paired Chinese parenthetical was removed with it.",
+      "reviewed_at": "2026-09-30T18:04:40+00:00",
+      "source_sha256": "030d68cbbc7aa44fa03e6942d71da7f691ab52d59de815a7b20dd2949a10d972",
       "translation": "docs/agent/02-runtime-harness/16-harness-definition-and-boundaries.zh.md",
-      "translation_sha256": "3dfa49d6bed4e5bd83417b25af8283366374ddf03b73cefa6198df9c8426437d"
+      "translation_sha256": "84024dc4a765f0727f7b2f5b7df73d7a2fc81807ac9375a8975f23bf0ebef5b7"
     },
     "docs/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -141,11 +141,11 @@
       "translation_sha256": "8d545a5b4546e158a08e89ed78c253ea0c3c605534cdaf79418656b0b23e4b85"
     },
     "docs/agent/02-runtime-harness/21-checkpoint-persistence-recovery.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "169ef1f94cdebc71bed348a60eb65d32a183af6629819a8ae70e8f6555f0c942",
+      "note": "Pointed the checkpointer misconception to LangGraph 10.11.5. Section 10.11.7 is the bool() approval-payload mistake. The paired Chinese section number was updated; the file link is unchanged.",
+      "reviewed_at": "2026-09-30T18:04:40+00:00",
+      "source_sha256": "9c943acf1b0e8084b96d1f8a40c7a59cc94833f3ceaf31b621557f557b3ba844",
       "translation": "docs/agent/02-runtime-harness/21-checkpoint-persistence-recovery.zh.md",
-      "translation_sha256": "5a5e15e9b8b0a0cd27ed3d5ebe41f114f8cf3b2241e7724cd286af6b81367dad"
+      "translation_sha256": "5753da9d679224a2cb062867dfd1f434e4d96785e21c49fafbfebfbd76265faa"
     },
     "docs/agent/02-runtime-harness/22-human-in-the-loop-and-interruption.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -218,11 +218,11 @@
       "translation_sha256": "9c35f934b9b7e9c6da7bf2d415f5cfd612070b96253fcd55898c9988d01b2ccb"
     },
     "docs/agent/05-production/14-agent-evaluation.md": {
-      "note": "Reviewed paired English and Chinese corrections for the 12 findings from the full English audit at 91950f6: evaluator types, static planning, parent mappings, explicit PostgreSQL URLs, functional migration versus canary traffic, Squid version/policy, text-video metrics, frozen weights versus behavior, conversation state, sandbox scope, grouped DISTINCT, and Celsius. Checked affected prose, tables, diagram, summary and cited primary sources; no chapter inventory or formula changes.",
-      "reviewed_at": "2026-09-20T06:43:50+00:00",
-      "source_sha256": "9d865bae369eebf9323f3058928f1aebf839256d8063652999fe57faddab0417",
+      "note": "Aligned the comparison table with Section 14.3.5 and the figure. Added AgentBench using the paper's per-environment scores and pointed AgentDojo to security Section 15.13.2 instead of listing it as a capability benchmark. HLE stays supplementary and outside the table. Paired Chinese updated.",
+      "reviewed_at": "2026-09-30T18:04:41+00:00",
+      "source_sha256": "4221d4320e5859be39824a1f6f2c27a0a79d48d803aa8480cd046765dd147e26",
       "translation": "docs/agent/05-production/14-agent-evaluation.zh.md",
-      "translation_sha256": "d38bdbb8ca9f3be7a6ec9ebb71c45e2db088eab5633e8d23d356cbf4c0f83712"
+      "translation_sha256": "aa6a95fce6bb57cf6daa9033589c31746601c924df9ce370e3647f95c8ee2329"
     },
     "docs/agent/05-production/15-agent-security.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

@@ -13,7 +13,8 @@ IDs are used to look up embeddings; the Transformer itself operates on continuou
 The Chinese example “你好，世界” below means “Hello, world.”
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     TXT["Human-readable text<br/>「你好，世界」"] -->|encode| IDS["Token ID sequence<br/>Values depend on the tokenizer"]
     IDS --> MODEL["Embedding + model"]
     MODEL --> OUT["Probability distribution<br/>for the next token"]
@@ -59,15 +60,18 @@ BPE, Unigram, and WordPiece are subword algorithms. **SentencePiece is a library
 BPE, or Byte Pair Encoding, has a simple three-step principle:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1["① Initialize<br/>Split the corpus into minimal units: bytes or characters<br/>Each character is a base token"]
-    S1 --> S2["② Merge repeatedly<br/>Count frequencies of all adjacent token pairs<br/>Merge the most frequent pair into a new token"]
-    S2 --> S3{"Has the vocabulary reached<br/>the target size?"}
+    S1["Initialize base tokens"]
+    S1 --> S2["Merge most frequent pair"]
+    S2 --> S3{"Target size reached?"}
     S3 -->|No| S2
-    S3 -->|Yes| S4["③ Finish<br/>Obtain a vocabulary + merge rules"]
+    S3 -->|Yes| S4["Vocabulary + merge rules"]
 
     style S4 fill:#e6f4ea
 ```
+
+Initialization splits the corpus into base units: bytes for byte-level BPE, or characters for character-level BPE. At each merge, count all adjacent token-pair frequencies and replace the most frequent pair with a new token. Repeat until the vocabulary reaches its target size; retain both the vocabulary and the merge rules.
 
 **An example of merging:**
 
@@ -235,13 +239,5 @@ Use the token budget to locate a cutoff, then step back to a verifiable Unicode 
 
 ## References
 
-- [Neural Machine Translation of Rare Words with Subword Units (BPE)](https://arxiv.org/abs/1508.07909)
-- [SentencePiece: A simple and language independent subword tokenizer](https://arxiv.org/abs/1808.06226)
-- [Subword Regularization: Improving NMT Models with Multiple Subword Candidates (Unigram)](https://arxiv.org/abs/1804.10959)
-- [Hugging Face: Tokenizers tutorial](https://huggingface.co/learn/nlp-course/chapter6/1)
-- [OpenAI tiktoken](https://github.com/openai/tiktoken)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
-- [Meta Llama 3 tokenizer implementation](https://github.com/meta-llama/llama3/blob/main/llama/tokenizer.py)
-- [Google SentencePiece implementation and configuration](https://github.com/google/sentencepiece)
-- [Hugging Face Transformers: Tokenization algorithms](https://huggingface.co/docs/transformers/tokenizer_summary)
-- [Hugging Face Transformers: Chat templates](https://huggingface.co/docs/transformers/chat_templating)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-05) for this chapter’s sources, reading suggestions, and source notes.

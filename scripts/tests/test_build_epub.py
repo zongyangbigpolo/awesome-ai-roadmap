@@ -8,6 +8,7 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+import xml.etree.ElementTree as ET
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -23,6 +24,55 @@ class EpubTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name).resolve()
+
+    def test_wide_table_labels_preserve_cell_markup_and_links(self):
+        tree = ET.fromstring(f'''<html xmlns="{epub.XHTML}"><body>
+          <table class="original"><thead><tr>
+          <th>Concept</th><th>Question <em>answered</em></th><th>执行动作</th><th>Form</th>
+          </tr></thead><tbody><tr><td>Tool</td><td><p id="question">Which <code>capability</code>?</p></td>
+          <td>Yes</td><td><a href="#question">Function</a> or API</td></tr></tbody></table>
+          <table><thead><tr><th>A</th><th>B</th></tr></thead>
+          <tbody><tr><td>1</td><td>2</td></tr></tbody></table>
+          </body></html>''')
+        narrow = tree.findall(".//h:table", epub.NS)[1]
+        original_narrow = ET.tostring(narrow)
+        epub.label_wide_tables(tree)
+        table = tree.find(".//h:table", epub.NS)
+        self.assertEqual(table.get("class"), "original wide-table")
+        labels = table.findall(".//h:span[@class='cell-label']", epub.NS)
+        self.assertEqual([node.text for node in labels],
+                         ["Concept", "Question answered", "执行动作", "Form"])
+        values = table.findall(".//h:div[@class='cell-value']", epub.NS)
+        self.assertEqual(["".join(node.itertext()) for node in values],
+                         ["Tool", "Which capability?", "Yes", "Function or API"])
+        self.assertEqual(values[1].find("h:p", epub.NS).get("id"), "question")
+        self.assertEqual(values[3].find("h:a", epub.NS).get("href"), "#question")
+        self.assertEqual(ET.tostring(narrow), original_narrow)
+
+    def test_wide_tables_reject_ambiguous_labels_and_spans(self):
+        for first in ['<th colspan="2">A</th>', '<th><img alt="A" src="a.png"/></th>']:
+            with self.subTest(first=first):
+                tree = ET.fromstring(f'''<html xmlns="{epub.XHTML}"><table><thead><tr>
+                  {first}<th>B</th><th>C</th><th>D</th></tr></thead>
+                  <tbody><tr><td>1</td><td>2</td><td>3</td><td>4</td></tr></tbody>
+                  </table></html>''')
+                with self.assertRaises(epub.BookError):
+                    epub.label_wide_tables(tree)
+
+    def test_wide_table_blank_corner_preserves_row_names_without_inventing_a_label(self):
+        tree = ET.fromstring(f'''<html xmlns="{epub.XHTML}"><table><thead><tr>
+          <th/><th>B</th><th>C</th><th>D</th></tr></thead>
+          <tbody><tr><td><strong>Tool</strong></td><td>2</td><td>3</td><td>4</td></tr></tbody>
+          </table></html>''')
+        invalid = ET.fromstring(ET.tostring(tree))
+        invalid.find(".//h:thead/h:tr", epub.NS)[1].text = None
+        with self.assertRaisesRegex(epub.BookError, "labels after the row-heading"):
+            epub.label_wide_tables(invalid)
+        epub.label_wide_tables(tree)
+        first = tree.find(".//h:tbody/h:tr/h:td", epub.NS)
+        self.assertIsNone(first.find("h:span", epub.NS))
+        self.assertEqual("".join(first.itertext()), "Tool")
+        self.assertEqual(len(tree.findall(".//h:span[@class='cell-label']", epub.NS)), 3)
 
     def test_language_cli_defaults_and_exclusive_manifest(self):
         with patch.object(epub, "build") as build:
@@ -138,8 +188,7 @@ class EpubTests(unittest.TestCase):
                 self.assertEqual(ast["meta"]["toc-title"]["c"], "Contents" if language == "en" else "目录")
                 rendered = {"results": [
                     dict(job, file=f'{job["key"]}.png', width=100, height=40,
-                         tiles=[{"file": "tile.png", "width": 80, "height": 40}]
-                         if job["kind"] == "mermaid" else []) for job in jobs]}
+                         tiles=[]) for job in jobs]}
                 result = epub.apply_images(ast, rendered)
                 links = [node["c"] for node in epub.walk(result) if node["t"] == "Link"]
                 images = [node["c"] for node in epub.walk(result) if node["t"] == "Image"]
@@ -147,12 +196,27 @@ class EpubTests(unittest.TestCase):
                 self.assertEqual(epub.text(images[0][1]),
                                  epub.LABELS[language]["formula_alt"].format(source="x_i"))
                 self.assertEqual(epub.text(links[2][1]), epub.LABELS[language]["diagram_view"])
-                self.assertIn("detail 1/1" if language == "en" else "局部 1/1", epub.text(images[-1][1]))
+                self.assertEqual(len(images), 3)
+                self.assertIn(["style", "width:100px;"], images[-1][0][2])
                 spans = [node["c"][0][0] for node in epub.walk(result) if node["t"] == "Span"]
                 self.assertEqual(spans, ["formula-1", "formula-2"])
                 if language == "en":
                     self.assertNotRegex(json.dumps(result, ensure_ascii=False), r"[\u4e00-\u9fff]")
         self.assertTrue(keys["en"].isdisjoint(keys["zh-CN"]), "render jobs must not share locale cache keys")
+
+    def test_bibliography_anchor_never_replaces_a_heading_anchor(self):
+        source = '<a id="reading-llm-01"></a>\n\n## Reading notes\n'
+        self.assertEqual(epub.prepare_markdown(source), '[]{#reading-llm-01}\n\n## Reading notes\n')
+
+    def test_diagrams_fail_export_when_oversized_or_tiled(self):
+        ast = {"blocks": []}
+        base = {"key": "diagram-key", "kind": "mermaid", "width": 480, "height": 650, "tiles": []}
+        self.assertEqual(epub.apply_images(ast, {"results": [base]}), ast)
+        for changes in ({"width": 481}, {"height": 651}, {"width": 0}, {"height": 0},
+                        {"tiles": [{"file": "fragment.png"}]},
+                        {"labelCollisions": [{"title": "KV", "node": "Block 1"}]}):
+            with self.subTest(changes=changes), self.assertRaises(epub.BookError):
+                epub.apply_images(ast, {"results": [{**base, **changes}]})
 
     def test_local_non_ascii_asset_and_missing_remote_fail(self):
         asset = self.root / "图片.png"
@@ -363,15 +427,13 @@ class EpubTests(unittest.TestCase):
                     for number in (1, 2))
                 additions += "".join(
                     f'<div id="figure-{number}" class="diagram">'
-                    f'<p><img class="diagram" src="../media/diagram.png" alt="{alt}"/></p>'
+                    f'<p><img class="diagram" src="../media/diagram.png" alt="{alt}" style="width:300px;"/></p>'
                     f'<a href="../media/diagram.png">{labels["diagram_view"]}</a>'
-                    '<div class="diagram-details"><p>'
-                    + labels["diagram_part"].format(label=alt, number=1, total=1)
-                    + f'</p><img class="diagram-detail" src="../media/tile.png" alt="{alt}"/></div></div>'
+                    '</div>'
                     for number, alt in enumerate(diagrams, 1))
                 entries["EPUB/text/ch3.xhtml"] = entries["EPUB/text/ch3.xhtml"].replace(
                     b"</body>", additions.encode() + b"</body>")
-                for name in ("formula", "diagram", "tile"):
+                for name in ("formula", "diagram"):
                     entries[f"EPUB/media/{name}.png"] = name.encode()
                     entries["EPUB/content.opf"] = entries["EPUB/content.opf"].replace(
                         b"</manifest>",
@@ -395,6 +457,15 @@ class EpubTests(unittest.TestCase):
                         title = tree.find("h:head/h:title", epub.NS).text
                         self.assertEqual(title, labels["formula_title"] if kind == "formula" else diagrams[number - 1])
                         self.assertIsNone(tree.find(".//h:script", epub.NS))
+                        if kind == "figure":
+                            self.assertEqual(tree.find(".//h:img", epub.NS).get("style"), "width:300px;")
+                            self.assertEqual(len(tree.findall(".//h:img", epub.NS)), 1)
+                entries["EPUB/figures/figure-1.xhtml"] = entries["EPUB/figures/figure-1.xhtml"].replace(
+                    b"</body>",
+                    b'<img class="diagram-detail" src="../media/diagram.png" alt="fragment"/></body>')
+                self.write_package(output, entries)
+                with self.assertRaisesRegex(epub.BookError, "cropped diagram panels"):
+                    epub.audit_epub(output, book, {"inline": 2, "mermaid": 2})
 
     def test_html_and_xml_language_must_match_metadata(self):
         for attribute in ("lang", "xml:lang"):

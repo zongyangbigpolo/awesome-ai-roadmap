@@ -15,13 +15,19 @@ The model cannot see a Python function's source code. When registering a tool, L
 | Executor (function/coroutine) | **Application** | Perform the actual operation with those arguments |
 
 ```mermaid
-flowchart LR
-    M["Model generates a call request<br/>Tool name + arguments"] --> R["Runtime executes the function"]
-    R --> T["Result returned as a ToolMessage"]
-    T --> M2["Model decides whether to call<br/>another tool or answer"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    M["Model generates<br/>a call request"] --> R["Runtime<br/>executes the<br/>function"]
+    R --> T["Result returned<br/>as a<br/>ToolMessage"]
+    T --> M2["Model decides<br/>whether to call"]
 
     style M fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Model generates a call request Tool name + arguments
+- Model decides whether to call another tool or answer
 
 > **A tool's description and schema are not ordinary comments. They are the calling contract between the model and business code.**
 >
@@ -32,19 +38,35 @@ flowchart LR
 You do not need to start by subclassing the lowest-level class. First ask: **is this tool still just an ordinary function?**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q1{"Do the function name, type hints,<br/>and docstring explain its purpose?"}
-    Q1 -->|Yes| A["Pass it directly to tools<br/>(ordinary function)"]
-    Q1 -->|No: rename the tool,<br/>describe arguments,<br/>constrain enums and ranges| Q2{"Can you modify the original function?<br/>Do you need to assemble sync and<br/>async implementations at runtime?"}
-    Q2 -->|Can modify it;<br/>only the contract needs work| B["@tool<br/>The natural choice<br/>for most business tools"]
-    Q2 -->|Cannot modify the function<br/>or need dynamic assembly| C["StructuredTool.from_function"]
-    C --> Q3{"Must the tool retain clients,<br/>manage resources, or customize<br/>the full execution process?"}
+    Q1["Contract clear?"]
+    Q1 -->|Yes| A["Plain function"]
+    Q1 -->|"No"| Q2["Can modify function?"]
+    Q2 -->|"Contract only"| B["@tool"]
+    Q2 -->|"Dynamic / external"| C["StructuredTool.from_function"]
+    C --> Q3["Stateful component?"]
     B --> Q3
-    Q3 -->|Yes: it is now a component| D["Subclass BaseTool"]
+    Q3 -->|"Yes"| D["Subclass BaseTool"]
 
     style B fill:#e6f4ea
     style D fill:#fff3cd
 ```
+
+Figure conditions and labels:
+
+- No: rename the tool, describe arguments, constrain enums and ranges
+- Can modify it; only the contract needs work
+- Cannot modify the function or need dynamic assembly
+- Yes: it is now a component
+
+Details of the illustrated steps and components:
+
+- Do the function name, type hints, and docstring explain its purpose?
+- Pass it directly to tools (ordinary function)
+- Can you modify the original function? Do you need to assemble sync and async implementations at runtime?
+- @tool The natural choice for most business tools
+- Must the tool retain clients, manage resources, or customize the full execution process?
 
 These four methods form a progression in implementation complexity: first make the function's purpose clear, then enrich its tool contract, then handle dynamic assembly, and only then manage a component's lifecycle.
 
@@ -234,14 +256,21 @@ Do not classify every failed tool call as retryable. Different failures require 
 **A function that an agent can call is not necessarily a tool that is safe to deploy.** Follow an actual call from start to finish:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    P1["① Before the model calls the tool<br/>Could its name or description be confused<br/>with another tool?<br/>Does the schema constrain enums, ranges,<br/>and required fields?"]
-    P2["② During execution<br/>Identity and permissions come from trusted<br/>runtime data, not model arguments<br/>Remote calls have timeouts, retry limits,<br/>and concurrency limits<br/>Changes to external state need<br/>idempotency, approval, and auditing"]
-    P3["③ After the call<br/>Logs and traces must support diagnosis<br/>without recording secrets, complete credentials,<br/>or unnecessary sensitive data"]
+    P1["① Before the<br/>model calls the<br/>tool"]
+    P2["② During<br/>execution"]
+    P3["③ After the<br/>call"]
     P1 --> P2 --> P3
 
     style P2 fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- ① Before the model calls the tool Could its name or description be confused with another tool? Does the schema constrain enums, ranges, and required fields?
+- ② During execution Identity and permissions come from trusted runtime data, not model arguments Remote calls have timeouts, retry limits, and concurrency limits Changes to external state need idempotency, approval, and auditing
+- ③ After the call Logs and traces must support diagnosis without recording secrets, complete credentials, or unnecessary sensitive data
 
 ### 5.8.1 More Tools Are Not Always Better
 
@@ -309,8 +338,5 @@ When registering tools, the essential distinction is between the model-visible c
 
 ## References
 
-- [LangChain: Tools Concepts](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Agents Concepts](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [langchain-core Tools API Reference](https://reference.langchain.com/python/langchain-core/tools/)
-- [Pydantic Documentation](https://docs.pydantic.dev/latest/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-05) for this chapter’s sources, reading suggestions, and source notes.

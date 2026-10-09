@@ -185,4 +185,5 @@ Start with the [title page](title-page.md), then read the preface, reading guide
 ## Closing matter and license
 
 - [Acknowledgments](acknowledgments.md)
+- [References and Further Reading](references.md)
 - [Author and License](colophon.md)

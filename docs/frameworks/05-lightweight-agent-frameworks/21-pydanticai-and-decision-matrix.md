@@ -58,13 +58,24 @@ Two points have immediate engineering implications:
 ## 21.3 Engineering benefits of type safety
 
 ```mermaid
-flowchart LR
-    A["Raw text from the model"] --> B{"output_type validation"}
-    B -->|"Pass"| C["Strongly typed object<br/>Ready for business logic"]
-    B -->|"Fail with budget remaining"| D["Return validation errors and retry"]
+%%{init: {"flowchart": {"nodeSpacing": 8, "rankSpacing": 12, "padding": 4}}}%%
+flowchart TB
+    A["Raw text from<br/>the model"] --> B["output_type<br/>validation"]
+    B -->|"Pass"| C["Strongly typed<br/>object"]
+    B -->|"Retry allowed"| D["Retry with<br/>errors"]
     D --> B
-    B -->|"Budget exhausted"| E["Return failure / application fallback"]
+    B -->|"Budget exhausted"| E["Failure /<br/>fallback"]
 ```
+
+Figure conditions and labels:
+
+- Fail with budget remaining
+- Return validation errors and retry
+
+Details of the illustrated steps and components:
+
+- Strongly typed object Ready for business logic
+- Return failure / application fallback
 
 When an output violates constraints, the framework can feed validation errors back to the model and retry within a limit. Exhausting the budget still produces a failure the application must handle. Tool-based output, provider-native structured output, and prompted output have different support requirements; do not assume every model enforces the same strict JSON Schema constraints. Static typing tools can check the calling code, not external facts.
 
@@ -140,12 +151,5 @@ Where AutoGen and CrewAI primarily address how multiple agents collaborate, Pyda
 
 ## References
 
-- [PydanticAI official documentation](https://ai.pydantic.dev/)
-- [PydanticAI: Core Agent concepts](https://pydantic.dev/docs/ai/core-concepts/agent/)
-- [PydanticAI: Function Tools](https://ai.pydantic.dev/tools/)
-- [PydanticAI: Dependency injection](https://ai.pydantic.dev/dependencies/)
-- [AutoGen official documentation](https://microsoft.github.io/autogen/stable/)
-- [CrewAI official documentation](https://docs.crewai.com/)
-- [PydanticAI: Output modes and validation](https://pydantic.dev/docs/ai/core-concepts/output/)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [AutoGen: State](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-21) for this chapter’s sources, reading suggestions, and source notes.

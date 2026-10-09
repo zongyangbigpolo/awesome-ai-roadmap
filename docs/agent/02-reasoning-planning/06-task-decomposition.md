@@ -21,15 +21,16 @@ Task decomposition turns a complex goal into units that are:
 > **Executable, verifiable, schedulable, and recoverable.**
 
 ```mermaid
-flowchart LR
-    G[Complex goal] --> D[Task decomposition]
-    D --> T1[Subtask 1]
-    D --> T2[Subtask 2]
-    D --> TN[Subtask N]
-    T1 --> V[Independent verification]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Complex goal"] --> D["Task decomposition"]
+    D --> T1["Subtask 1"]
+    D --> T2["Subtask 2"]
+    D --> TN["Subtask N"]
+    T1 --> V["Independent verification"]
     T2 --> V
     TN --> V
-    V --> S[Combine results]
+    V --> S["Combine results"]
 ```
 
 This chapter uses a fictional competitor-research task: examine the past six months of product, pricing, and market developments, then deliver a sourced report. Parameters and durations are illustrative, not measured project results: three research branches take 40, 50, and 60 seconds, and merging takes 10 seconds.
@@ -59,10 +60,11 @@ With separate steps, each model call has a more focused goal and input, a more c
 When a whole task fails, it can be difficult to tell whether search, analysis, or synthesis caused the problem. Decomposition allows each step to have its own acceptance criteria:
 
 ```mermaid
-flowchart LR
-    T[Execute subtask] --> V{Acceptance criteria met?}
-    V -->|Yes| NEXT[Proceed to downstream tasks]
-    V -->|No| R[Local retry or fallback]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Execute subtask"] --> V["Acceptance<br/>criteria met?"]
+    V -->|Yes| NEXT["Proceed to<br/>downstream tasks"]
+    V -->|No| R["Local retry or<br/>fallback"]
     R --> T
 ```
 
@@ -239,12 +241,13 @@ A subtask's granularity is usually appropriate when it meets most of these condi
 Developers define steps and dependencies in advance. This fits stable processes with clear rules.
 
 ```mermaid
-flowchart LR
-    IN[Customer question] --> C[Classify intent]
-    C --> R[Retrieve from knowledge base]
-    R --> G[Generate answer]
-    G --> S[Safety checks]
-    S --> OUT[Return result]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["Customer question"] --> C["Classify intent"]
+    C --> R["Retrieve from knowledge<br/>base"]
+    R --> G["Generate answer"]
+    G --> S["Safety checks"]
+    S --> OUT["Return result"]
 ```
 
 ### 6.6.1 Strengths
@@ -268,17 +271,40 @@ Static decomposition is usually implemented with a workflow, DAG, or state machi
 
 A planner generates subtasks from the goal and current environment.
 
+Plan, execute, and test overall acceptance.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    G[User goal] --> P[LLM Planner]
-    P --> PLAN[Generate task list or DAG]
-    PLAN --> E[Executor]
-    E --> O[Observation]
-    O --> DONE{Overall acceptance passed?}
-    DONE -->|Yes| OUT[Deliver result]
-    DONE -->|No| LIMIT{Budget remains and continuation allowed?}
-    LIMIT -->|No| STOP[Pause or report incompleteness]
-    LIMIT -->|Yes| RP{Replanning needed?}
+    G["User goal"]
+    P["LLM Planner"]
+    PLAN["Generate task list or<br/>DAG"]
+    E["Executor"]
+    O["Observation"]
+    DONE["Overall acceptance<br/>passed?"]
+    OUT["Deliver result"]
+    G --> P
+    P --> PLAN
+    PLAN --> E
+    E --> O
+    O --> DONE
+    DONE -->|Yes| OUT
+```
+
+After failed acceptance, check limits before continuing.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    DONE["Overall acceptance<br/>passed?"]
+    LIMIT["Budget remains and<br/>continuation allowed?"]
+    STOP["Pause or report<br/>incompleteness"]
+    RP["Replanning needed?"]
+    E["Executor"]
+    P["LLM Planner"]
+    DONE -->|No| LIMIT
+    LIMIT -->|No| STOP
+    LIMIT -->|Yes| RP
     RP -->|No| E
     RP -->|Yes| P
 ```
@@ -317,18 +343,19 @@ Complex tasks should not be expanded to the lowest level all at once. A more rob
 4. Expand the next level afterward.
 
 ```mermaid
-flowchart TB
-    G[Strategy report] --> M1[Collect material]
-    G --> M2[Comparative analysis]
-    G --> M3[Generate report]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Strategy<br/>report"] --> M1["Collect<br/>material"]
+    G --> M2["Comparative<br/>analysis"]
+    G --> M3["Generate<br/>report"]
 
-    M1 --> T11[Competitor A]
-    M1 --> T12[Competitor B]
-    M1 --> T13[Industry trends]
+    M1 --> T11["Competitor A"]
+    M1 --> T12["Competitor B"]
+    M1 --> T13["Industry<br/>trends"]
 
-    M2 --> T21[Feature comparison]
-    M2 --> T22[Price comparison]
-    M2 --> T23[Risk analysis]
+    M2 --> T21["Feature<br/>comparison"]
+    M2 --> T22["Price<br/>comparison"]
+    M2 --> T23["Risk<br/>analysis"]
 ```
 
 This borrows the hierarchical idea of Hierarchical Task Networks (HTN):
@@ -360,11 +387,12 @@ Rolling-horizon planning does not try to plan the entire future at once. Instead
 5. Extend the horizon again.
 
 ```mermaid
-flowchart LR
-    S[Current state] --> P[Plan near-term steps]
-    P --> E[Execute next step]
-    E --> O[Obtain feedback]
-    O --> U[Update state]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current state"] --> P["Plan near-term steps"]
+    P --> E["Execute next step"]
+    E --> O["Obtain feedback"]
+    O --> U["Update state"]
     U --> P
 ```
 
@@ -388,19 +416,46 @@ Adaptive decomposition uses runtime conditions to decide:
 - Whether to change executors.
 - Whether to increase or decrease parallelism.
 
+Execution produces the signals used to choose granularity.
+
 ```mermaid
 flowchart TB
-    T[Current task] --> E[Execute or probe]
-    E --> M[Monitoring signals]
-    M --> D{Adjust granularity?}
-    D -->|Too large or uncertain| SPLIT[Decompose further]
-    D -->|Too fine or too much overhead| MERGE[Merge tasks]
-    D -->|Plan still suitable| KEEP[Keep current plan]
-    D -->|Key assumption invalidated| REPLAN[Replan]
+    T[Current task]
+    E[Execute or probe]
+    M[Monitoring signals]
+    D{Adjust granularity?}
+    T --> E
+    E --> M
+    M --> D
+```
+
+Changes return to the current task with revised granularity or plan.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    D["Adjust<br/>granularity?"]
+    SPLIT["Decompose<br/>further"]
+    MERGE["Merge tasks"]
+    REPLAN["Replan"]
+    T["Current task"]
+    D -->|Too large or<br/>uncertain| SPLIT
+    D -->|Too fine or too<br/>much overhead| MERGE
+    D -->|Key assumption<br/>invalidated| REPLAN
     SPLIT --> T
     MERGE --> T
-    KEEP --> E
     REPLAN --> T
+```
+
+A suitable plan continues the same execution.
+
+```mermaid
+flowchart TB
+    D{Adjust granularity?}
+    KEEP[Keep current plan]
+    E[Execute or probe]
+    D -->|Plan still suitable| KEEP
+    KEEP --> E
 ```
 
 ### 6.10.1 Adaptation signals
@@ -454,13 +509,14 @@ After decomposition, analyze dependencies between subtasks.
 Let each node represent a task and each directed edge mean “the later task depends on the earlier one.” Only after checking for cycles do you have a task DAG:
 
 ```mermaid
-flowchart LR
-    A[Collect competitor A data] --> D[Product comparison]
-    B[Collect competitor B data] --> D
-    C[Collect industry trends] --> E[Trend analysis]
-    D --> F[Generate report]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Collect<br/>competitor A<br/>data"] --> D["Product<br/>comparison"]
+    B["Collect<br/>competitor B<br/>data"] --> D
+    C["Collect<br/>industry<br/>trends"] --> E["Trend<br/>analysis"]
+    D --> F["Generate<br/>report"]
     E --> F
-    F --> G[Fact and citation checks]
+    F --> G["Fact and<br/>citation<br/>checks"]
 ```
 
 ### 6.11.1 Dependency types
@@ -503,11 +559,12 @@ Leases are not sufficient on their own: an old worker may keep running after its
 Tasks with satisfied dependencies and sufficient concurrency resources can use fan-out/fan-in: dispatch to several branches, then aggregate their results.
 
 ```mermaid
-flowchart LR
-    P[Planner] --> A[Task A]
-    P --> B[Task B]
-    P --> C[Task C]
-    A --> J[Join / Aggregate]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Planner"] --> A["Task A"]
+    P --> B["Task B"]
+    P --> C["Task C"]
+    A --> J["Join / Aggregate"]
     B --> J
     C --> J
 ```
@@ -598,10 +655,11 @@ The 56.25% saving comes from these particular numbers. It is not a fixed gain av
 The longest dependency path in a task DAG, weighted by execution duration, is the **critical path**. Total completion time equals this path's length when resources are sufficient, ready tasks start immediately, and extra overhead is ignored. With concurrency limits, queues, or contention, it is only a lower bound.
 
 ```mermaid
-flowchart LR
-    A[Task A<br/>20s] --> C[Task C<br/>40s]
-    B[Task B<br/>50s] --> D[Task D<br/>10s]
-    C --> E[Aggregate<br/>10s]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Task A<br/>20s"] --> C["Task C<br/>40s"]
+    B["Task B<br/>50s"] --> D["Task D<br/>10s"]
+    C --> E["Aggregate<br/>10s"]
     D --> E
 ```
 
@@ -677,13 +735,14 @@ Artifacts should also be bound to input versions, producing tasks, and validatio
 Systems for decomposing complex tasks commonly separate four responsibilities:
 
 ```mermaid
-flowchart LR
-    G[Goal] --> P[Planner]
-    P --> DAG[Task DAG]
-    DAG --> S[Scheduler]
-    S --> E[Executors]
-    E --> V[Verifiers]
-    V -->|Pass| ART[Artifacts]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --> P["Planner"]
+    P --> DAG["Task DAG"]
+    DAG --> S["Scheduler"]
+    S --> E["Executors"]
+    E --> V["Verifiers"]
+    V -->|Pass| ART["Artifacts"]
     V -->|Local failure| S
     V -->|Plan invalidated| P
 ```
@@ -770,16 +829,34 @@ Operations that have already caused side effects cannot simply be retried. Desig
 - Idempotency keys.
 - Human confirmation.
 
-[AWS's guidance on idempotent API design](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) emphasizes caller-provided request identifiers that express the same operation, with server-side coordination between deduplication records and committing side effects. A task ID does not by itself guarantee exactly-once effects. Define an idempotency key's lifetime, parameter-consistency rules, and scope. Compensation does not turn back time: a refund is not the same as reversing shipment, and a sent email generally cannot be rolled back.
+AWS's guidance on idempotent API design<sup>[【466】](../../book/references.md#ref-466)</sup> emphasizes caller-provided request identifiers that express the same operation, with server-side coordination between deduplication records and committing side effects. A task ID does not by itself guarantee exactly-once effects. Define an idempotency key's lifetime, parameter-consistency rules, and scope. Compensation does not turn back time: a refund is not the same as reversing shipment, and a sent email generally cannot be rolled back.
+
+Repair transient and parameter failures locally.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    F[Task failure] --> C{Failure type}
-    C -->|Transient error| R[Retry with backoff]
-    C -->|Parameter error| A[Adjust parameters]
-    C -->|Task too large| S[Decompose further]
-    C -->|Plan invalidated| P[Replan]
-    C -->|Irreversible side effect| H[Compensate or involve a person]
+    F["Task failure"]
+    C["Failure type"]
+    R["Retry with backoff"]
+    A["Adjust parameters"]
+    F --> C
+    C -->|Transient error| R
+    C -->|Parameter error| A
+```
+
+Structural failures and irreversible effects need different responses.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Failure type"]
+    S["Decompose<br/>further"]
+    P["Replan"]
+    H["Compensate or<br/>involve a person"]
+    C -->|Task too large| S
+    C -->|Plan invalidated| P
+    C -->|Irreversible<br/>side effect| H
 ```
 
 ## 6.18 An adaptive decomposition controller
@@ -788,24 +865,15 @@ A practical adaptive decomposition controller might operate as follows:
 
 ```mermaid
 flowchart TB
-    G[Goal] --> P[Hierarchical Planner]
-    P --> DAG[Task DAG]
-    DAG --> SCH[Scheduler]
+    P[Hierarchical Planner] --> SCH[Scheduler]
     SCH --> EX[Executor Pool]
-    EX --> OBS[Execution Observations]
-    OBS --> VER[Verifier]
-
-    VER --> MET[Progress, quality, cost, and risk metrics]
-    MET --> CTRL{Adaptive Controller}
-
+    EX --> VER[Verifier]
+    VER --> CTRL[Adaptive Controller]
     CTRL -->|Continue unchanged| SCH
-    CTRL -->|Required tasks and overall acceptance pass| DONE[Deliver result]
-    CTRL -->|Decompose further| P
-    CTRL -->|Merge tasks or change dependencies| P
-    CTRL -->|Plan invalidated| P
-    CTRL -->|Budget exhausted or no progress| STOP[Stop and report]
-    CTRL -->|High risk| HUMAN[Human review]
+    CTRL -->|Change plan| P
 ```
+
+The goal enters the hierarchical planner, whose task DAG feeds the scheduler. Execution observations go to the verifier; progress, quality, cost, and risk metrics then inform the controller. Changing the plan includes further decomposition, merging tasks, changing dependencies, or replacing an invalid plan. Deliver only when required tasks **and** overall acceptance pass. Budget exhaustion or lack of progress stops execution with a report; high risk goes to human review.
 
 Changing granularity or dependencies creates a new DAG version for validation; it does not directly mutate the running graph. The controller should use observable metrics, not just the planner's natural-language judgment:
 
@@ -828,11 +896,12 @@ Goal:
 ### 6.19.1 High-level decomposition
 
 ```mermaid
-flowchart TB
-    G[Competitor research report] --> R[Collect material]
-    G --> A[Comparative analysis]
-    G --> W[Write report]
-    G --> V[Verify facts]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["Competitor<br/>research report"] --> R["Collect material"]
+    G --> A["Comparative<br/>analysis"]
+    G --> W["Write report"]
+    G --> V["Verify facts"]
 ```
 
 This diagram lists the work, not a parallel schedule. Comparison depends on research, and the report depends on analysis. Sources can be checked during collection, but the conclusions assembled in the final draft still need another check.
@@ -921,23 +990,11 @@ Calculate parallel gains from the DAG, critical path, and actual measurements.
 
 ```mermaid
 flowchart TB
-    G[Complex task] --> K{Are steps known and stable?}
-    K -->|Yes| STATIC[Static workflow]
-    K -->|Partly known| HYBRID[Fixed structure + Dynamic subtasks]
-    K -->|Unknown| DYNAMIC[Dynamic planner]
-
-    DYNAMIC --> H{Is the task long-running?}
-    H -->|Yes| HIER[Hierarchical + Rolling-horizon planning]
-    H -->|No| PLAN[Plan-and-Execute]
-
-    STATIC --> DEP[Build dependency DAG]
-    HYBRID --> DEP
-    HIER --> DEP
-    PLAN --> DEP
-
-    DEP --> PAR[Parallel scheduling]
+    DEP[Build dependency DAG] --> PAR[Parallel scheduling]
     PAR --> ADAPT[Runtime adaptation]
 ```
+
+Choose the planning structure before building the DAG. Known, stable steps favor a static workflow; partially known steps favor a fixed structure with dynamic subtasks. Unknown steps require a dynamic planner: use hierarchical plus rolling-horizon planning for long-running tasks, or Plan-and-Execute otherwise. All four choices converge on the dependency DAG, parallel scheduling, and runtime adaptation shown above.
 
 A practical design usually converges in this order:
 
@@ -1001,10 +1058,5 @@ Ultimately, granularity must satisfy two requirements:
 
 ## References
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LangChain: Planning Agents](https://www.langchain.com/blog/planning-agents)
-- [LLMCompiler: An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models](https://arxiv.org/abs/2305.18323)
-- [AWS Builders' Library: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/)
-- [SHOP planners: the authors' project page and implementations](https://www.cs.umd.edu/projects/shop/)
-- [Martin Kleppmann: How to do distributed locking](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) — late writes after lease expiration and fencing, from the 2016 article.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-06) for this chapter’s sources, reading suggestions, and source notes.

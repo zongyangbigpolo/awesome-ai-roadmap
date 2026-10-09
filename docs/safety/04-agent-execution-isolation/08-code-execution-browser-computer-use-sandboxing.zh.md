@@ -9,10 +9,17 @@ description: 按实际权限选择代码与桌面隔离边界，区分浏览器�
 代码解释器、浏览器自动化和 Computer Use（让模型直接操作图形界面、鼠标键盘）是当前 Agent 能力扩展最快的三类工具，也是攻击面最不容易被完整枚举的三类工具。它们的共同点是：**执行的具体指令由模型运行时生成，无法在设计阶段穷举**，因此防御重心必须放在"限制执行环境本身能造成的最大损害"，而不是"预判模型会生成什么指令"。
 
 ```mermaid
-flowchart LR
-    A[代码执行<br/>进程、文件与网络权限] --> B[浏览器自动化<br/>页面、登录态与下载]
-    B --> C[Computer Use<br/>可见桌面、应用与剪贴板]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["代码执行"] --> B["浏览器自动化"]
+    B --> C["Computer Use"]
 ```
+
+图中各项的完整含义：
+
+- 代码执行 进程、文件与网络权限
+- 浏览器自动化 页面、登录态与下载
+- Computer Use 可见桌面、应用与剪贴板
 
 三者没有固定风险排序。带宿主挂载和云凭据的代码容器，可能比一次性虚拟桌面更危险；浏览器和 Computer Use 的影响也受登录账户与操作系统权限限制。评估时先列出可读数据、可写资源、网络目的地与持有凭据，再选择隔离强度。
 
@@ -82,13 +89,20 @@ Computer Use 让模型通过截图理解界面、通过鼠标键盘操作可访�
 三类执行环境都需要一致的网络隔离策略，这与 [Tool Protocol 安全 15.3.1](../../tools/02-mcp/15-tool-protocol-security.zh.md) 描述的 SSRF 防护原则相通；放到执行沙箱里，就是下面这套网络设计：
 
 ```mermaid
-flowchart TB
-    E[执行环境<br/>代码/浏览器/Computer Use] --> P[强制走出口代理]
-    P --> W[域名/IP allowlist]
-    P --> N[拒绝 loopback/私网/metadata 地址]
-    P --> R[限制重定向次数与响应大小]
-    P --> L[无凭据网络段<br/>凭据由代理按需注入]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    E["执行环境"] --> P["强制走出口代理"]
+    P --> W["域名/IP<br/>allowlist"]
+    P --> N["阻断内部地址"]
+    P --> R["限制重定向次数<br/>与响应大小"]
+    P --> L["无凭据网络段"]
 ```
+
+图中各项的完整含义：
+
+- 执行环境 代码/浏览器/Computer Use
+- 拒绝 loopback/私网/metadata 地址
+- 无凭据网络段 凭据由代理按需注入
 
 - 执行环境不直连公网，所有出站流量强制经过受控代理；
 - 代理层维护 allowlist 而非 blocklist，默认拒绝一切未声明的目的地；
@@ -136,9 +150,5 @@ flowchart TB
 
 ## 参考资料
 
-- [OWASP LLM06:2025 Excessive Agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/)
-- [gVisor: Application Kernel for Containers](https://gvisor.dev/)
-- [Firecracker: Secure and Fast microVMs](https://firecracker-microvm.io/)
-- [MDN: Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Same-origin_policy)
-- [Anthropic: Computer Use Demo — security precautions and isolation limitations](https://github.com/anthropics/claude-quickstarts/tree/main/computer-use-demo)
-- [MITRE ATLAS: Evade ML Model / LLM Prompt Injection](https://atlas.mitre.org/techniques/AML.T0051)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-08)。

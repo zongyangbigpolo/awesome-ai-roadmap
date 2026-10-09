@@ -20,7 +20,7 @@ Checkpoint 保存足以恢复某个执行边界的状态，可包含第 17.2 节
 
 | 层次 | 对应关系 | 典型实现 | 用途 |
 |---|---|---|---|
-| 线程内持久化（checkpoint） | 单次会话/单个任务 | LangGraph 的 Checkpointer——"持久化一个线程的图状态，用于短期的、线程范围内的记忆，包括对话连续性、人在环工作流、时间旅行、容错"([LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)) | 支撑本章讨论的恢复能力 |
+| 线程内持久化（checkpoint） | 单次会话/单个任务 | LangGraph 的 Checkpointer——"持久化一个线程的图状态，用于短期的、线程范围内的记忆，包括对话连续性、人在环工作流、时间旅行、容错"(LangGraph: Persistence<sup>[【483】](../../book/references.zh.md#ref-483)</sup>) | 支撑本章讨论的恢复能力 |
 | 跨线程持久化（store） | 跨会话、跨任务 | LangGraph 的 Store——"持久化应用自定义的数据……用于长期的、跨线程的记忆" | 对应第七、八章的长期记忆存储 |
 
 两者应分清数据模型、访问权限与保留策略，但可以共用 PostgreSQL 等物理存储。这里的“线程”是框架的会话标识，不是操作系统线程；短期记忆也可以长期持久化，跨线程 store 也可能频繁更新。
@@ -32,7 +32,7 @@ Checkpoint 保存足以恢复某个执行边界的状态，可包含第 17.2 节
 - **可考虑自动重试**：限流或瞬时基础设施故障，前提是操作可安全重发，遵循 `Retry-After`、退避、尝试次数和总时限。网络超时本身不能证明未执行，有副作用的调用需先查询状态或使用已持久化的幂等键。
 - **不能原样盲目重试**：参数错误需要先修正；副作用结果未知时，先查状态或按业务幂等契约重发；任务确实不可行时，应解释缺失条件或交接。模型一句“做不到”也不是基础设施错误分类，仍要核对权限、信息与可用工具。
 
-[Temporal 的默认行为](https://docs.temporal.io/encyclopedia/retry-policies)是 **Activity 自动重试，Workflow Execution 默认不重试**。业务需覆盖重试上限、不可重试错误与超时，不能假设未配置就不会重试；Workflow Task 的重试又是不同层次。自定义工具客户端常用带抖动的指数退避，第 $n$ 次等待可写为：
+Temporal 的默认行为<sup>[【555】](../../book/references.zh.md#ref-555)</sup>是 **Activity 自动重试，Workflow Execution 默认不重试**。业务需覆盖重试上限、不可重试错误与超时，不能假设未配置就不会重试；Workflow Task 的重试又是不同层次。自定义工具客户端常用带抖动的指数退避，第 $n$ 次等待可写为：
 
 $$
 t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\right)
@@ -56,7 +56,7 @@ flowchart TB
 
 ## 21.6 幂等：让重试变得安全
 
-幂等性要求同一逻辑操作重放不增加额外效果。常见做法是**执行前持久化操作键与参数摘要**，服务端原子记录该键的状态和结果，重复请求返回同一结果，参数变化则拒绝。还要处理并发重复、记录有效期、处理中状态及业务写入与去重记录的原子性；[Stripe 的幂等请求文档](https://docs.stripe.com/api/idempotent_requests)是具体 API 的参考，不是所有工具共有的保证。
+幂等性要求同一逻辑操作重放不增加额外效果。常见做法是**执行前持久化操作键与参数摘要**，服务端原子记录该键的状态和结果，重复请求返回同一结果，参数变化则拒绝。还要处理并发重复、记录有效期、处理中状态及业务写入与去重记录的原子性；Stripe 的幂等请求文档<sup>[【556】](../../book/references.zh.md#ref-556)</sup>是具体 API 的参考，不是所有工具共有的保证。
 
 **模型工具调用 ID、JSON-RPC 请求 ID 与业务幂等键不同。** 模型重新规划可能生成新调用 ID；MCP 多轮请求也可能要求新的 JSON-RPC ID。因此应另设稳定的逻辑操作键，并映射多次尝试。若服务不支持幂等或查询，结果未知时可能只能人工核对或执行补偿，不能宣称 checkpoint 带来了 exactly-once 副作用。
 
@@ -81,9 +81,5 @@ Checkpoint 保存执行状态，不自动保存外部世界，也不保证副作
 
 ## 参考资料
 
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts)：恢复时重新进入节点，节点内中断之前的代码会再次执行。
-- [LangGraph: Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [Temporal: Retry Policies](https://docs.temporal.io/encyclopedia/retry-policies)
-- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
-- [LangGraph 第十章：LangGraph 的核心优势](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.zh.md)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-21)。

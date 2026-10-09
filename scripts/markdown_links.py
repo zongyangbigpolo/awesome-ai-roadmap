@@ -131,6 +131,7 @@ class _Links:
         self.path = path
         self.spans = []
         self.labels = {}
+        self.inline_links = {}
 
     def error(self, position, message):
         line = self.text.count("\n", 0, position) + 1
@@ -393,6 +394,7 @@ class _Links:
                     self.spans.append((start, end))
                     if not image:
                         self.labels[(start, end)] = label
+                        self.inline_links[(start, end)] = (opening, position)
                     continue
             position += 1
         return sorted(self.spans)
@@ -416,6 +418,28 @@ def rewrite_labeled_links(
             raise MarkdownLinkError(f"{path}: link callback must return a string")
         pieces.extend((text[position:start], replacement))
         position = end
+    pieces.append(text[position:])
+    return "".join(pieces)
+
+
+def rewrite_inline_links(text: str, path: str, rewrite: Callable[[str, str, str], str]) -> str:
+    """Replace complete inline links, never images, examples or reference definitions.
+
+    The callback receives the raw destination, label and complete original link.
+    The existing parser validates the whole input before any callback executes.
+    """
+    links = _Links(text, path)
+    spans = links.parse()
+    pieces, position = [], 0
+    for start, end in spans:
+        if (start, end) not in links.inline_links:
+            continue
+        opening, closing = links.inline_links[(start, end)]
+        replacement = rewrite(text[start:end], links.labels[(start, end)], text[opening:closing])
+        if not isinstance(replacement, str):
+            raise MarkdownLinkError(f"{path}: link callback must return a string")
+        pieces.extend((text[position:opening], replacement))
+        position = closing
     pieces.append(text[position:])
     return "".join(pieces)
 

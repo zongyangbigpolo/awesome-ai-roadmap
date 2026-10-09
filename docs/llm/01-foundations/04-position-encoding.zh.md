@@ -85,7 +85,8 @@ $$
 在固定内容向量 `q,k` 时，**显式位置项**只通过 `n−m` 进入点积。分数仍依赖内容；深层 q/k 已经携带上下文，不能据此断言整个模型输出只由距离决定。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q["内容 q"] --> RQ["按位置 m 旋转"]
     K["内容 k"] --> RK["按位置 n 旋转"]
     RQ --> DOT["点积"]
@@ -158,12 +159,5 @@ BLOOM 与 MPT 是采用 ALiBi 的公开例子，不应说成「只有 BLOOM 某�
 
 ## 参考资料
 
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
-- [ALiBi: Train Short, Test Long](https://arxiv.org/abs/2108.12409)
-- [Position Interpolation](https://arxiv.org/abs/2306.15595)
-- [YaRN: Efficient Context Window Extension of Large Language Models](https://arxiv.org/abs/2309.00071)
-- [Hugging Face Transformers：RoPE 参数与变体](https://huggingface.co/docs/transformers/main/en/internal/rope_utils)
-- [BLOOM 模型卡](https://huggingface.co/bigscience/bloom)
-- [MosaicML：MPT-7B 发布说明与 ALiBi 配置](https://www.databricks.com/blog/mpt-7b)
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-04)。

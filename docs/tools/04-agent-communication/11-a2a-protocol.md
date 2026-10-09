@@ -26,25 +26,43 @@ A useful follow-up is: **does splitting the work across agents really reduce con
 
 The key is that **intermediate work stays in separate contexts**:
 
-```mermaid
-flowchart LR
-    subgraph SINGLE["Single agent"]
-        S1["One context holds:<br/>dozens of full web pages<br/>+ multiple drafts<br/>+ reflection notes<br/>+ final conclusions"]
-    end
+**Single agent**
 
-    subgraph MULTI["Multiple agents"]
-        O["Orchestrating agent<br/>Receives summaries and citations<br/>Retrieves original material as needed"]
-        A1["Market research agent<br/>Keeps dozens of pages<br/>in its own context"]
-        A2["Technical research agent<br/>Keeps tool documentation<br/>in its own context"]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["One context<br/>holds:"]
+    style S1 fill:#fce8e6
+```
+
+**Multiple agents**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+        O["Orchestrator"]
+        A1["Market research<br/>agent"]
+        A2["Technical agent"]
         O --> A1
         O --> A2
-        A1 -.Conclusions and evidence.-> O
-        A2 -.Conclusions and evidence.-> O
-    end
-
-    style S1 fill:#fce8e6
+        A1 -.Evidence.-> O
+        A2 -.Evidence.-> O
     style O fill:#e6f4ea
 ```
+
+Each specialist returns conclusions and supporting evidence; the orchestrator receives summaries and citations and retrieves original material when needed.
+
+Figure conditions and labels:
+
+- Orchestrating agent
+- Technical research agent
+
+Details of the illustrated steps and components:
+
+- One context holds: dozens of full web pages + multiple drafts + reflection notes + final conclusions
+- Orchestrating agent Receives summaries and citations Retrieves original material as needed
+- Market research agent Keeps dozens of pages in its own context
+- Technical research agent Keeps tool documentation in its own context
 
 The market research agent searches dozens of pages, writes drafts, and revises them. **All that intermediate work stays in its own context.** When finished, it returns a short conclusion of a few hundred Chinese characters.
 
@@ -121,31 +139,21 @@ An A2A **Task** is a stateful unit of work. After a client sends a Message, the 
 The server creates the task identifier referenced by `taskId`; `contextId` links tasks and messages in the same conversational context, and `messageId` identifies a message. These are not user identities and do not automatically provide business-level idempotency. A `Part` can carry text, raw or referenced files, or structured data.
 
 ```mermaid
-stateDiagram-v2
-state "TASK_STATE_SUBMITTED" as submitted
-state "TASK_STATE_WORKING" as working
-state "TASK_STATE_INPUT_REQUIRED" as input_required
-state "TASK_STATE_AUTH_REQUIRED" as auth_required
-state "TASK_STATE_COMPLETED" as completed
-state "TASK_STATE_FAILED" as failed
-state "TASK_STATE_CANCELED" as canceled
-state "TASK_STATE_REJECTED" as rejected
-[*] --> submitted: Orchestrator submits work
-    submitted --> working: Recipient starts execution
-    working --> input_required: More information needed
-    input_required --> working: Caller supplies input
-    working --> auth_required: Additional authentication needed
-    auth_required --> working: Authentication completed
-    working --> completed: Execution succeeds
-    working --> failed: Execution fails
-    working --> canceled: Cancellation accepted
-    submitted --> rejected: Recipient declines
-    working --> rejected: Recipient cannot proceed
-    completed --> [*]
-    failed --> [*]
-    canceled --> [*]
-    rejected --> [*]
+%%{init: {"flowchart": {"rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["Submitted"] --> W["Working"]
+    W --> WAIT["Await input / auth"]
+    WAIT --> W
+    W --> END["Ended"]
+    S -->|Rejected| END
 ```
+
+Figure conditions and labels:
+
+- Input or auth required
+- Terminal outcome
+
+These are readable labels, not replacement protocol values. Submission enters `TASK_STATE_SUBMITTED`; starting execution enters `TASK_STATE_WORKING`. A working task may enter `TASK_STATE_INPUT_REQUIRED` until the caller supplies information, or `TASK_STATE_AUTH_REQUIRED` until authentication completes; both return to working. Successful execution ends in `TASK_STATE_COMPLETED`, failure in `TASK_STATE_FAILED`, and an accepted cancellation in `TASK_STATE_CANCELED`. The recipient may enter `TASK_STATE_REJECTED` either from submitted when it declines the task or from working when it cannot proceed. All four terminal outcomes end this lifecycle.
 
 These are typical paths; a task need not visit every state. Version 1.0 ProtoJSON uses the `TASK_STATE_*` enum names shown above. Lowercase or hyphenated values from older articles cannot be copied directly into 1.0 messages. `TASK_STATE_UNSPECIFIED` should not be used as a normal business state. Completed, failed, canceled, and rejected are terminal states; input required and authentication required are interrupted states.
 
@@ -209,23 +217,19 @@ Version 1.0 JSON-RPC methods include `SendMessage`, `GetTask`, `CancelTask`, and
 One simple way to understand their relationship is to **look at the direction of the connection**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    A1["Market analysis agent"]
-    A2["Technical research agent"]
-    ORCH["Orchestrating agent"]
-
-    ORCH <-->|"A2A · Horizontal"| A1
-    ORCH <-->|"A2A · Horizontal"| A2
-
-    A1 -->|"MCP · Vertical"| T1[(Search engine)]
-    A1 -->|"MCP · Vertical"| T2[(Browser)]
-    A2 -->|"MCP · Vertical"| T3[(Code executor)]
-    A2 -->|"MCP · Vertical"| T4[(GitHub)]
-
-    style ORCH fill:#e6f4ea
-    style A1 fill:#e8f0fe
-    style A2 fill:#e8f0fe
+    ORCH["Orchestrator"] <-->|A2A| AGENT["Specialist agents"]
+    AGENT -->|MCP| TOOLS["Tools"]
 ```
+
+A2A connects the orchestrator horizontally with market-analysis and technical-research agents. Each specialist connects vertically to tools through MCP: the market agent uses search and a browser; the technical agent uses a code executor and GitHub. The two protocols serve different boundaries.
+
+Figure conditions and labels:
+
+- Market analysis agent
+- Technical research agent
+- Orchestrating agent
 
 | | Direction | Counterpart | Problem addressed |
 |---|---|---|---|
@@ -286,12 +290,5 @@ As with tool descriptions, vague Agent Card descriptions can leave an agent with
 
 ## References
 
-- Source review: the Chinese manuscript's 2026-09-15 review read the v1.0.1 release notes, specification, and Proto definitions. The English migration rechecked the release metadata through GitHub's API and the relevant tagged specification and Proto sections. The release web page did not render through the retrieval tool. The tagged specification still contains an outdated “Latest Released Version 1.0.0” notice. Its Send Message overview also says the operation returns immediately, contradicting the execution-mode section and the Proto definition of blocking by default. This chapter follows the explicit `return_immediately` definition in the latter two sources; the JSON wire field is `returnImmediately`.
-- [A2A v1.0.1 release notes](https://github.com/a2aproject/A2A/releases/tag/v1.0.1)
-- [A2A protocol website](https://a2a-protocol.org/)
-- [A2A v1.0.1 release specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [A2A v1.0.1 protocol data definitions](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
-- [Google: Announcing the Agent2Agent Protocol](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)
-- [Linux Foundation: A2A Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-11) for this chapter’s sources, reading suggestions, and source notes.

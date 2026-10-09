@@ -21,16 +21,17 @@ This chapter compares three foundational families. They are neither mutually exc
 These patterns are often combined, usually in layers:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[User goal] --> WF[Workflow / Safety boundary]
-    WF --> P[Planner / Global plan]
-    P --> E[Executor]
-    E --> R[Local ReAct loop]
-    R --> V[Verifier / Evaluator]
-    V -->|Pass| DONE[Complete]
+    G["User goal"] --> WF["Workflow / Safety<br/>boundary"]
+    WF --> P["Planner / Global plan"]
+    P --> E["Executor"]
+    E --> R["Local ReAct loop"]
+    R --> V["Verifier / Evaluator"]
+    V -->|Pass| DONE["Complete"]
     V -->|Local failure| R
     V -->|Plan invalidated| P
-    V -->|Human judgment needed| H[Human-in-the-loop]
+    V -->|Human judgment needed| H["Human-in-the-loop"]
 ```
 
 ## 4.2 ReAct: alternating reasoning and action
@@ -39,14 +40,15 @@ ReAct (Reasoning and Acting) combines reasoning with external actions. Its class
 
 > **Thought → Action → Observation → Thought**
 
-This is a schematic view of the [original ReAct paper](https://arxiv.org/abs/2210.03629), not a requirement to emit a Thought before every action. For decision-making tasks, the paper allows sparse reasoning steps, which can also generate, track, and update plans. Its main experiments use in-context examples rather than updating model weights after each tool call. The paper also includes fine-tuning experiments; those should not be confused with prompting-based ReAct.
+This is a schematic view of the original ReAct paper<sup>[【268】](../../book/references.md#ref-268)</sup>, not a requirement to emit a Thought before every action. For decision-making tasks, the paper allows sparse reasoning steps, which can also generate, track, and update plans. Its main experiments use in-context examples rather than updating model weights after each tool call. The paper also includes fine-tuning experiments; those should not be confused with prompting-based ReAct.
 
 ```mermaid
-flowchart LR
-    T[Thought / Decide] --> A[Action]
-    A --> O[Observation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Thought / Decide"] --> A["Action"]
+    A --> O["Observation"]
     O --> T
-    T --> F[Final Answer]
+    T --> F["Final Answer"]
 ```
 
 ### 4.2.1 How one ReAct iteration works
@@ -143,13 +145,14 @@ Production systems commonly add:
 - External verification of critical steps.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    O[Observation] --> D[Decide]
-    D --> C{No progress or unauthorized action?}
-    C -->|Yes| RP[Replan or stop]
-    C -->|No| A[Action]
-    A --> U[Update structured state]
-    U --> G{Still aligned with the global goal?}
+    O["Observation"] --> D["Decide"]
+    D --> C["No progress or<br/>unauthorized action?"]
+    C -->|Yes| RP["Replan or stop"]
+    C -->|No| A["Action"]
+    A --> U["Update structured state"]
+    U --> G["Still aligned with the<br/>global goal?"]
     G -->|Yes| O
     G -->|No| RP
 ```
@@ -164,20 +167,55 @@ Plan-and-Execute separates global planning from local execution. Mature implemen
 
 Different models can fill these roles, or the same model can fill them with different contexts.
 
+Build and execute the plan.
+
 ```mermaid
 flowchart TB
-    G[Goal] --> P[Planner]
-    P --> PLAN[Plan / DAG]
-    PLAN --> E[Executor]
-    E --> O[Execution results]
-    O --> V{Is the plan still valid?}
-    V -->|Yes| N{Any steps remaining?}
-    N -->|Yes| E
-    N -->|No| ACCEPT{Overall acceptance passed?}
-    ACCEPT -->|Yes| DONE[Complete]
-    ACCEPT -->|No| RP
-    V -->|No| RP[Replanner]
+    G[Goal]
+    P[Planner]
+    PLAN[Plan / DAG]
+    E[Executor]
+    O[Execution results]
+    G --> P
+    P --> PLAN
+    PLAN --> E
+    E --> O
+```
+
+Check whether execution has invalidated the plan.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PLAN["Plan / DAG"]
+    E["Executor"]
+    O["Execution results"]
+    V["Is the plan still valid?"]
+    RP["Replanner"]
+    PLAN --> E
+    E --> O
+    O --> V
+    V -->|No| RP
     RP --> PLAN
+```
+
+Separate remaining steps from overall acceptance.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    V["Is the plan still valid?"]
+    N["Any steps remaining?"]
+    E["Executor"]
+    ACCEPT["Overall acceptance<br/>passed?"]
+    DONE["Complete"]
+    RP["Replanner"]
+    V -->|Yes| N
+    N -->|Yes| E
+    N -->|No| ACCEPT
+    ACCEPT -->|Yes| DONE
+    ACCEPT -->|No| RP
+    V -->|No| RP
 ```
 
 ### 4.3.1 A plan should be more than a natural-language list
@@ -294,11 +332,12 @@ This is teaching pseudocode, not a universal tool protocol. The Worker must subs
 A plan with explicit dependencies can be represented as a directed acyclic graph:
 
 ```mermaid
-flowchart LR
-    A[Research competitor A] --> D[Comparative analysis]
-    B[Research competitor B] --> D
-    C[Collect industry trends] --> E[Analyze trend implications]
-    D --> F[Generate report]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Research<br/>competitor A"] --> D["Comparative<br/>analysis"]
+    B["Research<br/>competitor B"] --> D
+    C["Collect<br/>industry<br/>trends"] --> E["Analyze<br/>trend<br/>implications"]
+    D --> F["Generate<br/>report"]
     E --> F
 ```
 
@@ -312,7 +351,7 @@ LLMCompiler-style architectures commonly include:
 - Task Fetching Unit: schedules tasks as soon as their dependencies are satisfied.
 - Executor: actually executes ready tool tasks.
 
-These are the three components listed in the [LLMCompiler paper](https://arxiv.org/abs/2312.04511). Implementations with replanning may also add a Joiner to aggregate results and decide whether to finish or continue. Do not confuse the Joiner with the tool-executing Executor.
+These are the three components listed in the LLMCompiler paper<sup>[【454】](../../book/references.md#ref-454)</sup>. Implementations with replanning may also add a Joiner to aggregate results and decide whether to finish or continue. Do not confuse the Joiner with the tool-executing Executor.
 
 Such designs address not just planning quality but also execution parallelism, model-call count, and total latency.
 
@@ -321,11 +360,12 @@ Such designs address not just planning quality but also execution parallelism, m
 Reflection adds evaluation after generation or execution:
 
 ```mermaid
-flowchart LR
-    G[Generate / Execute] --> E[Evaluate]
-    E --> D{Meets the criteria?}
-    D -->|Yes| DONE[Complete]
-    D -->|No| FB[Generate feedback]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --> E["Evaluate"]
+    E --> D["Meets the criteria?"]
+    D -->|Yes| DONE["Complete"]
+    D -->|No| FB["Generate feedback"]
     FB --> G
 ```
 
@@ -383,14 +423,15 @@ The original method has three functional modules—Actor, Evaluator, and Self-Re
 This does not require four separate models. Memory is storage, and the Evaluator can use environmental rewards, rules, or tests. The implementation depends on the feedback available for the task.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    A[Actor] --> ENV[Environment / Tools]
-    ENV --> TRAJ[Execution trajectory and results]
-    TRAJ --> E[Evaluator]
-    E --> PASS{Success?}
-    PASS -->|Yes| DONE[Finish]
-    PASS -->|No| SR[Self-Reflection]
-    SR --> MEM[Episodic memory]
+    A["Actor"] --> ENV["Environment / Tools"]
+    ENV --> TRAJ["Execution trajectory and<br/>results"]
+    TRAJ --> E["Evaluator"]
+    E --> PASS["Success?"]
+    PASS -->|Yes| DONE["Finish"]
+    PASS -->|No| SR["Self-Reflection"]
+    SR --> MEM["Episodic memory"]
     MEM --> A
 ```
 
@@ -437,23 +478,14 @@ A common layered composition is:
 
 ```mermaid
 flowchart TB
-    G[Goal] --> P[Plan-and-Execute<br/>Generate global milestones]
-    P --> S1[Step 1]
-    P --> S2[Step 2]
-    P --> S3[Step N]
-
-    S1 --> R1[ReAct<br/>Local exploration and tool calls]
-    S2 --> R2[ReAct<br/>Local exploration and tool calls]
-    S3 --> R3[ReAct<br/>Local exploration and tool calls]
-
-    R1 --> V[Reflection / Verifier]
-    R2 --> V
-    R3 --> V
-
+    P[Plan-and-Execute] --> R[ReAct per step]
+    R --> V[Reflection / Verifier]
     V -->|Local failure| RETRY[Local retry]
     V -->|Plan invalidated| P
     V -->|Pass| DONE[Complete]
 ```
+
+The goal enters Plan-and-Execute to generate global milestones and steps 1 through N. Each step has its own ReAct loop for local exploration and tool calls; all step loops feed the same reflection/verifier stage. The single ReAct box denotes repeated step-level loops, not one shared context or a claim that the steps must execute sequentially.
 
 Responsibilities are divided as follows:
 
@@ -471,14 +503,15 @@ An agentic workflow surrounds probabilistic decisions with deterministic process
 In the terminology of Anthropic's December 2024 *Building Effective Agents*, routing, fixed parallel branches, and evaluator-optimizer loops can all be workflows: they dispatch inputs, aggregate independent work, and iterate on feedback, respectively. A loop or multiple LLM calls alone do not make an autonomous agent. The key distinction is whether code predetermines subsequent paths or a model chooses them dynamically at runtime.
 
 ```mermaid
-flowchart LR
-    IN[Input] --> V[Validation]
-    V --> ROUTE[Fixed routing]
-    ROUTE --> AG[Constrained agent node]
-    AG --> CHECK[Deterministic verification]
-    CHECK -->|Pass| OUT[Output]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["Input"] --> V["Validation"]
+    V --> ROUTE["Fixed routing"]
+    ROUTE --> AG["Constrained agent node"]
+    AG --> CHECK["Deterministic<br/>verification"]
+    CHECK -->|Pass| OUT["Output"]
     CHECK -->|Repairable| AG
-    CHECK -->|High risk| HUMAN[Human review]
+    CHECK -->|High risk| HUMAN["Human review"]
 ```
 
 For example, in customer support:
@@ -507,19 +540,22 @@ This confines autonomy to the parts of the task that genuinely need flexibility.
 Two basic dimensions can also help:
 
 ```mermaid
+%%{init: {"quadrantChart": {"chartWidth": 440, "chartHeight": 440, "quadrantTextTopPadding": 100}}}%%
 quadrantChart
-    title Task complexity and quality requirements
+    title Complexity and quality
     x-axis Low complexity --> High complexity
-    y-axis Low quality requirement --> High quality requirement
-    quadrant-1 Plan-and-Execute plus Reflection
-    quadrant-2 ReAct plus Reflection
+    y-axis Lower quality bar --> Higher quality bar
+    quadrant-1 Plan + Reflect
+    quadrant-2 ReAct + Reflect
     quadrant-3 Simple workflow
-    quadrant-4 Plan-and-Execute
+    quadrant-4 Plan + Execute
     ReAct: [0.30, 0.40]
-    Plan-and-Execute: [0.78, 0.48]
-    Reflection: [0.40, 0.82]
-    Hybrid Agent: [0.82, 0.85]
+    Plan: [0.78, 0.48]
+    Reflect: [0.40, 0.82]
+    Hybrid: [0.82, 0.85]
 ```
+
+Here, “Plan” means Plan-and-Execute, “Reflect” means Reflection, and “Hybrid” means a hybrid agent.
 
 This two-dimensional chart is only a conceptual aid. A real decision must also consider risk, latency, cost, verifiability, and the rate of environmental change.
 
@@ -612,10 +648,5 @@ When combining them, specify which state each control loop changes, who accepts 
 
 ## References
 
-- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366)
-- [Reflexion: original experimental setup and Tables 1–2](https://arxiv.org/html/2303.11366v4)
-- [ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models](https://arxiv.org/abs/2305.18323)
-- [An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [LangChain: Planning Agents](https://www.langchain.com/blog/planning-agents)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) — the architectural distinction cited here comes from the December 2024 article; the live page now notes that parts of its tooling discussion have changed.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-04) for this chapter’s sources, reading suggestions, and source notes.

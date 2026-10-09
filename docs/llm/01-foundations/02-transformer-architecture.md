@@ -51,7 +51,8 @@ $$
 Dividing by `√d_k` keeps the dot-product variance at the same order of magnitude. Dividing by `d_k` would instead shrink the variance as the dimension increases. Without scaling, larger logits are more likely to saturate the softmax. This explains initialization and scale control; it is not proof that trained Q/K components must remain independent and identically distributed.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Dot-product scale grows with dimension"] --> B["Softmax becomes more concentrated"]
     B --> C["Some gradients shrink, making optimization harder"]
     A --> D["Divide by sqrt(d_k)"]
@@ -93,6 +94,7 @@ Self-attention without positional features or asymmetric masks is permutation-eq
 The attention equation alone does not describe a complete Transformer. The following diagram shows a common pre-norm decoder block; individual models may differ:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     X["Input x"] --> N1["Norm"]
     N1 --> A["Causal attention + output projection"]
@@ -198,11 +200,5 @@ If asked to work through a block by hand, first fix the batch size, sequence len
 
 ## References
 
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [BERT](https://arxiv.org/abs/1810.04805)
-- [Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer (T5)](https://arxiv.org/abs/1910.10683)
-- [On Layer Normalization in the Transformer Architecture](https://arxiv.org/abs/2002.04745)
-- [Root Mean Square Layer Normalization](https://arxiv.org/abs/1910.07467)
-- [GLU Variants Improve Transformer](https://arxiv.org/abs/2002.05202)
-- [Query-Key Normalization for Transformers](https://arxiv.org/abs/2010.04245)
-- [Transformer Feed-Forward Layers Are Key-Value Memories](https://arxiv.org/abs/2012.14913)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-02) for this chapter’s sources, reading suggestions, and source notes.

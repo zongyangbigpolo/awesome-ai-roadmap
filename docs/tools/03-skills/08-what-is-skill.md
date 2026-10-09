@@ -78,17 +78,26 @@ On a model with a 200K context window, Skills alone consume one fifth of the cap
 ### 8.3.2 Three levels of loading
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    L1["Level 1 · Discovery<br/>Read each Skill's name + description"]
-    L1 --> Q{"Does the current task<br/>match a Skill?"}
-    Q -->|No| SKIP["Do not load the body<br/>Discovery metadata still has a cost"]
-    Q -->|Yes| L2["Level 2 · On a match<br/>Load the Skill's SKILL.md body"]
-    L2 --> L3["Level 3 · During execution<br/>Read a template or script file<br/>only when the instructions require it"]
+    L1["Level 1 ·<br/>Discovery"]
+    L1 --> Q["Does the<br/>current task"]
+    Q -->|No| SKIP["Do not load the<br/>body"]
+    Q -->|Yes| L2["Level 2 · On a<br/>match"]
+    L2 --> L3["Level 3 ·<br/>During<br/>execution"]
 
     style L1 fill:#e8f0fe
     style L2 fill:#e6f4ea
     style L3 fill:#fef7e0
 ```
+
+Details of the illustrated steps and components:
+
+- Level 1 · Discovery Read each Skill's name + description
+- Does the current task match a Skill?
+- Do not load the body Discovery metadata still has a cost
+- Level 2 · On a match Load the Skill's SKILL.md body
+- Level 3 · During execution Read a template or script file only when the instructions require it
 
 | Level | What is loaded | When | Approximate size |
 |---|---|---|---|
@@ -128,16 +137,28 @@ As with [tool description design](../01-function-calling/03-tool-schema-design.m
 These concepts are often confused. An analogy with work in a company helps separate them:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    TOOL["Tool / MCP<br/>Callable external capabilities<br/>Authorization checked at execution"]
-    SKILL["Skill<br/>Operating manual and SOP<br/>Teaches the agent how to use its tools"]
-    PROMPT["Prompt<br/>Model instructions<br/>May be ad hoc or versioned"]
-    SLASH["Slash Command<br/>Predefined shortcut instructions<br/>Requires manual activation"]
+    TOOL["Tool / MCP"]
+    SKILL["Skill"]
+    PROMPT["Prompt"]
+    SLASH["Slash Command"]
 
-    SKILL -->|Host can call tools following the procedure| TOOL
+    SKILL -->|"Host calls tools"| TOOL
     PROMPT -.Captured and reused as.-> SKILL
     SLASH -.Can be an entry point for loading.-> SKILL
 ```
+
+Figure conditions and labels:
+
+- Host can call tools following the procedure
+
+Details of the illustrated steps and components:
+
+- Tool / MCP Callable external capabilities Authorization checked at execution
+- Skill Operating manual and SOP Teaches the agent how to use its tools
+- Prompt Model instructions May be ad hoc or versioned
+- Slash Command Predefined shortcut instructions Requires manual activation
 
 | | What it provides | Who triggers it | Persistent? |
 |---|---|---|---|
@@ -178,7 +199,7 @@ Two months later, Anthropic published the specification as an **open standard**,
 
 The file format does not require a separate network service. Using a Skill still requires a host to discover, load, and execute it; scripts also need the appropriate interpreter, dependencies, and permissions. This is an open content format, not a remote-call protocol.
 
-Multiple clients have adopted the format; see the [official client list](https://agentskills.io/clients). When moving between platforms, check activation behavior, tool names, file paths, permission fields, and execution environments. The ability to read Markdown does not guarantee identical behavior.
+Multiple clients have adopted the format; see the official client list<sup>[【308】](../../book/references.md#ref-308)</sup>. When moving between platforms, check activation behavior, tool names, file paths, permission fields, and execution environments. The ability to read Markdown does not guarantee identical behavior.
 
 ## 8.7 Common mistakes
 
@@ -219,11 +240,5 @@ The same Skill can have both explicit and automatic entry points. Unattended ope
 
 ## References
 
-- The source manuscript retains commit `69ef37e9424c0a7ea9dd2293b559e43ec8176379` as its historical format baseline and records a 2026-09-15 review of required fields, experimental fields, and loading recommendations on the official format page. The official page has no separate semantic version number. This translation retains that pin; the pinned specification and current format page were checked again on 2026-09-20.
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Anthropic: Equipping Agents for the Real World with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Agent Skills specification](https://agentskills.io/specification)
-- [Agent Skills pinned commit used for the format review](https://github.com/agentskills/agentskills/tree/69ef37e9424c0a7ea9dd2293b559e43ec8176379)
-- [Claude Docs: Agent Skills](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Anthropic: Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-08) for this chapter’s sources, reading suggestions, and source notes.

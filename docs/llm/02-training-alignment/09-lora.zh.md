@@ -103,16 +103,22 @@ output = F.linear(x, W_merged)
 
 对 QLoRA，要区分在反量化后的基座上合并与重新载入原浮点基座后合并；这两者权重不同。合并后再量化也会引入舍入误差，需要重新评估。
 
-```mermaid
-flowchart LR
-    subgraph AD["常见非线性 Adapter"]
-        X1["输入"] --> L1["Transformer 子层"] --> AD1["额外瓶颈网络"] --> O1["输出"]
-    end
-    subgraph LR2["LoRA 合并后"]
-        X2["输入"] --> M1["原线性层<br/>W + ΔW"] --> O2["输出"]
-    end
+**常见非线性 Adapter**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X1["输入"] --> L1["Transformer 子层"] --> AD1["额外瓶颈网络"] --> O1["输出"]
     style AD1 fill:#fdecea
+```
+
+**LoRA 合并后**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X2["输入"] --> M1["原线性层<br/>W + ΔW"] --> O2["输出"]
+
 ```
 
 常见瓶颈 Adapter 含非线性，通常不能折叠成同一个线性权重。不能据此给出“每层固定多几毫秒”的延迟，必须实际测量。
@@ -234,11 +240,5 @@ LoRA 的关键是**用低秩参数化约束更新，同时保留可冻结、可�
 
 ## 参考资料
 
-- [LoRA：公式、初始化与 rank 实验](https://arxiv.org/abs/2106.09685)
-- [QLoRA](https://arxiv.org/abs/2305.14314)
-- [Parameter-Efficient Transfer Learning for NLP](https://arxiv.org/abs/1902.00751)
-- [PEFT v0.17.0：LoRA 配置、初始化与缩放](https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora)
-- [PEFT：Model merging 与 add_weighted_adapter](https://huggingface.co/docs/peft/developer_guides/model_merging)
-- [PEFT v0.17.0：加权 adapter 的实现与限制](https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py)
-- [vLLM：LoRA adapters](https://docs.vllm.ai/en/stable/features/lora/)
-- [Transformers：模型训练的内存组成](https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-09)。

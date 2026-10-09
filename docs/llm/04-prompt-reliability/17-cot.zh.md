@@ -68,16 +68,13 @@ $$
 中间步骤提供显式工作空间，让模型能在额外的顺序计算中复用已学的分解方式。收益来自任务与这些计算方式相匹配；外部复核可以利用步骤，但不是 CoT 自动附带的能力。下图分开列出这几种作用：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["① 可检查的中间结果<br/>便于外部工具或人工复核<br/>不代表模型会自动纠错"]
-    B["② 草稿纸作用<br/>复杂中间状态不用全部憋在隐状态里<br/>显式输出减轻推理负担"]
-    C["③ 利用已学的分解模式<br/>受训练数据、模型能力<br/>与任务匹配程度影响"]
-    A --> R["可能改善任务正确率<br/>需要对照评测"]
-    B --> R
-    C --> R
-
-    style R fill:#e6f4ea
+    A["显式中间步骤"] --> R["可能提高正确率"]
+    R --> E["对照评测"]
 ```
+
+可能起作用的机制有三种：中间结果便于外部工具或人工检查，但不代表模型会自动纠错；草稿纸将复杂状态显式写出，不必全部保留在隐状态中；已学会的分解模式可以复用。最后一种机制取决于训练数据、模型能力与任务匹配程度。这些只是可能的收益，不保证正确率一定提升。
 
 ## 17.5 Self-Consistency：对多条路径聚合答案
 
@@ -88,21 +85,16 @@ flowchart TB
 如果正确答案能由多条路径得到，而错误比较分散，聚合可能改善结果。但同一模型的样本共享知识与偏差，完全可能一致地误解题意，反复得到同一个错误答案。一致性是信号，不是真实性的证明。
 
 ```mermaid
-flowchart LR
-    Q["问题"] --> P1["推理路径 1 → 答案 A"]
-    Q --> P2["推理路径 2 → 答案 A"]
-    Q --> P3["推理路径 3 → 答案 B"]
-    Q --> P4["推理路径 4 → 答案 A"]
-    Q --> P5["推理路径 5 → 答案 C"]
-    P1 --> V["归一化后取众数"]
-    P2 --> V
-    P3 --> V
-    P4 --> V
-    P5 --> V
-    V --> O["输出 A（3 票）"]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["问题"] --> P["采样五条推理路径"]
+    P --> V["归一化答案；取众数"]
+    V --> O["A 获胜：3 票"]
 
     style O fill:#e6f4ea
 ```
+
+这些路径是不同采样结果，而非依次执行的步骤。路径 1、2、4 得到 A，路径 3 得到 B，路径 5 得到 C；归一化后的答案依次为 A、A、B、A、C。
 
 ### 17.5.2 收益与代价
 
@@ -217,16 +209,5 @@ CoT 是线性生成中间步骤；规划还涉及状态、行动约束、搜索�
 
 ## 参考资料
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners（Let's think step by step）](https://arxiv.org/abs/2205.11916)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601)
-- [Towards Understanding Chain-of-Thought Prompting: An Empirical Study of What Matters](https://arxiv.org/abs/2212.10001)
-- [Measuring Faithfulness in Chain-of-Thought Reasoning](https://arxiv.org/abs/2307.13702)
-- [s1: Simple test-time scaling](https://arxiv.org/abs/2501.19393)
-- [Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs](https://arxiv.org/abs/2412.21187)
-- [OpenAI: Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [Anthropic Python SDK: 手动 thinking 配置](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/thinking_config_enabled_param.py)
-- [Amazon Bedrock: Extended thinking](https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html)（包含 Bedrock 上的手动预算规则、interleaved thinking 例外及模型差异，不代表所有 Claude 入口行为相同）
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-17)。

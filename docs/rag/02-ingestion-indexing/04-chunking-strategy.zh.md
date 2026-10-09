@@ -23,16 +23,13 @@ description: 比较固定长度、语义、递归、结构化和父子 Chunking 
 ## 4.2 粒度的核心矛盾
 
 ```mermaid
-flowchart TB
-    G[chunk 粒度] --> S[切得太小]
-    G --> L[切得太大]
-
-    S --> S1[语义聚焦 检索精准]
-    S --> S2[上下文缺失<br/>指代不明 结论没有前提]
-
-    L --> L1[上下文完整]
-    L --> L2[语义被稀释<br/>混入无关内容 检索不准]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    G[chunk 大小] --> S[小：检索更聚焦]
+    G --> L[大：上下文更完整]
 ```
+
+小块的语义更聚焦，可能提高检索精度，但容易丢失上下文：指代不明，结论缺少前提。大块保留更完整的上下文，但无关内容可能稀释语义，使检索不够精确。
 
 这是一个**无法被完全消除的矛盾**，只能被缓解——第五章的方法都是围绕这组权衡展开的。
 
@@ -74,7 +71,8 @@ flowchart TB
 ## 4.4 常见切分策略
 
 ```mermaid
-flowchart TB
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     C[切分策略] --> F[固定大小 + 重叠]
     C --> R[递归分隔符]
     C --> ST[结构化 按标题层级]
@@ -188,8 +186,5 @@ chunk 粒度不是孤立决策，它会影响下游多个环节：
 
 ## 参考资料
 
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Dense X Retrieval: What Retrieval Granularity Should We Use?](https://arxiv.org/abs/2312.06648)
-- [Qwen3-Embedding-0.6B 模型卡](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-04)。

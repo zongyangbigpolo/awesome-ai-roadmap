@@ -49,14 +49,22 @@ Product, engineering, and business owners must agree on an error-budget policy i
 Traditional capacity planning focuses on QPS and server counts. LLM services must also account for **provider-side rate limits and quotas—capacity that is often outside the team’s direct control**.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    FORECAST["Forecast traffic growth"] --> TOKENS["Convert to token throughput requirements"]
-    TOKENS --> QUOTA{"Exceeds the<br/>provider quota?"}
-    QUOTA -->|Yes| NEGOTIATE["Contact the provider early<br/>to request a quota increase"]
-    QUOTA -->|No| MULTI["Assess whether traffic needs<br/>multiple providers"]
+    FORECAST["Forecast<br/>traffic growth"] --> TOKENS["Estimate token<br/>demand"]
+    TOKENS --> QUOTA["Quota exceeded?"]
+    QUOTA -->|Yes| NEGOTIATE["Contact the<br/>provider early"]
+    QUOTA -->|No| MULTI["Assess whether<br/>traffic needs"]
     NEGOTIATE --> MULTI
     MULTI --> PLAN["Capacity plan"]
 ```
+
+Details of the illustrated steps and components:
+
+- Convert to token throughput requirements
+- Exceeds the provider quota?
+- Contact the provider early to request a quota increase
+- Assess whether traffic needs multiple providers
 
 | Planning consideration | Explanation |
 |---|---|
@@ -70,15 +78,26 @@ Hosted and self-hosted services have different constraints, but both require mea
 ## 12.4 Incident response: diagnostic paths for LLM services
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    ALERT["Alert fires"] --> TRIAGE{"Failure type?"}
-    TRIAGE -->|Error-rate spike| CHECK_PROVIDER["Use your own probes to check<br/>ingress, dependencies, quotas, and providers"]
-    TRIAGE -->|Quality drops without errors| CHECK_MODEL["Compare versions and evidence;<br/>check data, retrieval, caches, tools, and models"]
-    TRIAGE -->|Rising contract violations| CHECK_PROMPT["Check response status, truncation,<br/>schema, prompt, and routing changes"]
-    CHECK_PROVIDER --> MITIGATE["Mitigate the confirmed cause:<br/>rate limit, controlled fallback, disable, or roll back"]
-    CHECK_MODEL --> MITIGATE
-    CHECK_PROMPT --> MITIGATE
+    ALERT["Alert fires"] --> TRIAGE["Classify failure"]
+    TRIAGE --> CHECK["Verify the cause"]
+    CHECK --> MITIGATE["Mitigate safely"]
 ```
+
+An error-rate spike calls for your own probes of ingress, dependencies, quotas, and providers. A quality drop without errors calls for comparing versions and evidence across data, retrieval, caches, tools, and models. Rising contract violations call for checking response status, truncation, schema, prompt, and routing changes. Only after confirming the cause should you choose rate limiting, controlled fallback, disabling a capability, or rollback.
+
+Figure conditions and labels:
+
+- Quality drops without errors
+- Rising contract violations
+
+Details of the illustrated steps and components:
+
+- Use your own probes to check ingress, dependencies, quotas, and providers
+- Compare versions and evidence; check data, retrieval, caches, tools, and models
+- Check response status, truncation, schema, prompt, and routing changes
+- Mitigate the confirmed cause: rate limit, controlled fallback, disable, or roll back
 
 Quality degradation without exceptions is not unique to LLMs. A service may return HTTP 200 with schema-compliant output and still produce incorrect content because of retrieval permissions, stale data, caches, or tool failures. Do not attribute it solely to a model upgrade. This is why [Chapter 8](../04-evaluation-observability/08-online-observability-tracing.md) emphasizes collecting enough metadata—such as model snapshot versions and routing decisions—to support diagnosis.
 
@@ -114,8 +133,5 @@ Apparent model instability may be only a symptom. The underlying cause might be 
 
 ## References
 
-- [Google SRE Book: Service Level Objectives](https://sre.google/sre-book/service-level-objectives/)
-- [Google SRE Workbook: Implementing SLOs](https://sre.google/workbook/implementing-slos/)
-- [OpenAI: Rate limits](https://platform.openai.com/docs/guides/rate-limits)
-- [Anthropic: Rate limits](https://docs.anthropic.com/en/api/rate-limits)
-- [PagerDuty: Incident Response Documentation](https://response.pagerduty.com/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-12) for this chapter’s sources, reading suggestions, and source notes.

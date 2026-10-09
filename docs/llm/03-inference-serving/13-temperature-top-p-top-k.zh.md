@@ -173,8 +173,5 @@ Temperature 改概率比，Top-K 限制候选数，Top-P 限制累计概率质�
 
 ## 参考资料
 
-- [The Curious Case of Neural Text Degeneration](https://arxiv.org/abs/1904.09751)
-- [Transformers：Generation Utilities，含 Temperature/TopK/TopP LogitsWarper](https://huggingface.co/docs/transformers/main/en/internal/generation_utils)
-- [Transformers v4.56.2：贪心、采样与束搜索的配置条件](https://huggingface.co/docs/transformers/v4.56.2/en/generation_strategies)
-- [Qwen3-30B-A3B 官方模型卡与采样建议](https://huggingface.co/Qwen/Qwen3-30B-A3B)
-- [vLLM：Batch Invariance](https://docs.vllm.ai/en/stable/features/batch_invariance/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-13)。

@@ -51,7 +51,8 @@ $$
 除以 `√d_k` 把点积方差保持在同一量级。若除以 `d_k`，维度增大时方差反而趋小；若不缩放，较大 logits 更容易让 softmax 饱和。这里是初始化与尺度控制的解释，不是训练后 Q/K 一定满足独立同分布的证明。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["点积尺度随维度增大"] --> B["softmax 更易集中"]
     B --> C["部分梯度变小，优化更困难"]
     A --> D["除以 sqrt(d_k)"]
@@ -91,6 +92,7 @@ $$
 只写出 Attention 公式还不是完整 Transformer。以下是常见 Pre-Norm decoder block 的示意，具体模型可能不同：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     X["输入 x"] --> N1["Norm"]
     N1 --> A["因果 Attention + 输出投影"]
@@ -196,11 +198,5 @@ class DecoderBlock(nn.Module):
 
 ## 参考资料
 
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [BERT](https://arxiv.org/abs/1810.04805)
-- [Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer（T5）](https://arxiv.org/abs/1910.10683)
-- [On Layer Normalization in the Transformer Architecture](https://arxiv.org/abs/2002.04745)
-- [Root Mean Square Layer Normalization](https://arxiv.org/abs/1910.07467)
-- [GLU Variants Improve Transformer](https://arxiv.org/abs/2002.05202)
-- [Query-Key Normalization for Transformers](https://arxiv.org/abs/2010.04245)
-- [Transformer Feed-Forward Layers Are Key-Value Memories](https://arxiv.org/abs/2012.14913)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-02)。

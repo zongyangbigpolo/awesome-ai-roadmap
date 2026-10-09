@@ -13,15 +13,25 @@ This data-processing pipeline is a common starting point for LlamaIndex. The [La
 The two have substantial overlap and can also complement each other. This comparison concerns the emphasis of their commonly used abstractions, not product boundaries such as "LlamaIndex can only do RAG" or "LangChain is poor at data processing."
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph LC["A common starting point for LangChain"]
-        L1["Many models and tools<br/>How can we unify interfaces and coordinate calls reliably?"]
+    subgraph LC["LangChain"]
+        direction TB
+        L1["Many models and<br/>tools"]
     end
-    subgraph LI["A common starting point for LlamaIndex"]
-        I1["Scattered private data in different formats<br/>How can we turn it into high-quality context?"]
+    subgraph LI["LlamaIndex"]
+        direction TB
+        I1["Scattered<br/>private data"]
     end
     L1 -.Complementary.-> I1
 ```
+
+Details of the illustrated steps and components:
+
+- A common starting point for LangChain
+- Many models and tools How can we unify interfaces and coordinate calls reliably?
+- A common starting point for LlamaIndex
+- Scattered private data in different formats How can we turn it into high-quality context?
 
 ## 14.2 Data ingestion: `Document`, `Node`, and `IngestionPipeline`
 
@@ -65,16 +75,29 @@ After Nodes have been created, LlamaIndex organizes them using different **Index
 | `PropertyGraphIndex` | Extracts entities and relationships from Nodes into a graph | Multi-hop reasoning and relational questions, as discussed in the GraphRAG chapter under `docs/rag` |
 
 ```mermaid
-flowchart TB
-    N["Set of Nodes"] --> V["VectorStoreIndex<br/>Semantic retrieval"]
-    N --> S["SummaryIndex<br/>Full traversal by default"]
-    N --> T["TreeIndex<br/>Hierarchical summaries"]
-    N --> P["PropertyGraphIndex<br/>Entity-relationship graph"]
-    V --> Q["Unified Query Engine interface"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    N["Nodes"] --> V["VectorStoreIndex"]
+    N --> S["SummaryIndex"]
+    N --> T["TreeIndex"]
+    N --> P["PropertyGraphIndex"]
+    V --> Q["Queries"]
     S --> Q
     T --> Q
     P --> Q
 ```
+
+Figure conditions and labels:
+
+- Set of Nodes
+- Unified Query Engine interface
+
+Details of the illustrated steps and components:
+
+- VectorStoreIndex Semantic retrieval
+- SummaryIndex Full traversal by default
+- TreeIndex Hierarchical summaries
+- PropertyGraphIndex Entity-relationship graph
 
 Index types embody different retrieval assumptions; they are not just interchangeable database backends. Giving a question such as "summarize the entire document" to a `VectorStoreIndex` usually retrieves only a small number of semantically similar passages, not enough for a summary covering the whole document. This is one of the common mistakes in Section 14.5.
 
@@ -100,7 +123,7 @@ storage_context = StorageContext.from_defaults(vector_store=vector_store)
 index = VectorStoreIndex(nodes, storage_context=storage_context)
 ```
 
-This fragment assembles storage components. The PostgreSQL integration package and pgvector extension must already be installed. The application supplies `sync_database_url` and `async_database_url` for the same database, using compatible synchronous and asynchronous drivers, such as `postgresql+psycopg2` and `postgresql+asyncpg`. Both URLs are passed explicitly: [`from_params()` does not discover an existing application connection](https://github.com/run-llama/llama_index/blob/f475afd8a9bbda84f252567e045d89d07b5701b3/llama-index-integrations/vector_stores/llama-index-vector-stores-postgres/llama_index/vector_stores/postgres/base.py#L413-L478). Keep credentials in application configuration rather than in the example. `embed_dim` must match the actual embedding output; 1536 is only an example value.
+This fragment assembles storage components. The PostgreSQL integration package and pgvector extension must already be installed. The application supplies `sync_database_url` and `async_database_url` for the same database, using compatible synchronous and asynchronous drivers, such as `postgresql+psycopg2` and `postgresql+asyncpg`. Both URLs are passed explicitly: `from_params()` does not discover an existing application connection<sup>[【629】](../../book/references.md#ref-629)</sup>. Keep credentials in application configuration rather than in the example. `embed_dim` must match the actual embedding output; 1536 is only an example value.
 
 Switching backends can often preserve the higher-level interface, but you still need to migrate node IDs, text, metadata, and vectors, then verify filtering, hybrid retrieval, deletion semantics, and score scales. Nor is `persist()` an atomic backup across multiple remote stores: recovery requires consistent versions of the docstore, index structures, and vector collection.
 
@@ -148,9 +171,5 @@ Think of LlamaIndex as a set of abstractions organized around data ingestion and
 
 ## References
 
-- [LlamaIndex official documentation](https://developers.llamaindex.ai/python/framework/)
-- [LlamaIndex: Loading Data (Ingestion Pipeline)](https://developers.llamaindex.ai/python/framework/module_guides/loading/ingestion_pipeline/)
-- [LlamaIndex: Indexing concepts](https://developers.llamaindex.ai/python/framework/module_guides/indexing/)
-- [LlamaIndex: Default and optional retrieval modes for each index](https://developers.llamaindex.ai/python/framework/module_guides/indexing/index_guide/)
-- [LlamaIndex: Property Graph Index](https://developers.llamaindex.ai/python/framework/module_guides/indexing/lpg_index_guide/)
-- [LlamaIndex: Storage concepts](https://developers.llamaindex.ai/python/framework/module_guides/storing/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-14) for this chapter’s sources, reading suggestions, and source notes.

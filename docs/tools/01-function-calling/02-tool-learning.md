@@ -19,13 +19,21 @@ A model might simply describe its intent:
 With examples, it might also produce call text. Reliability must be tested on unseen tools, error recovery, and multi-turn tasks, not inferred from a single successful example.
 
 ```mermaid
-flowchart LR
-    PT["Pretraining<br/>Language, code, and API knowledge"] --> SFT["Optional: SFT / tool-trajectory training"]
-    SFT --> RL["Optional: preference optimization / execution rewards"]
-    PT --> RT["Runtime: examples, schemas, constrained decoding"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    PT["Pretraining"] --> SFT["Optional SFT"]
+    SFT --> RL["Optional<br/>optimization"]
+    PT --> RT["Runtime<br/>guidance"]
     RL --> RT
-    RT --> READY["Evaluate tool use on target tasks"]
+    RT --> READY["Evaluate tool<br/>use on target<br/>tasks"]
 ```
+
+Details of the illustrated steps and components:
+
+- Pretraining Language, code, and API knowledge
+- Optional: SFT / tool-trajectory training
+- Optional: preference optimization / execution rewards
+- Runtime: examples, schemas, constrained decoding
 
 ## 2.2 Learning tool-use trajectories with SFT
 
@@ -82,18 +90,23 @@ This is a mismatch between the data distribution and task objectives, not an inh
 SFT maximizes the likelihood of demonstrated trajectories. Preference optimization explicitly compares candidates, while RL optimizes a policy under a reward. These are different forms of supervision, but all can affect formatting, selection, and planning.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q["User: What is 1+1?"] --> SFTM["Model trained on call-heavy data"]
-    SFTM --> A1["Call calculator(expr='1+1')"]
-    A1 --> BAD["Unnecessary work<br/>More latency and cost"]
+    Q["User: What is<br/>1+1?"] --> SFTM["Model trained<br/>on call-heavy<br/>data"]
+    SFTM --> A1["Call<br/>calculator(expr='1+1')"]
+    A1 --> BAD["Unnecessary<br/>work"]
 
-    Q --> RLM["Model trained with no-call examples"]
-    RLM --> A2["Answer directly: 2"]
-    A2 --> GOOD["Appropriate behavior"]
+    Q --> RLM["Model trained<br/>with no-call<br/>examples"]
+    RLM --> A2["Answer<br/>directly: 2"]
+    A2 --> GOOD["Appropriate<br/>behavior"]
 
     style BAD fill:#fce8e6
     style GOOD fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Unnecessary work More latency and cost
 
 ## 2.4 Using feedback to improve selection and invocation boundaries
 
@@ -148,19 +161,28 @@ Some aspects of tool use can be checked programmatically, much like verifiable m
 
 Such rules can supply rewards automatically during training without asking a person to score every instance. This is the idea behind reinforcement learning with verifiable rewards (RLVR). People still need to design the tasks, validators, and safe execution environment.
 
+**RLHF approach**
+
 ```mermaid
-flowchart LR
-    subgraph RLHF["RLHF approach"]
-        H1[Human rankings] --> H2[Train reward model] --> H3[RL optimization]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        H1["Human rankings"] --> H2["Train reward<br/>model"] --> H3["RL optimization"]
 
-    subgraph RLVR["RLVR approach"]
-        V1[Model generates a call] --> V2[Actual execution / schema validation]
-        V2 --> V3["Rule-based reward<br/>Success=1 Failure=0"] --> V4[RL optimization]
-    end
+```
 
+**RLVR approach**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        V1["Model generates<br/>a call"] --> V2["Actual<br/>execution /<br/>schema<br/>validation"]
+        V2 --> V3["Rule-based<br/>reward"] --> V4["RL optimization"]
     style V2 fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Rule-based reward Success=1 Failure=0
 
 ### 2.5.2 What changes?
 
@@ -186,18 +208,28 @@ This introduces an engineering challenge: managing state when reasoning pauses f
 Training and runtime are different, although interview questions often blur them. [Chapter 1](01-function-calling.md) covers the complete runtime flow; the important distinction here is:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 10, "padding": 4, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph TRAIN["Training: provider or your training team"]
-        T1[Trajectory training such as SFT] --> T2[Optional preference or execution-reward optimization] --> T3[Produce model weights]
+    subgraph TRAIN["Training"]
+        direction TB
+        T1["Trajectory<br/>training such as<br/>SFT"] --> T2["Optional<br/>optimization"] --> T3["Produce model<br/>weights"]
     end
 
-    subgraph RUNTIME["Runtime: your application"]
-        R1[Supply tools schema] --> R2[Model outputs tool_calls]
-        R2 --> R3[Your code executes] --> R4[Return results] --> R5[Model generates answer]
+    subgraph RUNTIME["Runtime"]
+        direction TB
+        R1["Supply tools<br/>schema"] --> R2["Model outputs<br/>tool_calls"]
+        R2 --> R3["Your code<br/>executes"] --> R4["Return results"] --> R5["Model generates<br/>answer"]
     end
 
     T3 -.Deploy.-> R2
 ```
+
+Training by the provider or your training team produces weights. Your application supplies the runtime schema and executes calls; the deployment link brings trained weights into the runtime model, not into the tool implementation.
+
+Details of the illustrated steps and components:
+
+- Training: provider or your training team
+- Optional preference or execution-reward optimization
 
 Runtime choices affect the capabilities available in practice: the chat template, tool parser, constrained decoding, context, and routing can all change the outcome. First confirm the interface's support for parallel calls and its call format, then evaluate target tasks. A public leaderboard is not a ceiling on the model's capability in every application.
 
@@ -272,14 +304,5 @@ Check the model snapshot, API parameters, tool schemas, parser, and history subm
 
 ## References
 
-- [Toolformer: Language Models Can Teach Themselves to Use Tools](https://arxiv.org/abs/2302.04761)
-- [ReAct paper](https://arxiv.org/abs/2210.03629)
-- [PPO paper](https://arxiv.org/abs/1707.06347)
-- [ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs](https://arxiv.org/abs/2307.16789)
-- [Training language models to follow instructions with human feedback (InstructGPT)](https://arxiv.org/abs/2203.02155)
-- [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073)
-- [ToolRL: Reward is All Tool Learning Needs](https://arxiv.org/abs/2504.13958)
-- [ReTool: Reinforcement Learning for Strategic Tool Use in LLMs](https://arxiv.org/abs/2504.11536)
-- [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html)
-- [API-Bank: A Comprehensive Benchmark for Tool-Augmented LLMs](https://aclanthology.org/2023.emnlp-main.187/)
-- [τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-02) for this chapter’s sources, reading suggestions, and source notes.

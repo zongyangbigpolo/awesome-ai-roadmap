@@ -9,11 +9,13 @@ description: Examine engineering challenges in RAG preprocessing, retrieval, and
 The recurring challenges in deploying RAG usually fall into three categories.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    H[Three challenges<br/>in deploying RAG] --> H1[Challenge 1: Document preprocessing<br/>Labor-intensive work<br/>that sets the quality ceiling]
-    H --> H2[Challenge 2: Retrieval quality tuning<br/>Many variables require<br/>a systematic approach]
-    H --> H3[Challenge 3: Evaluation<br/>Without objective criteria,<br/>judgment rests on intuition]
+    H1[Document preprocessing] --> H2[Retrieval quality tuning]
+    H2 --> H3[Objective evaluation]
 ```
+
+Preprocessing is labor-intensive and limits the quality achievable downstream. Retrieval tuning involves many variables and needs a systematic approach. Evaluation needs objective criteria; without them, decisions rest on intuition. These are connected challenges, not substitutes for one another.
 
 ### 20.1.1 Challenge 1: Document Preprocessing
 
@@ -60,17 +62,13 @@ RAG expands the attack surface through which an application processes untrusted 
 > **Retrieved content enters the model's context, and that content may be controlled by an attacker.**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[RAG attack surface:<br/>external content] --> A1[Corpus poisoning]
-    A --> A2[Indirect prompt injection]
-    A --> A3[Data leakage]
-    A --> A4[Resource exhaustion]
-
-    A1 --> B1[Add misleading content<br/>to the knowledge base;<br/>manipulate answers to specific questions]
-    A2 --> B2[Hide instructions in documents;<br/>hijack model behavior]
-    A3 --> B3[Retrieve content<br/>without authorization]
-    A4 --> B4[Create costly queries]
+    A[External content] --> C[Content and instruction attacks]
+    A --> R[Access and resource abuse]
 ```
+
+Content attacks include **corpus poisoning**, which adds misleading material to manipulate answers to particular questions, and **indirect prompt injection**, which hides instructions in documents to hijack model behavior. Access and resource abuse include **data leakage** through unauthorized retrieval and **resource exhaustion** through costly queries.
 
 ### 20.3.1 Corpus Poisoning
 
@@ -238,8 +236,5 @@ Inconsistent refusal behavior can itself leak information.
 
 ## References
 
-- [PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models](https://arxiv.org/abs/2402.07867)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-20) for this chapter’s sources, reading suggestions, and source notes.

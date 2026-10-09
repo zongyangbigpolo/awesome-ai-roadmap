@@ -9,19 +9,28 @@ description: Review the provenance and loading of models and dependencies, and d
 Modern AI applications rarely train models from scratch. They download pretrained weights, adapters such as LoRA, tokenizers, and evaluation scripts from repositories such as Hugging Face or cloud-provider model marketplaces, then add their own fine-tuning and prompt engineering. **Models and their accompanying files should therefore be managed as software dependencies**, with supply chain governance comparable to that applied to open-source libraries. In practice, many teams scan code dependencies while leaving model files entirely unreviewed. OWASP lists this risk as LLM03, Supply Chain Vulnerabilities.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
     subgraph SC["Model supply chain"]
-        S1[Source of pretrained weights] --> S2[Fine-tuning/LoRA adapters]
-        S2 --> S3[Tokenizer/configuration files]
-        S3 --> S4[Inference framework/dependencies]
+        direction TB
+        S1["Source of<br/>pretrained<br/>weights"] --> S2["Fine-tuning/LoRA<br/>adapters"]
+        S2 --> S3["Tokenizer/configuration<br/>files"]
+        S3 --> S4["Inference<br/>framework/dependencies"]
     end
-    SC --> R1[Source tampering<br/>5.2]
-    SC --> R2[Deserialization RCE<br/>5.3]
-    SC --> R3[Dependency poisoning<br/>5.4]
-    R1 --> D[Defenses: signatures/provenance/ML-BOM<br/>5.5]
+    SC --> R1["Tampering"]
+    SC --> R2["RCE"]
+    SC --> R3["Dependencies"]
+    R1 --> D["Supply-chain<br/>defenses"]
     R2 --> D
     R3 --> D
 ```
+
+Details of the illustrated steps and components:
+
+- Source tampering 5.2
+- Deserialization RCE 5.3
+- Dependency poisoning 5.4
+- Defenses: signatures/provenance/ML-BOM 5.5
 
 ## 5.2 Source Tampering: A Model Repository Is Not a Root of Trust
 
@@ -40,14 +49,22 @@ PyTorch checkpoints often contain pickle metadata, and **general-purpose pickle 
 Starting with PyTorch 2.6, `torch.load` defaults to `weights_only=True` when `pickle_module` is not supplied. This restricts the types that can be constructed and prohibits dynamic imports. It reduces the attack surface but is not a complete sandbox: denial of service, parser defects, and unsafe allowlists remain concerns. Do not switch to `weights_only=False` without review merely to eliminate an error.
 
 ```mermaid
-sequenceDiagram
-    participant A as Attacker
-    participant F as Malicious .pt/.bin file
-    participant V as Victim environment
-    A->>F: Construct and pickle an object with __reduce__
-    V->>F: Unrestricted pickle loading<br/>For example, weights_only=False
-    F-->>V: Arbitrary code executes during deserialization
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Craft pickle object"]
+    S1["Distribute model file"]
+    S2["Unrestricted loading"]
+    S3["Code executes"]
+    S0 --> S1 --> S2 --> S3
 ```
+
+Complete exchange, including phase notes:
+
+| Participants | Message or action |
+| --- | --- |
+| Attacker → Malicious .pt/.bin file | Construct and pickle an object with __reduce__ |
+| Victim environment → Malicious .pt/.bin file | Unrestricted pickle loading; For example, weights_only=False |
+| Malicious .pt/.bin file → Victim environment (return) | Arbitrary code executes during deserialization |
 
 **Key defenses:**
 
@@ -118,10 +135,5 @@ Even when a model's source is trusted, pickle's deserialization mechanism can st
 
 ## References
 
-- [OWASP LLM03:2025 Supply Chain](https://genai.owasp.org/llmrisk/llm032025-supply-chain/)
-- [Hugging Face: Pickle Scanning and Safetensors](https://huggingface.co/docs/hub/security-pickle)
-- [PyTorch 2.6: Serialization semantics and weights_only](https://docs.pytorch.org/docs/2.6/notes/serialization.html#torch-load-with-weights-only-true)
-- [Sleepy Pickle: Exploiting Machine Learning Pickle Files](https://blog.trailofbits.com/2024/06/11/exploiting-ml-models-with-pickle-file-attacks-part-1/)
-- [MITRE ATLAS: ML Supply Chain Compromise](https://atlas.mitre.org/techniques/AML.T0010)
-- [CycloneDX: Machine Learning Bill of Materials (ML-BOM)](https://cyclonedx.org/capabilities/mlbom/)
-- [Sigstore: Software Signing for Everyone](https://www.sigstore.dev/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-05) for this chapter’s sources, reading suggestions, and source notes.

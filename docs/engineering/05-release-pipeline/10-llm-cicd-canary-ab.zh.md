@@ -9,15 +9,16 @@ description: 将离线评测加入现有 CI，隔离影子流量的副作用，�
 LLM CI/CD 在单元测试、集成测试、授权和契约测试之外，**新增**[离线评测门禁](../04-evaluation-observability/07-offline-eval-eval-driven-development.zh.md)，不是替换这些测试。质量退化可能不触发异常，因此发布还需观察业务质量信号，不能只看进程存活。
 
 ```mermaid
-flowchart LR
-    A["提交 Prompt/模型/路由变更"] --> B["自动化离线评测<br/>(黄金测试集 + 切片门禁)"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["提交变更"] --> B["自动化离线评测"]
     B -->|不通过| A
-    B -->|通过| C["按风险选择<br/>隔离的影子测试或受控试点"]
-    C --> D["小流量灰度 5%-10%"]
-    D --> E{"线上指标是否达标?"}
-    E -->|是| F{"已完成全量阶段观察?"}
+    B -->|通过| C["按风险选择试点"]
+    C --> D["小流量灰度<br/>5%-10%"]
+    D --> E["生产指标达标？"]
+    E -->|是| F["全量观察完成？"]
     E -->|否| G["自动回滚"]
-    F -->|否| NEXT["进入下一档<br/>25% → 50% → 100%"]
+    F -->|否| NEXT["进入下一档"]
     NEXT --> E
     F -->|是| H["全量发布"]
     G --> A
@@ -26,6 +27,15 @@ flowchart LR
     style E fill:#fff3cd
     style G fill:#fce8e6
 ```
+
+图中各项的完整含义：
+
+- 提交 Prompt/模型/路由变更
+- 自动化离线评测 (黄金测试集 + 切片门禁)
+- 按风险选择 隔离的影子测试或受控试点
+- 线上指标是否达标?
+- 已完成全量阶段观察?
+- 进入下一档 25% → 50% → 100%
 
 ## 10.2 Shadow 测试:让新版本"看见"流量但不影响用户
 
@@ -147,9 +157,5 @@ def check_rollout_health(current_metrics: dict, guard_metrics: dict) -> bool:
 
 ## 参考资料
 
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Google SRE Workbook: Canarying Releases](https://sre.google/workbook/canarying-releases/)
-- [SciPy: ttest_ind，独立样本与 Welch 检验前提](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html)
-- [Martin Fowler: Continuous Delivery for Machine Learning](https://martinfowler.com/articles/cd4ml.html)
-- [Spinnaker: Canary Analysis](https://spinnaker.io/docs/guides/user/canary/)
-- [Optimizely: Statistical significance in A/B testing](https://www.optimizely.com/optimization-glossary/statistical-significance/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-10)。

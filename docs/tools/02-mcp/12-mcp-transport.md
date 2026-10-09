@@ -9,15 +9,18 @@ description: Compares stdio and Streamable HTTP, explaining metadata, SSE, cance
 First, separate the message format from the transport:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph MSG["Message layer · unchanged"]
-        J["JSON-RPC 2.0<br/>method / params / id / result / error"]
+    subgraph MSG["Messages"]
+        direction TB
+        J["JSON-RPC 2.0"]
     end
 
-    subgraph TRANS["Transport layer · replaceable"]
-        T1["stdio<br/>Local subprocess pipes"]
-        T2["Streamable HTTP<br/>Single remote endpoint"]
-        T3["Custom transport<br/>Agreed extension implementation"]
+    subgraph TRANS["Transports"]
+        direction TB
+        T1["stdio"]
+        T2["Streamable HTTP"]
+        T3["Custom<br/>transport"]
     end
 
     J --> T1
@@ -27,6 +30,15 @@ flowchart TB
     style MSG fill:#e6f4ea
     style TRANS fill:#e8f0fe
 ```
+
+The JSON-RPC 2.0 message layer stays unchanged; the transport layer is replaceable.
+
+Details of the illustrated steps and components:
+
+- JSON-RPC 2.0 method / params / id / result / error
+- stdio Local subprocess pipes
+- Streamable HTTP Single remote endpoint
+- Custom transport Agreed extension implementation
 
 Transports reuse JSON-RPC method semantics, but their bindings differ in request metadata, cancellation, recovery, and authentication. Switching transports requires more than verifying that “JSON arrives.”
 
@@ -85,19 +97,27 @@ Three points matter:
 The Client **launches the Server as a subprocess**, writes requests to the process's standard input (`stdin`), and reads responses from its standard output (`stdout`).
 
 ```mermaid
-sequenceDiagram
-    participant C as MCP Client inside the Host
-    participant OS as Operating-system pipes
-    participant S as MCP Server<br/>(subprocess)
-
-    C->>S: Launch subprocess with the configured command
-    C->>OS: Write stdin: {"jsonrpc":"2.0","id":1,...}
-    OS->>S: Read from stdin
-    S->>S: Execute tool
-    S->>OS: Write stdout: {"jsonrpc":"2.0","id":1,"result":...}
-    OS->>C: Read from stdout
-    Note over C,S: Client manages shutdown, waiting, and subprocess cleanup
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Launch subprocess"]
+    S1["Write stdin"]
+    S2["Server executes"]
+    S3["Read stdout"]
+    S4["Clean up process"]
+    S0 --> S1 --> S2 --> S3 --> S4
 ```
+
+Complete exchange, including phase notes:
+
+| Participants | Message or action |
+| --- | --- |
+| MCP Client inside the Host → MCP Server (subprocess) | Launch subprocess with the configured command |
+| MCP Client inside the Host → Operating-system pipes | Write stdin: {"jsonrpc":"2.0","id":1,...} |
+| Operating-system pipes → MCP Server (subprocess) | Read from stdin |
+| MCP Server (subprocess) → MCP Server (subprocess) | Execute tool |
+| MCP Server (subprocess) → Operating-system pipes | Write stdout: {"jsonrpc":"2.0","id":1,"result":...} |
+| Operating-system pipes → MCP Client inside the Host | Read from stdout |
+| Note: MCP Client inside the Host, MCP Server (subprocess) | Client manages shutdown, waiting, and subprocess cleanup |
 
 A pipe can be understood as **a first-in, first-out buffer that the operating system allocates in memory for two processes**. The Client writes one line of JSON; the Server reads it from the other end, processes it, and writes back through another pipe.
 
@@ -155,17 +175,28 @@ For remote access, the Server runs as an independent HTTP service. The currently
 Its central design uses **one HTTP endpoint, typically `/mcp`, for requests and responses**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    C[Client] -->|"POST /mcp<br/>JSON-RPC request"| S[Server]
-    S --> D{"Does this operation<br/>need streaming?"}
-    D -->|No| R1["Return an ordinary JSON response<br/>Content-Type: application/json"]
-    D -->|Yes| R2["Return an SSE stream<br/>Content-Type: text/event-stream"]
+    C["Client"] -->|"POST /mcp"| S["Server"]
+    S --> D["Does this<br/>operation"]
+    D -->|No| R1["Return an<br/>ordinary JSON<br/>response"]
+    D -->|Yes| R2["Return an SSE<br/>stream"]
     R1 --> C
     R2 --> C
 
     style R1 fill:#e6f4ea
     style R2 fill:#fef7e0
 ```
+
+Figure conditions and labels:
+
+- POST /mcp JSON-RPC request
+
+Details of the illustrated steps and components:
+
+- Does this operation need streaming?
+- Return an ordinary JSON response Content-Type: application/json
+- Return an SSE stream Content-Type: text/event-stream
 
 **Choosing per operation is the point.** Simple synchronous operations return JSON directly; operations that need streaming return SSE. A long-lived connection is not mandatory.
 
@@ -181,7 +212,7 @@ A typical example is a team sharing one database MCP Server deployed on a server
 
 ### 12.4.3 Required HTTP headers and response boundaries in the current version
 
-Under [2026-07-28 Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http):
+Under 2026-07-28 Streamable HTTP<sup>[【315】](../../book/references.md#ref-315)</sup>:
 
 - Send each JSON-RPC request in a separate POST. The Client declares `Accept: application/json, text/event-stream` and must handle both response types; the request body uses `Content-Type: application/json`. The transport also defines notification POST mechanics, but this core revision uses no HTTP Client notifications. Do not send a JSON-RPC response to answer MRTR.
 - Requests carry `MCP-Protocol-Version` and `Mcp-Method`. `tools/call`, `prompts/get`, and `resources/read` also require `Mcp-Name`. Version, method, and name must agree with the body; checking only one copy is insufficient.
@@ -197,20 +228,36 @@ Some early tutorials still describe “HTTP + SSE.” This was the remote transp
 
 ### 12.5.1 The problem was the two channels
 
+**Old: two endpoints**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph OLD["Old design · two HTTP + SSE endpoints"]
-        C1[Client] -->|"POST /messages<br/>Send requests"| S1[Server]
-        S1 -->|"GET /sse long-lived connection<br/>Push responses"| C1
-    end
-
-    subgraph NEW["New design · one Streamable HTTP endpoint"]
-        C2[Client] <-->|"POST /mcp<br/>Request and response on one channel"| S2[Server]
-    end
-
-    style OLD fill:#fce8e6
-    style NEW fill:#e6f4ea
+        C1["Client"] -->|"POST /messages"| S1["Server"]
+        S1 -->|"GET /sse"| C1
 ```
+
+Figure conditions and labels:
+
+- POST /messages Send requests
+- GET /sse long-lived connection Push responses
+
+**New: one endpoint**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] <-->|"POST /mcp"| S2["Server"]
+```
+
+Figure conditions and labels:
+
+- POST /mcp Request and response on one channel
+
+Details of the illustrated steps and components:
+
+- Old design · two HTTP + SSE endpoints
+- New design · one Streamable HTTP endpoint
 
 Splitting one exchange across two channels complicates **state management**.
 
@@ -228,7 +275,7 @@ Streaming still uses SSE (`Content-Type: text/event-stream`); the two endpoints 
 
 The **HTTP binding** in 2026-07-28 uses POST, with JSON or request-scoped SSE responses. Do not extend HTTP rules to stdio. Standard request-header mirroring is required, not an optional optimization. Server→Client input requirements come back as MRTR results, no longer as independent reverse JSON-RPC requests.
 
-For legacy interoperability, identify the protocol era using the [version compatibility page](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning). A recognized `UnsupportedProtocolVersionError` calls for choosing a mutually supported modern version, not immediately downgrading. Legacy initialization fallback must be explicitly supported by a dual-era implementation. Authorization failure must not trigger an unauthenticated retry.
+For legacy interoperability, identify the protocol era using the version compatibility page<sup>[【280】](../../book/references.md#ref-280)</sup>. A recognized `UnsupportedProtocolVersionError` calls for choosing a mutually supported modern version, not immediately downgrading. Legacy initialization fallback must be explicitly supported by a dual-era implementation. Authorization failure must not trigger an unauthenticated retry.
 
 A custom transport should meet MCP's message-encoding and security requirements and define connection setup, message framing, authentication, shutdown, and error handling. WebSocket can be such a **nonstandard extension**, but does not automatically gain stdio/Streamable HTTP interoperability. For remote HTTP services, also validate `Origin`, enforce authentication, and avoid exposing local services to untrusted networks.
 
@@ -272,11 +319,5 @@ The current specification makes every request self-contained. Legacy sessions, G
 
 ## References
 
-- [MCP specification 2026-07-28: Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [MCP 2026-07-28 Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http)
-- [MCP 2026-07-28 stdio](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio)
-- [MCP 2026-07-28 version compatibility](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)
-- [MCP specification 2025-03-26: the introduction of Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)
-- [JSON-RPC 2.0 specification](https://www.jsonrpc.org/specification)
-- [Official MCP Server collection](https://github.com/modelcontextprotocol/servers)
-- [MDN: Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-12) for this chapter’s sources, reading suggestions, and source notes.

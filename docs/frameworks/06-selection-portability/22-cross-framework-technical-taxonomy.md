@@ -26,14 +26,24 @@ Here, *state* means the data that a multistep execution passes between steps and
 | PydanticAI | Runs, transferable message history, and dependencies | Supports multiple turns and durable execution; a dependency object is not a persistent session |
 
 ```mermaid
-flowchart TB
-    S1["State channels and merging<br/>LangGraph"]
-    S2["Events + explicit state<br/>LlamaIndex Workflows / CrewAI Flow"]
-    S3["Program parameters and call data<br/>DSPy"]
-    S4["Agent-local state and Teams<br/>AutoGen"]
-    S5["Conversation history / sessions<br/>PydanticAI / MAF"]
-    S6["Steps and events<br/>SK Process"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    S1["State channels<br/>and merging"]
+    S2["Events +<br/>explicit state"]
+    S3["Program<br/>parameters and<br/>call data"]
+    S4["Agent-local<br/>state and Teams"]
+    S5["Conversation<br/>history /<br/>sessions"]
+    S6["Steps and<br/>events"]
 ```
+
+Details of the illustrated steps and components:
+
+- State channels and merging LangGraph
+- Events + explicit state LlamaIndex Workflows / CrewAI Flow
+- Program parameters and call data DSPy
+- Agent-local state and Teams AutoGen
+- Conversation history / sessions PydanticAI / MAF
+- Steps and events SK Process
 
 These are areas of emphasis, not mutually exclusive categories. Debugging requires both state snapshots and event/message traces: shared state is hard to explain if nobody records who changed it. When evaluating a framework, ask the team to diagram the state owner, concurrent-update merge rules, and final commit point for one request.
 
@@ -82,7 +92,7 @@ Standard type annotations help reuse, but providers may still support different 
 | PydanticAI | Close integration with Pydantic Logfire | Also based on OpenTelemetry; a natural fit for teams already using the Pydantic ecosystem |
 | AutoGen / CrewAI | Message/workflow tracing and observability integrations | Check cross-agent correlation, tool spans, export, and data residency rather than inferring capabilities from a framework's age |
 
-[OpenTelemetry's GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) seek to standardize span names and attributes for model, agent, and tool calls so traces from different frameworks can be analyzed in one backend. **The overall GenAI documentation and agent spans are still marked Development; do not treat the entire set as a stable protocol.** Evaluate the fields actually exported and the semantic-convention version, not just the bundled UI or a claim of OpenTelemetry support.
+OpenTelemetry's GenAI semantic conventions<sup>[【524】](../../book/references.md#ref-524)</sup> seek to standardize span names and attributes for model, agent, and tool calls so traces from different frameworks can be analyzed in one backend. **The overall GenAI documentation and agent spans are still marked Development; do not treat the entire set as a stable protocol.** Evaluate the fields actually exported and the semantic-convention version, not just the bundled UI or a claim of OpenTelemetry support.
 
 Check convention versions and field stability explicitly. Sharing OTLP transport does not make span names, token accounting, or business attributes identical. Nor is collecting every prompt and response automatically better: define redaction, sampling, and retention policies. Traces explain execution; evaluation judges quality. They complement each other.
 
@@ -127,16 +137,5 @@ This turns "supports persistence" into measurable recovery behavior and exposes 
 
 ## References
 
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Checkpointers and super-steps](https://docs.langchain.com/oss/python/langgraph/checkpointers)
-- [LlamaIndex: Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/)
-- [LlamaIndex: Durable Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/)
-- [AutoGen: State](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
-- [CrewAI: Flows](https://docs.crewai.com/en/concepts/flows)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [Semantic Kernel: Process Framework](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework)
-- [OpenTelemetry Generative AI semantic conventions and status](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/README.md)
-- [LangSmith official documentation](https://docs.smith.langchain.com/)
-
-Version note: see the fixed sources in Chapters 19 and 20 for the release and maintenance status of Microsoft's frameworks. The OpenTelemetry GenAI Development status was checked on 2026-09-15. Pin and verify the semantic-convention version used by each exporter.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-22) for this chapter’s sources, reading suggestions, and source notes.

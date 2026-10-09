@@ -19,7 +19,8 @@ description: 比较 FLAT、HNSW、IVF 和 DiskANN 的搜索机制，说明量化
 ## 8.2 主流 ANN 索引
 
 ```mermaid
-flowchart TB
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     ANN[向量搜索方案] --> HNSW[HNSW<br/>图索引]
     ANN --> IVF[IVF<br/>倒排聚类]
     ANN --> DISK[DiskANN<br/>磁盘图索引]
@@ -106,6 +107,7 @@ Binary 量化常配合过采样和原向量重打分。重打分只能修正已�
 看起来只是加个 `WHERE`，但它会和 ANN 索引产生**严重的交互问题**。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     F[带过滤的向量检索] --> PRE[预过滤]
     F --> POST[后过滤]
@@ -142,17 +144,13 @@ flowchart TB
 选型时比产品名单更重要的是判断维度。
 
 ```mermaid
-flowchart TB
-    SEL[选型] --> D1[数据规模]
-    SEL --> D2[部署形态]
-    SEL --> D3[功能需求]
-    SEL --> D4[运维能力]
-
-    D1 --> A1[十万以下 / 百万级 / 亿级]
-    D2 --> A2[嵌入式 / 自托管 / 托管服务]
-    D3 --> A3[混合检索 / 元数据过滤 / 多租户]
-    D4 --> A4[团队能否承担独立组件的运维]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    SEL[业务需求] --> D[规模、功能与运维]
+    D --> A[选择部署形态]
 ```
+
+比较十万以下、百万级和亿级数据规模，结合混合检索、元数据过滤与多租户需求，评估嵌入式、自托管和托管服务。还要问团队能否运维另一个独立组件；不能仅凭数据规模决定部署形态。
 
 | 类型 | 代表 | 适用 |
 |---|---|---|
@@ -218,9 +216,5 @@ FLAT 值得作为基线，但是否够快要在真实维度、并发与过滤子
 
 ## 参考资料
 
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [pgvector 官方 README：过滤、迭代扫描、VACUUM 与扩展](https://github.com/pgvector/pgvector)
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data](https://arxiv.org/abs/2403.04871)
-- [Billion-scale similarity search with GPUs](https://arxiv.org/abs/1702.08734)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-08)。

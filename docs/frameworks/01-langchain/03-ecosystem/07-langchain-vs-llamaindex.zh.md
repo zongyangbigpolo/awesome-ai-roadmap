@@ -29,13 +29,21 @@ description: 从模型工具接入与数据上下文链路比较 LangChain 和 L
 **如果项目需要接入多个模型、搜索、数据库、浏览器、MCP Server 和公司内部 API**，最大的工程成本往往是**不同接口之间的适配**。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["统一 Model / Message / Tool / Structured Output 接口<br/>屏蔽厂商差异"] --> B["create_agent 组装模型与工具"]
-    B --> C["Middleware 统一加入<br/>权限、重试、摘要、动态模型选择、人工审批"]
-    C --> D["流程复杂到需要精细控制分支、并行和恢复时<br/>继续下沉到 LangGraph<br/>不必推翻已定义好的模型与工具"]
+    A["统一接口"] --> B["组装<br/>create_agent"]
+    B --> C["Middleware 统一<br/>加入"]
+    C --> D["控制执行过程"]
 
     style D fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 统一 Model / Message / Tool / Structured Output 接口 屏蔽厂商差异
+- create_agent 组装模型与工具
+- Middleware 统一加入 权限、重试、摘要、动态模型选择、人工审批
+- 流程复杂到需要精细控制分支、并行和恢复时 继续下沉到 LangGraph 不必推翻已定义好的模型与工具
 
 **它的主要难点**：让模型**选对工具、填对参数**，并把权限、重试和审批统一接入调用过程。
 
@@ -54,7 +62,8 @@ flowchart TB
 > **难点沿着「数据进入 → 建立索引 → 发起检索 → 组织上下文」一路传递，而不是某一个向量库能单独解决。**
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     A["数据接入"] --> B["解析与切分"] --> C["索引"] --> D["检索与重排"] --> E["Query Engine"] --> F["Agent"]
 
     style B fill:#e8f0fe
@@ -162,10 +171,5 @@ agent = create_agent(
 
 ## 参考资料
 
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Retrieval 概念文档](https://docs.langchain.com/oss/python/langchain/retrieval)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LlamaIndex 官方文档](https://docs.llamaindex.ai/)
-- [LlamaIndex: Building an Agent](https://docs.llamaindex.ai/en/stable/understanding/agent/)
-- [LlamaIndex: Workflows](https://docs.llamaindex.ai/en/stable/understanding/workflows/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-07)。

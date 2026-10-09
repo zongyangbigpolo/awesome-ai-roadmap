@@ -13,18 +13,15 @@ description: 按索引、查询、召回、上下文与生成五层定位 RAG �
 分层框架的作用，就是把优化手段按所处环节归类，再据此定位问题发生的位置。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    L1[第一层 索引层<br/>存的东西对不对] --> L2[第二层 查询层<br/>问的方式对不对]
-    L2 --> L3[第三层 召回层<br/>找的路径全不全]
-    L3 --> L4[第四层 重排与上下文层<br/>排得准、装得好吗]
-    L4 --> L5[第五层 生成与 Grounding 层<br/>答案被证据支持吗]
-
-    L1 -.-> P1[矛盾: 粒度大小]
-    L2 -.-> P2[鸿沟: 表述差异]
-    L3 -.-> P3[盲区: 单路系统性缺失]
-    L4 -.-> P4[精度: 排序与上下文污染]
-    L5 -.-> P5[可信: 引用、冲突与拒答]
+    L1[索引] --> L2[查询]
+    L2 --> L3[召回]
+    L3 --> L4[重排与上下文]
+    L4 --> L5[生成与 Grounding]
 ```
+
+索引层检查存入的材料是否正确，并考察切分粒度；查询层寻找表述鸿沟；召回层检查证据覆盖和单路系统性遗漏；重排与上下文层检查排序、精度和污染；生成与 Grounding 层检查答案是否被证据支持，包括引用、冲突与拒答。
 
 每层提供不同的诊断入口，但问题并不独立，也没有所有项目都适用的优化顺序。先找证据丢失或失真的位置，再修相应层；安全、观测和评估是横切能力。
 
@@ -107,19 +104,15 @@ flowchart TB
 框架本身只负责分类，真正能指导优化的是定位能力。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    BAD[答案质量差] --> C1{正确 chunk<br/>在 Top-50 里吗?}
-    C1 -->|不在| C2{知识库里<br/>有这个信息吗?}
-    C2 -->|没有| FIX1[索引层: 解析或切分问题<br/>或语料本身缺失]
-    C2 -->|有| C3{换个说法问<br/>能召回吗?}
-    C3 -->|能| FIX2[查询层: 表述鸿沟]
-    C3 -->|不能| FIX3[召回层: 换/加召回路]
-    C1 -->|在| C4{Top-5 里有吗?}
-    C4 -->|没有| FIX4[重排层: 加或换 Rerank]
-    C4 -->|有| C5{实际 Prompt 中<br/>证据完整且有效吗?}
-    C5 -->|否| FIX5[上下文层: 截断、去重<br/>父块扩展或版本过滤]
-    C5 -->|是| FIX6[生成与校验层<br/>检查误读、错引与拒答]
+    C1{正确块在 Top-50？} -->|否| UP[检查索引与召回]
+    C1 -->|是| DOWN[检查排序与生成]
 ```
+
+**不在 Top-50 时：** 先检查知识库是否有该信息。没有则排查解析、切分或源材料缺失。有则尝试换个说法：能召回说明存在表述鸿沟；仍不能召回则考虑更换或增加召回路径。
+
+**在 Top-50 时：** 继续检查 Top-5。未进入 Top-5，考虑增加或更换 Rerank。进入后检查实际 Prompt：证据不完整或不适用时，排查截断、去重、父块扩展或版本过滤。证据完整且有效时，再检查生成与校验中的误读、引用和拒答。
 
 这个决策树的价值在于：它把一个模糊的「效果不好」，变成了一系列可以用数据回答的是非题。
 
@@ -161,20 +154,25 @@ flowchart TB
 下面是一种可作为实验起点的组合，不是所有企业系统必然收敛的架构：
 
 ```mermaid
-flowchart LR
-    subgraph 离线
-        A[分层解析 + 质量校验] --> B[结构化切分 + 父子块]
-        B --> C[上下文增强]
-        C --> D[稠密 + 稀疏双索引]
-    end
-    subgraph 在线
-        E[指代消解 + 轻量路由] --> F[BM25 + 向量并行召回]
-        F --> G[RRF 融合去重]
-        G --> H[Cross-encoder 重排 + 校准拒答策略]
-        H --> I[受约束生成 + 引用校验]
-    end
-    D -.-> F
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[解析与校验] --> B[结构化切分]
+    B --> C[上下文增强]
+    C --> D[稠密与稀疏索引]
 ```
+
+离线阶段先分层解析并检查质量，再进行结构化切分与父子切分。上下文增强后的内容进入稠密和稀疏双索引。在线检索读取这两个索引：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E[指代消解；路由] --> F[BM25 与向量并行召回]
+    F --> G[RRF 融合去重]
+    G --> H[Cross-encoder；拒答判断]
+    H --> I[生成；引用校验]
+```
+
+路由应保持轻量。Cross-encoder 重排后使用经过校准的拒答策略；只有通过的证据才继续进入受约束生成与引用校验。
 
 **这套方案没有依赖实验性组件**，但覆盖了五层里的主要手段。每个组件是否适合，仍需由业务评测集、延迟与成本预算验证。
 
@@ -223,7 +221,5 @@ flowchart LR
 
 ## 参考资料
 
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-14)。

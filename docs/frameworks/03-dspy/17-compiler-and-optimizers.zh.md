@@ -29,16 +29,28 @@ $$
 | `BootstrapFinetune` | 模型权重 | 从成功轨迹构建训练数据并微调，需要可微调 LM、训练预算与部署支持 |
 
 ```mermaid
-flowchart LR
-    P["未优化的 Program"] --> B{"选择优化器"}
-    B -->|"数据量小、任务简单"| BF["BootstrapFewShot"]
-    B -->|"需要同时调指令和示例"| MI["MIPROv2"]
-    B -->|"需要从失败案例反思迭代"| GE["GEPA"]
-    BF --> C["编译产物：优化过的 Program"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["未优化的 Program"] --> B["选择优化器"]
+    B -->|"小型任务"| BF["BootstrapFewShot"]
+    B -->|"联合调优"| MI["MIPROv2"]
+    B -->|"反思失败"| GE["GEPA"]
+    BF --> C["优化后的程序"]
     MI --> C
     GE --> C
-    C --> D["可直接替换原 Program，接口不变"]
+    C --> D["保持接口替换实现"]
 ```
+
+图中条件与标签：
+
+- 数据量小、任务简单
+- 需要同时调指令和示例
+- 需要从失败案例反思迭代
+
+图中各项的完整含义：
+
+- 编译产物：优化过的 Program
+- 可直接替换原 Program，接口不变
 
 这些优化器通常返回保持调用接口的程序。要使用返回值，而不是假设原对象已被原地修改。优化产物还可能含更长的示例、指令或新的模型配置，接口不变不意味着延迟和费用不变。
 
@@ -120,10 +132,5 @@ Prompt 搜索不能保证突破能力瓶颈；但 DSPy 也有权重优化器，�
 
 ## 参考资料
 
-- [DSPy: 选择优化器](https://dspy.ai/diving-deeper/choosing-an-optimizer/)
-- [DSPy: MIPROv2 API 与三阶段机制](https://dspy.ai/api/optimizers/MIPROv2/)
-- [DSPy: GEPA API 与反馈契约](https://dspy.ai/api/optimizers/GEPA/overview/)
-- [DSPy: GEPA 优化教程](https://dspy.ai/getting-started/gepa-optimization/)
-- [DSPy 论文：Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"](https://arxiv.org/abs/2310.03714)
-- [GEPA 论文：Agrawal et al., "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning"](https://arxiv.org/abs/2507.19457)
-- [LangSmith 官方文档](https://docs.smith.langchain.com/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-17)。

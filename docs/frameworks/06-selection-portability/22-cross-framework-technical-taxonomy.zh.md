@@ -26,14 +26,24 @@ description: "从状态归属、检查点、工具执行契约及评测遥测比
 | PydanticAI | Run、可传递的 message history 和依赖 | 支持多轮与 durable execution；依赖对象不等于可持久会话 |
 
 ```mermaid
-flowchart TB
-    S1["状态通道与合并<br/>LangGraph"]
-    S2["事件 + 显式状态<br/>LlamaIndex Workflows / CrewAI Flow"]
-    S3["程序参数与调用数据<br/>DSPy"]
-    S4["Agent 局部状态与 Team<br/>AutoGen"]
-    S5["会话历史 / Session<br/>PydanticAI / MAF"]
-    S6["Step 与事件<br/>SK Process"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    S1["状态通道与合并"]
+    S2["事件 + 显式状态"]
+    S3["程序参数与调用<br/>数据"]
+    S4["Agent 局部状态<br/>与 Team"]
+    S5["会话历史 /<br/>Session"]
+    S6["Step 与事件"]
 ```
+
+图中各项的完整含义：
+
+- 状态通道与合并 LangGraph
+- 事件 + 显式状态 LlamaIndex Workflows / CrewAI Flow
+- 程序参数与调用数据 DSPy
+- Agent 局部状态与 Team AutoGen
+- 会话历史 / Session PydanticAI / MAF
+- Step 与事件 SK Process
 
 这些是侧重点，不是互斥类别。调试要同时观察状态快照和事件/消息轨迹；有共享状态却不记录谁更新了它，也很难解释问题。选型时可要求团队画出一次请求的状态所有者、并发合并规则和最终提交点。
 
@@ -82,7 +92,7 @@ flowchart TB
 | PydanticAI | 与 Pydantic Logfire 集成较紧密 | 同样基于 OpenTelemetry，适合已用 Pydantic 生态的团队 |
 | AutoGen / CrewAI | 消息/流程追踪与观测集成 | 核对跨 Agent 关联、工具 span、导出和数据驻留，不按“年轻”推断能力 |
 
-[OpenTelemetry GenAI 语义约定](https://github.com/open-telemetry/semantic-conventions-genai) 尝试统一模型、Agent 和工具调用的 span 命名与属性，便于不同框架的 Trace 在同一后端分析。**GenAI 总体文档和 Agent spans 仍标为 Development，不能把它们当成全部稳定的协议。** 评估时应检查实际导出字段与语义约定版本，而不只看自带 UI 或是否声称支持 OpenTelemetry。
+OpenTelemetry GenAI 语义约定<sup>[【524】](../../book/references.zh.md#ref-524)</sup> 尝试统一模型、Agent 和工具调用的 span 命名与属性，便于不同框架的 Trace 在同一后端分析。**GenAI 总体文档和 Agent spans 仍标为 Development，不能把它们当成全部稳定的协议。** 评估时应检查实际导出字段与语义约定版本，而不只看自带 UI 或是否声称支持 OpenTelemetry。
 
 仍需核对语义约定版本和字段稳定性；都使用 OTLP 不代表 span 名、token 统计和业务标签完全一致。Prompt/response 采集也不是默认越全越好，应明确脱敏、采样与保留期。Trace 帮助解释执行，评测判断质量，二者互补。
 
@@ -127,16 +137,5 @@ flowchart TB
 
 ## 参考资料
 
-- [LangGraph: Persistence 概念](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Checkpointers 与 super-step](https://docs.langchain.com/oss/python/langgraph/checkpointers)
-- [LlamaIndex: Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/)
-- [LlamaIndex: Durable Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/)
-- [AutoGen: State](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
-- [CrewAI: Flows](https://docs.crewai.com/en/concepts/flows)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [Microsoft Agent Framework 概览](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [Semantic Kernel: Process Framework](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework)
-- [OpenTelemetry Generative AI 语义约定及状态](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/README.md)
-- [LangSmith 官方文档](https://docs.smith.langchain.com/)
-
-版本说明：微软框架的发布与维护状态见第十九、二十章的固定来源；OpenTelemetry GenAI 的 Development 标记于 2026-09-15 复核。不同导出器仍需锁定并验证各自采用的语义约定版本。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-22)。

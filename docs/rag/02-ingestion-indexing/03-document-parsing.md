@@ -17,17 +17,13 @@ When investigating retrieval problems, therefore, first inspect what was actuall
 ## 3.2 Four Common Parsing Problems
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    DOC[Raw document] --> P1[Layout problems]
-    DOC --> P2[Table problems]
-    DOC --> P3[Non-text content]
-    DOC --> P4[Noise and lost structure]
-
-    P1 --> A1[Columns merged line by line<br/>Reading order scrambled]
-    P2 --> A2[Merged cells collapse<br/>Row-column relationships lost]
-    P3 --> A3[Scans, charts, and formulas<br/>No directly extractable text]
-    P4 --> A4[Repeated headers and footers<br/>Heading hierarchy lost]
+    DOC[Raw document] --> P[Parsing failure modes]
+    P --> A[Lost meaning or structure]
 ```
+
+Check four failure modes: columns can merge line by line and scramble reading order; merged table cells can collapse and lose row–column relationships; scans, charts, and formulas may lack directly extractable text; repeated headers and footers can add noise while heading hierarchy is lost.
 
 ### 3.2.1 Layout and Reading Order
 
@@ -60,18 +56,15 @@ Headers, footers, watermarks, and page numbers repeated on every page can end up
 **In practice, use a tiered pipeline rather than sending everything through the most expensive approach**:
 
 ```mermaid
-flowchart LR
-    IN[Document] --> T1[Rule-based parsing]
-    T1 --> CK{Quality check}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    T[Parse at current tier] --> CK{Quality check}
     CK -->|Pass| OK[Ingest]
-    CK -->|Fail| T2[Layout model]
-    T2 --> CK2{Quality check}
-    CK2 -->|Pass| OK
-    CK2 -->|Fail| T3[Multimodal model]
-    T3 --> CK3{Review passed?}
-    CK3 -->|Yes| OK
-    CK3 -->|No| HOLD[Quarantine or<br/>manual processing]
+    CK -->|Fail| NEXT[Escalate or quarantine]
+    NEXT -->|Next tier exists| T
 ```
+
+Start with rule-based parsing, escalate failed documents to a layout model, and then to a multimodal model if the next quality check still fails. Each tier must pass its own check before ingestion. If multimodal review also fails, quarantine the document or send it for manual processing rather than looping indefinitely.
 
 Most straightforward documents can then take the cheapest path, while only difficult cases move to a more expensive option.
 
@@ -190,8 +183,5 @@ Documents change, and new formats appear. The preprocessing pipeline must suppor
 
 ## References
 
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [Qdrant: Payload Updates and Indexing](https://qdrant.tech/documentation/manage-data/payload/)
-- [Advanced ingestion process powered by LLM parsing for RAG system](https://arxiv.org/abs/2412.15262)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-03) for this chapter’s sources, reading suggestions, and source notes.

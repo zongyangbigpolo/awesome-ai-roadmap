@@ -22,14 +22,15 @@ description: 区分模型规划训练与系统规划，讨论动作语义、计�
 - 完成条件。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Reasoning] --> Q[回答：为什么、是什么、能否推出]
-    P[Planning] --> A[回答：为了目标，接下来做什么]
+    R["Reasoning"] --> Q["回答：为什么、是什<br/>么、能否推出"]
+    P["Planning"] --> A["回答：为了目标，接<br/>下来做什么"]
 
-    Q --> COT[CoT / ToT / GoT]
-    A --> PLAN[Plan / DAG / Policy]
-    PLAN --> EXEC[Execution]
-    EXEC --> OBS[Observation]
+    Q --> COT["CoT / ToT / GoT"]
+    A --> PLAN["Plan / DAG /<br/>Policy"]
+    PLAN --> EXEC["Execution"]
+    EXEC --> OBS["Observation"]
     OBS --> PLAN
 ```
 
@@ -116,21 +117,58 @@ LLM 可以直接生成答案或动作，但复杂任务容易出现：
 - Replanner；
 - Budget 与 Guardrails。
 
+调度前先校验结构化计划。
+
 ```mermaid
 flowchart TB
-    G[Goal + Constraints] --> P[LLM Planner]
-    P --> S[Structured Plan]
-    S --> V[Plan Validator]
+    G[Goal + Constraints]
+    P[LLM Planner]
+    S[Structured Plan]
+    V[Plan Validator]
+    SCH[Scheduler]
+    G --> P
+    P --> S
+    S --> V
     V -->|不通过| P
-    V -->|通过| SCH[Scheduler]
-    SCH --> E[Executor]
-    E --> O[Observation]
-    O --> CHECK{验收与计划状态}
+    V -->|通过| SCH
+```
+
+执行并检查结果。
+
+```mermaid
+flowchart TB
+    SCH[Scheduler]
+    E[Executor]
+    O[Observation]
+    CHECK{验收与计划状态}
+    SCH --> E
+    E --> O
+    O --> CHECK
     CHECK -->|步骤通过且仍有任务| SCH
-    CHECK -->|计划失效| RP[Replanner]
-    CHECK -->|目标完成| DONE[完成]
-    CHECK -->|预算耗尽或需审批| STOP[停止或转人工]
+```
+
+根据验收检查继续执行或重新规划。
+
+```mermaid
+flowchart TB
+    CHECK{验收与计划状态}
+    SCH[Scheduler]
+    RP[Replanner]
+    S[Structured Plan]
+    CHECK -->|步骤通过且仍有任务| SCH
+    CHECK -->|计划失效| RP
     RP --> S
+```
+
+目标完成时结束，不宜继续时停止。
+
+```mermaid
+flowchart TB
+    CHECK{验收与计划状态}
+    DONE[完成]
+    STOP[停止或转人工]
+    CHECK -->|目标完成| DONE
+    CHECK -->|预算耗尽或需审批| STOP
 ```
 
 一个强模型如果缺少 Runtime 和验证，仍可能生成不可执行计划；一个中等模型配合良好 Schema、Tools 和 Verifier，反而可能更可靠。
@@ -187,11 +225,12 @@ flowchart TB
 CoT（Chain of Thought）让模型沿一条中间推理链得到结论：
 
 ```mermaid
-flowchart LR
-    Q[问题] --> S1[步骤 1]
-    S1 --> S2[步骤 2]
-    S2 --> S3[步骤 N]
-    S3 --> A[答案或初步计划]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["问题"] --> S1["步骤 1"]
+    S1 --> S2["步骤 2"]
+    S2 --> S3["步骤 N"]
+    S3 --> A["答案或初步计划"]
 ```
 
 它可以帮助模型：
@@ -220,12 +259,13 @@ CoT 文本可以出现“重新考虑”或初步验证，但这不等于控制�
 规划的第一步通常是将目标分解为可执行任务。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[复杂目标] --> M1[里程碑 1]
-    G --> M2[里程碑 2]
-    G --> M3[里程碑 3]
-    M1 --> T11[子任务 1.1]
-    M1 --> T12[子任务 1.2]
+    G["复杂目标"] --> M1["里程碑 1"]
+    G --> M2["里程碑 2"]
+    G --> M3["里程碑 3"]
+    M1 --> T11["子任务 1.1"]
+    M1 --> T12["子任务 1.2"]
 ```
 
 高质量子任务应具有：
@@ -268,19 +308,44 @@ ToT（Tree of Thoughts）把中间推理状态组织成树，在每个节点：
 3. 选择部分候选继续；
 4. 必要时回溯。
 
+初始候选。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    S0["Initial State"]
+    A["Candidate A"]
+    B["Candidate B"]
+    C["Candidate C"]
+    S0 --> A
+    S0 --> B
+    S0 --> C
+```
+
+展开 A 并评估后继节点。
+
 ```mermaid
 flowchart TB
-    S0[Initial State] --> A[Candidate A]
-    S0 --> B[Candidate B]
-    S0 --> C[Candidate C]
-
-    A --> A1[Expand A1]
-    A --> A2[Expand A2]
-    B --> B1[Expand B1]
-    B --> B2[Expand B2]
-
-    A1 --> E[Evaluate / Select]
+    A[Candidate A]
+    A1[Expand A1]
+    A2[Expand A2]
+    E[Evaluate / Select]
+    A --> A1
+    A --> A2
+    A1 --> E
     A2 --> E
+```
+
+展开 B 并汇入同一评估阶段。
+
+```mermaid
+flowchart TB
+    B[Candidate B]
+    B1[Expand B1]
+    B2[Expand B2]
+    E[Evaluate / Select]
+    B --> B1
+    B --> B2
     B1 --> E
     B2 --> E
 ```
@@ -343,14 +408,15 @@ GoT（Graph of Thoughts）允许多个推理路径：
 - 建立依赖。
 
 ```mermaid
-flowchart LR
-    A[Analysis A] --> M[Merge]
-    B[Analysis B] --> M
-    C[Evidence C] --> M
-    M --> R[Refine]
-    R --> V[Verify]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Analysis A"] --> M["Merge"]
+    B["Analysis B"] --> M
+    C["Evidence C"] --> M
+    M --> R["Refine"]
+    R --> V["Verify"]
     V -->|需要修订| R
-    V -->|通过| O[Output]
+    V -->|通过| O["Output"]
 ```
 
 它针对树结构的局限：
@@ -386,13 +452,14 @@ flowchart LR
 生产系统更适合把图节点定义为可执行 Task：
 
 ```mermaid
-flowchart LR
-    A[Collect Product Data] --> D[Compare Products]
-    B[Collect Pricing Data] --> D
-    C[Collect Market Data] --> E[Analyze Market]
-    D --> F[Generate Report]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Collect<br/>Product Data"] --> D["Compare<br/>Products"]
+    B["Collect<br/>Pricing Data"] --> D
+    C["Collect<br/>Market Data"] --> E["Analyze<br/>Market"]
+    D --> F["Generate<br/>Report"]
     E --> F
-    F --> V[Verify Sources]
+    F --> V["Verify<br/>Sources"]
 ```
 
 每个节点应包含：
@@ -412,16 +479,17 @@ flowchart LR
 一种可采用的系统架构是：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Goal] --> P[Planner]
-    P --> PLAN[Structured Plan]
-    PLAN --> E[Executor]
-    E --> O[Observation]
-    O --> V{计划仍有效?}
+    G["Goal"] --> P["Planner"]
+    P --> PLAN["Structured Plan"]
+    PLAN --> E["Executor"]
+    E --> O["Observation"]
+    O --> V["计划仍有效?"]
     V -->|是| E
-    V -->|否| RP[Replanner]
+    V -->|否| RP["Replanner"]
     RP --> PLAN
-    V -->|目标完成| DONE[Finish]
+    V -->|目标完成| DONE["Finish"]
 ```
 
 ### 11.13.1 Planner
@@ -500,19 +568,20 @@ $$
 分层规划先确定高层里程碑，再按需展开当前阶段：
 
 ```mermaid
-flowchart TB
-    G[Global Goal] --> M1[Research]
-    G --> M2[Implementation]
-    G --> M3[Validation]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Global Goal"] --> M1["Research"]
+    G --> M2["Implementation"]
+    G --> M3["Validation"]
 
-    M1 --> T11[Search Sources]
-    M1 --> T12[Extract Facts]
+    M1 --> T11["Search<br/>Sources"]
+    M1 --> T12["Extract<br/>Facts"]
 
-    M2 --> T21[Design]
-    M2 --> T22[Code]
+    M2 --> T21["Design"]
+    M2 --> T22["Code"]
 
-    M3 --> T31[Test]
-    M3 --> T32[Review]
+    M3 --> T31["Test"]
+    M3 --> T32["Review"]
 ```
 
 优势：
@@ -528,11 +597,12 @@ flowchart TB
 滚动规划只详细规划近期步骤：
 
 ```mermaid
-flowchart LR
-    S[Current State] --> P[Plan Next Horizon]
-    P --> E[Execute Next Step]
-    E --> O[Observe]
-    O --> U[Update State]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current State"] --> P["Plan Next Horizon"]
+    P --> E["Execute Next Step"]
+    E --> O["Observe"]
+    O --> U["Update State"]
     U --> P
 ```
 
@@ -593,13 +663,14 @@ Reflection 可以在规划前后加入质量检查。
 - 哪些经验可以用于后续规划。
 
 ```mermaid
-flowchart LR
-    P[Plan] --> C[Critic]
-    C --> V{Plan Valid?}
-    V -->|否| R[Revise]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Plan"] --> C["Critic"]
+    C --> V["Plan Valid?"]
+    V -->|否| R["Revise"]
     R --> P
-    V -->|是| E[Execute]
-    E --> F[Feedback]
+    V -->|是| E["Execute"]
+    E --> F["Feedback"]
     F --> C
 ```
 
@@ -646,13 +717,14 @@ Reflection 应优先使用真实工具反馈、规则、测试和人工审核，
 - 并发限制。
 
 ```mermaid
-flowchart LR
-    PLAN[Candidate Plan] --> S[Schema]
-    S --> D[Dependencies]
-    D --> C[Capabilities]
-    C --> R[Risk]
-    R --> B[Budget]
-    B --> EXEC[Executable Plan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    PLAN["Candidate Plan"] --> S["Schema"]
+    S --> D["Dependencies"]
+    D --> C["Capabilities"]
+    C --> R["Risk"]
+    R --> B["Budget"]
+    B --> EXEC["Executable Plan"]
 ```
 
 ## 11.20 使用外部规划器
@@ -693,6 +765,7 @@ Solver 在给定形式化模型内负责：
 - 在算法、目标函数和预算支持时给出最优性或不可行性证明。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant U as User
     participant M as LLM
@@ -709,9 +782,9 @@ sequenceDiagram
 
 > **这类问题更适合让语言模型负责建模和解释，把搜索或求解交给确定性算法。**
 
-要分开检查“求解器求对了模型”和“模型正确表达了用户需求”。遗漏预算、误译单位或错误动作效果时，求解器仍可能给出形式上有效、现实中不可用的计划。以 [OR-Tools CP-SAT](https://developers.google.com/optimization/cp/cp_solver) 为例，`FEASIBLE` 不等于 `OPTIMAL`，超时后的 `UNKNOWN` 也不等于已证明无解。
+要分开检查“求解器求对了模型”和“模型正确表达了用户需求”。遗漏预算、误译单位或错误动作效果时，求解器仍可能给出形式上有效、现实中不可用的计划。以 OR-Tools CP-SAT<sup>[【499】](../../book/references.zh.md#ref-499)</sup> 为例，`FEASIBLE` 不等于 `OPTIMAL`，超时后的 `UNKNOWN` 也不等于已证明无解。
 
-[LLM-Modulo](https://arxiv.org/abs/2402.01817)提出更紧密的候选生成—外部验证循环：LLM 不只做格式转换，也可以提出计划或补充模型，Verifier 返回具体违反的约束供修订。该论文对 LLM 规划能力的强判断是其研究立场，不宜当作对所有后续模型的永久结论；可采用的是让生成与独立检查互相反馈的机制。
+LLM-Modulo<sup>[【497】](../../book/references.zh.md#ref-497)</sup>提出更紧密的候选生成—外部验证循环：LLM 不只做格式转换，也可以提出计划或补充模型，Verifier 返回具体违反的约束供修订。该论文对 LLM 规划能力的强判断是其研究立场，不宜当作对所有后续模型的永久结论；可采用的是让生成与独立检查互相反馈的机制。
 
 ## 11.21 计划的表示方式
 
@@ -802,12 +875,13 @@ sequenceDiagram
 - 预算。
 
 ```mermaid
-flowchart TB
-    PLAN[Plan] --> STATE[Planning State]
-    OBS[Observations] --> STATE
-    FAIL[Failures] --> STATE
-    BUDGET[Budget] --> STATE
-    STATE --> RP[Replanner]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PLAN["Plan"] --> STATE["Planning<br/>State"]
+    OBS["Observations"] --> STATE
+    FAIL["Failures"] --> STATE
+    BUDGET["Budget"] --> STATE
+    STATE --> RP["Replanner"]
 ```
 
 计划若只留在单次 Prompt 中，执行过程中就很难追踪版本、恢复状态或安全重启。更稳妥的做法是把它存入结构化 State Store，并支持 Checkpoint。
@@ -833,7 +907,7 @@ LLM 可以隐式预测：
 
 World Model 的误差会随预测深度累积，尤其是在陌生状态或工具分布变化后。API Schema 描述参数形状，不是完整的环境转移模型；模拟器、只读查询和真实执行反馈也各有覆盖范围。
 
-[SayCan](https://arxiv.org/abs/2204.01691)提供了一个具体例子：用语言模型估计技能对目标的适合程度，用技能价值函数估计在当前环境中能否成功，再组合选择。它依赖已有技能库及相应可行性估计，不能由“语言模型能描述动作”推断机器人就具备该动作能力。
+SayCan<sup>[【498】](../../book/references.zh.md#ref-498)</sup>提供了一个具体例子：用语言模型估计技能对目标的适合程度，用技能价值函数估计在当前环境中能否成功，再组合选择。它依赖已有技能库及相应可行性估计，不能由“语言模型能描述动作”推断机器人就具备该动作能力。
 
 ## 11.25 规划中的不确定性
 
@@ -901,15 +975,34 @@ $$
 
 Adaptive Planner 根据任务难度和风险选择规划强度：
 
+简单任务、已知路径与可分解任务。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    G[Goal] --> A[Assess Complexity / Risk]
-    A -->|简单| C[CoT / Checklist]
-    A -->|路径明确| W[Workflow]
-    A -->|复杂但可分解| P[Plan-and-Execute]
-    A -->|候选较多| T[ToT / Search]
-    A -->|严格约束| S[External Solver]
-    A -->|动态环境| R[Rolling Replanning]
+    G["Goal"]
+    A["Assess<br/>Complexity /<br/>Risk"]
+    C["CoT /<br/>Checklist"]
+    W["Workflow"]
+    P["Plan-and-Execute"]
+    G --> A
+    A -->|简单| C
+    A -->|路径明确| W
+    A -->|复杂但可分解| P
+```
+
+搜索、严格约束与动态环境。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Assess<br/>Complexity /<br/>Risk"]
+    T["ToT / Search"]
+    S["External Solver"]
+    R["Rolling<br/>Replanning"]
+    A -->|候选较多| T
+    A -->|严格约束| S
+    A -->|动态环境| R
 ```
 
 对所有任务一律启用昂贵搜索，通常得不偿失。
@@ -1014,39 +1107,17 @@ Executor 不理解步骤目标或输出格式。
 
 ```mermaid
 flowchart TB
-    INPUT[User Goal] --> NORMALIZE[Goal / Constraint Parser]
-    NORMALIZE --> ROUTER[Planning Strategy Router]
-
-    ROUTER -->|固定流程| WF[Workflow]
-    ROUTER -->|动态任务| PLANNER[LLM Planner]
-    ROUTER -->|严格约束| SOLVER[External Solver]
-
-    PLANNER --> PLAN[Structured Plan / DAG]
-    SOLVER --> PLAN
-    WF --> PLAN
-
-    PLAN --> VALIDATE[Schema + Dependency + Risk Validation]
-    VALIDATE -->|不通过| PLANNER
-    VALIDATE -->|通过| SCHED[Scheduler]
-
-    SCHED --> GATE{执行前权限与审批有效?}
-    GATE -->|是| EXEC[Executor / ReAct]
-    GATE -->|否| HUMAN[Human Approval / 拒绝]
-    HUMAN -->|获批后重新校验| GATE
-    EXEC --> OBS[Observation + Artifact]
-    OBS --> VERIFY[Verifier]
-
+    SCHED[调度器] --> GATE[权限门控]
+    GATE -->|审批有效| EXEC[执行器 / ReAct]
+    EXEC --> OBS[观察结果与产物]
+    OBS --> VERIFY[验证器]
     VERIFY -->|步骤通过| SCHED
     VERIFY -->|局部失败重试| GATE
-    VERIFY -->|计划失效| REPLAN[Replanner]
-    REPLAN --> PLAN
-    VERIFY -->|需人工判断| HUMAN
-    VERIFY -->|目标完成| DONE[Final Result]
-
-    PLAN --> STATE[Planning State Store]
-    OBS --> STATE
-    STATE --> REPLAN
 ```
+
+进入调度器前，先解析用户目标与约束，再将固定流程交给工作流、动态任务交给 LLM 规划器、严格约束交给外部求解器。三者都生成结构化计划或 DAG。Schema、依赖与风险校验通过后才能调度；失败则返回 LLM 规划器。
+
+权限门控在执行前检查权限与审批。缺少授权时转人工批准或拒绝；获批后返回门控重新校验，而不是直接执行。验证器将失效计划交给重规划器，需要人工判断时转人工审核，目标完成时输出最终结果。计划与观察结果写入规划状态存储，供重规划器使用；重规划生成新的结构化计划后，仍须再次校验。
 
 图中的 Scheduler 只派发依赖已验收的任务，Verifier 区分步骤通过与目标完成。校验失败、重试和重规划共用硬性预算；不可修复的失败、审批拒绝或预算耗尽都应有停止出口，不能沿图中的回路无限运行。
 
@@ -1127,13 +1198,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601)
-- [Graph of Thoughts: Solving Elaborate Problems with Large Language Models](https://arxiv.org/abs/2308.09687)
-- [Plan-and-Solve Prompting](https://arxiv.org/abs/2305.04091)
-- [LLMCompiler: An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks](https://arxiv.org/abs/2402.01817)
-- [Do As I Can, Not As I Say: Grounding Language in Robotic Affordances](https://arxiv.org/abs/2204.01691)
-- [OR-Tools: CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver)
-- [DeepSeek-R1](https://arxiv.org/abs/2501.12948)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-11)。

@@ -118,14 +118,22 @@ Checkpoint granularity is the super-step. Nodes in the same step read the state 
 ### 10.5.1 How `interrupt()` works
 
 ```mermaid
-flowchart LR
-    A["Trigger interrupt()<br/>anywhere inside a node"] --> B["Runtime saves state<br/>and exposes a serializable<br/>interrupt payload"]
-    B --> C["Workflow waits indefinitely"]
-    C --> D["Resume with the same thread_id<br/>and Command(resume=...)"]
-    D --> E["External input becomes<br/>the return value of interrupt()"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Trigger<br/>interrupt()"] --> B["Runtime saves<br/>state"]
+    B --> C["Workflow waits<br/>indefinitely"]
+    C --> D["Resume with the<br/>same thread_id"]
+    D --> E["External input<br/>becomes"]
 
     style E fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Trigger interrupt() anywhere inside a node
+- Runtime saves state and exposes a serializable interrupt payload
+- Resume with the same thread_id and Command(resume=...)
+- External input becomes the return value of interrupt()
 
 **This is more flexible than “confirm or cancel.”** A reviewer can approve, reject, **change an amount, add evidence, or provide feedback**. Subsequent routing uses that input to choose the next step. Multilevel approval can also be split into nodes, **so each role sees only the information it needs**.
 
@@ -160,13 +168,21 @@ Accept only one decision per task version. Make recording the approval decision 
 ### 10.6.1 Three layers of node failure handling and their version boundaries
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Retry policy<br/>Retry by exception type<br/>and backoff policy"] --> B["Timeout<br/>Limit one attempt's duration"]
-    B --> C["Error handler<br/>Handle failure after retries<br/>are exhausted"]
-    C --> D["Handler can return Command<br/>to update error state and route<br/>to degradation, compensation,<br/>or human-review nodes"]
+    A["Retry policy"] --> B["Timeout"]
+    B --> C["Error handler"]
+    C --> D["Handler can<br/>return Command"]
 
     style D fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Retry policy Retry by exception type and backoff policy
+- Timeout Limit one attempt's duration
+- Error handler Handle failure after retries are exhausted
+- Handler can return Command to update error state and route to degradation, compensation, or human-review nodes
 
 | Capability | Minimum version / condition | Notes |
 |---|---|---|
@@ -545,15 +561,5 @@ Default single-value channels raise a concurrent-update error. Even with a custo
 
 ## References
 
-- [LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph: Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api)
-- [LangGraph: Functional API](https://docs.langchain.com/oss/python/langgraph/functional-api)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [LangGraph: Time Travel](https://docs.langchain.com/oss/python/langgraph/use-time-travel)
-- [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)
-- [LangGraph: Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [LangChain: Event streaming](https://docs.langchain.com/oss/python/langchain/event-streaming)
-- [LangChain: Agents](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangGraph Checkpointers: checkpoint and recovery semantics](https://docs.langchain.com/oss/python/langgraph/checkpointers)
-- [LangGraph concurrent state-update error](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-10) for this chapter’s sources, reading suggestions, and source notes.

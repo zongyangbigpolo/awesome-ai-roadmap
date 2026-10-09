@@ -12,18 +12,26 @@ Traditional NLP includes rule-based and statistical pipelines, but also end-to-e
 
 The diagram illustrates one customer-support example.
 
+**Traditional support**
+
 ```mermaid
-flowchart LR
-    subgraph PIPE["Traditional support"]
-        A["Text"] --> B["Tokenization and entity recognition"]
-        B --> C["Intent classification"]
-        C --> D["Retrieval or business rules"]
-    end
-    subgraph GEN["Generative application"]
-        E["Instructions + input + optional evidence"] --> F["Language model"]
-        F --> G["Text or structured output"]
-        G --> H["Validation and business execution"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Text"] --> B["Tokenization and entity recognition"]
+    B --> C["Intent classification"]
+    C --> D["Retrieval or business rules"]
+
+```
+
+**Generative application**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["Instructions + input + optional evidence"] --> F["Language model"]
+    F --> G["Text or structured output"]
+    G --> H["Validation and business execution"]
+
 ```
 
 Errors can accumulate in a pipeline, but one upstream mistake does not necessarily invalidate every downstream step. Joint training, character-level models, and correction rules can mitigate this. Generative systems reduce some task-specific heads and labeling work, but introduce challenges around uncertain outputs, cost, authorization, and fact checking.
@@ -104,7 +112,8 @@ Scaling laws fit empirical relationships between loss, parameter count, data, an
 “Emergence” usually describes an observation within a studied range of scales: smaller models perform near chance, while larger models improve markedly on particular metrics. Actual changes in capability must be distinguished from effects of the scoring rule:
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Success probability improves gradually for each substep"] --> B["Credit only for a completely correct answer"]
     B --> C["A steeper observed accuracy curve"]
     A --> D["Partial credit or continuous metrics"]
@@ -134,11 +143,5 @@ The main engineering shift brought by LLMs is the reuse of pretrained capabiliti
 
 ## References
 
-- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
-- [Language Models are Few-Shot Learners (GPT-3)](https://arxiv.org/abs/2005.14165)
-- [Language Models are Unsupervised Multitask Learners (GPT-2)](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
-- [Emergent Abilities of Large Language Models](https://arxiv.org/abs/2206.07682)
-- [Are Emergent Abilities of Large Language Models a Mirage?](https://arxiv.org/abs/2304.15004)
-- [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)
-- [Training Compute-Optimal Large Language Models (Chinchilla)](https://arxiv.org/abs/2203.15556)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-01) for this chapter’s sources, reading suggestions, and source notes.

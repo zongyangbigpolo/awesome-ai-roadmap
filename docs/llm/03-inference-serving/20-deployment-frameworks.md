@@ -31,15 +31,16 @@ Framework selection must ultimately satisfy service-level objectives (SLOs), suc
 **PagedAttention applies that idea to KV caching**:
 
 ```mermaid
-flowchart LR
-    subgraph L["A request's logical KV sequence"]
-        A1["Block 0"] --> A2["Block 1"] --> A3["Block 2"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L["Logical KV sequence<br/>Blocks 0 → 1 → 2"]
     L --> BT["Block Table<br/>Logical → physical mapping"]
-    BT --> P["Physical GPU memory pool<br/>Fixed-size blocks<br/>Noncontiguous placement<br/>Reference-based reclamation"]
+    BT --> P["Physical GPU block pool"]
 
     style BT fill:#e8f0fe
 ```
+
+For one request, logical blocks 0, 1, and 2 form an ordered KV sequence. The block table maps each logical block to a physical GPU memory block. Physical blocks have a fixed size, may occupy noncontiguous locations, and are reclaimed according to their references; logical order does not imply adjacent physical storage.
 
 With a block size of 16 tokens, a 200-token request needs `ceil(200/16)=13` blocks, providing capacity for 208 tokens with 8 unused positions in the last block. This avoids reserving a contiguous 4096-token region for the request. Actual block sizes depend on the backend and configuration.
 
@@ -85,14 +86,17 @@ vLLM offers not only PagedAttention but also **Automatic Prefix Caching (APC)** 
 ### 20.3.2 RadixAttention: organizing the KV cache with a radix tree
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     ROOT["Root: empty"] --> SP["Shared system prompt<br/>1000 tokens — stored once"]
-    SP --> U1["User A's question"]
-    SP --> U2["User B's question"]
-    SP --> U3["User C's question"]
+    SP --> U1["Question A"]
+    SP --> U2["Question B"]
+    SP --> U3["Question C"]
 
     style SP fill:#e6f4ea
 ```
+
+Questions A, B, and C belong to different users. Their branches share the one stored 1000-token system prompt, not each other's question suffixes.
 
 **Requests reuse the same token-prefix path and branch at the first differing token**. A radix-tree edge can compactly represent a sequence of tokens; a separate tree level per token is unnecessary.
 
@@ -262,19 +266,5 @@ Verify resource release on cancellation and timeout, overload rate limiting and 
 
 ## References
 
-- [Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM)](https://arxiv.org/abs/2309.06180)
-- [SGLang: Efficient Execution of Structured Language Model Programs (RadixAttention)](https://arxiv.org/abs/2312.07104)
-- [Orca: A Distributed Serving System for Transformer-Based Generative Models (continuous batching)](https://www.usenix.org/conference/osdi22/presentation/yu)
-- [vLLM documentation](https://docs.vllm.ai/)
-- [vLLM: Automatic Prefix Caching](https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/)
-- [SGLang repository](https://github.com/sgl-project/sglang)
-- [Text Generation Inference repository](https://github.com/huggingface/text-generation-inference)
-- [TGI official documentation: maintenance-mode notice, checked in the source manuscript on 2026-09-15](https://huggingface.co/docs/text-generation-inference/main/en/index)
-- [llama.cpp repository](https://github.com/ggml-org/llama.cpp)
-- [TensorRT-LLM repository](https://github.com/NVIDIA/TensorRT-LLM)
-- [llama.cpp: HTTP server capabilities and parameters](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)
-- [TensorRT-LLM: Quick Start](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html)
-- [vLLM: Chunked Prefill and configuration tuning](https://docs.vllm.ai/en/stable/configuration/optimization/)
-- [vLLM: Disaggregated Prefilling](https://docs.vllm.ai/en/stable/features/disagg_prefill/)
-- [TGI: components and HTTP/gRPC boundaries](https://huggingface.co/docs/text-generation-inference/main/en/architecture)
-- [TensorRT-LLM: LLM API and PyTorch backend](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/llm-api/index.md)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-20) for this chapter’s sources, reading suggestions, and source notes.

@@ -9,14 +9,25 @@ description: 按 SQL、Shell、HTML、CSV 和工具参数的消费上下文处�
 前两章关注「不可信内容怎么进入模型」，本章关注**模型的输出本身应被当作不可信内容**。这是 OWASP LLM05（Improper Output Handling）的核心命题：很多团队严格校验输入，却把模型输出直接拼进 SQL、Shell 命令、HTML、Markdown 渲染器或下游 API 调用参数，相当于把模型变成了一个「可被攻击者远程编程的模板引擎」。
 
 ```mermaid
-flowchart LR
-    U[攻击者可控输入<br/>直接或间接] --> M[模型]
-    M --> O[模型输出]
-    O -->|未经处理直接执行/渲染| D1[SQL/Shell/反序列化]
-    O -->|未经处理直接执行/渲染| D2[前端 HTML/Markdown]
-    O -->|作为工具调用参数| D3[下游 API/文件系统]
-    O -->|夹带凭据或内部信息| D4[外部可达的目的地]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    U["攻击者可控输入"] --> O["模型生成输出"]
+    O --> EXEC["不安全的执行"]
+    O --> LEAK["向外部泄露"]
 ```
+
+攻击者可控的直接或间接输入到达模型后，模型输出如果未经适当处理就进入 SQL、Shell、反序列化或前端 HTML/Markdown 渲染，就可能形成执行漏洞；工具调用参数也可能进入下游 API 或文件系统。另一条泄露路径是：含凭据或内部信息的输出到达外部可访问的目的地。需要哪些校验与转义，应由接收系统决定，而不是由模型表现出的自信决定。
+
+图中条件与标签：
+
+- 未经处理直接执行/渲染
+- 未经处理直接执行/渲染
+- 作为工具调用参数
+- 夹带凭据或内部信息
+
+图中各项的完整含义：
+
+- 攻击者可控输入 直接或间接
 
 模型输出之所以危险，是因为它同时具备两个特征：**内容可被攻击者间接操纵**（通过 Prompt Injection 或越狱），**又天然被下游系统当作「AI 生成的正常结果」而降低审查力度**。后面就沿着几个最容易出事的消费点往下看：执行、渲染、工具参数，以及单独拎出来看的密钥与敏感数据外泄（secret exfiltration）。
 
@@ -127,8 +138,5 @@ Agent 场景下，模型输出不只是展示文本，还会直接成为工具�
 
 ## 参考资料
 
-- [OWASP LLM05:2025 Improper Output Handling](https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/)
-- [OWASP LLM02:2025 Sensitive Information Disclosure](https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/)
-- [Imprompter: Tricking LLM Agents into Improper Tool Use](https://arxiv.org/abs/2410.14923)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [OWASP: CSV Injection](https://owasp.org/www-community/attacks/CSV_Injection)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-03)。

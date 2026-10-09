@@ -9,10 +9,17 @@ description: Choose code and desktop isolation according to actual privileges, a
 Code interpreters, browser automation, and computer use—letting a model operate a graphical interface with a mouse and keyboard—are three of the fastest-growing categories of agent tools. They are also among the hardest to enumerate completely in an attack-surface analysis. All three share a defining characteristic: **the model generates the specific instructions at runtime, so they cannot be exhaustively enumerated at design time**. Defenses must therefore focus on limiting the maximum harm the execution environment can cause, not on predicting every instruction the model might generate.
 
 ```mermaid
-flowchart LR
-    A[Code execution<br/>Process, file, and network permissions] --> B[Browser automation<br/>Pages, login sessions, and downloads]
-    B --> C[Computer use<br/>Visible desktop, applications, and clipboard]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Code execution"] --> B["Browser<br/>automation"]
+    B --> C["Computer use"]
 ```
+
+Details of the illustrated steps and components:
+
+- Code execution Process, file, and network permissions
+- Browser automation Pages, login sessions, and downloads
+- Computer use Visible desktop, applications, and clipboard
 
 There is no fixed risk ranking among the three. A code container with host mounts and cloud credentials may be more dangerous than a disposable virtual desktop; the impact of browser automation and computer use is likewise constrained by logged-in accounts and operating-system privileges. First inventory the readable data, writable resources, network destinations, and available credentials, then choose the strength of isolation.
 
@@ -82,13 +89,20 @@ Because the model relies on screenshots to understand the current screen, it may
 All three execution environments need consistent network isolation policies. These follow the same principles as the SSRF defenses in [Tool Protocol Security, Section 15.3.1](../../tools/02-mcp/15-tool-protocol-security.md). Applied to an execution sandbox, they yield the following network design:
 
 ```mermaid
-flowchart TB
-    E[Execution environment<br/>Code/browser/computer use] --> P[Mandatory egress proxy]
-    P --> W[Domain/IP allowlist]
-    P --> N[Deny loopback/private-network/metadata addresses]
-    P --> R[Limit redirects and response size]
-    P --> L[Credential-free network segment<br/>Proxy injects credentials as needed]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    E["Execution"] --> P["Mandatory<br/>egress proxy"]
+    P --> W["Domain/IP<br/>allowlist"]
+    P --> N["Deny internal<br/>addresses"]
+    P --> R["Limit redirects<br/>and response<br/>size"]
+    P --> L["Credential-free<br/>network segment"]
 ```
+
+Details of the illustrated steps and components:
+
+- Execution environment Code/browser/computer use
+- Deny loopback/private-network/metadata addresses
+- Credential-free network segment Proxy injects credentials as needed
 
 - Execution environments have no direct internet connectivity; all outbound traffic must pass through a controlled proxy.
 - The proxy maintains an allowlist rather than a blocklist, denying every undeclared destination by default.
@@ -136,9 +150,5 @@ Hijacking through visual injection would directly affect real host data and appl
 
 ## References
 
-- [OWASP LLM06:2025 Excessive Agency](https://genai.owasp.org/llmrisk/llm062025-excessive-agency/)
-- [gVisor: Application Kernel for Containers](https://gvisor.dev/)
-- [Firecracker: Secure and Fast microVMs](https://firecracker-microvm.io/)
-- [MDN: Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Same-origin_policy)
-- [Anthropic: Computer Use Demo — security precautions and isolation limitations](https://github.com/anthropics/claude-quickstarts/tree/main/computer-use-demo)
-- [MITRE ATLAS: Evade ML Model / LLM Prompt Injection](https://atlas.mitre.org/techniques/AML.T0051)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-08) for this chapter’s sources, reading suggestions, and source notes.

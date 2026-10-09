@@ -9,18 +9,26 @@ description: 将显式与隐式反馈转化为经授权的评测或训练数据�
 回到[第 2 章](../01-foundations/02-production-architecture-overview.zh.md)的架构全景图:所有环节最终都指向反馈闭环,而反馈闭环产出的数据又重新流回评测集和训练数据,成为下一轮迭代的起点。**这里不是再加一个新组件,而是把第 7–12 章那些已经搭好的评测、发布和训练数据入口真正接起来。**
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     PROD["生产系统运行"] --> SIGNAL["收集反馈信号"]
-    SIGNAL --> TRIAGE["核对使用授权 · 脱敏 · 去重 · 归因"]
-    TRIAGE --> EVALSET["加入评测数据集<br/>(第7章)"]
-    TRIAGE --> FINETUNE["加入微调/对齐数据<br/>任务适配与数据条件满足后"]
-    EVALSET --> RELEASE["下一轮发布门禁<br/>(第10章)"]
-    FINETUNE --> MODEL["下一代模型/适配层"]
+    SIGNAL --> TRIAGE["整理反馈"]
+    TRIAGE --> EVALSET["加入评测数据集"]
+    TRIAGE --> FINETUNE["加入微调/对齐数<br/>据"]
+    EVALSET --> RELEASE["下一轮发布门禁"]
+    FINETUNE --> MODEL["下一代模型/适配<br/>层"]
     RELEASE --> PROD
     MODEL --> RELEASE
 
     style TRIAGE fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 核对使用授权 · 脱敏 · 去重 · 归因
+- 加入评测数据集 (第7章)
+- 加入微调/对齐数据 任务适配与数据条件满足后
+- 下一轮发布门禁 (第10章)
 
 ## 13.2 反馈信号的来源:显式与隐式
 
@@ -58,16 +66,24 @@ def infer_implicit_signal(session_events: list[dict]) -> str | None:
 当反馈数据积累到一定规模,且短周期的 Prompt 调整已经无法进一步提升某类任务的表现时,才需要考虑更重的手段——用积累的数据做微调或偏好对齐(RLHF/DPO,见 [LLM · 训练与对齐](../../llm/02-training-alignment/README.zh.md))。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["生产反馈持续积累"] --> B["确认任务适合训练<br/>授权、标签质量与学习曲线达标"]
-    B --> C["构建微调/偏好数据集"]
-    C --> D["微调或对齐出新版本"]
-    D --> E["经过与第7-10章相同的<br/>评测门禁与灰度发布"]
-    E --> F["新版本上线,产生新的反馈"]
+    A["生产反馈持续积累"] --> B["确认任务适合训练"]
+    B --> C["构建训练数据集"]
+    C --> D["微调或对齐出新版<br/>本"]
+    D --> E["经过与第7-10章相<br/>同的"]
+    E --> F["部署并收集反馈"]
     F --> A
 
     style B fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 确认任务适合训练 授权、标签质量与学习曲线达标
+- 构建微调/偏好数据集
+- 经过与第7-10章相同的 评测门禁与灰度发布
+- 新版本上线,产生新的反馈
 
 没有通用的「数千到数万条即可微调」门槛。先做小规模实验和学习曲线，比较训练收益与 Prompt、检索、工具修复的收益。偏好对要对应相同任务与上下文，并确认差异来自答案质量而不是版本、曝光和用户群；模型生成的答案不能未经核验当作事实标签。
 
@@ -117,8 +133,5 @@ flowchart TB
 
 ## 参考资料
 
-- [OpenAI: Fine-tuning](https://platform.openai.com/docs/guides/fine-tuning)
-- [Anthropic: Constitutional AI and RLHF](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback)
-- [LangSmith: Attach user feedback](https://docs.langchain.com/langsmith/attach-user-feedback)
-- [Netflix Tech Blog: Recommendation systems and the data flywheel](https://netflixtechblog.com/artwork-personalization-c589f074ad76)
-- [Google: People + AI Guidebook - Feedback + Control](https://pair.withgoogle.com/guidebook/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-13)。

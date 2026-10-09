@@ -28,7 +28,8 @@ Embedding 把两者都映射到「休假申请」这个语义区域，从而能�
 ## 6.3 四类表示方法
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     G1[静态词向量] --> G2[上下文词向量]
     G2 --> G3[句向量 双塔]
     G3 --> G4[后期交互 多向量]
@@ -68,23 +69,32 @@ flowchart LR
 
 BERT 可以分别编码文本，也可以把 Query 与文档拼接后微调为 cross-encoder。后者意味着：
 
-```mermaid
-flowchart TB
-    subgraph CE[Cross-Encoder 交互式]
-        Q1[Query] --> CAT[拼接]
-        D1[文档] --> CAT
-        CAT --> M1[模型] --> S1[相似度分数]
-        N1[在线为每个文本对评分<br/>可批处理但计算量大]
-    end
+**Cross-Encoder 交互式**
 
-    subgraph BE[Bi-Encoder 双塔]
-        Q2[Query] --> ME1[模型] --> V1[Query 向量]
-        D2[文档] --> ME2[模型] --> V2[文档向量<br/>离线预先算好]
-        V1 --> SIM[向量距离]
-        V2 --> SIM
-        N2[文档向量离线算好<br/>在线只算 Query]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --> CAT[拼接]
+    D1[文档] --> CAT
+    CAT --> M1[模型] --> S1[相似度分数]
+
 ```
+
+Cross-Encoder 在线为每个 Query–文档对评分，可以批处理，但计算量较大。
+
+**Bi-Encoder 双塔**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --> ME1[模型] --> V1[Query 向量]
+    D2[文档] --> ME2[模型] --> V2[文档向量<br/>离线预先算好]
+    V1 --> SIM[向量距离]
+    V2 --> SIM
+
+```
+
+双塔模型离线预计算文档向量，在线只需编码 Query。两侧向量在距离计算时相遇，不会进入一个联合的 Query–文档编码器。
 
 **百万级候选需要在线评分百万个文本对。** 批处理减少调用开销，但不能免去这些交互计算，因此通常先用可预计算文档表示的检索器缩小范围。
 
@@ -117,13 +127,13 @@ flowchart TB
 文档不再压缩成**一个**向量，而是保留**每个 Token 的向量**。检索时计算 Query 每个 Token 与文档所有 Token 向量的最大相似度，再求和。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[单向量双塔] -->|保留更多细粒度表示| B[后期交互 多向量]
-    B -->|增加在线跨文本交互| C[Cross-Encoder]
-    A -.->|文档压成 1 个向量| A1[细粒度信息丢失]
-    B -.->|文档保留 N 个向量| B1[空间由数量、维度<br/>数据类型与压缩共同决定]
-    C -.->|Query 文档拼接| C1[无法离线预计算]
+    A[单向量双塔] --> B[多向量后期交互]
+    B --> C[Cross-Encoder]
 ```
+
+箭头比较表示与交互方式，不代表执行阶段。单向量双塔将文档压缩为一个向量，会丢失细粒度信息。后期交互为每篇文档保留 N 个向量，存储取决于数量、维度、数据类型和压缩方式。Cross-Encoder 拼接 Query 与文档，增加在线跨文本交互，因此无法离线预计算联合表示。
 
 **优点**：保留 Token 级匹配信息，同时文档表示仍可离线预计算。ColBERT 系论文在所测检索任务上展示了收益，但不能推出任意多向量模型都胜过单向量模型，或必然接近 cross-encoder。
 
@@ -155,7 +165,7 @@ flowchart TB
 
 ### 6.5.3 注意指令前缀
 
-不同 Embedding 模型的 Query 与文档输入约定不同。E5、BGE 等模型可能有特定前缀或指令约定（如 `query:` / `为这个句子生成表示以用于检索相关文章：`），文档可能不加或使用另一前缀，应按各自模型卡配置。[Qwen3-Embedding 官方模型卡](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)推荐为 Query 提供任务指令，但这不表示缺少指令就会使调用无效。
+不同 Embedding 模型的 Query 与文档输入约定不同。E5、BGE 等模型可能有特定前缀或指令约定（如 `query:` / `为这个句子生成表示以用于检索相关文章：`），文档可能不加或使用另一前缀，应按各自模型卡配置。Qwen3-Embedding 官方模型卡<sup>[【362】](../../book/references.zh.md#ref-362)</sup>推荐为 Query 提供任务指令，但这不表示缺少指令就会使调用无效。
 
 **遗漏适用的前缀或指令可能降低效果，但影响取决于模型和任务；应按模型卡配置，并在目标查询集上验证。** 不要把检索效果建议混同于 API 输入有效性要求。
 
@@ -207,11 +217,5 @@ Embedding 是表示方式，Rerank 是流水线阶段；常见重排采用 cross
 
 ## 参考资料
 
-- [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781)
-- [Stanford GloVe：全局共现统计与加权最小二乘目标](https://nlp.stanford.edu/projects/glove/)
-- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
-- [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)
-- [SimCSE: Simple Contrastive Learning of Sentence Embeddings](https://arxiv.org/abs/2104.08821)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-06)。

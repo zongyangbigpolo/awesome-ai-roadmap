@@ -15,7 +15,8 @@ description: Explain how autoregressive pretraining, supervised fine-tuning, and
 | Preference or reward optimization | Comparison labels, reward models, or verifiable feedback | Agreement with preferences or task rewards, usually with constraints on policy drift |
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     RAW["Random initialization"] -->|Pretraining| BASE["Base model"]
     BASE -->|SFT on demonstrations| SFT["Instruction model"]
     SFT -->|Preference or<br/>reward optimization| CHAT["Post-trained model"]
@@ -140,6 +141,7 @@ Preference optimization adds comparison or reward signals. Human preference is n
 RLHF predates InstructGPT. *Deep Reinforcement Learning from Human Preferences* studied learning rewards from human comparisons in 2017. InstructGPT is an important application of that idea to instruction-following language models.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     S1["Compare answers<br/>to the same question"] --> S2["Train a reward model, RM"]
     S2 --> S3["Policy generates answers online<br/>Reward scoring and PPO updates"]
@@ -186,12 +188,5 @@ The three-stage framework distinguishes data and optimization signals; it does n
 
 ## References
 
-- [GPT-3, §2 and few-shot evaluations](https://arxiv.org/html/2005.14165v4)
-- [Llama 2, §§2.1 and 3.1.1, and the model card](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models, §§3–4](https://arxiv.org/html/2407.21783v3)
-- [Chinchilla: the training-compute approximation](https://arxiv.org/html/2203.15556v1)
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [LIMA](https://arxiv.org/abs/2305.11206)
-- [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
-- [DPO: reward reparameterization and preference loss](https://arxiv.org/html/2305.18290v3)
-- [DeepSeek-R1: the training workflow in the initial 2025 report](https://arxiv.org/html/2501.12948v1)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-06) for this chapter’s sources, reading suggestions, and source notes.

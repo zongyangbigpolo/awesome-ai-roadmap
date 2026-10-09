@@ -15,7 +15,8 @@ description: 解释自回归预训练、监督微调与偏好优化的目标、�
 | 偏好或奖励优化 | 比较标签、奖励模型或可验证反馈 | 偏好一致性或任务奖励，通常限制策略偏移 |
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     RAW["随机初始化"] -->|预训练| BASE["Base 模型"]
     BASE -->|示范数据 SFT| SFT["指令模型"]
     SFT -->|偏好或奖励优化| CHAT["后训练模型"]
@@ -186,12 +187,5 @@ R1-Zero 与完整 R1 也不是同一路径：后者使用冷启动 SFT、推理 
 
 ## 参考资料
 
-- [GPT-3，§2 与 few-shot 评估](https://arxiv.org/html/2005.14165v4)
-- [Llama 2，§2.1、§3.1.1 与模型卡](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models，§3、§4](https://arxiv.org/html/2407.21783v3)
-- [Chinchilla：训练计算量近似](https://arxiv.org/html/2203.15556v1)
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [LIMA](https://arxiv.org/abs/2305.11206)
-- [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
-- [DPO：奖励重参数化与偏好损失](https://arxiv.org/html/2305.18290v3)
-- [DeepSeek-R1，2025 年初版训练流程](https://arxiv.org/html/2501.12948v1)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-06)。

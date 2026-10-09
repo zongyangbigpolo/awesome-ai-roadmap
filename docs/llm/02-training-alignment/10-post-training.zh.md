@@ -33,6 +33,7 @@ InstructGPT 是语言模型 RLHF 的代表工作，不是 RLHF 的起源；2017 
 ### 10.2.1 三步流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     S1["收集同一问题的回答比较"] --> S2["训练奖励模型 RM"]
     S2 --> S3["策略采样回答<br/>RM 评分与 PPO 更新"]
@@ -229,13 +230,5 @@ AI 评价可能降低人工逐条比较成本，但需要计算调用费用、�
 
 ## 参考资料
 
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
-- [DPO](https://arxiv.org/html/2305.18290v3)
-- [DeepSeekMath：GRPO 与迭代训练](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1：初版 §2](https://arxiv.org/html/2501.12948v1)
-- [Llama 2](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [Constitutional AI](https://arxiv.org/abs/2212.08073)
-- [RLAIF vs. RLHF](https://arxiv.org/abs/2309.00267)
-- [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-10)。

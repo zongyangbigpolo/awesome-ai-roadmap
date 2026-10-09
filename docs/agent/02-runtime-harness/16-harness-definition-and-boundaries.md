@@ -20,7 +20,7 @@ For an ordinary inference call, a model can be treated as a computational compon
 
 ### 16.2.2 Agent
 
-In this topic, an LLM agent combines **a model, tools, and a loop**: the model dynamically selects the next tool call or proposes stopping, within the actions and budget permitted by the runtime. [Anthropic's Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) distinguishes workflows with predefined code paths from agents whose processes are dynamically directed by a model. The model does not have exclusive control. The harness can still reject an action, require further work, or stop the task because of permissions, acceptance criteria, or budget. Here, “agent” describes a **control relationship**, not a system that delegates every decision to the model.
+In this topic, an LLM agent combines **a model, tools, and a loop**: the model dynamically selects the next tool call or proposes stopping, within the actions and budget permitted by the runtime. Anthropic's Building Effective Agents<sup>[【275】](../../book/references.md#ref-275)</sup> distinguishes workflows with predefined code paths from agents whose processes are dynamically directed by a model. The model does not have exclusive control. The harness can still reject an action, require further work, or stop the task because of permissions, acceptance criteria, or budget. Here, “agent” describes a **control relationship**, not a system that delegates every decision to the model.
 
 ### 16.2.3 Workflow
 
@@ -28,13 +28,13 @@ A workflow's control structure is constrained by code or a flowchart; individual
 
 ### 16.2.4 Framework
 
-A framework organizes capabilities through developer-facing APIs, DSLs, and components. **It is not limited to development-time responsibilities.** LangGraph's Graph API and Functional API share runtime and persistence capabilities; the OpenAI Agents SDK includes a Runner; Microsoft Agent Framework also provides a Harness Agent. A single product can provide both a framework and a harness. The distinction is a matter of perspective, not mutually exclusive software categories (see the [Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api) and [Functional API](https://docs.langchain.com/oss/python/langgraph/functional-api)).
+A framework organizes capabilities through developer-facing APIs, DSLs, and components. **It is not limited to development-time responsibilities.** LangGraph's Graph API and Functional API share runtime and persistence capabilities; the OpenAI Agents SDK includes a Runner; Microsoft Agent Framework also provides a Harness Agent. A single product can provide both a framework and a harness. The distinction is a matter of perspective, not mutually exclusive software categories (see the Graph API<sup>[【543】](../../book/references.md#ref-543)</sup> and Functional API<sup>[【544】](../../book/references.md#ref-544)</sup>).
 
 ### 16.2.5 Runtime / Harness
 
 Runtime/harness refers to the responsibilities of the execution host: driving the loop, assembling context, executing tools, managing permissions and budgets, persisting state, handling interruptions, and recording traces. Projects draw the boundaries between harness, runtime, and scaffolding differently. This chapter uses them as engineering terms, not standardized product categories.
 
-[SWE-agent's](https://arxiv.org/abs/2405.15793) **agent-computer interface (ACI)** focuses on how a model uses commands, editors, and feedback. It is an important part of a harness, not the entire runtime. [METR's evaluation of long tasks](https://arxiv.org/abs/2503.14499) also reminds us to distinguish the time a human takes to complete a task from the agent's own execution time. Task-duration capability depends jointly on the model, task set, success threshold, and scaffolding; it cannot be reduced to a fixed multiplier.
+SWE-agent's<sup>[【538】](../../book/references.md#ref-538)</sup> **agent-computer interface (ACI)** focuses on how a model uses commands, editors, and feedback. It is an important part of a harness, not the entire runtime. METR's evaluation of long tasks<sup>[【539】](../../book/references.md#ref-539)</sup> also reminds us to distinguish the time a human takes to complete a task from the agent's own execution time. Task-duration capability depends jointly on the model, task set, success threshold, and scaffolding; it cannot be reduced to a fixed multiplier.
 
 ### 16.2.6 Control Plane
 
@@ -45,13 +45,14 @@ A control plane manages configuration, resource scheduling, policy, and governan
 These six terms answer different questions: what capabilities the model provides, who chooses the next step, and who executes and governs the work. We can diagram their responsibilities, but they do not form six strict vertical layers:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    M["Model<br/>Generates content and tool requests from effective input"]
-    A["Agent<br/>Model dynamically chooses the next step within constraints"]
-    W["Workflow<br/>Code constrains control structure; nodes may contain agents"]
-    H["Runtime / Harness<br/>Runtime infrastructure that drives loop execution"]
-    F["Framework<br/>APIs and orchestration abstractions; may also provide a runtime"]
-    C["Control Plane<br/>Cross-session configuration, scheduling, and governance"]
+    M["Model"]
+    A["Agent"]
+    W["Workflow"]
+    H["Runtime / Harness"]
+    F["Framework"]
+    C["Control Plane"]
 
     M --> A
     M --> W
@@ -62,6 +63,8 @@ flowchart TB
     F -. may provide .-> H
     H --> C
 ```
+
+The model generates content and tool requests from its effective input. In an agent, it dynamically chooses the next step within constraints; in a workflow, code constrains the control structure, though nodes may contain agents. The runtime/harness supplies infrastructure that drives the loop. A framework provides APIs and orchestration abstractions and may also provide a runtime. The control plane handles cross-session configuration, scheduling, and governance.
 
 Both agents and workflows need an execution host; the main difference is who determines the next step. A framework is a cross-cutting development abstraction that can also include an execution host. A control plane manages multiple running instances and organizational policies. This diagram shows responsibilities, not a six-layer architecture that must be deployed as six separate services.
 
@@ -78,29 +81,23 @@ To decide whether a particular capability belongs to the harness or the agent/mo
 This module divides the harness into seven responsibilities, covered by the remaining seven chapters. A concrete system may combine components:
 
 ```mermaid
-flowchart LR
-    subgraph Harness["Runtime / Harness"]
-        L["Agent Loop<br/>State machine (Chapter 17)"]
-        CTX["Context Assembly<br/>Context assembly (Chapter 18)"]
-        T["Tool Pipeline<br/>Tool execution pipeline (Chapter 19)"]
-        S["Permission & Sandbox<br/>Permissions and sandboxing (Chapter 20)"]
-        P["Checkpoint & Recovery<br/>Persistence and recovery (Chapter 21)"]
-        HI["HITL & Interrupt<br/>Human involvement and interruption (Chapter 22)"]
-        OBS["Tracing & Cost<br/>Observability and cost (Chapter 23)"]
-    end
+flowchart TB
+    L["Agent Loop"]
+    CTX["Context Assembly"]
+    T["Tool Pipeline"]
+    S["Permission & Sandbox"]
     L --> CTX --> T --> S
-    L --> P
-    L --> HI
-    L --> OBS
 ```
+
+These components belong to the runtime/harness: the loop's state machine is covered in Chapter 17, context assembly in Chapter 18, tool execution in Chapter 19, and permissions/sandboxing in Chapter 20. The loop also connects directly to checkpoint persistence and recovery (Chapter 21), human involvement and interruption (Chapter 22), and tracing, observability, and cost accounting (Chapter 23). These are supporting connections, not extra sequential steps after sandboxing.
 
 These subsystems are not a strictly sequential pipeline. Context assembly prepares model calls; the tool pipeline and permission/sandbox mechanisms are invoked when execution is requested; checkpointing and observability span the lifecycle; and human-in-the-loop handling provides resumable pause points.
 
 ## 16.6 Case comparison: how two harnesses implement these layers
 
-The **Claude Agent SDK** exposes Claude Code's execution core as a programmable library: “The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript” ([Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview)). Its capability table maps directly to the subsystems in Section 16.5: built-in tools and MCP correspond to the tool pipeline, hooks and permissions to permission and sandbox controls, sessions to persistence, and subagents to nested agent loops.
+The **Claude Agent SDK** exposes Claude Code's execution core as a programmable library: “The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript” (Claude Agent SDK: Overview<sup>[【541】](../../book/references.md#ref-541)</sup>). Its capability table maps directly to the subsystems in Section 16.5: built-in tools and MCP correspond to the tool pipeline, hooks and permissions to permission and sandbox controls, sessions to persistence, and subagents to nested agent loops.
 
-**GitHub Copilot Coding Agent** implements its harness as an ephemeral, isolated GitHub Actions run. The model-driven loop runs in an “ephemeral development environment, powered by GitHub Actions.” Developers can use `copilot-setup-steps.yml` to preinstall dependencies, change runner capacity, and enable LFS, but cannot rewrite the loop's scheduling logic ([GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)). This illustrates the division between the harness—the ephemeral environment and loop scheduling—and the control plane—organization-level runner and firewall configuration, discussed in Section 20.8.
+**GitHub Copilot Coding Agent** implements its harness as an ephemeral, isolated GitHub Actions run. The model-driven loop runs in an “ephemeral development environment, powered by GitHub Actions.” Developers can use `copilot-setup-steps.yml` to preinstall dependencies, change runner capacity, and enable LFS, but cannot rewrite the loop's scheduling logic (GitHub Docs: Configure the development environment for Copilot cloud agent<sup>[【542】](../../book/references.md#ref-542)</sup>). This illustrates the division between the harness—the ephemeral environment and loop scheduling—and the control plane—organization-level runner and firewall configuration, discussed in Section 20.8.
 
 Both products let developers reuse an existing loop through configuration and extension points rather than implement scheduling from scratch. That is not a restriction in the definition of a harness: with a custom harness or explicit graph orchestration, developers may still directly define how the next step is chosen and when execution stops.
 
@@ -117,11 +114,5 @@ The model provides inference capabilities; agents and workflows describe forms o
 
 ## References
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering](https://arxiv.org/abs/2405.15793)
-- [METR: Measuring AI Ability to Complete Long Software Tasks](https://arxiv.org/abs/2503.14499)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [Microsoft Agent Framework Overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-16) for this chapter’s sources, reading suggestions, and source notes.

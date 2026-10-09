@@ -19,17 +19,14 @@ description: 解释 RAG 如何通过检索外部证据缓解知识过期、私�
 参数知识不会自动更新，也不一定覆盖私有资料。这两类缺口会增加无依据作答的风险，但不是幻觉的全部原因。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    ROOT[只依赖参数知识] --> P1[知识可能过期]
-    ROOT --> P2[可能缺少私有知识]
-    P1 --> P3[无依据作答风险]
-    P2 --> P3
-    OTHER[误读、推理与生成失误] --> P3
-
-    P1 --> D1[训练数据有截止日期]
-    P2 --> D2[企业内部数据从未进入训练集]
-    P3 --> D3[缺少依据时仍然生成流畅答案]
+    ROOT[只依赖参数知识] --> GAP[证据缺失或过时]
+    GAP --> P3[无依据作答风险]
+    OTHER[推理或阅读错误] --> P3
 ```
+
+训练数据有截止日期，企业内部数据也可能从未进入训练集。缺少证据时，模型仍然可以生成流畅答案。知识缺失或过时并非唯一原因：误读、推理失误和生成错误同样会造成问题。
 
 ### 1.2.1 知识过期
 
@@ -60,7 +57,8 @@ RAG（Retrieval-Augmented Generation，检索增强生成）的做法是：
 常见的工程实现不需要改动生成模型，主要让它阅读与组织材料。但“不训练”不是 RAG 的定义：原始 RAG 论文联合微调了检索器与生成器；也可以单独训练检索或生成组件。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[用户问题] --> R[检索相关材料]
     KB[(外部知识库)] --> R
     R --> P[材料 + 问题 拼成 Prompt]
@@ -82,24 +80,31 @@ flowchart LR
 
 常见工作流分为建库与查询两个阶段。建库负责随文档变化维护索引，可以批处理，也可以持续摄取；查询阶段处理每次提问，并可能复用有效缓存。“离线”主要指不在当前用户请求的关键路径上，不是只能定期运行。
 
-```mermaid
-flowchart TB
-    subgraph OFF[离线阶段 文档变化时执行]
-        D[原始文档] --> PARSE[解析与清洗]
-        PARSE --> CHUNK[切分 Chunking]
-        CHUNK --> EMB[向量化 Embedding]
-        EMB --> IDX[(写入索引)]
-    end
+**离线阶段 文档变化时执行**
 
-    subgraph ON[在线阶段 每次提问执行]
-        Q[用户 Query] --> RW[Query 改写]
-        RW --> QEMB[Query 向量化]
-        QEMB --> SEARCH[多路召回 粗排]
-        IDX --> SEARCH
-        SEARCH --> RERANK[Rerank 精排]
-        RERANK --> PROMPT[Prompt 拼装]
-        PROMPT --> GEN[生成 + 溯源]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[原始文档] --> PARSE[解析与清洗]
+    PARSE --> CHUNK[切分 Chunking]
+    CHUNK --> EMB[向量化 Embedding]
+    EMB --> IDX[(写入索引)]
+
+```
+
+**在线阶段 每次提问执行**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[用户 Query] --> RW[Query 改写]
+    RW --> QEMB[Query 向量化]
+    QEMB --> SEARCH[多路召回 粗排]
+    IDX[(离线文档索引)] --> SEARCH
+    SEARCH --> RERANK[Rerank 精排]
+    RERANK --> PROMPT[Prompt 拼装]
+    PROMPT --> GEN[生成 + 溯源]
+
 ```
 
 ### 1.4.1 离线阶段
@@ -134,7 +139,8 @@ Cross-encoder 重排能利用更细的交互，但对全库逐对打分通常成
 如果用这种成对重排直接扫全库，百万个候选就有百万个 Query—文档对需要评分。虽然可以批处理，但在交互式延迟和成本预算下通常不划算。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ALL[(百万级文档)] -->|索引召回| C[Top-100 候选]
     C -->|批量重排| F[Top-5 结果]
 ```
@@ -179,8 +185,5 @@ RAG 擅长的是**「材料里写了，但模型不知道」**这类问题。它
 
 ## 参考资料
 
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-01)。

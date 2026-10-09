@@ -67,6 +67,7 @@ jobs:
 
       - name: Check chapters and manuscript
         run: |
+          python scripts/migrate_bibliography.py --check
           python scripts/check_docs.py
           python scripts/localize_zh_links.py
           python scripts/check_translations.py

@@ -17,17 +17,13 @@ description: 说明 PDF 版面、表格和扫描件的解析路径，比较规�
 ## 3.2 解析阶段的四类典型问题
 
 ```mermaid
-flowchart TB
-    DOC[原始文档] --> P1[版面问题]
-    DOC --> P2[表格问题]
-    DOC --> P3[非文本内容]
-    DOC --> P4[噪音与结构丢失]
-
-    P1 --> A1[分栏被按行读串<br/>阅读顺序错乱]
-    P2 --> A2[合并单元格塌陷<br/>行列关系丢失]
-    P3 --> A3[扫描件 图表 公式<br/>无法直接取文本]
-    P4 --> A4[页眉页脚重复<br/>标题层级丢失]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    DOC[原始文档] --> P[解析失败类型]
+    P --> A[语义或结构丢失]
 ```
+
+检查四种失败类型：分栏被按行串读，导致阅读顺序错乱；合并单元格塌陷，导致表格行列关系丢失；扫描件、图表和公式没有可直接提取的文本；重复页眉页脚引入噪音，同时标题层级丢失。
 
 ### 3.2.1 版面与阅读顺序
 
@@ -60,18 +56,15 @@ PDF 页面主要描述绘制和布局；部分 Tagged PDF 含逻辑结构，但�
 **实践建议是分层处理，而不是全用最贵的那条路**：
 
 ```mermaid
-flowchart LR
-    IN[文档] --> T1[规则解析]
-    T1 --> CK{质量检查}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    T[当前层级解析] --> CK{质量检查}
     CK -->|通过| OK[入库]
-    CK -->|失败| T2[版面模型]
-    T2 --> CK2{质量检查}
-    CK2 -->|通过| OK
-    CK2 -->|失败| T3[多模态模型]
-    T3 --> CK3{复核通过?}
-    CK3 -->|是| OK
-    CK3 -->|否| HOLD[隔离或人工处理]
+    CK -->|失败| NEXT[升级或隔离]
+    NEXT -->|还有下一层级| T
 ```
+
+从规则解析开始，将失败文档升级到版面模型；再次检查仍不通过时，再使用多模态模型。每个层级都必须通过相应检查才能入库。多模态复核仍失败时，应隔离或交由人工处理，不能无限循环。
 
 这样绝大多数简单文档走最便宜的路径，只有难啃的部分才升级到昂贵方案。
 
@@ -190,8 +183,5 @@ VLM 除了可能漏字、错排，还可能生成原件没有的内容；应在�
 
 ## 参考资料
 
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [Qdrant：Payload 更新与索引](https://qdrant.tech/documentation/manage-data/payload/)
-- [Advanced ingestion process powered by LLM parsing for RAG system](https://arxiv.org/abs/2412.15262)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-03)。

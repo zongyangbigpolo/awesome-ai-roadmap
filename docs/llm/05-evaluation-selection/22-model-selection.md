@@ -17,18 +17,13 @@ Public scores can shortlist candidates, but they do not establish that a model s
 > **Model selection matches business requirements against four dimensions—compliance, cost, latency, and capability—not just benchmark scores.**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    B["Business requirements"] --> C1["① Compliance<br/>Data classification,<br/>cross-border transfers, approvals"]
-    B --> C2["② Cost<br/>Full-task usage, retries, and operations"]
-    B --> C3["③ Latency<br/>Internal sequential steps<br/>are on the critical path too<br/>Measure full-task tail latency"]
-    B --> C4["④ Capabilities<br/>Reasoning / structured output<br/>Long context / tool calls"]
-    C1 --> S["Selection decision"]
-    C2 --> S
-    C3 --> S
-    C4 --> S
-
-    style C1 fill:#fdecea
+    B["Business requirements"] --> C["Evaluate constraints jointly"]
+    C --> S["Selection decision"]
 ```
+
+Evaluate four dimensions together: **compliance** covers data classification, cross-border transfers, and approvals; **cost** includes full-task usage, retries, and operations; **latency** includes internal sequential steps on the critical path and full-task tail latency; **capability** covers reasoning, structured output, long context, and tool calls.
 
 Apply hard constraints first, then make tradeoffs among feasible candidates. Beyond data and licensing requirements, minimum accuracy, safety rules, and response deadlines can also be hard constraints. Low cost cannot compensate for unauthorized actions or critical-task failures.
 
@@ -75,24 +70,36 @@ Parse a long corporate financial report
 
 ### 22.3.2 Assigning models by node
 
-```mermaid
-flowchart TB
-    subgraph N1["Main orchestration / strict-format nodes"]
-        A1["Needs: reliable structured output<br/>Accurate tool use<br/>Strong long-context<br/>instruction following"]
-        A2["Why: the agent frequently<br/>calls internal APIs<br/>JSON, function arguments,<br/>and field names must be correct"]
-        A3["→ Reliability matters more than<br/>first place on a leaderboard"]
-    end
-    subgraph N2["Evaluate field extraction<br/>and complex analysis separately"]
-        B1["Needs: each task's success<br/>and latency thresholds"]
-        B2["Try small models or rules<br/>for simple extraction<br/>Compare reasoning models and tools<br/>for complex analysis"]
-        B3["Internal errors reach<br/>the final result too<br/>Quality cannot depend only<br/>on user visibility"]
-    end
-    subgraph N3["Sensitive-data paths"]
-        C1["Select endpoints under<br/>approved data policies<br/>For both primary and fallback models"]
-    end
+**Main orchestration / strict-format nodes**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1["Frequent internal API calls"] --> A2["Correct output contracts"]
+    A2 --> A3["Prioritize reliability"]
     style A3 fill:#e6f4ea
+```
+
+Main orchestration and strict-format nodes need reliable structured output, accurate tool use, and strong long-context instruction following. JSON, function arguments, and field names must be correct when calling internal APIs; reliability matters more than first place on a leaderboard.
+
+**Evaluate field extraction and complex analysis separately**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1["Task-specific thresholds"] --> B2["Compare suitable methods"]
+    B2 --> B3["Check end-to-end effects"]
     style B3 fill:#e6f4ea
+```
+
+Measure each task's success and latency thresholds separately. Try small models or rules for simple field extraction; compare reasoning models and tools for complex analysis. Internal errors also reach the final result, so user visibility alone cannot determine the quality requirement.
+
+**Sensitive-data paths**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1["Select endpoints under<br/>approved data policies<br/>For both primary and fallback models"]
     style C1 fill:#fdecea
 ```
 
@@ -187,12 +194,5 @@ Versions change quickly. **Explaining the selection logic is much more valuable 
 
 ## References
 
-- [Holistic Evaluation of Language Models (HELM)](https://arxiv.org/abs/2211.09110)
-- [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
-- [DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)
-- [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [RouteLLM: Learning to Route LLMs with Preference Data](https://arxiv.org/abs/2406.18665)
-- [FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance](https://arxiv.org/abs/2305.05176)
-- [OpenAI: Data controls in the OpenAI platform](https://developers.openai.com/api/docs/guides/your-data)
-- [OpenAI: Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-22) for this chapter’s sources, reading suggestions, and source notes.

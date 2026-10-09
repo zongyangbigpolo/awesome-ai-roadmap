@@ -28,7 +28,8 @@ One caveat belongs up front: **vector retrieval is not universally better than k
 ## 6.3 Four approaches to representation
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     G1[Static word vectors] --> G2[Contextual word vectors]
     G2 --> G3[Sentence embeddings<br/>Bi-encoders]
     G3 --> G4[Late interaction<br/>Multi-vector representations]
@@ -68,23 +69,32 @@ There are two reasons:
 
 BERT can encode texts separately, or it can be fine-tuned as a cross-encoder over a concatenated query and document. The latter has the following implications:
 
-```mermaid
-flowchart TB
-    subgraph CE[Cross-encoder<br/>Joint interaction]
-        Q1[Query] --> CAT[Concatenate]
-        D1[Document] --> CAT
-        CAT --> M1[Model] --> S1[Similarity score]
-        N1[Score every text pair online<br/>Batchable but compute-intensive]
-    end
+**Cross-encoder Joint interaction**
 
-    subgraph BE[Bi-encoder<br/>Independent encoding]
-        Q2[Query] --> ME1[Model] --> V1[Query vector]
-        D2[Document] --> ME2[Model] --> V2[Document vector<br/>Precomputed offline]
-        V1 --> SIM[Vector distance]
-        V2 --> SIM
-        N2[Precompute document vectors offline<br/>Encode only the query online]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --> CAT[Concatenate]
+    D1[Document] --> CAT
+    CAT --> M1[Model] --> S1[Similarity score]
+
 ```
+
+The cross-encoder scores every query–document pair online. Scoring can be batched but is compute-intensive.
+
+**Bi-encoder Independent encoding**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --> ME1[Model] --> V1[Query vector]
+    D2[Document] --> ME2[Model] --> V2[Document vector<br/>Precomputed offline]
+    V1 --> SIM[Vector distance]
+    V2 --> SIM
+
+```
+
+The bi-encoder precomputes document vectors offline; only the query needs encoding online. The two vectors meet at the distance calculation, not inside a joint query–document encoder.
 
 **A million candidates require scoring a million text pairs online.** Batching reduces invocation overhead but does not eliminate these interaction computations. A retriever with precomputable document representations therefore usually narrows the candidate set first.
 
@@ -117,13 +127,13 @@ Examples: ColBERT, ColBERTv2, and ColPali.
 Instead of compressing a document into **one** vector, retain **a vector for each token**. At retrieval time, find each query token's maximum similarity to any document token vector, then sum these maxima.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[Single-vector bi-encoder] -->|Retain more<br/>fine-grained representations| B[Late interaction<br/>Multi-vector representations]
-    B -->|Add online<br/>cross-text interaction| C[Cross-encoder]
-    A -.->|Compress document<br/>into 1 vector| A1[Fine-grained information lost]
-    B -.->|Retain N vectors<br/>per document| B1[Storage depends on vector count,<br/>dimensions, data type, and compression]
-    C -.->|Concatenate query<br/>and document| C1[Cannot precompute<br/>joint representations offline]
+    A[Single-vector bi-encoder] --> B[Multi-vector late interaction]
+    B --> C[Cross-encoder]
 ```
+
+These arrows compare representation and interaction choices, not execution stages. A single-vector bi-encoder compresses each document into one vector and loses fine-grained information. Late interaction retains N vectors per document; storage depends on their count, dimensions, data type, and compression. A cross-encoder adds online cross-text interaction by concatenating query and document, so its joint representations cannot be precomputed offline.
 
 **Benefit**: preserve token-level matching information while still precomputing document representations offline. Papers in the ColBERT family demonstrate gains on their evaluated retrieval tasks, but this does not establish that every multi-vector model beats a single-vector model or necessarily approaches a cross-encoder.
 
@@ -155,7 +165,7 @@ Input limits vary by model and service configuration; 512 tokens is not a univer
 
 ### 6.5.3 Check instruction prefixes
 
-Embedding models differ in their query and document input conventions. Models such as E5 and BGE may specify particular prefixes or instructions, such as `query:` or `为这个句子生成表示以用于检索相关文章：` (“generate a representation of this sentence for retrieving relevant articles”); documents may take no prefix or a different one. Follow the particular model card. The [official Qwen3-Embedding model card](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B) recommends task instructions for queries, but that does not mean an instruction-free call is invalid.
+Embedding models differ in their query and document input conventions. Models such as E5 and BGE may specify particular prefixes or instructions, such as `query:` or `为这个句子生成表示以用于检索相关文章：` (“generate a representation of this sentence for retrieving relevant articles”); documents may take no prefix or a different one. Follow the particular model card. The official Qwen3-Embedding model card<sup>[【362】](../../book/references.md#ref-362)</sup> recommends task instructions for queries, but that does not mean an instruction-free call is invalid.
 
 **Omitting an applicable prefix or instruction can reduce performance, but the effect depends on the model and task. Follow the model card and evaluate on the target query set.** Retrieval-quality guidance is not the same as an API input-validity requirement.
 
@@ -207,11 +217,5 @@ A list such as “Word2Vec, BERT, BGE” tells the listener little. **Explain wh
 
 ## References
 
-- [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781)
-- [Stanford GloVe: global co-occurrence statistics and a weighted least-squares objective](https://nlp.stanford.edu/projects/glove/)
-- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
-- [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)
-- [SimCSE: Simple Contrastive Learning of Sentence Embeddings](https://arxiv.org/abs/2104.08821)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-06) for this chapter’s sources, reading suggestions, and source notes.

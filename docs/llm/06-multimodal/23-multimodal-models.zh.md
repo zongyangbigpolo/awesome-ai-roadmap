@@ -145,12 +145,5 @@ $$
 
 ## 参考资料
 
-- [CLIP: Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020)
-- [Flamingo: a Visual Language Model for Few-Shot Learning](https://arxiv.org/abs/2204.14198)
-- [LLaVA: Visual Instruction Tuning](https://arxiv.org/abs/2304.08485)
-- [Whisper: Robust Speech Recognition via Large-Scale Weak Supervision](https://arxiv.org/abs/2212.04356)
-- [Video-LLaMA: An Instruction-tuned Audio-Visual Language Model](https://arxiv.org/abs/2306.02858)
-- [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework)
-- [BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models](https://arxiv.org/abs/2301.12597)
-- [Qwen2-VL: Enhancing Vision-Language Model's Perception of the World at Any Resolution](https://arxiv.org/abs/2409.12191)
-- [Hugging Face Evaluate：WER 指标定义与实现说明](https://github.com/huggingface/evaluate/blob/main/metrics/wer/README.md)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-23)。

@@ -49,14 +49,22 @@ def error_budget_remaining(
 传统容量规划关注 QPS 和服务器数量,LLM 场景要额外考虑**供应商侧的速率限制(rate limit)和配额,这部分容量往往不在自己掌控范围内**。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    FORECAST["预测未来流量增长"] --> TOKENS["换算成 Token 吞吐需求"]
-    TOKENS --> QUOTA{"是否超过<br/>供应商配额上限?"}
-    QUOTA -->|是| NEGOTIATE["提前联系供应商<br/>申请提升配额"]
-    QUOTA -->|否| MULTI["评估是否需要<br/>多供应商分流"]
+    FORECAST["预测未来流量增长"] --> TOKENS["估算 token 吞吐<br/>需求"]
+    TOKENS --> QUOTA["是否超过"]
+    QUOTA -->|是| NEGOTIATE["提前联系供应商"]
+    QUOTA -->|否| MULTI["评估是否需要"]
     NEGOTIATE --> MULTI
     MULTI --> PLAN["容量规划方案"]
 ```
+
+图中各项的完整含义：
+
+- 换算成 Token 吞吐需求
+- 是否超过 供应商配额上限?
+- 提前联系供应商 申请提升配额
+- 评估是否需要 多供应商分流
 
 | 容量规划要素 | 说明 |
 |---|---|
@@ -70,15 +78,26 @@ flowchart TB
 ## 12.4 事故响应:LLM 服务特有的排查路径
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    ALERT["告警触发"] --> TRIAGE{"故障类型?"}
-    TRIAGE -->|错误率飙升| CHECK_PROVIDER["结合自身探针排查<br/>入口、依赖、配额和供应商"]
-    TRIAGE -->|质量下降但无报错| CHECK_MODEL["对照版本与证据<br/>查数据、检索、缓存、工具和模型"]
-    TRIAGE -->|契约违反率上升| CHECK_PROMPT["查响应状态、截断<br/>Schema、Prompt 与路由变更"]
-    CHECK_PROVIDER --> MITIGATE["按已确认原因止损<br/>限流、受控回退、停用或回滚"]
-    CHECK_MODEL --> MITIGATE
-    CHECK_PROMPT --> MITIGATE
+    ALERT["告警触发"] --> TRIAGE["区分故障类型"]
+    TRIAGE --> CHECK["验证原因"]
+    CHECK --> MITIGATE["安全止损"]
 ```
+
+错误率飙升时，用自己的探针检查入口、依赖、配额与供应商。没有报错却质量下降时，比较版本和证据，检查数据、检索、缓存、工具与模型。契约违例上升时，检查响应状态、截断、schema、提示词和路由变更。确认原因后，再选择限流、受控回退、禁用某项能力或回滚。
+
+图中条件与标签：
+
+- 质量下降但无报错
+- 契约违反率上升
+
+图中各项的完整含义：
+
+- 结合自身探针排查 入口、依赖、配额和供应商
+- 对照版本与证据 查数据、检索、缓存、工具和模型
+- 查响应状态、截断 Schema、Prompt 与路由变更
+- 按已确认原因止损 限流、受控回退、停用或回滚
 
 质量下降但无异常并非 LLM 独有。服务返回 200、Schema 合规，也可能因检索权限、数据新鲜度、缓存或工具失败而生成错误内容；不要仅归因于模型升级。这也是为什么[第 8 章](../04-evaluation-observability/08-online-observability-tracing.zh.md)强调要采集足够的元数据(模型快照版本、路由决策)来支撑这类排查。
 
@@ -114,8 +133,5 @@ LLM 服务返回 200 不代表内容质量合格,不设质量类 SLI 会让"服�
 
 ## 参考资料
 
-- [Google SRE Book: Service Level Objectives](https://sre.google/sre-book/service-level-objectives/)
-- [Google SRE Workbook: Implementing SLOs](https://sre.google/workbook/implementing-slos/)
-- [OpenAI: Rate limits](https://platform.openai.com/docs/guides/rate-limits)
-- [Anthropic: Rate limits](https://docs.anthropic.com/en/api/rate-limits)
-- [PagerDuty: Incident Response Documentation](https://response.pagerduty.com/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-12)。

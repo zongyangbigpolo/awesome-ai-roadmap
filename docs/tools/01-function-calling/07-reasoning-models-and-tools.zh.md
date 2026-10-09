@@ -9,12 +9,18 @@ description: 区分推理模型、工具调用 API 和 MCP 支持，解释工具
 先把这条传导链拆开看：
 
 ```mermaid
-flowchart LR
-    A["推理模型不支持<br/>某个 Function Calling 接口"] --> B["该 Host 的 FC 桥接不可用"]
-    B --> C["改用其他模型接口<br/>或确定性 MCP 调用"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["推理模型不支持"] --> B["该 Host 的 FC 桥<br/>接不可用"]
+    B --> C["改用其他模型接口"]
 
     style A fill:#fce8e6
 ```
+
+图中各项的完整含义：
+
+- 推理模型不支持 某个 Function Calling 接口
+- 改用其他模型接口 或确定性 MCP 调用
 
 [第六章](../02-mcp/06-mcp-vs-function-calling.zh.md) 讲过，很多 Host 会把 Server 的工具定义转换成模型原生的 Function Calling 格式。这条**模型驱动**的桥接路径依赖模型接口；若该接口不可用，Host 可以改用结构化输出、规则工作流或人工触发 `tools/call`。MCP 本身并未要求模型具备 Function Calling。
 
@@ -24,17 +30,28 @@ flowchart LR
 
 部分模型提供显式的 reasoning/thinking 模式，在最终输出前或工具调用之间进行额外推理。内部推理、公开思考文本和 API 返回的摘要不是同一物；也不能据此认为普通模型“完全没有推理”。
 
-```mermaid
-flowchart TB
-    subgraph NORMAL["普通模型"]
-        N1[问题] --> N2[直接生成答案]
-    end
+**普通模型**
 
-    subgraph REASONING["推理模型"]
-        R1[问题] --> R2["额外推理<br/>预算和可见性依接口而定"]
-        R2 --> R3[最终答案]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["问题"] --> N2["直接生成答案"]
+
 ```
+
+**推理模型**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        R1["问题"] --> R2["额外推理"]
+        R2 --> R3["最终答案"]
+
+```
+
+图中各项的完整含义：
+
+- 额外推理 预算和可见性依接口而定
 
 工具返回值是后续输入的一部分。关键工程问题是如何保留模型 API 要求的历史项和关联标识，而非保证某块 GPU 显存一直不释放。
 
@@ -95,14 +112,19 @@ ReTool 等论文研究将执行反馈纳入推理训练，但论文的特定实�
 一种常见折中是：**让工具调用发生在思考阶段完全结束之后**。
 
 ```mermaid
-flowchart LR
-    Q[问题] --> T["本轮先思考<br/>再输出工具调用"]
-    T --> TC[输出 tool_calls]
-    TC --> EX[执行工具]
-    EX --> A[生成最终答案]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["问题"] --> T["本轮先思考"]
+    T --> TC["输出 tool_calls"]
+    TC --> EX["执行工具"]
+    EX --> A["生成最终答案"]
 
     style T fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 本轮先思考 再输出工具调用
 
 这是一个应用流程选择，不是保证推理质量的通用方案。
 
@@ -112,19 +134,24 @@ flowchart LR
 
 ### 7.6.2 方案二：交错思考
 
-Anthropic 的 [Claude 4 发布说明](https://www.anthropic.com/news/claude-4)明确描述了思考与工具交替的能力，当时以 beta 发布。相较之下，早期 Claude 3.7 官方 Cookbook 的工具示例注明同一工具结果轮次不再输出新的 thinking 块；不能把旧示例当作当前所有模型的行为。
+Anthropic 的 Claude 4 发布说明<sup>[【298】](../../book/references.zh.md#ref-298)</sup>明确描述了思考与工具交替的能力，当时以 beta 发布。相较之下，早期 Claude 3.7 官方 Cookbook 的工具示例注明同一工具结果轮次不再输出新的 thinking 块；不能把旧示例当作当前所有模型的行为。
 
 ```mermaid
-flowchart LR
-    Q[问题] --> T1[思考片段 1]
-    T1 --> C1[调工具 A]
-    C1 --> T2["思考片段 2<br/>基于工具 A 的结果"]
-    T2 --> C2[调工具 B]
-    C2 --> T3[思考片段 3]
-    T3 --> A[最终答案]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["问题"] --> T1["思考片段 1"]
+    T1 --> C1["调工具 A"]
+    C1 --> T2["思考片段 2"]
+    T2 --> C2["调工具 B"]
+    C2 --> T3["思考片段 3"]
+    T3 --> A["最终答案"]
 
     style T2 fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 思考片段 2 基于工具 A 的结果
 
 这在很大程度上缓解了「思考阶段感知不到工具结果」的局限——模型可以边查边想。
 
@@ -202,15 +229,5 @@ flowchart LR
 
 ## 参考资料
 
-- [OpenAI: Reasoning Models 指南](https://developers.openai.com/api/docs/guides/reasoning)
-- [OpenAI: Function Calling 与 reasoning 项回传](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: o1-preview 模型页](https://developers.openai.com/api/docs/models/o1-preview)
-- [OpenAI: o1 模型与快照](https://developers.openai.com/api/docs/models/o1)
-- [OpenAI Cookbook：o1-preview 初期结构化输出限制](https://github.com/openai/openai-cookbook/blob/main/examples/o1/Using_chained_calls_for_o1_structured_outputs.ipynb)
-- [Anthropic：Claude 4 交错工具使用发布说明](https://www.anthropic.com/news/claude-4)
-- [Anthropic Cookbook：早期 Claude 3.7 thinking 块保留示例](https://github.com/anthropics/anthropic-cookbook/blob/main/extended_thinking/extended_thinking_with_tool_use.ipynb)
-- [Anthropic: Extended Thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
-- [DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning](https://arxiv.org/abs/2501.12948)
-- [ReTool: Reinforcement Learning for Strategic Tool Use in LLMs](https://arxiv.org/abs/2504.11536)
-- [ToolRL: Reward is All Tool Learning Needs](https://arxiv.org/abs/2504.13958)
-- [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-07)。

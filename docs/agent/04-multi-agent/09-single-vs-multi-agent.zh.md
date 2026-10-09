@@ -23,13 +23,14 @@ Single-Agent 指系统中只有一个主要的动态决策主体。它可以：
 > **除主 Agent 外，被调用的执行单元是否还会依据自己的观察，自主决定下一步动作。**
 
 ```mermaid
-flowchart TB
-    U[User Goal] --> A[Single Agent]
-    A --> T1[Search Tool]
-    A --> T2[Code Tool]
-    A --> T3[Database Tool]
-    A --> M[Memory]
-    A --> W[Workflow]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    U["User Goal"] --> A["Single Agent"]
+    A --> T1["Search Tool"]
+    A --> T2["Code Tool"]
+    A --> T3["Database<br/>Tool"]
+    A --> M["Memory"]
+    A --> W["Workflow"]
 ```
 
 一个 Agent 使用十个 Tool，仍然可以是 Single-Agent。
@@ -50,13 +51,14 @@ Multi-Agent System 包含多个相对独立的 Agent。每个 Agent 通常具有
 它们通过消息、任务、Artifact 或共享工作区协作完成整体目标。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Global Goal] --> O[Orchestrator Agent]
-    O --> R[Research Agent]
-    O --> C[Coding Agent]
-    O --> V[Review Agent]
-    R --> AR[Research Artifact]
-    C --> AC[Code Artifact]
+    G["Global Goal"] --> O["Orchestrator Agent"]
+    O --> R["Research Agent"]
+    O --> C["Coding Agent"]
+    O --> V["Review Agent"]
+    R --> AR["Research Artifact"]
+    C --> AC["Code Artifact"]
     AR --> V
     AC --> V
     V --> O
@@ -101,11 +103,12 @@ Multi-Agent 不会改变底层模型的 Context Window。它做的是：
 - 通过摘要或 Artifact 交换结果。
 
 ```mermaid
-flowchart LR
-    FULL[Large Task Context] --> A[Agent A Context]
-    FULL --> B[Agent B Context]
-    FULL --> C[Agent C Context]
-    A --> S[Shared Summary / Artifact]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    FULL["Large Task<br/>Context"] --> A["Agent A<br/>Context"]
+    FULL --> B["Agent B<br/>Context"]
+    FULL --> C["Agent C<br/>Context"]
+    A --> S["Shared<br/>Summary /<br/>Artifact"]
     B --> S
     C --> S
 ```
@@ -177,11 +180,12 @@ Multi-Agent 的收益通常落在五个方面。
 互不依赖的 Agent 可以同时工作：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    O[Orchestrator] --> A[Market Agent]
-    O --> B[Technology Agent]
-    O --> C[Risk Agent]
-    A --> J[Join]
+    O["Orchestrator"] --> A["Market Agent"]
+    O --> B["Technology<br/>Agent"]
+    O --> C["Risk Agent"]
+    A --> J["Join"]
     B --> J
     C --> J
 ```
@@ -222,11 +226,12 @@ Multi-Agent 会增加：
 - 可观测性要求。
 
 ```mermaid
-flowchart LR
-    BENEFIT[分工与并行收益] --> DECISION{收益是否大于协调成本?}
-    COST[通信、合并、冲突与重试] --> DECISION
-    DECISION -->|是| MULTI[Multi-Agent]
-    DECISION -->|否| SINGLE[Single-Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    BENEFIT["分工与并行收益"] --> DECISION["收益是否大于协调成本?"]
+    COST["通信、合并、冲突与重试"] --> DECISION
+    DECISION -->|是| MULTI["Multi-Agent"]
+    DECISION -->|否| SINGLE["Single-Agent"]
 ```
 
 任务复杂并不自动意味着应该使用 Multi-Agent。若任务无法清晰拆分，多 Agent 可能只是把一个困难问题变成多个协调困难的问题。
@@ -237,7 +242,7 @@ flowchart LR
 
 **Cognition 的文章**以长时编码任务为主要例子：多个 Agent 并行工作时，A 不知道 B 做了什么决定；即使共享初始需求，后续仍可能产生冲突的隐含假设。因此作者建议优先使用单线程、上下文连续的 Agent，长轨迹再做压缩。这是对耦合任务的风险提醒，不是“所有轨迹必须复制给所有 Agent”的安全要求；应共享相关决策、接口和证据，避免传播凭据或无关私有上下文。
 
-**Anthropic 的研究系统文章**报告：Claude Opus 4 主 Agent 加 Sonnet 4 子 Agent，在其内部研究评测上比单 Opus 4 系统表现高出 90.2%；其数据中，多 Agent 系统消耗的 Token 约为普通聊天的 15 倍，单 Agent 约为聊天的 4 倍。[原文](https://www.anthropic.com/engineering/multi-agent-research-system)没有给出足以复现这一内部评测的全部细节，90.2% 不能解释为准确率增加 90.2 个百分点，15 倍也不是“相对单 Agent”的通用倍率。模型组合、额外推理预算和任务分解一起改变，不能把收益全部归因于拓扑。
+**Anthropic 的研究系统文章**报告：Claude Opus 4 主 Agent 加 Sonnet 4 子 Agent，在其内部研究评测上比单 Opus 4 系统表现高出 90.2%；其数据中，多 Agent 系统消耗的 Token 约为普通聊天的 15 倍，单 Agent 约为聊天的 4 倍。原文<sup>[【488】](../../book/references.zh.md#ref-488)</sup>没有给出足以复现这一内部评测的全部细节，90.2% 不能解释为准确率增加 90.2 个百分点，15 倍也不是“相对单 Agent”的通用倍率。模型组合、额外推理预算和任务分解一起改变，不能把收益全部归因于拓扑。
 
 ### 9.6.2 分歧的实质与调和
 
@@ -342,12 +347,13 @@ flowchart LR
 下面是一条排查复杂度的路径，不是必须逐级完成的架构演进。固定任务可以直接使用 Workflow，无须先实现自由 Agent。
 
 ```mermaid
-flowchart LR
-    L[Single LLM Call] --> T[LLM + Tools]
-    T --> S[Single-Agent]
-    S --> W[Agentic Workflow]
-    W --> PW[Parallel Workers]
-    PW --> M[Multi-Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    L["Single LLM Call"] --> T["LLM + Tools"]
+    T --> S["Single-Agent"]
+    S --> W["Agentic Workflow"]
+    W --> PW["Parallel Workers"]
+    PW --> M["Multi-Agent"]
 ```
 
 如果尚不清楚瓶颈在哪里，可以按以下顺序排查；已知流程固定时可直接采用 Workflow：
@@ -372,18 +378,20 @@ flowchart LR
 - 处理失败和重试。
 
 ```mermaid
-flowchart TB
-    U[User] --> O[Orchestrator]
-    O --> T[Task Ledger]
-    O --> W1[Worker A]
-    O --> W2[Worker B]
-    O --> W3[Worker C]
-    W1 --> ART[Shared Artifact Store]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    O["Orchestrator"]
+    O --> T["Task Ledger"]
+    O --> W1["Worker A"]
+    O --> W2["Worker B"]
+    O --> W3["Worker C"]
+    W1 --> ART["Shared Artifact<br/>Store"]
     W2 --> ART
     W3 --> ART
     ART --> O
-    O --> U
 ```
+
+用户向编排器提交工作，并从编排器接收最终结果。工作节点 A、B、C 独立写入共享产物存储，其返回边让编排器汇集工作结果，而不是由每个工作节点直接把控制权交给用户。
 
 ### 9.11.1 优势
 
@@ -418,19 +426,20 @@ flowchart TB
 分层架构适合 Agent 数量较多、领域边界明确的系统。
 
 ```mermaid
-flowchart TB
-    O[Global Orchestrator] --> R[Research Lead]
-    O --> E[Engineering Lead]
-    O --> Q[Quality Lead]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    O["Global<br/>Orchestrator"] --> R["Research<br/>Lead"]
+    O --> E["Engineering<br/>Lead"]
+    O --> Q["Quality Lead"]
 
-    R --> R1[Web Researcher]
-    R --> R2[Database Researcher]
+    R --> R1["Web<br/>Researcher"]
+    R --> R2["Database<br/>Researcher"]
 
-    E --> E1[Frontend Worker]
-    E --> E2[Backend Worker]
+    E --> E1["Frontend<br/>Worker"]
+    E --> E2["Backend<br/>Worker"]
 
-    Q --> Q1[Test Worker]
-    Q --> Q2[Security Reviewer]
+    Q --> Q1["Test Worker"]
+    Q --> Q2["Security<br/>Reviewer"]
 ```
 
 优势：
@@ -452,10 +461,11 @@ flowchart TB
 Pipeline 让多个 Agent 按固定顺序处理：
 
 ```mermaid
-flowchart LR
-    R[Research Agent] --> W[Writer Agent]
-    W --> V[Review Agent]
-    V --> P[Publisher Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Research Agent"] --> W["Writer Agent"]
+    W --> V["Review Agent"]
+    V --> P["Publisher Agent"]
 ```
 
 它更接近 Workflow：
@@ -479,11 +489,12 @@ flowchart LR
 多个 Agent 不直接互相发送全部消息，而是读写共享工作区：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    B[Shared Blackboard<br/>Tasks + Facts + Artifacts]
-    A1[Agent A] <--> B
-    A2[Agent B] <--> B
-    A3[Agent C] <--> B
+    B["Shared Blackboard<br/>Tasks + Facts +<br/>Artifacts"]
+    A1["Agent A"] <--> B
+    A2["Agent B"] <--> B
+    A3["Agent C"] <--> B
 ```
 
 共享工作区可以包含：
@@ -519,10 +530,11 @@ flowchart TB
 Peer-to-Peer 中，Agent 可以直接发现并联系其他 Agent：
 
 ```mermaid
-flowchart LR
-    A[Agent A] <--> B[Agent B]
-    B <--> C[Agent C]
-    C <--> D[Agent D]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] <--> B["Agent B"]
+    B <--> C["Agent C"]
+    C <--> D["Agent D"]
     D <--> A
     A <--> C
 ```
@@ -575,20 +587,21 @@ Peer-to-Peer 可以通过以下机制进入生产：
 
 问题在于这些机制的实现成本很高。对单团队、单产品中的 Agent 系统，中心化或分层编排通常更简单。
 
-这里的 Agent 协商不等于 Raft/Paxos 强共识。前者在讨论方案和证据；后者在给定故障模型下，使存储副本对日志顺序和已提交状态达成一致。需要多副本任务账本时，应使用有相应保证的数据库或协调服务，而不是让 LLM 投票选 Owner。[Raft](https://raft.github.io/)可容忍一定数量的崩溃故障，但不验证业务事实，也不提供针对恶意 Agent 输出的拜占庭容错。
+这里的 Agent 协商不等于 Raft/Paxos 强共识。前者在讨论方案和证据；后者在给定故障模型下，使存储副本对日志顺序和已提交状态达成一致。需要多副本任务账本时，应使用有相应保证的数据库或协调服务，而不是让 LLM 投票选 Owner。Raft<sup>[【491】](../../book/references.zh.md#ref-491)</sup>可容忍一定数量的崩溃故障，但不验证业务事实，也不提供针对恶意 Agent 输出的拜占庭容错。
 
 ## 9.16 混合拓扑
 
 实际系统经常混合使用：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    W[Deterministic Workflow] --> O[Orchestrator]
-    O --> A[Domain Agent A]
-    O --> B[Domain Agent B]
-    A <--> C[External Partner Agent]
-    B --> P[Worker Pool]
-    A --> S[Shared Workspace]
+    W["Deterministic<br/>Workflow"] --> O["Orchestrator"]
+    O --> A["Domain Agent<br/>A"]
+    O --> B["Domain Agent<br/>B"]
+    A <--> C["External<br/>Partner<br/>Agent"]
+    B --> P["Worker Pool"]
+    A --> S["Shared<br/>Workspace"]
     B --> S
 ```
 
@@ -686,6 +699,7 @@ Agent Card 描述：
 - 输入输出模式。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant O as Orchestrator
     participant R as Remote Agent
@@ -693,14 +707,14 @@ sequenceDiagram
     O->>R: 读取 Agent Card
     R-->>O: 返回 Skills 与连接信息
     O->>R: 发送消息并请求处理
-    R-->>O: 返回 Task（本例采用任务路径）
+    R-->>O: 返回 Task（本例采用任务<br/>路径）
     R-->>O: 状态更新
     R-->>O: 返回 Artifact
 ```
 
 A2A 标准化通信，但不会自动解决任务分解、信任、费用、冲突和全局调度。图中展示的是服务端返回 Task 后跟踪状态的路径；简单请求也可以直接返回 Message，并非每次通信都必然创建 Task。
 
-本节固定讨论 [A2A v1.0.1](https://github.com/a2aproject/A2A/releases/tag/v1.0.1)，对应线上协议版本标识 `1.0`。实际接入时要选择双方支持的 binding，即协议在 JSON-RPC、HTTP/REST 或 gRPC 上的具体映射，不能把应用自定义 JSON 直接当作标准报文。Agent Card 是能力声明，不是能力测评或授权凭据；跨组织调用仍需验证服务身份，并单独约定超时、费用和结果验收。
+本节固定讨论 A2A v1.0.1<sup>[【309】](../../book/references.zh.md#ref-309)</sup>，对应线上协议版本标识 `1.0`。实际接入时要选择双方支持的 binding，即协议在 JSON-RPC、HTTP/REST 或 gRPC 上的具体映射，不能把应用自定义 JSON 直接当作标准报文。Agent Card 是能力声明，不是能力测评或授权凭据；跨组织调用仍需验证服务身份，并单独约定超时、费用和结果验收。
 
 ## 9.19 Shared Memory 设计
 
@@ -709,13 +723,14 @@ Multi-Agent 不应共享全部 Messages。
 推荐分层：
 
 ```mermaid
-flowchart TB
-    A1[Agent A] --> P1[Private Context A]
-    A2[Agent B] --> P2[Private Context B]
-    A1 --> WS[Shared Task Workspace]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    A1["Agent A"] --> P1["Private<br/>Context A"]
+    A2["Agent B"] --> P2["Private<br/>Context B"]
+    A1 --> WS["Shared Task<br/>Workspace"]
     A2 --> WS
-    WS --> VM[Validated Shared Memory]
-    A1 --> AUDIT[Audit Log]
+    WS --> VM["Validated<br/>Shared<br/>Memory"]
+    A1 --> AUDIT["Audit Log"]
     A2 --> AUDIT
 ```
 
@@ -781,13 +796,14 @@ Orchestrator 可以统一处理：
 - 部分结果返回。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    W[Worker Failure] --> O[Orchestrator]
-    O --> C{错误类型}
-    C -->|临时| R[重试]
-    C -->|能力不匹配| S[切换 Worker]
-    C -->|计划失效| P[重新规划]
-    C -->|高风险| H[人工处理]
+    W["Worker Failure"] --> O["Orchestrator"]
+    O --> C["错误类型"]
+    C -->|临时| R["重试"]
+    C -->|能力不匹配| S["切换 Worker"]
+    C -->|计划失效| P["重新规划"]
+    C -->|高风险| H["人工处理"]
 ```
 
 ### 9.21.2 去中心化架构
@@ -868,18 +884,38 @@ $$
 - Failure Recovery；
 - Trace。
 
+规划并选择工作节点。
+
 ```mermaid
 flowchart TB
-    G[Goal] --> P[Planner]
-    P --> DAG[Task DAG]
-    DAG --> S[Scheduler]
-    S --> CR[Capability Registry]
-    CR --> W[Worker Selection]
-    W --> E[Execution]
-    E --> V[Verifier]
-    V -->|通过| A[Artifact Store]
-    V -->|失败| R[Retry / Replan]
-    A --> J[Join / Synthesis]
+    G[Goal]
+    P[Planner]
+    DAG[Task DAG]
+    S[Scheduler]
+    CR[Capability Registry]
+    W[Worker Selection]
+    G --> P
+    P --> DAG
+    DAG --> S
+    S --> CR
+    CR --> W
+```
+
+先验证执行，再汇总通过验证的产物。
+
+```mermaid
+flowchart TB
+    W[Worker Selection]
+    E[Execution]
+    V[Verifier]
+    A[Artifact Store]
+    R[Retry / Replan]
+    J[Join / Synthesis]
+    W --> E
+    E --> V
+    V -->|通过| A
+    V -->|失败| R
+    A --> J
 ```
 
 Orchestrator 的模型决策也应受到确定性 Runtime 的限制。
@@ -917,12 +953,13 @@ Orchestrator 的模型决策也应受到确定性 Runtime 的限制。
 合并流程应包括：
 
 ```mermaid
-flowchart LR
-    R[Worker Results] --> S[Schema Validation]
-    S --> D[Deduplicate]
-    D --> C[Conflict Detection]
-    C --> V[Evidence Verification]
-    V --> J[Join / Synthesis]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Worker Results"] --> S["Schema Validation"]
+    S --> D["Deduplicate"]
+    D --> C["Conflict Detection"]
+    C --> V["Evidence Verification"]
+    V --> J["Join / Synthesis"]
 ```
 
 冲突不应由 Writer Agent 静默选择。应：
@@ -1016,24 +1053,14 @@ Agent 不断互相批评但不执行。
 
 ```mermaid
 flowchart TB
-    U[User Goal] --> O[Research Orchestrator]
-    O --> A[Competitor A Agent]
-    O --> B[Competitor B Agent]
-    O --> C[Competitor C Agent]
-    O --> T[Market Trend Agent]
-
-    A --> STORE[Artifact Store]
-    B --> STORE
-    C --> STORE
-    T --> STORE
-
-    STORE --> F[Fact-check Agent]
-    F --> V{证据通过?}
-    V -->|否| O
-    V -->|是| W[Writer Agent]
+    O[调研编排器] --> STORE[产物存储]
+    STORE --> F[事实核查 Agent]
+    F -->|证据不通过| O
+    F -->|证据通过| W[写作 Agent]
     W --> O
-    O --> U
 ```
+
+用户目标进入调研编排器。第一条箭头包含四个独立工作节点：竞品 A、B、C Agent 与市场趋势 Agent，它们的产物汇入同一存储。各节点可以独立开展工作，这张概览图并未将其改为串行管线。证据不通过时返回编排器，通过后进入写作；写作 Agent 将结果交回编排器，再由编排器返回用户。
 
 ### 9.28.1 为什么适合 Multi-Agent
 
@@ -1075,20 +1102,52 @@ Fact-check 返回缺口后，可以只重开受影响的研究任务，不必重
 
 ## 9.30 选型决策树
 
+先判断单 Agent 是否足够。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    G[新任务] --> S{Single-Agent 质量成本延迟均达标?}
-    S -->|是| SINGLE[使用 Single-Agent]
-    S -->|否| D{子任务能否清晰分离?}
-    D -->|否| IMPROVE[优化 Context、Tools、Memory 或 Workflow]
-    D -->|是| H{是否存在隔离异构或并行收益?}
-    H -->|否| WORKFLOW[Single-Agent + Workflow]
-    H -->|是| C{协调成本是否可接受?}
-    C -->|否| LIMITED[少量并行 Worker]
-    C -->|是| M[Multi-Agent]
-    M --> T{需要开放式对等协作?}
-    T -->|否| O[Orchestrator / Hierarchical]
-    T -->|是| P[Hybrid / Peer-to-Peer]
+    G["新任务"]
+    S["Single-Agent 质量成本延<br/>迟均达标?"]
+    SINGLE["使用 Single-Agent"]
+    D["子任务能否清晰分离?"]
+    IMPROVE["优化 Context、Tools、<br/>Memory 或 Workflow"]
+    G --> S
+    S -->|是| SINGLE
+    S -->|否| D
+    D -->|否| IMPROVE
+```
+
+只有可清晰分离的任务才进入收益与成本检查。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    D["子任务能否清晰分离?"]
+    H["是否存在隔离异构或并<br/>行收益?"]
+    WORKFLOW["Single-Agent +<br/>Workflow"]
+    C["协调成本是否可接受?"]
+    LIMITED["少量并行 Worker"]
+    M["Multi-Agent"]
+    D -->|是| H
+    H -->|否| WORKFLOW
+    H -->|是| C
+    C -->|否| LIMITED
+    C -->|是| M
+```
+
+确定使用多个 Agent 后再选择拓扑。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M["Multi-Agent"]
+    T["需要开放式对等协作?"]
+    O["Orchestrator /<br/>Hierarchical"]
+    P["Hybrid / Peer-to-Peer"]
+    M --> T
+    T -->|否| O
+    T -->|是| P
 ```
 
 这棵树从已测量的 Single-Agent 基线开始排查，不要求纯规则或固定 Workflow 任务先上 Agent。无论走哪条分支，最后都要回到同一组任务上测质量、总成本和延迟；图里的“可接受”是业务约束，不是模型自行打分。
@@ -1097,7 +1156,7 @@ flowchart TB
 
 先建立相同任务、工具权限和验收标准的基线，再比较两种约束：同总预算下谁质量更高，以及同质量目标下谁更便宜、更快。总预算包含主 Agent、子 Agent、验证、失败尝试、工具费用和重试，不能只统计最终回复。若多 Agent 用了更强模型或更多 Token，应另做消融，避免把额外算力误写成协作收益。
 
-按任务可分解性、依赖密度、上下文长度和副作用风险分层评测；保留失败与超时样本，对同一任务重复运行并报告波动或置信区间。单独去掉并行、角色 Prompt 或独立上下文，可以检验究竟是哪一项起作用。[MAST](https://arxiv.org/abs/2503.13657)提供了任务定义、跨 Agent 对齐、验证与终止等失败分析视角，其分类适合辅助标注，不是系统的通用成功率。
+按任务可分解性、依赖密度、上下文长度和副作用风险分层评测；保留失败与超时样本，对同一任务重复运行并报告波动或置信区间。单独去掉并行、角色 Prompt 或独立上下文，可以检验究竟是哪一项起作用。MAST<sup>[【490】](../../book/references.zh.md#ref-490)</sup>提供了任务定义、跨 Agent 对齐、验证与终止等失败分析视角，其分类适合辅助标注，不是系统的通用成功率。
 
 ### 9.31.1 质量
 
@@ -1199,15 +1258,5 @@ Multi-Agent 值得引入的前提是边界可定义、输出可验收；上下�
 
 ## 参考资料
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Anthropic: How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
-- [Cognition: Don't Build Multi-Agents](https://cognition.com/blog/dont-build-multi-agents)
-- [Why Do Multi-Agent LLM Systems Fail? (MAST)](https://arxiv.org/abs/2503.13657)
-- [Agent2Agent (A2A) v1.0.1 Specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [Raft：作者维护的算法与论文入口](https://raft.github.io/)
-- [etcd v3.5：revision、条件事务与租约](https://etcd.io/docs/v3.5/learning/api/)
-- [Martin Kleppmann：How to do distributed locking（2016）](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)（引用进程暂停、租约与 fencing token 的分析，不将其 Redis 版本结论推广到当前产品）
-- [AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation](https://arxiv.org/abs/2308.08155)
-- [CAMEL: Communicative Agents for Mind Exploration of Large Language Model Society](https://arxiv.org/abs/2303.17760)
-
-资料核对：2026-09-15。Anthropic 与 Cognition 的对照限于文中所述的 2025 年系统和模型；未复现其内部评测。A2A 按 v1.0.1 发布标签核对，不以文档页顶部残留的 `Latest Released Version 1.0.0` 文案替代版本依据。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-09)。

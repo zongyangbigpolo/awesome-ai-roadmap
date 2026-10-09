@@ -34,7 +34,7 @@ The table describes tasks and what is scored, not model rankings as of a particu
 | | **LiveBench** | Regularly updated questions scored against objective answers to reduce contamination risk; the release version still needs to be fixed, and leakage cannot be ruled out entirely |
 | | **Humanity's Last Exam** | Difficult academic questions across disciplines, including multiple choice, short answers, and multimodal content; not sufficient proof of general workplace competence or autonomous research ability |
 
-SWE-bench Verified needs an additional validity caveat. OpenAI identified test-design flaws and training-data contamination, stopped reporting its score, and recommended SWE-bench Pro instead; see [OpenAI's statement](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/). This is that organization's evaluation decision, not a claim that every user has stopped using the benchmark. Historical scores should retain their version and limitations and must not be compared directly with scores on a different question set.
+SWE-bench Verified needs an additional validity caveat. OpenAI identified test-design flaws and training-data contamination, stopped reporting its score, and recommended SWE-bench Pro instead; see OpenAI's statement<sup>[【155】](../../book/references.md#ref-155)</sup>. This is that organization's evaluation decision, not a claim that every user has stopped using the benchmark. Historical scores should retain their version and limitations and must not be compared directly with scores on a different question set.
 
 ### 21.2.1 Pass@k
 
@@ -70,14 +70,16 @@ Perplexity (PPL) measures the average difficulty of predicting reference text un
 ## 21.3 A systemic benchmark problem: data contamination
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["Training or post-training<br/>may use public web data"] --> B["Public questions, answers,<br/>and paraphrases<br/>May enter the data pipeline"]
-    B --> C["The model may already have seen<br/>the answers during pretraining"]
-    C --> D["Generalization to unseen questions<br/>may be overstated"]
-    D --> E["Validate with independent tasks<br/>and held-out data<br/>Do not infer generalization<br/>from rankings alone"]
+    A["Public web training data"] --> B["Benchmark contamination"]
+    B --> D["Generalization overstated"]
+    D --> E["Independent validation"]
 
     style E fill:#fdecea
 ```
+
+Training or post-training data pipelines may contain public benchmark questions, answers, and paraphrases. A model may therefore have seen answers during pretraining, making apparent generalization to unseen questions too optimistic. Validate with independent tasks and held-out data; rankings alone do not establish generalization.
 
 Contamination is one risk; mismatched task distributions, saturated tests, scoring errors, and unequal reasoning budgets are others. Disagreement between leaderboard scores and business results does not prove that a model memorized the questions. Confirming contamination requires data or experimental evidence.
 
@@ -92,18 +94,14 @@ Contamination is one risk; mismatched task distributions, saturated tests, scori
 **The most practical response to benchmark limitations is a test set specific to your tasks.**
 
 ```mermaid
-flowchart LR
-    A["Sample real user requests"] --> B["Human-label expected answers"]
-    B --> C["Stratified development set<br/>For iteration"]
-    B --> H["Isolated held-out test set<br/>For milestone acceptance"]
-    C --> D["Iterate on the model or prompt<br/>Compare on the development set"]
-    D --> E["Compute pass rate or quality score"]
-    E --> D
-    E -->|After freezing the candidate| F["Milestone acceptance<br/>Report statistical uncertainty"]
-    H --> F
-
-    style C fill:#e6f4ea
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Sample and label requests"] --> B["Separate development and test"]
+    B --> D["Iterate on development data"]
+    D -->|Freeze candidate| F["Held-out acceptance"]
 ```
+
+Sample real user requests and have humans label expected answers. Use a stratified development set to iterate on the model or prompt, repeatedly comparing pass rates or quality scores. Isolate a held-out set for milestone acceptance only after freezing the candidate, and report statistical uncertainty.
 
 ### 21.4.1 Scoring two types of task
 
@@ -179,19 +177,5 @@ Clearly defined training splits are usable. But after training or optimizing pro
 
 ## References
 
-- [Measuring Massive Multitask Language Understanding (MMLU)](https://arxiv.org/abs/2009.03300)
-- [MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark](https://arxiv.org/abs/2406.01574)
-- [Evaluating Large Language Models Trained on Code (HumanEval / Pass@k)](https://arxiv.org/abs/2107.03374)
-- [SWE-bench: Can Language Models Resolve Real-World GitHub Issues?](https://arxiv.org/abs/2310.06770)
-- [OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)
-- [Training Verifiers to Solve Math Word Problems (GSM8K)](https://arxiv.org/abs/2110.14168)
-- [Measuring Mathematical Problem Solving With the MATH Dataset](https://arxiv.org/abs/2103.03874)
-- [GPQA: A Graduate-Level Google-Proof Q&A Benchmark](https://arxiv.org/abs/2311.12022)
-- [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
-- [Holistic Evaluation of Language Models (HELM)](https://arxiv.org/abs/2211.09110)
-- [LiveBench: A Challenging, Contamination-Limited LLM Benchmark](https://arxiv.org/abs/2406.19314)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [HumanEval's official Pass@k implementation](https://github.com/openai/human-eval/blob/master/human_eval/evaluation.py)
-- [Official SWE-bench documentation: Verified subset](https://www.swebench.com/SWE-bench/)
-- [Humanity's Last Exam](https://arxiv.org/abs/2501.14249)
-- [On Faithfulness and Factuality in Abstractive Summarization (lexical metrics versus faithfulness)](https://arxiv.org/abs/2005.00661)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-21) for this chapter’s sources, reading suggestions, and source notes.

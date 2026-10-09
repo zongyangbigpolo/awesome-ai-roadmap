@@ -162,7 +162,8 @@ OCP MX 规范还用同样的 32 元素 E8M0 块 scale 定义了 MXFP8、MXFP6 �
 位宽降低通常使误差控制更难，但不存在统一的「INT4 到 INT3 必然陡降、INT2 不能用」。模型大小、group size、量化算法、校准数据和任务都会改变曲线；GPTQ 原论文及作者实现就包含 2/3/4-bit 实验。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["高精度基线"] --> B["选择格式与分组"]
     B --> C["量化并验证质量"]
     C --> D["测容量、吞吐与延迟"]
@@ -202,19 +203,25 @@ $$
 ### 15.4.1 流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1["① 准备代表性校准输入"]
-    S1 --> S2["② 收集当前层输入<br/>构造带阻尼的二阶信息"]
-    S2 --> S3["③ 按指定列顺序量化<br/>不是默认先量化最不重要权重"]
-    S3 --> S4["④ 补偿同层未量化权重"]
-    S4 --> MORE{"当前层还有未量化列？"}
-    MORE -->|有| S3
-    MORE -->|无| NEXT{"还有待量化层？"}
-    NEXT -->|有| S2
-    NEXT -->|无| DONE["导出量化权重"]
-
-    style S4 fill:#e8f0fe
+    S1["校准输入"] --> S2["收集当前层统计量"]
+    S2 --> S3["量化当前层"]
+    S3 -->|下一层| S2
+    S3 -->|所有层完成| DONE["导出权重"]
 ```
+
+使用有代表性的校准输入。对每一层，收集其输入并构造带阻尼的二阶信息。下面的内循环按照指定顺序量化各列，而不是默认先量化最不重要的权重。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["量化下一列"] --> C["补偿剩余权重"]
+    C -->|还有未量化列| Q
+    C -->|所有列完成| D["当前层完成"]
+```
+
+补偿只更新**同一层**尚未量化的权重。完成这一层的列循环后，才收集下一层的输入。
 
 ### 15.4.2 优缺点
 
@@ -389,24 +396,5 @@ QLoRA 训练的是适配器，冻结的低比特基座参与前向和梯度传�
 
 ## 参考资料
 
-- [GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers](https://arxiv.org/abs/2210.17323)
-- [AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration](https://arxiv.org/abs/2306.00978)
-- [QLoRA: Efficient Finetuning of Quantized LLMs（NF4）](https://arxiv.org/abs/2305.14314)
-- [LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale](https://arxiv.org/abs/2208.07339)
-- [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](https://arxiv.org/abs/2211.10438)
-- [Optimal Brain Compression: A Framework for Accurate Post-Training Quantization and Pruning](https://arxiv.org/abs/2208.11580)
-- [llama.cpp / GGUF](https://github.com/ggml-org/llama.cpp)
-- [AutoAWQ](https://github.com/casper-hansen/AutoAWQ)
-- [GPTQ 作者实现：列顺序、act-order 与分组](https://github.com/IST-DASLab/gptq)
-- [AWQ 原论文：逐通道缩放与搜索](https://arxiv.org/html/2306.00978v5)
-- [PyTorch AO：Quantization-Aware Training](https://docs.pytorch.org/ao/main/workflows/qat.html)
-- [FP8 Formats for Deep Learning，v1，第 2–3 节与表 1](https://arxiv.org/abs/2209.05433v1)
-- [OCP Microscaling Formats (MX) Specification v1.0](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)
-- [微软 MX 库：最大指数缩放与 scale 边界，固定版本](https://github.com/microsoft/microxcaling/blob/7bc41952de394f5cc5e782baf132e7c7542eb4e4/mx/mx_ops.py)
-- [NVIDIA：Introducing NVFP4 for Efficient and Accurate Low-Precision Inference](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/)
-- [NVIDIA Transformer Engine：FP8 入门与 MXFP8/NVFP4，固定版本 notebook](https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/docs/examples/fp8_primer.ipynb)
-- [NVIDIA Transformer Engine：缩放配方、历史最大值与 margin，固定版本源码](https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/transformer_engine/common/recipe/__init__.py)
-- [gpt-oss-120b 与 gpt-oss-20b 模型卡，v1，第 2.1 节与表 1：MXFP4 MoE 权重与 checkpoint 大小](https://arxiv.org/abs/2508.10925v1)
-- [AMD ROCm 博客：CDNA3 与 CDNA4 上的 FP8 FNUZ 与 OCP 变体](https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html)
-- [ONNX：FP8 正规数／次正规数解码与特殊值编码](https://onnx.ai/onnx/technical/float8.html)
-- [vLLM v0.10.2：E4M3FN 到 E4M3FNUZ 的规范化，固定版本实现](https://github.com/vllm-project/vllm/blob/01efc7ef781391e744ed08c3292817a773d654e6/vllm/model_executor/layers/quantization/utils/w8a8_utils.py#L437-L458)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-15)。

@@ -78,9 +78,5 @@ LAION-5B 是从 Common Crawl 提取图像链接及关联文本、再做 CLIP 相
 
 ## 参考资料
 
-- [LAION-5B: An Open Large-Scale Dataset for Training Next Generation Image-Text Models](https://arxiv.org/abs/2210.08402)
-- [OpenAI DALL·E 3: Improving Image Generation with Better Captions](https://cdn.openai.com/papers/dall-e-3.pdf)
-- [LLaVA: Visual Instruction Tuning](https://arxiv.org/abs/2304.08485)
-- [Flamingo: a Visual Language Model for Few-Shot Learning](https://arxiv.org/abs/2204.14198)
-- [OBELICS: An Open Web-Scale Filtered Dataset of Interleaved Image-Text Documents](https://arxiv.org/abs/2306.16527)
-- [Aligning Large Multimodal Models with Factually Augmented RLHF (LLaVA-RLHF)](https://arxiv.org/abs/2309.14525)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-09)。

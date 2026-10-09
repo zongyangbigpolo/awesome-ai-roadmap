@@ -16,15 +16,30 @@ response = query_engine.query("公司差旅报销的额度上限是多少？")
 当系统里同时存在多个索引（比如员工手册的 `VectorStoreIndex` 和财务制度的 `PropertyGraphIndex`），`RouterQueryEngine` 通过 selector 选择一个或多个 Query Engine；多选还需要汇总结果。下面画的是单选路径：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q["用户问题"] --> R["RouterQueryEngine<br/>用 LLM 判断问题类型"]
-    R -->|"语义相似度问题"| V["VectorStoreIndex 的 Query Engine"]
-    R -->|"多跳关系问题"| P["PropertyGraphIndex 的 Query Engine"]
-    R -->|"需要全文覆盖"| S["SummaryIndex 的 Query Engine"]
-    V --> A["答案 + 来源节点<br/>引用正确性需验证"]
+    Q["用户问题"] --> R["RouterQueryEngine"]
+    R -->|"语义相似"| V["向量查询"]
+    R -->|"多跳关系"| P["图查询"]
+    R -->|"全文覆盖"| S["摘要查询"]
+    V --> A["答案 + 来源节点"]
     P --> A
     S --> A
 ```
+
+图中条件与标签：
+
+- 语义相似度问题
+- 多跳关系问题
+- 需要全文覆盖
+- VectorStoreIndex 的 Query Engine
+- PropertyGraphIndex 的 Query Engine
+- SummaryIndex 的 Query Engine
+
+图中各项的完整含义：
+
+- RouterQueryEngine 用 LLM 判断问题类型
+- 答案 + 来源节点 引用正确性需验证
 
 使用官方常见的 LLM/Pydantic selector 会增加模型路由开销，多选后的答案合成还可能增加调用。`description` 很重要，但路由质量也取决于模型、候选集合、问题分布和多选策略。来源节点不等于答案中每个断言都有准确引用，需要单独做引用评测。
 
@@ -83,14 +98,22 @@ LlamaIndex 和 LangChain 的组合边界，[LangChain 生态 · 第七章](../01
 1. **把 LlamaIndex 当「数据工具」**：暴露 `query_engine.query()` / `aquery()`，把顶层编排交给外部 Agent 框架。适合数据层可独立封装、外部已有编排或审批系统的项目，外部编排本身不必很轻。
 2. **把 LlamaIndex Workflows 当「运行时」**：整个多步骤流程（检索 → 反思 → 重试 → 生成）都用 Workflows 编排，外部框架只在入口处调用一次 `workflow.run()`。适合「数据和编排都很重，且希望减少跨框架状态同步」的项目。
 
+**把 LlamaIndex 当工具**
+
 ```mermaid
-flowchart LR
-    subgraph A["把 LlamaIndex 当工具"]
-        A1["外部 Agent / 工作流"] -->|"调用一次"| A2["LlamaIndex Query Engine"]
-    end
-    subgraph B["把 LlamaIndex Workflows 当运行时"]
-        B1["外部系统"] -->|"触发一次"| B2["Workflows 内部多步骤循环"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        A1["外部 Agent / 工<br/>作流"] -->|"调用一次"| A2["LlamaIndex Query<br/>Engine"]
+
+```
+
+**把 LlamaIndex Workflows 当运行时**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        B1["外部系统"] -->|"触发一次"| B2["Workflows 内部多<br/>步骤循环"]
+
 ```
 
 选择的关键在于中间状态由谁持有：如果多步骤的中间状态（检索结果、反思意见、重试次数）需要和外部 Agent 的记忆、审批流程共享，适合选方案一，把控制权交给外部框架；如果这些中间状态只在数据加工内部有意义，外部只关心最终答案，适合选方案二，以减少跨框架序列化成本。这也对应 [框架选型与可移植架构](../06-selection-portability/README.zh.md) 中的「状态归属先于工具选择」。
@@ -131,11 +154,5 @@ LlamaIndex 的编排层延续了它以数据为中心的设计：Query Engine �
 
 ## 参考资料
 
-- [LlamaIndex: Query Engine 概念](https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/)
-- [LlamaIndex: Routers 与 selector](https://developers.llamaindex.ai/python/framework/module_guides/querying/router/)
-- [LlamaIndex: Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/)
-- [LlamaIndex: Workflows 共享状态](https://developers.llamaindex.ai/python/llamaagents/workflows/managing_state/)
-- [LlamaIndex: Durable Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/)
-- [LlamaIndex: WorkflowServer 部署](https://developers.llamaindex.ai/python/llamaagents/workflows/deployment/)
-- [LlamaIndex: BaseSynthesizer 的 query / nodes 接口](https://github.com/run-llama/llama_index/blob/main/llama-index-core/llama_index/core/response_synthesizers/base.py)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-15)。

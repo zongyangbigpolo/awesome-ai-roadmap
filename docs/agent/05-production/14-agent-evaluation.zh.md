@@ -21,14 +21,15 @@ description: 说明如何评估 Agent 的任务成功率、轨迹质量、工具
 **第四，失败有多种形态。** 任务失败、工具调用格式错误、无限循环、超预算、越权操作，这些是不同的失败，不能合并成一个「错误率」。
 
 ```mermaid
-flowchart TB
-    LLM[单轮文本评估] --> L1[输入: Prompt]
-    LLM --> L2[输出: 文本]
-    LLM --> L3[比较: 与参考答案]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    LLM["单轮文本评估"] --> L1["输入: Prompt"]
+    LLM --> L2["输出: 文本"]
+    LLM --> L3["比较: 与参考答案"]
 
-    AG[Agent 评估] --> A1[输入: 目标 + 环境]
-    AG --> A2[输出: 轨迹 + 环境状态变化]
-    AG --> A3[比较: 状态断言 + 多次采样]
+    AG["Agent 评估"] --> A1["输入: 目标 + 环境"]
+    AG --> A2["输出: 轨迹 + 环境状态变<br/>化"]
+    AG --> A3["比较: 状态断言 + 多次采<br/>样"]
 ```
 
 ## 14.2 评估的四个层次
@@ -56,20 +57,17 @@ flowchart BT
 理解学术基准的价值不在于刷分，而在于它们各自**定义了一类能力**，可以借鉴其评测设计思路来构造自己的业务评测集。
 
 ```mermaid
-flowchart TB
-    B[Agent Benchmark] --> CODE[代码工程]
-    B --> WEB[网页与检索]
-    B --> GUI[操作系统与 GUI]
-    B --> TOOL[工具与对话]
-    B --> GEN[通用助手]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    B["Agent Benchmark"] --> CODE["代码工程"]
+    B --> WEB["网页与检索"]
+    B --> GUI["操作系统与 GUI"]
+    B --> TOOL["工具与对话"]
+    B --> GEN["通用助手"]
 
-    CODE --> SWE[SWE-bench / SWE-Lancer / Terminal-Bench]
-    WEB --> WA[WebArena / BrowseComp]
-    GUI --> OS[OSWorld]
-    TOOL --> TAU[tau-bench / tau2-bench]
-    GEN --> GA[GAIA / AgentBench]
-    B -.补充知识评测.-> HLE[HLE：非 Agent 专用]
 ```
+
+各类别的示例包括：代码工程的 SWE-bench、SWE-Lancer 与 Terminal-Bench；网页与检索的 WebArena、BrowseComp；操作系统与 GUI 的 OSWorld；工具与对话的 tau-bench、tau2-bench；通用助手的 GAIA、AgentBench。HLE 可以补充知识评测，但**不是 Agent 专用基准**。
 
 ### 14.3.1 代码工程类
 
@@ -80,7 +78,7 @@ flowchart TB
 1. **用可执行测试而非文本相似度做判定**，减少主观评分，但测试仍可能遗漏需求、脆弱或被投机满足；
 2. **提供完整仓库而非孤立文件**，迫使 Agent 具备检索与导航能力。
 
-由于原始数据集中存在部分描述不充分或测试不可靠的样例，后续出现了人工筛选过的 **SWE-bench Verified** 子集（500 题）。OpenAI 指出该基准存在测试设计缺陷和训练数据污染问题，已停止报告其分数，并建议改报 SWE-bench Pro，见 [Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)。**引用分数时必须说明是哪个子集**，Full、Lite、Verified 的分数不可直接比较；引用 Verified 成绩时应注意这些局限。
+由于原始数据集中存在部分描述不充分或测试不可靠的样例，后续出现了人工筛选过的 **SWE-bench Verified** 子集（500 题）。OpenAI 指出该基准存在测试设计缺陷和训练数据污染问题，已停止报告其分数，并建议改报 SWE-bench Pro，见 Why SWE-bench Verified no longer measures frontier coding capabilities<sup>[【155】](../../book/references.zh.md#ref-155)</sup>。**引用分数时必须说明是哪个子集**，Full、Lite、Verified 的分数不可直接比较；引用 Verified 成绩时应注意这些局限。
 
 **SWE-Lancer** 使用真实自由职业市场的软件任务，包含独立贡献者任务与管理者选择方案任务。按任务历史报酬聚合的金额是该基准下的价值代理，不是 Agent 实际收入，也不能直接推算生产 ROI。
 
@@ -88,7 +86,7 @@ flowchart TB
 
 ### 14.3.2 网页与检索类
 
-**WebArena** 构建了可复现的自托管网站环境（电商、论坛、代码托管等）。[官方评估器](https://github.com/web-arena-x/webarena/blob/73d9de71c25af3f5037c722ede9cabe25a8c77c2/evaluation_harness/evaluators.py) 按任务检查答案、URL 或页面内容；信息查询任务可以采用答案精确匹配、必要词句检查或模型裁判的模糊匹配。最终答案本身可以是需要评分的任务产物，但 Agent 自称“操作完成”不能证明网站状态确实发生了所要求的变化。
+**WebArena** 构建了可复现的自托管网站环境（电商、论坛、代码托管等）。官方评估器<sup>[【529】](../../book/references.zh.md#ref-529)</sup> 按任务检查答案、URL 或页面内容；信息查询任务可以采用答案精确匹配、必要词句检查或模型裁判的模糊匹配。最终答案本身可以是需要评分的任务产物，但 Agent 自称“操作完成”不能证明网站状态确实发生了所要求的变化。
 
 **BrowseComp** 走向另一个方向：题目答案简短且易于验证，但需要在网络上进行**深度、多跳的检索**才能找到，专门用来测量「持续搜索并交叉验证」的能力。
 
@@ -177,12 +175,13 @@ $$
 两个估计式都约定：组合数中可选元素少于 `k` 时，分子取零。若跨次共享反思记忆、改变策略或不重置环境，就不再满足上述独立同分布假设；应另行评估这种有状态运行方式，不能直接套用该估计。
 
 ```mermaid
-flowchart LR
-    P1["pass@k<br/>k 次中至少一次成功"] --> U1[衡量能力上界]
-    U1 --> S1[适用: 有人工审核的场景]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P1["pass@k<br/>k 次中至少一次成功"] --> U1["衡量能力上界"]
+    U1 --> S1["适用: 有人工审核的<br/>场景"]
 
-    P2["pass^k<br/>k 次全部成功"] --> U2[衡量行为一致性]
-    U2 --> S2[适用: 无人值守自动化]
+    P2["pass^k<br/>k 次全部成功"] --> U2["衡量行为一致性"]
+    U2 --> S2["适用: 无人值守自动<br/>化"]
 ```
 
 长链路为何脆弱？在“每步独立、正确率相同、任一步失败都不可恢复”的教学假设下， $m$ 步成功率为 $p^m$； $p = 0.95$、 $m = 20$ 时约为 $0.36$。真实 Agent 存在相关错误、重试和验证，不能直接套用此式，更不能由它推出“降低方差一定比提高能力重要”。此外，即便只有单步任务， $p_i^k$ 也会随重复次数衰减。
@@ -235,14 +234,15 @@ $$
 这是构建评测集时最关键的设计决策。
 
 ```mermaid
-flowchart TB
-    J[判定方式] --> E[程序化断言]
-    J --> L[LLM-as-Judge]
-    J --> H[人工评估]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    J["判定方式"] --> E["程序化断言"]
+    J --> L["LLM-as-Judge"]
+    J --> H["人工评估"]
 
-    E --> E1[可重复 依赖断言覆盖]
-    L --> L1[覆盖主观任务 需校准]
-    H --> H1[领域判断 需一致性校准]
+    E --> E1["可重复 依赖断言<br/>覆盖"]
+    L --> L1["覆盖主观任务 需<br/>校准"]
+    H --> H1["领域判断 需一致<br/>性校准"]
 ```
 
 ### 14.5.1 程序化断言（首选）
@@ -284,13 +284,14 @@ flowchart TB
 评测集可以分层。下面数量与频率是教学示例，不是行业标准；实际按风险覆盖、统计精度与运行成本调整：
 
 ```mermaid
-flowchart LR
-    S[Smoke 10-20 条] --> R[Regression 100-300 条]
-    R --> F[Full 1000+ 条]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Smoke 10-20 条"] --> R["Regression 100-300 条"]
+    R --> F["Full 1000+ 条"]
 
-    S --> S1[每次提交]
-    R --> R1[每次发布]
-    F --> F1[每周 / 重大变更]
+    S --> S1["每次提交"]
+    R --> R1["每次发布"]
+    F --> F1["每周 / 重大变更"]
 ```
 
 | 层次 | 规模 | 频率 | 用途 |
@@ -386,15 +387,16 @@ OpenTelemetry 的 GenAI 语义约定覆盖模型与 Agent 的 Span 等信息，�
 把评估放在开发流程的前面，而不是后面。
 
 ```mermaid
-flowchart LR
-    A[发现问题场景] --> B[写成评测用例]
-    B --> C[确认当前失败]
-    C --> D[修改 Prompt/Tool/流程]
-    D --> E[跑评测集]
-    E --> F{通过且无回归?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["发现问题场景"] --> B["写成评测用例"]
+    B --> C["确认当前失败"]
+    C --> D["修改 Prompt/Tool/流程"]
+    D --> E["跑评测集"]
+    E --> F["通过且无回归?"]
     F -->|否| D
-    F -->|是| G[灰度发布]
-    G --> H[线上监控]
+    F -->|是| G["灰度发布"]
+    G --> H["线上监控"]
     H --> A
 ```
 
@@ -442,24 +444,5 @@ Agent 评估不能停留在最终文本，还要检查**整条轨迹和环境状
 
 ## 参考资料
 
-- [SWE-bench: Can Language Models Resolve Real-World GitHub Issues?](https://arxiv.org/abs/2310.06770)
-- [OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)
-- [SWE-Lancer: Can Frontier LLMs Earn $1 Million from Real-World Freelance Software Engineering?](https://arxiv.org/abs/2502.12115)
-- [Terminal-Bench：官方任务与版本入口](https://www.tbench.ai/)
-- [GAIA: a benchmark for General AI Assistants](https://arxiv.org/abs/2311.12983)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [tau^2-Bench: Evaluating Conversational Agents in a Dual-Control Environment](https://arxiv.org/abs/2506.07982)
-- [OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments](https://arxiv.org/abs/2404.07972)
-- [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854)
-- [BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)
-- [AgentBench: Evaluating LLMs as Agents](https://arxiv.org/abs/2308.03688)
-- [MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering](https://arxiv.org/abs/2410.07095)
-- [Humanity's Last Exam](https://arxiv.org/abs/2501.14249)
-- [AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents](https://arxiv.org/abs/2406.13352)
-- [OpenTelemetry: Generative AI Semantic Conventions](https://github.com/open-telemetry/semantic-conventions-genai)
-- [OpenTelemetry: GenAI 约定状态说明（Development，固定提交 0c87594）](https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Anthropic: Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
-- [SWE-bench: Evaluation harness](https://www.swebench.com/SWE-bench/guides/evaluation/)
-- [OpenAI: BrowseComp reference implementation](https://github.com/openai/simple-evals/blob/main/browsecomp_eval.py)
-- [Anthropic: How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-14)。

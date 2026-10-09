@@ -9,16 +9,22 @@ description: 构建防污染的业务评测集，用配对比较、置信区间�
 传统软件工程里"测试驱动开发"要求先写测试再写实现。LLM 应用的对应实践是 **Eval-Driven Development(EDD)**:任何一次 Prompt、路由或模型的变更,在合入之前必须先在一套固定的评测集上跑出可比较的分数,而不是凭感觉判断"看起来是不是变好了"。
 
 ```mermaid
-flowchart LR
-    A["提出改动<br/>(改 Prompt / 换模型 / 调路由)"] --> B["在黄金测试集上跑评测"]
-    B --> C{"分数是否达标<br/>且无关键用例回归?"}
-    C -->|是| D["合入,进入灰度发布"]
-    C -->|否| E["回到改动,继续迭代"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["提出改动"] --> B["在黄金测试集上跑<br/>评测"]
+    B --> C["分数是否达标"]
+    C -->|是| D["合入,进入灰度发<br/>布"]
+    C -->|否| E["回到改动,继续迭<br/>代"]
     E --> A
 
     style C fill:#fff3cd
     style D fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 提出改动 (改 Prompt / 换模型 / 调路由)
+- 分数是否达标 且无关键用例回归?
 
 这套流程和[第 10 章](../05-release-pipeline/10-llm-cicd-canary-ab.zh.md)的发布流水线是同一件事的两个视角:EDD 讲的是"改动怎么被验证",发布流水线讲的是"验证通过之后怎么安全上线"。
 
@@ -126,13 +132,5 @@ def release_gate(eval_result: EvalResult, baseline: EvalResult) -> GateDecision:
 
 ## 参考资料
 
-工具生命周期不等于评测方法生命周期：OpenAI 的 2026-06-03 公告写明，其托管 Evals 平台将于 2026-10-31 转为只读，Evals dashboard 和 API 计划于 2026-11-30 关闭。采用该平台时需核对迁移计划；不能据此声称开源 `openai/evals` 或自建评测方法一并失效。
-
-- [OpenAI Evals](https://github.com/openai/evals)
-- [OpenAI: Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)
-- [OpenAI: 2026-06-03 Evals platform deprecation](https://developers.openai.com/api/docs/deprecations#2026-06-03-evals-platform)
-- [Anthropic: Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
-- [SciPy: Binomial proportion confidence intervals](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats._result_classes.BinomTestResult.proportion_ci.html)
-- [Google: Rules of Machine Learning - Rule #4: Keep the first model simple and get the infrastructure right](https://developers.google.com/machine-learning/guides/rules-of-ml)
-- [Braintrust: What is an eval?](https://www.braintrust.dev/docs/guides/evals)
-- [LangSmith: Evaluation concepts](https://docs.langchain.com/langsmith/evaluation-concepts)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-07)。

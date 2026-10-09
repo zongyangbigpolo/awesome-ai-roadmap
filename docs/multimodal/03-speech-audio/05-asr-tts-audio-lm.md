@@ -97,13 +97,5 @@ Zero-shot voice-cloning methods such as VALL-E can be misused for voice forgery 
 
 ## References
 
-- [Whisper: Robust Speech Recognition via Large-Scale Weak Supervision](https://arxiv.org/abs/2212.04356)
-- [Connectionist Temporal Classification (original paper)](https://www.cs.toronto.edu/~graves/icml_2006.pdf)
-- [Sequence Transduction with Recurrent Neural Networks (RNN-T)](https://arxiv.org/abs/1211.3711)
-- [Natural TTS Synthesis by Conditioning WaveNet on Mel Spectrogram Predictions (Tacotron 2)](https://arxiv.org/abs/1712.05884)
-- [Neural Codec Language Models are Zero-Shot Text to Speech Synthesizers (VALL-E)](https://arxiv.org/abs/2301.02111)
-- [SoundStream: An End-to-End Neural Audio Codec](https://arxiv.org/abs/2107.03312)
-- [High Fidelity Neural Audio Compression (EnCodec)](https://arxiv.org/abs/2210.13438)
-- [AudioLM: a Language Modeling Approach to Audio Generation](https://arxiv.org/abs/2209.03143)
-- [Qwen-Audio: Advancing Universal Audio Understanding via Unified Large-Scale Audio-Language Models](https://arxiv.org/abs/2311.07919)
-- [SALMONN: Towards Generic Hearing Abilities for Large Language Models](https://arxiv.org/abs/2310.13289)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-05) for this chapter’s sources, reading suggestions, and source notes.

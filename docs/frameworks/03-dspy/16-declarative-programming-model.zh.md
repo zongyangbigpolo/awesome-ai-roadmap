@@ -10,16 +10,30 @@ description: "说明 DSPy 的 Signature、Module、Adapter 与程序组合，区
 
 DSPy（Declarative Self-improving Python）的出发点是把这两件事拆开：先声明输入、输出和任务目标，再选择 Module 及程序结构，让优化器在指定搜索空间内改进指令、示例或模型权重。常规 Prompt 优化并不自动决定业务流程该拆成几步；没有编译也能运行 DSPy 程序。
 
+**命令式 Prompt 工程**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph Old["命令式 Prompt 工程"]
         O1["手写 Prompt 字符串"] --> O2["跑一遍看效果"] --> O3["人工猜测怎么改措辞"] --> O1
-    end
-    subgraph New["DSPy 声明式编程"]
-        N1["声明 Signature：输入/输出契约"] --> N2["选择 Module：Predict / CoT / ReAct"]
-        N2 --> N3["Optimizer 编译：预算内搜索更优参数"]
-    end
+
 ```
+
+**DSPy 声明式编程**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["声明 Signature"] --> N2["选择 Module"]
+        N2 --> N3["在预算内编译优化"]
+
+```
+
+图中各项的完整含义：
+
+- 声明 Signature：输入/输出契约
+- 选择 Module：Predict / CoT / ReAct
+- Optimizer 编译：预算内搜索更优参数
 
 ## 16.2 Signature：声明字段和任务指令，而非完整请求模板
 
@@ -117,7 +131,5 @@ DSPy 依然需要开发者组织 Module、管理数据流和定义指标。声�
 
 ## 参考资料
 
-- [DSPy 官方文档](https://dspy.ai/)
-- [DSPy: Class-based signatures](https://dspy.ai/getting-started/class-based-signatures/)
-- [DSPy: Changing modules](https://dspy.ai/getting-started/changing-modules/)
-- [DSPy 论文：Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"](https://arxiv.org/abs/2310.03714)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-16)。

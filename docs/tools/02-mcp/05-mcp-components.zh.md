@@ -11,21 +11,33 @@ description: 按角色、能力与传输拆解 MCP，解释 2026-07-28 的逐请
 本章按角色、能力、传输三个视角组织概念；这是教学拆分，不是三个独立进程或强制依赖层级。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph L1["第一层 · 角色架构：谁和谁在通信"]
-        A["Host ── Client ── Server"]
+    subgraph L1["1 · 角色"]
+        direction TB
+        A["Host ── Client<br/>── Server"]
     end
 
-    subgraph L2["第二层 · 能力类型：Server 能提供什么"]
-        B["Tools / Resources / Prompts<br/>+ Client input capabilities"]
+    subgraph L2["2 · 能力"]
+        direction TB
+        B["Tools /<br/>Resources /<br/>Prompts"]
     end
 
-    subgraph L3["第三层 · 传输协议：消息怎么传"]
-        C["JSON-RPC 2.0 消息格式<br/>+ stdio / Streamable HTTP 传输方式"]
+    subgraph L3["3 · 传输"]
+        direction TB
+        C["JSON-RPC 2.0 消<br/>息格式"]
     end
 
     L1 --> L2 --> L3
 ```
+
+图中各项的完整含义：
+
+- 第一层 · 角色架构：谁和谁在通信
+- 第二层 · 能力类型：Server 能提供什么
+- Tools / Resources / Prompts + Client input capabilities
+- 第三层 · 传输协议：消息怎么传
+- JSON-RPC 2.0 消息格式 + stdio / Streamable HTTP 传输方式
 
 解耦的意思是：传输可替换而不改变核心能力语义；能力扩展也不必重写角色模型。
 
@@ -45,23 +57,30 @@ Host 选择接入方，Client 封装协议交互，Server 提供能力。服务�
 
 Host 常为每个 Server 建立独立 Client/连接，便于管理生命周期、认证与故障；规范不会因此自动隔离 Server 的文件、网络或进程权限。
 
+**独立 Client / 连接**
+
 ```mermaid
-flowchart TB
-    subgraph GOOD["独立 Client / 连接"]
-        H1[Host] --> C1[Client 1] --> S1[财务数据 Server]
-        H1 --> C2[Client 2] --> S2[第三方工具 Server]
-        NOTE1["便于分别管理<br/>版本、认证、故障与生命周期"]
-    end
-
-    subgraph BOUNDARY["真正的安全边界"]
-        P["Host 策略"] --> R["进程 / 容器权限"]
-        P --> N["网络出口与数据过滤"]
-        P --> A["用户授权与审计"]
-    end
-
-    style GOOD fill:#e6f4ea
-    style BOUNDARY fill:#fff3cd
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        H1["Host"] --> C1["Client 1"] --> S1["财务数据 Server"]
+        H1 --> C2["Client 2"] --> S2["第三方工具 Server"]
 ```
+
+**真正的安全边界**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        P["Host 策略"] --> R["进程权限"]
+        P --> N["网络控制"]
+        P --> A["用户授权"]
+```
+
+这些边界包括进程和容器权限、网络出口与数据过滤，以及用户授权和审计。独立连接便于分别管理版本、认证、故障与生命周期，但连接分离本身并不构成这些安全边界。
+
+图中各项的完整含义：
+
+- 便于分别管理 版本、认证、故障与生命周期
 
 面对第三方 Server，Host 还应使用最小权限、进程/容器隔离、网络出口控制和参数过滤。只有这些运行时策略才能限制一个 Server 能读取和执行的范围。
 
@@ -105,13 +124,13 @@ Tools、Resources、Prompts 的分类不是安全等级。Host 控制暴露与�
 
 上例只列方法名，不是完整请求。`*/list` 可能分页；2026-07-28 的缓存结果带 `ttlMs` 和 `cacheScope`，列表变化可通过 `subscriptions/listen` 订阅。缓存必须按授权上下文隔离，不能把某租户的工具清单复用给另一租户。
 
-[Tools 规范](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)还区分了几个强度不同的要求：
+Tools 规范<sup>[【285】](../../book/references.zh.md#ref-285)</sup>还区分了几个强度不同的要求：
 
 - 工具集合 **MUST NOT** 按连接状态或同连接其他请求的副作用变化；**MAY** 随时间、当前请求携带的授权变化。
 - 集合未变化时，Server **SHOULD** 保持确定性返回顺序，以利于列表缓存和模型前缀缓存；不是必须按字母排序。
 - `tools.listChanged` 能力仍存在。声明它的 Server **SHOULD** 向已通过 `subscriptions/listen` 请求 `notifications.toolsListChanged: true` 的 Client 发送 `notifications/tools/list_changed`，而不是向所有连接广播。
 
-[订阅规范](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/subscriptions)要求先发送 `notifications/subscriptions/acknowledged`，其 filter 表示服务端实际接受的订阅子集；Client 应核对，不能把提交订阅当成功。流中的通知携带 `_meta.io.modelcontextprotocol/subscriptionId` 用于关联。变化通知不携带完整新清单，收到后重新 `tools/list`，并审查新增或改动定义。
+订阅规范<sup>[【289】](../../book/references.zh.md#ref-289)</sup>要求先发送 `notifications/subscriptions/acknowledged`，其 filter 表示服务端实际接受的订阅子集；Client 应核对，不能把提交订阅当成功。流中的通知携带 `_meta.io.modelcontextprotocol/subscriptionId` 用于关联。变化通知不携带完整新清单，收到后重新 `tools/list`，并审查新增或改动定义。
 
 ### 5.3.2 容易被漏掉的第四类：Server 需要 Client 输入
 
@@ -123,26 +142,33 @@ Tools、Resources、Prompts 的分类不是安全等级。Host 控制暴露与�
 | **Elicitation** | 向用户索取结构化补充信息 | 参数不全时补充；不能替代高风险动作的独立审批 |
 | **Roots（已弃用）** | 获取工作目录等上下文提示 | 不是文件沙箱；迁移到参数、资源 URI 或服务端配置 |
 
-这些状态依据 [2026-07-28 changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog)：Sampling、Roots、Logging 已弃用但未移除。兼容 Sampling 时，Host 仍需限制模型、预算、可见上下文和返回范围。
+这些状态依据 2026-07-28 changelog<sup>[【277】](../../book/references.zh.md#ref-277)</sup>：Sampling、Roots、Logging 已弃用但未移除。兼容 Sampling 时，Host 仍需限制模型、预算、可见上下文和返回范围。
 
 ### 5.3.3 InputRequiredResult 的往返模式
 
 这种模式称为 **MRTR（Multi Round-Trip Requests，多轮往返请求）**。消息方向仍是 Client request → Server response；需要 Client 输入时，Server 返回输入需求，结束这一轮响应，Client 随后补齐输入再发起新请求，不要求服务端一直挂起原来的调用栈：
 
 ```mermaid
-sequenceDiagram
-    participant C as Client
-    participant S as Server
-
-    rect rgb(230, 244, 234)
-    Note over C,S: Server 需要用户补充信息
-    C->>S: tools/call
-    S-->>C: InputRequiredResult(elicitation/create)
-    C->>C: Host 展示请求并取得用户输入
-    C->>S: 新请求 ID，原参数 + inputResponses + requestState
-    S-->>C: 工具结果
-    end
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["tools/call"]
+    S1["需要补充输入"]
+    S2["Host 收集用户输入"]
+    S3["重新提交请求"]
+    S4["工具结果"]
+    S0 --> S1 --> S2 --> S3 --> S4
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 说明：Client, Server | Server 需要用户补充信息 |
+| Client → Server | tools/call |
+| Server → Client（返回） | InputRequiredResult(elicitation/create) |
+| Client → Client | Host 展示请求并取得用户输入 |
+| Client → Server | 新请求 ID，原参数 + inputResponses + requestState |
+| Server → Client（返回） | 工具结果 |
 
 并非每个 Server 都使用这些能力。Host 应逐请求声明允许的 Client capabilities，并把用户交互、模型访问、预算和数据边界纳入授权策略。
 
@@ -155,12 +181,20 @@ sequenceDiagram
 这一层的设计点，就是把消息格式和传输方式分开：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    MSG["JSON-RPC 2.0<br/>消息格式（不变）"]
-    MSG --> T1["stdio<br/>本地子进程"]
-    MSG --> T2["Streamable HTTP<br/>远程服务"]
-    MSG --> T3["自定义传输<br/>规范允许扩展"]
+    MSG["JSON-RPC 2.0"]
+    MSG --> T1["stdio"]
+    MSG --> T2["Streamable HTTP"]
+    MSG --> T3["自定义传输"]
 ```
+
+图中各项的完整含义：
+
+- JSON-RPC 2.0 消息格式（不变）
+- stdio 本地子进程
+- Streamable HTTP 远程服务
+- 自定义传输 规范允许扩展
 
 工具语义可在不同传输上复用，但改成远程服务还涉及认证、部署、取消、隔离和连接故障，不能保证只改配置。当前 HTTP 与 stdio 的取消机制也不同。
 
@@ -182,35 +216,41 @@ flowchart TB
 ## 5.5 三层拼起来：一次完整调用
 
 ```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant H as Host
-    participant C as Client
-    participant S as Server
-    participant M as LLM
-
-    Note over H,S: 可选发现阶段
-    H->>C: 创建 Client 连接 GitHub Server
-    C->>S: server/discover
-    S-->>C: 支持的版本与能力
-    C->>S: tools/list
-    S-->>C: [create_issue, search_repos, ...]
-    C->>H: 汇总工具清单
-
-    Note over H,M: 运行阶段
-    U->>H: 帮我提个 bug issue
-    H->>M: messages + 按授权和任务筛选的工具 Schema
-    M-->>H: tool_calls: create_issue(...)
-    H->>U: 请确认：将创建 Issue
-    U->>H: 同意
-    H->>C: 转发调用
-    C->>S: tools/call
-    S-->>C: {"issue_url": "..."}
-    C->>H: 结果
-    H->>M: 按模型 API 回填工具结果
-    M-->>H: 已创建 Issue，链接是……
-    H->>U: 最终答案
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["发现工具"]
+    S1["筛选 schema"]
+    S2["模型提出调用"]
+    S3["用户批准"]
+    S4["Host 调用 Server"]
+    S5["返回回答"]
+    S0 --> S1 --> S2 --> S3 --> S4 --> S5
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 说明：Host, Server | 可选发现阶段 |
+| Host → Client | 创建 Client 连接 GitHub Server |
+| Client → Server | server/discover |
+| Server → Client（返回） | 支持的版本与能力 |
+| Client → Server | tools/list |
+| Server → Client（返回） | [create_issue, search_repos, ...] |
+| Client → Host | 汇总工具清单 |
+| 说明：Host, LLM | 运行阶段 |
+| 用户 → Host | 帮我提个 bug issue |
+| Host → LLM | messages + 按授权和任务筛选的工具 Schema |
+| LLM → Host（返回） | tool_calls: create_issue(...) |
+| Host → 用户 | 请确认：将创建 Issue |
+| 用户 → Host | 同意 |
+| Host → Client | 转发调用 |
+| Client → Server | tools/call |
+| Server → Client（返回） | {"issue_url": "..."} |
+| Client → Host | 结果 |
+| Host → LLM | 按模型 API 回填工具结果 |
+| LLM → Host（返回） | 已创建 Issue，链接是…… |
+| Host → 用户 | 最终答案 |
 
 这次完整调用里，有三点最值得注意：
 
@@ -258,10 +298,5 @@ stdio 模式下往 stdout 打日志会直接破坏协议消息流，而且报错
 
 ## 参考资料
 
-- [MCP 架构说明](https://modelcontextprotocol.io/specification/2026-07-28/architecture)
-- [MCP 规范 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [MCP Server 能力：Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [MCP Multi Round-Trip Requests](https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr)
-- [MCP 弃用特性](https://modelcontextprotocol.io/specification/2026-07-28/deprecated)
-- [MCP 传输层规范](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [JSON-RPC 2.0 规范](https://www.jsonrpc.org/specification)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-05)。

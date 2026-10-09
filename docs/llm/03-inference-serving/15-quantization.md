@@ -162,7 +162,8 @@ Two practical consequences follow:
 Lower bit widths generally make error control harder, but there is no universal rule that INT4 to INT3 must cause a sharp collapse or that INT2 is unusable. Model size, group size, algorithm, calibration data, and task all change the curve. The original GPTQ paper and its authors' implementation include 2/3/4-bit experiments.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["High-precision<br/>baseline"] --> B["Choose format<br/>and grouping"]
     B --> C["Quantize and<br/>validate quality"]
     C --> D["Measure capacity,<br/>throughput, and latency"]
@@ -202,19 +203,25 @@ The quantized weights must be constrained to the target quantization grid; other
 ### 15.4.1 Procedure
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1["① Prepare representative<br/>calibration inputs"]
-    S1 --> S2["② Collect the current layer's inputs<br/>Build damped second-order information"]
-    S2 --> S3["③ Quantize in the specified column order<br/>Not least-important weights first<br/>by default"]
-    S3 --> S4["④ Compensate unquantized weights<br/>in the same layer"]
-    S4 --> MORE{"Unquantized columns<br/>remain in this layer?"}
-    MORE -->|Yes| S3
-    MORE -->|No| NEXT{"More layers to quantize?"}
-    NEXT -->|Yes| S2
-    NEXT -->|No| DONE["Export quantized weights"]
-
-    style S4 fill:#e8f0fe
+    S1["Calibration inputs"] --> S2["Collect layer statistics"]
+    S2 --> S3["Quantize this layer"]
+    S3 -->|Next layer| S2
+    S3 -->|All layers done| DONE["Export weights"]
 ```
+
+Use representative calibration inputs. For each layer, collect its inputs and build damped second-order information. The inner loop below quantizes columns in the specified order—not, by default, from least-important weights first.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Quantize next column"] --> C["Compensate remaining weights"]
+    C -->|Columns remain| Q
+    C -->|No columns remain| D["Layer complete"]
+```
+
+Compensation updates the still-unquantized weights in the **same layer**. Finish its column loop before collecting inputs for the next layer.
 
 ### 15.4.2 Strengths and limitations
 
@@ -389,24 +396,5 @@ QLoRA trains adapters. Its frozen low-bit base participates in forward computati
 
 ## References
 
-- [GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers](https://arxiv.org/abs/2210.17323)
-- [AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration](https://arxiv.org/abs/2306.00978)
-- [QLoRA: Efficient Finetuning of Quantized LLMs (NF4)](https://arxiv.org/abs/2305.14314)
-- [LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale](https://arxiv.org/abs/2208.07339)
-- [SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models](https://arxiv.org/abs/2211.10438)
-- [Optimal Brain Compression: A Framework for Accurate Post-Training Quantization and Pruning](https://arxiv.org/abs/2208.11580)
-- [llama.cpp / GGUF](https://github.com/ggml-org/llama.cpp)
-- [AutoAWQ](https://github.com/casper-hansen/AutoAWQ)
-- [GPTQ authors' implementation: column order, act-order, and grouping](https://github.com/IST-DASLab/gptq)
-- [AWQ paper: per-channel scaling and search](https://arxiv.org/html/2306.00978v5)
-- [PyTorch AO: Quantization-Aware Training](https://docs.pytorch.org/ao/main/workflows/qat.html)
-- [FP8 Formats for Deep Learning, v1, §§2–3 and Table 1](https://arxiv.org/abs/2209.05433v1)
-- [OCP Microscaling Formats (MX) Specification v1.0](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)
-- [Microsoft MX library: max-exponent scaling and scale limits, pinned revision](https://github.com/microsoft/microxcaling/blob/7bc41952de394f5cc5e782baf132e7c7542eb4e4/mx/mx_ops.py)
-- [NVIDIA: Introducing NVFP4 for Efficient and Accurate Low-Precision Inference](https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/)
-- [NVIDIA Transformer Engine: FP8 primer and MXFP8/NVFP4, pinned notebook](https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/docs/examples/fp8_primer.ipynb)
-- [NVIDIA Transformer Engine: scaling recipes, history, and margin, pinned source](https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/transformer_engine/common/recipe/__init__.py)
-- [gpt-oss-120b & gpt-oss-20b model card, v1, §2.1 and Table 1: MXFP4 MoE weights and checkpoint sizes](https://arxiv.org/abs/2508.10925v1)
-- [AMD ROCm blog: FP8 FNUZ and OCP variants on CDNA3 and CDNA4](https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html)
-- [ONNX: FP8 normal/subnormal decoding and special-value encodings](https://onnx.ai/onnx/technical/float8.html)
-- [vLLM v0.10.2: E4M3FN-to-E4M3FNUZ normalization, pinned implementation](https://github.com/vllm-project/vllm/blob/01efc7ef781391e744ed08c3292817a773d654e6/vllm/model_executor/layers/quantization/utils/w8a8_utils.py#L437-L458)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-15) for this chapter’s sources, reading suggestions, and source notes.

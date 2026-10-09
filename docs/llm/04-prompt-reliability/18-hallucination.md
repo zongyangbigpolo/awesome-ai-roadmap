@@ -23,18 +23,23 @@ Fluency can make an error more convincing, but it is not a necessary condition f
 
 ## 18.2 Generation probability is not fact verification
 
-```mermaid
-flowchart TB
-    subgraph DB["Database"]
-        D1["Input query"] --> D2["Return exact-match records"]
-        D2 --> D3["Return records or an empty result<br/>under the API contract<br/>The records themselves may be outdated"]
-    end
-    subgraph LLM["LLM"]
-        L1["Input context"] --> L2["Generate tokens from a learned<br/>conditional distribution"]
-        L2 --> L3["May answer or decline<br/>Probability is not factual truth"]
-    end
+**Database**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1["Input query"] --> D2["Return exact-match records"]
+    D2 --> D3["Return records or an empty result<br/>under the API contract<br/>The records themselves may be outdated"]
     style D3 fill:#e6f4ea
+```
+
+**LLM**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1["Input context"] --> L2["Generate tokens from a learned<br/>conditional distribution"]
+    L2 --> L3["May answer or decline<br/>Probability is not factual truth"]
     style L3 fill:#fdecea
 ```
 
@@ -98,14 +103,16 @@ RAG adds updatable, traceable evidence to generation; it does not completely rep
 Alignment training can improve truthfulness and refusals, or amplify undesirable preferences, depending on examples, rewards, and evaluation. It is inaccurate to claim that SFT or RLHF necessarily increases hallucinations.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["Training or evaluation<br/>Under-rewards evidence<br/>and appropriate abstention"]
-    A --> B["Fluent but incorrect answers<br/>that agree with the user<br/>Sometimes receive higher<br/>preference scores"]
-    B --> C["Reward or preference optimization<br/>May reinforce these proxy features"]
-    C --> F["On some tasks<br/>Sycophancy or unsupported assertions"]
+    A["Misaligned scoring"] --> B["Wrong answers score well"]
+    B --> C["Proxy features reinforced"]
+    C --> F["Sycophancy or unsupported claims"]
 
     style F fill:#fdecea
 ```
+
+When training or evaluation under-rewards evidence and appropriate abstention, fluent but incorrect answers that agree with the user may receive higher preference scores. Reward or preference optimization can reinforce those proxy features, leading on some tasks to sycophancy or unsupported assertions—not inevitably on every task.
 
 *Towards Understanding Sycophancy in Language Models* observed that humans and preference models sometimes prefer answers that agree with users' views even when those answers are wrong. This supports the existence of a risk—not the claim that cautious answers almost always score poorly, or that a particular optimization algorithm inevitably causes hallucinations.
 
@@ -126,7 +133,8 @@ Selective answering chooses thresholds on a validation set and abstains, asks fo
 ## 18.7 Mitigation at three levels
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["Training<br/>Improve data<br/>and learning objectives"] --> I["Inference<br/>Allocate sampling<br/>and verification budgets"] --> S["System<br/>Retrieval, evidence checks,<br/>and risk controls"]
 
     style S fill:#e6f4ea
@@ -228,14 +236,5 @@ Guarantees can be discussed after defining the task, output space, and verificat
 
 ## References
 
-- [On Faithfulness and Factuality in Abstractive Summarization](https://arxiv.org/abs/2005.00661)
-- [Survey of Hallucination in Natural Language Generation](https://arxiv.org/abs/2202.03629)
-- [A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions](https://arxiv.org/abs/2311.05232)
-- [Language Models (Mostly) Know What They Know](https://arxiv.org/abs/2207.05221)
-- [TruthfulQA: Measuring How Models Mimic Human Falsehoods](https://arxiv.org/abs/2109.07958)
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models](https://arxiv.org/abs/2303.08896)
-- [Chain-of-Verification Reduces Hallucination in Large Language Models](https://arxiv.org/abs/2309.11495)
-- [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073)
-- [Towards Understanding Sycophancy in Language Models](https://arxiv.org/abs/2310.13548)
-- [OpenAI: Structured Outputs (structural guarantees versus content errors)](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-18) for this chapter’s sources, reading suggestions, and source notes.

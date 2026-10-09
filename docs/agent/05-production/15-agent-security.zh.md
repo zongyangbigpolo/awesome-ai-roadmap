@@ -15,12 +15,13 @@ description: 分析 Agent 面临的 Prompt Injection、工具滥用、权限提�
 3. **多步传播**。自主程度越高，越不能依靠每一步人工发现错误；污染可能经摘要、记忆和委派继续传播。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    LLM[LLM 内容安全] --> R1[风险: 输出不当文本]
-    LLM --> M1[缓解: 内容过滤]
+    LLM["LLM 内容安全"] --> R1["风险: 输出不当文本"]
+    LLM --> M1["缓解: 内容过滤"]
 
-    AG[Agent 安全] --> R2[风险: 执行不当动作 / 数据外泄]
-    AG --> M2[缓解: 权限 + 隔离 + 架构约束]
+    AG["Agent 安全"] --> R2["风险: 执行不当动作 / 数<br/>据外泄"]
+    AG --> M2["缓解: 权限 + 隔离 + 架构<br/>约束"]
 ```
 
 模型侧训练和检测可以降低风险，但不应作为高权限动作唯一的授权依据。架构、权限与数据流控制提供独立于模型判断的执行边界。
@@ -40,30 +41,21 @@ LLM API 有消息角色、工具通道和指令层级，模型也可以训练成
 ## 15.3 威胁模型：攻击面在哪里
 
 ```mermaid
-flowchart TB
-    A[Agent 攻击面] --> IN[输入通道]
-    A --> TOOL[工具层]
-    A --> MEM[记忆层]
-    A --> MULTI[多 Agent 层]
-    A --> OUT[输出通道]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    A["Agent 攻击面"] --> IN["输入通道"]
+    A --> TOOL["工具层"]
+    A --> MEM["记忆层"]
+    A --> MULTI["多 Agent 层"]
+    A --> OUT["输出通道"]
 
-    IN --> IN1[用户直接输入]
-    IN --> IN2[网页 / 邮件 / 文档]
-    IN --> IN3[工具返回值]
-
-    TOOL --> T1[工具描述被污染]
-    TOOL --> T2[工具权限过大]
-    TOOL --> T3[MCP 服务端不可信]
-
-    MEM --> ME1[长期记忆被写入恶意内容]
-    MEM --> ME2[RAG 语料被投毒]
-
-    MULTI --> MU1[Agent 间消息携带注入]
-    MULTI --> MU2[高权限 Agent 被当枪使]
-
-    OUT --> OU1[数据经外发工具泄露]
-    OU1 --> OU2[Markdown 图片 / 链接回传]
 ```
+
+- **输入通道：**用户直接输入、网页、邮件、文档与工具返回值。
+- **工具层：**描述被污染、权限过大，以及不可信的 MCP 服务端。
+- **记忆层：**恶意内容进入长期记忆，或 RAG 语料被投毒。
+- **多 Agent 层：**Agent 间消息携带注入，或高权限 Agent 被利用为“混淆代理”。
+- **输出通道：**数据通过外发工具泄露，包括通过 Markdown 图片或链接外传。
 
 **工具返回值同样需要检查来源。** 只过滤用户输入，却把搜索结果、网页正文、数据库查询结果默认当成可信指令，会留下间接注入入口。可信工具可能忠实返回攻击者写入的内容；“工具调用成功”不等于“返回文本可信”。
 
@@ -82,20 +74,19 @@ Agent 真正难防的是这类间接注入。攻击载荷藏在 Agent 会读取�
 典型链路：
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as 用户
     participant A as Agent
-    participant W as 被污染的网页
+    participant W as 网页
     participant T as 邮件工具
 
-    U->>A: 帮我总结一下这个页面
-    A->>W: 抓取页面内容
-    W-->>A: 正文 + 隐藏的注入指令
-    Note over A: 模型错误地采纳网页指令<br/>且执行层未拦截越权动作
-    A->>T: 把用户的通讯录发到 attacker@evil.com
+    A->>W: 抓取内容
+    W-->>A: 正文与注入指令
+    A->>T: 越权发送
     T-->>A: 发送成功
-    A->>U: 这是页面摘要（看起来完全正常）
 ```
+
+用户仅要求总结页面。被污染的网页在正文中夹带隐藏的注入指令。在这个失败案例中，模型错误地采纳这些指令，执行层也未拦截越权动作：将用户通讯录发送到 `attacker@evil.com`。邮件工具报告发送成功，而 Agent 向用户返回看似正常的页面摘要。
 
 用户请求的是「总结页面」，实际发生的是数据外泄，而返回给用户的摘要完全正常，**攻击在用户视角下不可见**。
 
@@ -106,12 +97,13 @@ sequenceDiagram
 这是识别 Agent 数据外泄**高风险前提**的实用框架。当以下三个条件同时满足时，攻击面和潜在影响显著上升；它不等于“必然被攻破”，因为隔离、出口策略、授权与确认仍会影响可利用性和后果：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    T1[① 能访问私有数据] --> RISK{三者同时具备?}
-    T2[② 会接触不可信内容] --> RISK
-    T3[③ 具备对外通信能力] --> RISK
-    RISK -->|是| BREACH[高风险：必须评估并加控制]
-    RISK -->|否| SAFE[该类外泄链路可能被缩短，仍需审计]
+    T1["① 能访问私有<br/>数据"] --> RISK["三者同时具备<br/>?"]
+    T2["② 会接触不可<br/>信内容"] --> RISK
+    T3["③ 具备对外通<br/>信能力"] --> RISK
+    RISK -->|是| BREACH["高风险：必须<br/>评估并加控制"]
+    RISK -->|否| SAFE["该类外泄链路<br/>可能被缩短，<br/>仍需审计"]
 ```
 
 | 要素 | 含义 | 例子 |
@@ -194,13 +186,14 @@ Agent A 只能读公开数据，Agent B 能访问数据库。攻击者污染 A �
 隔离 LLM 处理完后，结果不以自然语言回传，而是存入变量，特权 LLM 只拿到一个不透明的引用（如 `$VAR_1`）来做后续编排。
 
 ```mermaid
-flowchart LR
-    U[用户请求] --> P[特权 LLM<br/>有工具 无不可信输入]
-    P -->|调度| Q[隔离 LLM<br/>无工具 处理不可信内容]
-    W[网页 / 邮件] --> Q
-    Q -->|结果存入变量| V[(变量存储)]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["用户请求"] --> P["特权 LLM<br/>有工具 无不可信输<br/>入"]
+    P -->|调度| Q["隔离 LLM<br/>无工具 处理不可信<br/>内容"]
+    W["网页 / 邮件"] --> Q
+    Q -->|结果存入变量| V[("变量存储")]
     V -->|不透明引用| P
-    P --> T[执行工具]
+    P --> T["执行工具"]
 ```
 
 例如用户明确要求“总结这封邮件并保存到我的草稿”，隔离模型生成摘要，执行层把摘要保存成变量；特权模型只安排将该变量写入已授权草稿，不再读取摘要来决定收件人或新增动作。不透明引用不是自动净化：执行层仍要限制变量可流向的工具参数，不能把其中的文本当作 Shell 命令、代码或未经批准的外发内容。
@@ -234,14 +227,14 @@ CaMeL 是论文与原型中的能力/信息流控制方案，不是通用部署�
 ### 15.8.7 模式选择
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q{任务需要读不可信内容吗?} -->|否| N[常规 Agent + 最小权限]
-    Q -->|是| Q2{读完之后还要执行高风险动作吗?}
-    Q2 -->|否| CM[Context-Minimization]
-    Q2 -->|是| Q3{动作集合能预先确定吗?}
-    Q3 -->|是| PE[Plan-Then-Execute / Action-Selector]
-    Q3 -->|否| DL[Dual LLM / CaMeL + 人工确认]
+    Q3["动作集合能预先确定吗?"]
+    Q3 -->|是| PE["Plan-Then-Execute /<br/>Action-Selector"]
+    Q3 -->|否| DL["Dual LLM / CaMeL + 人工<br/>确认"]
 ```
+
+先判断任务是否必须读取不可信内容。如果不需要，采用常规 Agent 加最小权限；如果需要读取、但之后不需要执行高风险动作，则采用 Context-Minimization。只有同时需要读取不可信内容并随后执行高风险动作，才进入图中的动作集合判断。
 
 这张图用于筛选候选设计，不是安全等级表。“后续没有高风险动作”也要检查最终输出、图片加载和同步文件是否会泄露数据；上下文最小化不能代替这些出口的策略检查。
 
@@ -414,16 +407,5 @@ API Key、Token 由执行层从密钥管理服务取用，模型只传逻辑参�
 
 ## 参考资料
 
-- [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
-- [Simon Willison: The Dual LLM pattern for building AI assistants that can resist prompt injection](https://simonwillison.net/2023/Apr/25/dual-llm-pattern/)
-- [Design Patterns for Securing LLM Agents against Prompt Injections（v1）](https://arxiv.org/abs/2506.08837v1)
-- [Defeating Prompt Injections by Design（CaMeL，v2）](https://arxiv.org/abs/2503.18813v2)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents](https://arxiv.org/abs/2406.13352)
-- [The Task Shield: Enforcing Task Alignment to Defend Against Indirect Prompt Injection in LLM Agents](https://arxiv.org/abs/2412.16682)
-- [System-Level Defense against Indirect Prompt Injection Attacks: An Information Flow Control Perspective](https://arxiv.org/abs/2409.19091)
-- [Bypassing LLM Guardrails: An Empirical Analysis of Evasion Attacks against Prompt Injection and Jailbreak Detection Systems（v3）](https://arxiv.org/abs/2504.11168v3)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
-- [Docker Engine：Linux 容器的 seccomp 配置与边界](https://docs.docker.com/engine/security/seccomp/)
-- [Anthropic: Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [MCP 2026-07-28: Security Best Practices](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-15)。

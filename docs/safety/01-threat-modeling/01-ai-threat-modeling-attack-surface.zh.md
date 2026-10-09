@@ -9,12 +9,20 @@ description: 按资产、信任边界与攻击者能力建立 AI 威胁模型，
 LLM 接口通常有 system、user、tool 等角色结构，但模型仍可能把低信任内容理解为应服从的指令，**角色标签不是确定性的安全边界**。这是提示注入的重要根因，却不能解释全部 AI 风险：数据投毒改变训练材料，反序列化风险来自加载器，越权来自身份与资源授权，各有独立机制。传统应用同样不能默认代码及供应链可信。
 
 ```mermaid
-flowchart TB
-    T[传统应用安全] --> T1[代码与依赖审查<br/>数据流和权限边界分析]
-    A[AI 系统安全] --> A1[模型行为由权重和上下文共同决定<br/>无法穷举所有输入到输出的映射]
-    A --> A2[指令与数据同道传输<br/>见第2章]
-    A --> A3[系统包含训练、微调、检索、<br/>工具、多 Agent 协作等新阶段]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    T["传统应用安全"] --> T1["代码与依赖"]
+    A["AI 系统安全"] --> A1["权重与上下文"]
+    A --> A2["指令与数据共享通道"]
+    A --> A3["新增攻击面"]
 ```
+
+图中各项的完整含义：
+
+- 代码与依赖审查 数据流和权限边界分析
+- 模型行为由权重和上下文共同决定 无法穷举所有输入到输出的映射
+- 指令与数据同道传输 见第2章
+- 系统包含训练、微调、检索、 工具、多 Agent 协作等新阶段
 
 因此，AI 系统的威胁建模需要在传统的资产、信任边界和攻击者画像之外，额外回答三个问题：**模型从哪里获得了它现在的行为？运行时哪些不可信内容会进入模型的决策链路？模型的输出能触发什么后果？** 后续章节只是把这三个问题拆到具体环节里展开。
 
@@ -55,42 +63,38 @@ NIST AI RMF 1.0 是自愿使用的风险管理框架，不是法律或产品安�
 三者分工不同：ATLAS 描述攻击者的战术与技术，RMF 管理组织风险，OWASP 提供应用实现层的漏洞检查项。
 
 ```mermaid
-flowchart LR
-    ATLAS["MITRE ATLAS<br/>攻击者战术/技术"] -->|校准威胁优先级| MODEL[本组织威胁模型]
-    OWASP["OWASP LLM / Agentic Top 10<br/>漏洞分类"] -->|检查项| MODEL
-    RMF["NIST AI RMF<br/>Govern/Map/Measure/Manage"] -->|治理流程| MODEL
-    MODEL --> DECIDE[决定投入哪些防御<br/>见第2-10章]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    ATLAS["MITRE ATLAS"] -->|"威胁优先级"| MODEL["本组织威胁模型"]
+    OWASP["OWASP LLM /<br/>Agentic Top 10"] -->|检查项| MODEL
+    RMF["NIST AI RMF"] -->|治理流程| MODEL
+    MODEL --> DECIDE["决定投入哪些防御"]
 ```
+
+图中条件与标签：
+
+- 校准威胁优先级
+
+图中各项的完整含义：
+
+- MITRE ATLAS 攻击者战术/技术
+- OWASP LLM / Agentic Top 10 漏洞分类
+- NIST AI RMF Govern/Map/Measure/Manage
+- 决定投入哪些防御 见第2-10章
 
 ## 1.4 攻击面总览：沿数据与模型生命周期铺开
 
 按 AI 系统的生命周期阶段梳理攻击面，比按单点漏洞罗列更容易做到不遗漏。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph S1["数据与训练阶段"]
-        D1[预训练语料] --> PRE[预训练]
-        PRE --> BASE[基础权重]
-        BASE --> FT[微调/对齐]
-        D2[微调/偏好数据] --> FT
-        FT --> D3[模型权重]
-    end
-    subgraph S2["分发与部署阶段"]
-        D3 --> P1[模型仓库/供应链]
-        P1 --> P2[推理服务]
-    end
-    subgraph S3["运行时阶段"]
-        P2 --> R1[Prompt/多模态输入]
-        R1 --> R2[RAG 检索]
-        R2 --> R3[工具/MCP/A2A 调用]
-        R3 --> R4[代码执行/浏览器/Computer Use]
-    end
-    subgraph S4["输出与治理阶段"]
-        R4 --> O1[生成输出]
-        O1 --> O2[下游系统/用户]
-        O2 --> G1[审计与合规]
-    end
+    TRAIN["数据与训练"] --> DEPLOY["分发与部署"]
+    DEPLOY --> RUN["运行时交互"]
+    RUN --> OUTPUT["输出与治理"]
 ```
+
+沿这些边界追踪产物：预训练消费语料并产生基础权重，微调或对齐再结合基础权重与微调、偏好数据，产生模型权重。模型仓库及其供应链将权重交付给推理服务。运行时的提示词或多模态输入可能引出 RAG 检索、工具/MCP/A2A 调用，以及代码执行、浏览器自动化或计算机操作。生成输出随后到达下游系统或用户，审计与合规覆盖由此产生的活动。箭头描述一种可能的生命周期，不要求每个应用都具备图中所有运行时能力。
 
 图中按阶段列出需要检查的位置，不是一次请求必须经过的固定流程。RAG、工具与桌面执行都是可选能力；增加任何一项，都要补上相应的数据与权限边界。
 
@@ -167,10 +171,5 @@ L0–L5 是本章的讨论标签，不是行业标准或严格递增的权限等
 
 ## 参考资料
 
-- [MITRE ATLAS](https://atlas.mitre.org/)
-- [NIST AI Risk Management Framework (AI RMF 1.0)](https://www.nist.gov/itl/ai-risk-management-framework)
-- [NIST Generative AI Profile (NIST AI 600-1)](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)
-- [OWASP Top 10 for Large Language Model Applications](https://genai.owasp.org/llm-top-10/)
-- [OWASP Agentic AI Threats and Mitigations](https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/)
-- [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
-- [NIST AI 100-2 E2025: Adversarial Machine Learning Taxonomy](https://doi.org/10.6028/NIST.AI.100-2e2025)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-01)。

@@ -9,15 +9,18 @@ description: 对比 stdio 与 Streamable HTTP，按 MCP 2026-07-28 说明元数�
 先把消息格式和传输方式分开看：
 
 ```mermaid
-flowchart TB
-    subgraph MSG["消息层 · 不变"]
-        J["JSON-RPC 2.0<br/>method / params / id / result / error"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart LR
+    subgraph MSG["消息层"]
+        direction TB
+        J["JSON-RPC 2.0"]
     end
 
-    subgraph TRANS["传输层 · 可替换"]
-        T1["stdio<br/>本地子进程管道"]
-        T2["Streamable HTTP<br/>远程单端点"]
-        T3["Custom transport<br/>协商的扩展实现"]
+    subgraph TRANS["传输层"]
+        direction TB
+        T1["stdio"]
+        T2["Streamable HTTP"]
+        T3["Custom transport"]
     end
 
     J --> T1
@@ -27,6 +30,15 @@ flowchart TB
     style MSG fill:#e6f4ea
     style TRANS fill:#e8f0fe
 ```
+
+JSON-RPC 2.0 消息层保持不变，传输层可以替换。
+
+图中各项的完整含义：
+
+- JSON-RPC 2.0 method / params / id / result / error
+- stdio 本地子进程管道
+- Streamable HTTP 远程单端点
+- Custom transport 协商的扩展实现
 
 传输复用 JSON-RPC 方法语义，但请求元数据、取消、故障恢复和认证有绑定差异。切换传输不能只验证“能收到 JSON”。
 
@@ -85,19 +97,27 @@ JSON-RPC 2.0 是轻量 RPC 规范，JSON 易读易调试，可跨语言实现。
 Client 启动时把 Server **当作子进程拉起来**，通过进程的标准输入（stdin）发请求、从标准输出（stdout）读响应。
 
 ```mermaid
-sequenceDiagram
-    participant C as Host 内的 MCP Client
-    participant OS as 操作系统管道
-    participant S as MCP Server<br/>(子进程)
-
-    C->>S: 以配置的命令启动子进程
-    C->>OS: 写入 stdin: {"jsonrpc":"2.0","id":1,...}
-    OS->>S: 从 stdin 读出
-    S->>S: 执行工具
-    S->>OS: 写入 stdout: {"jsonrpc":"2.0","id":1,"result":...}
-    OS->>C: 从 stdout 读出
-    Note over C,S: Client 应管理关闭、等待与子进程清理
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["启动子进程"]
+    S1["写入 stdin"]
+    S2["Server 执行"]
+    S3["读取 stdout"]
+    S4["清理子进程"]
+    S0 --> S1 --> S2 --> S3 --> S4
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| Host 内的 MCP Client → MCP Server (子进程) | 以配置的命令启动子进程 |
+| Host 内的 MCP Client → 操作系统管道 | 写入 stdin: {"jsonrpc":"2.0","id":1,...} |
+| 操作系统管道 → MCP Server (子进程) | 从 stdin 读出 |
+| MCP Server (子进程) → MCP Server (子进程) | 执行工具 |
+| MCP Server (子进程) → 操作系统管道 | 写入 stdout: {"jsonrpc":"2.0","id":1,"result":...} |
+| 操作系统管道 → Host 内的 MCP Client | 从 stdout 读出 |
+| 说明：Host 内的 MCP Client, MCP Server (子进程) | Client 应管理关闭、等待与子进程清理 |
 
 这里的「管道」可以理解成**操作系统在内存里给两个进程分配的一段先进先出缓冲区**。Client 往里塞一行 JSON，Server 从另一头读出来处理，处理完往另一条管道塞回去。
 
@@ -153,17 +173,28 @@ print("正在执行已授权的数据库查询", file=sys.stderr)
 核心设计是**用单个 HTTP 端点（通常是 `/mcp`）同时处理请求和响应**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    C[Client] -->|"POST /mcp<br/>JSON-RPC 请求"| S[Server]
-    S --> D{"这个操作<br/>需要流式吗?"}
-    D -->|否| R1["返回普通 JSON 响应<br/>Content-Type: application/json"]
-    D -->|是| R2["返回 SSE 流<br/>Content-Type: text/event-stream"]
+    C["Client"] -->|"POST /mcp"| S["Server"]
+    S --> D["这个操作"]
+    D -->|否| R1["返回普通 JSON 响<br/>应"]
+    D -->|是| R2["返回 SSE 流"]
     R1 --> C
     R2 --> C
 
     style R1 fill:#e6f4ea
     style R2 fill:#fef7e0
 ```
+
+图中条件与标签：
+
+- POST /mcp JSON-RPC 请求
+
+图中各项的完整含义：
+
+- 这个操作 需要流式吗?
+- 返回普通 JSON 响应 Content-Type: application/json
+- 返回 SSE 流 Content-Type: text/event-stream
 
 **「按需选择」是关键**：简单同步操作直接返回 JSON，需要流式输出时才返回 SSE 流。不强制建立长连接。
 
@@ -179,7 +210,7 @@ flowchart TB
 
 ### 12.4.3 当前版 HTTP 的必需头与响应边界
 
-以 [2026-07-28 Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http)为准：
+以 2026-07-28 Streamable HTTP<sup>[【315】](../../book/references.zh.md#ref-315)</sup>为准：
 
 - 每条 JSON-RPC 请求通过独立 POST 发送，客户端声明 `Accept: application/json, text/event-stream`，两种响应都必须处理；请求体使用 `Content-Type: application/json`。传输还定义通知 POST，但本版核心不使用 HTTP 客户端通知，不能发送 JSON-RPC response 来回答 MRTR。
 - 请求带 `MCP-Protocol-Version` 和 `Mcp-Method`；`tools/call`、`prompts/get`、`resources/read` 还必须带 `Mcp-Name`。版本、方法和名称须与消息体一致，不能只检查其中一份。
@@ -195,20 +226,36 @@ flowchart TB
 
 ### 12.5.1 问题出在两条通道
 
+**旧设计：两个端点**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph OLD["旧方案 · HTTP + SSE 双端点"]
-        C1[Client] -->|"POST /messages<br/>发请求"| S1[Server]
-        S1 -->|"GET /sse 长连接<br/>推响应"| C1
-    end
-
-    subgraph NEW["新方案 · Streamable HTTP 单端点"]
-        C2[Client] <-->|"POST /mcp<br/>请求与响应同一条"| S2[Server]
-    end
-
-    style OLD fill:#fce8e6
-    style NEW fill:#e6f4ea
+        C1["Client"] -->|"POST /messages"| S1["Server"]
+        S1 -->|"GET /sse"| C1
 ```
+
+图中条件与标签：
+
+- POST /messages 发请求
+- GET /sse 长连接 推响应
+
+**新设计：一个端点**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] <-->|"POST /mcp"| S2["Server"]
+```
+
+图中条件与标签：
+
+- POST /mcp 请求与响应同一条
+
+图中各项的完整含义：
+
+- 旧方案 · HTTP + SSE 双端点
+- 新方案 · Streamable HTTP 单端点
 
 同一个对话被拆成了两条通道，具体问题是**状态管理复杂**：
 
@@ -226,7 +273,7 @@ Client POST 了一条消息后网络突然断了——**那条消息到底被处
 
 2026-07-28 的 **HTTP 绑定**使用 POST，响应为 JSON 或请求专属 SSE；不要把 HTTP 规则推广到 stdio。标准请求头镜像是必需项，不是任选优化。Server→Client 输入需求用 MRTR 结果返回，不再以独立反向 JSON-RPC 请求发送。
 
-兼容旧服务时按[版本兼容页](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)识别协议时代。识别到 `UnsupportedProtocolVersionError` 应选共同支持的现代版本，而不是直接降级；旧版初始化回退需由 dual-era 实现明确支持。鉴权失败不应触发无授权重试。
+兼容旧服务时按版本兼容页<sup>[【280】](../../book/references.zh.md#ref-280)</sup>识别协议时代。识别到 `UnsupportedProtocolVersionError` 应选共同支持的现代版本，而不是直接降级；旧版初始化回退需由 dual-era 实现明确支持。鉴权失败不应触发无授权重试。
 
 自定义 transport 应满足 MCP 的消息编码和安全要求，并明确规定连接建立、消息边界、认证、关闭与错误处理。WebSocket 可以成为这样的**非标准扩展**，但不会自动获得 stdio/Streamable HTTP 的互操作性。对远程 HTTP 服务，还应校验 `Origin`、实施认证并避免将本地服务暴露到不受信任网络。
 
@@ -270,11 +317,5 @@ JSON-RPC 2.0 是消息格式，stdio / Streamable HTTP 是传输方式。核心�
 
 ## 参考资料
 
-- [MCP 规范 2026-07-28：Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [MCP 2026-07-28 Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http)
-- [MCP 2026-07-28 stdio](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio)
-- [MCP 2026-07-28 版本兼容](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)
-- [MCP 规范 2025-03-26（Streamable HTTP 引入版本）](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports)
-- [JSON-RPC 2.0 规范](https://www.jsonrpc.org/specification)
-- [MCP 官方 Server 集合](https://github.com/modelcontextprotocol/servers)
-- [MDN: Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-12)。

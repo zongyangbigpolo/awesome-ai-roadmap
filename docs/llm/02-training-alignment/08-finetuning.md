@@ -11,17 +11,21 @@ Fine-tuning should not be the automatic first reaction, nor must it always be th
 ### 8.1.1 Attribute the Errors First
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    NEED["Model performance falls short"] --> Q1{"What is the main error?"}
-    Q1 -->|Invalid format| P1["Prompts and examples<br/>Structured output<br/>or constrained decoding"]
-    Q1 -->|Missing or outdated facts| P2["Retrieval or database tools<br/>Check recall and evidence use"]
-    Q1 -->|Poor behavior on a stable task| P3["Candidate SFT experiments"]
-    Q1 -->|Comparable quality differences<br/>between candidates| P4["Preference data and<br/>methods such as DPO"]
-    P1 --> E["Compare quality, cost, and latency<br/>on the same test set"]
-    P2 --> E
-    P3 --> E
-    P4 --> E
+    NEED["Performance gap"] --> Q1["Diagnose the main error"]
+    Q1 --> P["Choose a targeted intervention"]
+    P --> E["Compare on one test set"]
 ```
+
+The diagnosis determines the intervention, not a mandatory training sequence:
+
+- **Invalid format:** try prompts and examples, structured output, or constrained decoding.
+- **Missing or outdated facts:** use retrieval or database tools, checking recall and evidence use.
+- **Poor behavior on a stable task:** run candidate SFT experiments.
+- **Comparable quality differences between candidates:** collect preference data and test methods such as DPO.
+
+Compare quality, cost, and latency on the same test set.
 
 These approaches can be combined. RAG might supply the latest contract, while SFT teaches the model to answer from evidence and cite its sources. If retrieval misses the relevant clause, further tuning of the generator usually will not fix the root cause.
 
@@ -185,9 +189,5 @@ Use error analysis to choose a training signal, then select a parameterization b
 
 ## References
 
-- [LoRA](https://arxiv.org/abs/2106.09685)
-- [QLoRA](https://arxiv.org/abs/2305.14314)
-- [Transformers v4.46.3: Model training anatomy](https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy)
-- [PEFT: LoRA configuration and initialization](https://huggingface.co/docs/peft/package_reference/lora)
-- [DPO](https://arxiv.org/html/2305.18290v3)
-- [LIMA](https://arxiv.org/abs/2305.11206)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-08) for this chapter’s sources, reading suggestions, and source notes.

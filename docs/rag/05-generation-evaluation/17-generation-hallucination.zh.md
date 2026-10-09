@@ -13,21 +13,14 @@ description: 区分证据忠实度与事实正确性，说明 RAG 的拒答、�
 ## 17.2 幻觉的主要来源
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    H[RAG 中的不实输出] --> H1[证据不可用或不可靠]
-    H --> H2[证据到答案的推理失真]
-    H --> H3[系统处理与复用失效]
-
-    H1 --> C1[知识库缺失、过期或错误]
-    H1 --> C2[有但未召回]
-    H1 --> C3[召回后被截断或权限过滤]
-
-    H2 --> C4[脑补材料没有的细节]
-    H2 --> C5[误读、错误归因或过度概括]
-    H2 --> C6[参数化知识覆盖材料]
-    H2 --> C7[冲突材料被擅自消解]
-    H3 --> C8[缓存、版本或引用校验失效]
+    E[证据问题] --> H[RAG 不实输出]
+    R[推理问题] --> H
+    S[系统问题] --> H
 ```
+
+证据不可用或不可靠，可能因为知识库缺失、过期或错误，有证据却未召回，或召回后被截断、被权限过滤。推理问题包括编造材料中没有的细节、误读、错误归因、过度概括、用参数化知识覆盖材料，以及无依据地消解冲突。系统处理与复用则可能在缓存、版本处理或引用校验环节失效。
 
 这些来源对应的治理手段不同，但可以组合使用；只优化单一环节，通常会遗漏其他失效模式。
 
@@ -52,18 +45,24 @@ flowchart TB
 这是成本最低、也最常被漏掉的控制点之一。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    R[检索结果] --> C1{有结果吗?}
-    C1 -->|无| REJ[拒答]
-    C1 -->|有| C2{校准后置信度足够?}
-    C2 -->|否| REJ[拒答、澄清或降级]
-    C2 -->|是| GEN[进入生成]
-    GEN --> C3{模型说材料不足?}
-    C3 -->|是| REJ2[输出无法回答 + 建议]
-    C3 -->|否| C4{关键主张与引用<br/>通过发布校验?}
-    C4 -->|是| OUT[输出答案 + 引用]
-    C4 -->|否| REJ2
+    R[检索结果] --> C{通过证据检查？}
+    C -->|否| REJ[拒答或补救]
+    C -->|是| GEN[生成候选答案]
 ```
+
+没有检索结果就拒答。有结果但校准后置信度不足时，拒答、澄清或降级。只有校准后置信度足够才允许生成。生成候选答案后，还需要单独的发布检查：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GEN[候选答案] --> C[检查证据与引用]
+    C -->|通过| OUT[答案与引用]
+    C -->|失败| REJ[解释无法回答；给出建议]
+```
+
+如果模型表示证据不足，就不发布答案；否则继续检查关键主张与引用。发布校验失败时，同样应解释无法回答的原因，并建议下一步。
 
 目标是在证据不足时不进入常规生成链路，并阻止未经校验的关键结论发布。无权材料不是可补给模型的“遗漏证据”；检索故障、无授权依据与正常无命中要在内部区分，外部响应还需避免泄漏受限材料是否存在。
 
@@ -236,9 +235,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Astute RAG: Overcoming Imperfect Retrieval Augmentation and Knowledge Conflicts for Large Language Models](https://arxiv.org/abs/2410.07176)
-- [Making Retrieval-Augmented Language Models Robust to Irrelevant Context](https://arxiv.org/abs/2310.01558)
-- [RAGAS: Automated Evaluation of Retrieval Augmented Generation](https://arxiv.org/abs/2309.15217)
-- [ALCE：Enabling Large Language Models to Generate Text with Citations](https://arxiv.org/abs/2305.14627)
-- [Corrective Retrieval Augmented Generation](https://arxiv.org/abs/2401.15884)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-17)。

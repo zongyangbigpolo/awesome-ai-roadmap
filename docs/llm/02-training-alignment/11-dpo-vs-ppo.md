@@ -97,7 +97,8 @@ The indexing here is `t = 0,…,T−1`, and the terminal state usually has `V(sT
 “Advantage always equals final reward minus V” is therefore only a simplified intuition for one-step tasks, not a replacement for the general token-level formula.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     P["Old sampling policy"] --> DATA["Answers and<br/>old log probabilities"]
     DATA --> R["RM and KL rewards"]
     R --> V["Value estimates and advantages"]
@@ -230,9 +231,17 @@ $$
 Here, `ε` is a numerical safeguard. The outcome-supervised version assigns the same advantage to an answer's tokens, then combines this with a clipped probability ratio and KL. Equal rewards across the group give zero task advantage. Group normalization can also introduce difficulty-dependent weighting and sensitivity to noise.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     ONLINE["Online sampling<br/>and reward optimization"] --> PPO["PPO<br/>Learned value baseline"]
     ONLINE --> GRPO["GRPO<br/>Group-relative baseline"]
+```
+
+Offline preference optimization has a different inner loop:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OFFLINE["Fixed preference pairs"] --> DPO["Offline DPO<br/>Direct preference loss"]
     DPO -.->|Can add an outer<br/>sampling and annotation loop| OFFLINE
 ```
@@ -264,12 +273,5 @@ PPO-RLHF uses online rewards, advantage estimation, and clipped policy updates. 
 
 ## References
 
-- [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
-- [OpenAI Spinning Up: PPO-Clip equations and constraint limits](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [DPO: §4 and Appendix A derivations](https://arxiv.org/html/2305.18290v3)
-- [DeepSeekMath: GRPO](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1, initial version](https://arxiv.org/html/2501.12948v1)
-- [Llama 2](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-11) for this chapter’s sources, reading suggestions, and source notes.

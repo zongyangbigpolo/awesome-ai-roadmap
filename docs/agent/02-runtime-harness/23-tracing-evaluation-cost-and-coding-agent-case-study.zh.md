@@ -13,14 +13,15 @@ description: 用 Trace 关联模型、工具、审批与恢复，区分开发中
 可以按 Session、任务、Turn 组织业务记录，但不要把它们当作 OpenTelemetry 的固定层级。**Session** 是应用会话，可能包含多项任务；**Turn** 在本模块指一次模型决策与相应工具处理；**Trace** 用相关联的 **Span** 描述一次运行经过的操作，Span 有起止时间。模型调用、工具执行适合各建 Span，瞬时状态转移则可以记为 Span event，而不是每次变化都新建 Span。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
     SESS["Session<br/>可含多项任务"]
-    RUN["任务的一次运行<br/>可映射到一个 Trace"]
+    RUN["任务的一次运<br/>行<br/>可映射到一个<br/>Trace"]
     T1["Turn 1"]
     T2["Turn 2"]
-    S1["Span: 模型调用"]
-    S2["Span: 工具执行"]
-    S3["Span: 权限判定"]
+    S1["Span: 模型调<br/>用"]
+    S2["Span: 工具执<br/>行"]
+    S3["Span: 权限判<br/>定"]
     SESS --> RUN
     RUN --> T1
     RUN --> T2
@@ -33,7 +34,7 @@ flowchart TB
 
 ## 23.3 OpenTelemetry GenAI 语义约定
 
-[所引用版本的 OpenTelemetry GenAI 语义约定](https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md)仍标记为 **Development**，不能笼统宣称字段已稳定。可复用其模型、Agent、工具与 MCP 字段，但应固定语义约定及 instrumentation 版本，并验证后端映射；自定义审批规则字段另设命名空间。
+所引用版本的 OpenTelemetry GenAI 语义约定<sup>[【525】](../../book/references.zh.md#ref-525)</sup>仍标记为 **Development**，不能笼统宣称字段已稳定。可复用其模型、Agent、工具与 MCP 字段，但应固定语义约定及 instrumentation 版本，并验证后端映射；自定义审批规则字段另设命名空间。
 
 模型 Span 记录模型版本、Token 和延迟；工具 Span 记录工具身份、执行状态与耗时；审批 Span 关联规则及审批记录。内容采集应默认最小化，参数、结果、用户信息与密钥需要脱敏和访问控制；不要为“完整 Trace”记录隐藏思维链。
 
@@ -68,13 +69,13 @@ Trace 和成本核算是"事后可见"，成本控制则要在运行时主动生
 
 ### 23.7.1 Claude Code / Claude Agent SDK
 
-Claude Agent SDK 暴露 Claude Code 使用的循环、工具和上下文管理（[Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop)）。Hooks 可插入审计与规则检查，Subagents 提供委派，Sessions 支持恢复与分叉。权限模式、审批回调和 Hook 的覆盖范围不同，不能把所有检查都只放进 `canUseTool`；会话恢复也不等于外部副作用自动幂等。
+Claude Agent SDK 暴露 Claude Code 使用的循环、工具和上下文管理（Agent loop<sup>[【545】](../../book/references.zh.md#ref-545)</sup>）。Hooks 可插入审计与规则检查，Subagents 提供委派，Sessions 支持恢复与分叉。权限模式、审批回调和 Hook 的覆盖范围不同，不能把所有检查都只放进 `canUseTool`；会话恢复也不等于外部副作用自动幂等。
 
 ### 23.7.2 OpenAI Codex CLI / Agents SDK
 
-OpenAI Agents SDK 用 `Runner` 调度模型、工具和 Handoff（[Running agents](https://openai.github.io/openai-agents-python/running_agents/)）。输入 Guardrail 默认与 Agent **并行**运行，触发拦截前模型可能已消耗 Token 或执行工具；只有配置阻塞模式才保证检查完成后再启动。输入 Guardrail 仅作用于链首，输出 Guardrail 作用于最终输出；逐工具调用的检查需要相应工具级机制（[Guardrails](https://openai.github.io/openai-agents-python/guardrails/)）。
+OpenAI Agents SDK 用 `Runner` 调度模型、工具和 Handoff（Running agents<sup>[【546】](../../book/references.zh.md#ref-546)</sup>）。输入 Guardrail 默认与 Agent **并行**运行，触发拦截前模型可能已消耗 Token 或执行工具；只有配置阻塞模式才保证检查完成后再启动。输入 Guardrail 仅作用于链首，输出 Guardrail 作用于最终输出；逐工具调用的检查需要相应工具级机制（Guardrails<sup>[【549】](../../book/references.zh.md#ref-549)</sup>）。
 
-[Codex CLI](https://github.com/openai/codex)是独立的编码 Agent 产品与代码库，不能因为都由 OpenAI 提供就断言它以 Agents SDK 为内核。二者可以集成、共享循环设计思路，但沙箱、审批、会话和工具行为需要分别核实。
+Codex CLI<sup>[【558】](../../book/references.zh.md#ref-558)</sup>是独立的编码 Agent 产品与代码库，不能因为都由 OpenAI 提供就断言它以 Agents SDK 为内核。二者可以集成、共享循环设计思路，但沙箱、审批、会话和工具行为需要分别核实。
 
 ### 23.7.3 GitHub Copilot Coding Agent
 
@@ -98,14 +99,5 @@ Trace 需要关联运行、工具、审批和恢复，但内容采集不能越�
 
 ## 参考资料
 
-- [OpenTelemetry: Generative AI Semantic Conventions](https://github.com/open-telemetry/semantic-conventions-genai)
-- [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/)：Span、Span event、上下文传播与 Span links。
-- [Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)
-- [OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)
-- [OpenAI Agents SDK: Guardrails](https://openai.github.io/openai-agents-python/guardrails/)
-- [OpenAI Codex repository](https://github.com/openai/codex)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Anthropic: How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
-
-GenAI 语义约定固定在提交 `0c87594975195608dc91b3f702e250a7b240c151`，查阅于 2026-09-15；产品接口以本章所引官方文档为边界，不据此推断未公开的内部实现。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-23)。

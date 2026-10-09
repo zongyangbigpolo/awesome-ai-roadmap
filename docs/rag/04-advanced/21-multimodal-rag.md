@@ -11,7 +11,8 @@ Multimodal RAG is more than “adding images to RAG.” It must ingest, represen
 ## 21.1 The End-to-End Pipeline
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A[Original media] --> B[Ingestion and parsing]
     B --> C[Multiple representations<br/>and indexes]
     Q[Question] --> D[Intent and modality routing]
@@ -95,10 +96,5 @@ In particular, thumbnails, OCR text, vectors, caches, and logs are derived copie
 
 ## References
 
-- [Learning Transferable Visual Models From Natural Language Supervision (CLIP)](https://arxiv.org/abs/2103.00020)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [RAG-Anything: All-in-One RAG Framework](https://arxiv.org/abs/2510.12323)
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-
-Source checks for this translation covered CLIP’s learned shared embedding space, ColPali’s page-image multi-vector representation and late interaction, and RAG-Anything’s cross-modal representation and retrieval approach. The original RAG and indirect prompt-injection papers were checked at the abstract level only. These checks do not constitute tests of media parsing, authorization, localization, or attack resistance.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-21) for this chapter’s sources, reading suggestions, and source notes.

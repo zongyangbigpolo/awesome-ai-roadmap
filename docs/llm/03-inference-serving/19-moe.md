@@ -15,15 +15,16 @@ Scaling a dense model generally increases computation and weight storage, but en
 This chapter discusses sparse, token-choice FFN MoE: selected Transformer layers contain N routed experts, and each token's hidden state goes to only K of them. Other layers and shared experts still execute.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["Token hidden state<br/>at the current layer"] --> R["Router selects<br/>K experts"]
     R --> E1["Expert 1"]
-    R -.Not selected.-> E2["Expert 2"]
     R --> E3["Expert 3"]
-    R -.Not selected.-> EN["Other experts"]
     E1 --> O["Sum with gate weights"]
     E3 --> O
 ```
+
+In this example K = 2: experts 1 and 3 execute, and their outputs are summed with gate weights. Expert 2 and the other experts are not selected for this token.
 
 Let P_shared denote all non-routed parameters that always participate, and P_experts the total routed-expert parameters across layers. Assuming equally sized experts across layers and a selection ratio K/N, approximately:
 
@@ -155,7 +156,8 @@ Softmax is differentiable, but `topk` index selection is discrete. Main-task gra
 Expert parallelism places different experts on different devices. A common path is:
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     H["Token hidden states"] --> ROUTE["Route and pack"]
     ROUTE --> SEND["Dispatch to<br/>expert devices"]
     SEND --> FFN["Experts execute<br/>their FFNs"]
@@ -208,12 +210,5 @@ Separate four aspects of MoE: total parameter capacity, active computation per t
 
 ## References
 
-- [Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
-- [GShard](https://arxiv.org/abs/2006.16668)
-- [Switch Transformers](https://arxiv.org/abs/2101.03961)
-- [Mixtral of Experts](https://arxiv.org/html/2401.04088v1)
-- [DeepSeek-V3 Technical Report](https://arxiv.org/html/2412.19437v2)
-- [Auxiliary-Loss-Free Load Balancing](https://arxiv.org/abs/2408.15664)
-- [Expert Choice Routing](https://arxiv.org/abs/2202.09368)
-- [ST-MoE: router z-loss](https://arxiv.org/abs/2202.08906)
-- [Qwen3-30B-A3B official model card](https://huggingface.co/Qwen/Qwen3-30B-A3B)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-19) for this chapter’s sources, reading suggestions, and source notes.

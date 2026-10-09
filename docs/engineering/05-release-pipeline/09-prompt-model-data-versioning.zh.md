@@ -9,12 +9,20 @@ description: 用可追溯的发布清单关联 Prompt、模型快照、检索和
 Prompt 决定了系统行为,但很多团队把它当成字符串常量随手改,改完直接生效,没有版本号,没有变更记录,出问题时无法确定"上一个还工作的版本是哪个"。**Prompt、模型选择、检索数据这三者任何一个变化,都可能改变系统输出**,理应像应用代码一样接受版本管理的约束。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart LR
-    P["Prompt 变更"] --> V["三者任一变化都应触发版本升级"]
+    P["Prompt 变更"] --> V["每类变更都须版<br/>本化"]
     M["模型/路由变更"] --> V
     D["数据/知识库变更"] --> V
-    V --> R["新版本号 + 变更记录 + 可回滚"]
+    V --> R["发布记录"]
 ```
+
+提示词、模型或路由、数据或知识库发生任何变更，都需要新版本。发布记录应包含版本号、变更说明和回滚支持。
+
+图中各项的完整含义：
+
+- 三者任一变化都应触发版本升级
+- 新版本号 + 变更记录 + 可回滚
 
 ## 9.2 Prompt 版本管理
 
@@ -106,8 +114,5 @@ indexed_at: 2026-08-25T02:00:00Z
 
 ## 参考资料
 
-- [OpenAI: GPT-4o snapshots](https://developers.openai.com/api/docs/models/gpt-4o)
-- [OpenAI: Deprecations](https://developers.openai.com/api/docs/deprecations)
-- [DVC: Data Version Control](https://dvc.org/doc)
-- [MLflow: Model Registry](https://mlflow.org/docs/latest/model-registry.html)
-- [Google Cloud: MLOps continuous delivery and automation pipelines](https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-09)。

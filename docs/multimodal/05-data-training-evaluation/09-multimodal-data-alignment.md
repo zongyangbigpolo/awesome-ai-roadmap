@@ -78,9 +78,5 @@ Text-oriented judgments such as “which answer is more detailed or helpful?” 
 
 ## References
 
-- [LAION-5B: An Open Large-Scale Dataset for Training Next Generation Image-Text Models](https://arxiv.org/abs/2210.08402)
-- [OpenAI DALL·E 3: Improving Image Generation with Better Captions](https://cdn.openai.com/papers/dall-e-3.pdf)
-- [LLaVA: Visual Instruction Tuning](https://arxiv.org/abs/2304.08485)
-- [Flamingo: a Visual Language Model for Few-Shot Learning](https://arxiv.org/abs/2204.14198)
-- [OBELICS: An Open Web-Scale Filtered Dataset of Interleaved Image-Text Documents](https://arxiv.org/abs/2306.16527)
-- [Aligning Large Multimodal Models with Factually Augmented RLHF (LLaVA-RLHF)](https://arxiv.org/abs/2309.14525)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-09) for this chapter’s sources, reading suggestions, and source notes.

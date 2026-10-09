@@ -19,13 +19,21 @@ description: 解释工具调用的训练数据、损失掩码、SFT 与强化学
 也可能在示例引导下输出调用文本。可靠性需要用未见工具、错误恢复和多轮任务检验，不能靠单个成功样例判断。
 
 ```mermaid
-flowchart LR
-    PT["预训练<br/>语言、代码与 API 知识"] --> SFT["可选：SFT / 工具轨迹训练"]
-    SFT --> RL["可选：偏好优化 / 执行奖励"]
-    PT --> RT["运行时：示例、Schema、约束解码"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    PT["预训练"] --> SFT["可选的 SFT"]
+    SFT --> RL["可选的优化"]
+    PT --> RT["运行时引导"]
     RL --> RT
-    RT --> READY["在目标任务上评测工具能力"]
+    RT --> READY["在目标任务上评测<br/>工具能力"]
 ```
+
+图中各项的完整含义：
+
+- 预训练 语言、代码与 API 知识
+- 可选：SFT / 工具轨迹训练
+- 可选：偏好优化 / 执行奖励
+- 运行时：示例、Schema、约束解码
 
 ## 2.2 用 SFT 学习工具调用轨迹
 
@@ -82,18 +90,23 @@ ToolLLM 使用真实 RapidAPI 工具和模型生成的指令、解题轨迹构�
 SFT 最大化示范轨迹的似然；偏好优化显式比较候选，RL 则优化奖励下的策略。三者监督形式不同，但都可能同时影响格式、选择和规划能力。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q["用户：1+1 等于几？"] --> SFTM["训练偏向调用的模型"]
-    SFTM --> A1["调用 calculator(expr='1+1')"]
-    A1 --> BAD["多此一举<br/>增加延迟与成本"]
+    Q["用户：1+1 等于几<br/>？"] --> SFTM["训练偏向调用的模<br/>型"]
+    SFTM --> A1["调用 calculator(<br/>expr=' 1+1')"]
+    A1 --> BAD["多此一举"]
 
-    Q --> RLM["覆盖不调用样例的模型"]
+    Q --> RLM["覆盖不调用样例的<br/>模型"]
     RLM --> A2["直接回答：2"]
     A2 --> GOOD["行为得体"]
 
     style BAD fill:#fce8e6
     style GOOD fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 多此一举 增加延迟与成本
 
 ## 2.4 用反馈优化选择与调用边界
 
@@ -148,19 +161,28 @@ RLAIF 用 AI 反馈替代部分人工反馈，可能降低人工标注成本。�
 
 这类规则可在训练循环中自动提供奖励，不必每次请人评分，这就是 RLVR（Reinforcement Learning with Verifiable Rewards，可验证奖励强化学习）的思路。人仍需设计任务、校验器及安全执行环境。
 
+**RLHF 路线**
+
 ```mermaid
-flowchart LR
-    subgraph RLHF["RLHF 路线"]
-        H1[人类排序] --> H2[训练奖励模型] --> H3[RL 优化]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        H1["人类排序"] --> H2["训练奖励模型"] --> H3["RL 优化"]
 
-    subgraph RLVR["RLVR 路线"]
-        V1[模型生成调用] --> V2[真实执行 / Schema 校验]
-        V2 --> V3["规则奖励<br/>成功=1 失败=0"] --> V4[RL 优化]
-    end
+```
 
+**RLVR 路线**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        V1["模型生成调用"] --> V2["真实执行 /<br/>Schema 校验"]
+        V2 --> V3["规则奖励"] --> V4["RL 优化"]
     style V2 fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 规则奖励 成功=1 失败=0
 
 ### 2.5.2 带来的变化
 
@@ -186,18 +208,28 @@ flowchart LR
 训练与运行时是两件事，面试里经常被混着问。运行时的完整流程在 [第一章](01-function-calling.zh.md) 已经讲过，这里只强调分界：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph TRAIN["训练期（厂商或自有训练团队）"]
-        T1[SFT 等轨迹训练] --> T2[可选：偏好或执行奖励优化] --> T3[产出模型权重]
+    subgraph TRAIN["训练阶段"]
+        direction TB
+        T1["SFT 等轨迹训练"] --> T2["可选的优化"] --> T3["产出模型权重"]
     end
 
-    subgraph RUNTIME["运行期（你做）"]
-        R1[传入 tools schema] --> R2[模型输出 tool_calls]
-        R2 --> R3[你的代码执行] --> R4[结果回填] --> R5[模型生成答案]
+    subgraph RUNTIME["应用运行时"]
+        direction TB
+        R1["传入 tools<br/>schema"] --> R2["模型输出<br/>tool_calls"]
+        R2 --> R3["你的代码执行"] --> R4["结果回填"] --> R5["模型生成答案"]
     end
 
     T3 -.部署.-> R2
 ```
+
+供应商或自己的训练团队负责训练并产出权重。应用负责提供运行时 schema 和执行调用；部署连线表示将训练后的权重交给运行时模型，而不是把权重部署进工具实现。
+
+图中各项的完整含义：
+
+- 训练期（厂商或自有训练团队）
+- 可选：偏好或执行奖励优化
 
 运行时会改变可用能力：chat template、工具解析器、约束解码、上下文与路由都可能影响结果。先确认接口是否支持并行及调用格式，再用目标任务评测；公开榜单不是模型在所有应用中的能力上限。
 
@@ -272,14 +304,5 @@ SFT 可以学格式也可以学调用边界；RL 可以优化格式、选择和�
 
 ## 参考资料
 
-- [Toolformer: Language Models Can Teach Themselves to Use Tools](https://arxiv.org/abs/2302.04761)
-- [ReAct 原论文](https://arxiv.org/abs/2210.03629)
-- [PPO 原论文](https://arxiv.org/abs/1707.06347)
-- [ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs](https://arxiv.org/abs/2307.16789)
-- [Training language models to follow instructions with human feedback（InstructGPT）](https://arxiv.org/abs/2203.02155)
-- [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073)
-- [ToolRL: Reward is All Tool Learning Needs](https://arxiv.org/abs/2504.13958)
-- [ReTool: Reinforcement Learning for Strategic Tool Use in LLMs](https://arxiv.org/abs/2504.11536)
-- [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html)
-- [API-Bank: A Comprehensive Benchmark for Tool-Augmented LLMs](https://aclanthology.org/2023.emnlp-main.187/)
-- [τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-02)。

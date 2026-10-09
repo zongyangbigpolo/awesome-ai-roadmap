@@ -6,6 +6,8 @@
 
 从头阅读可进入[中文书稿目录](docs/book/README.zh.md)，依次阅读前言、九篇正文和书末附页。网站与电子书共用章节源文件，在线阅读照旧。
 
+[集中参考资料章节](docs/book/references.zh.md)汇集全书统一编号的来源和各章阅读说明。正文中的上标引用编号链接到对应条目。
+
 日常内容修改先从英文主稿开始，对应的中文同步更新在**同一个 PR** 中审阅。CI 检查翻译是否齐全、配对版本是否过期，不会偷偷翻译整本书或自动刷新过期记录。合并后分别更新网站与两种语言的 EPUB 下载工件。不必为网页和 EPUB 各改一份稿，也不提交生成的 `.epub`；流程不会自动上传 KDP。
 
 **下载 EPUB：** 打开 [Build EPUB 工作流](https://github.com/zongyangbigpolo/awesome-ai-roadmap/actions/workflows/epub.yml)，选择成功的运行，在 Artifacts 中选择 `ai-engineering-interview-en-epub` 或 `ai-engineering-interview-zh-CN-epub`，解压即可得到对应语言的 `.epub` 和构建记录。工件最长保留 90 天；过期后维护者可点 **Run workflow** 重建。依赖安装后，本地可运行 `python3 scripts/build_epub.py --language en` 或 `--language zh-CN`，详见[维护说明](book/README.zh.md)。**格式有效不等于具备 KDP 上架资格或已完成人工排版验收**。

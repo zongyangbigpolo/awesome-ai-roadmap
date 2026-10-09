@@ -81,9 +81,5 @@ Choose synchronous responses or asynchronous jobs according to generation length
 
 ## References
 
-- [Video Diffusion Models](https://arxiv.org/abs/2204.03458)
-- [Imagen Video: High Definition Video Generation with Diffusion Models](https://arxiv.org/abs/2210.02303)
-- [OpenAI: Video generation models as world simulators (Sora technical report)](https://openai.com/index/video-generation-models-as-world-simulators/)
-- [Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets](https://arxiv.org/abs/2311.15127)
-- [Towards Accurate Generative Models of Video: A New Metric & Challenges (FVD)](https://arxiv.org/abs/1812.01717)
-- [VBench: Comprehensive Benchmark Suite for Video Generative Models](https://arxiv.org/abs/2311.17982)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-08) for this chapter’s sources, reading suggestions, and source notes.

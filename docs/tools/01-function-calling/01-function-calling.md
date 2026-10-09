@@ -50,20 +50,31 @@ For example, when asked "Can you check the weather?", the model may simply descr
 
 It turns a **text-parsing problem** into a **protocol problem**:
 
-```mermaid
-flowchart LR
-    subgraph OLD["Earlier approach"]
-        O1[Model outputs natural language] --> O2[Parse with regex or format rules]
-        O2 --> O3{Parsing succeeds?}
-        O3 -->|No| O4[Silent fallback]
-        O3 -->|Yes| O5[Call tool]
-    end
+**Earlier approach**
 
-    subgraph NEW["Function calling"]
-        N1[Model outputs tool_calls structure] --> N2[Parse fields and validate arguments and permissions]
-        N2 --> N3[Call tool]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O1["Model outputs natural<br/>language"] --> O2["Parse with regex or<br/>format rules"]
+        O2 --> O3["Parsing succeeds?"]
+        O3 -->|No| O4["Silent fallback"]
+        O3 -->|Yes| O5["Call tool"]
+
 ```
+
+**Function calling**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["Model outputs<br/>tool_calls structure"] --> N2["Validate call"]
+        N2 --> N3["Call tool"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Parse fields and validate arguments and permissions
 
 In OpenAI **Chat Completions**, `tool_calls` and `finish_reason: "tool_calls"` explicitly mark a call; the application no longer has to infer intent from ordinary text. Responses instead uses `function_call` items in `output`, with results linked through `function_call_output.call_id`; `finish_reason` does not apply there. These fields are API design choices, not evidence that the model internally generates the entire response object.
 
@@ -72,20 +83,33 @@ In OpenAI **Chat Completions**, `tool_calls` and `finish_reason: "tool_calls"` e
 Think of the process as delegating a task. The responsibilities then become clear.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    DEV["Developer<br/>Writes tool specifications in JSON Schema"] -->|Registers tools| MODEL
-    USER["User<br/>Makes a request"] -->|messages| MODEL
+    DEV["Developer"] -->|Registers tools| MODEL
+    USER["User"] -->|messages| MODEL
 
-    MODEL["Model<br/>Makes decisions only"] -->|Outputs tool_calls| HOST
+    MODEL["Model"] -->|Outputs tool_calls| HOST
 
-    HOST["Host application<br/>Validates, authorizes, and executes"] -->|Actual call| EXT["External systems<br/>API / DB / files"]
+    HOST["Host application"] -->|Actual call| EXT["External systems"]
     EXT -->|Returns results| HOST
     HOST -->|role: tool message| MODEL
-    MODEL -->|Final natural-language answer| USER
+    MODEL -->|"Answer"| USER
 
     style MODEL fill:#e8f0fe
     style HOST fill:#fce8e6
 ```
+
+Figure conditions and labels:
+
+- Final natural-language answer
+
+Details of the illustrated steps and components:
+
+- Developer Writes tool specifications in JSON Schema
+- User Makes a request
+- Model Makes decisions only
+- Host application Validates, authorizes, and executes
+- External systems API / DB / files
 
 | Role | Responsibility | What it does not do |
 |---|---|---|
@@ -160,22 +184,29 @@ An `enum` supports server-side validation and can let a runtime with constrained
 ## 1.5 The complete flow: two model turns with execution in between
 
 ```mermaid
-sequenceDiagram
-    participant U as User
-    participant H as Host application
-    participant M as Model
-    participant T as Weather API
-
-    U->>H: What is the weather in Beijing today?
-    H->>M: messages + tools (first turn)
-    M-->>H: finish_reason=tool_calls<br/>get_weather(city="北京")
-    Note over M: The model stops here,<br/>without a final answer
-    H->>T: Actual HTTP request
-    T-->>H: Sunny, 15°C, northeasterly wind at force 3
-    H->>M: Append role=tool message (second turn)
-    M-->>H: Beijing is sunny today, with a temperature of 15°C…
-    H->>U: Final answer
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["User request"]
+    S1["Model proposes call"]
+    S2["Host calls weather API"]
+    S3["Model uses result"]
+    S4["Final answer"]
+    S0 --> S1 --> S2 --> S3 --> S4
 ```
+
+Complete exchange, including phase notes:
+
+| Participants | Message or action |
+| --- | --- |
+| User → Host application | What is the weather in Beijing today? |
+| Host application → Model | messages + tools (first turn) |
+| Model → Host application (return) | finish_reason=tool_calls; get_weather(city="北京") |
+| Note: Model | The model stops here,; without a final answer |
+| Host application → Weather API | Actual HTTP request |
+| Weather API → Host application (return) | Sunny, 15°C, northeasterly wind at force 3 |
+| Host application → Model | Append role=tool message (second turn) |
+| Model → Host application (return) | Beijing is sunny today, with a temperature of 15°C… |
+| Host application → User | Final answer |
 
 The following is a teaching fragment for a single query, not a standalone client. `registry` is the application's tool allowlist. The application must implement `validate_and_authorize` to check the schema, business arguments, and current user's permissions, raising a clear error on failure. The example uses a model compatible with Chat Completions; it does not imply that all newer models support that interface. The Chinese input `北京今天天气怎么样？` asks for today's weather in Beijing. The diagram preserves the actual Chinese city argument `city="北京"`; its explanatory labels are in English.
 
@@ -327,17 +358,28 @@ Because this example manages `input_items` manually, it must pass the first turn
 
 If the user asks for the weather in Beijing, Shanghai, and Guangzhou, the model can return three call requests in **one response**:
 
-```mermaid
-flowchart LR
-    subgraph SER["Sequential: 4 model calls, including the final summary"]
-        S1[Model] --> S2[Query Beijing] --> S3[Model] --> S4[Query Shanghai] --> S5[Model] --> S6[Query Guangzhou] --> S7[Model]
-    end
+**Sequential calls**
 
-    subgraph PAR["Parallel: 2 model calls"]
-        P1[Model outputs 3 tool_calls at once] --> P2[Execute three queries concurrently]
-        P2 --> P3[Return all three results together] --> P4[Model]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["Model"] --> S2["Query Beijing"] --> S3["Model"] --> S4["Query Shanghai"] --> S5["Model"] --> S6["Query Guangzhou"] --> S7["Model"]
+
 ```
+
+**Parallel: 2 model calls**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        P1["Model outputs 3<br/>tool_calls at<br/>once"] --> P2["Execute three<br/>queries<br/>concurrently"]
+        P2 --> P3["Return all<br/>three results<br/>together"] --> P4["Model"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Sequential: 4 model calls, including the final summary
 
 In a teaching model where the queries are independent, each model invocation takes approximately `T`, and queueing and scheduling overhead are ignored, sequential queries plus a summary take about `4T + IO₁ + IO₂ + IO₃`. A concurrent batch plus a summary takes about `2T + max(IO₁, IO₂, IO₃)`. Actual gains depend on generation length, concurrency limits, and API latency.
 
@@ -424,11 +466,5 @@ Models differ more than one might expect: support for parallel calls, `tool_choi
 
 ## References
 
-- [OpenAI: Function Calling guide (checked 2026-09-08)](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: Responses API migration guide (this section's fields and examples were checked against this page and the Function Calling guide on 2026-09-16)](https://developers.openai.com/api/docs/guides/migrate-to-responses)
-- [OpenAI: The 2023 Function Calling announcement](https://openai.com/index/function-calling-and-other-api-updates/)
-- [Anthropic: Tool Use with Claude](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview)
-- [Anthropic: Writing Effective Tools for Agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
-- [Toolformer: Language Models Can Teach Themselves to Use Tools](https://arxiv.org/abs/2302.04761)
-- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
-- [JSON Schema specification](https://json-schema.org/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-01) for this chapter’s sources, reading suggestions, and source notes.

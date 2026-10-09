@@ -26,25 +26,38 @@ description: 解释 A2A 协议中的 Agent Card、任务生命周期、消息与
 
 关键在于**中间过程被隔离了**：
 
-```mermaid
-flowchart LR
-    subgraph SINGLE["单 Agent"]
-        S1["上下文里堆着：<br/>几十个网页原文<br/>+ 多版草稿<br/>+ 反思记录<br/>+ 最终结论"]
-    end
+**单 Agent**
 
-    subgraph MULTI["多 Agent"]
-        O["调度 Agent<br/>接收摘要与证据引用<br/>必要时追溯原始材料"]
-        A1["市场 Agent<br/>几十个网页在<br/>它自己的上下文里"]
-        A2["技术 Agent<br/>工具文档在<br/>它自己的上下文里"]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["上下文里堆着："]
+    style S1 fill:#fce8e6
+```
+
+**多 Agent**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O["调度 Agent"]
+        A1["市场 Agent"]
+        A2["技术 Agent"]
         O --> A1
         O --> A2
-        A1 -.回传结论与证据.-> O
-        A2 -.回传结论与证据.-> O
-    end
-
-    style S1 fill:#fce8e6
+        A1 -.证据.-> O
+        A2 -.证据.-> O
     style O fill:#e6f4ea
 ```
+
+各专业 Agent 回传结论及支持证据，调度方接收摘要与引用，并在需要时回查原始材料。
+
+图中各项的完整含义：
+
+- 上下文里堆着： 几十个网页原文 + 多版草稿 + 反思记录 + 最终结论
+- 调度 Agent 接收摘要与证据引用 必要时追溯原始材料
+- 市场 Agent 几十个网页在 它自己的上下文里
+- 技术 Agent 工具文档在 它自己的上下文里
 
 市场 Agent 自己去搜几十个网页、写草稿、反复迭代，这些**中间过程全在它自己的上下文里**。任务完成后只把一份几百字的结论回传。
 
@@ -121,31 +134,20 @@ A2A 的 **Task** 是有状态的工作单元。Client 发 Message 后，Server �
 `taskId` 由 Server 创建，`contextId` 关联同一会话中的多个任务与消息，`messageId` 标识消息；它们不是用户身份，也不会自动提供业务幂等性。`Part` 可携带文本、原始/引用文件或结构化数据。
 
 ```mermaid
-stateDiagram-v2
-state "TASK_STATE_SUBMITTED" as submitted
-state "TASK_STATE_WORKING" as working
-state "TASK_STATE_INPUT_REQUIRED" as input_required
-state "TASK_STATE_AUTH_REQUIRED" as auth_required
-state "TASK_STATE_COMPLETED" as completed
-state "TASK_STATE_FAILED" as failed
-state "TASK_STATE_CANCELED" as canceled
-state "TASK_STATE_REJECTED" as rejected
-[*] --> submitted: 调度 Agent 提交
-    submitted --> working: 接收方开始执行
-    working --> input_required: 需要补充信息
-    input_required --> working: 调用方补充后继续
-    working --> auth_required: 需要追加认证
-    auth_required --> working: 完成认证后继续
-    working --> completed: 执行成功
-    working --> failed: 执行失败
-    working --> canceled: 取消获准
-    submitted --> rejected: 接收方拒绝
-    working --> rejected: 无法继续受理
-    completed --> [*]
-    failed --> [*]
-    canceled --> [*]
-    rejected --> [*]
+%%{init: {"flowchart": {"rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["已提交"] --> W["执行中"]
+    W --> WAIT["等待输入或认证"]
+    WAIT --> W
+    W --> END["已终止"]
+    S -->|拒绝| END
 ```
+
+图中条件与标签：
+
+- 终止结果
+
+图中使用便于阅读的标签，并未替换协议值。提交任务进入 `TASK_STATE_SUBMITTED`，开始执行进入 `TASK_STATE_WORKING`。执行中可以转入 `TASK_STATE_INPUT_REQUIRED` 等待调用方补充信息，也可以转入 `TASK_STATE_AUTH_REQUIRED` 等待认证完成；两者之后都恢复执行。执行成功、执行失败和取消获准分别进入 `TASK_STATE_COMPLETED`、`TASK_STATE_FAILED`、`TASK_STATE_CANCELED`。接收方既可以在已提交状态拒绝任务，也可以在执行中因无法继续受理而进入 `TASK_STATE_REJECTED`。这四种终止结果都会结束本次生命周期。
 
 这是典型路径，不要求每个任务走过全部状态。1.0 的 ProtoJSON 使用图中的 `TASK_STATE_*` 枚举名；旧文章中的小写或连字符值不能直接用于 1.0 报文。`TASK_STATE_UNSPECIFIED` 不应作为正常业务状态；完成、失败、取消、拒绝是终态，补充输入和追加认证是中断态。
 
@@ -209,23 +211,18 @@ WebSocket **不是 A2A 核心 binding**；需要它的双方可定义 custom bin
 理清两者关系最简单的方式是**看方向**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    A1["市场分析 Agent"]
-    A2["技术研究 Agent"]
-    ORCH["调度 Agent"]
-
-    ORCH <-->|"A2A · 横向"| A1
-    ORCH <-->|"A2A · 横向"| A2
-
-    A1 -->|"MCP · 纵向"| T1[(搜索引擎)]
-    A1 -->|"MCP · 纵向"| T2[(浏览器)]
-    A2 -->|"MCP · 纵向"| T3[(代码执行器)]
-    A2 -->|"MCP · 纵向"| T4[(GitHub)]
-
-    style ORCH fill:#e6f4ea
-    style A1 fill:#e8f0fe
-    style A2 fill:#e8f0fe
+    ORCH["调度 Agent"] <-->|A2A| AGENT["专业 Agent"]
+    AGENT -->|MCP| TOOLS["工具"]
 ```
+
+A2A 横向连接调度方与市场分析、技术研究 Agent。各专业 Agent 再通过 MCP 纵向连接工具：市场 Agent 使用搜索和浏览器，技术 Agent 使用代码执行器与 GitHub。两种协议处理的是不同的边界。
+
+图中条件与标签：
+
+- 市场分析 Agent
+- 技术研究 Agent
 
 | | 连接方向 | 对端是谁 | 解决什么 |
 |---|---|---|---|
@@ -286,12 +283,5 @@ A2A 定义的是跨实现共享的数据模型、任务生命周期、发现和�
 
 ## 参考资料
 
-- 来源核对：2026-09-15 读取 v1.0.1 发布记录、规范和 Proto 定义。该标签内规范页仍有“Latest Released Version 1.0.0”的旧提示；Send Message 概述中的立即返回措辞，也与执行模式小节和 Proto 的默认阻塞定义不一致。本章按后两处明确的 `return_immediately` 字段定义说明，线上 JSON 使用 `returnImmediately`。
-- [A2A v1.0.1 发布记录](https://github.com/a2aproject/A2A/releases/tag/v1.0.1)
-- [A2A 协议官网](https://a2a-protocol.org/)
-- [A2A v1.0.1 发布规范](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [A2A v1.0.1 规范数据定义](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
-- [Google: Announcing the Agent2Agent Protocol](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)
-- [Linux Foundation: A2A Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-11)。

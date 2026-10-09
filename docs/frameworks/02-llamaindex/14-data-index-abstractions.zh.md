@@ -13,15 +13,25 @@ LlamaIndex 的常用切入点就是这条数据加工链路；[LangChain 生态]
 两者有大量能力重叠，也可以分工互补；这里比较的是常用抽象的侧重点，不是「LlamaIndex 只能做 RAG」或「LangChain 不擅长数据处理」的产品边界。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph LC["LangChain 的常用切入点"]
-        L1["模型和工具太多<br/>怎么统一接口、可靠调度"]
+    subgraph LC["LangChain"]
+        direction TB
+        L1["模型和工具太多"]
     end
-    subgraph LI["LlamaIndex 的常用切入点"]
-        I1["私有数据零散、格式各异<br/>怎么变成高质量上下文"]
+    subgraph LI["LlamaIndex"]
+        direction TB
+        I1["分散的私有数据"]
     end
     L1 -.互补.-> I1
 ```
+
+图中各项的完整含义：
+
+- LangChain 的常用切入点
+- 模型和工具太多 怎么统一接口、可靠调度
+- LlamaIndex 的常用切入点
+- 私有数据零散、格式各异 怎么变成高质量上下文
 
 ## 14.2 数据接入层：`Document`、`Node` 与 `IngestionPipeline`
 
@@ -65,16 +75,28 @@ nodes = pipeline.run(documents=[Document(text=raw_text, metadata={"source": "han
 | `PropertyGraphIndex` | 把 Node 抽取成图谱中的实体与关系 | 多跳推理、关系型问题（对应 `docs/rag` 中的 GraphRAG 章节） |
 
 ```mermaid
-flowchart TB
-    N["Node 集合"] --> V["VectorStoreIndex<br/>语义检索"]
-    N --> S["SummaryIndex<br/>默认全量遍历"]
-    N --> T["TreeIndex<br/>层级摘要"]
-    N --> P["PropertyGraphIndex<br/>实体关系图"]
-    V --> Q["统一的 Query Engine 接口"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    N["Node 集合"] --> V["VectorStoreIndex"]
+    N --> S["SummaryIndex"]
+    N --> T["TreeIndex"]
+    N --> P["PropertyGraphIndex"]
+    V --> Q["查询接口"]
     S --> Q
     T --> Q
     P --> Q
 ```
+
+图中条件与标签：
+
+- 统一的 Query Engine 接口
+
+图中各项的完整含义：
+
+- VectorStoreIndex 语义检索
+- SummaryIndex 默认全量遍历
+- TreeIndex 层级摘要
+- PropertyGraphIndex 实体关系图
 
 索引类型对应的是不同的检索假设，而不只是更换数据库后端。把「总结全文」这类问题交给 `VectorStoreIndex`，通常只会召回少量语义相似片段，无法得到覆盖全局的摘要；这正是 14.5 节的常见错误之一。
 
@@ -100,7 +122,7 @@ storage_context = StorageContext.from_defaults(vector_store=vector_store)
 index = VectorStoreIndex(nodes, storage_context=storage_context)
 ```
 
-上例是存储装配片段，需要预先安装 PostgreSQL 集成包和 pgvector 扩展。应用提供指向同一数据库的 `sync_database_url` 与 `async_database_url`，分别使用兼容的同步、异步驱动，例如 `postgresql+psycopg2` 和 `postgresql+asyncpg`。两个 URL 都要显式传入：[`from_params()` 不会自动发现应用已有的连接](https://github.com/run-llama/llama_index/blob/f475afd8a9bbda84f252567e045d89d07b5701b3/llama-index-integrations/vector_stores/llama-index-vector-stores-postgres/llama_index/vector_stores/postgres/base.py#L413-L478)。凭据由应用配置管理，不写进示例。`embed_dim` 必须与实际 Embedding 输出一致；1536 只是示例值。
+上例是存储装配片段，需要预先安装 PostgreSQL 集成包和 pgvector 扩展。应用提供指向同一数据库的 `sync_database_url` 与 `async_database_url`，分别使用兼容的同步、异步驱动，例如 `postgresql+psycopg2` 和 `postgresql+asyncpg`。两个 URL 都要显式传入：`from_params()` 不会自动发现应用已有的连接<sup>[【629】](../../book/references.zh.md#ref-629)</sup>。凭据由应用配置管理，不写进示例。`embed_dim` 必须与实际 Embedding 输出一致；1536 只是示例值。
 
 更换后端常能保留上层接口，但仍需迁移节点 ID、文本、元数据和向量，并验证过滤、混合检索、删除语义与得分尺度。`persist()` 也不是跨多个远程存储的原子备份：恢复时要保证 docstore、索引结构和向量集合版本一致。
 
@@ -148,9 +170,5 @@ index = VectorStoreIndex(nodes, storage_context=storage_context)
 
 ## 参考资料
 
-- [LlamaIndex 官方文档](https://developers.llamaindex.ai/python/framework/)
-- [LlamaIndex: Loading Data (Ingestion Pipeline)](https://developers.llamaindex.ai/python/framework/module_guides/loading/ingestion_pipeline/)
-- [LlamaIndex: Indexing 概念](https://developers.llamaindex.ai/python/framework/module_guides/indexing/)
-- [LlamaIndex: 各索引的默认与可选检索方式](https://developers.llamaindex.ai/python/framework/module_guides/indexing/index_guide/)
-- [LlamaIndex: Property Graph Index](https://developers.llamaindex.ai/python/framework/module_guides/indexing/lpg_index_guide/)
-- [LlamaIndex: Storage 概念](https://developers.llamaindex.ai/python/framework/module_guides/storing/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-14)。

@@ -11,12 +11,14 @@ RAG 是一条多环节的流水线。**最终答案不好，可能是任何一�
 如果只看一个端到端的总分，你能知道"效果差"，但不知道**差在哪**。而分层指标能直接告诉你问题落在第十四章框架的哪一层。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
 flowchart TB
-    E[RAG 评估] --> E1[检索层<br/>找到了吗 排前面了吗]
-    E --> E2[生成层<br/>忠实吗 切题吗]
-    E --> E3[端到端<br/>用户问题解决了吗]
-    E --> E4[线上<br/>真实用户怎么反馈的]
+    E[离线评估] --> R[检索与生成]
+    R --> T[端到端成功率]
+    T --> P[线上反馈]
 ```
+
+检索层衡量是否找到了证据、是否排在前面；生成层衡量回答是否忠实、切题；端到端衡量是否解决了用户问题。线上反馈补充真实用户的意见，而非替代这些离线检查。
 
 只看端到端分数只能发现退化，不能定位病因；只看检索又无法判断整条链路是否完成任务。两类评测需要同时存在。
 
@@ -221,14 +223,15 @@ LLM 生成评测集时有个常见偏差：直接让 LLM 读一个 chunk 然后�
 ## 18.8 建立评估的正确顺序
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. 收集真实问题] --> S2[2. 人工标注正确 chunk 和参考答案]
-    S2 --> S3[3. 建立检索层指标基线]
-    S3 --> S4[4. 加程序化断言]
-    S4 --> S5[5. 引入 LLM-as-Judge 并校准]
-    S5 --> S6[6. 接入线上反馈回流]
-    S6 --> S1
+    S1[收集并标注问题] --> S2[检索指标基线]
+    S2 --> S3[断言与校准后的评审模型]
+    S3 --> S4[线上反馈]
+    S4 --> S1
 ```
+
+由人工为真实问题标注正确块与参考答案。先建立检索指标基线，再加入程序化断言，随后引入并校准 LLM-as-Judge。将线上反馈用于下一轮评测问题收集。
 
 这是一条闭环流程：线上反馈补充开发集和回归集，再指导优化。冻结测试集应隔离保管、按约定周期更新，不能把已经反复用于选阈值和调提示词的测试题继续当作未见样本。
 
@@ -286,15 +289,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Ragas: Automated Evaluation of Retrieval Augmented Generation](https://arxiv.org/abs/2309.15217)
-- [Ragas：Context Recall](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/)
-- [Ragas：Context Precision](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/)
-- [Ragas：Faithfulness](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)
-- [Ragas：Answer / Response Relevancy](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/)
-- [ALCE：Enabling Large Language Models to Generate Text with Citations](https://arxiv.org/abs/2305.14627)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
-- [CRAG - Comprehensive RAG Benchmark](https://arxiv.org/abs/2406.04744)
-- [TREC RAG Track](https://trec-rag.github.io/)
-- [Fact, Fetch, and Reason: A Unified Evaluation of Retrieval-Augmented Generation](https://arxiv.org/abs/2409.12941)
-
-Ragas 在线指标文档查阅于 2026-09-15；文中的 API 名称用于区分统计口径，不代表所有历史版本都提供同名类。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-18)。

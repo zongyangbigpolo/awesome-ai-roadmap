@@ -50,20 +50,31 @@ if "天气" in reply and ("查" in reply or "看" in reply):
 
 它把这件事从**文本解析问题**变成了**协议问题**：
 
-```mermaid
-flowchart LR
-    subgraph OLD["旧方案"]
-        O1[模型输出自然语言] --> O2[正则 / 格式约定解析]
-        O2 --> O3{解析成功?}
-        O3 -->|失败| O4[静默降级]
-        O3 -->|成功| O5[调用工具]
-    end
+**旧方案**
 
-    subgraph NEW["Function Calling"]
-        N1[模型输出 tool_calls 结构] --> N2[解析字段并校验参数与权限]
-        N2 --> N3[调用工具]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O1["模型输出自然语言"] --> O2["正则 / 格式约定解析"]
+        O2 --> O3["解析成功?"]
+        O3 -->|失败| O4["静默降级"]
+        O3 -->|成功| O5["调用工具"]
+
 ```
+
+**Function Calling**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["模型输出 tool_calls 结<br/>构"] --> N2["校验调用"]
+        N2 --> N3["调用工具"]
+
+```
+
+图中各项的完整含义：
+
+- 解析字段并校验参数与权限
 
 在 OpenAI **Chat Completions** 中，`tool_calls` 与 `finish_reason: "tool_calls"` 明确标记调用，而不是让应用从普通文本猜意图。Responses 则使用 `output` 中的 `function_call` 项，并以 `function_call_output.call_id` 回传；不能套用 `finish_reason`。这些字段是 API 设计，不代表模型内部直接生成了整个响应对象。
 
@@ -72,20 +83,33 @@ flowchart LR
 把整个流程理解成一次任务委托，三个角色的分工就很清楚了。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    DEV["开发者<br/>写工具说明书（JSON Schema）"] -->|注册 tools| MODEL
-    USER["用户<br/>提出需求"] -->|messages| MODEL
+    DEV["开发者"] -->|注册 tools| MODEL
+    USER["用户"] -->|messages| MODEL
 
-    MODEL["模型<br/>只做决策"] -->|输出 tool_calls| HOST
+    MODEL["模型"] -->|输出 tool_calls| HOST
 
-    HOST["宿主程序<br/>校验、批准并执行"] -->|真正调用| EXT["外部系统<br/>API / DB / 文件"]
+    HOST["宿主程序"] -->|真正调用| EXT["外部系统"]
     EXT -->|返回结果| HOST
     HOST -->|role: tool 消息| MODEL
-    MODEL -->|最终自然语言答案| USER
+    MODEL -->|"最终回答"| USER
 
     style MODEL fill:#e8f0fe
     style HOST fill:#fce8e6
 ```
+
+图中条件与标签：
+
+- 最终自然语言答案
+
+图中各项的完整含义：
+
+- 开发者 写工具说明书（JSON Schema）
+- 用户 提出需求
+- 模型 只做决策
+- 宿主程序 校验、批准并执行
+- 外部系统 API / DB / 文件
 
 | 角色 | 职责 | 明确不做的事 |
 |---|---|---|
@@ -159,22 +183,29 @@ tools = [{
 ## 1.5 完整调用流程：两轮对话加中间执行
 
 ```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant H as 宿主程序
-    participant M as 模型
-    participant T as 天气 API
-
-    U->>H: 北京今天天气怎么样？
-    H->>M: messages + tools（第一轮）
-    M-->>H: finish_reason=tool_calls<br/>get_weather(city="北京")
-    Note over M: 模型在这里停下，<br/>没有输出最终答案
-    H->>T: 真正的 HTTP 请求
-    T-->>H: 晴，15°C，东北风 3 级
-    H->>M: 追加 role=tool 消息（第二轮）
-    M-->>H: 北京今天晴，气温 15°C……
-    H->>U: 最终答案
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["用户请求"]
+    S1["模型提出调用"]
+    S2["Host 调用天气 API"]
+    S3["模型使用结果"]
+    S4["最终回答"]
+    S0 --> S1 --> S2 --> S3 --> S4
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 用户 → 宿主程序 | 北京今天天气怎么样？ |
+| 宿主程序 → 模型 | messages + tools（第一轮） |
+| 模型 → 宿主程序（返回） | finish_reason=tool_calls；get_weather(city="北京") |
+| 说明：模型 | 模型在这里停下，；没有输出最终答案 |
+| 宿主程序 → 天气 API | 真正的 HTTP 请求 |
+| 天气 API → 宿主程序（返回） | 晴，15°C，东北风 3 级 |
+| 宿主程序 → 模型 | 追加 role=tool 消息（第二轮） |
+| 模型 → 宿主程序（返回） | 北京今天晴，气温 15°C…… |
+| 宿主程序 → 用户 | 最终答案 |
 
 下面是单次查询的教学片段，不是独立可运行的客户端。`registry` 是应用的工具白名单；`validate_and_authorize` 需由应用实现，检查 Schema、业务参数和当前用户权限，失败时抛出明确错误。示例使用兼容 Chat Completions 的模型，不代表所有新模型支持该接口。
 
@@ -326,17 +357,28 @@ print(response.output_text)
 
 用户问「帮我查北京、上海、广州的天气」，模型可以在**一次响应**里返回三个调用请求：
 
-```mermaid
-flowchart LR
-    subgraph SER["串行：4 轮模型调用，含最终总结"]
-        S1[模型] --> S2[查北京] --> S3[模型] --> S4[查上海] --> S5[模型] --> S6[查广州] --> S7[模型]
-    end
+**串行调用**
 
-    subgraph PAR["并行：2 轮模型调用"]
-        P1[模型一次输出 3 个 tool_calls] --> P2[并发执行三个查询]
-        P2 --> P3[一次性回填三条结果] --> P4[模型]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["模型"] --> S2["查北京"] --> S3["模型"] --> S4["查上海"] --> S5["模型"] --> S6["查广州"] --> S7["模型"]
+
 ```
+
+**并行：2 轮模型调用**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        P1["模型一次输出 3<br/>个 tool_calls"] --> P2["并发执行三个查询"]
+        P2 --> P3["一次性回填三条结<br/>果"] --> P4["模型"]
+
+```
+
+图中各项的完整含义：
+
+- 串行：4 轮模型调用，含最终总结
 
 在三个查询彼此独立、每轮推理耗时均近似为 `T`、不计排队和调度开销的教学模型下：逐次查询加总结约为 `4T + IO₁ + IO₂ + IO₃`，一批并发加总结约为 `2T + max(IO₁, IO₂, IO₃)`。实际收益取决于生成长度、并发限制和 API 延迟。
 
@@ -423,11 +465,5 @@ Function Calling 只解决了「模型怎么表达调用意图」。它没有解
 
 ## 参考资料
 
-- [OpenAI: Function Calling 指南（2026-09-08 核查）](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: Responses API 迁移指南（本节字段与示例于 2026-09-16 对照此页及 Function Calling 指南核查）](https://developers.openai.com/api/docs/guides/migrate-to-responses)
-- [OpenAI: 2023 年 Function Calling 发布](https://openai.com/index/function-calling-and-other-api-updates/)
-- [Anthropic: Tool Use with Claude](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview)
-- [Anthropic: Writing Effective Tools for Agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
-- [Toolformer: Language Models Can Teach Themselves to Use Tools](https://arxiv.org/abs/2302.04761)
-- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
-- [JSON Schema 规范](https://json-schema.org/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-01)。

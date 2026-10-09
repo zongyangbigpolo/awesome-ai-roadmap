@@ -13,7 +13,8 @@ Computer use lets a model observe screenshots and generate actions such as click
 ## 4.2 The perception–decision–action loop
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A[Screenshot / accessibility tree] --> B[Understand screen state]
     B --> C[Plan the next action]
     C --> D["Execute action<br/>Click / type / scroll"]
@@ -85,12 +86,5 @@ An irreversible payment, deletion, or send error on a real account can cost far 
 
 ## References
 
-- [Anthropic: Developing a computer use model](https://www.anthropic.com/news/developing-computer-use)
-- [Anthropic: Upgraded Claude 3.5 Sonnet and computer use public beta](https://www.anthropic.com/news/3-5-models-and-computer-use)
-- [Anthropic Computer Use documentation](https://docs.claude.com/en/docs/agents-and-tools/tool-use/computer-use-tool)
-- [OpenAI: Computer-Using Agent](https://openai.com/index/computer-using-agent/)
-- [OpenAI Operator](https://openai.com/index/introducing-operator/)
-- [OpenAI: Computer use tools and execution environments](https://developers.openai.com/api/docs/guides/tools-computer-use/)
-- [UI-TARS: Pioneering Automated GUI Interaction with Native Agents](https://arxiv.org/abs/2501.12326)
-- [OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments](https://arxiv.org/abs/2404.07972)
-- [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-04) for this chapter’s sources, reading suggestions, and source notes.

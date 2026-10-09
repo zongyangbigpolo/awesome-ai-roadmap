@@ -196,13 +196,19 @@ raise ValueError("city not found")
 主流解法是**动态工具筛选**：
 
 ```mermaid
-flowchart LR
-    Q[用户请求] --> R["路由层<br/>轻量分类 或 向量检索"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["用户请求"] --> R["路由层"]
     POOL[("工具库")] --> R
-    R --> SEL["按任务筛选<br/>数量由评测确定"]
-    SEL --> M[模型]
-    M --> CALL[tool_calls]
+    R --> SEL["按任务筛选"]
+    SEL --> M["模型"]
+    M --> CALL["tool_calls"]
 ```
+
+图中各项的完整含义：
+
+- 路由层 轻量分类 或 向量检索
+- 按任务筛选 数量由评测确定
 
 路由可用规则、检索或模型。图中的筛选应先排除无权使用的工具，再评测召回漏失与额外时延。检索把必要工具漏掉时，主模型也无法从当前候选集中调用它。
 
@@ -336,9 +342,5 @@ flowchart LR
 
 ## 参考资料
 
-- [Anthropic: Writing Effective Tools for Agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [OpenAI: Function Calling 指南](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: Structured Outputs 支持的 Schema](https://developers.openai.com/api/docs/guides/structured-outputs)
-- [JSON Schema 规范](https://json-schema.org/)
-- [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-03)。

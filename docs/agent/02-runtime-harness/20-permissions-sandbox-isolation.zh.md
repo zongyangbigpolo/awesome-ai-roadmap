@@ -10,27 +10,24 @@ description: 区分工具审批、执行授权和沙箱隔离，核对 Claude Ag
 
 ## 20.2 权限模型：从布尔开关到分级规则引擎
 
-最简单的权限模型是一个全局布尔开关（"允许执行命令"/"不允许"），但生产级 harness 需要更细粒度的分级：按工具类型（读 vs 写）、按具体命令模式（`Bash(rm *)` 这类带参数模式匹配的规则）、按目标路径是否属于"关键路径"。Claude Agent SDK 的权限系统是这类分级规则引擎的典型实现，它把每一次工具请求的判定过程明确为一条**有序**的判定链（[Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)）：
+最简单的权限模型是一个全局布尔开关（"允许执行命令"/"不允许"），但生产级 harness 需要更细粒度的分级：按工具类型（读 vs 写）、按具体命令模式（`Bash(rm *)` 这类带参数模式匹配的规则）、按目标路径是否属于"关键路径"。Claude Agent SDK 的权限系统是这类分级规则引擎的典型实现，它把每一次工具请求的判定过程明确为一条**有序**的判定链（Claude Agent SDK: Configure permissions<sup>[【550】](../../book/references.zh.md#ref-550)</sup>）：
 
 ```mermaid
 flowchart TB
-    REQ["工具调用请求"] --> HOOK["1. Hooks<br/>可直接拒绝，允许不能跳过后续 deny/ask 规则"]
-    HOOK -->|拒绝| BLOCK["拒绝执行"]
+    HOOK["1. Hooks"]
     HOOK -->|继续| DENY["2. Deny 规则"]
-    DENY -->|命中| BLOCK["拒绝执行"]
     DENY -->|不命中| ASK["3. Ask 规则"]
-    ASK -->|命中| PROMPT{"允许询问?"}
-    PROMPT -->|是| CALLBACK["转交人工确认回调"]
-    PROMPT -->|dontAsk| BLOCK
-    ASK -->|不命中| MODE["4. 权限模式<br/>（bypass / acceptEdits / plan / 其他）"]
-    MODE -->|模式内批准| ALLOW["执行"]
-    MODE -->|plan 下的文件编辑或 shell 写入| CALLBACK
+    ASK -->|不命中| MODE["4. 权限模式"]
     MODE -->|未覆盖| ALLOWRULE["5. Allow 规则"]
-    ALLOWRULE -->|命中| ALLOW
-    ALLOWRULE -->|不命中| PROMPT
-    CALLBACK -->|批准| ALLOW
-    CALLBACK -->|拒绝/超时| BLOCK
 ```
+
+图中展示工具调用请求的规则优先级，不是一条无条件批准路径：
+
+- Hooks 可以立即拒绝；Hook 的允许结果不能跳过后续 deny/ask 规则。
+- Deny 规则命中即拒绝执行。Ask 规则命中时，先判断是否允许询问；允许则调用人工确认回调，`dontAsk` 则直接拒绝。
+- Ask 规则未命中时，检查权限模式（`bypass`、`acceptEdits`、`plan` 或其他模式）。模式内批准即可执行；plan 模式下的文件编辑或 shell 写入转人工确认回调。
+- 模式未覆盖时，再检查 Allow 规则；命中即可执行，未命中则返回“是否允许询问”的判断。
+- 人工回调只有批准时才允许执行；拒绝或超时都阻止执行。
 
 这张图是 Claude Agent SDK 的简化路径，不是所有 Harness 的权限标准。命中 deny 是拒绝，不是转人工；`dontAsk` 中需要确认的调用会被拒绝。`plan` 下文件编辑和 shell 写入不能靠 allow 规则自动批准。关键路径删除、`auto` 模式及禁用权限提示的配置另有分支，应按具体版本核对；官方的关键路径例外不是所有危险操作的通用保障。
 
@@ -78,7 +75,7 @@ GitHub Copilot cloud agent 的内置防火墙是具体产品例子，但只覆�
 
 ## 20.8 案例：GitHub Copilot Coding Agent 的沙箱与防火墙
 
-GitHub Copilot Coding Agent 把每次任务运行放在"由 GitHub Actions 提供的一次性开发环境"里执行：Copilot 在这个环境里探索代码、修改文件、跑测试和 lint（[GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)）。这个设计体现了本章的多个原则：
+GitHub Copilot Coding Agent 把每次任务运行放在"由 GitHub Actions 提供的一次性开发环境"里执行：Copilot 在这个环境里探索代码、修改文件、跑测试和 lint（GitHub Docs: Configure the development environment for Copilot cloud agent<sup>[【542】](../../book/references.zh.md#ref-542)</sup>）。这个设计体现了本章的多个原则：
 
 - **一次性环境**减少运行实例残留，但外部数据库、缓存、构建产物和凭据并不会随进程销毁自动消失；是否跨租户隔离仍须查看 Runner、存储和访问控制配置；
 - **`copilot-setup-steps.yml` 只能定制固定的一组字段**（`steps`、`permissions`、`runs-on`、`services`、`snapshot`、`timeout-minutes` 等），其余运行时行为不可被仓库配置覆盖——这是 16.2.6 节 "Control Plane" 与 Harness 分工的具体例子：仓库开发者能配置"环境里预装什么"，但不能改写"循环本身怎么调度"；
@@ -99,11 +96,5 @@ GitHub Copilot Coding Agent 把每次任务运行放在"由 GitHub Actions 提�
 
 ## 参考资料
 
-- [Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)
-- [gVisor 文档](https://gvisor.dev/docs/)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [GitHub Docs: Customizing or disabling the firewall](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
-
-SDK 权限顺序与 GitHub 环境、防火墙范围按 2026-09-15 的官方文档核对；`anthropic/requiresUserInteraction` 的 v2.1.199 前提保留。未在本轮运行 SDK 权限实验或配置云端环境。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-20)。

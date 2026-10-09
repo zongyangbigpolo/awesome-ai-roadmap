@@ -173,8 +173,5 @@ Temperature changes probability ratios, Top-K limits candidate count, and Top-P 
 
 ## References
 
-- [The Curious Case of Neural Text Degeneration](https://arxiv.org/abs/1904.09751)
-- [Transformers: Generation Utilities, including Temperature/TopK/TopP LogitsWarper](https://huggingface.co/docs/transformers/main/en/internal/generation_utils)
-- [Transformers v4.56.2: configuration conditions for greedy decoding, sampling, and beam search](https://huggingface.co/docs/transformers/v4.56.2/en/generation_strategies)
-- [Qwen3-30B-A3B official model card and sampling recommendations](https://huggingface.co/Qwen/Qwen3-30B-A3B)
-- [vLLM: Batch Invariance](https://docs.vllm.ai/en/stable/features/batch_invariance/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-13) for this chapter’s sources, reading suggestions, and source notes.

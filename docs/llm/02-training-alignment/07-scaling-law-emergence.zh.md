@@ -92,7 +92,8 @@ GPT-3 175B 训练了 300B token，`D/N` 约为 1.7。按 `20N` 算 3.5T token �
 ### 7.3.1 训练最优与全生命周期成本不同
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["训练预算固定<br/>选择 N 与 D<br/>最小化验证损失"]
     B["服务需求固定<br/>权衡训练与推理成本<br/>满足质量和延迟"]
     A -.->|目标函数不同| B
@@ -159,6 +160,7 @@ $$
 Schaeffer 等人的 Mirage 论文通过数学模型和实验说明，**非线性或不连续指标可以产生表观涌现**。对固定模型输出，改用 token 级编辑距离、概率等更细粒度指标，有时会呈现更平滑的趋势。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     OUT["同一批模型输出"] --> EXACT["整题全对计分<br/>可能呈现陡变"]
     OUT --> FINE["细粒度距离或概率指标<br/>可能显示渐进改善"]
@@ -216,11 +218,5 @@ Scaling law 是预算规划工具，Chinchilla 是特定条件下的训练预算
 
 ## 参考资料
 
-- [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)
-- [Chinchilla：§3、表 2 与计算最优推导](https://arxiv.org/html/2203.15556v1)
-- [Emergent Abilities of Large Language Models](https://arxiv.org/abs/2206.07682)
-- [Are Emergent Abilities of Large Language Models a Mirage?](https://arxiv.org/abs/2304.15004)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [Qwen3 Technical Report，初版](https://arxiv.org/html/2505.09388v1)
-- [DeepSeekMath：数据构建与 GRPO](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1，初版](https://arxiv.org/html/2501.12948v1)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-07)。

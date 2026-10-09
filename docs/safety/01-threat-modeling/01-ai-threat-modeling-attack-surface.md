@@ -9,12 +9,20 @@ description: Build an AI threat model around assets, trust boundaries, and attac
 LLM interfaces typically distinguish roles such as system, user, and tool. Yet a model may still interpret lower-trust content as instructions it should follow: **role labels are not a deterministic security boundary**. This is an important root cause of prompt injection, but it does not explain every AI risk. Data poisoning changes training material; deserialization risks arise from loaders; unauthorized access arises from failures in identity and resource authorization. Each has its own mechanism. Traditional applications cannot assume that code and supply chains are trustworthy, either.
 
 ```mermaid
-flowchart TB
-    T[Traditional application security] --> T1[Review code and dependencies<br/>Analyze data flows and permission boundaries]
-    A[AI system security] --> A1[Weights and context jointly determine model behavior<br/>Input-output mappings cannot be exhaustively enumerated]
-    A --> A2[Instructions and data share a channel<br/>See Chapter 2]
-    A --> A3[Additional stages include training, fine-tuning, retrieval,<br/>tools, and multi-agent collaboration]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    T["Traditional<br/>application<br/>security"] --> T1["Code and dependencies"]
+    A["AI system<br/>security"] --> A1["Weights +<br/>context"]
+    A --> A2["Shared input<br/>channel"]
+    A --> A3["Additional<br/>attack surfaces"]
 ```
+
+Details of the illustrated steps and components:
+
+- Review code and dependencies Analyze data flows and permission boundaries
+- Weights and context jointly determine model behavior Input-output mappings cannot be exhaustively enumerated
+- Instructions and data share a channel See Chapter 2
+- Additional stages include training, fine-tuning, retrieval, tools, and multi-agent collaboration
 
 AI threat modeling therefore needs to go beyond the usual assets, trust boundaries, and attacker profiles to answer three more questions: **Where did the model's current behavior come from? Which untrusted content enters its decision process at runtime? What consequences can its output trigger?** The remaining chapters examine these questions at specific stages of the system.
 
@@ -55,42 +63,38 @@ The separate **Top 10 for Agentic Applications 2026** focuses on tool, identity,
 The division of work is straightforward: ATLAS describes attacker tactics and techniques, the RMF manages organizational risk, and OWASP supplies vulnerability checks for application implementations.
 
 ```mermaid
-flowchart LR
-    ATLAS["MITRE ATLAS<br/>Attacker tactics/techniques"] -->|Inform threat priorities| MODEL[The organization's threat model]
-    OWASP["OWASP LLM / Agentic Top 10<br/>Vulnerability categories"] -->|Checks| MODEL
-    RMF["NIST AI RMF<br/>Govern/Map/Measure/Manage"] -->|Governance process| MODEL
-    MODEL --> DECIDE[Decide which defenses to fund<br/>See Chapters 2-10]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    ATLAS["MITRE ATLAS"] -->|"Threat priorities"| MODEL["The<br/>organization's<br/>threat model"]
+    OWASP["OWASP LLM /<br/>Agentic Top 10"] -->|Checks| MODEL
+    RMF["NIST AI RMF"] -->|Governance| MODEL
+    MODEL --> DECIDE["Decide which<br/>defenses to fund"]
 ```
+
+Figure conditions and labels:
+
+- Inform threat priorities
+
+Details of the illustrated steps and components:
+
+- MITRE ATLAS Attacker tactics/techniques
+- OWASP LLM / Agentic Top 10 Vulnerability categories
+- NIST AI RMF Govern/Map/Measure/Manage
+- Decide which defenses to fund See Chapters 2-10
 
 ## 1.4 Mapping the Attack Surface Across the Data and Model Lifecycle
 
 Organizing the attack surface by lifecycle stage makes omissions easier to spot than a list of isolated vulnerabilities does.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph S1["Data and training"]
-        D1[Pretraining corpus] --> PRE[Pretraining]
-        PRE --> BASE[Base weights]
-        BASE --> FT[Fine-tuning/alignment]
-        D2[Fine-tuning/preference data] --> FT
-        FT --> D3[Model weights]
-    end
-    subgraph S2["Distribution and deployment"]
-        D3 --> P1[Model repository/supply chain]
-        P1 --> P2[Inference service]
-    end
-    subgraph S3["Runtime"]
-        P2 --> R1[Prompt/multimodal input]
-        R1 --> R2[RAG retrieval]
-        R2 --> R3[Tool/MCP/A2A calls]
-        R3 --> R4[Code execution/browser/computer use]
-    end
-    subgraph S4["Output and governance"]
-        R4 --> O1[Generated output]
-        O1 --> O2[Downstream systems/users]
-        O2 --> G1[Audit and compliance]
-    end
+    TRAIN["Data and training"] --> DEPLOY["Distribution and deployment"]
+    DEPLOY --> RUN["Runtime interactions"]
+    RUN --> OUTPUT["Output and governance"]
 ```
+
+Follow artifacts across these boundaries. Pretraining consumes the corpus and produces base weights; fine-tuning or alignment combines those weights with fine-tuning or preference data to produce model weights. A model repository and its supply chain distribute them to an inference service. At runtime, prompt or multimodal inputs can lead to RAG retrieval, tool/MCP/A2A calls, and code execution, browser automation, or computer use. Generated output then reaches downstream systems or users, with auditing and compliance covering the resulting activity. The arrows trace a possible lifecycle, not a requirement that every application use every runtime capability.
 
 This diagram identifies places to inspect at each stage; it is not a fixed sequence that every request must follow. RAG, tools, and desktop execution are optional capabilities. Adding any of them requires corresponding controls over data and permissions.
 
@@ -167,10 +171,5 @@ Product and engineering teams decide model behavior, prompt structure, and the s
 
 ## References
 
-- [MITRE ATLAS](https://atlas.mitre.org/)
-- [NIST AI Risk Management Framework (AI RMF 1.0)](https://www.nist.gov/itl/ai-risk-management-framework)
-- [NIST Generative AI Profile (NIST AI 600-1)](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)
-- [OWASP Top 10 for Large Language Model Applications](https://genai.owasp.org/llm-top-10/)
-- [OWASP Agentic AI Threats and Mitigations](https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/)
-- [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
-- [NIST AI 100-2 E2025: Adversarial Machine Learning Taxonomy](https://doi.org/10.6028/NIST.AI.100-2e2025)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-01) for this chapter’s sources, reading suggestions, and source notes.

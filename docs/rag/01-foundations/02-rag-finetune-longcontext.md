@@ -13,16 +13,13 @@ Long-context models add another dimension: “If all the material fits, why retr
 A better approach is to compare fine-tuning, long context, and RAG together, then decide whether to combine them.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    NEED[Requirements] --> Q1{Change knowledge<br/>or behavior?}
-    Q1 -->|Behavior, style, or format| FT[Fine-tuning]
-    Q1 -->|Knowledge| Q2{Knowledge volume<br/>and freshness?}
-    Q2 -->|Small and stable| LC[Put all material<br/>in a long context]
-    Q2 -->|Large or frequently changing<br/>or requiring access filtering| RAG[RAG]
-    FT --> COMBO[Often combined in practice]
-    LC --> COMBO
-    RAG --> COMBO
+    NEED[Requirements] --> Q1[Separate behavior and knowledge]
+    Q1 --> CHOICE[Choose or combine approaches]
 ```
+
+For behavior, style, or format changes, consider fine-tuning. For knowledge, small stable material may fit directly in a long context; large, frequently changing, or access-filtered corpora point toward RAG. These approaches are often combined in practice.
 
 ## 2.2 How the Three Approaches Differ
 
@@ -80,17 +77,13 @@ If the knowledge base contains only a few dozen stable documents, supplying them
 ### 2.4.1 Four Constraints Still Apply
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    LC[Put all material<br/>in a long context] --> C1[Scale]
-    LC --> C2[Freshness]
-    LC --> C3[Authorization]
-    LC --> C4[Quality]
-
-    C1 --> D1[A corpus far larger than<br/>the window cannot fit]
-    C2 --> D2[Frequent updates<br/>frequently invalidate caches]
-    C3 --> D3[Enforce ACLs before input<br/>Permission differences reduce cache reuse]
-    C4 --> D4[Position and distracting content<br/>may impair effective use]
+    LC[Full-corpus context] --> C[Check four constraints]
+    C --> D[Measure effective use]
 ```
+
+The constraints are **scale** (a corpus larger than the window cannot fit), **freshness** (frequent updates invalidate caches), **authorization** (enforce ACLs before input; different permissions reduce cache reuse), and **quality** (position and distracting content can impair effective use).
 
 The first three are common engineering constraints. **The fourth directly affects final answer quality.**
 
@@ -155,19 +148,14 @@ Anthropic's Contextual Retrieval post compared 5, 10, and 20 chunks in its teste
 ## 2.7 How to Choose: A Practical Decision Sequence
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S[Requirements] --> A{Change behavior<br/>or add knowledge?}
-    A -->|Behavior, format, or style| FT[Fine-tuning]
-    A -->|Add knowledge| B{Does the corpus<br/>fit in the window?}
-    B -->|No| RAG[RAG]
-    B -->|Yes| C{Frequent updates?}
-    C -->|Yes| COMP[Compare total costs of updates,<br/>authorization filtering,<br/>caching, and retrieval]
-    C -->|No| D{Filter by user?}
-    D -->|Yes| COMP
-    D -->|No| E{High request volume?}
-    E -->|Yes| COMP
-    E -->|No| LC[Put all material<br/>in a long context]
+    B{Corpus fits?} -->|No| RAG[RAG]
+    B -->|Yes| C[Check workload conditions]
+    C --> D[Compare total costs]
 ```
+
+Apply this decision to knowledge requirements; behavior, format, or style changes still lead to fine-tuning. If the corpus fits, check **frequent updates**, then **per-user filtering**, then **high request volume**. Any “yes” calls for comparing the total costs of updates, authorization filtering, caching, and retrieval. Only when all three are “no” is putting all material directly into a long context the simple starting point.
 
 Work through four questions: **Does it fit? → Does it change? → Must it be filtered? → Is request volume high?** When the corpus exceeds the window, selection, grouping, or multiple processing rounds are unavoidable. Frequent updates and permission differences call for comparing alternatives; they do not automatically rule out long context. Even if you supply everything, test for overlooked evidence and distractions on a fixed task set.
 
@@ -225,10 +213,5 @@ In enterprise settings, these often determine the choice directly. Better answer
 
 ## References
 
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
-- [Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot)
-- [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?](https://arxiv.org/abs/2406.13121)
-- [Long-Context LLMs Meet RAG: Overcoming Challenges for Long Inputs in RAG](https://arxiv.org/abs/2410.05983)
-- [LongRAG: Enhancing Retrieval-Augmented Generation with Long-context LLMs](https://arxiv.org/abs/2406.15319)
-- [RAFT: Adapting Language Model to Domain Specific RAG](https://arxiv.org/abs/2403.10131)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-02) for this chapter’s sources, reading suggestions, and source notes.

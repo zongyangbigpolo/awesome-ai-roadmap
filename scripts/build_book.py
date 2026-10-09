@@ -150,8 +150,8 @@ class BlockContext:
         return body, base, code, relative
 
 
-def segments(text, path):
-    """Protect fences, inline code, math and indented code; discard comments."""
+def segments(text, path, preserve_comments=False):
+    """Protect code and math; optionally retain comments for lossless source edits."""
     context = BlockContext()
     position = 0
     while position < len(text):
@@ -187,6 +187,8 @@ def segments(text, path):
         if match.group("comment"):
             end = text.find("-->", end)
             require(end != -1, f"{path}: unclosed HTML comment")
+            if preserve_comments:
+                yield True, text[start:end + 3]
             position = end + 3
             continue
         elif match.group("code"):
@@ -483,6 +485,13 @@ class Book:
             require(not key.startswith("^"), f"{document.path}: footnotes are not supported")
             require(key not in document.references, f"{document.path}: duplicate reference: {key}")
             document.references[key] = f"{document.id}-ref-{digest(key.encode())[:12]}"
+        # Bibliography targets are explicit, globally unique IDs, not TOC headings.
+        if document.id == "references":
+            citation_anchor = re.compile(r'<a id="((?:ref-[1-9]\d*|reading-[a-z0-9-]+))"></a>')
+            for match in citation_anchor.finditer(prose):
+                self.add_anchor(match[1])
+                document.aliases[match[1]] = match[1]
+            prose = citation_anchor.sub("", prose)
         require(not re.search(r"<[A-Za-z][^>]*\b(?:id|name)\s*=", prose),
                 f"{document.path}: source HTML anchors need explicit conversion")
 

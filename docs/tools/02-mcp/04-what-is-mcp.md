@@ -30,19 +30,17 @@ Suppose you want to connect GitHub to an AI application. You write the GitHub AP
 3. **The tool provider upgrades its API.** Every consuming application updates its own code.
 
 ```mermaid
-flowchart LR
-    subgraph BEFORE["Separate integrations: a simplified model with M×N relationships"]
-        A1[Claude Desktop] --- T1[GitHub]
-        A1 --- T2[Slack]
-        A1 --- T3[Postgres]
-        A2[Cursor] --- T1
-        A2 --- T2
-        A2 --- T3
-        A3[Custom agent] --- T1
-        A3 --- T2
-        A3 --- T3
-    end
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["M applications"] --- PAIRS["M × N integrations"]
+    PAIRS --- TOOLS["N external systems"]
 ```
+
+For example, Claude Desktop, Cursor, and a custom agent may each integrate separately with GitHub, Slack, and Postgres. The nine pairwise relationships illustrate the simplified `M × N` maintenance model; the lines represent integration relationships rather than execution order.
+
+Details of the illustrated steps and components:
+
+- Separate integrations: a simplified model with M×N relationships
 
 If every application independently integrates every tool, there are M×N interface combinations. This is a simplified model of duplicated work, not a historical measurement. Shared SDKs, internal APIs, and adapter layers can also reduce duplication.
 
@@ -53,16 +51,17 @@ Think of MCP as a **common interface such as USB**: shared conventions reduce th
 MCP gives AI applications and tool providers a common standard:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart LR
-    subgraph AFTER["Shared protocol: a simplified model with M Clients + N Servers"]
-        A1[Claude Desktop] --> P((MCP))
-        A2[Cursor] --> P
-        A3[Custom agent] --> P
-        P --> S1[GitHub MCP Server]
-        P --> S2[Slack MCP Server]
-        P --> S3[Postgres MCP Server]
-    end
+    CLIENTS["M Clients"] --> MCP["Shared MCP contract"]
+    MCP --> SERVERS["N Servers"]
 ```
+
+The same three applications can use MCP Clients with GitHub, Slack, and Postgres MCP Servers. The simplified cost model is `M Clients + N Servers`. The shared contract is not an extra central broker: hosts still create the appropriate Client–Server connections.
+
+Details of the illustrated steps and components:
+
+- Shared protocol: a simplified model with M Clients + N Servers
 
 Once a provider implements a Server, applications supporting compatible versions, transports, and capabilities can reuse that integration. Authentication, data mapping, permissions, and deployment still need configuration. This is not a promise of “zero-code integration with any client.”
 
@@ -73,9 +72,11 @@ Once a provider implements a Server, applications supporting compatible versions
 MCP uses a client-host-server architecture. There are three roles, not two—an easy distinction to miss.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph HOST["Host process: Claude Desktop / Cursor / your agent"]
-        H["Host<br/>Coordinator: lifecycle, security policies, user authorization"]
+    subgraph HOST["Host process"]
+        direction TB
+        H["Host"]
         C1["Client 1"]
         C2["Client 2"]
         C3["Client 3"]
@@ -85,18 +86,28 @@ flowchart TB
     end
 
     subgraph LOCAL["Local"]
-        S1["Server 1<br/>Filesystem"]
-        S2["Server 2<br/>Database"]
+        direction TB
+        S1["Server 1"]
+        S2["Server 2"]
     end
 
     subgraph REMOTE["Remote"]
-        S3["Server 3<br/>External API"]
+        direction TB
+        S3["Server 3"]
     end
 
     C1 --> S1
     C2 --> S2
     C3 --> S3
 ```
+
+Details of the illustrated steps and components:
+
+- Host process: Claude Desktop / Cursor / your agent
+- Host Coordinator: lifecycle, security policies, user authorization
+- Server 1 Filesystem
+- Server 2 Database
+- Server 3 External API
 
 | Role | Responsibilities | Typical count |
 |---|---|---|
@@ -186,7 +197,7 @@ In the new specification, requests carry the protocol version and Client capabil
 
 Interoperating with legacy Servers requires a **dual-era** implementation that explicitly supports both generations. Only such implementations can follow the compatibility matrix to fall back to `initialize`, `notifications/initialized`, and legacy session semantics. A modern-only SDK may have no such path. Do not describe the old handshake as a mandatory step in every MCP interaction.
 
-In 2026-07-28, all results also require `resultType`; read and list results carry `ttlMs` and `cacheScope`. Sampling, Roots, and Logging are **Deprecated**: retained for compatibility, but not recommended for new implementations. Tasks have moved to the official optional extension `io.modelcontextprotocol/tasks`. Extensions, draft SEPs, and the core protocol are different release categories; see the [changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog).
+In 2026-07-28, all results also require `resultType`; read and list results carry `ttlMs` and `cacheScope`. Sampling, Roots, and Logging are **Deprecated**: retained for compatibility, but not recommended for new implementations. Tasks have moved to the official optional extension `io.modelcontextprotocol/tasks`. Extensions, draft SEPs, and the core protocol are different release categories; see the changelog<sup>[【277】](../../book/references.md#ref-277)</sup>.
 
 ### 4.7.3 Engineering implications
 
@@ -214,7 +225,7 @@ if __name__ == "__main__":
 
 The parameter types generate the input JSON Schema, and the docstring supplies the tool description. The SDK saves some message-construction work, but does not replace business permission checks or deployment configuration.
 
-**Tool integrations can be reused.** Distinguish officially maintained Servers, community implementations, and archived examples. The old `@modelcontextprotocol/server-github` is archived; GitHub's official implementation is [github/github-mcp-server](https://github.com/github/github-mcp-server). The following Host configuration uses a locally owned Server rather than installing an archived package:
+**Tool integrations can be reused.** Distinguish officially maintained Servers, community implementations, and archived examples. The old `@modelcontextprotocol/server-github` is archived; GitHub's official implementation is github/github-mcp-server<sup>[【284】](../../book/references.md#ref-284)</sup>. The following Host configuration uses a locally owned Server rather than installing an archived package:
 
 ```json
 {
@@ -269,12 +280,5 @@ Starting a local Server executes third-party code; connecting to a remote Server
 
 ## References
 
-- Version-status review: the original manuscript rechecked the following pinned-version changes and compatibility notes on 2026-09-15. It uses a fixed protocol baseline; a dynamic page saying “latest” is not evidence of SDK support.
-- [MCP version status](https://modelcontextprotocol.io/specification/versioning)
-- [MCP 2026-07-28 changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
-- [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP specification 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [MCP version compatibility](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)
-- [MCP architecture](https://modelcontextprotocol.io/specification/2026-07-28/architecture)
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
-- [JSON-RPC 2.0 specification](https://www.jsonrpc.org/specification)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-04) for this chapter’s sources, reading suggestions, and source notes.

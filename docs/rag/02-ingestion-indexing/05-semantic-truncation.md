@@ -11,20 +11,13 @@ The previous chapter discussed the granularity tradeoff. This chapter examines i
 Common solutions fall into two groups:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    P[Meaning broken by chunking] --> D1[Approach 1:<br/>Avoid harmful boundaries]
-    P --> D2[Approach 2:<br/>Restore missing context]
-
-    D1 --> M1[Overlapping chunks]
-    D1 --> M2[Semantic boundary splitting]
-    D1 --> M3[Structure-aware chunking]
-
-    D2 --> M4[Sentence-window retrieval]
-    D2 --> M5[Parent-child chunking]
-    D2 --> M6[Proposition rewriting]
-    D2 --> M7[Contextual Retrieval]
-    D2 --> M8[Late Chunking]
+    P[Broken meaning] --> D1[Avoid harmful boundaries]
+    P --> D2[Restore missing context]
 ```
+
+Boundary-oriented methods include overlapping chunks, semantic boundary splitting, and structure-aware chunking. Context-oriented methods include sentence-window retrieval, parent-child chunking, proposition rewriting, Contextual Retrieval, and Late Chunking. The two groups describe what is preserved, not a requirement that all context recovery happen after splitting: Late Chunking encodes the larger context before pooling by chunk boundaries.
 
 - **The first approach is preventive**: avoid breaking units of meaning during chunking.
 - **The second supplies missing context**: sentence windows and parent-child chunking expand the material read after retrieval, while proposition rewriting, Contextual Retrieval, and Late Chunking improve chunk representations during indexing. Whether smaller chunks actually retrieve more accurately still requires evaluation.
@@ -58,7 +51,8 @@ This method requires additional sentence encoding and breakpoint computation. **
 Index **small units**, such as sentences or short passages, for retrieval. After a hit, return **several units before and after it** and send them together to the model.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query] --> IDX[Small-chunk index]
     IDX --> HIT[Retrieved chunk N]
     HIT --> EXP[Fetch N-2 through N+2]
@@ -76,7 +70,7 @@ Instead of expanding a fixed window around a hit, this method looks up its paren
 - **Child chunks**, which are small, are embedded and used for retrieval.
 - **Parent chunks** are the larger units returned when a child is retrieved. A parent can be the whole source document, a section, or a larger chunk created by a length-based or recursive splitter.
 
-The source does not need an existing heading hierarchy. For example, [LangChain's `ParentDocumentRetriever`](https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py) supports either raw documents or larger split chunks as parents.
+The source does not need an existing heading hierarchy. For example, LangChain's `ParentDocumentRetriever`<sup>[【366】](../../book/references.md#ref-366)</sup> supports either raw documents or larger split chunks as parents.
 
 | Comparison | Sentence window | Parent-child chunking |
 |---|---|---|
@@ -119,7 +113,8 @@ This is one of the approaches commonly used in recent years.
 **The idea**: rather than rewriting the source, **prepend a short LLM-generated explanation of the chunk's position and background within the full document**, then embed it and build a keyword index.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     DOC[Full document] --> LLM[LLM generates<br/>context explanation]
     CH[Original chunk] --> LLM
     LLM --> NEW[Context explanation<br/>+ original chunk]
@@ -148,19 +143,26 @@ The blog's **$1.02 per million document tokens** estimates the cost of generatin
 
 **This takes the idea a step further**: first encode the document text that fits within the context window to obtain token-level representations, then pool them according to chunk boundaries. The paper's bidirectional encoder lets token representations incorporate both preceding and following context within that window. With causal attention, a position can draw context only from earlier positions, so the explanation that “every token sees the whole document” does not transfer unchanged. Chunk boundaries still need to be determined; pooling simply takes place after encoding.
 
-```mermaid
-flowchart TB
-    subgraph TRAD[Traditional approach]
-        D1[Document] --> C1[Split first]
-        C1 --> E1[Encode each<br/>chunk independently]
-        E1 --> V1[Chunk vectors<br/>Cannot see full document]
-    end
+**Traditional approach**
 
-    subgraph LATE[Late Chunking]
-        D2[Document] --> E2[Encode full document<br/>with long context]
-        E2 --> C2[Pool token vectors<br/>by chunk boundaries]
-        C2 --> V2[Chunk vectors<br/>Incorporate context<br/>within the encoding window]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1[Document] --> C1[Split first]
+    C1 --> E1[Encode each<br/>chunk independently]
+    E1 --> V1[Chunk vectors<br/>Cannot see full document]
+
+```
+
+**Late Chunking**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D2[Document] --> E2[Encode full document<br/>with long context]
+    E2 --> C2[Pool token vectors<br/>by chunk boundaries]
+    C2 --> V2[Chunk vectors<br/>Incorporate context<br/>within the encoding window]
+
 ```
 
 The useful insight is that **context enters naturally during encoding, without an extra LLM call to generate an explanation**.
@@ -237,9 +239,5 @@ Complex methods may add preprocessing and maintenance work. First establish a si
 
 ## References
 
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models](https://arxiv.org/abs/2409.04701)
-- [Jina AI: Post-Encoding Pooling and Boundaries in Late Chunking](https://jina.ai/news/late-chunking-in-long-context-embedding-models/)
-- [Dense X Retrieval: What Retrieval Granularity Should We Use?](https://arxiv.org/abs/2312.06648)
-- [RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval](https://arxiv.org/abs/2401.18059)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-05) for this chapter’s sources, reading suggestions, and source notes.

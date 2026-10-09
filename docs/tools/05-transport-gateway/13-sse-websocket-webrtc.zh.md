@@ -61,20 +61,31 @@ HTTP/1.1 路径使用 Upgrade 请求和 `101 Switching Protocols`；HTTP/2 的 R
 
 在 HTTP/1.1 路径中，升级后的 TCP 连接承载 WebSocket 帧；在 HTTP/2/3 路径中，则由一个扩展 CONNECT 流承载，其他 HTTP 流可以继续存在。两种路径都提供**双方可独立发送消息的全双工信道**。
 
+**SSE**
+
 ```mermaid
-flowchart LR
-    subgraph SSE_M["SSE"]
-        C1[客户端] -->|"HTTP 请求<br/>GET 或 POST 依 API"| S1[服务端]
-        S1 -->|"该请求的 SSE 响应流"| C1
-    end
-
-    subgraph WS_M["WebSocket"]
-        C2[客户端] <-->|"同一条连接<br/>双方随时发"| S2[服务端]
-    end
-
-    style SSE_M fill:#fef7e0
-    style WS_M fill:#e8f0fe
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["客户端"] -->|"HTTP 请求"| S1["服务端"]
+        S1 -->|"SSE 响应"| C1
 ```
+
+图中条件与标签：
+
+- HTTP 请求 GET 或 POST 依 API
+- 该请求的 SSE 响应流
+
+**WebSocket**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["客户端"] <-->|"双向通信"| S2["服务端"]
+```
+
+图中条件与标签：
+
+- 同一条连接 双方随时发
 
 SSE 的响应方向是单向，但客户端可在读取期间并行发送其他 HTTP 请求；它不是必须等服务端说完才响应的半双工“对讲机”。
 
@@ -131,7 +142,7 @@ Redis Pub/Sub 只是可选实现之一，也可使用专用网关、broker 或�
 
 ### 13.5.2 代理和防火墙穿透
 
-部分旧代理或企业网关配置会**阻止或移除 WebSocket Upgrade 请求**，是否支持取决于部署版本与策略。例如，[Squid v5 支持受配置控制的 Upgrade](https://www.squid-cache.org/Versions/v5/cfgman/http_upgrade_request_protocols.html)，但默认会移除 Upgrade 头。默认策略限制不等于产品没有实现该协议能力。
+部分旧代理或企业网关配置会**阻止或移除 WebSocket Upgrade 请求**，是否支持取决于部署版本与策略。例如，Squid v5 支持受配置控制的 Upgrade<sup>[【331】](../../book/references.zh.md#ref-331)</sup>，但默认会移除 Upgrade 头。默认策略限制不等于产品没有实现该协议能力。
 
 SSE 通常不会遇到 Upgrade 被拒这一类问题——它始终是普通 HTTP 请求，大多数代理都能透传，但仍受访问策略、缓冲和空闲超时限制。
 
@@ -157,23 +168,33 @@ UDP 自身不保证交付，但 WebRTC 媒体链路可结合 NACK（否定确认
 
 ### 13.6.2 TCP 重传何时会拖慢实时语音
 
+**TCP · WebSocket**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph TCP_W["TCP · WebSocket"]
-        T1["第 5 个音频帧丢了"] --> T2["TCP 强制等重传"]
-        T2 --> T3["第 6、7、8… 帧<br/>全部堵在缓冲区"]
-        T3 --> T4["队头阻塞<br/>可能超过播放时限"]
-    end
-
-    subgraph UDP_W["UDP · WebRTC"]
-        U1["第 5 个音频帧丢了"] --> U2["按播放时限评估恢复"]
-        U2 --> U3["及时重传 / FEC<br/>或解码器 PLC"]
-        U3 --> U4["控制延迟<br/>音质取决于丢包模式与编解码器"]
-    end
-
-    style TCP_W fill:#fce8e6
-    style UDP_W fill:#e6f4ea
+        T1["第 5 个音频帧丢<br/>了"] --> T2["TCP 强制等重传"]
+        T2 --> T3["第 6、7、8… 帧"]
+        T3 --> T4["队头阻塞"]
 ```
+
+**UDP · WebRTC**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        U1["第 5 个音频帧丢<br/>了"] --> U2["评估恢复时限"]
+        U2 --> U3["及时重传 / FEC"]
+        U3 --> U4["控制延迟"]
+```
+
+图中各项的完整含义：
+
+- 第 6、7、8… 帧 全部堵在缓冲区
+- 队头阻塞 可能超过播放时限
+- 按播放时限评估恢复
+- 及时重传 / FEC 或解码器 PLC
+- 控制延迟 音质取决于丢包模式与编解码器
 
 若音频位于同一 TCP 字节流，丢失字节的重传会阻塞该流后续数据交付；影响取决于 RTT、丢包、缓冲和播放预算，不是一次丢包就必然卡死。
 
@@ -188,18 +209,26 @@ PLC 通常由编解码器/解码器在缺失音频时估计信号，不是统一
 媒体与数据通道是不同路径，DTLS 用于协商 SRTP 密钥，不是把每个 SRTP 包再包一层 DTLS：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    ICE["ICE / STUN / TURN<br/>连接建立与 NAT 穿透"]
-    SRTP["SRTP / SRTCP<br/>媒体与控制包保护"]
+    ICE["ICE / STUN /<br/>TURN"]
+    SRTP["SRTP / SRTCP"]
     DTLS["DTLS 握手"]
-    DATA["DataChannel<br/>SCTP over DTLS"]
-    PATH["ICE 选定的网络路径<br/>通常 UDP，必要时 TURN 中继"]
+    DATA["DataChannel"]
+    PATH["ICE 选定的网络路<br/>径"]
     ICE --> PATH
     DTLS -.导出密钥.-> SRTP
     SRTP --> PATH
     DATA --> PATH
     DTLS --> PATH
 ```
+
+图中各项的完整含义：
+
+- ICE / STUN / TURN 连接建立与 NAT 穿透
+- SRTP / SRTCP 媒体与控制包保护
+- DataChannel SCTP over DTLS
+- ICE 选定的网络路径 通常 UDP，必要时 TURN 中继
 
 | 层 | 职责 | 为什么需要 |
 |---|---|---|
@@ -227,16 +256,21 @@ flowchart TB
 ICE 收集 host、server-reflexive、relay 等候选，构造候选对并进行有节奏的连通性检查与 nomination。它不是严格“本地失败 → STUN 失败 → TURN”的三阶段串行降级：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    P1["Host 候选<br/>本地接口地址"] --> CHECK["候选对优先级<br/>STUN 连通性检查与选定"]
-    P2["Server-reflexive 候选<br/>STUN 发现映射地址"] --> CHECK
-    P3["Relay 候选<br/>TURN 分配中继地址"] --> CHECK
-    CHECK --> SELECT["选定可用路径<br/>失败时可 ICE restart"]
-
-    style P1 fill:#e6f4ea
-    style P2 fill:#fef7e0
-    style P3 fill:#fce8e6
+    CAND["收集 ICE 候选"] --> CHECK["排序并检查候选对"]
+    CHECK --> SELECT["提名可用路径"]
 ```
+
+候选收集包括本地接口的 host 地址、通过 STUN 发现的 server-reflexive 地址，以及 TURN 分配的 relay 地址。ICE 按候选对优先级执行 STUN 连通性检查，并提名可用的候选对。路径失败时可能需要 ICE restart，不能假定原路径始终可用。
+
+图中各项的完整含义：
+
+- Host 候选 本地接口地址
+- 候选对优先级 STUN 连通性检查与选定
+- Server-reflexive 候选 STUN 发现映射地址
+- Relay 候选 TURN 分配中继地址
+- 选定可用路径 失败时可 ICE restart
 
 NAT 映射/过滤行为、UDP 阻断、防火墙与候选可达性都可能导致直连失败；不能仅凭“企业网络”或“运营商 NAT”推断特定行为。某些部署还会为隐私或网络策略主动使用 relay。
 
@@ -295,15 +329,21 @@ A2A 1.0（本章采用发布版 v1.0.1）的 JSON-RPC 与 HTTP/REST binding 可�
 选型原则：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"需要实时交互式<br/>音视频吗?"}
+    Q1["需要实时交互式"]
     Q1 -->|是| RTC["WebRTC"]
-    Q1 -->|否| Q2{"需要持续双向消息<br/>而非少量 HTTP 控制吗?"}
+    Q1 -->|否| Q2["需要持续双向消息<br/>？"]
     Q2 -->|否| SSE["SSE"]
     Q2 -->|是| WS["WebSocket"]
 
     style SSE fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 需要实时交互式 音视频吗?
+- 需要持续双向消息 而非少量 HTTP 控制吗?
 
 | 场景 | 方案 | 原因 |
 |---|---|---|
@@ -363,18 +403,5 @@ SSE 与 WebSocket 连接都由某个实例持有。扩容、重连和跨实例�
 
 ## 参考资料
 
-- [MDN: Using Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
-- [MDN: The WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-- [MDN: WebRTC API](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API)
-- [RFC 6455: The WebSocket Protocol](https://www.rfc-editor.org/rfc/rfc6455)
-- [RFC 8445: Interactive Connectivity Establishment (ICE)](https://www.rfc-editor.org/rfc/rfc8445)
-- [WebRTC 官方站点](https://webrtc.org/)
-- [WHATWG HTML：Server-sent events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
-- [RFC 8835：WebRTC 传输](https://www.rfc-editor.org/rfc/rfc8835)
-- [RFC 8834：WebRTC 媒体与丢包恢复](https://www.rfc-editor.org/rfc/rfc8834)
-- [RFC 8831：WebRTC Data Channels](https://www.rfc-editor.org/rfc/rfc8831)
-- [RFC 8441：WebSocket over HTTP/2](https://www.rfc-editor.org/rfc/rfc8441)
-- [RFC 9220：WebSocket over HTTP/3](https://www.rfc-editor.org/rfc/rfc9220)
-- [OpenAI: WebRTC 接入（Realtime API 部分）](https://developers.openai.com/api/docs/guides/voice-webrtc?api=realtime)
-- [MCP 规范：Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [A2A v1.0.1 发布规范](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-13)。

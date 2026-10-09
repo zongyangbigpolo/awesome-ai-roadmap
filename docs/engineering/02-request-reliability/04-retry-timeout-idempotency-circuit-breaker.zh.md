@@ -46,10 +46,17 @@ def call_with_retry(fn, max_retries=3, base_delay=1.0):
 一次 LLM 调用的耗时和输出长度强相关,固定超时容易在长输出场景下误杀正常请求。更稳健的做法是设置**分层超时预算**:
 
 ```mermaid
-flowchart LR
-    A["连接超时:2s<br/>示例预算"] --> B["首 token 超时:10s<br/>等待首个有效内容 token"]
-    B --> C["总耗时超时:60s<br/>整个流式响应的硬上限"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["连接超时:2s"] --> B["首 token 超时<br/>:10s"]
+    B --> C["总耗时超时:60s"]
 ```
+
+图中各项的完整含义：
+
+- 连接超时:2s 示例预算
+- 首 token 超时:10s 等待首个有效内容 token
+- 总耗时超时:60s 整个流式响应的硬上限
 
 | 超时层级 | 典型值 | 目的 |
 |---|---|---|
@@ -139,8 +146,5 @@ Agent 内部多轮工具调用如果各自生成新的幂等键,重试时下游�
 
 ## 参考资料
 
-- [Google Cloud: Implementing exponential backoff](https://cloud.google.com/storage/docs/retry-strategy)
-- [Stripe API: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
-- [Martin Fowler: CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html)
-- [Netflix Tech Blog: Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
-- [AWS Well-Architected Framework: REL05-BP04 Bulkhead architecture](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_mitigate_interaction_failure_bulkhead.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-04)。

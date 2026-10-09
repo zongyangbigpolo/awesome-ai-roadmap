@@ -11,12 +11,13 @@ Agent Reflection 更接近一套反馈驱动的控制机制，而不是抽象的
 > **生成或执行 → 评价 → 定位问题 → 定向修订 → 再验证**
 
 ```mermaid
-flowchart LR
-    G[Generate / Execute] --> E[Evaluate]
-    E --> D{满足标准?}
-    D -->|是| DONE[Finish]
-    D -->|否| F[Structured Feedback]
-    F --> R[Refine / Retry / Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --> E["Evaluate"]
+    E --> D["满足标准?"]
+    D -->|是| DONE["Finish"]
+    D -->|否| F["Structured Feedback"]
+    F --> R["Refine / Retry / Replan"]
     R --> G
 ```
 
@@ -57,19 +58,21 @@ flowchart LR
 在强依赖任务中，早期错误可能成为后续步骤的输入：
 
 ```mermaid
-flowchart LR
-    A[错误搜索词] --> B[错误资料]
-    B --> C[错误分析]
-    C --> D[错误结论]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["错误搜索词"] --> B["错误资料"]
+    B --> C["错误分析"]
+    C --> D["错误结论"]
 ```
 
 如果在关键节点验证：
 
 ```mermaid
-flowchart LR
-    A[搜索结果] --> V{来源与相关性通过?}
-    V -->|是| B[继续分析]
-    V -->|否| R[修改查询并重试]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["搜索结果"] --> V["来源与相关性通过?"]
+    V -->|是| B["继续分析"]
+    V -->|否| R["修改查询并重试"]
 ```
 
 就有机会在错误进入后续分析前拦住它；前提是验证器确实检查了来源和相关性，而不只是检查搜索接口是否返回成功。
@@ -128,11 +131,12 @@ flowchart LR
 | 表述是否清晰、方案是否适用 | 领域人工审核或经校准的模型评价 | 评分一致性与证据覆盖 |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    RESULT[Candidate Result] --> DET[Deterministic Verifier]
-    DET -->|可验证| DECISION[Pass / Fail]
-    DET -->|无法完全验证| HUMAN[Human or Domain Review]
-    HUMAN -->|仍需辅助| JUDGE[LLM Judge]
+    RESULT["Candidate Result"] --> DET["Deterministic Verifier"]
+    DET -->|可验证| DECISION["Pass / Fail"]
+    DET -->|无法完全验证| HUMAN["Human or Domain Review"]
+    HUMAN -->|仍需辅助| JUDGE["LLM Judge"]
 ```
 
 语言模型评价适合处理难以完全形式化的质量维度，但不应替代可用的客观验证。
@@ -144,11 +148,12 @@ HTTP 200 可能只代表受理，真实系统也可能返回过期状态；编�
 除了步骤级和任务级，还可以加入里程碑级与跨任务 Consolidation。
 
 ```mermaid
-flowchart TB
-    R[Reflection Granularity] --> S[Step-level]
-    R --> M[Milestone-level]
-    R --> T[Task-level]
-    R --> C[Cross-task Consolidation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection<br/>Granularity"] --> S["Step-level"]
+    R --> M["Milestone-level"]
+    R --> T["Task-level"]
+    R --> C["Cross-task<br/>Consolidation"]
 ```
 
 ## 12.6 Step-level Reflection
@@ -156,12 +161,13 @@ flowchart TB
 Step-level Reflection 在 Tool Call、推理步骤或状态转移后检查结果。
 
 ```mermaid
-flowchart LR
-    S[Execute Step] --> O[Observation]
-    O --> V{Step Valid?}
-    V -->|是| N[Next Step]
-    V -->|否| F[Feedback]
-    F --> R[Retry or Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Execute Step"] --> O["Observation"]
+    O --> V["Step Valid?"]
+    V -->|是| N["Next Step"]
+    V -->|否| F["Feedback"]
+    F --> R["Retry or Replan"]
     R --> S
 ```
 
@@ -218,11 +224,12 @@ flowchart LR
 Milestone-level Reflection 在一个阶段完成后评价，而不是检查每个微步骤。
 
 ```mermaid
-flowchart LR
-    S1[Stage Steps] --> M[Milestone Artifact]
-    M --> V{Milestone Valid?}
-    V -->|是| NEXT[Next Milestone]
-    V -->|否| FIX[Repair Affected Stage]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S1["Stage Steps"] --> M["Milestone Artifact"]
+    M --> V["Milestone Valid?"]
+    V -->|是| NEXT["Next Milestone"]
+    V -->|否| FIX["Repair Affected Stage"]
 ```
 
 这种做法减少了检查次数，但不保证总成本一定更低：阶段末才发现错误时，可能要重做更多步骤。它通常比只看最终结果更容易尽早发现偏差，前提是阶段有清晰产物，可以整体验收和修复。
@@ -245,12 +252,13 @@ flowchart LR
 Task-level Reflection 在完整任务结束后进行整体评价。
 
 ```mermaid
-flowchart LR
-    TASK[Complete Task] --> OUT[Final Candidate]
-    OUT --> E[Holistic Evaluation]
-    E --> D{Pass?}
-    D -->|是| DONE[Deliver]
-    D -->|否| R[Revise Result or Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TASK["Complete Task"] --> OUT["Final Candidate"]
+    OUT --> E["Holistic Evaluation"]
+    E --> D["Pass?"]
+    D -->|是| DONE["Deliver"]
+    D -->|否| R["Revise Result or Replan"]
 ```
 
 ### 12.8.1 适用场景
@@ -292,13 +300,14 @@ flowchart LR
 - 哪些 Tool 或 Prompt 需要改进。
 
 ```mermaid
-flowchart LR
-    T1[Task 1] --> C[Consolidation]
-    T2[Task 2] --> C
-    T3[Task N] --> C
-    C --> M[Validated Memory]
-    C --> S[Skill / Workflow Update]
-    C --> E[Evaluation Set]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T1["Task 1"] --> C["Consolidation"]
+    T2["Task 2"] --> C
+    T3["Task N"] --> C
+    C --> M["Validated<br/>Memory"]
+    C --> S["Skill /<br/>Workflow<br/>Update"]
+    C --> E["Evaluation<br/>Set"]
 ```
 
 跨任务经验必须经过验证、去重和适用范围检查，不能把模型的一次自我评价自动提升为永久规则。
@@ -317,12 +326,13 @@ flowchart LR
 生产系统通常混合使用：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    STEP[Low-risk Steps] --> MILESTONE[Milestone Verification]
-    RISK[High-risk Step] --> IMMEDIATE[Immediate Verification]
-    MILESTONE --> TASK[Task-level Review]
+    STEP["Low-risk Steps"] --> MILESTONE["Milestone<br/>Verification"]
+    RISK["High-risk Step"] --> IMMEDIATE["Immediate<br/>Verification"]
+    MILESTONE --> TASK["Task-level Review"]
     IMMEDIATE --> TASK
-    TASK --> CONS[Optional Consolidation]
+    TASK --> CONS["Optional<br/>Consolidation"]
 ```
 
 ## 12.11 Adaptive Reflection
@@ -342,11 +352,12 @@ flowchart TB
 - Verifier 分数低。
 
 ```mermaid
-flowchart LR
-    O[Observation] --> R[Risk / Anomaly Detector]
-    R -->|正常| NEXT[Continue]
-    R -->|异常| REFLECT[Reflect / Verify]
-    REFLECT --> FIX[Repair / Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --> R["Risk / Anomaly Detector"]
+    R -->|正常| NEXT["Continue"]
+    R -->|异常| REFLECT["Reflect / Verify"]
+    REFLECT --> FIX["Repair / Replan"]
 ```
 
 相比固定“每一步一次 Critic”，自适应触发通常更容易把成本控制住。
@@ -362,19 +373,44 @@ flowchart LR
 5. Stop Controller；
 6. Optional Memory Writer。
 
+产生证据与结构化反馈。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["Generator / Executor"]
+    A["Artifact + Trace"]
+    V["Verifier / Critic"]
+    F["Structured Feedback"]
+    S["Stop Controller"]
+    G --> A
+    A --> V
+    V --> F
+    F --> S
+```
+
+停止控制器选择修订或退出。
+
 ```mermaid
 flowchart TB
-    G[Generator / Executor] --> A[Artifact + Trace]
-    A --> V[Verifier / Critic]
-    V --> F[Structured Feedback]
-    F --> S{Stop Controller}
-    S -->|允许修订| R[Refiner]
+    S{Stop Controller}
+    R[Refiner]
+    G[Generator / Executor]
+    S -->|允许修订| R
     R --> G
-    S -->|Pass| DONE[Finish]
-    S -->|Budget Exhausted| PARTIAL[Report Incomplete]
-    S -->|需人工判断| HUMAN[Human Review]
-    DONE --> MV[Validate Reusable Experience]
-    MV -->|通过| MW[Optional Memory Writer]
+```
+
+控制器的其他结果退出这条修订路径：通过时完成，预算耗尽时报告未完成，需要人工判断时转人工审核。
+
+可选写入前先校验可复用经验。
+
+```mermaid
+flowchart TB
+    DONE[Finish]
+    MV[Validate Reusable Experience]
+    MW[Optional Memory Writer]
+    DONE --> MV
+    MV -->|通过| MW
 ```
 
 Stop Controller 先判断是否允许继续，再调用 Refiner，避免停止信号发出后仍触发修订。原始反馈可以留作任务内诊断记录；写入长期记忆的是经过验证、带适用范围的经验，不是所有 Critic 意见。
@@ -602,19 +638,20 @@ Self-Reflection 使用同一模型或同一 Agent 评价自己的结果。
 
 Self-Reflection 可以作为初筛，但不能当成客观验证。
 
-实验结论要带上范围：[Huang 等人的研究](https://arxiv.org/abs/2310.01798)发现，当时所测模型在没有外部反馈的推理纠错中经常无收益甚至退化；这不是“模型永远无法自纠错”的定理。[SCoRe](https://arxiv.org/abs/2409.12917)随后用多轮在线 RL 专门训练自纠错，测试时不要求外部纠错反馈。这与只给冻结模型加一句“检查一下”不同：训练阶段确实使用奖励并更新了参数。
+实验结论要带上范围：Huang 等人的研究<sup>[【503】](../../book/references.zh.md#ref-503)</sup>发现，当时所测模型在没有外部反馈的推理纠错中经常无收益甚至退化；这不是“模型永远无法自纠错”的定理。SCoRe<sup>[【505】](../../book/references.zh.md#ref-505)</sup>随后用多轮在线 RL 专门训练自纠错，测试时不要求外部纠错反馈。这与只给冻结模型加一句“检查一下”不同：训练阶段确实使用奖励并更新了参数。
 
 ## 12.19 Critic Agent
 
 Critic Agent 专门检查 Executor 的 Artifact 或轨迹。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant E as Executor Agent
     participant C as Critic Agent
     participant V as Verifier
 
-    E->>C: Candidate + Rubric + Evidence
+    E->>C: Candidate + Rubric +<br/>Evidence
     C-->>E: Structured Findings
     E->>E: Refine
     E->>V: Revised Candidate
@@ -664,12 +701,13 @@ sequenceDiagram
 - 领域合规。
 
 ```mermaid
-flowchart TB
-    OUT[Candidate] --> F[Fact Critic]
-    OUT --> S[Safety Critic]
-    OUT --> L[Logic Critic]
-    OUT --> D[Domain Critic]
-    F --> J[Finding Aggregator]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    OUT["Candidate"] --> F["Fact Critic"]
+    OUT --> S["Safety<br/>Critic"]
+    OUT --> L["Logic Critic"]
+    OUT --> D["Domain<br/>Critic"]
+    F --> J["Finding<br/>Aggregator"]
     S --> J
     L --> J
     D --> J
@@ -693,13 +731,14 @@ flowchart TB
 Debate 让多个 Agent 对候选方案进行对抗式讨论。
 
 ```mermaid
-flowchart LR
-    P[Proposer] --> O[Opponent]
-    O --> R[Rebuttal]
-    R --> J[Judge / Verifier]
-    J --> D{通过?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Proposer"] --> O["Opponent"]
+    O --> R["Rebuttal"]
+    R --> J["Judge / Verifier"]
+    J --> D["通过?"]
     D -->|否| P
-    D -->|是| OUT[Final Decision]
+    D -->|是| OUT["Final Decision"]
 ```
 
 适合：
@@ -727,12 +766,13 @@ Self-Refine 的基本流程是：
 > **Generate → Feedback → Refine**
 
 ```mermaid
-flowchart LR
-    G[Generate] --> F[Self Feedback]
-    F --> R[Refine]
-    R --> V{Pass?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate"] --> F["Self Feedback"]
+    F --> R["Refine"]
+    R --> V["Pass?"]
     V -->|否| F
-    V -->|是| OUT[Output]
+    V -->|是| OUT["Output"]
 ```
 
 Self-Refine 原方法使用同一 LLM 生成、反馈、修订，不要求额外训练或 RL，主要优化当前候选而非模型权重。原论文在七类任务上报告收益，但任务使用的评价标准、模型与停止方式不同，不能把其平均增益当作任意业务的普遍提升。
@@ -758,14 +798,15 @@ Reflexion 将任务反馈转化为自然语言反思，并保存在 Episodic Mem
 - Episodic Memory。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    A[Actor] --> ENV[Environment]
-    ENV --> TRAJ[Trajectory + Reward]
-    TRAJ --> E[Evaluator]
-    E --> D{Success?}
-    D -->|是| DONE[Finish]
-    D -->|否| SR[Self-Reflection]
-    SR --> MEM[Episodic Memory]
+    A["Actor"] --> ENV["Environment"]
+    ENV --> TRAJ["Trajectory + Reward"]
+    TRAJ --> E["Evaluator"]
+    E --> D["Success?"]
+    D -->|是| DONE["Finish"]
+    D -->|否| SR["Self-Reflection"]
+    SR --> MEM["Episodic Memory"]
     MEM --> A
 ```
 
@@ -820,23 +861,24 @@ LATS（Language Agent Tree Search）将：
 结合在同一个基于蒙特卡洛树搜索（MCTS）的过程中。Selection 在继续探索访问较少的分支与利用已有高价值分支之间取舍，Expansion 生成动作，模拟轨迹（rollout）或环境执行得到反馈，价值估计与回报再回传到树节点；这不是神经网络梯度回传，原方法不靠在线微调更新 LLM 参数。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    ROOT[Current State] --> A[Action A]
-    ROOT --> B[Action B]
-    ROOT --> C[Action C]
+    ROOT["Current<br/>State"] --> A["Action A"]
+    ROOT --> B["Action B"]
+    ROOT --> C["Action C"]
 
-    A --> OA[Observation A]
-    B --> OB[Observation B]
-    C --> OC[Observation C]
+    A --> OA["Observation<br/>A"]
+    B --> OB["Observation<br/>B"]
+    C --> OC["Observation<br/>C"]
 
-    OA --> VA[Value + Reflection]
-    OB --> VB[Value + Reflection]
-    OC --> VC[Value + Reflection]
+    OA --> VA["Value +<br/>Reflection"]
+    OB --> VB["Value +<br/>Reflection"]
+    OC --> VC["Value +<br/>Reflection"]
 
-    VA --> SELECT[Tree Policy]
+    VA --> SELECT["Tree Policy"]
     VB --> SELECT
     VC --> SELECT
-    SELECT --> EXPAND[Expand Promising Path]
+    SELECT --> EXPAND["Expand<br/>Promising<br/>Path"]
 ```
 
 ### 12.24.1 核心价值
@@ -877,12 +919,13 @@ LATS 是重要的研究型架构，其思想可以用于：
 Reflection 可以作用于不同对象：
 
 ```mermaid
-flowchart TB
-    R[Reflection] --> OUT[Output Reflection]
-    R --> STEP[Step Reflection]
-    R --> PLAN[Plan Reflection]
-    R --> TRACE[Trajectory Reflection]
-    R --> MEMORY[Memory Reflection]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection"] --> OUT["Output Reflection"]
+    R --> STEP["Step Reflection"]
+    R --> PLAN["Plan Reflection"]
+    R --> TRACE["Trajectory Reflection"]
+    R --> MEMORY["Memory Reflection"]
 ```
 
 - Output Reflection：结果是否正确；
@@ -897,20 +940,58 @@ Plan-and-Execute 中，反思结果可能触发 Replanner，而不仅是重写�
 
 生产系统通常将反思限制在 Workflow 节点中：
 
+确定性检查失败时直接修复。
+
 ```mermaid
-flowchart LR
-    IN[Input] --> G[Generate]
-    G --> DET[Deterministic Checks]
-    DET -->|通过| C[Critic]
-    DET -->|失败| FIX[Direct Repair]
+flowchart TB
+    IN[Input]
+    G[Generate]
+    DET[Deterministic Checks]
+    FIX[Direct Repair]
+    C[Critic]
+    IN --> G
+    G --> DET
+    DET -->|通过| C
+    DET -->|失败| FIX
     FIX --> DET
-    C --> D{Verdict}
-    D -->|PASS| OUT[Output]
-    D -->|REVISE| R[Refiner]
-    D -->|REPLAN| P[Planner]
-    D -->|HUMAN| H[Human Review]
+```
+
+修订后返回确定性检查。
+
+```mermaid
+flowchart TB
+    DET[Deterministic Checks]
+    C[Critic]
+    D{Verdict}
+    R[Refiner]
+    DET -->|通过| C
+    C --> D
+    D -->|REVISE| R
     R --> DET
+```
+
+重规划后返回生成。
+
+```mermaid
+flowchart TB
+    C[Critic]
+    D{Verdict}
+    P[Planner]
+    G[Generate]
+    C --> D
+    D -->|REPLAN| P
     P --> G
+```
+
+其他结论对应输出或人工审核。
+
+```mermaid
+flowchart TB
+    D{Verdict}
+    OUT[Output]
+    H[Human Review]
+    D -->|PASS| OUT
+    D -->|HUMAN| H
 ```
 
 图中修复与重规划都受同一个 Stop Controller 限制；修订后重新跑必需检查，不能因 Critic 返回 PASS 而跳过。发送、部署、付款等动作另设执行前准入门，不能只在事后进入这个质量循环。
@@ -939,15 +1020,16 @@ LLM 负责：
 先用空列表复现 `IndexError`，再查看失败位置。如果异常来自直接访问首元素，下一步也不应立刻决定“空输入返回 0”：要先查函数契约，确认应返回空结果、抛出约定异常，还是采用默认值。反思负责提出根因与修复假设，测试负责检查这个假设是否满足需求。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Generate Patch] --> T[Run Tests]
-    T --> D{Tests Pass?}
-    D -->|是| R[Code Review]
-    D -->|否| F[Extract Failure]
-    F --> REF[Reflect on Root Cause]
+    G["Generate Patch"] --> T["Run Tests"]
+    T --> D["Tests Pass?"]
+    D -->|是| R["Code Review"]
+    D -->|否| F["Extract Failure"]
+    F --> REF["Reflect on Root Cause"]
     REF --> G
-    R --> Q{Review Pass?}
-    Q -->|是| DONE[Finish]
+    R --> Q["Review Pass?"]
+    Q -->|是| DONE["Finish"]
     Q -->|否| G
 ```
 
@@ -1024,15 +1106,16 @@ flowchart TB
 ## 12.30 防止 Reflection Loop
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Reflection Round] --> V[Verify]
-    V --> P{Pass?}
-    P -->|是| DONE[Finish]
-    P -->|否| B{Budget Remaining?}
-    B -->|否| STOP[Stop and Report]
-    B -->|是| I{Finding Changed?}
-    I -->|否| ESC[Escalate / Human]
-    I -->|是| FIX[Refine]
+    R["Reflection<br/>Round"] --> V["Verify"]
+    V --> P["Pass?"]
+    P -->|是| DONE["Finish"]
+    P -->|否| B["Budget<br/>Remaining?"]
+    B -->|否| STOP["Stop and<br/>Report"]
+    B -->|是| I["Finding<br/>Changed?"]
+    I -->|否| ESC["Escalate /<br/>Human"]
+    I -->|是| FIX["Refine"]
     FIX --> R
 ```
 
@@ -1143,37 +1226,19 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    TASK[Task] --> BUDGET{仍有预算且可继续?}
-    BUDGET -->|是| GATE{执行前权限与审批通过?}
-    BUDGET -->|否| PARTIAL[Report Incomplete]
-    GATE -->|是| EXEC[Executor]
-    GATE -->|否| HUMAN[Human Review / 拒绝]
-    HUMAN -->|重新获得授权| GATE
-    EXEC --> ART[Artifact + Trace]
-
-    ART --> DV[Deterministic Verifiers]
-    DV --> HARD{必需检查通过?}
-    HARD -->|否| FAILURE[记录硬性失败并生成修复反馈]
-    HARD -->|是| NEED{需要主观质量评价?}
-    NEED -->|否| DONE[Finish]
-    NEED -->|是| CRITIC[Critic]
-
-    CRITIC --> VERDICT{Verdict}
-    VERDICT -->|PASS| DONE
-    VERDICT -->|REVISE| REFINE[Refiner]
-    VERDICT -->|REPLAN| PLAN[Replanner]
-    VERDICT -->|BLOCKED| HUMAN
-    FAILURE --> REFINE
-
-    REFINE --> BUDGET
-    PLAN --> BUDGET
-
-    DONE --> CONS{经验值得沉淀?}
-    CONS -->|否| END[End]
-    CONS -->|是| VALIDATE[Validate Reflection]
-    VALIDATE -->|通过| MEMORY[Memory / Skill Candidate]
-    VALIDATE -->|未证实| END
+    EXEC[执行器] --> DV[必需检查]
+    DV -->|通过且需主观评价| CRITIC[评审器]
+    DV -->|硬性失败| REFINE[修订器]
+    CRITIC -->|REVISE| REFINE
+    REFINE --> GATE[预算与权限检查]
+    GATE -->|重新校验通过| EXEC
 ```
+
+每个任务都先检查预算与继续执行的条件，再检查执行时权限与审批。预算耗尽或不允许继续时报告未完成；缺少授权时转人工审核或拒绝，重新获得授权后仍须再次通过权限门控。
+
+执行器将产物与轨迹交给确定性验证器。硬性失败必须记录，并生成反馈交给修订器。必需检查通过后，如果不需要主观质量评价就结束；否则由评审器给出 `PASS`（完成）、`REVISE`（修订）、`REPLAN`（重规划）或 `BLOCKED`（人工审核）。修订与重规划都须先返回预算检查，再经过权限门控，才能重新执行。
+
+完成后，只有值得沉淀且反思校验通过的经验，才能成为记忆或 Skill 候选；未证实或无需保留的经验直接结束，不写入记忆。
 
 图中硬性失败没有通向 Critic PASS 的捷径。入口展示了整体准入检查，Runtime 还必须在每个模型／工具调用前检查剩余预算，包括 Critic、Refiner 和 Replanner；任何修改都要绑定新候选版本重新验收。这里的 Executor 消费当前候选或计划，不应在 Refiner 修改后无条件丢弃它重新生成。
 
@@ -1215,10 +1280,5 @@ Self-Refine、Reflexion、Critic Agent、Debate 和 LATS 提供的是不同深�
 
 ## 参考资料
 
-- [Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning（v4）](https://arxiv.org/abs/2303.11366v4)
-- [Language Agent Tree Search Unifies Reasoning, Acting, and Planning（v3）](https://arxiv.org/abs/2310.04406v3)
-- [Improving Factuality and Reasoning in Language Models through Multiagent Debate](https://arxiv.org/abs/2305.14325)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Large Language Models Cannot Self-Correct Reasoning Yet](https://arxiv.org/abs/2310.01798)
-- [Training Language Models to Self-Correct via Reinforcement Learning（SCoRe，v1）](https://arxiv.org/abs/2409.12917v1)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-12)。

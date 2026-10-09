@@ -14,14 +14,22 @@ At the conversation level, half duplex means “you finish speaking, then it spe
 
 There are two fundamentally different architectural approaches to voice dialogue:
 
+**Cascaded pipeline**
+
 ```mermaid
-flowchart LR
-    subgraph Cascade["Cascaded pipeline"]
-        A1[ASR] --> A2[LLM text reasoning] --> A3[TTS]
-    end
-    subgraph Native["Native speech-to-speech"]
-        B1[Audio encoding] --> B2["Single model<br/>Joint speech understanding<br/>and generation"] --> B3[Audio decoding]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1[ASR] --> A2[LLM text reasoning] --> A3[TTS]
+
+```
+
+**Native speech-to-speech**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1[Audio encoding] --> B2["Single model<br/>Joint speech understanding<br/>and generation"] --> B3[Audio decoding]
+
 ```
 
 - **Cascaded pipeline**: ASR → text LLM → TTS. Components are easy to replace, audit, and connect to text-based tools. Passing only a transcript loses some intonation, emotion, and background information, but timestamps, acoustic labels, or TTS style controls can be passed separately. Streaming components can overlap; all downstream work need not wait for the complete utterance. The tradeoff is that partial-transcript revisions may invalidate responses already generated or played.
@@ -95,10 +103,5 @@ Even with the same average latency, a few very slow responses can cause repeated
 
 ## References
 
-- [Moshi: a speech-text foundation model for real-time dialogue](https://arxiv.org/abs/2410.00037)
-- [Generative Spoken Dialogue Language Modeling (dGSLM)](https://arxiv.org/abs/2203.16502)
-- [OpenAI GPT-4o System Card](https://openai.com/index/gpt-4o-system-card/)
-- [GPT-4o System Card (original report)](https://arxiv.org/abs/2410.21276)
-- [OpenAI Realtime API documentation](https://platform.openai.com/docs/guides/realtime)
-- [OpenAI Realtime: Conversation state and interruption handling](https://developers.openai.com/api/docs/guides/realtime-conversations/)
-- [Kyutai Moshi project page](https://kyutai.org/moshi)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-06) for this chapter’s sources, reading suggestions, and source notes.

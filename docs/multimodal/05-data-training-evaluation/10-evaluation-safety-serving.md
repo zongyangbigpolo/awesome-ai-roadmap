@@ -71,11 +71,5 @@ Ignoring media-dependent encoding loads lets large-media requests delay others i
 
 ## References
 
-- [MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark](https://arxiv.org/abs/2311.16502)
-- [MathVista: Evaluating Mathematical Reasoning of Foundation Models in Visual Contexts](https://arxiv.org/abs/2310.02255)
-- [Multimodal Neurons in Artificial Neural Networks (Typographic Attack)](https://distill.pub/2021/multimodal-neurons/)
-- [Visual Adversarial Examples Jailbreak Aligned Large Language Models](https://arxiv.org/abs/2306.13213)
-- [C2PA 2.1 technical specification](https://spec.c2pa.org/specifications/specifications/2.1/specs/C2PA_Specification.html)
-- [Google DeepMind: SynthID](https://deepmind.google/models/synthid/)
-- [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving](https://arxiv.org/abs/2401.09670)
-- [vLLM: Prefix caching design and multimodal hashing](https://docs.vllm.ai/en/stable/design/prefix_caching/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-10) for this chapter’s sources, reading suggestions, and source notes.

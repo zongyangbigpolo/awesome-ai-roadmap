@@ -29,16 +29,28 @@ This is the same quantitative approach discussed in the chapter on capability ev
 | `BootstrapFinetune` | Model weights | Builds training data from successful traces and fine-tunes; requires a fine-tunable LM, training budget, and deployment support |
 
 ```mermaid
-flowchart LR
-    P["Unoptimized program"] --> B{"Choose an optimizer"}
-    B -->|"Small dataset, simple task"| BF["BootstrapFewShot"]
-    B -->|"Tune instructions and examples together"| MI["MIPROv2"]
-    B -->|"Iterate by reflecting on failures"| GE["GEPA"]
-    BF --> C["Compilation artifact: optimized program"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["Unoptimized program"] --> B["Choose an optimizer"]
+    B -->|"Small task"| BF["BootstrapFewShot"]
+    B -->|"Joint tuning"| MI["MIPROv2"]
+    B -->|"Reflection"| GE["GEPA"]
+    BF --> C["Optimized program"]
     MI --> C
     GE --> C
-    C --> D["Replace the original program with the same interface"]
+    C --> D["Replace implementation"]
 ```
+
+Figure conditions and labels:
+
+- Small dataset, simple task
+- Tune instructions and examples together
+- Iterate by reflecting on failures
+
+Details of the illustrated steps and components:
+
+- Compilation artifact: optimized program
+- Replace the original program with the same interface
 
 These optimizers usually return a program with the same calling interface. Use the returned value rather than assuming the original object was modified in place. The artifact may contain longer examples, longer instructions, or a new model configuration. An unchanged interface does not imply unchanged latency or cost.
 
@@ -120,10 +132,5 @@ For deeper follow-up questions, be ready to explain why a metric improvement did
 
 ## References
 
-- [DSPy: Choosing an optimizer](https://dspy.ai/diving-deeper/choosing-an-optimizer/)
-- [DSPy: MIPROv2 API and its three-stage mechanism](https://dspy.ai/api/optimizers/MIPROv2/)
-- [DSPy: GEPA API and feedback contract](https://dspy.ai/api/optimizers/GEPA/overview/)
-- [DSPy: GEPA optimization tutorial](https://dspy.ai/getting-started/gepa-optimization/)
-- [DSPy paper: Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"](https://arxiv.org/abs/2310.03714)
-- [GEPA paper: Agrawal et al., "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning"](https://arxiv.org/abs/2507.19457)
-- [Official LangSmith documentation](https://docs.smith.langchain.com/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-17) for this chapter’s sources, reading suggestions, and source notes.

@@ -13,21 +13,14 @@ Missing retrieval results, outdated or conflicting evidence, context truncation 
 ## 17.2 Main Sources of Hallucination
 
 ```mermaid
-flowchart TB
-    H[False output in RAG] --> H1[Unavailable or<br/>unreliable evidence]
-    H --> H2[Distorted reasoning<br/>from evidence to answer]
-    H --> H3[System processing<br/>and reuse failures]
-
-    H1 --> C1[Missing, outdated, or incorrect<br/>knowledge-base content]
-    H1 --> C2[Evidence exists<br/>but was not retrieved]
-    H1 --> C3[Retrieved evidence is truncated<br/>or filtered by permissions]
-
-    H2 --> C4[Inventing details<br/>absent from the material]
-    H2 --> C5[Misreading, misattribution,<br/>or overgeneralization]
-    H2 --> C6[Parametric knowledge<br/>overrides the material]
-    H2 --> C7[Conflicting material<br/>is resolved without justification]
-    H3 --> C8[Cache, version, or<br/>citation-validation failures]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    E[Evidence failures] --> H[False RAG output]
+    R[Reasoning failures] --> H
+    S[System failures] --> H
 ```
+
+Evidence may be unavailable or unreliable because the knowledge base is missing, outdated, or wrong; existing evidence was not retrieved; or retrieved evidence was truncated or filtered by permissions. Reasoning failures include inventing absent details, misreading, misattribution, overgeneralization, overriding material with parametric knowledge, and resolving conflicts without justification. System processing and reuse can fail through caches, version handling, or citation validation.
 
 Different causes call for different controls, but those controls can be combined. Optimizing only one stage usually leaves other failure modes unaddressed.
 
@@ -52,18 +45,24 @@ The prompt can state that authorized business material valid at the time of the 
 This is one of the cheapest—and most frequently omitted—control points.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    R[Retrieval results] --> C1{Any results?}
-    C1 -->|No| REJ[Abstain]
-    C1 -->|Yes| C2{Sufficient confidence<br/>after calibration?}
-    C2 -->|No| REJ[Abstain, clarify,<br/>or degrade gracefully]
-    C2 -->|Yes| GEN[Proceed to generation]
-    GEN --> C3{Does the model report<br/>insufficient evidence?}
-    C3 -->|Yes| REJ2[Explain inability to answer<br/>and suggest next steps]
-    C3 -->|No| C4{Do key claims and citations<br/>pass release checks?}
-    C4 -->|Yes| OUT[Return answer and citations]
-    C4 -->|No| REJ2
+    R[Retrieval results] --> C{Evidence gate passes?}
+    C -->|No| REJ[Abstain or recover]
+    C -->|Yes| GEN[Generate candidate]
 ```
+
+No results means abstention. If results exist but calibrated confidence is insufficient, abstain, clarify, or degrade gracefully. Only sufficient calibrated confidence permits generation. The generated candidate then faces a separate release gate:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GEN[Generated candidate] --> C[Check evidence and citations]
+    C -->|Pass| OUT[Answer with citations]
+    C -->|Fail| REJ[Explain inability; suggest steps]
+```
+
+If the model reports insufficient evidence, do not release an answer. Otherwise check key claims and citations; failed release checks likewise require explaining the inability to answer and suggesting next steps.
 
 The goal is to keep insufficient evidence out of the normal generation path and prevent unvalidated key claims from being released. Unauthorized material is not “missing evidence” that may be supplied to the model. Internally, distinguish retrieval failures, the absence of authorized evidence, and ordinary no-match results. Externally, responses must also avoid disclosing whether restricted material exists.
 
@@ -236,9 +235,5 @@ It can only reduce them. Retrieval failure, incorrect material, and generation b
 
 ## References
 
-- [Astute RAG: Overcoming Imperfect Retrieval Augmentation and Knowledge Conflicts for Large Language Models](https://arxiv.org/abs/2410.07176)
-- [Making Retrieval-Augmented Language Models Robust to Irrelevant Context](https://arxiv.org/abs/2310.01558)
-- [RAGAS: Automated Evaluation of Retrieval Augmented Generation](https://arxiv.org/abs/2309.15217)
-- [ALCE: Enabling Large Language Models to Generate Text with Citations](https://arxiv.org/abs/2305.14627)
-- [Corrective Retrieval Augmented Generation](https://arxiv.org/abs/2401.15884)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-17) for this chapter’s sources, reading suggestions, and source notes.

@@ -76,19 +76,27 @@ Typical dense first-stage retrieval encodes queries and documents independently 
 
 A common reranker is a cross-encoder: **concatenate the query and candidate document** and feed them into a model that allows full interaction before producing a relevance score. Reranking can also use multi-vector scoring or LLM-based ordering; it is not restricted to one architecture.
 
+**First-stage ranking**
+
 ```mermaid
-flowchart LR
-    subgraph 粗排["First-stage ranking"]
-        Q1[Query] --> E1[Encode]
-        D1[Document] --> E2[Encode<br/>Offline]
-        E1 --> S1[Vector distance]
-        E2 --> S1
-    end
-    subgraph 精排["Reranking"]
-        Q2[Query] --> CAT[Concatenate]
-        D2[Candidate document] --> CAT
-        CAT --> M[Joint-interaction model] --> S2[Relevance score]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --> E1[Encode]
+    D1[Document] --> E2[Encode<br/>Offline]
+    E1 --> S1[Vector distance]
+    E2 --> S1
+
+```
+
+**Reranking**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --> CAT[Concatenate]
+    D2[Candidate document] --> CAT
+    CAT --> M[Joint-interaction model] --> S2[Relevance score]
+
 ```
 
 **The quality improvement is often substantial**, making reranking a high-return, focused optimization that commonly enters the pipeline before more complex changes.
@@ -122,19 +130,23 @@ A reranking timeout can fall back to first-stage results, but it must use eviden
 ## 13.5 The complete retrieval-and-ranking pipeline
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    Q[Query] --> RW[Query rewriting]
-    RW --> P1[BM25 retrieval: top-50]
-    RW --> P2[Vector retrieval: top-50]
-    RW --> P3[Optional: other paths]
+    RW[Rewritten query] --> P1[BM25 top-50]
+    RW --> P2[Vector top-50]
     P1 --> RRF[RRF fusion]
     P2 --> RRF
-    P3 --> RRF
     RRF --> DEDUP[Deduplicate and merge]
-    DEDUP --> RR[Rerank: top-50 to top-5]
-    RR --> TH{Sufficient calibrated<br/>confidence?}
+```
+
+BM25 and vector retrieval are parallel paths; optional additional paths can also join fusion. Deduplicate and merge their candidates before reranking and the release decision:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    RR[Rerank: top-50 to top-5] --> TH{Calibrated confidence sufficient?}
     TH -->|Yes| CTX[Assemble context]
-    TH -->|No| REJ[Abstain, clarify,<br/>or degrade gracefully]
+    TH -->|No| REJ[Abstain, clarify, or degrade]
 ```
 
 **Illustrative candidate counts by stage**: 50–100 per retrieval path → 50–150 after fusion and deduplication → 50 reranker inputs → 3–10 final results.
@@ -202,9 +214,5 @@ A validated fallback to first-stage results can improve availability, but it mus
 
 ## References
 
-- [Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR 2009)](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf)
-- [Lucene 9.12: the BM25Similarity scoring implementation](https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-13) for this chapter’s sources, reading suggestions, and source notes.

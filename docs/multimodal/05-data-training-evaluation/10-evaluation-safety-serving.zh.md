@@ -71,11 +71,5 @@ MMMU 面向多学科学科知识，MathVista 面向视觉情境中的数学推�
 
 ## 参考资料
 
-- [MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark](https://arxiv.org/abs/2311.16502)
-- [MathVista: Evaluating Mathematical Reasoning of Foundation Models in Visual Contexts](https://arxiv.org/abs/2310.02255)
-- [Multimodal Neurons in Artificial Neural Networks (Typographic Attack)](https://distill.pub/2021/multimodal-neurons/)
-- [Visual Adversarial Examples Jailbreak Aligned Large Language Models](https://arxiv.org/abs/2306.13213)
-- [C2PA 2.1 技术规范](https://spec.c2pa.org/specifications/specifications/2.1/specs/C2PA_Specification.html)
-- [Google DeepMind: SynthID](https://deepmind.google/models/synthid/)
-- [DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving](https://arxiv.org/abs/2401.09670)
-- [vLLM：前缀缓存设计与多模态哈希](https://docs.vllm.ai/en/stable/design/prefix_caching/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-10)。

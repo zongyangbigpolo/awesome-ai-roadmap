@@ -213,6 +213,7 @@ nav:
       - book/preface.md
       - book/how-to-read.md
       - book/acknowledgments.md
+      - book/references.md
       - book/colophon.md
   - About:
       - about.md

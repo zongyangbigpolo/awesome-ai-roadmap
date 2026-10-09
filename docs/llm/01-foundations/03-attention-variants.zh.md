@@ -107,14 +107,15 @@ DeepSeek-V2 报告的 KV Cache 减少 93.3% 是**相对 DeepSeek 67B 的特定�
 FlashAttention 对 Q/K/V 分块，在片上存储中计算局部分数，使用 **online softmax** 合并不同块的统计量，避免在显存中物化完整 `N × N` 矩阵。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["载入一块 Q 和一块 K/V"] --> B["计算局部 logits"]
-    B --> C["更新行最大值、归一化和、加权值和"]
-    C --> D{"还有 K/V 块?"}
-    D -->|有| A
-    D -->|无| E["归一化得到输出"]
-    E --> F["反向时用保存的统计量重算局部概率"]
+    A["Q 块 + K/V 块"] --> B["局部 logits"]
+    B --> C["更新行统计量"]
+    C -->|下一块 K/V| A
+    C -->|所有块处理完毕| E["归一化输出"]
 ```
+
+对每块 Q，遍历所有 K/V 块，累计更新行最大值、归一化和与加权值和。反向传播时，根据保存的统计量重算局部概率，而不是存储完整的注意力矩阵。
 
 为什么不能把每块 softmax 独立归一化后直接相加？因为分母应该覆盖整行。以旧块最大值 `m`、指数和 `l`，新块对应 `m_b, l_b` 为例：
 
@@ -163,15 +164,5 @@ GQA 决定存几组 K/V，FlashAttention 决定如何高效计算注意力，二
 
 ## 参考资料
 
-- [Fast Transformer Decoding: One Write-Head is All You Need（MQA）](https://arxiv.org/abs/1911.02150)
-- [GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/abs/2305.13245)
-- [Llama 2](https://arxiv.org/abs/2307.09288)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
-- [DeepSeek-V2 论文与官方实现](https://github.com/deepseek-ai/DeepSeek-V2)
-- [FlashAttention](https://arxiv.org/abs/2205.14135)
-- [FlashAttention 官方仓库与版本要求（2026-07-06 README 快照）](https://github.com/Dao-AILab/flash-attention/blob/1f7ce2f7cb503473559f3d44d575ae05b1ed8557/README.md)
-- [Online normalizer calculation for softmax](https://arxiv.org/abs/1805.02867)
-- [Mistral 7B](https://arxiv.org/abs/2310.06825)
-- [Linformer](https://arxiv.org/abs/2006.04768)
-- [Rethinking Attention with Performers](https://arxiv.org/abs/2009.14794)
-- [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-03)。

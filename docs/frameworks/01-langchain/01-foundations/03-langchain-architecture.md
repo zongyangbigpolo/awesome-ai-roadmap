@@ -26,18 +26,27 @@ LangChain defines stable interfaces over these differences. Provider integration
 **Observability spans every layer**, recording model calls, tool calls, durations, and exceptions through execution events and traces.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Core protocol layer<br/>Message / Runnable / Model / Tool"]
-    B["Integration adapter layer<br/>Separate provider packages"]
-    C["Agent development layer<br/>create_agent / Middleware / Structured Output"]
-    D["Orchestration runtime layer<br/>LangGraph Runtime"]
-    O["Observability<br/>Execution events and traces"]
+    A["Core protocol<br/>layer"]
+    B["Integration<br/>adapter layer"]
+    C["Agent<br/>development<br/>layer"]
+    D["Orchestration<br/>runtime layer"]
+    O["Observability"]
     A --- B --- C --- D
     O -.spans.- A
     O -.spans.- D
 
     style O fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Core protocol layer Message / Runnable / Model / Tool
+- Integration adapter layer Separate provider packages
+- Agent development layer create_agent / Middleware / Structured Output
+- Orchestration runtime layer LangGraph Runtime
+- Observability Execution events and traces
 
 The diagram shows responsibility boundaries, not a strict one-way call sequence. For example, models and compiled agents both follow the Runnable invocation interface, but they serve different architectural roles.
 
@@ -84,17 +93,22 @@ The Chinese question is preserved as example input; it asks, "What is an agent?"
 Unlike an ordinary single call, an agent may execute multiple rounds between the model and tools.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
     H["HumanMessage"] --> M["Model"]
     M --> A["AIMessage"]
-    A --> D{"Contains tool_calls?"}
+    A --> D["Contains<br/>tool_calls?"]
     D -->|No| F["Final answer"]
     D -->|Yes| T["Tool Runtime"]
-    T --> TM["ToolMessage<br/>with tool_call_id"]
+    T --> TM["ToolMessage"]
     TM --> M
 
     style F fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- ToolMessage with tool_call_id
 
 ### 3.4.1 Why does `tool_call_id` matter?
 
@@ -127,16 +141,24 @@ Real applications commonly need **dynamic prompts, model switching, tool filteri
 **Putting all of this logic into prompts or tools quickly tangles the code.**
 
 ```mermaid
-flowchart LR
-    R["Request"] --> M1["Before the model call<br/>Build a system prompt for the user's identity<br/>Summarize if the history is too long"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    R["Request"] --> M1["Before the<br/>model call"]
     M1 --> LLM["Model"]
-    LLM --> M2["After tool selection<br/>Check permissions<br/>Pause sensitive actions for approval"]
-    M2 --> T["Execute the tool<br/>Use bounded retries for transient network failures"]
-    T --> M3["After results return<br/>Add format or safety checks"]
+    LLM --> M2["After tool<br/>selection"]
+    M2 --> T["Execute the<br/>tool"]
+    T --> M3["After results<br/>return"]
     M3 --> O["Output"]
 
     style M2 fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Before the model call Build a system prompt for the user's identity Summarize if the history is too long
+- After tool selection Check permissions Pause sensitive actions for approval
+- Execute the tool Use bounded retries for transient network failures
+- After results return Add format or safety checks
 
 > **Middleware is not a separate runtime.** It runs inside the LangGraph graph compiled by `create_agent`, providing **composable extensions** to execution behavior.
 
@@ -223,11 +245,5 @@ Follow a single request to understand LangChain v1: the protocol layer standardi
 
 ## References
 
-- [LangChain documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents concepts](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Messages concepts](https://docs.langchain.com/oss/python/langchain/messages)
-- [LangChain: Tools concepts](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Middleware concepts](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain v1 migration guide](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph Checkpointers: super-steps and pending writes](https://docs.langchain.com/oss/python/langgraph/checkpointers)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-03) for this chapter’s sources, reading suggestions, and source notes.

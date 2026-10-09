@@ -14,7 +14,7 @@ Registry 是 harness 维护的"当前会话可用工具"的单一事实来源，
 
 - **多来源合并**：内置工具、MCP Server 工具和宿主插件注册的工具统一进入 Registry。Skill 可以引用工具或附带脚本，但 `SKILL.md` 本身不是工具注册协议，仍需宿主适配执行器。
 - **命名冲突与去重**：多个 MCP Server 可能提供同名工具（例如两个不同的 `search`），Registry 需要用命名空间前缀或显式路由规则消除歧义。前缀应绑定宿主配置中的服务身份；MCP 的 `serverInfo.name` 不保证跨服务器唯一，不能只信服务自报名称。
-- **动态变化**：MCP 2026-07-28 中，`listChanged` 声明通知能力，客户端还要以 `toolsListChanged: true` 打开 `subscriptions/listen` 才接收列表变化通知。列表可随时间与请求授权变化，但不得随连接或连接上其他请求的副作用变化（[Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)）。缓存必须区分授权范围，收到通知后重新列举，不能跨租户复用私有工具列表。
+- **动态变化**：MCP 2026-07-28 中，`listChanged` 声明通知能力，客户端还要以 `toolsListChanged: true` 打开 `subscriptions/listen` 才接收列表变化通知。列表可随时间与请求授权变化，但不得随连接或连接上其他请求的副作用变化（Tools<sup>[【285】](../../book/references.zh.md#ref-285)</sup>）。缓存必须区分授权范围，收到通知后重新列举，不能跨租户复用私有工具列表。
 
 规范对确定性顺序使用 **SHOULD**，有助于缓存但不是唯一变化检测机制。Registry 还应固定工具来源、Schema/描述版本及执行器映射；列表更新后重新做信任检查，审批过的调用不能悄悄改绑到新工具。
 
@@ -29,7 +29,8 @@ Registry 是 harness 维护的"当前会话可用工具"的单一事实来源，
 一次工具调用从被模型请求到结果写回上下文，要经过五个明确的阶段：
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
     A["1. 解析<br/>从模型输出提取<br/>调用 ID + 参数"] --> B["2. 校验<br/>按 Schema 验证参数"]
     B --> C["3. 权限判定<br/>见第 20 章"]
     C --> D["4. 调度执行<br/>并发/串行/超时"]
@@ -50,7 +51,7 @@ flowchart LR
 - **有副作用且互相依赖的工具**（连续编辑同一个文件）需要串行执行，或者由 harness 检测到目标资源冲突后自动降级为串行；
 - **每个工具调用应有独立的超时预算**，且这个超时应该嵌套在整个 Turn 乃至整个会话的更大预算之内（第 21 章 21.5 节展开分层超时的设计）；超时触发时应产出一个明确的"超时"错误结果，而不是让调用无限期挂起阻塞整个状态机。
 
-OpenAI Agents SDK 的工具级 Guardrails 可以在配置了检查的 `FunctionTool` 执行前后插入业务规则（[Guardrails](https://openai.github.io/openai-agents-python/guardrails/)）。这不是对所有工具自动生效的总开关：托管工具、Handoff 及内置执行工具不一定经过同一管线，需核对覆盖范围。输出检查发生在执行之后，能阻止结果继续传播，却不能撤销已经产生的副作用。
+OpenAI Agents SDK 的工具级 Guardrails 可以在配置了检查的 `FunctionTool` 执行前后插入业务规则（Guardrails<sup>[【549】](../../book/references.zh.md#ref-549)</sup>）。这不是对所有工具自动生效的总开关：托管工具、Handoff 及内置执行工具不一定经过同一管线，需核对覆盖范围。输出检查发生在执行之后，能阻止结果继续传播，却不能撤销已经产生的副作用。
 
 ## 19.6 结果回写与错误的一等公民地位
 
@@ -61,8 +62,8 @@ OpenAI Agents SDK 的工具级 Guardrails 可以在配置了检查的 `FunctionT
 第 18 章 18.5 节区分了工具定义的上下文占用、传输与计费。工程上有三类机制减少不必要的定义和结果进入模型：
 
 - **渐进式披露**：第三章 3.5.3 节已讨论 Skill 的渐进式披露；工具层面的对应做法是只把当前任务相关的工具子集纳入本轮请求，其余工具保持"已注册但未装配"的状态，需要时再动态加入。
-- **Code Execution with MCP**：让模型生成代码去调用工具，而不是把每个工具的完整 Schema 都塞进上下文——模型只需要知道有一个代码执行环境和一份 API 索引，具体的参数细节可以在执行时才按需读取（[Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)；[Cloudflare: Code Mode](https://blog.cloudflare.com/code-mode/) 是同一思路的另一实现）。
-- **检索式工具选择**：当工具数量达到成百上千时，用检索而不是全量枚举来决定本轮暴露哪些工具，[RAG-MCP](https://arxiv.org/abs/2505.03275) 描述了这种思路应对"工具过多导致 Prompt 膨胀"问题的效果。
+- **Code Execution with MCP**：让模型生成代码去调用工具，而不是把每个工具的完整 Schema 都塞进上下文——模型只需要知道有一个代码执行环境和一份 API 索引，具体的参数细节可以在执行时才按需读取（Anthropic: Code execution with MCP<sup>[【446】](../../book/references.zh.md#ref-446)</sup>；Cloudflare: Code Mode<sup>[【447】](../../book/references.zh.md#ref-447)</sup> 是同一思路的另一实现）。
+- **检索式工具选择**：当工具数量达到成百上千时，用检索而不是全量枚举来决定本轮暴露哪些工具，RAG-MCP<sup>[【448】](../../book/references.zh.md#ref-448)</sup> 描述了这种思路应对"工具过多导致 Prompt 膨胀"问题的效果。
 
 这三种机制的共同点是把"要不要把某个工具的完整定义放进这一轮上下文"从静态决策变成动态决策，本质上是第 18 章装配管线的一个可插拔组件。
 
@@ -80,9 +81,5 @@ Registry 管理工具身份、定义版本与授权可见性，执行管线管�
 
 ## 参考资料
 
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Model Context Protocol: Versioning](https://modelcontextprotocol.io/specification/versioning)：2026-07-28 的 Current 状态与修订规则，查阅于 2026-09-15。
-- [OpenAI Agents SDK: Guardrails](https://openai.github.io/openai-agents-python/guardrails/)
-- [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
-- [Cloudflare: Code Mode — the better way to use MCP](https://blog.cloudflare.com/code-mode/)
-- [RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation](https://arxiv.org/abs/2505.03275)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-19)。

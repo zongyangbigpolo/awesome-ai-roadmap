@@ -50,17 +50,22 @@ LangGraph primarily handles loops, conditional branches, parallel execution, per
 ### 1.3.1 A concrete example
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Read the payment document"] --> B["Compliance check"]
-    B --> C{"Amount exceeds the limit?"}
-    C -->|Yes| D["Pause<br/>Wait for manager approval"]
-    D --> E{"Approved?"}
-    E -->|Yes| F["Call the payment tool"]
+    A["Read the<br/>payment<br/>document"] --> B["Compliance<br/>check"]
+    B --> C["Amount exceeds<br/>the limit?"]
+    C -->|Yes| D["Pause"]
+    D --> E["Approved?"]
+    E -->|Yes| F["Call the<br/>payment tool"]
     E -->|No| G["Reject"]
     C -->|No| F
 
     style D fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Pause Wait for manager approval
 
 This kind of process is usually easier to express as a graph than to squeeze into a single agent loop.
 
@@ -79,20 +84,28 @@ Treating LlamaIndex as "another LangChain" obscures its emphasis on private-data
 ### 1.4.1 Enterprise knowledge bases involve more than tool calls
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart LR
-    subgraph IN["When documents enter the system"]
-        I1["Parse PDF tables correctly"]
-        I2["Connect diverse data sources consistently"]
-        I3["Split and index documents"]
+    subgraph IN["Ingestion"]
+        direction LR
+        I1["Parse PDF tables<br/>correctly"]
+        I2["Connect data<br/>sources"]
+        I3["Split and index<br/>documents"]
     end
-    subgraph Q["When users start asking questions"]
-        Q1["Filter and rerank retrieved results"]
-        Q2["Ensure each user sees only<br/>data they are authorized to access"]
+    subgraph Q["Querying"]
+        direction LR
+        Q1["Filter and<br/>rerank retrieved<br/>results"]
+        Q2["Enforce data<br/>access"]
     end
     IN --> Q
 
     style IN fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Connect diverse data sources consistently
+- Ensure each user sees only data they are authorized to access
 
 Problems in enterprise knowledge bases arise throughout the data pipeline. Registering one more search tool does not solve them.
 
@@ -109,15 +122,22 @@ LlamaIndex also provides agents, memory, multi-agent patterns, and workflows.
 **You do not necessarily have to choose just one.**
 
 ```mermaid
-flowchart LR
-    A["LlamaIndex<br/>Process documents and build indexes<br/>Return retrieval results"] --> B["Wrap as a Tool"]
-    B --> C["LangChain agent<br/>Decide when to call it"]
-    C --> D["LangGraph<br/>Coordinate query rewriting, answer validation,<br/>human review, and failure recovery"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LlamaIndex"] --> B["Wrap as a Tool"]
+    B --> C["LangChain agent"]
+    C --> D["LangGraph"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
     style D fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- LlamaIndex Process documents and build indexes Return retrieval results
+- LangChain agent Decide when to call it
+- LangGraph Coordinate query rewriting, answer validation, human review, and failure recovery
 
 **This is one possible division of work, not a set of nonoverlapping capabilities.** LlamaIndex also has workflows, and LangChain also has retrieval components. If you introduce all three, avoid having duplicate memory, retry, and tracing mechanisms manage the same request.
 
@@ -135,21 +155,36 @@ flowchart LR
 ## 1.7 A selection process: narrow the question step by step
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q1{"① Does this task<br/>really need an agent?"}
-    Q1 -->|Fixed steps and clear rules| N["Use ordinary functions or workflows<br/>Cheaper and more stable<br/>Handing an if/else process to a model<br/>only adds uncertainty"]
-    Q1 -->|Yes| Q2{"② Which layer is actually<br/>the hardest part of the project?"}
-    Q2 -->|Model and tool integration| A["LangChain is a natural fit"]
-    Q2 -->|Private data, document parsing, retrieval quality| B["LlamaIndex addresses the core problem"]
-    Q2 -->|Complex branches, loops, state recovery| C["LangGraph plays to its strengths"]
+    Q1["① Need an agent?"]
+    Q1 -->|"Fixed rules"| N["Use ordinary<br/>functions or<br/>workflows"]
+    Q1 -->|Yes| Q2["② Main<br/>difficulty?"]
+    Q2 -->|"Integration"| A["LangChain"]
+    Q2 -->|"Private data"| B["LlamaIndex"]
+    Q2 -->|"Execution control"| C["LangGraph"]
     A --> Q3
     B --> Q3
     C --> Q3
-    Q3["③ Examine production constraints"]
+    Q3["③ Examine<br/>production<br/>constraints"]
 
     style N fill:#fdecea
     style Q3 fill:#fff3cd
 ```
+
+Figure conditions and labels:
+
+- Fixed steps and clear rules
+- Model and tool integration
+- Private data, document parsing, retrieval quality
+- Complex branches, loops, state recovery
+
+Details of the illustrated steps and components:
+
+- ① Does this task really need an agent?
+- Use ordinary functions or workflows Cheaper and more stable Handing an if/else process to a model only adds uncertainty
+- ② Which layer is actually the hardest part of the project?
+- LlamaIndex addresses the core problem
 
 ### 1.7.1 Step three: a working demo is not a production-ready system
 
@@ -222,10 +257,5 @@ The key to choosing a framework is to establish whether the project's main diffi
 
 ## References
 
-- [LangChain documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LlamaIndex documentation](https://docs.llamaindex.ai/)
-- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-- [CrewAI documentation](https://docs.crewai.com/)
-- [AutoGen repository](https://github.com/microsoft/autogen)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-01) for this chapter’s sources, reading suggestions, and source notes.

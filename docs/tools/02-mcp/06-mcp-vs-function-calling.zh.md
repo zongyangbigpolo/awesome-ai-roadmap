@@ -27,18 +27,25 @@ description: 从协议层级、部署位置、工具发现、权限和复用成�
 
 若 **5 个应用**分别独立适配 **8 个工具**，就有 **40 个适配组合**；共享 SDK 或内部服务可减少重复代码，MCP 是标准化这类适配的一种方式。
 
+**各自维护适配器**
+
 ```mermaid
-flowchart TB
-    subgraph PAIN["缺少共享适配时的维护风险"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
         P1["上游 API 字段变化"] --> R1["各应用分别适配"]
-        P2["迁移模型 API"] --> R2["检查 Schema 与回填格式"]
-        P3["新应用也需访问"] --> R3["重复实现发现与授权"]
-    end
+        P2["迁移模型 API"] --> R2["检查 API 契约"]
+        P3["新应用也需访问"] --> R3["重新实现集成"]
 
     style R1 fill:#fce8e6
     style R2 fill:#fce8e6
     style R3 fill:#fce8e6
 ```
+
+图中各项的完整含义：
+
+- 缺少共享适配时的维护风险
+- 检查 Schema 与回填格式
+- 重复实现发现与授权
 
 核心风险是：没有共享适配层时，同一工具会在多个应用里重复维护。Function Calling 本身不负责跨应用的工具管理和互操作；这部分可以用 MCP，也可以由已有共享 SDK 或内部服务承担。
 
@@ -47,25 +54,33 @@ flowchart TB
 项目里最常见的接法，就是 Host 用 Function Calling 路由 MCP Tool。
 
 ```mermaid
-sequenceDiagram
-    participant M as 模型
-    participant H as 宿主程序（内含 MCP Client）
-    participant S as MCP Server
-
-    Note over H,S: 启动时
-    H->>S: tools/list
-    S-->>H: MCP 格式的工具定义
-    Note over H: 转换成模型原生的<br/>Function Calling Schema
-
-    Note over M,H: 运行时
-    H->>M: messages + tools（普通 FC 格式）
-    M-->>H: tool_calls（普通 FC 输出）
-    Note over M: 此桥接不要求模型<br/>理解 MCP 传输
-    H->>S: tools/call（路由到对应 Server）
-    S-->>H: 执行结果
-    H->>M: 按模型 API 回填工具结果
-    M-->>H: 最终答案
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["发现 MCP 工具"]
+    S1["转换 schema"]
+    S2["模型提出调用"]
+    S3["Host 路由至 MCP"]
+    S4["返回工具结果"]
+    S5["模型回答"]
+    S0 --> S1 --> S2 --> S3 --> S4 --> S5
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 说明：宿主程序（内含 MCP Client）, MCP Server | 启动时 |
+| 宿主程序（内含 MCP Client） → MCP Server | tools/list |
+| MCP Server → 宿主程序（内含 MCP Client）（返回） | MCP 格式的工具定义 |
+| 说明：宿主程序（内含 MCP Client） | 转换成模型原生的；Function Calling Schema |
+| 说明：模型, 宿主程序（内含 MCP Client） | 运行时 |
+| 宿主程序（内含 MCP Client） → 模型 | messages + tools（普通 FC 格式） |
+| 模型 → 宿主程序（内含 MCP Client）（返回） | tool_calls（普通 FC 输出） |
+| 说明：模型 | 此桥接不要求模型；理解 MCP 传输 |
+| 宿主程序（内含 MCP Client） → MCP Server | tools/call（路由到对应 Server） |
+| MCP Server → 宿主程序（内含 MCP Client）（返回） | 执行结果 |
+| 宿主程序（内含 MCP Client） → 模型 | 按模型 API 回填工具结果 |
+| 模型 → 宿主程序（内含 MCP Client）（返回） | 最终答案 |
 
 在这种集成中，模型的视角确实是普通 Function Calling，能力发现、schema 转换、调用路由和结果回传都在 Host 层完成。这种桥接很常见，但不是 MCP 的规范要求。
 
@@ -109,14 +124,15 @@ sequenceDiagram
 ### 6.4.3 判断流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    START{要接一个工具} --> Q1{社区有现成<br/>MCP Server 吗?}
-    Q1 -->|有| USE_MCP["先核查维护状态、权限<br/>及版本兼容后复用"]
-    Q1 -->|没有| Q2{需要跨项目 /<br/>跨团队复用吗?}
+    START["要接一个工具"] --> Q1["有现成 MCP Server？"]
+    Q1 -->|有| USE_MCP["审查后再复用"]
+    Q1 -->|没有| Q2["需要跨团队复用？"]
     Q2 -->|需要| BUILD_MCP["实现 MCP Server"]
-    Q2 -->|不需要| Q3{已有本地函数或 API<br/>能满足需求吗?}
-    Q3 -->|能| USE_FC["实现或保留本地函数 / API<br/>可用 Function Calling 驱动"]
-    Q3 -->|不能| Q4{还需要跨 Host 的<br/>标准发现与互操作吗?}
+    Q2 -->|不需要| Q3["本地 API 足够？"]
+    Q3 -->|能| USE_FC["本地函数 / API"]
+    Q3 -->|不能| Q4["需要互操作？"]
     Q4 -->|是| BUILD_MCP
     Q4 -->|否| USE_FC
 
@@ -124,6 +140,15 @@ flowchart TB
     style BUILD_MCP fill:#e6f4ea
     style USE_FC fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 社区有现成 MCP Server 吗?
+- 先核查维护状态、权限 及版本兼容后复用
+- 需要跨项目 / 跨团队复用吗?
+- 已有本地函数或 API 能满足需求吗?
+- 实现或保留本地函数 / API 可用 Function Calling 驱动
+- 还需要跨 Host 的 标准发现与互操作吗?
 
 ### 6.4.4 混用是常态
 
@@ -160,7 +185,7 @@ tools = mcp_tools + local_tools
 
 这是示意配置，需替换成已安装、已审阅并固定版本的实际启动入口；宿主是否要重启由产品决定。目录参数是 filesystem Server 的实现配置，**不是 Roots 协议本身**。Roots 只是上下文提示而非强制沙箱，且在 2026-07-28 已弃用；文件访问还要靠服务端路径校验和 OS 隔离。
 
-旧 `@modelcontextprotocol/server-github` 已归档；GitHub 官方实现见 [github/github-mcp-server](https://github.com/github/github-mcp-server)。令牌应由凭据管理器或受控环境注入，不应提交到配置仓库。
+旧 `@modelcontextprotocol/server-github` 已归档；GitHub 官方实现见 github/github-mcp-server<sup>[【284】](../../book/references.zh.md#ref-284)</sup>。令牌应由凭据管理器或受控环境注入，不应提交到配置仓库。
 
 ### 6.5.2 自己写一个 Server
 
@@ -239,10 +264,5 @@ MCP 工具发现不强制模型全量注入。Host 可先分页发现、缓存�
 
 ## 参考资料
 
-- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP 服务端开发快速上手](https://modelcontextprotocol.io/docs/develop/build-server)
-- [MCP Servers 官方示例仓库](https://github.com/modelcontextprotocol/servers)
-- [已归档 MCP 示例](https://github.com/modelcontextprotocol/servers-archived)
-- [MCP Roots：弃用状态与非安全边界](https://modelcontextprotocol.io/specification/2026-07-28/client/roots)
-- [OpenAI: Function Calling 指南](https://platform.openai.com/docs/guides/function-calling)
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-06)。

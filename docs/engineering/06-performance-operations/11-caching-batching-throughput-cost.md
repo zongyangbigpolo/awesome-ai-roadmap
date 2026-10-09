@@ -9,12 +9,20 @@ description: Distinguish answer caching from prefix caching, account for batchin
 For usage-priced model APIs, token usage, tool usage, and call counts directly affect the bill. Self-hosting also requires accounting for compute utilization and operations. Four common levers are **avoiding repeated computation through caching, sending delay-tolerant tasks to asynchronous batch processing, routing to cheaper models, and compressing context to reduce tokens**. We begin with the first two application-level levers. Cost-aware routing is covered in [Chapter 3](../02-request-reliability/03-model-gateway-routing-fallback.md); inference-engine techniques such as quantization and KV caching are covered in [LLM · Inference and Serving](../../llm/03-inference-serving/README.md).
 
 ```mermaid
-flowchart TB
-    COST["Call cost"] --> CACHE["Caching:<br/>avoid repeated computation"]
-    COST --> BATCH["Batching:<br/>amortize per-item overhead"]
-    COST --> ROUTE["Cost-aware routing:<br/>see Chapter 3"]
-    COST --> CTX["Context compression:<br/>reduce input tokens"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    COST["Call cost"] --> CACHE["Caching:"]
+    COST --> BATCH["Batching:"]
+    COST --> ROUTE["Cost-aware<br/>routing:"]
+    COST --> CTX["Context<br/>compression:"]
 ```
+
+Details of the illustrated steps and components:
+
+- Caching: avoid repeated computation
+- Batching: amortize per-item overhead
+- Cost-aware routing: see Chapter 3
+- Context compression: reduce input tokens
 
 ## 11.2 Semantic caching: a direct way to reduce application costs
 
@@ -126,8 +134,5 @@ Without knowing which use cases actually drive spending, optimization effort can
 
 ## References
 
-- [Anthropic: Prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
-- [OpenAI: Prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
-- [OpenAI: Batch API](https://platform.openai.com/docs/guides/batch)
-- [Anthropic: Message Batches API](https://docs.anthropic.com/en/docs/build-with-claude/batch-processing)
-- [Google Cloud: Cost optimization for AI and ML workloads](https://cloud.google.com/architecture/framework/cost-optimization/ai-ml)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-11) for this chapter’s sources, reading suggestions, and source notes.

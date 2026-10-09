@@ -9,12 +9,18 @@ description: Define scope, success criteria, and attack budgets for authorized r
 Earlier chapters repeatedly noted that some attacks are invisible to standard evaluations and that alignment is a probabilistic mitigation. An AI system's security posture is therefore not a constant that one test can establish. It changes with model versions, prompts, newly connected tools, and newly disclosed jailbreak techniques. [Agent Security, Section 15.13](../../agent/05-production/15-agent-security.md) and [RAG Security, Section 20.4](../../rag/06-operations-security/20-rag-challenges-security.md) already explain the application-level principle that attack success rate (ASR) and utility must be reported together. At an organizational level, that principle needs to become a red-teaming methodology, an automated toolchain, and a continuous assurance process.
 
 ```mermaid
-flowchart LR
-    A[Pre-release red teaming] --> B[Continuous automated evaluation]
-    B --> C[Production monitoring and incident response]
-    C --> D[Feed findings into the next evaluation set]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Pre-release red<br/>teaming"] --> B["Continuous<br/>automated<br/>evaluation"]
+    B --> C["Monitor and<br/>respond"]
+    C --> D["Add regression<br/>cases"]
     D --> B
 ```
+
+Details of the illustrated steps and components:
+
+- Production monitoring and incident response
+- Feed findings into the next evaluation set
 
 ## 9.2 Red-Teaming Methodology
 
@@ -59,17 +65,22 @@ Pin tool, probe, model, and scorer versions, and record the run configuration. P
 ## 9.4 Continuous Assurance: Integrating Security Evaluation into Development
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    C1[Code/prompt/tool change] --> G1{CI security gate}
-    G1 -->|Pass| C2[Deploy to staging]
-    G1 -->|Fail| BLOCK[Block and report findings]
-    C2 --> G2{Staging regression evaluation}
-    G2 -->|Pass| PROD[Production release]
+    C1["Code/prompt/tool<br/>change"] --> G1["CI security gate"]
+    G1 -->|Pass| C2["Deploy to staging"]
+    G1 -->|Fail| BLOCK["Block and report<br/>findings"]
+    C2 --> G2["Staging regression<br/>evaluation"]
+    G2 -->|Pass| PROD["Production release"]
     G2 -->|Fail| BLOCK
-    PROD --> MON[Production monitoring]
-    MON -->|New attack pattern found| NEWCASE[Create a new regression case]
+    PROD --> MON["Production monitoring"]
+    MON -->|"New attack"| NEWCASE["Create a new<br/>regression case"]
     NEWCASE --> G1
 ```
+
+Figure conditions and labels:
+
+- New attack pattern found
 
 - **CI security gates:** every change to a system prompt, a tool's authorized scope, or a model version triggers automated security regression tests, not just functional tests.
 - **Tiered evaluation sets:** follow the Smoke/Regression/Full approach in the [RAG Security Release Checklist](../../rag/06-operations-security/20-rag-challenges-security.md). Run a minimal smoke set on every commit, the complete regression set before merging, and a full evaluation covering newly disclosed attack techniques on a regular schedule.
@@ -122,9 +133,5 @@ Large numbers of similar, repetitive cases do not reveal the system's actual sec
 
 ## References
 
-- [NIST AI RMF: Measure Function](https://www.nist.gov/itl/ai-risk-management-framework)
-- [garak: LLM Vulnerability Scanner](https://github.com/leondz/garak)
-- [PyRIT: Python Risk Identification Tool for generative AI](https://github.com/Azure/PyRIT)
-- [HarmBench: A Standardized Evaluation Framework for Automated Red Teaming](https://arxiv.org/abs/2402.04249)
-- [Red Teaming Language Models with Language Models](https://arxiv.org/abs/2202.03286)
-- [OWASP LLM Applications Cybersecurity and Governance Checklist](https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-09) for this chapter’s sources, reading suggestions, and source notes.

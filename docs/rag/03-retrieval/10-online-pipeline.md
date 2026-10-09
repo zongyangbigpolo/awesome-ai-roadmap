@@ -19,22 +19,36 @@ Offline construction also has cost, freshness, and failure constraints; incorrec
 ## 10.2 The complete pipeline
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    Q[User query] --> S0[0. Initial decision<br/>Is retrieval needed?]
+    Q[User query] --> S0{Retrieve?}
     S0 -->|No| DIRECT[Generate directly]
-    S0 -->|Yes| S1[1. Query understanding<br/>and rewriting]
-    S1 --> S2[2. Query embedding]
-    S2 --> S3[3. Multi-path retrieval]
-    S3 --> S4[4. Fusion and deduplication]
-    S4 --> S5[5. Reranking]
-    S5 --> S6[6. Context trimming<br/>and assembly]
-    S6 --> GATE{Sufficient evidence<br/>and authorized use?}
-    GATE -->|No| STOP[Abstain, clarify, or perform<br/>bounded additional retrieval]
-    GATE -->|Yes| S7[7. Prompt assembly]
-    S7 --> S8[8. Generation]
-    S8 --> S9[9. Citation annotation<br/>and validation]
-    S9 --> OUT[Return the answer]
+    S0 -->|Yes| S1[Prepare query]
+    S1 --> S2[Retrieve evidence]
 ```
+
+Query preparation means understanding and rewriting the question, then embedding it. The retrieval branch continues through the following evidence-selection stages:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S3[Multi-path retrieval] --> S4[Fuse and deduplicate]
+    S4 --> S5[Rerank]
+    S5 --> S6[Trim and assemble context]
+```
+
+The selected context must pass an evidence and authorization gate before generation:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GATE{Evidence usable?} -->|No| STOP[Abstain or recover]
+    GATE -->|Yes| S7[Assemble prompt; generate]
+    S7 --> S9[Annotate and validate citations]
+    S9 --> OUT[Return answer]
+```
+
+“Usable” requires both sufficient evidence and authorized use. On failure, abstain, ask for clarification, or perform bounded additional retrieval. Citation annotation and validation follow generation; they are not replaced by the pre-generation gate.
 
 Steps 0 and 9 are often omitted from basic RAG diagrams, but they are frequently necessary in production.
 
@@ -227,8 +241,5 @@ Do not focus on vector retrieval that takes a few milliseconds while overlooking
 
 ## References
 
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
-- [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-10) for this chapter’s sources, reading suggestions, and source notes.

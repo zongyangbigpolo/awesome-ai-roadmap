@@ -10,23 +10,14 @@ In production, LLM outputs may be displayed to people or parsed by programs: wri
 
 ```mermaid
 flowchart TB
-    P["Prompt"] --> M["Model generation"]
-    M --> RAW["Raw output"]
-    RAW --> STATUS{"Completed normally, without refusal?"}
-    STATUS -->|No| STOP["Handle refusal, truncation, or failure"]
-    STATUS -->|Yes| PARSE["Parse JSON"]
-    PARSE -->|Parse succeeds| SCHEMA{"Conforms to schema?"}
-    PARSE -->|Parse fails| REPAIR{"Repairable, with budget remaining?"}
-    SCHEMA -->|No| REPAIR
-    REPAIR -->|Yes| M
-    REPAIR -->|No| STOP
-    SCHEMA -->|Yes| BUSINESS["Verify business facts and permissions"]
-    BUSINESS --> DOWNSTREAM["Pass to downstream consumers after approval"]
-
-    style SCHEMA fill:#fff3cd
+    STATUS["Check completion"] --> PARSE["Parse and validate"]
+    PARSE --> BUSINESS["Check facts and access"]
+    BUSINESS --> DOWNSTREAM["Release approved result"]
 ```
 
 Check response status first, then parse JSON and validate the schema, and finally verify business conditions. A single library may perform both parsing and schema validation, but these are different checks. Failure at any stage must prevent an unfinished result from reaching downstream execution.
+
+The diagram shows the successful path, not an unconditional sequence of actions. Refusal, truncation, or failed generation stops that path before parsing. A parsing or schema error may trigger a repair only when the error is repairable and the time and cost budgets allow another attempt; otherwise stop or hand off. A repaired result must pass the checks again. A failed business or permission check is not a formatting error and must not be bypassed by retrying generation.
 
 ## 5.2 Interface form and constraint strength are separate questions
 
@@ -37,7 +28,7 @@ Check response status first, then parse JSON and validate the schema, and finall
 | **Function calling / tool use** | Configuration-dependent | An interface for generating tool arguments, not an inherent schema guarantee; strict tool calling can also use Structured Outputs |
 | **Strict structured outputs / constrained decoding** | Schema constraint | Constrains output structure when the model, interface, and schema subset are supported and generation completes normally |
 
-OpenAI's [Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs) can be used for both structured responses and strict tool calling. **Check response status and refusal signals before parsing a complete object.** A refusal may not conform to the business schema, a length limit or interruption may leave output incomplete, and an unsupported schema may cause the request to be rejected. Constrained decoding does not guarantee that amounts, currencies, or business facts are correct. Verify checkable semantics at runtime, and use offline evaluation to measure the remaining error rate.
+OpenAI's Structured Outputs<sup>[【691】](../../book/references.md#ref-691)</sup> can be used for both structured responses and strict tool calling. **Check response status and refusal signals before parsing a complete object.** A refusal may not conform to the business schema, a length limit or interruption may leave output incomplete, and an unsupported schema may cause the request to be rejected. Constrained decoding does not guarantee that amounts, currencies, or business facts are correct. Verify checkable semantics at runtime, and use offline evaluation to measure the remaining error rate.
 
 The same sequence applies to reasoning models. A schema constrains the structure of visible output; valid output does not establish that internal reasoning is controlled.
 
@@ -144,9 +135,5 @@ Valid JSON is not proof of authorization. The server should verify checkable con
 
 ## References
 
-- [OpenAI: Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [OpenAI: Function calling](https://platform.openai.com/docs/guides/function-calling)
-- [Anthropic: Tool use with Claude](https://docs.anthropic.com/en/docs/build-with-claude/tool-use)
-- [JSON Schema Specification](https://json-schema.org/specification)
-- [Pydantic: Validators](https://docs.pydantic.dev/latest/concepts/validators/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-05) for this chapter’s sources, reading suggestions, and source notes.

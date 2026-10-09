@@ -11,7 +11,8 @@ description: 说明文本、页面、表格与音视频的多表示检索，覆�
 ## 21.1 端到端链路
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A[原始媒体] --> B[摄取与解析]
     B --> C[多种表示与索引]
     Q[问题] --> D[意图与模态路由]
@@ -95,8 +96,5 @@ flowchart LR
 
 ## 参考资料
 
-- [Learning Transferable Visual Models From Natural Language Supervision (CLIP)](https://arxiv.org/abs/2103.00020)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [RAG-Anything: All-in-One RAG Framework](https://arxiv.org/abs/2510.12323)
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-21)。

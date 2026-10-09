@@ -22,13 +22,18 @@ description: 区分 LangChain 高层 Agent 与 LangGraph 图编排的依赖和�
 ### 9.1.1 关键的层次关系
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["LangChain 高层 Agent API<br/>create_agent"] --> B["编译后的 LangGraph"]
-    B --> C["检查点、流式事件、中断与执行运行时"]
+    A["LangChain 高层<br/>Agent API"] --> B["编译后的<br/>LangGraph"]
+    B --> C["检查点、流式事件<br/>、中断与执行运行<br/>时"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- LangChain 高层 Agent API create_agent
 
 **`create_agent` 会构建一个基于 LangGraph 的图运行时**：Agent 在模型节点和工具节点之间循环，直到模型给出最终答案或命中停止条件。
 
@@ -79,19 +84,26 @@ flowchart TB
 **比如这样一条流程**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["权限校验"] --> B1["研究节点 1"] & B2["研究节点 2"] & B3["研究节点 3"]
+    A["权限校验"] --> B1["研究 1"] & B2["研究 2"] & B3["研究 3"]
     B1 & B2 & B3 --> C["汇总"]
-    C --> D{"金额高?"}
+    C --> D["金额高?"]
     D -->|是| E["转人工"]
     D -->|否| F["继续"]
-    F --> G{"失败?"}
+    F --> G["失败?"]
     G -->|是| H["补偿节点"]
-    G -->|否| I["等待次日任务继续"]
+    G -->|否| I["等待次日继续"]
 
     style C fill:#e8f0fe
     style H fill:#fff3cd
 ```
+
+图中条件与标签：
+
+- 研究节点 1
+- 研究节点 2
+- 研究节点 3
 
 **这时开发者需要明确看到每个节点、状态字段和路由条件**，图编排的价值才真正体现出来。
 
@@ -246,16 +258,28 @@ LangSmith 承担 **tracing、evaluation、Studio 和 Deployment** 等平台能�
 ## 9.10 什么时候下沉 LangGraph
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"需求能自然表达成<br/>『给模型一组工具，让它循环调用直到完成』吗?"}
-    Q1 -->|能| A["从 create_agent 开始<br/>客服问答、数据库查询助手、内部知识助手"]
-    A --> A2["提示词动态化、模型切换、工具筛选<br/>摘要、重试、护栏、敏感工具审批<br/>先用 middleware 解决"]
-    Q1 -->|主角已不是一个 Agent loop<br/>而是一条业务流程| B["考虑 LangGraph"]
-    B --> B2["典型信号：<br/>确定性规则与模型决策交替出现<br/>多条路径并行再汇合<br/>跨小时/跨天暂停恢复<br/>多个 Agent 协作<br/>必须精确控制失败补偿和人工节点"]
+    Q1["需求能自然表达成"]
+    Q1 -->|能| A["从 create_agent<br/>开始"]
+    A --> A2["扩展中间件"]
+    Q1 -->|"业务工作流"| B["考虑 LangGraph"]
+    B --> B2["典型信号："]
 
     style A fill:#e6f4ea
     style B fill:#fff3cd
 ```
+
+图中条件与标签：
+
+- 主角已不是一个 Agent loop 而是一条业务流程
+
+图中各项的完整含义：
+
+- 需求能自然表达成 『给模型一组工具，让它循环调用直到完成』吗?
+- 从 create_agent 开始 客服问答、数据库查询助手、内部知识助手
+- 提示词动态化、模型切换、工具筛选 摘要、重试、护栏、敏感工具审批 先用 middleware 解决
+- 典型信号： 确定性规则与模型决策交替出现 多条路径并行再汇合 跨小时/跨天暂停恢复 多个 Agent 协作 必须精确控制失败补偿和人工节点
 
 ### 9.10.1 更常见的做法是渐进式组合
 
@@ -330,14 +354,5 @@ LangChain 负责高层 Agent 入口和标准模型/工具循环，LangGraph 负�
 
 ## 参考资料
 
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain: Streaming](https://docs.langchain.com/oss/python/langchain/streaming)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph: Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api)
-- [LangGraph 持久化文档](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [LangSmith 官方文档](https://docs.langchain.com/langsmith/observability)
-- [LangGraph Python 包依赖声明](https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/pyproject.toml)
-- [LangGraph 并行状态更新错误](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-09)。

@@ -63,20 +63,31 @@ The HTTP/1.1 path uses an Upgrade request and `101 Switching Protocols`. RFC 844
 
 On the HTTP/1.1 path, the upgraded TCP connection carries WebSocket frames. On the HTTP/2/3 path, an extended CONNECT stream carries them, while other HTTP streams can remain active. Both paths provide **a full-duplex channel in which either side can send messages independently**.
 
+**SSE**
+
 ```mermaid
-flowchart LR
-    subgraph SSE_M["SSE"]
-        C1[Client] -->|"HTTP request<br/>GET or POST, depending on the API"| S1[Server]
-        S1 -->|"SSE response stream for that request"| C1
-    end
-
-    subgraph WS_M["WebSocket"]
-        C2[Client] <-->|"One connection<br/>Either side can send at any time"| S2[Server]
-    end
-
-    style SSE_M fill:#fef7e0
-    style WS_M fill:#e8f0fe
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Client"] -->|"HTTP request"| S1["Server"]
+        S1 -->|"SSE response"| C1
 ```
+
+Figure conditions and labels:
+
+- HTTP request GET or POST, depending on the API
+- SSE response stream for that request
+
+**WebSocket**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] <-->|"Bidirectional"| S2["Server"]
+```
+
+Figure conditions and labels:
+
+- One connection Either side can send at any time
 
 An SSE response flows in one direction, but the client can send other HTTP requests in parallel while reading it. It is not a half-duplex “walkie-talkie” that requires the server to finish speaking before the client can respond.
 
@@ -133,7 +144,7 @@ Redis Pub/Sub is only one option. A dedicated gateway, broker, or platform-provi
 
 ### 13.5.2 Getting through Proxies and Firewalls
 
-Some older proxies and enterprise gateway configurations **block or strip WebSocket Upgrade requests**. Support depends on the deployed version and policy. For example, [Squid v5 supports controlled upgrades](https://www.squid-cache.org/Versions/v5/cfgman/http_upgrade_request_protocols.html), although its default configuration drops the Upgrade header. A default restriction is not the same as a missing protocol capability.
+Some older proxies and enterprise gateway configurations **block or strip WebSocket Upgrade requests**. Support depends on the deployed version and policy. For example, Squid v5 supports controlled upgrades<sup>[【331】](../../book/references.md#ref-331)</sup>, although its default configuration drops the Upgrade header. A default restriction is not the same as a missing protocol capability.
 
 SSE usually avoids this particular class of Upgrade rejection: it remains an ordinary HTTP request that most proxies can forward. It is still subject to access policies, buffering, and idle timeouts.
 
@@ -159,23 +170,33 @@ UDP itself does not guarantee delivery, but a WebRTC media path can combine NACK
 
 ### 13.6.2 When TCP Retransmission Slows Real-Time Voice
 
+**TCP · WebSocket**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph TCP_W["TCP · WebSocket"]
-        T1["Audio frame 5 is lost"] --> T2["TCP waits for retransmission"]
-        T2 --> T3["Frames 6, 7, 8…<br/>are all blocked in the buffer"]
-        T3 --> T4["Head-of-line blocking<br/>May exceed the playback deadline"]
-    end
-
-    subgraph UDP_W["UDP · WebRTC"]
-        U1["Audio frame 5 is lost"] --> U2["Assess recovery against the playback deadline"]
-        U2 --> U3["Timely retransmission / FEC<br/>or decoder PLC"]
-        U3 --> U4["Control latency<br/>Quality depends on loss patterns and codecs"]
-    end
-
-    style TCP_W fill:#fce8e6
-    style UDP_W fill:#e6f4ea
+        T1["Audio frame 5<br/>is lost"] --> T2["TCP waits for<br/>retransmission"]
+        T2 --> T3["Frames 6, 7, 8…"]
+        T3 --> T4["Head-of-line<br/>blocking"]
 ```
+
+**UDP · WebRTC**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        U1["Audio frame 5<br/>is lost"] --> U2["Assess recovery"]
+        U2 --> U3["Timely<br/>retransmission<br/>/ FEC"]
+        U3 --> U4["Control latency"]
+```
+
+Details of the illustrated steps and components:
+
+- Frames 6, 7, 8… are all blocked in the buffer
+- Head-of-line blocking May exceed the playback deadline
+- Assess recovery against the playback deadline
+- Timely retransmission / FEC or decoder PLC
+- Control latency Quality depends on loss patterns and codecs
 
 If audio travels in one TCP byte stream, retransmitting missing bytes blocks delivery of later data in that stream. The impact depends on RTT, packet loss, buffering, and the playback budget; one lost packet does not inevitably freeze playback.
 
@@ -190,18 +211,26 @@ Real-time voice balances latency against audio quality. Audio tasks such as offl
 Media and data channels follow different paths. DTLS negotiates SRTP keys; it does not wrap every SRTP packet in another DTLS layer:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    ICE["ICE / STUN / TURN<br/>Connection setup and NAT traversal"]
-    SRTP["SRTP / SRTCP<br/>Media and control packet protection"]
+    ICE["ICE / STUN /<br/>TURN"]
+    SRTP["SRTP / SRTCP"]
     DTLS["DTLS handshake"]
-    DATA["DataChannel<br/>SCTP over DTLS"]
-    PATH["ICE-selected network path<br/>Usually UDP, with TURN relay when needed"]
+    DATA["DataChannel"]
+    PATH["ICE-selected<br/>network path"]
     ICE --> PATH
     DTLS -.exports keys.-> SRTP
     SRTP --> PATH
     DATA --> PATH
     DTLS --> PATH
 ```
+
+Details of the illustrated steps and components:
+
+- ICE / STUN / TURN Connection setup and NAT traversal
+- SRTP / SRTCP Media and control packet protection
+- DataChannel SCTP over DTLS
+- ICE-selected network path Usually UDP, with TURN relay when needed
 
 | Layer | Responsibility | Why it is needed |
 |---|---|---|
@@ -229,16 +258,21 @@ Signaling can use HTTP, WebSocket, or another application channel:
 ICE gathers host, server-reflexive, relay, and other candidates, forms candidate pairs, and performs paced connectivity checks and nomination. It is not a strictly sequential three-stage fallback of “local fails → STUN fails → TURN”:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    P1["Host candidates<br/>Local interface addresses"] --> CHECK["Candidate-pair priorities<br/>STUN connectivity checks and nomination"]
-    P2["Server-reflexive candidates<br/>STUN discovers mapped addresses"] --> CHECK
-    P3["Relay candidates<br/>TURN allocates relay addresses"] --> CHECK
-    CHECK --> SELECT["Select a working path<br/>ICE restart is possible on failure"]
-
-    style P1 fill:#e6f4ea
-    style P2 fill:#fef7e0
-    style P3 fill:#fce8e6
+    CAND["Gather ICE candidates"] --> CHECK["Prioritize and test pairs"]
+    CHECK --> SELECT["Nominate a working path"]
 ```
+
+Candidate gathering includes host addresses from local interfaces, server-reflexive addresses discovered with STUN, and relay addresses allocated by TURN. ICE prioritizes candidate pairs, performs STUN connectivity checks, and nominates a usable pair. Failure may require an ICE restart rather than assuming the original path remains usable.
+
+Details of the illustrated steps and components:
+
+- Host candidates Local interface addresses
+- Candidate-pair priorities STUN connectivity checks and nomination
+- Server-reflexive candidates STUN discovers mapped addresses
+- Relay candidates TURN allocates relay addresses
+- Select a working path ICE restart is possible on failure
 
 NAT mapping and filtering behavior, blocked UDP, firewalls, and candidate reachability can all prevent a direct connection. Labels such as “enterprise network” or “carrier NAT” alone do not establish a particular behavior. Some deployments deliberately use relays for privacy or network-policy reasons.
 
@@ -297,15 +331,21 @@ Reliable delivery in this table refers only to transport semantics while the con
 A selection guide:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"Need real-time interactive<br/>audio or video?"}
+    Q1["Need real-time<br/>interactive"]
     Q1 -->|Yes| RTC["WebRTC"]
-    Q1 -->|No| Q2{"Need continuous bidirectional messages<br/>rather than occasional HTTP control?"}
+    Q1 -->|No| Q2["Bidirectional<br/>traffic?"]
     Q2 -->|No| SSE["SSE"]
     Q2 -->|Yes| WS["WebSocket"]
 
     style SSE fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Need real-time interactive audio or video?
+- Need continuous bidirectional messages rather than occasional HTTP control?
 
 | Scenario | Approach | Reason |
 |---|---|---|
@@ -365,18 +405,5 @@ Both SSE and WebSocket connections belong to a particular instance. Scaling, rec
 
 ## References
 
-- [MDN: Using Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
-- [MDN: The WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-- [MDN: WebRTC API](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API)
-- [RFC 6455: The WebSocket Protocol](https://www.rfc-editor.org/rfc/rfc6455)
-- [RFC 8445: Interactive Connectivity Establishment (ICE)](https://www.rfc-editor.org/rfc/rfc8445)
-- [WebRTC Official Site](https://webrtc.org/)
-- [WHATWG HTML: Server-Sent Events](https://html.spec.whatwg.org/multipage/server-sent-events.html)
-- [RFC 8835: WebRTC Transports](https://www.rfc-editor.org/rfc/rfc8835)
-- [RFC 8834: WebRTC Media and Packet-Loss Recovery](https://www.rfc-editor.org/rfc/rfc8834)
-- [RFC 8831: WebRTC Data Channels](https://www.rfc-editor.org/rfc/rfc8831)
-- [RFC 8441: WebSocket over HTTP/2](https://www.rfc-editor.org/rfc/rfc8441)
-- [RFC 9220: WebSocket over HTTP/3](https://www.rfc-editor.org/rfc/rfc9220)
-- [OpenAI: WebRTC Connections (Realtime API Section)](https://developers.openai.com/api/docs/guides/voice-webrtc?api=realtime)
-- [MCP Specification: Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [A2A v1.0.1 Released Specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-13) for this chapter’s sources, reading suggestions, and source notes.

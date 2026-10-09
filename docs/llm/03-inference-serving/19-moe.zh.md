@@ -15,15 +15,16 @@ Dense Transformer 的每个 token 通常经过各层 attention 与 FFN，不进�
 本章讨论稀疏、token-choice 的 FFN MoE：在选定的 Transformer 层中设置 N 个 routed experts，每个 token 的隐藏状态只送往其中 K 个。其他层或共享专家仍然计算。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["当前层 token 隐藏状态"] --> R["Router 选 K 个专家"]
     R --> E1["专家 1"]
-    R -.未选中.-> E2["专家 2"]
     R --> E3["专家 3"]
-    R -.未选中.-> EN["其余专家"]
     E1 --> O["按 gate 权重求和"]
     E3 --> O
 ```
+
+本例 K = 2：专家 1 和专家 3 执行计算，输出按 gate 权重求和。专家 2 和其余专家未被当前 token 选中。
 
 设 P_shared 是整个模型始终参与的非路由部分，P_experts 是所有层的 routed expert 总参数，且各层专家大小相同、选取比例为 K/N，则可粗略写成：
 
@@ -155,7 +156,8 @@ softmax 可微，`topk` 的索引选择是离散的；主任务梯度可经所�
 Expert Parallel 将不同专家放到不同设备。常见路径是：
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     H["token 隐藏状态"] --> ROUTE["路由与打包"]
     ROUTE --> SEND["dispatch：发往专家设备"]
     SEND --> FFN["各专家执行 FFN"]
@@ -208,12 +210,5 @@ MoE 要分开讨论四件事：总参数容量、每 token 的激活计算、全
 
 ## 参考资料
 
-- [Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
-- [GShard](https://arxiv.org/abs/2006.16668)
-- [Switch Transformers](https://arxiv.org/abs/2101.03961)
-- [Mixtral of Experts](https://arxiv.org/html/2401.04088v1)
-- [DeepSeek-V3 Technical Report](https://arxiv.org/html/2412.19437v2)
-- [Auxiliary-Loss-Free Load Balancing](https://arxiv.org/abs/2408.15664)
-- [Expert Choice Routing](https://arxiv.org/abs/2202.09368)
-- [ST-MoE：Router z-loss](https://arxiv.org/abs/2202.08906)
-- [Qwen3-30B-A3B 官方模型卡](https://huggingface.co/Qwen/Qwen3-30B-A3B)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-19)。

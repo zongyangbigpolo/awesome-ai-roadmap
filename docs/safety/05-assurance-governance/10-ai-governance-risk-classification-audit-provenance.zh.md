@@ -9,14 +9,24 @@ description: 区分组织风险分级与 AI Act 法定义务，核对适用时�
 前九章讨论的都是具体的技术防御。但技术控制要长期有效，需要制度保证：谁批准一个高风险 Agent 上线、谁对模型行为负责、出了事故按什么流程处理、监管要求怎么落地为内部checklist。这正是 NIST AI RMF 中 **Govern** 功能覆盖的范畴：把这些责任、流程和检查项固定下来。
 
 ```mermaid
-flowchart TB
-    G[治理] --> G1[风险分级<br/>10.2]
-    G --> G2[审计与可追溯<br/>10.3]
-    G --> G3[透明度文档<br/>10.4]
-    G --> G4[内容出处<br/>10.5]
-    G --> G5[事件响应与披露<br/>10.6]
-    G --> G6[供应商与第三方风险<br/>10.7]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    G["治理"] --> G1["风险分级"]
+    G --> G2["审计与可追溯"]
+    G --> G3["透明度文档"]
+    G --> G4["内容出处"]
+    G --> G5["事件响应与披露"]
+    G --> G6["供应商与第三方<br/>风险"]
 ```
+
+图中各项的完整含义：
+
+- 风险分级 10.2
+- 审计与可追溯 10.3
+- 透明度文档 10.4
+- 内容出处 10.5
+- 事件响应与披露 10.6
+- 供应商与第三方风险 10.7
 
 ## 10.2 风险分级方法论
 
@@ -76,14 +86,21 @@ flowchart TB
 生成式 AI 大规模普及后，"这段内容是不是 AI 生成的""这张图片有没有被篡改"成为独立的信任问题，这是内容出处（Content Provenance）要解决的范畴。
 
 ```mermaid
-flowchart LR
-    C[内容生成/编辑] --> M[附加可验证的出处元数据]
-    M --> D[分发]
-    D --> V[下游验证工具核实元数据签名]
-    V --> T{完整性是否保持}
-    T -->|是| TRUST[展示经签名验证的出处声明<br/>不证明内容事实为真]
-    T -->|否| WARN[标记为不可验证]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["内容生成/编辑"] --> M["附加溯源元数据"]
+    M --> D["分发"]
+    D --> V["验证元数据签名"]
+    V --> T["完整性保持？"]
+    T -->|是| TRUST["展示签名已验证的<br/>声明"]
+    T -->|否| WARN["标记为不可验证"]
 ```
+
+图中各项的完整含义：
+
+- 附加可验证的出处元数据
+- 下游验证工具核实元数据签名
+- 展示经签名验证的出处声明 不证明内容事实为真
 
 - **数字签名式出处标准**（如 C2PA）：将来源与编辑等声明绑定到资产，验证签名、资产绑定和信任链。签名不是加密，不保证元数据保密；签名有效也不保证声明所描述的事实真实或编辑历史完整；
 - **可见水印/隐性水印**：可见水印容易被裁剪去除，隐性水印试图在不明显改变内容的前提下嵌入可检测的标记，但目前技术上都存在被特定攻击手法擦除或伪造的可能性，应作为纵深防御的一层而非唯一保证；
@@ -146,14 +163,5 @@ Content Credentials 可因截图、转码或剥离元数据而丢失：无凭据
 
 ## 参考资料
 
-法规核对日期：2026-09-15。2026/1744 于 2026-07-24 刊登《欧盟官方公报》，依第 4 条在公布后第三日（2026-07-27）生效；第 1 条 (40) 项修改 AI Act 第 113 条，第 (39) 项涉及既有系统过渡安排。正文引用的是已生效修订，不是提案或政治协议。C2PA 的能力说明采用下列 2.2 版，不声称它是最新版本。
-
-- [NIST AI RMF: Govern Function](https://www.nist.gov/itl/ai-risk-management-framework)
-- [EU AI Act：Regulation (EU) 2024/1689 原文](https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng)
-- [Regulation (EU) 2026/1744：第 1 条 (39)、(40) 项与第 4 条](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744)
-- [GDPR：第 33、34 条，数据事件通知的条件与时限](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng)
-- [European Commission: AI Act policy overview](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai)
-- [C2PA 2.2: Explainer，验证能力与非目标](https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html)
-- [Model Cards for Model Reporting](https://arxiv.org/abs/1810.03993)
-- [System Cards: A New Resource for Understanding How AI Systems Work](https://openai.com/index/system-card/)
-- [OWASP LLM Applications Cybersecurity and Governance Checklist](https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-10)。

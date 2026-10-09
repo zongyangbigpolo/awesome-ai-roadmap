@@ -15,19 +15,15 @@ RAG 更新和普通数据库更新的差异在于：**文档哪怕只改一个�
 ## 19.2 完整的更新链路
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S[数据源变化] --> D[1. 变更检测]
-    D --> C[2. 判断变更类型]
-    C -->|新增| ADD[解析 切分 向量化 写入]
-    C -->|修改| MOD[构建新版本 chunk 与索引]
-    C -->|删除或撤权| DEL[先阻断访问<br/>再更新受影响产物]
-    ADD --> V[3. 一致性与权限校验]
-    MOD --> V
-    DEL --> V
-    V --> A[4. 发布一致版本 manifest]
-    A --> G[5. 灰度生效]
-    G --> M[6. 效果监控]
+    D[检测并分类变更] --> C[按类型处理]
+    C --> V[一致性与权限校验]
+    V --> A[发布版本 manifest]
+    A --> G[灰度生效；监控]
 ```
+
+新增内容需要解析、切分、向量化并写入；修改需要构建新版本的块与索引；删除或撤权必须**先阻断访问**，再更新受影响产物。所有路径都要先通过一致性与权限校验，再发布一致版本 manifest，随后灰度生效并监控质量。
 
 ## 19.3 第一步：变更检测
 
@@ -50,14 +46,15 @@ flowchart TB
 数据库 alias 通常指向 collection/index，并不自动提供每个文档的版本事务。文档级发布可用事务表或 manifest 维护活动版本；跨向量、BM25、原文存储时，将它们的版本组合发布为同一快照，查询绑定这个快照。单独切一个向量库 alias 并不能保证其他系统原子同步。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[doc_id: v17 active] --> B[构建隔离的 v18<br/>解析、切分、向量化、索引]
-    B --> C[校验内容、ACL、召回与索引就绪]
-    C -->|通过| D[原子更新活动版本映射<br/>v17 → v18]
-    C -->|失败| E[丢弃 v18，继续服务 v17]
-    D --> F[观察、可回滚]
-    F --> G[回收 v17]
+    B[构建隔离的 v18] --> C{校验通过？}
+    C -->|是| D[原子激活 v18]
+    C -->|否| E[丢弃 v18；保留 v17]
+    D --> F[观察后再回收 v17]
 ```
+
+初始状态是 `doc_id: v17 active`。构建 v18 包括解析、切分、向量化与索引；校验覆盖内容、ACL、召回和索引就绪状态。通过后，将活动版本映射从 v17 原子切换到 v18。观察 v18 期间保留回滚能力，之后才回收 v17；校验失败则继续由 v17 提供服务。
 
 这避免了边界偏移造成的残留旧块和删后写入窗口。一次请求绑定同一发布快照，其中可以包含多份文档的各自版本；不能无意混入半新半旧内容。历史对比题可显式选取两版并标注。删除与撤权的当前限制独立于快照生效，回滚不能恢复已禁止的访问。
 
@@ -128,7 +125,8 @@ flowchart TB
 大批量更新（换 Embedding 模型、改切分策略、导入新语料）**必须灰度**。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OLD[(旧索引)] --> R[流量路由]
     NEW[(新索引)] --> R
     R --> U[用户]
@@ -230,9 +228,5 @@ flowchart LR
 
 ## 参考资料
 
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [pgvector 官方 README：更新、删除与 VACUUM](https://github.com/pgvector/pgvector)
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data](https://arxiv.org/abs/2403.04871)
-- [LightRAG: Simple and Fast Retrieval-Augmented Generation](https://arxiv.org/abs/2410.05779)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-19)。

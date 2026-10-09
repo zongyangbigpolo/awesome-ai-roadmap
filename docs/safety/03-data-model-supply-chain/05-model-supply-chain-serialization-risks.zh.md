@@ -9,19 +9,28 @@ description: 审查模型及依赖的来源与加载链路，解释 PyTorch weig
 现代 AI 应用很少从零训练模型，而是从模型仓库（Hugging Face、云厂商模型市场等）下载预训练权重、适配器（LoRA）、Tokenizer 和评测脚本，再叠加自己的微调和 Prompt 工程。这意味着**模型和它的配套文件应该被当作软件依赖来管理**，需要与开源库依赖同等级别的供应链治理——但现实中很多团队只对代码依赖做扫描，对模型文件毫无审查。OWASP 将其列为 LLM03（Supply Chain Vulnerabilities）。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
     subgraph SC["模型供应链"]
-        S1[预训练权重来源] --> S2[微调/LoRA 适配器]
-        S2 --> S3[Tokenizer/配置文件]
-        S3 --> S4[推理框架/依赖库]
+        direction TB
+        S1["预训练权重来源"] --> S2["微调/LoRA 适配器"]
+        S2 --> S3["Tokenizer/配置文<br/>件"]
+        S3 --> S4["推理框架/依赖库"]
     end
-    SC --> R1[来源篡改<br/>5.2]
-    SC --> R2[反序列化 RCE<br/>5.3]
-    SC --> R3[依赖投毒<br/>5.4]
-    R1 --> D[防御：签名/出处/ML-BOM<br/>5.5]
+    SC --> R1["来源篡改"]
+    SC --> R2["反序列化 RCE"]
+    SC --> R3["依赖投毒"]
+    R1 --> D["供应链防护"]
     R2 --> D
     R3 --> D
 ```
+
+图中各项的完整含义：
+
+- 来源篡改 5.2
+- 反序列化 RCE 5.3
+- 依赖投毒 5.4
+- 防御：签名/出处/ML-BOM 5.5
 
 ## 5.2 来源篡改：模型仓库不是可信根
 
@@ -40,14 +49,22 @@ PyTorch 检查点常含 Pickle 元数据，而**通用 Pickle 反序列化可以
 PyTorch 2.6 起，未传入 `pickle_module` 时，`torch.load` 默认采用 `weights_only=True`，限制可构造类型并禁止动态导入。它是攻击面缩减措施，不是完整沙箱；拒绝服务、解析器缺陷和不安全 allowlist 仍需防范。不能为消除报错就无审查地切换 `weights_only=False`。
 
 ```mermaid
-sequenceDiagram
-    participant A as 攻击者
-    participant F as 恶意 .pt/.bin 文件
-    participant V as 受害者环境
-    A->>F: 构造带 __reduce__ 的对象并 pickle
-    V->>F: 不受限的 Pickle 加载<br/>例如 weights_only=False
-    F-->>V: 反序列化时执行任意代码
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["构造 pickle 对象"]
+    S1["分发模型文件"]
+    S2["不受限地加载"]
+    S3["执行任意代码"]
+    S0 --> S1 --> S2 --> S3
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 攻击者 → 恶意 .pt/.bin 文件 | 构造带 __reduce__ 的对象并 pickle |
+| 受害者环境 → 恶意 .pt/.bin 文件 | 不受限的 Pickle 加载；例如 weights_only=False |
+| 恶意 .pt/.bin 文件 → 受害者环境（返回） | 反序列化时执行任意代码 |
 
 **防御要点**：
 
@@ -118,10 +135,5 @@ sequenceDiagram
 
 ## 参考资料
 
-- [OWASP LLM03:2025 Supply Chain](https://genai.owasp.org/llmrisk/llm032025-supply-chain/)
-- [Hugging Face: Pickle Scanning and Safetensors](https://huggingface.co/docs/hub/security-pickle)
-- [PyTorch 2.6: Serialization semantics and weights_only](https://docs.pytorch.org/docs/2.6/notes/serialization.html#torch-load-with-weights-only-true)
-- [Sleepy Pickle: Exploiting Machine Learning Pickle Files](https://blog.trailofbits.com/2024/06/11/exploiting-ml-models-with-pickle-file-attacks-part-1/)
-- [MITRE ATLAS: ML Supply Chain Compromise](https://atlas.mitre.org/techniques/AML.T0010)
-- [CycloneDX: Machine Learning Bill of Materials (ML-BOM)](https://cyclonedx.org/capabilities/mlbom/)
-- [Sigstore: Software Signing for Everyone](https://www.sigstore.dev/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-05)。

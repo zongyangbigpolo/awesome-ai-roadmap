@@ -10,7 +10,7 @@ description: "从四个开源项目整理 FDE 交付中的常见问题：需求�
 
 ## 2.1 到了现场才发现，原来的需求不能照做
 
-Applied AI Field Guide 的[发票异常教学案例](https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/field-evidence.md)从一个冲突开始：原来的承诺是自动处理并入账，现场流程和政策却要求指定人员先审批。项目因此改成准备建议和待审内容，把审批、入账留给有权操作的人。
+Applied AI Field Guide 的发票异常教学案例<sup>[【808】](../../book/references.zh.md#ref-808)</sup>从一个冲突开始：原来的承诺是自动处理并入账，现场流程和政策却要求指定人员先审批。项目因此改成准备建议和待审内容，把审批、入账留给有权操作的人。
 
 值得学的不是“遇到风险就加个人工审核”，而是**发现原需求做不了以后，怎样和客户重新约定**。不能把原来的要求悄悄改掉，也不能以为给项目出钱的人就一定有权放宽业务政策。
 
@@ -33,16 +33,21 @@ Applied AI Field Guide 的[发票异常教学案例](https://github.com/davidahm
 记录要标明“待确认、同意、拒绝或延期”，而不是开完会就默认客户接受了。改范围后，验收条件、交付计划和费用约定也要一起看。
 
 ```mermaid
-flowchart LR
-    A["保留原来的约定"] --> B["写清现场发现的冲突"]
-    B --> C["说明影响与备选方案"]
-    C --> D{"有权负责人确认新范围?"}
-    D -->|否| E["保留待决事项<br/>不执行新增动作"]
-    D -->|是| F["更新范围、验收与计划"]
-    F --> G["按确认后的范围实施"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["保留原来的约定"] --> B["写清现场发现的冲<br/>突"]
+    B --> C["说明影响与备选方<br/>案"]
+    C --> D["有权负责人确认新<br/>范围?"]
+    D -->|否| E["保留待决事项"]
+    D -->|是| F["更新范围、验收与<br/>计划"]
+    F --> G["按确认后的范围实<br/>施"]
 ```
 
-另一个常见问题是“顺手再做一点”。FDEOps 的 [hold-scope](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/hold-scope.md)建议把新增要求的提出人、影响和处理决定记下来，再讨论放在本期、下一期，还是另开项目。
+图中各项的完整含义：
+
+- 保留待决事项 不执行新增动作
+
+另一个常见问题是“顺手再做一点”。FDEOps 的 hold-scope<sup>[【809】](../../book/references.zh.md#ref-809)</sup>建议把新增要求的提出人、影响和处理决定记下来，再讨论放在本期、下一期，还是另开项目。
 
 比如客户要求助手顺便预留库存，工程师要说明这已经涉及写入权限、并发占用和失败后的核对。可以讨论怎么做，但不能先答应“顺手加上”，到延期时才解释工作量。
 
@@ -50,7 +55,7 @@ flowchart LR
 
 “ERP 权限还没开”“库存字段需要确认”“业务有空再看”都像是在跟进，实际却看不出谁应该做什么。
 
-FDEstack 把待确认问题放进 [`unknowns.md`](https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/templates/unknowns.md)，再由客户上下文、任务分诊和复盘流程反复带出来。值得借鉴的是：**重要问题没有答案时，不让它随着聊天记录沉下去。**
+FDEstack 把待确认问题放进 `unknowns.md`<sup>[【810】](../../book/references.zh.md#ref-810)</sup>，再由客户上下文、任务分诊和复盘流程反复带出来。值得借鉴的是：**重要问题没有答案时，不让它随着聊天记录沉下去。**
 
 问题可以写得比“待确认”再具体一点：
 
@@ -70,7 +75,7 @@ FDEstack 把待确认问题放进 [`unknowns.md`](https://github.com/Dan-Cleary/
 
 PoC 结束时，最容易留下的是一个能演示的目录。最容易丢掉的，是为了跑通它，工程师到底发现了什么。
 
-FDEstack 的 [`/poc`](https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/poc/SKILL.md)要求把技术发现、设计决定和可复用经验分别写回项目记录。它的 [`/integrate`](https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/integrate/SKILL.md)更进一步，约定不读取 PoC 目录，而是根据这些记录重新实现生产版本。
+FDEstack 的 `/poc`<sup>[【811】](../../book/references.zh.md#ref-811)</sup>要求把技术发现、设计决定和可复用经验分别写回项目记录。它的 `/integrate`<sup>[【812】](../../book/references.zh.md#ref-812)</sup>更进一步，约定不读取 PoC 目录，而是根据这些记录重新实现生产版本。
 
 不必照搬“所有 PoC 都重写”，但应该把结论留下。订单助手的试验结束后，接手的人至少要能看懂下面几类事情：
 
@@ -93,7 +98,7 @@ FDEstack 的“不读 PoC”也是 Skill 的行为约定，不是操作系统权
 
 > “为什么现在只能生成草稿？当时是谁决定的？这个限制还有效吗？”
 
-OpenFDE 的[设计](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md)把材料、事实和任务分开保存。访谈和文档是来源，从中提取出的目标、约束、决定等进入项目记忆，任务再取用相关上下文。事实保留出处，变化通过新记录替代旧记录，而不是直接抹去过去。
+OpenFDE 的设计<sup>[【805】](../../book/references.zh.md#ref-805)</sup>把材料、事实和任务分开保存。访谈和文档是来源，从中提取出的目标、约束、决定等进入项目记忆，任务再取用相关上下文。事实保留出处，变化通过新记录替代旧记录，而不是直接抹去过去。
 
 不用先搭知识图谱，也能采用这个思路。一条有用的项目记录应能回答：
 
@@ -116,7 +121,7 @@ OpenFDE 的[设计](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe
 
 “已经上线”“效果不错”“客户接受了”经常出现在同一份周报里，但它们回答的是不同问题。
 
-FDEOps 的[交接流程](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/close.md)要求区分承诺、测到的结果和客户接受的结果。这个区别可以直接放进项目沟通里：
+FDEOps 的交接流程<sup>[【813】](../../book/references.zh.md#ref-813)</sup>要求区分承诺、测到的结果和客户接受的结果。这个区别可以直接放进项目沟通里：
 
 | 现在能确认什么 | 需要什么依据 | 还不能顺便宣布什么 |
 |---|---|---|
@@ -128,13 +133,13 @@ FDEOps 的[交接流程](https://github.com/suboss87/fdeops/blob/cc96340955b8a1d
 
 如果客户说“先上线试试，收益下个月再看”，就把它记成带条件的试用决定，写明下次看什么、由谁决定继续。不要把它写成“项目价值已验收”。项目负责人同意试用，也不能代替数据、权限或业务政策要求的审批。
 
-工具中的状态也容易造成误会。OpenFDE 在本章引用版本中已有 [`eval` 命令](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/apps/cli/src/commands/eval.ts)，会记录评判结果；但[任务状态转换](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/dispatch/tasks.ts)没有把评测通过设为进入 `accepted` 的硬条件。因此，即使任务显示“已接受”，还得知道是谁确认、依据是什么。
+工具中的状态也容易造成误会。OpenFDE 在本章引用版本中已有 `eval` 命令<sup>[【814】](../../book/references.zh.md#ref-814)</sup>，会记录评判结果；但任务状态转换<sup>[【815】](../../book/references.zh.md#ref-815)</sup>没有把评测通过设为进入 `accepted` 的硬条件。因此，即使任务显示“已接受”，还得知道是谁确认、依据是什么。
 
 ## 2.6 交接时，换一个人处理故障
 
 文档讲得很清楚，原开发者演示也很顺，不代表接手团队真的会用。
 
-Applied AI Field Guide 的[交接案例](https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/adoption-and-handoff.md)把接手方需要完成的事情单独列出来：添加评测样本、发布和回滚、处理异常、支持用户。FDEOps 则强调，交接说明要能帮接到告警的人解决问题，而不只是介绍架构。
+Applied AI Field Guide 的交接案例<sup>[【816】](../../book/references.zh.md#ref-816)</sup>把接手方需要完成的事情单独列出来：添加评测样本、发布和回滚、处理异常、支持用户。FDEOps 则强调，交接说明要能帮接到告警的人解决问题，而不只是介绍架构。
 
 订单助手交接时，可以在测试环境安排三次操作，由接手同事动手，原工程师只观察：
 
@@ -150,7 +155,7 @@ Applied AI Field Guide 的[交接案例](https://github.com/davidahmann/applied-
 
 ## 2.7 第二个客户来了，不要复制第一个客户的全部做法
 
-FDEstack 的跨客户经验记录，以及 FDEOps 的[模式整理](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/encode-pattern.md)，都希望下一次项目不用从零开始。真正值得带走的是排查方法、接口设计和测试思路，不是客户的原始材料。
+FDEstack 的跨客户经验记录，以及 FDEOps 的模式整理<sup>[【817】](../../book/references.zh.md#ref-817)</sup>，都希望下一次项目不用从零开始。真正值得带走的是排查方法、接口设计和测试思路，不是客户的原始材料。
 
 比如“库存字段名相同，含义也可能不同”是一条值得复用的提醒；第一家客户的订单、价格和内部政策，则不能直接进入共享经验库。把经验写成“接库存接口前，核对是否扣除了预留数量”，下一家仍然要用自己的数据确认。
 
@@ -158,21 +163,13 @@ FDEstack 的跨客户经验记录，以及 FDEOps 的[模式整理](https://gith
 
 项目记录放在哪里，同样要按客户要求决定。FDEstack 使用私有 Git 仓库，FDEOps 默认使用本地文件，OpenFDE 使用本地数据库，但这些选择都不自动等于“数据不会离开机器”。编程助手读取文件后可能发送给模型服务，电脑也可能启用了云同步。
 
-OpenFDE 的[Claude 抽取实现](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/extraction/anthropic.ts)会发送待抽取的文本或附件；FDEOps 的[隐私说明](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md)也区分了本地 CLI 和模型服务的数据传输。不能只看见 local-first，就直接导入客户会议纪要。
+OpenFDE 的Claude 抽取实现<sup>[【818】](../../book/references.zh.md#ref-818)</sup>会发送待抽取的文本或附件；FDEOps 的隐私说明<sup>[【819】](../../book/references.zh.md#ref-819)</sup>也区分了本地 CLI 和模型服务的数据传输。不能只看见 local-first，就直接导入客户会议纪要。
 
 开始时，一份范围约定、一张待确认问题表、一份决策与试验记录，再加验收和交接说明，通常已经能把工作接起来。等资料多到难以查找，再考虑自动提取、图谱和任务工作台，不必为了采用一个工具先填写它的全部模板。
 
 ## 2.8 来源与继续阅读
 
-资料整理日期：**2026-09-10**；2026-09-15 另按所引提交复核了 OpenFDE 的评测记录、任务接受条件与 Claude 抽取数据流。本章借鉴工作方法并用订单场景重新组织，不把原项目的全部流程当作通用标准。链接固定到阅读时的提交，方便对照。
-
-| 项目 | 建议先看哪里 | 引用版本 |
-|---|---|---|
-| [Applied AI Field Guide](https://github.com/davidahmann/applied-ai-field-guide) | [五分钟导读](https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/guide/field-guide-in-five-minutes.md)、发票案例中的范围调整和接手演练 | `6b557eb` |
-| [FDEstack](https://github.com/Dan-Cleary/fdestack) | [八个 Skills 的总览](https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/README.md)，尤其是待确认问题、PoC 结论和生产实现之间的衔接 | `5524460` |
-| [OpenFDE](https://github.com/memovai/openfde) | [架构说明](https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md)，看来源、事实、任务和上下文怎样连接 | `e2dec16` |
-| [FDEOps](https://github.com/suboss87/fdeops) | [项目总览](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/README.md)、需求变更和交接技能 | `cc96340` |
-
-需要补技术实现时，可以继续读[重试与幂等](../../engineering/02-request-reliability/04-retry-timeout-idempotency-circuit-breaker.zh.md)、[版本管理](../../engineering/05-release-pipeline/09-prompt-model-data-versioning.zh.md)和[反馈数据处理](../../engineering/06-performance-operations/13-feedback-loop-data-flywheel.zh.md)。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-fde-02)。
 
 返回 [现场经验模块](README.zh.md)。

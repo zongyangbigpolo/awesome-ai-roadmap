@@ -9,14 +9,25 @@ description: Handle model outputs according to their SQL, shell, HTML, CSV, or t
 The first two chapters examined how untrusted content enters a model. This chapter starts from a different principle: **the model's output must itself be treated as untrusted content**. This is the central concern of OWASP LLM05, Improper Output Handling. Teams may carefully validate input yet interpolate model output directly into SQL, shell commands, HTML, Markdown renderers, or downstream API arguments. In effect, they turn the model into a template engine that an attacker can program remotely.
 
 ```mermaid
-flowchart LR
-    U[Attacker-controlled input<br/>Direct or indirect] --> M[Model]
-    M --> O[Model output]
-    O -->|Executed/rendered without handling| D1[SQL/shell/deserialization]
-    O -->|Executed/rendered without handling| D2[Frontend HTML/Markdown]
-    O -->|Used as tool-call arguments| D3[Downstream APIs/filesystem]
-    O -->|Contains credentials or internal information| D4[Externally reachable destination]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    U["Attacker-controlled input"] --> O["Model generates output"]
+    O --> EXEC["Unsafe execution"]
+    O --> LEAK["External disclosure"]
 ```
+
+Direct or indirect attacker-controlled input reaches the model. Its output can become an execution vulnerability when passed without appropriate handling to SQL, a shell, deserialization, or frontend HTML/Markdown rendering; tool-call arguments can similarly reach downstream APIs or a filesystem. A separate disclosure path arises when output containing credentials or internal information reaches an externally accessible destination. The receiving system, not the model's apparent confidence, determines what checks and escaping are required.
+
+Figure conditions and labels:
+
+- Executed/rendered without handling
+- Executed/rendered without handling
+- Used as tool-call arguments
+- Contains credentials or internal information
+
+Details of the illustrated steps and components:
+
+- Attacker-controlled input Direct or indirect
 
 Model output is risky because it combines two properties: **attackers can influence its content indirectly**, through prompt injection or jailbreaks, and **downstream systems may scrutinize it less because it looks like a normal AI-generated result**. We will examine the consumption points most prone to failure—execution, rendering, and tool arguments—then address secret exfiltration separately.
 
@@ -127,8 +138,5 @@ Once credentials enter the model's context, they can be repeated, retained, or e
 
 ## References
 
-- [OWASP LLM05:2025 Improper Output Handling](https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/)
-- [OWASP LLM02:2025 Sensitive Information Disclosure](https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/)
-- [Imprompter: Tricking LLM Agents into Improper Tool Use](https://arxiv.org/abs/2410.14923)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [OWASP: CSV Injection](https://owasp.org/www-community/attacks/CSV_Injection)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-03) for this chapter’s sources, reading suggestions, and source notes.

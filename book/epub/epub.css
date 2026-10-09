@@ -36,6 +36,30 @@ th, td {
   vertical-align: top;
   overflow-wrap: anywhere;
 }
+.cell-label { display: none; }
+@media (max-width: 600px) {
+  table.wide-table, .wide-table tbody, .wide-table tfoot, .wide-table tr {
+    display: block;
+  }
+  .wide-table thead, .wide-table colgroup { display: none; }
+  .wide-table tr {
+    margin: 0 0 1em;
+    border: 1px solid #888;
+  }
+  .wide-table th, .wide-table td {
+    display: block;
+    width: auto;
+    border: 0;
+    padding: 0.5em;
+  }
+  .wide-table .cell-label {
+    display: block;
+    font-weight: bold;
+  }
+  .wide-table .cell-label, .wide-table .cell-value {
+    text-align: left;
+  }
+}
 blockquote {
   margin: 1em 0;
   padding-left: 0.8em;
@@ -46,6 +70,13 @@ img { max-width: 100%; height: auto; }
 .diagram img, .display-math img {
   background: white;
   padding: 0.2em;
+}
+img.diagram {
+  display: block;
+  margin: 0 auto;
+  box-sizing: border-box;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 img.inline-math {
   max-width: 100%;

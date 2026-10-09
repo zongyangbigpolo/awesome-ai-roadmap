@@ -76,17 +76,26 @@ Skill 的价值不只在于「能打包」，更在于**加载方式**。
 ### 8.3.2 三层加载
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    L1["第一层 · 发现阶段<br/>读取 Skill 的 name + description"]
-    L1 --> Q{"当前任务匹配<br/>某个 Skill 吗?"}
-    Q -->|否| SKIP["不加载正文<br/>发现元数据仍有成本"]
-    Q -->|是| L2["第二层 · 匹配时<br/>加载该 Skill 的 SKILL.md 正文"]
-    L2 --> L3["第三层 · 执行中<br/>指令提到某个模板/脚本时<br/>才去读那个文件"]
+    L1["第一层 · 发现阶<br/>段"]
+    L1 --> Q["当前任务匹配"]
+    Q -->|否| SKIP["不加载正文"]
+    Q -->|是| L2["第二层 · 匹配时"]
+    L2 --> L3["第三层 · 执行中"]
 
     style L1 fill:#e8f0fe
     style L2 fill:#e6f4ea
     style L3 fill:#fef7e0
 ```
+
+图中各项的完整含义：
+
+- 第一层 · 发现阶段 读取 Skill 的 name + description
+- 当前任务匹配 某个 Skill 吗?
+- 不加载正文 发现元数据仍有成本
+- 第二层 · 匹配时 加载该 Skill 的 SKILL.md 正文
+- 第三层 · 执行中 指令提到某个模板/脚本时 才去读那个文件
 
 | 层次 | 加载什么 | 时机 | 量级 |
 |---|---|---|---|
@@ -123,16 +132,28 @@ description: "对 Python/Go 代码做安全与性能审查，输出含风险等�
 这几个概念经常被混淆，用一个公司类比就能分清：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    TOOL["Tool / MCP<br/>可调用的外部能力<br/>权限由执行端校验"]
-    SKILL["Skill<br/>操作手册与 SOP<br/>教 Agent 拿到工具后「怎么做」"]
-    PROMPT["Prompt<br/>模型指令<br/>可以临时也可以版本化"]
-    SLASH["Slash Command<br/>写死的快捷指令<br/>需要人工触发"]
+    TOOL["Tool / MCP"]
+    SKILL["Skill"]
+    PROMPT["Prompt"]
+    SLASH["Slash Command"]
 
-    SKILL -->|Host 可按流程调用| TOOL
+    SKILL -->|"Host 调用工具"| TOOL
     PROMPT -.沉淀为.-> SKILL
     SLASH -.可作为加载入口.-> SKILL
 ```
+
+图中条件与标签：
+
+- Host 可按流程调用
+
+图中各项的完整含义：
+
+- Tool / MCP 可调用的外部能力 权限由执行端校验
+- Skill 操作手册与 SOP 教 Agent 拿到工具后「怎么做」
+- Prompt 模型指令 可以临时也可以版本化
+- Slash Command 写死的快捷指令 需要人工触发
 
 | | 提供什么 | 谁触发 | 是否持久 |
 |---|---|---|---|
@@ -171,7 +192,7 @@ Agent Skills 是 Anthropic 在 2025 年 10 月推出的，最初只覆盖 Claude
 
 文件格式不要求独立网络服务；真正使用仍需要宿主发现、加载和执行，脚本还需要相应解释器、依赖与权限。这是开放内容格式，不是远程调用协议。
 
-已有多种客户端采用，见[官方客户端列表](https://agentskills.io/clients)。跨平台迁移要核对触发方式、工具名称、文件路径、许可字段和执行环境，不能由“都能读 Markdown”推导出行为完全一致。
+已有多种客户端采用，见官方客户端列表<sup>[【308】](../../book/references.zh.md#ref-308)</sup>。跨平台迁移要核对触发方式、工具名称、文件路径、许可字段和执行环境，不能由“都能读 Markdown”推导出行为完全一致。
 
 ## 8.7 常见错误
 
@@ -212,11 +233,5 @@ Tool 提供可调用能力，Skill 组织方法与材料。一个分析 Skill �
 
 ## 参考资料
 
-- 格式核查保留原有固定提交 `69ef37e9424c0a7ea9dd2293b559e43ec8176379` 作为历史基准，并于 2026-09-15 复核官方格式页中的必填字段、实验性字段和加载建议；官方页没有独立的语义版本号。
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Anthropic: Equipping Agents for the Real World with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Agent Skills 规范](https://agentskills.io/specification)
-- [Agent Skills 本次核查的固定提交](https://github.com/agentskills/agentskills/tree/69ef37e9424c0a7ea9dd2293b559e43ec8176379)
-- [Claude Docs: Agent Skills](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Anthropic: Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-08)。

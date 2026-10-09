@@ -11,15 +11,23 @@ description: 解释 LangChain 拆包、Runnable、LangGraph 与 v1 Agent 演进�
 **但问题是层层叠加的**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["第一层：依赖<br/>第三方 SDK 的一次更新<br/>就可能牵动整个依赖树"]
-    B["第二层：API 不统一<br/>不同 Chain 的调用和组合方式不一致<br/>开发者要记住越来越多专用 API"]
-    C["第三层：执行不可控<br/>复杂 Agent 的执行循环藏在执行器内部<br/>很难插入分支、审批和恢复逻辑"]
+    A["第一层：依赖"]
+    B["第二层：API 不统<br/>一"]
+    C["第三层：执行不可<br/>控"]
     A --> B --> C
-    C --> D["功能越加越多<br/>核心职责反而越来越模糊"]
+    C --> D["功能越加越多"]
 
     style D fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 第一层：依赖 第三方 SDK 的一次更新 就可能牵动整个依赖树
+- 第二层：API 不统一 不同 Chain 的调用和组合方式不一致 开发者要记住越来越多专用 API
+- 第三层：执行不可控 复杂 Agent 的执行循环藏在执行器内部 很难插入分支、审批和恢复逻辑
+- 功能越加越多 核心职责反而越来越模糊
 
 > **大版本演进的重点并不是单纯增加功能，而是重新划分边界**：哪些协议需要保持稳定，哪些集成应该独立更新，哪些流程应该由更底层的运行时管理。
 
@@ -81,14 +89,21 @@ result = chain.invoke({"question": "什么是 Agent？"})
 **从开发者最常接触的入口看起**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① 高层入口收敛到 create_agent<br/>提供模型、工具和系统提示词<br/>底层由 LangGraph 运行 Agent loop<br/>因此仍能使用持久化、流式输出和人工介入"]
-    A --> B["② middleware 成为主要扩展方式<br/>动态提示词、模型选择、工具筛选<br/>对话摘要、重试、人工审批<br/>插入关键执行阶段而不是复制整套 loop"]
-    B --> C["③ 主命名空间顺势精简<br/>旧 Chain、Retriever、Indexing、Hub<br/>主要迁到 langchain-classic"]
+    A["① create_agent"]
+    A --> B["② middleware"]
+    B --> C["③ 主命名空间顺<br/>势精简"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- ① 高层入口收敛到 create_agent 提供模型、工具和系统提示词 底层由 LangGraph 运行 Agent loop 因此仍能使用持久化、流式输出和人工介入
+- ② middleware 成为主要扩展方式 动态提示词、模型选择、工具筛选 对话摘要、重试、人工审批 插入关键执行阶段而不是复制整套 loop
+- ③ 主命名空间顺势精简 旧 Chain、Retriever、Indexing、Hub 主要迁到 langchain-classic
 
 > **易用性留在 LangChain，复杂执行能力则由 LangGraph 承接。**
 
@@ -115,16 +130,24 @@ flowchart TB
 **跨大版本升级不能只执行一次依赖更新。**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① 动手前<br/>锁定当前依赖和可复现环境<br/>阅读目标版本的迁移指南<br/>否则多个包同时变化，很难判断问题从哪开始"]
-    S2["② 顺着新的分层检查兼容关系<br/>langchain、LangGraph 和模型集成包各有更新节奏<br/>确认版本组合后再替换废弃导入路径和内部 API<br/>小步修改、小步运行"]
-    S3["③ 代码能启动只说明导入问题解决了<br/>工具调用、结构化输出、流式响应、持久化<br/>仍要分别回归"]
-    S4["④ 有副作用的路径<br/>付款、发消息先在隔离环境验证幂等<br/>再做小流量发布"]
+    S1["① 动手前"]
+    S2["② 检查兼容性"]
+    S3["③ 回归测试"]
+    S4["④ 有副作用的路<br/>径"]
     S1 --> S2 --> S3 --> S4
 
     style S3 fill:#fff3cd
     style S4 fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- ① 动手前 锁定当前依赖和可复现环境 阅读目标版本的迁移指南 否则多个包同时变化，很难判断问题从哪开始
+- ② 顺着新的分层检查兼容关系 langchain、LangGraph 和模型集成包各有更新节奏 确认版本组合后再替换废弃导入路径和内部 API 小步修改、小步运行
+- ③ 代码能启动只说明导入问题解决了 工具调用、结构化输出、流式响应、持久化 仍要分别回归
+- ④ 有副作用的路径 付款、发消息先在隔离环境验证幂等 再做小流量发布
 
 ### 11.7.1 一条容易被忽略的稳定性边界
 
@@ -155,15 +178,24 @@ flowchart TB
 把几次架构变化连起来，可以看到一条连续的路线：
 
 ```mermaid
-flowchart LR
-    A["langchain-core<br/>稳定基础协议"] --> B["集成拆包<br/>解决核心与外部 SDK<br/>节奏不一致"]
-    B --> C["Runnable + LCEL<br/>统一确定性流程的组合方式"]
-    C --> D["LangGraph<br/>承接复杂状态和执行流程"]
-    D --> E["create_agent + middleware<br/>提供更易用的 Agent 入口"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["langchain-core"] --> B["集成拆包"]
+    B --> C["Runnable + LCEL"]
+    C --> D["LangGraph"]
+    D --> E["create_agent +<br/>middleware"]
 
     style A fill:#e8f0fe
     style E fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- langchain-core 稳定基础协议
+- 集成拆包 解决核心与外部 SDK 节奏不一致
+- Runnable + LCEL 统一确定性流程的组合方式
+- LangGraph 承接复杂状态和执行流程
+- create_agent + middleware 提供更易用的 Agent 入口
 
 > **这套方向让 LangChain 从「封装大量 LLM 功能」，转向「提供清晰分层的 Agent 工程体系」。**
 >
@@ -224,14 +256,5 @@ flowchart LR
 
 ## 参考资料
 
-- [LangChain v1 迁移指南](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain v1 发布说明](https://docs.langchain.com/oss/python/releases/langchain-v1)
-- [LangChain v0.3 官方发布说明（Pydantic 2 迁移）](https://blog.langchain.com/announcing-langchain-v0-3/)
-- [LangChain 官方博客](https://blog.langchain.com/)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [Pydantic 迁移指南](https://docs.pydantic.dev/latest/migration/)
-- [LangChain Structured output：能力与最低版本](https://docs.langchain.com/oss/python/langchain/structured-output)
-- [LangGraph Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [LangGraph Graph API：graph migrations](https://docs.langchain.com/oss/python/langgraph/graph-api#graph-migrations)
-- [LangChain Event streaming](https://docs.langchain.com/oss/python/langchain/event-streaming)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-11)。

@@ -9,11 +9,12 @@ description: 将概率性内容护栏与确定性授权分离，按拦截原因�
 [第 5 章](05-structured-output-contracts.zh.md)的契约校验回答"输出格式对不对",Guardrails 回答的是另一件事:**输出内容是否安全、是否符合业务允许的边界**——即使一段文本完全符合 JSON Schema,它仍然可能包含泄露的隐私信息、越权的操作指令,或者只是单纯地跑题了。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    IN["用户输入"] --> INGUARD["输入护栏:<br/>Prompt 注入检测 · 越权请求识别"]
+    IN["用户输入"] --> INGUARD["输入护栏:"]
     INGUARD -->|拦截| REJECT1["拒绝 / 转人工"]
     INGUARD -->|通过| MODEL["模型生成"]
-    MODEL --> OUTGUARD["输出护栏:<br/>PII 过滤 · 内容安全 · 事实边界"]
+    MODEL --> OUTGUARD["输出护栏:"]
     OUTGUARD -->|拦截| DEGRADE["降级路径"]
     OUTGUARD -->|通过| RESP["返回用户"]
     DEGRADE --> RESP
@@ -22,6 +23,11 @@ flowchart TB
     style OUTGUARD fill:#e8f0fe
     style DEGRADE fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 输入护栏: Prompt 注入检测 · 越权请求识别
+- 输出护栏: PII 过滤 · 内容安全 · 事实边界
 
 ## 6.2 输入护栏:在模型看到之前拦下风险
 
@@ -60,15 +66,24 @@ def output_guardrail(text: str, context: dict) -> GuardrailResult:
 护栏拦截不一定是服务故障，也不必先返回 500。应按原因选择受限重试、缩小任务、有效缓存或明确拒绝/转人工；下列层级是可选处置，不是必须依次尝试的链路。能返回一段文字，也不代表原任务已经完成。
 
 ```mermaid
-flowchart TB
-    CAUSE{"按拦截原因和风险选处置"} --> L1["Lv1: 允许的任务有限重试<br/>政策不变"]
-    CAUSE --> L2["Lv2: 缩小到仍获授权的任务范围"]
-    CAUSE --> L3["Lv3: 返回经权限和时效核对的缓存"]
-    CAUSE --> L4["Lv4: 明确拒绝、模板兜底或转人工"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    CAUSE["选择安全处理方式"] --> L1["Lv1：有限重试"]
+    CAUSE --> L2["Lv2：缩小任务范围"]
+    CAUSE --> L3["Lv3：已校验缓存"]
+    CAUSE --> L4["Lv4：拒绝或人工复核"]
 
     style L1 fill:#e6f4ea
     style L4 fill:#fce8e6
 ```
+
+图中各项的完整含义：
+
+- 按拦截原因和风险选处置
+- Lv1: 允许的任务有限重试 政策不变
+- Lv2: 缩小到仍获授权的任务范围
+- Lv3: 返回经权限和时效核对的缓存
+- Lv4: 明确拒绝、模板兜底或转人工
 
 | 阶梯 | 触发条件 | 用户感知 |
 |---|---|---|
@@ -118,8 +133,5 @@ flowchart TB
 
 ## 参考资料
 
-- [OpenAI: Moderation API](https://platform.openai.com/docs/guides/moderation)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
-- [Anthropic: Guardrails against misuse](https://www.anthropic.com/news/expanding-our-model-safety-bug-bounty-program)
-- [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework)
-- [Google Cloud: Responsible AI practices](https://ai.google/responsibility/responsible-ai-practices/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-06)。

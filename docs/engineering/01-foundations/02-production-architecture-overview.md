@@ -9,38 +9,31 @@ description: Follow request, evaluation, and feedback paths through an LLM produ
 An LLM application at the demo stage is often just a call to `client.chat.completions.create()`. Supporting real traffic requires an entire system around that call: gateways, orchestration, output validation, observability, evaluation, and release management.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    U["User / upstream service"] --> ENTRY["Ingress API gateway<br/>User authentication · Tenant rate limits"]
-    ENTRY --> ORCH["Orchestration<br/>Agents / RAG / Tool calls"]
-    ORCH --> GW["Model gateway<br/>Provider credentials · Routing · Fallback · Quotas"]
-    GW --> PROVIDER["Model provider<br/>OpenAI / Anthropic / In-house deployment"]
-    PROVIDER --> RESULT["Model response validation<br/>Text or tool arguments"]
-    RESULT --> ORCH
-    ORCH --> TOOL["Tool authorization and execution<br/>Resource permissions · Approval · Idempotency"]
-    TOOL --> ORCH
-    ORCH --> VALIDATE["Final output validation<br/>Contracts · Guardrails"]
-    VALIDATE -->|Pass| RESP["Return to user"]
-    VALIDATE -->|Fail| DEGRADE["Degraded-service path"]
-    DEGRADE --> RESP
-
-    ORCH -.trace/metrics.-> OBS["Observability<br/>Logs · Metrics · Traces"]
-    VALIDATE -.trace/metrics.-> OBS
-    GW -.trace/metrics.-> OBS
-
-    OBS --> EVAL["Offline evaluation<br/>Golden test set"]
-    EVAL --> CICD["Release pipeline<br/>Gradual rollout / Canary / A-B"]
-    CICD --> GW
-    CICD --> ORCH
-
-    RESP -.User feedback.-> FEEDBACK["Feedback collection and reuse"]
-    FEEDBACK --> EVAL
-    FEEDBACK --> DATA["Training / fine-tuning data"]
-
-    style GW fill:#e8f0fe
-    style VALIDATE fill:#fff3cd
-    style OBS fill:#e6f4ea
-    style CICD fill:#fce8e6
+    ENTRY["Authorize request"] --> ORCH["Orchestrate calls"]
+    ORCH --> CHECK["Validate output"]
+    CHECK --> RESP["Return safely"]
+    RESP -.-> IMPROVE["Evaluate and release"]
+    IMPROVE -.-> ORCH
 ```
+
+The request path begins at the ingress API gateway. Within orchestration, model calls go through the model gateway to a provider; their text or tool arguments are validated before returning to the orchestrator. Tool calls follow a separate authorization-and-execution path and also return to the orchestrator. Final output validation either permits the response or selects a degraded-service response.
+
+The improvement loop is not another synchronous request step. Orchestration, output validation, and the model gateway emit traces and metrics. Observability and user feedback supply the offline evaluation set; suitable feedback may also become training or fine-tuning data. Evaluation gates the release pipeline, which updates the gateway and orchestration through staged releases.
+
+Details of the illustrated steps and components:
+
+- Ingress API gateway User authentication · Tenant rate limits
+- Orchestration Agents / RAG / Tool calls
+- Model gateway Provider credentials · Routing · Fallback · Quotas
+- Model provider OpenAI / Anthropic / In-house deployment
+- Model response validation Text or tool arguments
+- Tool authorization and execution Resource permissions · Approval · Idempotency
+- Final output validation Contracts · Guardrails
+- Observability Logs · Metrics · Traces
+- Offline evaluation Golden test set
+- Release pipeline Gradual rollout / Canary / A-B
 
 A request first passes ingress authentication, then enters the orchestration layer. Every model call from the orchestrator goes through the model gateway. After receiving a response, the orchestrator decides whether to call another tool or finish the task and validate the final answer. Tools have their own authorization and execution controls. The diagram separates responsibilities: several may live in the same service, but colocating them does not remove the need for their checks.
 
@@ -76,16 +69,22 @@ This is why the topic's final module is called “Performance, Cost, and Operati
 Not every team needs all the modules in the diagram in Section 2.1. A lean but still production-ready starting point is:
 
 ```mermaid
-flowchart LR
-    U[User] --> GW["Lightweight gateway<br/>(Start with an open-source gateway rather than building one)"]
-    GW --> M[Single model provider]
-    M --> V["Basic<br/>JSON Schema validation"]
-    V --> R[Return]
-    V -.Failed examples.-> LOG[Structured logs]
-    LOG -.Regular manual sampling.-> EVAL[Small evaluation set]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["User"] --> GW["Lightweight<br/>gateway"]
+    GW --> M["Single model<br/>provider"]
+    M --> V["Basic"]
+    V --> R["Return"]
+    V -.Failed examples.-> LOG["Structured logs"]
+    LOG -.Regular manual sampling.-> EVAL["Small<br/>evaluation set"]
 
     style GW fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Lightweight gateway (Start with an open-source gateway rather than building one)
+- Basic JSON Schema validation
 
 The gateway can initially be an existing component. Start logs with request correlation IDs, versions, latency, status, and usage; **do not persist raw inputs and outputs by default**. Manually reviewing a few dozen examples can reveal obvious problems, but cannot establish a low failure rate. Even a small system needs authentication, a total timeout, rate limits, spending caps, and a release switch that can disable the feature. When side effects are involved, add tool authorization, approval, and idempotency. Whether multi-model fallback is necessary depends on the risks and recovery objectives; it is not a prerequisite for launching every application.
 
@@ -117,8 +116,5 @@ Feedback should be reused only after authorization, deduplication, and human ana
 
 ## References
 
-- [OpenAI: Production best practices](https://platform.openai.com/docs/guides/production-best-practices)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Google SRE Book: Chapter 1 - Introduction](https://sre.google/sre-book/introduction/)
-- [Uber Engineering: Michelangelo Machine Learning Platform](https://www.uber.com/blog/michelangelo-machine-learning-platform/)
-- [Martin Fowler: Continuous Delivery for Machine Learning](https://martinfowler.com/articles/cd4ml.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-02) for this chapter’s sources, reading suggestions, and source notes.

@@ -81,9 +81,5 @@ VBench 已提供主体一致性、运动平滑、时间闪烁等自动化维度�
 
 ## 参考资料
 
-- [Video Diffusion Models](https://arxiv.org/abs/2204.03458)
-- [Imagen Video: High Definition Video Generation with Diffusion Models](https://arxiv.org/abs/2210.02303)
-- [OpenAI: Video generation models as world simulators (Sora 技术报告)](https://openai.com/index/video-generation-models-as-world-simulators/)
-- [Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets](https://arxiv.org/abs/2311.15127)
-- [Towards Accurate Generative Models of Video: A New Metric & Challenges (FVD)](https://arxiv.org/abs/1812.01717)
-- [VBench: Comprehensive Benchmark Suite for Video Generative Models](https://arxiv.org/abs/2311.17982)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-08)。

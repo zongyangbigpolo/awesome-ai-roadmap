@@ -22,13 +22,19 @@ Comparing these frameworks only by counting features makes it easy to overlook t
 ### 9.1.1 The key layering relationship
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["LangChain high-level agent API<br/>create_agent"] --> B["Compiled LangGraph"]
-    B --> C["Checkpoints, streaming events,<br/>interrupts, and execution runtime"]
+    A["LangChain<br/>high-level<br/>agent API"] --> B["Compiled<br/>LangGraph"]
+    B --> C["Runtime services"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- LangChain high-level agent API create_agent
+- Checkpoints, streaming events, interrupts, and execution runtime
 
 **`create_agent` builds a graph runtime based on LangGraph**: the agent loops between model and tool nodes until the model produces a final answer or a stopping condition is reached.
 
@@ -79,19 +85,30 @@ A model may finish immediately or request tools. After tools execute, control re
 **Consider this workflow**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    A["Authorization check"] --> B1["Research node 1"] & B2["Research node 2"] & B3["Research node 3"]
+    A["Authorization<br/>check"] --> B1["Research 1"] & B2["Research 2"] & B3["Research 3"]
     B1 & B2 & B3 --> C["Aggregate"]
-    C --> D{"High amount?"}
+    C --> D["High amount?"]
     D -->|Yes| E["Human review"]
     D -->|No| F["Continue"]
-    F --> G{"Failed?"}
-    G -->|Yes| H["Compensation node"]
-    G -->|No| I["Wait for the next day's<br/>task to continue"]
+    F --> G["Failed?"]
+    G -->|Yes| H["Compensation<br/>node"]
+    G -->|No| I["Wait until<br/>tomorrow"]
 
     style C fill:#e8f0fe
     style H fill:#fff3cd
 ```
+
+Figure conditions and labels:
+
+- Research node 1
+- Research node 2
+- Research node 3
+
+Details of the illustrated steps and components:
+
+- Wait for the next day's task to continue
 
 **Here, developers need a clear view of every node, state field, and routing condition.** This is where graph orchestration becomes valuable.
 
@@ -246,16 +263,28 @@ LangSmith provides platform capabilities for **tracing, evaluation, Studio, and 
 ## 9.10 When should you move down to LangGraph?
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"Does the requirement naturally fit<br/>'Give a model tools and let it<br/>call them until done'?"}
-    Q1 -->|Yes| A["Start with create_agent<br/>Support Q&A, database query assistants,<br/>internal knowledge assistants"]
-    A --> A2["Dynamic prompts, model switching, tool selection<br/>Summaries, retries, guardrails,<br/>sensitive-tool approval<br/>Try middleware first"]
-    Q1 -->|The central concern is a business<br/>workflow, not a single agent loop| B["Consider LangGraph"]
-    B --> B2["Typical signals:<br/>Rules alternate with model decisions<br/>Parallel paths later join<br/>Pauses lasting hours or days<br/>Several agents collaborate<br/>Precise control of compensation<br/>and human-review nodes"]
+    Q1["Does the<br/>requirement<br/>naturally fit"]
+    Q1 -->|Yes| A["Start with<br/>create_agent"]
+    A --> A2["Extend<br/>middleware"]
+    Q1 -->|"Business workflow"| B["Consider<br/>LangGraph"]
+    B --> B2["Typical<br/>signals:"]
 
     style A fill:#e6f4ea
     style B fill:#fff3cd
 ```
+
+Figure conditions and labels:
+
+- The central concern is a business workflow, not a single agent loop
+
+Details of the illustrated steps and components:
+
+- Does the requirement naturally fit 'Give a model tools and let it call them until done'?
+- Start with create_agent Support Q&A, database query assistants, internal knowledge assistants
+- Dynamic prompts, model switching, tool selection Summaries, retries, guardrails, sensitive-tool approval Try middleware first
+- Typical signals: Rules alternate with model decisions Parallel paths later join Pauses lasting hours or days Several agents collaborate Precise control of compensation and human-review nodes
 
 ### 9.10.1 Incremental composition is the more common approach
 
@@ -330,14 +359,5 @@ LangChain supplies the high-level agent entry point and standard model/tool loop
 
 ## References
 
-- [LangChain documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain: Streaming](https://docs.langchain.com/oss/python/langchain/streaming)
-- [LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph: Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [LangSmith documentation](https://docs.langchain.com/langsmith/observability)
-- [LangGraph Python package dependencies](https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/pyproject.toml)
-- [LangGraph concurrent state-update error](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-09) for this chapter’s sources, reading suggestions, and source notes.

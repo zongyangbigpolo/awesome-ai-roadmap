@@ -10,23 +10,14 @@ description: 区分工具调用、JSON 模式和严格结构化输出，处理�
 
 ```mermaid
 flowchart TB
-    P["Prompt"] --> M["模型生成"]
-    M --> RAW["原始输出"]
-    RAW --> STATUS{"正常完成且未拒绝?"}
-    STATUS -->|否| STOP["按拒绝、截断或失败处置"]
-    STATUS -->|是| PARSE["解析 JSON"]
-    PARSE -->|解析成功| SCHEMA{"符合 Schema?"}
-    PARSE -->|解析失败| REPAIR{"可修复且还有预算?"}
-    SCHEMA -->|否| REPAIR
-    REPAIR -->|是| M
-    REPAIR -->|否| STOP
-    SCHEMA -->|是| BUSINESS["核对业务事实与权限"]
-    BUSINESS --> DOWNSTREAM["通过后交给下游消费"]
-
-    style SCHEMA fill:#fff3cd
+    STATUS["检查完成状态"] --> PARSE["解析并校验"]
+    PARSE --> BUSINESS["核对事实与权限"]
+    BUSINESS --> DOWNSTREAM["放行已通过的结果"]
 ```
 
 顺序是先检查响应状态，再解析 JSON、验证 Schema，最后核对业务条件。解析和 Schema 校验可以由同一个库完成，但它们不是同一个判断；任何一层失败，都不能把半成品交给下游执行。
+
+图中只画出成功路径，并不表示可以无条件逐步执行。遇到拒绝、截断或生成失败，应在解析前停止这条路径。解析或 Schema 校验出错后，只有错误可修复且时间、费用预算允许时，才能再次尝试；否则应停止或转交人工。修复后的结果必须重新通过各项检查。业务条件或权限校验失败不是格式错误，不能靠反复生成绕过。
 
 ## 5.2 接口形式与约束强度要分开看
 
@@ -37,7 +28,7 @@ flowchart TB
 | **Function Calling / Tool Use** | 取决于配置 | 是生成工具参数的接口，不天然保证 Schema；严格工具调用也可以使用 Structured Outputs |
 | **严格结构化输出 / 约束解码** | Schema 约束 | 在模型、接口和 Schema 子集被支持且生成正常完成时约束输出结构 |
 
-OpenAI 的 [Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs) 可用于结构化回答，也可用于严格工具调用。**先检查响应状态和拒绝信号，再解析完整对象**：拒绝可能不符合业务 Schema，长度上限或中断可能留下不完整输出，未支持的 Schema 则可能在请求时被拒绝。约束解码不保证金额、币种或业务事实正确；可验证的语义应在运行时核对，离线评测衡量剩余错误率。
+OpenAI 的 Structured Outputs<sup>[【691】](../../book/references.zh.md#ref-691)</sup> 可用于结构化回答，也可用于严格工具调用。**先检查响应状态和拒绝信号，再解析完整对象**：拒绝可能不符合业务 Schema，长度上限或中断可能留下不完整输出，未支持的 Schema 则可能在请求时被拒绝。约束解码不保证金额、币种或业务事实正确；可验证的语义应在运行时核对，离线评测衡量剩余错误率。
 
 换成推理模型，这个顺序仍然适用。Schema 约束的是可见输出的结构，不能由「输出合法」反推内部推理受控。
 
@@ -144,9 +135,5 @@ def parse_with_repair(raw_text: str, schema: type, max_repairs: int = 1):
 
 ## 参考资料
 
-- [OpenAI: Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [OpenAI: Function calling](https://platform.openai.com/docs/guides/function-calling)
-- [Anthropic: Tool use with Claude](https://docs.anthropic.com/en/docs/build-with-claude/tool-use)
-- [JSON Schema Specification](https://json-schema.org/specification)
-- [Pydantic: Validators](https://docs.pydantic.dev/latest/concepts/validators/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-05)。

@@ -31,15 +31,16 @@ description: 从 KV 管理、连续批处理和前缀复用比较推理运行时
 **PagedAttention 把这个思路搬到 KV Cache 上**：
 
 ```mermaid
-flowchart LR
-    subgraph L["请求的逻辑 KV 序列"]
-        A1["块 0"] --> A2["块 1"] --> A3["块 2"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L["逻辑 KV 序列<br/>块 0 → 1 → 2"]
     L --> BT["Block Table<br/>逻辑 → 物理映射"]
-    BT --> P["物理显存池<br/>固定大小 Block<br/>可非连续分布，按引用回收"]
+    BT --> P["物理显存块池"]
 
     style BT fill:#e8f0fe
 ```
+
+对一个请求，逻辑块 0、1、2 构成有序的 KV 序列。块表将每个逻辑块映射到物理显存块。物理块大小固定，可以分布在不连续的位置，并按引用情况回收；逻辑顺序不意味着物理存储位置相邻。
 
 假设块大小为 16 token，一个请求的 200 token 需要 `ceil(200/16)=13` 块，总容量为 208 token，尾块空 8 个位置。它避免了为该请求预留整段 4096-token 连续空间；真实块大小受后端和配置约束。
 
@@ -85,14 +86,17 @@ vLLM 不只有 PagedAttention，也提供 **Automatic Prefix Caching（APC）**�
 ### 20.3.2 RadixAttention：用基数树组织 KV Cache
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     ROOT["根节点（空）"] --> SP["共享的 System Prompt<br/>1000 token —— 只存一份"]
-    SP --> U1["用户 A 的问题"]
-    SP --> U2["用户 B 的问题"]
-    SP --> U3["用户 C 的问题"]
+    SP --> U1["问题 A"]
+    SP --> U2["问题 B"]
+    SP --> U3["问题 C"]
 
     style SP fill:#e6f4ea
 ```
+
+问题 A、B、C 来自不同用户。各分支共享只存储一份的 1000 token 系统提示，不共享彼此的问题后缀。
 
 **多个请求可复用相同的 token 前缀路径，在第一个不同 token 处分叉**。Radix tree 的一条边可压缩存储一段 token，不必一个 token 对应树的一层。
 
@@ -262,19 +266,5 @@ TensorRT-LLM 针对 NVIDIA GPU 的 kernel、运行时与服务调度进行优化
 
 ## 参考资料
 
-- [Efficient Memory Management for Large Language Model Serving with PagedAttention（vLLM）](https://arxiv.org/abs/2309.06180)
-- [SGLang: Efficient Execution of Structured Language Model Programs（RadixAttention）](https://arxiv.org/abs/2312.07104)
-- [Orca: A Distributed Serving System for Transformer-Based Generative Models（Continuous Batching）](https://www.usenix.org/conference/osdi22/presentation/yu)
-- [vLLM 文档](https://docs.vllm.ai/)
-- [vLLM: Automatic Prefix Caching](https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/)
-- [SGLang 仓库](https://github.com/sgl-project/sglang)
-- [Text Generation Inference 仓库](https://github.com/huggingface/text-generation-inference)
-- [TGI 官方文档（维护模式说明，2026-09-15 核对）](https://huggingface.co/docs/text-generation-inference/main/en/index)
-- [llama.cpp 仓库](https://github.com/ggml-org/llama.cpp)
-- [TensorRT-LLM 仓库](https://github.com/NVIDIA/TensorRT-LLM)
-- [llama.cpp：HTTP Server 能力与参数](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md)
-- [TensorRT-LLM：Quick Start](https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html)
-- [vLLM：Chunked Prefill 与配置调优](https://docs.vllm.ai/en/stable/configuration/optimization/)
-- [vLLM：Disaggregated Prefilling](https://docs.vllm.ai/en/stable/features/disagg_prefill/)
-- [TGI：组件与 HTTP/gRPC 边界](https://huggingface.co/docs/text-generation-inference/main/en/architecture)
-- [TensorRT-LLM：LLM API 与 PyTorch backend](https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/llm-api/index.md)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-20)。

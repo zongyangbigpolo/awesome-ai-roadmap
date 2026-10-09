@@ -77,18 +77,22 @@ RRF 是混合检索中广泛采用、值得先建立的**强基线**，因为它
 常见的 Rerank 实现采用 cross-encoder：**把 Query 和候选文档拼在一起**送进模型，让两者充分交互后输出相关性分数。重排也可用多向量打分或 LLM 排序，不只这一种架构。
 
 ```mermaid
-flowchart LR
-    subgraph 粗排
-        Q1[Query] --> E1[编码]
-        D1[文档] --> E2[编码<br/>离线完成]
-        E1 --> S1[向量距离]
-        E2 --> S1
-    end
-    subgraph 精排
-        Q2[Query] --> CAT[拼接]
-        D2[候选文档] --> CAT
-        CAT --> M[交互式模型] --> S2[相关性分数]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --> E1[编码]
+    D1[文档] --> E2[编码<br/>离线完成]
+    E1 --> S1[向量距离]
+    E2 --> S1
+```
+
+**精排**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --> CAT[拼接]
+    D2[候选文档] --> CAT
+    CAT --> M[交互式模型] --> S2[相关性分数]
 ```
 
 **效果提升通常很明显**，也是单点投入产出比很高的优化，因此往往会早于更复杂的改造进入链路。
@@ -122,17 +126,21 @@ Rerank 超时可以回退到粗排，但必须使用针对粗排校准的证据�
 ## 13.5 完整的召回-排序链路
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    Q[Query] --> RW[Query 改写]
-    RW --> P1[BM25 召回 top-50]
-    RW --> P2[向量召回 top-50]
-    RW --> P3[可选: 其他路]
+    RW[改写后的 Query] --> P1[BM25 top-50]
+    RW --> P2[向量 top-50]
     P1 --> RRF[RRF 融合]
     P2 --> RRF
-    P3 --> RRF
     RRF --> DEDUP[去重与合并]
-    DEDUP --> RR[Rerank top-50 到 top-5]
-    RR --> TH{校准后置信度足够?}
+```
+
+BM25 和向量召回是并行路径，也可以加入其他可选路径。融合后去重并合并候选，再进入重排与放行判断：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    RR[Rerank：top-50 到 top-5] --> TH{校准后置信度足够？}
     TH -->|是| CTX[组装上下文]
     TH -->|否| REJ[拒答、澄清或降级]
 ```
@@ -202,9 +210,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR 2009)](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf)
-- [Lucene 9.12：BM25Similarity 的具体计分实现](https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-13)。

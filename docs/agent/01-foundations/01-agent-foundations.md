@@ -173,14 +173,31 @@ Anthropic introduced MCP in November 2024. In December 2025, Anthropic donated M
 
 MCP provides a standard interface for connecting AI applications to external tools and data sources. A useful analogy is a “USB-C port” for the AI tool ecosystem.
 
+Connection to the server.
+
 ```mermaid
+flowchart TB
+    A[AI application or agent]
+    B[MCP Client]
+    C[MCP Server]
+    A --> B
+    B --> C
+```
+
+Capabilities exposed by that server.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart LR
-    A[AI application or agent] --> B[MCP Client]
-    B --> C[MCP Server]
-    C --> D[Tools]
-    C --> E[Databases]
-    C --> F[Files and resources]
-    C --> G[External APIs]
+    C["MCP Server"]
+    D["Tools"]
+    E["Databases"]
+    F["Files and resources"]
+    G["External APIs"]
+    C --> D
+    C --> E
+    C --> F
+    C --> G
 ```
 
 MCP has three main roles:
@@ -220,15 +237,16 @@ Consider the core objects in the A2A v1.0.1 release specification:
 > An Agent Card is more like a capability profile. Objects such as Task primarily describe what the agent is doing and its execution progress.
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant A as Orchestrator agent
     participant B as Specialist agent
 
     A->>B: Read Agent Card
-    B-->>A: Return capabilities and interaction options
-    A->>B: Send a task request message
-    B-->>A: Return Task and current status
-    B-->>A: Return subsequent status and Artifact through the chosen interaction mode
+    B-->>A: Return capabilities and<br/>interaction options
+    A->>B: Send a task request<br/>message
+    B-->>A: Return Task and current<br/>status
+    B-->>A: Return subsequent status<br/>and Artifact through<br/>the chosen interaction<br/>mode
 ```
 
 The diagram shows a task that requires ongoing tracking. Under the A2A v1.0.1 release specification, sending a message can also return a `Message` directly; not every interaction has to create a `Task`. Check the exact message fields and transports against the A2A versions actually supported by both parties.
@@ -250,28 +268,21 @@ The two are often complementary, but the distinction is not whether a service co
 An MCP tool can run an agent behind the scenes; an A2A service can execute a deterministic workflow. Neither protocol automatically solves task decomposition, delegated authorization, or distributed transactions, and a multi-agent system does not have to adopt both.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    U[User goal] --> O[Orchestrator agent]
+    U["User goal"] --> O["Orchestrator<br/>agent"]
 
-    O <-->|A2A| R[Research agent]
-    O <-->|A2A| C[Coding agent]
-    O <-->|A2A| W[Writing agent]
+    O <-->|A2A| R["Research<br/>agent"]
+    O <-->|A2A| C["Coding agent"]
+    O <-->|A2A| W["Writing<br/>agent"]
 
-    O -->|MCP| T1[Business tools]
-    R -->|MCP| T2[Search and knowledge base]
-    C -->|MCP| T3[Code executor]
-    W -->|MCP| T4[Document system]
 ```
+
+The bidirectional A2A links connect the orchestrator to research, coding, and writing agents. Tool access is separate: through MCP, the orchestrator uses business tools, the research agent uses search and a knowledge base, the coding agent uses a code executor, and the writing agent uses a document system.
 
 MCP helps individual agents reach for tools, while A2A helps multiple agents communicate and divide the work. Together, they provide an important foundation for standardization and interoperability in multi-agent systems.
 
 ## References
 
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
-- [OpenAI Agents SDK: Agents](https://openai.github.io/openai-agents-python/agents/)
-- [LangChain: Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
-- [Linux Foundation: Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [A2A v1.0.1 release specification: Core objects and message sending](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
-- [A2A Protocol: Core Concepts](https://a2a-protocol.org/latest/topics/key-concepts/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-01) for this chapter’s sources, reading suggestions, and source notes.

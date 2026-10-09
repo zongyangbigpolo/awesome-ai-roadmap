@@ -30,41 +30,16 @@ description: 给出 AI Agent 的现代系统架构，说明模型、规划、记
 
 ```mermaid
 flowchart TB
-    U[用户目标] --> RT[Agent Runtime / Orchestrator]
-
-    subgraph Context[上下文与状态层]
-        ST[任务状态]
-        WM[工作记忆]
-        LM[长期记忆]
-        CB[Context Builder]
-        ST --> CB
-        WM --> CB
-        LM --> CB
-    end
-
-    RT --> CB
-    CB --> MP[Model + Planner]
-    MP --> DEC{下一步决策}
-
-    DEC -->|回答| OUT[结果验收与输出]
-    DEC -->|调用工具| PG[Policy / Permission Gate]
-    DEC -->|委派任务| DG[委派权限与预算检查]
-    DG --> A2A[其他 Agent]
-
-    PG --> TR[Tool Registry / MCP Client]
-    TR --> TS[Tool / MCP Server]
-    TS --> ENV[搜索、文件、数据库、代码、API]
-    ENV --> OBS[Observation]
-
-    A2A --> OBS
+    RT[运行时] --> CB[上下文构建器]
+    CB --> MP[模型与规划器]
+    MP --> DEC[下一步决策]
+    DEC -->|执行或委派| OBS[观察结果]
     OBS --> RT
-    RT --> ST
-    RT --> WM
-    RT --> LM
-
-    RT -.运行轨迹.-> OT[Tracing / Evaluation / Audit]
-    OUT -.结果评估.-> OT
 ```
+
+用户目标进入运行时。运行时更新任务状态、工作记忆和长期记忆，三者共同为上下文构建器提供输入。如果决策是回答，则进入结果验收与输出，而不是再执行一轮。
+
+图中的执行箭头包含两种不同的门控。工具调用先经过策略与权限检查，再经过 Tool Registry / MCP Client，最后到达工具 / MCP Server；搜索、文件、数据库、代码和 API 产生观察结果。委派则先检查权限与预算，再由其他 Agent 行动，其结果同样成为观察结果。运行时的执行轨迹和输出的结果评估共同进入追踪、评估与审计。
 
 一次典型执行包含以下步骤：
 
@@ -153,22 +128,22 @@ flowchart TB
 应用程序随后执行以下流程：
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
-    participant R as Runtime
-    participant M as Model
-    participant T as Tool
+    participant R as 运行时
+    participant M as 模型
+    participant T as 工具
 
-    U->>R: 提交目标
-    R->>M: 目标 + 上下文 + 工具定义
-    M-->>R: Tool Call
-    R->>R: 校验参数与权限
-    R->>T: 执行工具
-    T-->>R: Tool Result
-    R->>M: 返回 Observation
-    M-->>R: 下一步动作或最终答案
-    R-->>U: 返回结果
+    R->>M: 模型输入
+    M-->>R: 工具调用
+    R->>R: 校验调用
+    R->>T: 执行
+    T-->>R: 工具结果
+    R->>M: 观察结果
+    M-->>R: 动作或答案
 ```
+
+这段交互开始前，用户先向运行时提交目标。模型输入包含目标、上下文与工具定义；执行前的调用校验同时检查参数与权限。模型收到观察结果后，选择下一步动作或最终答案，运行时再向用户返回结果。
 
 ### 2.4.2 工具调用的安全边界
 
@@ -196,13 +171,14 @@ MCP 包含三个主要角色：
 - **Server**：向 Client 暴露 Tools、Resources 和 Prompts 等能力。
 
 ```mermaid
-flowchart LR
-    H[Host<br/>AI Application] --> C1[MCP Client]
-    H --> C2[MCP Client]
-    C1 <--> S1[MCP Server<br/>Files]
-    C2 <--> S2[MCP Server<br/>Database]
-    S1 --> F[文件系统]
-    S2 --> D[数据库]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host<br/>AI Application"] --> C1["MCP Client"]
+    H --> C2["MCP Client"]
+    C1 <--> S1["MCP Server<br/>Files"]
+    C2 <--> S2["MCP Server<br/>Database"]
+    S1 --> F["文件系统"]
+    S2 --> D["数据库"]
 ```
 
 “MCP 是工具世界的 USB-C”是一个有用的类比，但需要补充两个边界：
@@ -309,21 +285,57 @@ State 描述任务当前执行到哪里，例如：
 
 LangChain 的上下文工程文章用四类操作组织常见做法：
 
+写入上下文。
+
 ```mermaid
 flowchart TB
-    CE[Context Engineering] --> W[Write 写出去]
-    CE --> S[Select 选进来]
-    CE --> C[Compress 压缩]
-    CE --> I[Isolate 隔离]
+    CE[Context Engineering]
+    W[Write 写出去]
+    W1[Scratchpad / 笔记文件]
+    W2[长期记忆]
+    CE --> W
+    W --> W1
+    W --> W2
+```
 
-    W --> W1[Scratchpad / 笔记文件]
-    W --> W2[长期记忆]
-    S --> S1[检索记忆与文档]
-    S --> S2[按需加载工具]
-    C --> C1[摘要 / Compaction]
-    C --> C2[结果裁剪]
-    I --> I1[Sub-Agent 独立上下文]
-    I --> I2[沙箱中处理大对象]
+选择上下文。
+
+```mermaid
+flowchart TB
+    CE[Context Engineering]
+    S[Select 选进来]
+    S1[检索记忆与文档]
+    S2[按需加载工具]
+    CE --> S
+    S --> S1
+    S --> S2
+```
+
+压缩上下文。
+
+```mermaid
+flowchart TB
+    CE[Context Engineering]
+    C[Compress 压缩]
+    C1[摘要 / Compaction]
+    C2[结果裁剪]
+    CE --> C
+    C --> C1
+    C --> C2
+```
+
+隔离上下文。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    I["Isolate 隔离"]
+    I1["Sub-Agent 独立上下文"]
+    I2["沙箱中处理大对象"]
+    CE --> I
+    I --> I1
+    I --> I2
 ```
 
 | 操作 | 含义 | 典型做法 |
@@ -492,14 +504,15 @@ CoT（Chain of Thought）通过中间推理步骤帮助模型解决复杂问题�
 ToT（Tree of Thoughts）在多个候选推理路径之间进行展开、评估和回溯：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    S[当前状态] --> A[候选路径 A]
-    S --> B[候选路径 B]
-    S --> C[候选路径 C]
-    A --> EA[评估]
-    B --> EB[评估]
-    C --> EC[评估]
-    EA --> BEST[选择或回溯]
+    S["当前状态"] --> A["候选路径 A"]
+    S --> B["候选路径 B"]
+    S --> C["候选路径 C"]
+    A --> EA["评估"]
+    B --> EB["评估"]
+    C --> EC["评估"]
+    EA --> BEST["选择或回溯"]
     EB --> BEST
     EC --> BEST
 ```
@@ -513,12 +526,13 @@ flowchart TB
 Plan-and-Execute 先生成整体计划，再逐步执行：
 
 ```mermaid
-flowchart LR
-    G[目标] --> P[生成完整计划]
-    P --> S1[步骤 1]
-    S1 --> S2[步骤 2]
-    S2 --> S3[步骤 3]
-    S3 --> R[结果]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["目标"] --> P["生成完整计划"]
+    P --> S1["步骤 1"]
+    S1 --> S2["步骤 2"]
+    S2 --> S3["步骤 3"]
+    S3 --> R["结果"]
 ```
 
 优点：
@@ -566,14 +580,15 @@ flowchart LR
 4. 持续检查目标、预算和终止条件。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[目标] --> HP[高层计划]
-    HP --> M1[里程碑 1]
-    HP --> M2[里程碑 2]
-    HP --> M3[里程碑 3]
+    G["目标"] --> HP["高层计划"]
+    HP --> M1["里程碑 1"]
+    HP --> M2["里程碑 2"]
+    HP --> M3["里程碑 3"]
 
-    M1 --> L1[局部 Reason-Act-Observe 循环]
-    L1 --> C{里程碑完成?}
+    M1 --> L1["局部 Reason-Act-Observe<br/>循环"]
+    L1 --> C["里程碑完成?"]
     C -->|否| L1
     C -->|是| M2
     C -->|假设失效| HP
@@ -651,16 +666,5 @@ Agent 的结果具有非确定性，仅判断“最终有没有回答”通常�
 
 ## 参考资料
 
-- [OpenAI: Function calling（Chat Completions 与 Responses 的工具定义、strict 模式）](https://developers.openai.com/api/docs/guides/function-calling)
-- [MCP Governance and Stewardship](https://modelcontextprotocol.io/community/governance)
-- [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
-- [Microsoft Agent Framework Overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [AutoGen Maintenance Mode](https://github.com/microsoft/autogen)
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot)
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
-- [Drew Breunig: How Contexts Fail and How to Fix Them](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html)
-- [Anthropic: Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
-- [Cloudflare: Code Mode — the better way to use MCP](https://blog.cloudflare.com/code-mode/)
-- [RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation](https://arxiv.org/abs/2505.03275)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-02)。

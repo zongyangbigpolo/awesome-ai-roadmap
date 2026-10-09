@@ -8,21 +8,43 @@ description: Understand the overlapping responsibilities of DevOps, MLOps, and L
 
 DevOps, MLOps, and LLMOps are not mutually exclusive roles, and the industry has no universally agreed dividing lines between them. The assets they primarily manage offer a useful distinction, but all three share release management, monitoring, data governance, and incident response capabilities. LLMOps can also include self-hosting, fine-tuning, and training; it is not limited to calling third-party APIs.
 
+**DevOps**
+
 ```mermaid
-flowchart LR
-    subgraph DevOps["DevOps"]
-        D1["Assets: application code"]
-        D2["Concerns: builds, tests, releases, rollbacks"]
-    end
-    subgraph MLOps["MLOps"]
-        M1["Assets: data, models, and ML pipelines"]
-        M2["Concerns: training, evaluation, deployment, drift monitoring"]
-    end
-    subgraph LLMOps["LLMOps"]
-        L1["Assets: models, prompts, context, and tool configuration"]
-        L2["Concerns: prompts, routing, evaluation, cost, hallucination management"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        D1["Assets: application<br/>code"]
+        D2["DevOps concerns"]
+
 ```
+
+**MLOps**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["MLOps assets"]
+        M2["MLOps concerns"]
+
+```
+
+**LLMOps**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        L1["LLMOps assets"]
+        L2["LLMOps concerns"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Concerns: builds, tests, releases, rollbacks
+- Assets: data, models, and ML pipelines
+- Concerns: training, evaluation, deployment, drift monitoring
+- Assets: models, prompts, context, and tool configuration
+- Concerns: prompts, routing, evaluation, cost, hallucination management
 
 DevOps focuses on software delivery and operations. MLOps brings the data and model lifecycle into engineering management. LLMOps emphasizes prompts, context, open-ended outputs, and tool execution in generative applications. Managed APIs introduce constraints around provider versions, quotas, and where and how data is processed. Self-hosted models remove some external dependencies, but leave the team responsible for inference scheduling, compute resources, and model updates.
 
@@ -44,18 +66,24 @@ Service quality can deteriorate without a code change: the input distribution, k
 LLMOps does not discard DevOps and start over. It builds on established DevOps infrastructure, such as CI/CD and observability, and **adds quality gates specific to models and prompts**.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Code["Code change"] --> UnitTest["Unit / integration tests"]
-    Prompt["Prompt / model / routing change"] --> EvalGate["Offline evaluation gate (added by LLMOps)"]
+    Code["Code change"] --> UnitTest["Unit /<br/>integration<br/>tests"]
+    Prompt["Prompt / model<br/>/ routing<br/>change"] --> EvalGate["Offline<br/>evaluation"]
     UnitTest --> Build["Build image"]
     EvalGate --> Build
     Build --> Deploy["Gradual rollout"]
-    Deploy --> Observe["Observability: logs / metrics / traces"]
+    Deploy --> Observe["Observability"]
     Observe -.Feedback.-> Prompt
     Observe -.Feedback.-> Code
 
     style EvalGate fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Offline evaluation gate (added by LLMOps)
+- Observability: logs / metrics / traces
 
 Schemas, authorization, monetary calculations, idempotency, and state machines should still have deterministic tests. Open-ended generation additionally needs quality evaluations that account for sampling error. Traditional ML evaluation also has statistical uncertainty; an additional difficulty with LLMs is that more than one answer may be acceptable. Repeated samples for the same question reveal variability, but must not be presented as additional independent business examples.
 
@@ -95,8 +123,5 @@ LLMOps extends existing software and ML engineering practices to generative appl
 
 ## References
 
-- [Google Cloud: MLOps: Continuous delivery and automation pipelines in machine learning](https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning)
-- [a16z: What Is LLMOps?](https://a16z.com/emerging-architectures-for-llm-applications/)
-- [Chip Huyen: Building LLM applications for production](https://huyenchip.com/2023/04/11/llm-engineering.html)
-- [OpenAI: Best practices for production deployments](https://platform.openai.com/docs/guides/production-best-practices)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-01) for this chapter’s sources, reading suggestions, and source notes.

@@ -14,20 +14,47 @@ MCP 则位于另一条维度：
 
 > **MCP 不是 Tool 的替代品，而是 AI 应用连接 Tools、Resources 和 Prompts 的标准协议。**
 
+工作流选择计算组件。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["用户目标"]
+    W["Workflow / 控制结构"]
+    A["Agent / 动态决策者"]
+    L["LLM 节点"]
+    T1["Tool 节点"]
+    U --> W
+    W --> A
+    W --> L
+    W --> T1
+```
+
+Agent 在仓库指令约束下使用方法与工具。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Agent / 动态决策者"]
+    S["Skill / 方法与知识"]
+    T2["Tools / 可执行能力"]
+    I["AGENTS.md<br/>仓库约定与指令"]
+    A --> S
+    A --> T2
+    I -.指导.-> A
+```
+
+MCP 将 Agent 连接到外部系统。
+
 ```mermaid
 flowchart TB
-    U[用户目标] --> W[Workflow / 控制结构]
-    W --> A[Agent / 动态决策者]
-    W --> L[LLM 节点]
-    W --> T1[Tool 节点]
-
-    A --> S[Skill / 方法与知识]
-    A --> T2[Tools / 可执行能力]
-    A --> M[MCP Client]
-    M --> MS[MCP Server]
-    MS --> EXT[外部系统]
-
-    I[AGENTS.md<br/>仓库约定与指令] -.指导.-> A
+    A[Agent / 动态决策者]
+    M[MCP Client]
+    MS[MCP Server]
+    EXT[外部系统]
+    A --> M
+    M --> MS
+    MS --> EXT
 ```
 
 图中的实线表示编排或调用关系，虚线表示提供指令。`AGENTS.md` 可以要求开发者或编码 Agent 修改工作流，但文件本身不会成为运行时的权限门禁；需要强制执行的规则仍要写进代码、工具权限或部署配置。
@@ -92,12 +119,13 @@ Tool 本身不负责判断：
 8. 错误与审计信息。
 
 ```mermaid
-flowchart LR
-    TD[Tool Definition<br/>名称、描述、Schema] --> TC[Tool Call]
-    TC --> V[参数与权限校验]
-    V --> EX[Executor]
-    EX --> SYS[外部系统]
-    SYS --> RES[结构化结果或错误]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TD["Tool Definition<br/>名称、描述、Schema"] --> TC["Tool Call"]
+    TC --> V["参数与权限校验"]
+    V --> EX["Executor"]
+    EX --> SYS["外部系统"]
+    SYS --> RES["结构化结果或错误"]
 ```
 
 ### 3.3.3 Tool Schema
@@ -154,6 +182,7 @@ flowchart LR
 真正的调用过程是：
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant M as Model
     participant R as Runtime
@@ -179,13 +208,14 @@ MCP（Model Context Protocol）是连接 AI 应用与外部系统的开放标准
 - **Prompts**：可复用的提示模板。
 
 ```mermaid
-flowchart LR
-    H[Host] --> C1[MCP Client]
-    H --> C2[MCP Client]
-    C1 <--> S1[MCP Server A]
-    C2 <--> S2[MCP Server B]
-    S1 --> DB[数据库]
-    S2 --> API[外部 API]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host"] --> C1["MCP Client"]
+    H --> C2["MCP Client"]
+    C1 <--> S1["MCP Server A"]
+    C2 <--> S2["MCP Server B"]
+    S1 --> DB["数据库"]
+    S2 --> API["外部 API"]
 ```
 
 MCP 的价值是统一连接方式、能力描述和消息交换，从而减少重复适配。
@@ -269,13 +299,14 @@ Skill 的重要设计原则是 Progressive Disclosure：
 3. 脚本、参考资料和资源只在需要时读取。
 
 ```mermaid
-flowchart LR
-    META[Metadata<br/>始终可见] --> MATCH{任务匹配?}
-    MATCH -->|否| SKIP[不加载]
-    MATCH -->|是| BODY[加载 SKILL.md]
-    BODY --> NEED{需要更多资料?}
-    NEED -->|是| RES[按需加载 scripts / references / assets]
-    NEED -->|否| RUN[执行 Skill]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    META["Metadata<br/>始终可见"] --> MATCH["任务匹配?"]
+    MATCH -->|否| SKIP["不加载"]
+    MATCH -->|是| BODY["加载 SKILL.md"]
+    BODY --> NEED["需要更多资料?"]
+    NEED -->|是| RES["按需加载 scripts /<br/>references / assets"]
+    NEED -->|否| RUN["执行 Skill"]
 ```
 
 这可以避免把所有领域知识一次性塞入上下文。
@@ -388,11 +419,12 @@ Agent 的循环更适合表示为：
 > **Observe → Decide/Plan → Act → Observe**
 
 ```mermaid
-flowchart LR
-    O[Observe] --> D[Decide / Plan]
-    D --> A[Act]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observe"] --> D["Decide / Plan"]
+    D --> A["Act"]
     A --> O
-    D --> F[Finish]
+    D --> F["Finish"]
 ```
 
 有些资料使用 Thought → Action → Observation 描述 ReAct，但生产系统不必向用户暴露完整的隐藏思维过程。控制循环真正需要保存的是结构化计划、工具调用、返回证据和状态变化，再向用户提供简洁的决策依据。这样才能分清“模型打算做什么”和“执行器实际做了什么”。
@@ -432,13 +464,14 @@ $$
 | 用户取消 | 及时停止并清理资源 |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    LOOP[Agent Loop] --> DONE{目标完成?}
-    DONE -->|是| SUCCESS[成功结束]
-    DONE -->|否| LIMIT{触发限制?}
+    LOOP["Agent Loop"] --> DONE["目标完成?"]
+    DONE -->|是| SUCCESS["成功结束"]
+    DONE -->|否| LIMIT["触发限制?"]
     LIMIT -->|否| LOOP
-    LIMIT -->|需要审批| HUMAN[暂停并请求人工操作]
-    LIMIT -->|预算或安全限制| PARTIAL[停止并报告未完成状态]
+    LIMIT -->|需要审批| HUMAN["暂停并请求人工操作"]
+    LIMIT -->|预算或安全限制| PARTIAL["停止并报告未完成状态"]
 ```
 
 如果因预算、超时或最大步数而终止，系统不应把部分结果伪装成成功，而应明确报告：
@@ -511,20 +544,17 @@ Agent 和 Workflow 不是互斥关系。一个 Workflow 节点可以运行 Agent
 > **用 Workflow 固定主流程、权限和验收边界，在确实需要灵活判断的位置嵌入 Agent。**
 
 ```mermaid
-flowchart LR
-    IN[用户请求] --> V[确定性校验]
-    V --> R[确定性路由]
-    R -->|标准问题| KB[知识库检索 Tool]
-    R -->|复杂问题| AG[Agent 调研节点]
-    KB --> GEN[LLM 生成]
-    AG --> GEN
-    GEN --> EVAL[质量与安全评估]
-    EVAL -->|通过| OUT[返回结果]
-    EVAL -->|不通过| FIX[受限优化]
-    FIX --> LIMIT{仍有预算且有进展?}
-    LIMIT -->|是| EVAL
-    LIMIT -->|否| STOP[报告未完成或转人工]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    IN["用户请求"] --> V["校验与路由"]
+    V --> GEN["LLM 生成"]
+    GEN --> EVAL["质量与安全评估"]
+    EVAL -->|通过| OUT["返回结果"]
+    EVAL -->|不通过| FIX["受限优化"]
+    FIX -->|仍有预算且有进展| EVAL
 ```
+
+校验与路由是确定性的。标准问题使用知识库检索工具，复杂问题使用 Agent 调研节点，两者都为 LLM 生成步骤提供输入。评估失败后，只有仍有预算**且**仍有进展，优化才会返回评估；否则报告未完成或转人工。
 
 这种架构的优势是：
 
@@ -547,11 +577,12 @@ flowchart LR
 Prompt Chaining 将任务拆分为固定步骤，前一步输出成为后一步输入：
 
 ```mermaid
-flowchart LR
-    A[生成提纲] --> G{质量检查}
-    G -->|通过| B[撰写正文]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["生成提纲"] --> G["质量检查"]
+    G -->|通过| B["撰写正文"]
     G -->|不通过| A
-    B --> C[编辑与格式化]
+    B --> C["编辑与格式化"]
 ```
 
 适合：
@@ -572,11 +603,12 @@ flowchart LR
 Routing 先判断输入类别，再分发给专门分支：
 
 ```mermaid
-flowchart LR
-    Q[用户问题] --> C{分类与路由}
-    C -->|退款| R[退款流程]
-    C -->|技术支持| T[技术支持流程]
-    C -->|普通咨询| G[知识问答流程]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["用户问题"] --> C["分类与路由"]
+    C -->|退款| R["退款流程"]
+    C -->|技术支持| T["技术支持流程"]
+    C -->|普通咨询| G["知识问答流程"]
 ```
 
 路由决策可以由：
@@ -593,11 +625,12 @@ flowchart LR
 Parallelization 同时运行多个独立子任务：
 
 ```mermaid
-flowchart LR
-    Q[分析任务] --> A[市场维度]
-    Q --> B[技术维度]
-    Q --> C[风险维度]
-    A --> S[汇总]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["分析任务"] --> A["市场维度"]
+    Q --> B["技术维度"]
+    Q --> C["风险维度"]
+    A --> S["汇总"]
     B --> S
     C --> S
 ```
@@ -620,15 +653,16 @@ flowchart LR
 Orchestrator 动态拆分任务并分配给多个 Worker：
 
 ```mermaid
-flowchart TB
-    TASK[复杂任务] --> O[Orchestrator]
-    O --> W1[Worker 1]
-    O --> W2[Worker 2]
-    O --> W3[Worker N]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    TASK["复杂任务"] --> O["Orchestrator"]
+    O --> W1["Worker 1"]
+    O --> W2["Worker 2"]
+    O --> W3["Worker N"]
     W1 --> O
     W2 --> O
     W3 --> O
-    O --> SYN[综合结果]
+    O --> SYN["综合结果"]
 ```
 
 它与普通并行化的区别是：
@@ -645,11 +679,12 @@ Anthropic 仍将它列为 Workflow，是因为“分解—委派—汇总”的�
 Evaluator-Optimizer 使用生成者和评估者进行迭代优化：
 
 ```mermaid
-flowchart LR
-    G[Generator] --> E[Evaluator]
-    E --> D{达到标准?}
-    D -->|是| OUT[最终结果]
-    D -->|否| FB[反馈]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generator"] --> E["Evaluator"]
+    E --> D["达到标准?"]
+    D -->|是| OUT["最终结果"]
+    D -->|否| FB["反馈"]
     FB --> G
 ```
 
@@ -683,19 +718,14 @@ flowchart LR
 可以使用以下决策顺序：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    S[新需求] --> C{单次调用可解决?}
-    C -->|是| SIMPLE[普通代码、Tool 或单次 LLM]
-    C -->|否| P{路径可预先定义?}
-    P -->|是| W[Workflow]
-    P -->|部分可以| AW[Agentic Workflow]
-    P -->|否| A[Agent]
-    W --> SK{是否存在可复用方法?}
-    AW --> SK
-    A --> SK
-    SK -->|是| K[封装为 Skill]
-    SK -->|否| END[直接实现]
+    P["路径可预先定义?"] -->|是| W["Workflow"]
+    P -->|部分可以| AW["Agentic Workflow"]
+    P -->|否| A["Agent"]
 ```
+
+面对新需求，先判断普通代码、工具或单次 LLM 调用能否解决；只有不足以解决时，才进入图中的路径选择。选定 Workflow、Agentic Workflow 或 Agent 后，如果存在可复用方法，就将其封装为 Skill；否则直接实现。
 
 ## 3.14 客服系统示例
 
@@ -719,27 +749,14 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    Q[客户问题] --> WF[客服 Workflow]
-    WF --> ROUTE{问题分类}
-
-    ROUTE -->|知识咨询| SEARCH[知识库 Tool]
-    ROUTE -->|订单查询| ORDER[订单 Tool]
-    ROUTE -->|复杂问题| AGENT[客服 Agent]
-
-    AGENT --> SKILL[客服处理 Skill]
-    AGENT --> SEARCH
-    AGENT --> ORDER
-
-    ROUTE -->|退款| CHECK[退款资格 Workflow]
-    CHECK --> APPROVE{人工确认}
+    CHECK[退款资格检查] --> APPROVE[人工确认]
     APPROVE -->|批准| REFUND[退款 Tool]
     APPROVE -->|拒绝| REJECT[解释原因]
-
-    SEARCH --> ANSWER[生成回答]
-    ORDER --> ANSWER
-    AGENT --> ANSWER
     REFUND --> ANSWER
+    ANSWER[生成回答]
 ```
+
+客户问题先进入客服工作流并分类。知识咨询交给知识库工具，订单查询交给订单工具，复杂问题交给客服 Agent；该 Agent 使用客服处理 Skill，也可以调用这两类工具。这三条路径最终进入回答生成。图中单独展示退款路径：分类先选择退款资格工作流，只有人工批准后才能调用退款工具。
 
 该系统不是纯 Workflow，也不是让一个 Agent 控制所有事情。它将动态判断限制在合适范围内，并把退款等高风险操作保留在确定性流程和人工审批中。
 
@@ -757,11 +774,5 @@ MCP 则负责让 AI 应用以标准方式连接外部系统。生产环境通常
 
 ## 参考资料
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [Agent Skills Specification](https://agentskills.io/specification)
-- [AGENTS.md](https://agents.md/)
-- [OpenAI Codex: Custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
-- [OpenAI: Function calling](https://developers.openai.com/api/docs/guides/function-calling)
-
-Agent Skills 与宿主指令发现行为按 2026-09-15 查阅的官方页面核对；查阅日期不是格式版本号。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-03)。

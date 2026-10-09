@@ -72,16 +72,13 @@ For models already trained to reason, start with clear tasks and constraints, th
 Intermediate steps provide an explicit workspace in which the model can reuse learned decomposition patterns through additional sequential computation. Benefits depend on the fit between the task and those computational patterns. External verification can use the steps, but it is not a built-in capability of CoT. The diagram separates these effects:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["① Checkable intermediate results<br/>Support external tools or human review<br/>Do not imply automatic self-correction"]
-    B["② A scratchpad<br/>Complex intermediate state<br/>need not stay entirely hidden<br/>Explicit output reduces<br/>the reasoning burden"]
-    C["③ Reuse learned decomposition patterns<br/>Depends on training data, model capability,<br/>and task fit"]
-    A --> R["May improve task accuracy<br/>Requires controlled evaluation"]
-    B --> R
-    C --> R
-
-    style R fill:#e6f4ea
+    A["Explicit intermediate steps"] --> R["Potential accuracy gain"]
+    R --> E["Controlled evaluation"]
 ```
+
+Three mechanisms can contribute: intermediate results allow external tools or humans to check the work, without implying automatic self-correction; a scratchpad externalizes complex state instead of keeping it entirely hidden; and learned decomposition patterns can be reused. The last mechanism depends on training data, model capability, and task fit. These are possible benefits, not a guarantee of better accuracy.
 
 ## 17.5 Self-consistency: aggregating answers across paths
 
@@ -92,21 +89,16 @@ flowchart TB
 Aggregation may help when several paths lead to the correct answer while errors are dispersed. However, samples from the same model share knowledge and biases. They can all misunderstand the question and repeatedly produce the same wrong answer. Agreement is a signal, not proof of truth.
 
 ```mermaid
-flowchart LR
-    Q["Question"] --> P1["Reasoning path 1 → Answer A"]
-    Q --> P2["Reasoning path 2 → Answer A"]
-    Q --> P3["Reasoning path 3 → Answer B"]
-    Q --> P4["Reasoning path 4 → Answer A"]
-    Q --> P5["Reasoning path 5 → Answer C"]
-    P1 --> V["Normalize answers<br/>and take the mode"]
-    P2 --> V
-    P3 --> V
-    P4 --> V
-    P5 --> V
-    V --> O["Return A: 3 votes"]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Question"] --> P["Sample five reasoning paths"]
+    P --> V["Normalize answers; take mode"]
+    V --> O["A wins: 3 votes"]
 
     style O fill:#e6f4ea
 ```
+
+The paths are alternative samples, not sequential steps. Paths 1, 2, and 4 produce A, path 3 produces B, and path 5 produces C; the normalized answers are therefore A, A, B, A, C.
 
 ### 17.5.2 Benefits and costs
 
@@ -221,16 +213,5 @@ CoT generates intermediate steps linearly. Planning also involves state, action 
 
 ## References
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners (Let's think step by step)](https://arxiv.org/abs/2205.11916)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601)
-- [Towards Understanding Chain-of-Thought Prompting: An Empirical Study of What Matters](https://arxiv.org/abs/2212.10001)
-- [Measuring Faithfulness in Chain-of-Thought Reasoning](https://arxiv.org/abs/2307.13702)
-- [s1: Simple test-time scaling](https://arxiv.org/abs/2501.19393)
-- [Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs](https://arxiv.org/abs/2412.21187)
-- [OpenAI: Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [Anthropic Python SDK: manual thinking configuration](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/thinking_config_enabled_param.py)
-- [Amazon Bedrock: Extended thinking](https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html) (covers Bedrock's manual-budget rules, the interleaved-thinking exception, and model differences; it does not imply identical behavior across every Claude access path)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-17) for this chapter’s sources, reading suggestions, and source notes.

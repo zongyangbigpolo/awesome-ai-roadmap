@@ -28,17 +28,28 @@ description: 分析研究型 Agent 的证据链、串并行规划、停止预算
 ## 12.2 核心流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① 澄清问题并确定范围"] --> S2["② 生成 Research Brief"]
-    S2 --> S3["③ Supervisor 拆分子课题"]
-    S3 --> S4["④ Researcher 并行检索与核验"]
-    S4 --> S5["⑤ 压缩证据并检查研究缺口"]
-    S5 -->|发现缺口或冲突| S3
-    S5 -->|覆盖充分| S6["⑥ 统一生成最终报告"]
+    S1["① 澄清问题并确<br/>定范围"] --> S2["② 生成 Research<br/>Brief"]
+    S2 --> S3["③ 划分子课题"]
+    S3 --> S4["④ 并行检索核验"]
+    S4 --> S5["⑤ 检查证据"]
+    S5 -->|"缺口或冲突"| S3
+    S5 -->|覆盖充分| S6["⑥ 统一生成最终<br/>报告"]
 
     style S2 fill:#e8f0fe
     style S6 fill:#e6f4ea
 ```
+
+图中条件与标签：
+
+- 发现缺口或冲突
+
+图中各项的完整含义：
+
+- ③ Supervisor 拆分子课题
+- ④ Researcher 并行检索与核验
+- ⑤ 压缩证据并检查研究缺口
 
 | 步骤 | 关键点 |
 |---|---|
@@ -79,14 +90,21 @@ flowchart TB
 判断质量时，可以沿着「来源 → 证据 → 结论」反向追查：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① 来源是否值得信<br/>官方文档、论文、监管文件、一手资料更接近原始事实<br/>多篇转载可能都来自同一篇文章<br/>不能因为链接数量多就当成交叉验证"]
-    A --> B["② 来源是否真的支持当前结论<br/>报告应把事实、推断和不确定性分开<br/>遇到冲突时追查发布时间、统计口径和原始出处<br/>而不是挑一个最符合预期的答案"]
-    B --> C["③ 结论仍不稳就回到研究过程<br/>搜索词是否漏掉关键限定<br/>子课题是否重复<br/>停止条件是否过早<br/>工具失败后有没有换用有效来源"]
+    A["① 来源是否值得<br/>信"]
+    A --> B["② 检查论据支持"]
+    B --> C["③ 复查研究过程"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- ① 来源是否值得信 官方文档、论文、监管文件、一手资料更接近原始事实 多篇转载可能都来自同一篇文章 不能因为链接数量多就当成交叉验证
+- ② 来源是否真的支持当前结论 报告应把事实、推断和不确定性分开 遇到冲突时追查发布时间、统计口径和原始出处 而不是挑一个最符合预期的答案
+- ③ 结论仍不稳就回到研究过程 搜索词是否漏掉关键限定 子课题是否重复 停止条件是否过早 工具失败后有没有换用有效来源
 
 ### 12.4.1 评测既看答案也看轨迹
 
@@ -153,18 +171,31 @@ Deep Agents 向模型提供的是**可插拔 backend 后面的文件系统工具
 先判断是否需要动态、多轮的证据收集，再判断是否值得使用并行研究员。能否拆成独立子课题只影响并行方案，不是 Deep Research 的必要条件：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"问题是否开放到<br/>需要多轮搜索和动态调整方向?"}
-    Q1 -->|一次权威检索就能回答| N1["不用<br/>复杂研究流程只会增加成本"]
-    Q1 -->|是| Q2{"能否拆出相对独立的子课题?"}
-    Q2 -->|不能| N2["使用串行研究<br/>避免强行并行"]
+    Q1["开放式研究？"]
+    Q1 -->|"一次检索即可"| N1["不用"]
+    Q1 -->|是| Q2["子课题相对独立？"]
+    Q2 -->|不能| N2["使用串行研究"]
     N2 --> Q3
-    Q2 -->|能| Q3{"报告价值能否覆盖<br/>多轮模型与搜索成本?"}
+    Q2 -->|能| Q3["价值足以覆盖成本？"]
     Q3 -->|不能| N3["不用"]
-    Q3 -->|能| Y["适合 Deep Research"]
+    Q3 -->|能| Y["适合 Deep<br/>Research"]
 
     style Y fill:#e6f4ea
 ```
+
+图中条件与标签：
+
+- 一次权威检索就能回答
+
+图中各项的完整含义：
+
+- 问题是否开放到 需要多轮搜索和动态调整方向?
+- 不用 复杂研究流程只会增加成本
+- 能否拆出相对独立的子课题?
+- 使用串行研究 避免强行并行
+- 报告价值能否覆盖 多轮模型与搜索成本?
 
 **典型场景**：竞品分析、技术路线调研、文献综述、供应商尽调、政策影响研究，以及企业内部资料与公开信息的联合分析。
 
@@ -250,14 +281,5 @@ flowchart TB
 
 ## 参考资料
 
-- [LangChain 官方博客：Open Deep Research](https://blog.langchain.com/open-deep-research/)
-- [open_deep_research 官方仓库](https://github.com/langchain-ai/open_deep_research)
-- [Deep Agents 概览](https://docs.langchain.com/oss/python/deepagents/overview)
-- [Deep Agents Backends](https://docs.langchain.com/oss/python/deepagents/backends)
-- [Deep Agents Sandboxes](https://docs.langchain.com/oss/python/deepagents/sandboxes)
-- [Deep Agents 同步子 Agent](https://docs.langchain.com/oss/python/deepagents/subagents)
-- [Deep Agents 异步子 Agent](https://docs.langchain.com/oss/python/deepagents/async-subagents)
-- [deepagents 官方仓库](https://github.com/langchain-ai/deepagents)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangSmith Evaluation 文档](https://docs.langchain.com/langsmith/evaluation)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-12)。

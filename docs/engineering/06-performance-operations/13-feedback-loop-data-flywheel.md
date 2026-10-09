@@ -9,18 +9,26 @@ description: Turn explicit and implicit feedback into authorized evaluation or t
 Return to the architecture overview in [Chapter 2](../01-foundations/02-production-architecture-overview.md). Every stage ultimately feeds into feedback collection, and the resulting data returns to evaluation and training datasets as the starting point for the next iteration. **The goal is not to add another component, but to connect the evaluation, release, and training-data entry points established across Chapters 7–12.**
 
 ```mermaid
-flowchart LR
-    PROD["System runs in production"] --> SIGNAL["Collect feedback signals"]
-    SIGNAL --> TRIAGE["Verify permitted use · sanitize · deduplicate · identify causes"]
-    TRIAGE --> EVALSET["Add to evaluation datasets<br/>(Chapter 7)"]
-    TRIAGE --> FINETUNE["Add to fine-tuning / alignment data<br/>once task and data requirements are met"]
-    EVALSET --> RELEASE["Next release gate<br/>(Chapter 10)"]
-    FINETUNE --> MODEL["Next model / adaptation layer"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    PROD["System runs in<br/>production"] --> SIGNAL["Collect<br/>feedback<br/>signals"]
+    SIGNAL --> TRIAGE["Prepare<br/>feedback"]
+    TRIAGE --> EVALSET["Add to<br/>evaluation<br/>datasets"]
+    TRIAGE --> FINETUNE["Add to<br/>fine-tuning /<br/>alignment data"]
+    EVALSET --> RELEASE["Next release<br/>gate"]
+    FINETUNE --> MODEL["Next model /<br/>adaptation<br/>layer"]
     RELEASE --> PROD
     MODEL --> RELEASE
 
     style TRIAGE fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Verify permitted use · sanitize · deduplicate · identify causes
+- Add to evaluation datasets (Chapter 7)
+- Add to fine-tuning / alignment data once task and data requirements are met
+- Next release gate (Chapter 10)
 
 ## 13.2 Sources of feedback: explicit and implicit signals
 
@@ -58,16 +66,24 @@ This short cycle does not require model training. The fix may belong in retrieva
 Once feedback data has accumulated and short-cycle prompt adjustments no longer improve a particular task, consider a more substantial intervention: fine-tuning or preference alignment with the collected data, such as RLHF or DPO (see [LLM · Training and Alignment](../../llm/02-training-alignment/README.md)).
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    A["Production feedback accumulates"] --> B["Confirm training suits the task;<br/>permissions, label quality, and learning curves are adequate"]
-    B --> C["Build a fine-tuning / preference dataset"]
-    C --> D["Fine-tune or align a new version"]
-    D --> E["Apply the same evaluation gates<br/>and staged rollout as Chapters 7-10"]
-    E --> F["Deploy the new version and collect new feedback"]
+    A["Production feedback<br/>accumulates"] --> B["Check training suitability"]
+    B --> C["Build training dataset"]
+    C --> D["Fine-tune or align a<br/>new version"]
+    D --> E["Apply the same<br/>evaluation gates"]
+    E --> F["Deploy and collect"]
     F --> A
 
     style B fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Confirm training suits the task; permissions, label quality, and learning curves are adequate
+- Build a fine-tuning / preference dataset
+- Apply the same evaluation gates and staged rollout as Chapters 7-10
+- Deploy the new version and collect new feedback
 
 There is no universal threshold of “a few thousand to tens of thousands of examples is enough for fine-tuning.” Begin with small experiments and learning curves, comparing gains from training with gains from prompt, retrieval, or tool fixes. Preference pairs must correspond to the same task and context. Verify that the preference reflects answer quality rather than differences in version, exposure, or user population. Model-generated answers must not become factual labels without verification.
 
@@ -117,8 +133,5 @@ Changing a prompt or authorization policy in response to one correction without 
 
 ## References
 
-- [OpenAI: Fine-tuning](https://platform.openai.com/docs/guides/fine-tuning)
-- [Anthropic: Constitutional AI and RLHF](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback)
-- [LangSmith: Attach user feedback](https://docs.langchain.com/langsmith/attach-user-feedback)
-- [Netflix Tech Blog: Recommendation systems and the data flywheel](https://netflixtechblog.com/artwork-personalization-c589f074ad76)
-- [Google: People + AI Guidebook - Feedback + Control](https://pair.withgoogle.com/guidebook/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-13) for this chapter’s sources, reading suggestions, and source notes.

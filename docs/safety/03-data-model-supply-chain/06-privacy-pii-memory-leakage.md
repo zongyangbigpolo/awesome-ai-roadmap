@@ -9,12 +9,20 @@ description: Distinguish training data memorization, membership inference, and a
 Privacy risks in traditional applications also include logs, caches, and third-party processing. In LLM systems, distinguish training data memorized in model weights from conversations, summaries, and long-term memories kept in application storage. The former may leak through model output; the latter often reflects failures in retrieval authorization, tenant isolation, or lifecycle governance. Memory leakage is not separate from access control.
 
 ```mermaid
-flowchart TB
-    P[AI privacy risks] --> P1[Training data memorization<br/>6.2]
-    P --> P2[PII handling during inference<br/>6.3]
-    P --> P3[Memory mechanism leakage<br/>6.4]
-    P --> P4[Data residency and cross-border compliance<br/>6.5]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["AI privacy<br/>risks"] --> P1["Training data<br/>memorization"]
+    P --> P2["PII handling<br/>during<br/>inference"]
+    P --> P3["Memory<br/>mechanism<br/>leakage"]
+    P --> P4["Residency /<br/>transfers"]
 ```
+
+Details of the illustrated steps and components:
+
+- Training data memorization 6.2
+- PII handling during inference 6.3
+- Memory mechanism leakage 6.4
+- Data residency and cross-border compliance 6.5
 
 ## 6.2 Training Data Memorization and Extraction Attacks
 
@@ -60,11 +68,17 @@ Even a model with no memorization problem can encounter substantial PII in runti
 Agent systems commonly introduce long-term memory (see [Agent Memory](../../agent/03-memory-context/07-agent-memory.md)), creating privacy risks absent from traditional stateless question-answering systems:
 
 ```mermaid
-flowchart LR
-    U1[User A's conversation] --> W[Write to shared memory storage]
-    W --> R[Retrieval without user-level filtering]
-    R --> U2[User B's conversation receives A's information]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U1["User A's<br/>conversation"] --> W["Write to shared<br/>memory storage"]
+    W --> R["Unscoped<br/>retrieval"]
+    R --> U2["Leak to user B"]
 ```
+
+Details of the illustrated steps and components:
+
+- Retrieval without user-level filtering
+- User B's conversation receives A's information
 
 | Risk | Scenario |
 |---|---|
@@ -123,11 +137,5 @@ Logs, caches, vector indexes, and long-term memory often persist longer and are 
 
 ## References
 
-- [Extracting Training Data from Large Language Models](https://arxiv.org/abs/2012.07805)
-- [Quantifying Memorization Across Neural Language Models](https://arxiv.org/abs/2202.07646)
-- [Membership Inference Attacks against Machine Learning Models](https://arxiv.org/abs/1610.05820)
-- [Deep Learning with Differential Privacy (DP-SGD)](https://arxiv.org/abs/1607.00133)
-- [OWASP LLM02:2025 Sensitive Information Disclosure](https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/)
-- [NIST AI 600-1: Generative AI Profile — Privacy risks](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)
-- [OpenAI: Data controls in the API platform](https://developers.openai.com/api/docs/guides/your-data)
-- [GDPR original text: Articles 5, 6, 17, and Chapter V](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-06) for this chapter’s sources, reading suggestions, and source notes.

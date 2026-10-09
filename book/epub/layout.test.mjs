@@ -19,7 +19,7 @@ const fixture = process.env.EPUB_FILE !== undefined;
 if (fixture) assert.ok(path.isAbsolute(process.env.EPUB_FILE), "EPUB_FILE must be an absolute path");
 const epub = fixture ? process.env.EPUB_FILE
   : path.resolve(directory, `../${language}/generated/epub/ai-engineering-interview-${language}.epub`);
-const requiredIds = fixture ? ["llm-01", "llm-02"] : ["llm-01", "llm-02", "llm-15"];
+const requiredIds = fixture ? ["llm-01", "llm-02"] : ["llm-01", "llm-02", "llm-15", "agent-03"];
 
 test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code remain within the page`, async () => {
   const extracted = await fs.mkdtemp(path.join(os.tmpdir(), "epub-layout-"));
@@ -139,6 +139,31 @@ test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code rem
         }
       }
     }
+    const wideChapter = chapters.find((chapter) => chapter.id === (fixture ? "llm-01" : "agent-03"));
+    await page.goto(`${origin}/${wideChapter.file}`, { waitUntil: "networkidle0" });
+    for (const width of [375, 768]) {
+      await page.setViewport({ width, height: 1024 });
+      const tables = await page.$$eval("table.wide-table", (tables) => tables.map((table) => ({
+        labels: [...table.querySelectorAll(".cell-label")].map((label) => ({
+          text: label.textContent, display: getComputedStyle(label).display,
+          alignment: getComputedStyle(label).textAlign,
+        })),
+        cellWidths: [...table.querySelectorAll("tbody td")].map((cell) => cell.clientWidth),
+        display: getComputedStyle(table).display,
+      })));
+      assert.ok(tables.length, "exercise real wide-table output");
+      for (const table of tables) {
+        assert.ok(table.labels.length >= 4);
+        assert.ok(table.labels.every((label) => label.text.trim()));
+        assert.equal(table.display, width === 375 ? "block" : "table");
+        assert.ok(table.labels.every((label) => label.display === (width === 375 ? "block" : "none")));
+        if (width === 375) assert.ok(table.cellWidths.every((cell) => cell >= 300),
+          "wide-table values must use the available line rather than narrow columns");
+        if (width === 375) assert.ok(table.labels.every((label) => label.alignment === "left"),
+          "stacked fields do not inherit numeric-column alignment");
+      }
+    }
+    await page.setViewport({ width: 375, height: 812 });
     const formulaChapter = chapters.find((chapter) => chapter.id === (fixture ? "llm-01" : "llm-15"));
     await page.goto(`${origin}/${formulaChapter.file}`, { waitUntil: "networkidle0" });
     const target = await page.$eval("a.formula-link", (link) => ({
@@ -162,11 +187,54 @@ test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code rem
     ]);
     assert.equal(page.url(), back);
     assert.ok(await page.evaluate(() => Boolean(document.getElementById(location.hash.slice(1)))));
+    const figureDocuments = await Promise.all((await fs.readdir(path.join(extracted, "EPUB/figures")))
+      .filter((file) => file.endsWith(".xhtml")).map(async (file) => ({
+        file: `EPUB/figures/${file}`,
+        source: await fs.readFile(path.join(extracted, "EPUB/figures", file), "utf8"),
+      })));
+    const diagramDocuments = [...documents, ...figureDocuments].filter(({ source }) =>
+      /class="[^"]*\bdiagram\b/.test(source));
+    const diagramMeasurements = [];
+    for (const { file } of diagramDocuments) {
+      await page.goto(`${origin}/${file}`, { waitUntil: "load" });
+      for (const width of [375, 768]) {
+        await page.setViewport({ width, height: 812 });
+        const diagrams = await page.evaluate(async () => {
+          await document.fonts.ready;
+          return [...document.querySelectorAll("img.diagram")].map((image) => {
+            const box = image.getBoundingClientRect();
+            const style = getComputedStyle(image);
+            const contentWidth = box.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+            const contentHeight = box.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+            return {
+              src: image.getAttribute("src"), width: box.width, height: box.height,
+              nativeWidth: image.naturalWidth / 2, nativeHeight: image.naturalHeight / 2,
+              ratio: contentWidth / contentHeight, naturalRatio: image.naturalWidth / image.naturalHeight,
+              breakInside: style.breakInside,
+            };
+          });
+        });
+        assert.ok(diagrams.length, `${file}: selected document must contain diagrams`);
+        assert.equal(await page.$$eval(".diagram-details, img.diagram-detail", (nodes) => nodes.length), 0);
+        for (const image of diagrams) {
+          assert.ok(image.nativeWidth > 0 && image.nativeWidth <= 480, `${file}: native diagram width`);
+          assert.ok(image.nativeHeight > 0 && image.nativeHeight <= 650, `${file}: native diagram height`);
+          assert.ok(image.width <= 480 && image.height <= 650, `${file}: diagram must not be upscaled`);
+          assert.ok(Math.abs(image.ratio / image.naturalRatio - 1) < 0.02, `${file}: preserve complete image ratio`);
+          assert.equal(image.breakInside, "avoid", `${file}: keep image together`);
+        }
+        diagramMeasurements.push({ file, viewport: width, diagrams });
+      }
+    }
+    const build = JSON.parse(await fs.readFile(path.join(path.dirname(epub), "build.json"), "utf8"));
+    assert.equal(diagramMeasurements.filter((item) => item.viewport === 375)
+      .reduce((sum, item) => sum + item.diagrams.length, 0), 2 * build.occurrences.mermaid,
+    "inspect every diagram occurrence in both chapter text and its complete-image page");
     await fs.writeFile(path.join(path.dirname(epub), "layout.json"), JSON.stringify({
       epub_sha256: createHash("sha256").update(await fs.readFile(epub)).digest("hex"),
       language, mode: fixture ? "fixture" : "full-book",
       selected_chapters: chapters, formula_return: { ...formulaChapter, occurrence: target.occurrence },
-      viewport_width: 375, passed: true, measurements,
+      viewport_width: 375, passed: true, measurements, diagramMeasurements,
     }, null, 2));
   } finally {
     if (browser) await browser.close();

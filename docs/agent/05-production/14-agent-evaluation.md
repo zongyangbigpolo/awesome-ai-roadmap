@@ -21,14 +21,15 @@ It makes some of the difficulties of single-turn text evaluation more pronounced
 **Fourth, failures take different forms.** Task failure, malformed tool calls, infinite loops, budget overruns, and unauthorized actions are distinct failures. They should not be collapsed into a single “error rate.”
 
 ```mermaid
-flowchart TB
-    LLM[Single-turn text evaluation] --> L1[Input: prompt]
-    LLM --> L2[Output: text]
-    LLM --> L3[Comparison: reference answer]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    LLM["Single-turn text<br/>evaluation"] --> L1["Input: prompt"]
+    LLM --> L2["Output: text"]
+    LLM --> L3["Comparison: reference<br/>answer"]
 
-    AG[Agent evaluation] --> A1[Input: goal + environment]
-    AG --> A2[Output: trajectory + environment state changes]
-    AG --> A3[Comparison: state assertions + repeated sampling]
+    AG["Agent evaluation"] --> A1["Input: goal +<br/>environment"]
+    AG --> A2["Output: trajectory +<br/>environment state<br/>changes"]
+    AG --> A3["Comparison: state<br/>assertions + repeated<br/>sampling"]
 ```
 
 ## 14.2 Four Levels of Evaluation
@@ -56,20 +57,17 @@ In practice, it is easy to focus only on L3 end-to-end success. The problem is t
 The value of understanding academic benchmarks is not in chasing scores. Each benchmark **defines a category of capability**, and its evaluation design can inform a test set for your own application.
 
 ```mermaid
-flowchart TB
-    B[Agent benchmarks] --> CODE[Software engineering]
-    B --> WEB[Web and retrieval]
-    B --> GUI[Operating systems and GUIs]
-    B --> TOOL[Tools and conversation]
-    B --> GEN[General assistants]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    B["Agent benchmarks"] --> CODE["Software engineering"]
+    B --> WEB["Web and retrieval"]
+    B --> GUI["Operating systems and<br/>GUIs"]
+    B --> TOOL["Tools and conversation"]
+    B --> GEN["General assistants"]
 
-    CODE --> SWE[SWE-bench / SWE-Lancer / Terminal-Bench]
-    WEB --> WA[WebArena / BrowseComp]
-    GUI --> OS[OSWorld]
-    TOOL --> TAU[tau-bench / tau2-bench]
-    GEN --> GA[GAIA / AgentBench]
-    B -.Supplementary knowledge evaluation.-> HLE[HLE: not agent-specific]
 ```
+
+Examples by category are SWE-bench, SWE-Lancer, and Terminal-Bench for software engineering; WebArena and BrowseComp for web/retrieval; OSWorld for operating systems and GUIs; tau-bench and tau2-bench for tools/conversation; and GAIA and AgentBench for general assistants. HLE provides supplementary knowledge evaluation and is **not agent-specific**.
 
 ### 14.3.1 Software Engineering
 
@@ -80,7 +78,7 @@ Two aspects of its design are worth borrowing:
 1. **Use executable tests rather than text similarity to judge success.** This reduces subjective scoring, although tests can still miss requirements, be brittle, or reward solutions that game them.
 2. **Provide a complete repository rather than isolated files.** This requires the agent to retrieve information and navigate the codebase.
 
-Some instances in the original dataset had underspecified issue descriptions or unreliable tests. This led to **SWE-bench Verified**, a human-screened subset of 500 tasks. OpenAI has identified flaws in test design and training-data contamination in this benchmark, stopped reporting its scores, and recommended reporting SWE-bench Pro instead; see [Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/). **Always identify the subset when citing a score.** Full, Lite, and Verified scores are not directly comparable, and these limitations matter when citing Verified results.
+Some instances in the original dataset had underspecified issue descriptions or unreliable tests. This led to **SWE-bench Verified**, a human-screened subset of 500 tasks. OpenAI has identified flaws in test design and training-data contamination in this benchmark, stopped reporting its scores, and recommended reporting SWE-bench Pro instead; see Why SWE-bench Verified no longer measures frontier coding capabilities<sup>[【155】](../../book/references.md#ref-155)</sup>. **Always identify the subset when citing a score.** Full, Lite, and Verified scores are not directly comparable, and these limitations matter when citing Verified results.
 
 **SWE-Lancer** uses software tasks from a real freelance marketplace, including both independent-contributor tasks and managerial tasks that require choosing an implementation proposal. Amounts aggregated from historical task payments are a proxy for value within the benchmark, not actual agent earnings, and cannot be directly extrapolated to production ROI.
 
@@ -88,7 +86,7 @@ Some instances in the original dataset had underspecified issue descriptions or 
 
 ### 14.3.2 Web and Retrieval
 
-**WebArena** provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Its [official evaluators](https://github.com/web-arena-x/webarena/blob/73d9de71c25af3f5037c722ede9cabe25a8c77c2/evaluation_harness/evaluators.py) check answers, URLs, or page content according to the task. Information-seeking tasks can use exact answer matching, required phrases, or model-based fuzzy matching. An answer is a legitimate task output to grade; an agent merely saying “I completed the action” is not evidence that the required website state changed.
+**WebArena** provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Its official evaluators<sup>[【529】](../../book/references.md#ref-529)</sup> check answers, URLs, or page content according to the task. Information-seeking tasks can use exact answer matching, required phrases, or model-based fuzzy matching. An answer is a legitimate task output to grade; an agent merely saying “I completed the action” is not evidence that the required website state changed.
 
 **BrowseComp** takes a different approach: answers are short and easy to verify, but finding them requires **deep, multi-hop web retrieval**. It specifically measures the ability to keep searching and cross-check information.
 
@@ -177,12 +175,13 @@ This is not $\mathrm{pass@}k$. The original tau-bench paper calls it “pass hat
 Both estimators use the convention that the numerator is zero when fewer than `k` elements are available to choose from. Sharing reflection memory across runs, changing strategies, or not resetting the environment violates the independent, identically distributed assumption. Such stateful operation must be evaluated separately rather than by applying these estimators directly.
 
 ```mermaid
-flowchart LR
-    P1["pass@k<br/>At least one success in k runs"] --> U1[Measures an upper bound on capability]
-    U1 --> S1[Suited to: human-reviewed settings]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P1["pass@k<br/>At least one<br/>success in k runs"] --> U1["Measures an upper<br/>bound on<br/>capability"]
+    U1 --> S1["Suited to:<br/>human-reviewed<br/>settings"]
 
-    P2["pass^k<br/>All k runs succeed"] --> U2[Measures behavioral consistency]
-    U2 --> S2[Suited to: unattended automation]
+    P2["pass^k<br/>All k runs succeed"] --> U2["Measures<br/>behavioral<br/>consistency"]
+    U2 --> S2["Suited to:<br/>unattended<br/>automation"]
 ```
 
 Why are long action sequences fragile? Under the teaching assumptions that “each step is independent, every step has the same probability of being correct, and any failed step is unrecoverable,” the success probability for $m$ steps is $p^m$. For $p = 0.95$ and $m = 20$, it is about $0.36$. Real agents have correlated errors, retries, and verification, so this formula cannot be applied directly. Still less does it imply that “reducing variance is always more important than improving capability.” Moreover, $p_i^k$ decreases with the number of repetitions even for a single-step task.
@@ -235,14 +234,15 @@ This allocates total cost across successful tasks; the ratio has no finite defin
 This is the most important design decision when constructing an evaluation set.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    J[Grading methods] --> E[Programmatic assertions]
-    J --> L[LLM-as-Judge]
-    J --> H[Human evaluation]
+    J["Grading<br/>methods"] --> E["Programmatic<br/>assertions"]
+    J --> L["LLM-as-Judge"]
+    J --> H["Human<br/>evaluation"]
 
-    E --> E1[Repeatable; depends on assertion coverage]
-    L --> L1[Covers subjective tasks; needs calibration]
-    H --> H1[Domain judgment; needs agreement calibration]
+    E --> E1["Repeatable;<br/>depends on<br/>assertion<br/>coverage"]
+    L --> L1["Covers<br/>subjective<br/>tasks; needs<br/>calibration"]
+    H --> H1["Domain<br/>judgment;<br/>needs<br/>agreement<br/>calibration"]
 ```
 
 ### 14.5.1 Programmatic Assertions: First Choice
@@ -284,13 +284,14 @@ Domain experts can establish reference labels, calibrate judges, review producti
 An evaluation set can be organized into tiers. The sizes and frequencies below are teaching examples, not industry standards; adjust them to risk coverage, statistical precision, and execution cost:
 
 ```mermaid
-flowchart LR
-    S[Smoke: 10-20 cases] --> R[Regression: 100-300 cases]
-    R --> F[Full: 1000+ cases]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Smoke: 10-20 cases"] --> R["Regression:<br/>100-300 cases"]
+    R --> F["Full: 1000+ cases"]
 
-    S --> S1[Every commit]
-    R --> R1[Every release]
-    F --> F1[Weekly / major changes]
+    S --> S1["Every commit"]
+    R --> R1["Every release"]
+    F --> F1["Weekly / major<br/>changes"]
 ```
 
 | Tier | Size | Frequency | Purpose |
@@ -388,15 +389,16 @@ OpenTelemetry's GenAI semantic conventions cover information such as model and a
 Put evaluation before development changes, not after them.
 
 ```mermaid
-flowchart LR
-    A[Identify a problematic scenario] --> B[Turn it into an evaluation case]
-    B --> C[Confirm the current failure]
-    C --> D[Change the prompt/tool/workflow]
-    D --> E[Run the evaluation set]
-    E --> F{Passes without regressions?}
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Identify a problematic<br/>scenario"] --> B["Turn it into an<br/>evaluation case"]
+    B --> C["Confirm the current<br/>failure"]
+    C --> D["Change the<br/>prompt/tool/workflow"]
+    D --> E["Run the evaluation set"]
+    E --> F["Passes without<br/>regressions?"]
     F -->|No| D
-    F -->|Yes| G[Staged rollout]
-    G --> H[Production monitoring]
+    F -->|Yes| G["Staged rollout"]
+    G --> H["Production monitoring"]
     H --> A
 ```
 
@@ -444,24 +446,5 @@ Academic benchmarks are best used as sources of evaluation design ideas. Decisio
 
 ## References
 
-- [SWE-bench: Can Language Models Resolve Real-World GitHub Issues?](https://arxiv.org/abs/2310.06770)
-- [OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)
-- [SWE-Lancer: Can Frontier LLMs Earn $1 Million from Real-World Freelance Software Engineering?](https://arxiv.org/abs/2502.12115)
-- [Terminal-Bench: Official tasks and versions](https://www.tbench.ai/)
-- [GAIA: a benchmark for General AI Assistants](https://arxiv.org/abs/2311.12983)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [tau^2-Bench: Evaluating Conversational Agents in a Dual-Control Environment](https://arxiv.org/abs/2506.07982)
-- [OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments](https://arxiv.org/abs/2404.07972)
-- [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854)
-- [BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents](https://arxiv.org/abs/2504.12516)
-- [AgentBench: Evaluating LLMs as Agents](https://arxiv.org/abs/2308.03688)
-- [MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering](https://arxiv.org/abs/2410.07095)
-- [Humanity's Last Exam](https://arxiv.org/abs/2501.14249)
-- [AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents](https://arxiv.org/abs/2406.13352)
-- [OpenTelemetry: Generative AI Semantic Conventions](https://github.com/open-telemetry/semantic-conventions-genai)
-- [OpenTelemetry: GenAI convention status (Development, pinned commit 0c87594)](https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Anthropic: Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
-- [SWE-bench: Evaluation harness](https://www.swebench.com/SWE-bench/guides/evaluation/)
-- [OpenAI: BrowseComp reference implementation](https://github.com/openai/simple-evals/blob/main/browsecomp_eval.py)
-- [Anthropic: How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-14) for this chapter’s sources, reading suggestions, and source notes.

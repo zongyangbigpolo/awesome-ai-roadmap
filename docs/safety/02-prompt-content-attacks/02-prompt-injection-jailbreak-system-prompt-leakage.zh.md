@@ -17,12 +17,17 @@ description: 区分提示注入、越狱与系统提示泄漏的目标，理解�
 三者可能组合，但不能当作同义词。角色字段和消息结构确实存在，却不能保证模型始终按信任等级解释内容；越狱还涉及安全对齐的泛化失败，系统提示泄漏则是一种可能结果。是否构成实际越权，要继续看工具服务和数据出口能否独立执行授权，不能只凭模型说出「我已忽略规则」判定成功。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    ROOT["模型可能错误处理指令优先级<br/>或安全约束"] --> PI[Prompt Injection]
-    ROOT --> JB[Jailbreak]
-    PI --> SPL[系统提示泄漏]
+    ROOT["指令或安全约束失<br/>效"] --> PI["Prompt Injection"]
+    ROOT --> JB["Jailbreak"]
+    PI --> SPL["系统提示泄漏"]
     JB --> SPL
 ```
+
+图中各项的完整含义：
+
+- 模型可能错误处理指令优先级 或安全约束
 
 ## 2.2 Prompt Injection 的分类回顾与本章补充
 
@@ -57,13 +62,22 @@ flowchart TB
 Jailbreak 与 Prompt Injection 的区别在于：越狱通常不需要第三方载荷，攻击者本人就是发起者，目标是让模型突破自身的安全对齐（而不是执行「另一个任务」）。
 
 ```mermaid
-flowchart TB
-    J[Jailbreak 技术] --> J1[角色扮演类<br/>DAN / 虚构人格]
-    J --> J2[情境包装类<br/>学术研究/小说创作/调试模式]
-    J --> J3[多轮蚕食类<br/>Crescendo]
-    J --> J4[对抗后缀类<br/>自动化搜索出的低可读性后缀]
-    J --> J5[Many-shot 类<br/>大量示例填满上下文诱导模仿]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    J["Jailbreak 技术"] --> J1["角色扮演类"]
+    J --> J2["情境包装类"]
+    J --> J3["多轮蚕食类"]
+    J --> J4["对抗后缀类"]
+    J --> J5["Many-shot 类"]
 ```
+
+图中各项的完整含义：
+
+- 角色扮演类 DAN / 虚构人格
+- 情境包装类 学术研究/小说创作/调试模式
+- 多轮蚕食类 Crescendo
+- 对抗后缀类 自动化搜索出的低可读性后缀
+- Many-shot 类 大量示例填满上下文诱导模仿
 
 | 类别 | 手法 | 特点 |
 |---|---|---|
@@ -144,9 +158,5 @@ Base64、同形字和语言混合等方式可能避开精确匹配，单靠静�
 
 ## 参考资料
 
-- [OWASP LLM01:2025 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
-- [OWASP LLM07:2025 System Prompt Leakage](https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/)
-- [Many-shot Jailbreaking (Anthropic)](https://www.anthropic.com/research/many-shot-jailbreaking)
-- [Universal and Transferable Adversarial Attacks on Aligned Language Models](https://arxiv.org/abs/2307.15043)
-- [Ignore This Title and HackAPrompt: Exposing Systemic Vulnerabilities of LLMs](https://arxiv.org/abs/2311.16119)
-- [MITRE ATLAS: Prompt Injection](https://atlas.mitre.org/techniques/AML.T0051)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-02)。

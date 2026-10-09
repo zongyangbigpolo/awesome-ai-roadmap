@@ -14,20 +14,47 @@ MCP addresses a different dimension:
 
 > **MCP does not replace tools. It is a standard protocol for connecting AI applications to Tools, Resources, and Prompts.**
 
+The workflow chooses its computational components.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["User goal"]
+    W["Workflow / control<br/>structure"]
+    A["Agent / dynamic<br/>decision-maker"]
+    L["LLM node"]
+    T1["Tool node"]
+    U --> W
+    W --> A
+    W --> L
+    W --> T1
+```
+
+The agent uses methods and tools under repository instructions.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Agent / dynamic<br/>decision-maker"]
+    S["Skill / methods and<br/>knowledge"]
+    T2["Tools / executable<br/>capabilities"]
+    I["AGENTS.md<br/>Repository conventions<br/>and instructions"]
+    A --> S
+    A --> T2
+    I -.Guides.-> A
+```
+
+MCP connects the agent to external systems.
+
 ```mermaid
 flowchart TB
-    U[User goal] --> W[Workflow / control structure]
-    W --> A[Agent / dynamic decision-maker]
-    W --> L[LLM node]
-    W --> T1[Tool node]
-
-    A --> S[Skill / methods and knowledge]
-    A --> T2[Tools / executable capabilities]
-    A --> M[MCP Client]
-    M --> MS[MCP Server]
-    MS --> EXT[External systems]
-
-    I[AGENTS.md<br/>Repository conventions and instructions] -.Guides.-> A
+    A[Agent / dynamic decision-maker]
+    M[MCP Client]
+    MS[MCP Server]
+    EXT[External systems]
+    A --> M
+    M --> MS
+    MS --> EXT
 ```
 
 Solid lines represent orchestration or invocation; the dotted line represents instructions. `AGENTS.md` can ask developers or coding agents to modify a workflow, but the file itself is not a runtime permission gate. Rules that must be enforced still belong in code, tool permissions, or deployment configuration.
@@ -92,12 +119,13 @@ A production tool typically includes:
 8. Errors and audit information.
 
 ```mermaid
-flowchart LR
-    TD[Tool Definition<br/>Name, description, schema] --> TC[Tool Call]
-    TC --> V[Argument and permission validation]
-    V --> EX[Executor]
-    EX --> SYS[External system]
-    SYS --> RES[Structured result or error]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TD["Tool Definition<br/>Name, description,<br/>schema"] --> TC["Tool Call"]
+    TC --> V["Argument and permission<br/>validation"]
+    V --> EX["Executor"]
+    EX --> SYS["External system"]
+    SYS --> RES["Structured result or<br/>error"]
 ```
 
 ### 3.3.3 Tool Schemas
@@ -158,13 +186,14 @@ The sample query is Chinese for “advances in agent technology in 2026.”
 The actual invocation proceeds as follows:
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant M as Model
     participant R as Runtime
     participant T as Tool
 
     M-->>R: Generate Tool Call
-    R->>R: Validate schema, permissions, and budget
+    R->>R: Validate schema,<br/>permissions, and budget
     R->>T: Execute call
     T-->>R: Return Result or Error
     R-->>M: Provide Observation
@@ -183,13 +212,14 @@ MCP (Model Context Protocol) is an open standard for connecting AI applications 
 - **Prompts**: reusable prompt templates.
 
 ```mermaid
-flowchart LR
-    H[Host] --> C1[MCP Client]
-    H --> C2[MCP Client]
-    C1 <--> S1[MCP Server A]
-    C2 <--> S2[MCP Server B]
-    S1 --> DB[Database]
-    S2 --> API[External API]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host"] --> C1["MCP Client"]
+    H --> C2["MCP Client"]
+    C1 <--> S1["MCP Server A"]
+    C2 <--> S2["MCP Server B"]
+    S1 --> DB["Database"]
+    S2 --> API["External API"]
 ```
 
 MCP reduces duplicated integration work by standardizing connections, capability descriptions, and message exchange.
@@ -273,13 +303,14 @@ An important design principle of skills is progressive disclosure:
 3. Read scripts, references, and resources only when needed.
 
 ```mermaid
-flowchart LR
-    META[Metadata<br/>Always visible] --> MATCH{Matches the task?}
-    MATCH -->|No| SKIP[Do not load]
-    MATCH -->|Yes| BODY[Load SKILL.md]
-    BODY --> NEED{More material needed?}
-    NEED -->|Yes| RES[Load scripts / references / assets on demand]
-    NEED -->|No| RUN[Execute the skill]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    META["Metadata<br/>Always visible"] --> MATCH["Matches the task?"]
+    MATCH -->|No| SKIP["Do not load"]
+    MATCH -->|Yes| BODY["Load SKILL.md"]
+    BODY --> NEED["More material needed?"]
+    NEED -->|Yes| RES["Load scripts /<br/>references / assets on<br/>demand"]
+    NEED -->|No| RUN["Execute the skill"]
 ```
 
 This avoids loading all domain knowledge into context at once.
@@ -392,11 +423,12 @@ A useful representation of the agent loop is:
 > **Observe → Decide/Plan → Act → Observe**
 
 ```mermaid
-flowchart LR
-    O[Observe] --> D[Decide / Plan]
-    D --> A[Act]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observe"] --> D["Decide / Plan"]
+    D --> A["Act"]
     A --> O
-    D --> F[Finish]
+    D --> F["Finish"]
 ```
 
 Some material describes ReAct as Thought → Action → Observation, but production systems do not need to expose complete hidden reasoning to users. What the control loop needs to preserve is structured plans, tool calls, returned evidence, and state changes, while giving users concise reasons for decisions. This distinguishes what the model intended from what the executor actually did.
@@ -436,13 +468,14 @@ Even with temperature set to zero, do not assume that the entire agent system is
 | User cancellation | Stop promptly and clean up resources |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    LOOP[Agent Loop] --> DONE{Goal achieved?}
-    DONE -->|Yes| SUCCESS[Finish successfully]
-    DONE -->|No| LIMIT{Limit triggered?}
+    LOOP["Agent Loop"] --> DONE["Goal<br/>achieved?"]
+    DONE -->|Yes| SUCCESS["Finish<br/>successfully"]
+    DONE -->|No| LIMIT["Limit<br/>triggered?"]
     LIMIT -->|No| LOOP
-    LIMIT -->|Approval needed| HUMAN[Pause and request human action]
-    LIMIT -->|Budget or safety limit| PARTIAL[Stop and report incomplete status]
+    LIMIT -->|Approval<br/>needed| HUMAN["Pause and<br/>request<br/>human action"]
+    LIMIT -->|Budget or<br/>safety limit| PARTIAL["Stop and<br/>report<br/>incomplete<br/>status"]
 ```
 
 If execution stops because of a budget, timeout, or step limit, the system must not present partial results as success. It should explicitly report:
@@ -515,20 +548,17 @@ An agentic workflow is useful when the main business process is clear but some l
 > **Use a workflow to fix the main process, permissions, and acceptance boundaries. Embed agents where flexible judgment is genuinely needed.**
 
 ```mermaid
-flowchart LR
-    IN[User request] --> V[Deterministic validation]
-    V --> R[Deterministic routing]
-    R -->|Standard question| KB[Knowledge retrieval tool]
-    R -->|Complex question| AG[Agent research node]
-    KB --> GEN[LLM generation]
-    AG --> GEN
-    GEN --> EVAL[Quality and safety evaluation]
-    EVAL -->|Pass| OUT[Return result]
-    EVAL -->|Fail| FIX[Bounded refinement]
-    FIX --> LIMIT{Budget remains and progress continues?}
-    LIMIT -->|Yes| EVAL
-    LIMIT -->|No| STOP[Report incomplete status or hand off to a human]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    IN["User request"] --> V["Validate and route"]
+    V --> GEN["LLM generation"]
+    GEN --> EVAL["Quality and safety<br/>evaluation"]
+    EVAL -->|Pass| OUT["Return result"]
+    EVAL -->|Fail| FIX["Bounded refinement"]
+    FIX -->|Budget and progress| EVAL
 ```
+
+Validation and routing are deterministic. Standard questions use a knowledge retrieval tool; complex questions use an agent research node. Both supply the LLM generation step. After failed evaluation, refinement returns to evaluation only while budget remains **and** progress continues; otherwise report incomplete status or hand off to a human.
 
 This architecture offers:
 
@@ -551,11 +581,12 @@ Even when the core task needs only one model call, authentication, approval, and
 Prompt chaining divides a task into fixed steps, with each step's output becoming the next step's input:
 
 ```mermaid
-flowchart LR
-    A[Generate outline] --> G{Quality check}
-    G -->|Pass| B[Write the body]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Generate outline"] --> G["Quality check"]
+    G -->|Pass| B["Write the body"]
     G -->|Fail| A
-    B --> C[Edit and format]
+    B --> C["Edit and format"]
 ```
 
 Suitable when:
@@ -576,11 +607,12 @@ The diagram's retry after a failed check must be bounded by attempt, time, and c
 Routing classifies an input and sends it to a specialized branch:
 
 ```mermaid
-flowchart LR
-    Q[User question] --> C{Classify and route}
-    C -->|Refund| R[Refund process]
-    C -->|Technical support| T[Technical support process]
-    C -->|General inquiry| G[Knowledge Q&A process]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["User<br/>question"] --> C["Classify and<br/>route"]
+    C -->|Refund| R["Refund<br/>process"]
+    C -->|Technical<br/>support| T["Technical<br/>support<br/>process"]
+    C -->|General<br/>inquiry| G["Knowledge<br/>Q&A process"]
 ```
 
 The routing decision can use:
@@ -597,11 +629,12 @@ It suits tasks with reasonably clear category boundaries and different handling 
 Parallelization runs independent subtasks concurrently:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    Q[Analysis task] --> A[Market perspective]
-    Q --> B[Technical perspective]
-    Q --> C[Risk perspective]
-    A --> S[Aggregate]
+    Q["Analysis<br/>task"] --> A["Market<br/>perspective"]
+    Q --> B["Technical<br/>perspective"]
+    Q --> C["Risk<br/>perspective"]
+    A --> S["Aggregate"]
     B --> S
     C --> S
 ```
@@ -624,15 +657,16 @@ Parallel tasks still require concurrency limits, timeouts, cancellation, and agg
 An orchestrator dynamically decomposes a task and assigns work to multiple workers:
 
 ```mermaid
-flowchart TB
-    TASK[Complex task] --> O[Orchestrator]
-    O --> W1[Worker 1]
-    O --> W2[Worker 2]
-    O --> W3[Worker N]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Complex task"] --> O["Orchestrator"]
+    O --> W1["Worker 1"]
+    O --> W2["Worker 2"]
+    O --> W3["Worker N"]
     W1 --> O
     W2 --> O
     W3 --> O
-    O --> SYN[Synthesize results]
+    O --> SYN["Synthesize<br/>results"]
 ```
 
 It differs from ordinary parallelization in that:
@@ -649,11 +683,12 @@ It suits coding, research, and multi-document analysis where the number of subta
 Evaluator-optimizer uses a generator and an evaluator for iterative improvement:
 
 ```mermaid
-flowchart LR
-    G[Generator] --> E[Evaluator]
-    E --> D{Meets the criteria?}
-    D -->|Yes| OUT[Final result]
-    D -->|No| FB[Feedback]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generator"] --> E["Evaluator"]
+    E --> D["Meets the criteria?"]
+    D -->|Yes| OUT["Final result"]
+    D -->|No| FB["Feedback"]
     FB --> G
 ```
 
@@ -687,19 +722,14 @@ Required controls include:
 The following decision sequence can help:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    S[New requirement] --> C{Can one call solve it?}
-    C -->|Yes| SIMPLE[Ordinary code, tool, or single LLM call]
-    C -->|No| P{Can the path be predefined?}
-    P -->|Yes| W[Workflow]
-    P -->|Partly| AW[Agentic Workflow]
-    P -->|No| A[Agent]
-    W --> SK{Is there a reusable method?}
-    AW --> SK
-    A --> SK
-    SK -->|Yes| K[Package it as a skill]
-    SK -->|No| END[Implement directly]
+    P["Can the path be<br/>predefined?"] -->|Yes| W["Workflow"]
+    P -->|Partly| AW["Agentic Workflow"]
+    P -->|No| A["Agent"]
 ```
+
+For a new requirement, first ask whether ordinary code, a tool, or one LLM call can solve it. Only if that is insufficient does the diagram's path-selection question apply. After choosing a workflow, agentic workflow, or agent, package any reusable method as a skill; without a reusable method, implement directly.
 
 ## 3.14 A Customer Support Example
 
@@ -722,28 +752,15 @@ The implementation can be divided as follows:
 | Connecting to the order system and knowledge base | MCP or business APIs |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q[Customer question] --> WF[Customer support workflow]
-    WF --> ROUTE{Question classification}
-
-    ROUTE -->|Knowledge inquiry| SEARCH[Knowledge base tool]
-    ROUTE -->|Order query| ORDER[Order tool]
-    ROUTE -->|Complex issue| AGENT[Customer support agent]
-
-    AGENT --> SKILL[Customer support skill]
-    AGENT --> SEARCH
-    AGENT --> ORDER
-
-    ROUTE -->|Refund| CHECK[Refund eligibility workflow]
-    CHECK --> APPROVE{Human confirmation}
-    APPROVE -->|Approved| REFUND[Refund tool]
-    APPROVE -->|Rejected| REJECT[Explain the reason]
-
-    SEARCH --> ANSWER[Generate response]
-    ORDER --> ANSWER
-    AGENT --> ANSWER
-    REFUND --> ANSWER
+    CHECK["Refund eligibility"] --> APPROVE["Human confirmation"]
+    APPROVE -->|Approved| REFUND["Refund tool"]
+    APPROVE -->|Rejected| REJECT["Explain the reason"]
+    REFUND --> ANSWER["Generate response"]
 ```
+
+The customer question enters a support workflow that classifies it. Knowledge inquiries go to the knowledge base tool; order queries go to the order tool. Complex issues go to a support agent, which uses the support skill and can call both tools. Those three paths feed response generation. The diagram isolates the refund path: classification first selects the refund eligibility workflow, and only human approval permits the refund tool to run.
 
 This system is neither a pure workflow nor an agent in control of everything. It confines dynamic judgment to suitable areas and keeps high-risk actions such as refunds within deterministic processes and human approval.
 
@@ -761,11 +778,5 @@ MCP, meanwhile, standardizes how AI applications connect to external systems. Pr
 
 ## References
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [Agent Skills Specification](https://agentskills.io/specification)
-- [AGENTS.md](https://agents.md/)
-- [OpenAI Codex: Custom instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
-- [OpenAI: Function calling](https://developers.openai.com/api/docs/guides/function-calling)
-
-The Agent Skills format and host instruction-discovery behavior were checked against official pages accessed on 2026-09-15. That access date is not a format version number.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-03) for this chapter’s sources, reading suggestions, and source notes.

@@ -33,21 +33,27 @@ class EpubIntegration(unittest.TestCase):
         third = fixtures.builder.language_path(fixture.third, language)
         title = "# Chapter 1: Models" if english else "# 第一章：模型"
         section = "## 1.1 Mechanism" if english else "## 1.1 中文机制"
-        diagram = ('```mermaid\nflowchart LR\n A["Retrieve context"] --> B["Generate an answer"]'
-                   ' --> C["Verify facts and sources"] --> D["Human review and delivery"] --> E["Review and update"]\n```\n'
-                   if english else '```mermaid\nflowchart LR\n A["中文检索"] --> B["生成答案"]'
-                   ' --> C["核对事实与来源"] --> D["人工审阅与交付"] --> E["复盘与更新"]\n```\n')
+        diagram = ('```mermaid\nflowchart TB\n A["Retrieve"] --> B["Generate"]'
+                   ' --> C["Verify"] --> D["Review"]\n```\n'
+                   if english else '```mermaid\nflowchart TB\n A["检索"] --> B["生成"]'
+                   ' --> C["核验"] --> D["审阅"]\n```\n')
         links = ("[Next chapter](../02-second/02-second.md#21-mechanism) [Contents](../../README.md)"
                  if english else "[跨章中文标题](../02-second/02-second.zh.md#21-机制) "
                  "[目录](../../README.zh.md)")
+        handle = ("@reviewer<sup>[1](../02-second/02-second.md#21-mechanism)</sup>"
+                  if english else "@reviewer<sup>[1](../02-second/02-second.zh.md#21-机制)</sup>")
         table = ("| Configuration | Formula |\n|---|---|\n"
                  "| retrievalAugmentedGenerationConfiguration | $x_i^2$ |\n"
                  if english else "| 配置 | 公式 |\n|---|---|\n| 检索增强生成 | $x_i^2$ |\n")
-        fixture.write(first, title + "\n\n" + section + "\n\n" + links + "\n\n"
+        wide_table = ("| Concept | Question | Action | Form |\n|---|---|---|---|\n"
+                      "| Tool | Which capability? | Yes | Function |\n"
+                      if english else "| 概念 | 问题 | 动作 | 形式 |\n|---|---|---|---|\n"
+                      "| 工具 | 可以调用什么能力？ | 是 | 函数 |\n")
+        fixture.write(first, title + "\n\n" + section + "\n\n" + links + "\n\n" + handle + "\n\n"
                       '`$not_math$` and `` `$$` ``.\n\n'
                       "    $indented_code$\n\n"
                       '````markdown\n```mermaid\nnot a real diagram\n```\n$x$\n````\n\n'
-                      + table + "\n$$\n\\frac{1}{2}\n$$\n\n" + diagram)
+                      + table + "\n" + wide_table + "\n$$\n\\frac{1}{2}\n$$\n\n" + diagram)
         agent_heading = "# Chapter 1: Agents\n\n## 1.1 Mechanism\n\n" if english else "# 第一章：智能体\n\n## 1.1 机制\n\n"
         fixture.write(third, agent_heading + diagram)
         original = {path: path.read_bytes() for path in fixture.root.rglob("*.md")}
@@ -79,13 +85,18 @@ class EpubIntegration(unittest.TestCase):
         self.assertEqual(report["nonlinear_figure_documents"], 2)
         self.assertEqual(report["nonlinear_formula_documents"], 2)
         self.assertNotIn("diagram-detail", report["image_occurrences"])
-        self.assertGreater(report["supplemental_image_occurrences"]["diagram-detail"], 0)
+        self.assertEqual(report["supplemental_image_occurrences"].get("diagram-detail", 0), 0)
+        self.assertEqual(report["diagram_detail_tiles"], 0)
         filename = output / f"ai-engineering-interview-{language}.epub"
         previous = filename.read_bytes()
         with zipfile.ZipFile(filename) as archive:
             trees = {name: ET.fromstring(archive.read(name)) for name in archive.namelist()
                      if name.endswith(".xhtml")}
         origin = {}
+        self.assertTrue(any("@reviewer" in "".join(tree.itertext()) for tree in trees.values()))
+        self.assertFalse(any(node.get("data-cites") for tree in trees.values() for node in tree.iter()),
+                         "literal handles before superscripts must not become Pandoc citations")
+        self.assertTrue(any(tree.findall(".//h:sup/h:a", epub.NS) for tree in trees.values()))
         for name, tree in trees.items():
             self.assertEqual(tree.get("lang"), language)
             self.assertEqual(tree.get("{http://www.w3.org/XML/1998/namespace}lang"), language)
@@ -115,6 +126,13 @@ class EpubIntegration(unittest.TestCase):
         self.assertTrue(layout["passed"])
         self.assertEqual(layout["language"], language)
         self.assertEqual(layout["epub_sha256"], report["sha256"])
+        oversized = '```mermaid\nflowchart TB\n' + '\n'.join(
+            f'N{i}["Step {i}"] --> N{i + 1}["Step {i + 1}"]' for i in range(12)) + '\n```\n'
+        fixture.write(first, title + "\n\n" + oversized)
+        result, errors = build()
+        self.assertEqual(result, 1)
+        self.assertIn("simplify the source", errors)
+        self.assertEqual(filename.read_bytes(), previous, "an oversized diagram must not replace the EPUB")
         fixture.write(first, title + "\n\n$\\notARealCommand{x}$\n")
         result, errors = build()
         self.assertEqual(result, 1)

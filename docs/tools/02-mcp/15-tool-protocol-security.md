@@ -9,12 +9,13 @@ description: Examines prompt injection, privilege escalation, tool poisoning, an
 MCP and A2A both bring data, descriptions, and actions outside the model's control into an agent's execution path. Protocol interoperability does not make the peer, tool description, or arguments trustworthy.
 
 ```mermaid
-flowchart LR
-    U[User] --> H[Host / caller]
-    H --> M[Model]
-    H --> P[MCP or A2A peer]
-    P --> X[External system]
-    H --> A[Approval and auditing]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["User"] --> H["Host / caller"]
+    H --> M["Model"]
+    H --> P["MCP or A2A peer"]
+    P --> X["External system"]
+    H --> A["Approval and<br/>auditing"]
 ```
 
 The Host/caller should enforce policy: verify identity and provenance, restrict tools and data, approve high-risk actions, and retain traceable evidence. Model text, Agent Cards, and tool `description` fields must not decide permissions for themselves.
@@ -131,12 +132,5 @@ Users cannot inspect hidden arguments or complex call chains. Approval handles r
 
 ## References
 
-- [MCP 2026-07-28 Authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
-- [MCP 2026-07-28 Security Best Practices](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices)
-- [MCP 2026-07-28 Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [A2A v1.0.1 released specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [RFC 9728: OAuth 2.0 Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728)
-- [RFC 8252: OAuth for Native Apps and loopback redirects](https://www.rfc-editor.org/rfc/rfc8252)
-- [RFC 9700: OAuth 2.0 Security Best Current Practice](https://www.rfc-editor.org/rfc/rfc9700)
-- [RFC 7636: PKCE](https://www.rfc-editor.org/rfc/rfc7636)
-- [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-15) for this chapter’s sources, reading suggestions, and source notes.

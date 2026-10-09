@@ -85,16 +85,5 @@ Production documents commonly include skew, low-resolution scans, obscuring stam
 
 ## References
 
-- [LayoutLM: Pre-training of Text and Layout for Document Image Understanding](https://arxiv.org/abs/1912.13318)
-- [LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking](https://arxiv.org/abs/2204.08387)
-- [OCR-free Document Understanding Transformer (Donut)](https://arxiv.org/abs/2111.15664)
-- [PubTables-1M: Towards Comprehensive Table Extraction From Unstructured Documents](https://arxiv.org/abs/2110.00061)
-- [GriTS: Grid Table Similarity](https://arxiv.org/abs/2203.12555)
-- [Image-based table recognition: data, model, and evaluation (PubTabNet / TEDS)](https://arxiv.org/abs/1911.10683)
-- [ChartQA: A Benchmark for Question Answering about Charts](https://arxiv.org/abs/2203.10244)
-- [DocVQA: A Dataset for VQA on Document Images](https://arxiv.org/abs/2007.00398)
-- [Azure AI Document Intelligence documentation](https://learn.microsoft.com/azure/ai-services/document-intelligence/overview)
-- [Azure Document Intelligence: Accuracy and confidence](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/concept/accuracy-confidence?view=doc-intel-4.0.0)
-- [Google Cloud Document AI documentation](https://cloud.google.com/document-ai/docs/overview)
-- [Amazon Textract documentation](https://docs.aws.amazon.com/textract/latest/dg/what-is.html)
-- [Amazon Textract: AnalyzeDocument and FeatureTypes](https://docs.aws.amazon.com/textract/latest/APIReference/API_AnalyzeDocument.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-03) for this chapter’s sources, reading suggestions, and source notes.

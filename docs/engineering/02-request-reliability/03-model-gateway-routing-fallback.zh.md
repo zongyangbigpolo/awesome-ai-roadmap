@@ -9,22 +9,23 @@ description: 设计受质量、数据驻留和容量约束的模型路由与回�
 [Tools · LLM 网关](../../tools/05-transport-gateway/14-llm-gateway.zh.md)讲过网关**这个组件本身**要具备统一接口、负载均衡、限流配额等能力。更麻烦的是请求到了网关以后:**应该按什么策略决定打给哪个模型、什么时候放弃当前模型换下一个**。这是一层建立在网关基础设施之上的**路由策略**,也是 LLMOps 团队日常调整最频繁的配置之一。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    REQ["请求进入网关"] --> POLICY{"路由策略"}
-    POLICY -->|按成本| CHEAP["优先低成本模型"]
-    POLICY -->|按能力| CAPABLE["需要强推理→路由到旗舰模型"]
-    POLICY -->|按延迟| FAST["延迟敏感→路由到最快供应商"]
-    POLICY -->|按灰度| CANARY["按比例分流到新版本"]
-    CHEAP --> CALL["发起调用"]
-    CAPABLE --> CALL
-    FAST --> CALL
-    CANARY --> CALL
-    CALL -->|失败| CHECK{"允许回退且<br/>还有预算与合规候选?"}
-    CHECK -->|是| FALLBACK["按回退链路尝试下一个候选"]
-    CHECK -->|否| STOP["明确失败或受限降级"]
-    FALLBACK --> CALL
-    CALL -->|成功| DONE["返回"]
+    POLICY["选择候选模型"] --> CALL["调用模型"]
+    CALL -->|成功| DONE["返回结果"]
+    CALL -->|失败| CHECK["检查回退条件"]
+    CHECK -->|允许| CALL
+    CHECK -->|停止| STOP["失败或受限服务"]
 ```
+
+路由策略按成本、能力、延迟或灰度配额选择候选：适合的任务优先使用低成本模型，需要强推理时使用旗舰模型，延迟敏感请求选择最快供应商，新版本则只接收分配给它的流量。调用失败后，只有策略允许回退，而且预算与候选都尚未耗尽时，才使用下一个合格候选重新调用。否则明确返回失败或提供受限服务，不能无限循环。
+
+图中各项的完整含义：
+
+- 需要强推理→路由到旗舰模型
+- 按比例分流到新版本
+- 允许回退且 还有预算与合规候选?
+- 按回退链路尝试下一个候选
 
 ## 3.2 三种常见路由策略
 
@@ -134,8 +135,5 @@ OpenAI 返回的 `reasoning_tokens` 已包含在 `output_tokens` 中，只用于
 
 ## 参考资料
 
-- [LiteLLM: Routing](https://docs.litellm.ai/docs/routing)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [Amazon Bedrock: Model routing (intelligent prompt routing)](https://docs.aws.amazon.com/bedrock/latest/userguide/intelligent-prompt-routing.html)
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Netflix Tech Blog: Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-03)。

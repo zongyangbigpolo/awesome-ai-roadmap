@@ -14,7 +14,7 @@ The registry is the harness's source of truth for tools available in the current
 
 - **Combining multiple sources:** built-in tools, MCP server tools, and host-plugin tools all enter the registry. A skill may reference tools or include scripts, but `SKILL.md` is not itself a tool-registration protocol; the host still needs an executor adapter.
 - **Naming conflicts and deduplication:** multiple MCP servers may provide tools with the same name, such as two different `search` tools. The registry needs namespace prefixes or explicit routing rules to disambiguate them. Prefixes should bind to service identities in host configuration. MCP's `serverInfo.name` is not guaranteed to be unique across servers, so a server's self-reported name is not sufficient.
-- **Dynamic changes:** in MCP 2026-07-28, `listChanged` declares notification support, and the client must also open `subscriptions/listen` with `toolsListChanged: true` to receive tool-list change notifications. Lists may vary over time and by the authorization presented on a request, but must not vary by connection or as a side effect of other requests on that connection ([Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)). Caches must distinguish authorization scopes. Re-list tools after a notification, and never reuse a private tool list across tenants.
+- **Dynamic changes:** in MCP 2026-07-28, `listChanged` declares notification support, and the client must also open `subscriptions/listen` with `toolsListChanged: true` to receive tool-list change notifications. Lists may vary over time and by the authorization presented on a request, but must not vary by connection or as a side effect of other requests on that connection (Tools<sup>[【285】](../../book/references.md#ref-285)</sup>). Caches must distinguish authorization scopes. Re-list tools after a notification, and never reuse a private tool list across tenants.
 
 The specification uses **SHOULD** for deterministic ordering. This helps caching but is not the only mechanism for detecting changes. The registry should also pin tool sources, schema/description versions, and executor mappings. Recheck trust after a list update; an approved call must not silently be rebound to a new tool.
 
@@ -29,11 +29,12 @@ Within the harness, a tool invocation must associate at least a call ID, tool na
 A tool call passes through five explicit stages between the model's request and the result's return to context:
 
 ```mermaid
-flowchart LR
-    A["1. Parse<br/>Extract from model output:<br/>call ID + arguments"] --> B["2. Validate<br/>Check arguments against schema"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["1. Parse<br/>Extract from model<br/>output:<br/>call ID + arguments"] --> B["2. Validate<br/>Check arguments against<br/>schema"]
     B --> C["3. Permission check<br/>See Chapter 20"]
-    C --> D["4. Schedule and execute<br/>Concurrency / sequencing / timeout"]
-    D --> E["5. Write back result<br/>Serialize + bind to call ID"]
+    C --> D["4. Schedule and execute<br/>Concurrency / sequencing<br/>/ timeout"]
+    D --> E["5. Write back result<br/>Serialize + bind to call<br/>ID"]
 ```
 
 - **Parse:** for streaming responses, wait until all JSON argument chunks have been assembled, as discussed in Section 17.5. Parsing too early produces invalid JSON.
@@ -50,7 +51,7 @@ A single model output may request several tool calls. The harness must choose a 
 - **Interdependent tools with side effects**, such as successive edits to the same file, require sequential execution. Alternatively, the harness can detect target-resource conflicts and fall back to serialization.
 - **Each tool call needs its own timeout budget**, nested within the larger budget for the turn and ultimately the session. Section 21.5 develops this hierarchical timeout design. A timeout should produce an explicit timeout error result, not leave the call suspended indefinitely and block the entire state machine.
 
-Tool-level guardrails in the OpenAI Agents SDK can insert business checks before and after execution of a configured `FunctionTool` ([Guardrails](https://openai.github.io/openai-agents-python/guardrails/)). This is not a global switch that automatically covers every tool: hosted tools, handoffs, and built-in execution tools may not use the same pipeline, so verify coverage. An output check runs after execution. It can prevent further propagation of a result, but cannot undo side effects that have already occurred.
+Tool-level guardrails in the OpenAI Agents SDK can insert business checks before and after execution of a configured `FunctionTool` (Guardrails<sup>[【549】](../../book/references.md#ref-549)</sup>). This is not a global switch that automatically covers every tool: hosted tools, handoffs, and built-in execution tools may not use the same pipeline, so verify coverage. An output check runs after execution. It can prevent further propagation of a result, but cannot undo side effects that have already occurred.
 
 ## 19.6 Result writeback and first-class errors
 
@@ -61,8 +62,8 @@ Recoverable tool business errors should be returned as structured results with c
 Section 18.5 distinguishes the context occupancy, transmission, and billing costs of tool definitions. Three engineering mechanisms reduce the amount of unnecessary definition and result data sent to the model:
 
 - **Progressive disclosure:** Section 3.5.3 discusses progressive disclosure for skills. The corresponding tool-level technique includes only the task-relevant subset in the current request. Other tools remain registered but unassembled until they are needed.
-- **Code execution with MCP:** let the model generate code that calls tools instead of placing every tool's complete schema in context. The model initially needs to know about a code execution environment and an API index; it can read the detailed parameters on demand when preparing execution ([Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)). [Cloudflare's Code Mode](https://blog.cloudflare.com/code-mode/) is another implementation of this idea.
-- **Retrieval-based tool selection:** when a system has hundreds or thousands of tools, use retrieval rather than full enumeration to decide which tools to expose this turn. [RAG-MCP](https://arxiv.org/abs/2505.03275) describes this approach to prompt bloat caused by excessive tool definitions.
+- **Code execution with MCP:** let the model generate code that calls tools instead of placing every tool's complete schema in context. The model initially needs to know about a code execution environment and an API index; it can read the detailed parameters on demand when preparing execution (Anthropic: Code execution with MCP<sup>[【446】](../../book/references.md#ref-446)</sup>). Cloudflare's Code Mode<sup>[【447】](../../book/references.md#ref-447)</sup> is another implementation of this idea.
+- **Retrieval-based tool selection:** when a system has hundreds or thousands of tools, use retrieval rather than full enumeration to decide which tools to expose this turn. RAG-MCP<sup>[【448】](../../book/references.md#ref-448)</sup> describes this approach to prompt bloat caused by excessive tool definitions.
 
 All three turn the decision to include a tool's full definition in the current context from a static choice into a dynamic one. In effect, each is a pluggable component of Chapter 18's assembly pipeline.
 
@@ -80,9 +81,5 @@ The registry manages tool identity, definition versions, and authorization-based
 
 ## References
 
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Model Context Protocol: Versioning](https://modelcontextprotocol.io/specification/versioning): the Current status and revision rules for 2026-07-28; accessed in the source review on 2026-09-15.
-- [OpenAI Agents SDK: Guardrails](https://openai.github.io/openai-agents-python/guardrails/)
-- [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
-- [Cloudflare: Code Mode — the better way to use MCP](https://blog.cloudflare.com/code-mode/)
-- [RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation](https://arxiv.org/abs/2505.03275)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-19) for this chapter’s sources, reading suggestions, and source notes.

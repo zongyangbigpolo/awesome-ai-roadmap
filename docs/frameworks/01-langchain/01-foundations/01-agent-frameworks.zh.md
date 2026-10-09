@@ -50,17 +50,22 @@ LangGraph 主要处理循环、条件分支、并行执行、持久化、暂停�
 ### 1.3.1 一个具体例子
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
     A["读取单据"] --> B["合规检查"]
-    B --> C{"金额超过限制?"}
-    C -->|是| D["暂停<br/>等待主管审批"]
-    D --> E{"审批通过?"}
+    B --> C["金额超过限制?"]
+    C -->|是| D["暂停"]
+    D --> E["审批通过?"]
     E -->|是| F["调用付款工具"]
     E -->|否| G["驳回"]
     C -->|否| F
 
     style D fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 暂停 等待主管审批
 
 这类流程通常更适合用图结构表达，而不是继续塞进单一 Agent 循环。
 
@@ -79,20 +84,28 @@ LangChain 提供常用组件和高层入口，LangGraph 提供底层执行、状
 ### 1.4.1 企业知识库场景的难点不只在工具调用
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart LR
-    subgraph IN["资料进入系统时"]
-        I1["PDF 表格要正确解析"]
-        I2["多种数据源要统一接入"]
-        I3["文档要切分并建立索引"]
+    subgraph IN["资料入库"]
+        direction LR
+        I1["PDF 表格要正确解<br/>析"]
+        I2["连接数据源"]
+        I3["文档要切分并建立<br/>索引"]
     end
-    subgraph Q["用户开始提问后"]
-        Q1["过滤和重排召回结果"]
-        Q2["确保不同用户只看到<br/>自己有权访问的数据"]
+    subgraph Q["用户查询"]
+        direction LR
+        Q1["过滤和重排召回结<br/>果"]
+        Q2["执行数据授权"]
     end
     IN --> Q
 
     style IN fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 多种数据源要统一接入
+- 确保不同用户只看到 自己有权访问的数据
 
 企业知识库的问题会沿整条数据链路出现，不是多注册一个搜索工具就能解决。
 
@@ -109,15 +122,22 @@ LlamaIndex 同样提供 Agent、Memory、多 Agent Pattern 和 Workflow。
 **它们不一定三选一。**
 
 ```mermaid
-flowchart LR
-    A["LlamaIndex<br/>处理文档、建索引<br/>提供检索结果"] --> B["包装成 Tool"]
-    B --> C["LangChain Agent<br/>决定何时调用"]
-    C --> D["LangGraph<br/>负责查询改写、答案校验<br/>人工审核、失败恢复<br/>这些步骤如何衔接"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LlamaIndex"] --> B["包装成 Tool"]
+    B --> C["LangChain Agent"]
+    C --> D["LangGraph"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
     style D fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- LlamaIndex 处理文档、建索引 提供检索结果
+- LangChain Agent 决定何时调用
+- LangGraph 负责查询改写、答案校验 人工审核、失败恢复 这些步骤如何衔接
 
 **这是一种可选分工，不是互不重叠的能力划分。** LlamaIndex 也有工作流，LangChain 也有检索组件；同时引入三者时，应避免两套记忆、重试和追踪机制重复管理同一次请求。
 
@@ -135,13 +155,14 @@ flowchart LR
 ## 1.7 选型顺序：从外到内收窄
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q1{"① 这个任务<br/>真的需要 Agent 吗?"}
-    Q1 -->|步骤固定、规则明确| N["用普通函数或工作流<br/>更便宜、更稳定<br/>本来能写成 if/else 的流程<br/>交给模型只会增加不确定性"]
-    Q1 -->|需要| Q2{"② 项目真正困难的<br/>是哪一层?"}
-    Q2 -->|模型和工具接入最费力| A["LangChain 更自然"]
-    Q2 -->|私有数据、文档解析、检索质量| B["LlamaIndex 更贴近问题"]
-    Q2 -->|复杂分支、循环、状态恢复| C["LangGraph 发挥优势"]
+    Q1["① 需要 Agent？"]
+    Q1 -->|"固定规则"| N["用普通函数或工作流"]
+    Q1 -->|需要| Q2["② 主要难点？"]
+    Q2 -->|"集成"| A["LangChain"]
+    Q2 -->|"私有数据"| B["LlamaIndex"]
+    Q2 -->|"执行控制"| C["LangGraph"]
     A --> Q3
     B --> Q3
     C --> Q3
@@ -150,6 +171,20 @@ flowchart TB
     style N fill:#fdecea
     style Q3 fill:#fff3cd
 ```
+
+图中条件与标签：
+
+- 步骤固定、规则明确
+- 模型和工具接入最费力
+- 私有数据、文档解析、检索质量
+- 复杂分支、循环、状态恢复
+
+图中各项的完整含义：
+
+- ① 这个任务 真的需要 Agent 吗?
+- 用普通函数或工作流 更便宜、更稳定 本来能写成 if/else 的流程 交给模型只会增加不确定性
+- ② 项目真正困难的 是哪一层?
+- LlamaIndex 更贴近问题
 
 ### 1.7.1 第三步：Demo 能跑和系统能上线是两回事
 
@@ -222,10 +257,5 @@ flowchart TB
 
 ## 参考资料
 
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LlamaIndex 官方文档](https://docs.llamaindex.ai/)
-- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-- [CrewAI 官方文档](https://docs.crewai.com/)
-- [AutoGen 仓库](https://github.com/microsoft/autogen)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-01)。

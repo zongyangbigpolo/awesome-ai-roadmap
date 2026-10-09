@@ -34,7 +34,7 @@ description: 整理大语言模型的知识、推理、代码、事实性和人�
 | | **LiveBench** | 持续更新题目并按客观答案评分，以降低污染风险；仍需锁定发布版本，不能保证绝无泄漏 |
 | | **Humanity's Last Exam** | 跨学科高难度学术题，含选择、短答及多模态内容；不是通用工作能力或自主研究能力的充分证明 |
 
-SWE-bench Verified 还需要额外留意基准有效性：OpenAI 指出其测试设计缺陷与训练数据污染问题，已停止报告该分数，并建议改报 SWE-bench Pro，见 [OpenAI 声明](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)。这是该机构的评测决定，不代表所有使用者都已停止使用；保留历史成绩时，应说明其版本与局限，不能直接与另一套题目的分数比较。
+SWE-bench Verified 还需要额外留意基准有效性：OpenAI 指出其测试设计缺陷与训练数据污染问题，已停止报告该分数，并建议改报 SWE-bench Pro，见 OpenAI 声明<sup>[【155】](../../book/references.zh.md#ref-155)</sup>。这是该机构的评测决定，不代表所有使用者都已停止使用；保留历史成绩时，应说明其版本与局限，不能直接与另一套题目的分数比较。
 
 ### 21.2.1 Pass@k
 
@@ -70,14 +70,16 @@ $$
 ## 21.3 Benchmark 的系统性缺陷：数据污染
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["训练或后训练可能使用公开网络数据"] --> B["公开题目、答案和改写版本<br/>也可能进入数据流水线"]
-    B --> C["模型预训练时可能已经『见过』这些题的答案"]
-    C --> D["可能高估未见题泛化能力"]
-    D --> E["需要独立任务与保留数据验证<br/>不能仅凭榜单反推泛化能力"]
+    A["公开网络训练数据"] --> B["评测集污染"]
+    B --> D["泛化能力被高估"]
+    D --> E["独立验证"]
 
     style E fill:#fdecea
 ```
+
+训练或后训练的数据流水线可能包含公开评测题目、答案及改写版本。模型因此可能在预训练时已经见过答案，使未见题泛化能力的估计过于乐观。需要使用独立任务与保留数据验证，不能仅凭排名判断泛化能力。
 
 污染是一个风险，任务分布不匹配、测试饱和、评分错误和推理预算不同也是风险。榜单与业务结果不一致，不足以证明某模型「背过题」；确认污染需要数据或实验依据。
 
@@ -92,18 +94,14 @@ flowchart TB
 **面对 Benchmark 的局限，最务实的做法是建任务特定测试集。**
 
 ```mermaid
-flowchart LR
-    A["从真实用户请求里采样"] --> B["人工标注期望答案"]
-    B --> C["分层开发集<br/>用于迭代"]
-    B --> H["隔离的保留测试集<br/>用于阶段验收"]
-    C --> D["迭代模型或 Prompt<br/>在开发集上比较"]
-    D --> E["计算通过率或质量分"]
-    E --> D
-    E -->|候选冻结后| F["阶段性验收<br/>报告统计不确定性"]
-    H --> F
-
-    style C fill:#e6f4ea
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["采样并标注请求"] --> B["分离开发集与测试集"]
+    B --> D["在开发集上迭代"]
+    D -->|冻结候选| F["保留测试集验收"]
 ```
+
+从真实用户请求中采样，由人工标注期望答案。使用分层开发集迭代模型或 Prompt，反复比较通过率或质量分。隔离保留测试集，只有在候选冻结后才做阶段验收，并报告统计不确定性。
 
 ### 21.4.1 两类任务的评分方式
 
@@ -179,19 +177,5 @@ LLM 裁判可能偏爱较长回答、特定位置、自己熟悉的风格，也�
 
 ## 参考资料
 
-- [Measuring Massive Multitask Language Understanding（MMLU）](https://arxiv.org/abs/2009.03300)
-- [MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark](https://arxiv.org/abs/2406.01574)
-- [Evaluating Large Language Models Trained on Code（HumanEval / Pass@k）](https://arxiv.org/abs/2107.03374)
-- [SWE-bench: Can Language Models Resolve Real-World GitHub Issues?](https://arxiv.org/abs/2310.06770)
-- [OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)
-- [Training Verifiers to Solve Math Word Problems（GSM8K）](https://arxiv.org/abs/2110.14168)
-- [Measuring Mathematical Problem Solving With the MATH Dataset](https://arxiv.org/abs/2103.03874)
-- [GPQA: A Graduate-Level Google-Proof Q&A Benchmark](https://arxiv.org/abs/2311.12022)
-- [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
-- [Holistic Evaluation of Language Models（HELM）](https://arxiv.org/abs/2211.09110)
-- [LiveBench: A Challenging, Contamination-Limited LLM Benchmark](https://arxiv.org/abs/2406.19314)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [HumanEval 官方 Pass@k 实现](https://github.com/openai/human-eval/blob/master/human_eval/evaluation.py)
-- [SWE-bench 官方文档（Verified 子集）](https://www.swebench.com/SWE-bench/)
-- [Humanity's Last Exam](https://arxiv.org/abs/2501.14249)
-- [On Faithfulness and Factuality in Abstractive Summarization（词面指标与忠实性的区别）](https://arxiv.org/abs/2005.00661)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-21)。

@@ -9,14 +9,24 @@ description: 区分训练与检索投毒的生效机制，限定少样本后门�
 数据投毒（Data Poisoning）通过污染训练材料或运行时引用的数据影响系统行为。污染不一定成功：训练中还取决于采样、去重、重复曝光和优化过程；RAG 中取决于文档是否入库、召回及被模型采信。要区分攻击者「能写入数据」与「能达成目标」。
 
 ```mermaid
-flowchart TB
-    P[数据投毒] --> P1[预训练语料投毒]
-    P --> P2[微调/RLHF 数据投毒]
-    P --> P3["RAG 语料投毒<br/>见 RAG 安全 20.3.1"]
-    P1 --> E1[改变权重<br/>依赖训练采样与曝光]
-    P2 --> E2[改变权重或偏好<br/>依赖标注与训练入口]
-    P3 --> E3[改变检索上下文<br/>依赖写入和召回权限]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["数据投毒"] --> P1["预训练语料投毒"]
+    P --> P2["微调/RLHF 数据<br/>投毒"]
+    P --> P3["RAG 语料投毒"]
+    P1 --> E1["改变权重"]
+    P2 --> E2["改变权重或偏好"]
+    P3 --> E3["改变检索上下文"]
 ```
+
+三个分支分别指向预训练语料、微调或 RLHF 数据，以及 RAG 语料的投毒。训练阶段的投毒可能影响权重或学到的偏好；RAG 投毒改变的是检索上下文，不需要更新模型权重。
+
+图中各项的完整含义：
+
+- RAG 语料投毒 见 RAG 安全 20.3.1
+- 改变权重 依赖训练采样与曝光
+- 改变权重或偏好 依赖标注与训练入口
+- 改变检索上下文 依赖写入和召回权限
 
 三者都需要来源、审核和血缘，但不存在固定的难度排序：开放网页抓取与只读审批知识库的 RAG 风险不同；小量训练污染也可能对窄目标有效。训练投毒影响权重，删除原始文档不能直接消除影响；RAG 通常不改权重，但删除还需传播到索引、缓存和派生记忆。检索侧细节见 [RAG 安全](../../rag/06-operations-security/20-rag-challenges-security.zh.md)。
 
@@ -31,18 +41,27 @@ flowchart TB
 后门攻击试图让模型在特定「触发器」（trigger）出现时偏向攻击者指定行为，同时尽量保持无触发器时的正常表现。是否成功、对其他任务的损害多大，都需要分别测量，不能假定所有后门都完全隐形。
 
 ```mermaid
-sequenceDiagram
-    participant A as 攻击者
-    participant D as 训练/微调数据集
-    participant M as 模型
-    participant U as 正常用户
-    A->>D: 注入带触发器的样本<br/>（如特定短语/格式/罕见 token）
-    D->>M: 参与训练/微调
-    U->>M: 正常输入（无触发器）
-    M-->>U: 正常输出，无异常
-    A->>M: 输入含触发器的 Prompt
-    M-->>A: 触发预设的恶意行为
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["污染训练样本"]
+    S1["训练纳入触发器"]
+    S2["正常输入：正常输出"]
+    S3["触发输入：恶意行为"]
+    S0 --> S1
+    S1 --> S2
+    S1 --> S3
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 攻击者 → 训练/微调数据集 | 注入带触发器的样本；（如特定短语/格式/罕见 token） |
+| 训练/微调数据集 → 模型 | 参与训练/微调 |
+| 正常用户 → 模型 | 正常输入（无触发器） |
+| 模型 → 正常用户（返回） | 正常输出，无异常 |
+| 攻击者 → 模型 | 输入含触发器的 Prompt |
+| 模型 → 攻击者（返回） | 触发预设的恶意行为 |
 
 **触发器可以是**：一个不常见的词组、特定的格式指令、特定语言、特定的 Unicode 字符组合，甚至是看似无害的上下文模式。触发器设计得越隐蔽、越不可能在正常评测中被撞到，攻击就越难被发现。
 
@@ -66,16 +85,17 @@ sequenceDiagram
 | 微调/RLHF 数据 | 因任务与训练方法而异 | 部分研究在小样本污染下有效，不构成通用成功阈值 |
 | RAG 知识库 | 从小型私有库到持续抓取库 | 依赖写入权限、召回排序和上下文信任处理 |
 
-Anthropic、英国 AI Security Institute 与 Alan Turing Institute 的[联合研究](https://www.anthropic.com/research/small-samples-poison)在 600M–13B 参数模型和特定训练设置下，发现约 250 份恶意文档可形成输出乱码的窄后门，效果更接近依赖绝对数量而非污染比例。这不是「任意规模模型只要 250 份文档就能操控」：更大模型、有害目标、真实抓取与清洗管道能否复现，原文明确保留不确定性。
+Anthropic、英国 AI Security Institute 与 Alan Turing Institute 的联合研究<sup>[【746】](../../book/references.zh.md#ref-746)</sup>在 600M–13B 参数模型和特定训练设置下，发现约 250 份恶意文档可形成输出乱码的窄后门，效果更接近依赖绝对数量而非污染比例。这不是「任意规模模型只要 250 份文档就能操控」：更大模型、有害目标、真实抓取与清洗管道能否复现，原文明确保留不确定性。
 
 ## 4.4 防御框架
 
 ```mermaid
-flowchart LR
-    S[来源治理] --> C[入库前审核]
-    C --> T[训练中监控]
-    T --> A[训练后审计]
-    A --> R[运行时异常检测]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["来源治理"] --> C["入库前审核"]
+    C --> T["训练中监控"]
+    T --> A["训练后审计"]
+    A --> R["运行时异常检测"]
 ```
 
 | 阶段 | 控制手段 |
@@ -117,10 +137,5 @@ RAG 投毒可以改变检索内容、排序或向模型提供间接指令；训�
 
 ## 参考资料
 
-- [Poisoning Web-Scale Training Datasets is Practical](https://arxiv.org/abs/2302.10149)
-- [Anthropic / UK AISI / Alan Turing Institute: Small samples can poison language models](https://www.anthropic.com/research/small-samples-poison)
-- [BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain](https://arxiv.org/abs/1708.06733)
-- [A Backdoor Attack Against LSTM-based Text Classification Systems](https://arxiv.org/abs/1905.12457)
-- [On the Exploitability of Instruction Tuning](https://arxiv.org/abs/2306.17194)
-- [OWASP LLM04:2025 Data and Model Poisoning](https://genai.owasp.org/llmrisk/llm042025-data-and-model-poisoning/)
-- [NIST AI 100-2 E2025: Adversarial Machine Learning Taxonomy](https://doi.org/10.6028/NIST.AI.100-2e2025)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-04)。

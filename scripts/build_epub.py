@@ -349,6 +349,37 @@ def reading_order(book):
     return order + [d.id for d in book.back]
 
 
+def label_wide_tables(tree):
+    for table in tree.findall(".//h:table", NS):
+        headings = table.findall("h:thead/h:tr", NS)
+        if not headings or len(headings[0]) < 4:
+            continue
+        require(len(headings) == 1, "wide tables require one header row")
+        headers = list(headings[0])
+        rows = table.findall("h:tbody/h:tr", NS) + table.findall("h:tfoot/h:tr", NS)
+        require(all(len(row) == len(headers) for row in rows),
+                "wide-table rows must match the header columns")
+        cells = headers + [cell for row in rows for cell in row]
+        require(all(cell.get("colspan", "1") == "1" and cell.get("rowspan", "1") == "1"
+                    for cell in cells), "wide tables with merged cells need explicit layout support")
+        require(not any(header.findall(".//h:img", NS) for header in headers),
+                "wide-table image headers need explicit text labels")
+        labels = [" ".join("".join(header.itertext()).split()) for header in headers]
+        require(all(labels[1:]), "wide tables require labels after the row-heading column")
+        table.set("class", (table.get("class", "") + " wide-table").strip())
+        for row in rows:
+            for cell, label in zip(row, labels):
+                value = ET.Element(f"{{{XHTML}}}div", {"class": "cell-value"})
+                value.text = cell.text
+                value.extend(list(cell))
+                cell.text = None
+                cell[:] = [value]
+                if label:
+                    heading = ET.Element(f"{{{XHTML}}}span", {"class": "cell-label"})
+                    heading.text = label
+                    cell.insert(0, heading)
+
+
 def repair_links(path, resource_hashes=None, book=None):
     """Resolve fragment-only links using actual split XHTML IDs, including raw HTML."""
     entries = read_package(path)
@@ -378,6 +409,7 @@ def repair_links(path, resource_hashes=None, book=None):
     fixed = 0
     figures = {}
     for name, tree in trees.items():
+        label_wide_tables(tree)
         parents = {child: parent for parent in tree.iter() for child in parent}
         for element in tree.iter():
             url = element.get("href", "")

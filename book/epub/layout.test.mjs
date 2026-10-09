@@ -19,7 +19,7 @@ const fixture = process.env.EPUB_FILE !== undefined;
 if (fixture) assert.ok(path.isAbsolute(process.env.EPUB_FILE), "EPUB_FILE must be an absolute path");
 const epub = fixture ? process.env.EPUB_FILE
   : path.resolve(directory, `../${language}/generated/epub/ai-engineering-interview-${language}.epub`);
-const requiredIds = fixture ? ["llm-01", "llm-02"] : ["llm-01", "llm-02", "llm-15"];
+const requiredIds = fixture ? ["llm-01", "llm-02"] : ["llm-01", "llm-02", "llm-15", "agent-03"];
 
 test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code remain within the page`, async () => {
   const extracted = await fs.mkdtemp(path.join(os.tmpdir(), "epub-layout-"));
@@ -139,6 +139,31 @@ test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code rem
         }
       }
     }
+    const wideChapter = chapters.find((chapter) => chapter.id === (fixture ? "llm-01" : "agent-03"));
+    await page.goto(`${origin}/${wideChapter.file}`, { waitUntil: "networkidle0" });
+    for (const width of [375, 768]) {
+      await page.setViewport({ width, height: 1024 });
+      const tables = await page.$$eval("table.wide-table", (tables) => tables.map((table) => ({
+        labels: [...table.querySelectorAll(".cell-label")].map((label) => ({
+          text: label.textContent, display: getComputedStyle(label).display,
+          alignment: getComputedStyle(label).textAlign,
+        })),
+        cellWidths: [...table.querySelectorAll("tbody td")].map((cell) => cell.clientWidth),
+        display: getComputedStyle(table).display,
+      })));
+      assert.ok(tables.length, "exercise real wide-table output");
+      for (const table of tables) {
+        assert.ok(table.labels.length >= 4);
+        assert.ok(table.labels.every((label) => label.text.trim()));
+        assert.equal(table.display, width === 375 ? "block" : "table");
+        assert.ok(table.labels.every((label) => label.display === (width === 375 ? "block" : "none")));
+        if (width === 375) assert.ok(table.cellWidths.every((cell) => cell >= 300),
+          "wide-table values must use the available line rather than narrow columns");
+        if (width === 375) assert.ok(table.labels.every((label) => label.alignment === "left"),
+          "stacked fields do not inherit numeric-column alignment");
+      }
+    }
+    await page.setViewport({ width: 375, height: 812 });
     const formulaChapter = chapters.find((chapter) => chapter.id === (fixture ? "llm-01" : "llm-15"));
     await page.goto(`${origin}/${formulaChapter.file}`, { waitUntil: "networkidle0" });
     const target = await page.$eval("a.formula-link", (link) => ({

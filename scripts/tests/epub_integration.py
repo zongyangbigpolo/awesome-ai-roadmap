@@ -43,11 +43,15 @@ class EpubIntegration(unittest.TestCase):
         table = ("| Configuration | Formula |\n|---|---|\n"
                  "| retrievalAugmentedGenerationConfiguration | $x_i^2$ |\n"
                  if english else "| 配置 | 公式 |\n|---|---|\n| 检索增强生成 | $x_i^2$ |\n")
+        wide_table = ("| Concept | Question | Action | Form |\n|---|---|---|---|\n"
+                      "| Tool | Which capability? | Yes | Function |\n"
+                      if english else "| 概念 | 问题 | 动作 | 形式 |\n|---|---|---|---|\n"
+                      "| 工具 | 可以调用什么能力？ | 是 | 函数 |\n")
         fixture.write(first, title + "\n\n" + section + "\n\n" + links + "\n\n"
                       '`$not_math$` and `` `$$` ``.\n\n'
                       "    $indented_code$\n\n"
                       '````markdown\n```mermaid\nnot a real diagram\n```\n$x$\n````\n\n'
-                      + table + "\n$$\n\\frac{1}{2}\n$$\n\n" + diagram)
+                      + table + "\n" + wide_table + "\n$$\n\\frac{1}{2}\n$$\n\n" + diagram)
         agent_heading = "# Chapter 1: Agents\n\n## 1.1 Mechanism\n\n" if english else "# 第一章：智能体\n\n## 1.1 机制\n\n"
         fixture.write(third, agent_heading + diagram)
         original = {path: path.read_bytes() for path in fixture.root.rglob("*.md")}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "language": "zh-CN",
-  "edition": "zh-CN-draft-1",
+  "edition": "zh-CN-rc-1",
   "title": "AI 工程面试：从模型原理到现场交付",
   "chapter_count": 143,
   "source_url": "https://github.com/zongyangbigpolo/awesome-ai-roadmap/blob/main/",

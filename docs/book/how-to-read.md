@@ -8,7 +8,9 @@ The book has nine parts: large language models, multimodal AI, tools and protoco
 
 **Chapter numbering restarts at 1 in each part.** Chapter 1 in Part 1 discusses language models; Chapter 1 in Part 5 discusses agents. References such as "Chapter 14" or "Section 14.2" without another topic name use the numbering of the current part. Cross-part references name the topic and include a link. The book does not impose a single global chapter sequence, and section numbers stay with their chapters.
 
-English is the primary manuscript, with a complete Simplified Chinese companion. Both editions use the same chapter identities and numbering. The website lets you switch languages within a chapter; each EPUB contains one language, so choose the corresponding download.
+This is the English edition. A complete Simplified Chinese companion uses the same chapter identities and numbering. Each edition can be read on its own; you do not need the other language to follow the explanations.
+
+In the ebook, use the table of contents to move between parts and chapters. Links within the book lead to related discussions. Diagrams and formulas have detail links where needed, with a return link to the original location. The text, diagrams, and formulas are available offline; external references require an internet connection.
 
 When preparing an answer, close the book and explain the central distinction in your own words, then check what you missed. Saying "RAG can reduce hallucinations" is only a start. You also need to explain why retrieval can find the wrong evidence, why generation can misuse valid evidence, and how to distinguish those failures. That is more useful than listing components.
 

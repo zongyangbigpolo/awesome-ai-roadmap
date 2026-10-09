@@ -15,11 +15,11 @@
       "translation_sha256": "9d5c2fc05ace52a57e9fb598914a28c47eeb84d18e72ca5507f44ba881e9bdd9"
     },
     "book/README.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "82702210a810f893305a2d5dc5d1cb636b35dd2f15ad2e9031d7fee3326e78a5",
+      "note": "Reviewed bilingual wide-table export and regression documentation, including the supported empty top-left row-name heading, explicit errors for other empty headings, and unchanged offline, licensing and Kindle-preview limitations.",
+      "reviewed_at": "2026-10-09T03:05:53+00:00",
+      "source_sha256": "212dad4aacdb37c0544e0e6ce680c414ccb2ec6670ebd23eae97b0acf93f8523",
       "translation": "book/README.zh.md",
-      "translation_sha256": "f00bbbf4e5b282b118b6e7ec04511d88f9823083a6a6b482caa0468b48edf1a3"
+      "translation_sha256": "bbaf29c327e8194edc798b56573003ea85d8a60d646680125e16a716154cb9d8"
     },
     "docs/README.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -281,11 +281,11 @@
       "translation_sha256": "7308788c3916049e72e068f6ba6d282dc8f3c525d1836c9611a0dcc0f2da3a7d"
     },
     "docs/book/acknowledgments.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "e232ecba4dd4fef592a3c67a05f58e78882c5537eacbee68e850f7312abc2f5f",
+      "note": "Reviewed English/Chinese publication-page pairs: Polo Li title-page attribution, standalone edition wording, ebook navigation and offline/external-link boundaries, and removal of author-facing acknowledgment placeholders. Existing title, descriptive line and centralized licensing retained; no technical chapters changed.",
+      "reviewed_at": "2026-10-09T02:54:39+00:00",
+      "source_sha256": "5e3ae8bd8b2a96266aa8c1a01e3ef8d9a310d743cf3b73fb843a4796c5153c46",
       "translation": "docs/book/acknowledgments.zh.md",
-      "translation_sha256": "e8171bf3e00a1a519d3997e3745ea5b461736bcc2ff7ea284f03723b5386f4eb"
+      "translation_sha256": "13769021d002fc35c4b8e194c2ea06bfd35623b1260df1fe13f697f332dcfa8a"
     },
     "docs/book/colophon.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -295,11 +295,11 @@
       "translation_sha256": "c7c01899c61b981a84c4c3f14ae8c88598f24de332812615a1fd526ee1eb017a"
     },
     "docs/book/how-to-read.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "de0e62e4f36eb1d797d75fed9427f0dec43c1a31fcef944492ba7bb093e93de6",
+      "note": "Reviewed English/Chinese publication-page pairs: Polo Li title-page attribution, standalone edition wording, ebook navigation and offline/external-link boundaries, and removal of author-facing acknowledgment placeholders. Existing title, descriptive line and centralized licensing retained; no technical chapters changed.",
+      "reviewed_at": "2026-10-09T02:54:39+00:00",
+      "source_sha256": "4ed21df2db65c90e175f0c0aaa48915dee331f246c3bbd8ca7730793b7e1b82b",
       "translation": "docs/book/how-to-read.zh.md",
-      "translation_sha256": "88e42f58047d331612f04cc69ee2d6f6b2154f528983a4d1b2e4695938166ba2"
+      "translation_sha256": "1be192b21d558b10f25317ce0f167930a7f25b194ee9aff6af18813dd9979527"
     },
     "docs/book/preface.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
@@ -309,11 +309,11 @@
       "translation_sha256": "f8f7e288a4dd68d7fc025dd7677f95a6fef6bf833ff5a347bc3d673f955664ae"
     },
     "docs/book/title-page.md": {
-      "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",
-      "reviewed_at": "2026-09-20T03:42:34+00:00",
-      "source_sha256": "943d9949c51918b694a29dfe9f26fd74123dd229a6d8ae7d3d3b321be67b6521",
+      "note": "Reviewed English/Chinese publication-page pairs: Polo Li title-page attribution, standalone edition wording, ebook navigation and offline/external-link boundaries, and removal of author-facing acknowledgment placeholders. Existing title, descriptive line and centralized licensing retained; no technical chapters changed.",
+      "reviewed_at": "2026-10-09T02:54:39+00:00",
+      "source_sha256": "d11b6bcfe9b40c928eb0d9021152382646d23e393b71aa37999448eb1b6a7ea5",
       "translation": "docs/book/title-page.zh.md",
-      "translation_sha256": "86bd9b2a114a7cdfdaa6563278132ee8f9d89278bde45812df713bf63f343949"
+      "translation_sha256": "f5843f0c89187c4a4ce19d9ed3f1cdeb0727405d3946ed3c39dfd420f1fb6259"
     },
     "docs/editorial-policy.md": {
       "note": "Initial full English-first migration from be53feda: all 143 knowledge chapters and reader/support page pairs reviewed; primary-source checks and approved paired corrections are recorded in book/i18n/reviews. Chinese links localized and both reading indexes regenerated; version pairing does not replace semantic review.",

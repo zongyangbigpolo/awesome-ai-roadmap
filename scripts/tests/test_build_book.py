@@ -540,15 +540,18 @@ class RepositoryBookTests(unittest.TestCase):
                 manuscript = book.assemble()
                 pattern = r"^## Part \d+, Chapter \d+:" if language == "en" else r"^## 第.+篇 第\d+章："
                 self.assertEqual(len(re.findall(pattern, manuscript, re.M)), 143)
-                self.assertEqual(manuscript.count("Polo Li"), 1)
+                self.assertEqual(manuscript.count("Polo Li"), 2)
                 anchors = re.findall(r'<a id="([^"]+)"></a>', manuscript)
                 self.assertEqual(len(anchors), len(set(anchors)))
                 self.assertFalse(set(re.findall(r"\]\(#([^)]+)\)", manuscript)) - set(anchors))
                 for document in book.documents.values():
                     with self.subTest(path=document.path):
+                        rendered = book.render_document(document)
+                        expected_attribution = 1 if document.id in {"title-page", "colophon"} else 0
+                        self.assertEqual(rendered.count("Polo Li"), expected_attribution)
                         source_code_math = [content for protected, content in document.chunks if protected]
                         assembled_code_math = [content for protected, content in
-                                               builder.segments(book.render_document(document), document.path)
+                                               builder.segments(rendered, document.path)
                                                if protected]
                         self.assertEqual(assembled_code_math, source_code_math)
 

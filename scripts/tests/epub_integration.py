@@ -40,6 +40,8 @@ class EpubIntegration(unittest.TestCase):
         links = ("[Next chapter](../02-second/02-second.md#21-mechanism) [Contents](../../README.md)"
                  if english else "[跨章中文标题](../02-second/02-second.zh.md#21-机制) "
                  "[目录](../../README.zh.md)")
+        handle = ("@reviewer<sup>[1](../02-second/02-second.md#21-mechanism)</sup>"
+                  if english else "@reviewer<sup>[1](../02-second/02-second.zh.md#21-机制)</sup>")
         table = ("| Configuration | Formula |\n|---|---|\n"
                  "| retrievalAugmentedGenerationConfiguration | $x_i^2$ |\n"
                  if english else "| 配置 | 公式 |\n|---|---|\n| 检索增强生成 | $x_i^2$ |\n")
@@ -47,7 +49,7 @@ class EpubIntegration(unittest.TestCase):
                       "| Tool | Which capability? | Yes | Function |\n"
                       if english else "| 概念 | 问题 | 动作 | 形式 |\n|---|---|---|---|\n"
                       "| 工具 | 可以调用什么能力？ | 是 | 函数 |\n")
-        fixture.write(first, title + "\n\n" + section + "\n\n" + links + "\n\n"
+        fixture.write(first, title + "\n\n" + section + "\n\n" + links + "\n\n" + handle + "\n\n"
                       '`$not_math$` and `` `$$` ``.\n\n'
                       "    $indented_code$\n\n"
                       '````markdown\n```mermaid\nnot a real diagram\n```\n$x$\n````\n\n'
@@ -91,6 +93,10 @@ class EpubIntegration(unittest.TestCase):
             trees = {name: ET.fromstring(archive.read(name)) for name in archive.namelist()
                      if name.endswith(".xhtml")}
         origin = {}
+        self.assertTrue(any("@reviewer" in "".join(tree.itertext()) for tree in trees.values()))
+        self.assertFalse(any(node.get("data-cites") for tree in trees.values() for node in tree.iter()),
+                         "literal handles before superscripts must not become Pandoc citations")
+        self.assertTrue(any(tree.findall(".//h:sup/h:a", epub.NS) for tree in trees.values()))
         for name, tree in trees.items():
             self.assertEqual(tree.get("lang"), language)
             self.assertEqual(tree.get("{http://www.w3.org/XML/1998/namespace}lang"), language)

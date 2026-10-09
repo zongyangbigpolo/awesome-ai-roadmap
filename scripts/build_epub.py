@@ -666,7 +666,7 @@ def build(args):
         stage = Path(temporary) / "result"
         stage.mkdir()
         book.write(stage / "manuscript.md", manuscript)
-        ast = json.loads(run([PANDOC, "--from=markdown-smart-implicit_figures", "--to=json"],
+        ast = json.loads(run([PANDOC, "--from=markdown-smart-implicit_figures-citations", "--to=json"],
                              input=prepare_markdown(manuscript)))
         jobs, occurrences = prepare_ast(ast, book, stage)
         expected = source_counts(manuscript)

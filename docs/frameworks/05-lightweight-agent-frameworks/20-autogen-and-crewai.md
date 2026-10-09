@@ -13,18 +13,33 @@ This chapter retains AutoGen to explain and maintain existing systems and compar
 - **AutoGen**: Starts with the underlying runtime, modeling communication between agents as an **Actor model with asynchronous message passing**, targeting event-driven, distributable, scalable multi-agent systems.
 - **CrewAI**: Describes collaboration through roles, tasks, and Crews, while also providing Flows to manage process state, routing, and multiple Crews. Definitions can use Python or YAML; it is not merely a lightweight wrapper around role prompts.
 
+**AutoGen's approach**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph AG["AutoGen's approach"]
-        A1["Actor-model runtime"] --> A2["Asynchronous messaging between agents"]
-        A2 --> A3["AgentChat: high-level abstractions for conversations"]
-    end
-    subgraph CR["CrewAI's approach"]
-        C1["Agent: role + goal + backstory"]
-        C1 --> C2["Crew: sequential / hierarchical collaboration"]
-        C1 --> C3["Flow: event-driven deterministic control flow"]
-    end
+        A1["Actor-model<br/>runtime"] --> A2["Async messages"]
+        A2 --> A3["AgentChat"]
+
 ```
+
+**CrewAI's approach**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Agent: role +<br/>goal +<br/>backstory"]
+        C1 --> C2["Crew"]
+        C1 --> C3["Flow"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Asynchronous messaging between agents
+- AgentChat: high-level abstractions for conversations
+- Crew: sequential / hierarchical collaboration
+- Flow: event-driven deterministic control flow
 
 ## 20.2 AutoGen: a layered runtime—Core and AgentChat
 
@@ -131,15 +146,5 @@ AutoGen uses the Actor model to address distributed collaboration, while CrewAI 
 
 ## References
 
-- [AutoGen official documentation](https://microsoft.github.io/autogen/stable/)
-- [AutoGen: Core user guide](https://microsoft.github.io/autogen/stable/user-guide/core-user-guide/index.html)
-- [AutoGen: AgentChat user guide](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/index.html)
-- [AutoGen official repository: Maintenance Mode, pinned commit](https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/README.md)
-- [AutoGen → MAF migration guide](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-autogen/)
-- [AutoGen: Saving and loading Agent/Team state](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
-- [CrewAI official documentation](https://docs.crewai.com/)
-- [CrewAI: Flow concepts](https://docs.crewai.com/en/concepts/flows)
-- [CrewAI: Crew concepts](https://docs.crewai.com/en/concepts/crews)
-- [CrewAI: Sequential and hierarchical Processes](https://docs.crewai.com/en/concepts/processes)
-
-Version note: AutoGen's maintenance mode and successor recommendation were checked against the pinned commit above on 2026-09-15. The code in this chapter retains the Core/AgentChat generation of APIs rather than rewriting it into MAF APIs.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-20) for this chapter’s sources, reading suggestions, and source notes.

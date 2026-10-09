@@ -46,10 +46,17 @@ The gateway, SDK, and business layer must not retry independently. For example, 
 An LLM call's duration is strongly related to its output length. A fixed timeout can incorrectly terminate healthy requests that produce long outputs. A more robust approach uses **layered timeout budgets**:
 
 ```mermaid
-flowchart LR
-    A["Connection timeout: 2s<br/>Example budget"] --> B["First-token timeout: 10s<br/>Wait for the first meaningful content token"]
-    B --> C["Total timeout: 60s<br/>Hard limit for the entire streamed response"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Connection<br/>timeout: 2s"] --> B["First-token<br/>timeout: 10s"]
+    B --> C["Total timeout:<br/>60s"]
 ```
+
+Details of the illustrated steps and components:
+
+- Connection timeout: 2s Example budget
+- First-token timeout: 10s Wait for the first meaningful content token
+- Total timeout: 60s Hard limit for the entire streamed response
 
 | Timeout layer | Typical value | Purpose |
 |---|---|---|
@@ -139,8 +146,5 @@ A slow background task can fill the connection pool and delay real-time user con
 
 ## References
 
-- [Google Cloud: Implementing exponential backoff](https://cloud.google.com/storage/docs/retry-strategy)
-- [Stripe API: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
-- [Martin Fowler: CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html)
-- [Netflix Tech Blog: Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
-- [AWS Well-Architected Framework: REL05-BP04 Bulkhead architecture](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_mitigate_interaction_failure_bulkhead.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-04) for this chapter’s sources, reading suggestions, and source notes.

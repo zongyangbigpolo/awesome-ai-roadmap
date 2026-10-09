@@ -21,15 +21,16 @@ description: 说明任务契约、拆分粒度、DAG 调度、关键路径与局
 > **可执行、可验证、可调度、可恢复的任务单元。**
 
 ```mermaid
-flowchart LR
-    G[复杂目标] --> D[任务拆分]
-    D --> T1[子任务 1]
-    D --> T2[子任务 2]
-    D --> TN[子任务 N]
-    T1 --> V[独立验证]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["复杂目标"] --> D["任务拆分"]
+    D --> T1["子任务 1"]
+    D --> T2["子任务 2"]
+    D --> TN["子任务 N"]
+    T1 --> V["独立验证"]
     T2 --> V
     TN --> V
-    V --> S[结果组合]
+    V --> S["结果组合"]
 ```
 
 本章用虚构的竞品研究任务串联例子：调研最近半年的产品、定价和市场动态，最终交付带来源的报告。示例参数和时长用于演算，其中三个调研分支取 40、50、60 秒，合并取 10 秒，不是项目实测结果。
@@ -59,10 +60,11 @@ Agent 执行时间越长，产生的消息、工具结果和中间结论越多�
 完整任务失败时，很难定位问题来自搜索、分析还是结果合成。拆分后，可以为每个步骤设置验收条件：
 
 ```mermaid
-flowchart LR
-    T[执行子任务] --> V{满足验收条件?}
-    V -->|是| NEXT[进入后续任务]
-    V -->|否| R[局部重试或回退]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["执行子任务"] --> V["满足验收条件?"]
+    V -->|是| NEXT["进入后续任务"]
+    V -->|否| R["局部重试或回退"]
     R --> T
 ```
 
@@ -237,12 +239,13 @@ flowchart LR
 静态拆分由开发者预先定义步骤和依赖，适合流程稳定、规则清晰的场景。
 
 ```mermaid
-flowchart LR
-    IN[客户问题] --> C[意图分类]
-    C --> R[检索知识库]
-    R --> G[生成回答]
-    G --> S[安全检查]
-    S --> OUT[返回结果]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["客户问题"] --> C["意图分类"]
+    C --> R["检索知识库"]
+    R --> G["生成回答"]
+    G --> S["安全检查"]
+    S --> OUT["返回结果"]
 ```
 
 ### 6.6.1 优势
@@ -266,17 +269,40 @@ flowchart LR
 
 动态拆分由 Planner 根据目标和当前环境生成子任务。
 
+规划、执行并检查整体验收。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    G[用户目标] --> P[LLM Planner]
-    P --> PLAN[生成任务列表或 DAG]
-    PLAN --> E[Executor]
-    E --> O[Observation]
-    O --> DONE{整体验收通过?}
-    DONE -->|是| OUT[交付结果]
-    DONE -->|否| LIMIT{仍有预算且允许继续?}
-    LIMIT -->|否| STOP[暂停或报告未完成]
-    LIMIT -->|是| RP{需要重规划?}
+    G["用户目标"]
+    P["LLM Planner"]
+    PLAN["生成任务列表或 DAG"]
+    E["Executor"]
+    O["Observation"]
+    DONE["整体验收通过?"]
+    OUT["交付结果"]
+    G --> P
+    P --> PLAN
+    PLAN --> E
+    E --> O
+    O --> DONE
+    DONE -->|是| OUT
+```
+
+整体验收失败后，先检查限制，再决定是否继续。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    DONE["整体验收通过?"]
+    LIMIT["仍有预算且允许继续?"]
+    STOP["暂停或报告未完成"]
+    RP["需要重规划?"]
+    E["Executor"]
+    P["LLM Planner"]
+    DONE -->|否| LIMIT
+    LIMIT -->|否| STOP
+    LIMIT -->|是| RP
     RP -->|否| E
     RP -->|是| P
 ```
@@ -315,18 +341,19 @@ flowchart TB
 4. 再展开下一层。
 
 ```mermaid
-flowchart TB
-    G[战略报告] --> M1[资料收集]
-    G --> M2[对比分析]
-    G --> M3[报告生成]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["战略报告"] --> M1["资料收集"]
+    G --> M2["对比分析"]
+    G --> M3["报告生成"]
 
-    M1 --> T11[竞品 A]
-    M1 --> T12[竞品 B]
-    M1 --> T13[行业趋势]
+    M1 --> T11["竞品 A"]
+    M1 --> T12["竞品 B"]
+    M1 --> T13["行业趋势"]
 
-    M2 --> T21[功能对比]
-    M2 --> T22[价格对比]
-    M2 --> T23[风险分析]
+    M2 --> T21["功能对比"]
+    M2 --> T22["价格对比"]
+    M2 --> T23["风险分析"]
 ```
 
 这借鉴了 Hierarchical Task Network（HTN）的分层思路：
@@ -358,11 +385,12 @@ flowchart TB
 5. 再向前展开。
 
 ```mermaid
-flowchart LR
-    S[当前状态] --> P[规划近期步骤]
-    P --> E[执行下一步]
-    E --> O[获取反馈]
-    O --> U[更新状态]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["当前状态"] --> P["规划近期步骤"]
+    P --> E["执行下一步"]
+    E --> O["获取反馈"]
+    O --> U["更新状态"]
     U --> P
 ```
 
@@ -386,19 +414,46 @@ flowchart LR
 - 是否改变执行器；
 - 是否提高或降低并行度。
 
+执行产生用于判断任务粒度的信号。
+
 ```mermaid
 flowchart TB
-    T[当前任务] --> E[执行或试探]
-    E --> M[监控信号]
-    M --> D{是否需要调整粒度?}
-    D -->|任务过大或不确定| SPLIT[继续拆分]
-    D -->|任务过细或开销过高| MERGE[合并任务]
-    D -->|计划仍合适| KEEP[保持当前计划]
-    D -->|关键假设失效| REPLAN[重新规划]
+    T[当前任务]
+    E[执行或试探]
+    M[监控信号]
+    D{是否需要调整粒度?}
+    T --> E
+    E --> M
+    M --> D
+```
+
+调整粒度或计划后，返回当前任务。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    D["是否需要调整粒度<br/>?"]
+    SPLIT["继续拆分"]
+    MERGE["合并任务"]
+    REPLAN["重新规划"]
+    T["当前任务"]
+    D -->|任务过大或不确定| SPLIT
+    D -->|任务过细或开销过<br/>高| MERGE
+    D -->|关键假设失效| REPLAN
     SPLIT --> T
     MERGE --> T
-    KEEP --> E
     REPLAN --> T
+```
+
+计划仍合适时继续原有执行。
+
+```mermaid
+flowchart TB
+    D{是否需要调整粒度?}
+    KEEP[保持当前计划]
+    E[执行或试探]
+    D -->|计划仍合适| KEEP
+    KEEP --> E
 ```
 
 ### 6.10.1 自适应信号
@@ -452,13 +507,14 @@ flowchart TB
 设每个节点表示任务，每条有向边表示“后一个任务依赖前一个任务”；确认没有循环后，才得到任务 DAG：
 
 ```mermaid
-flowchart LR
-    A[收集竞品 A] --> D[产品对比]
-    B[收集竞品 B] --> D
-    C[收集行业趋势] --> E[趋势分析]
-    D --> F[生成报告]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["收集竞品 A"] --> D["产品对比"]
+    B["收集竞品 B"] --> D
+    C["收集行业趋势"] --> E["趋势分析"]
+    D --> F["生成报告"]
     E --> F
-    F --> G[事实与引用检查]
+    F --> G["事实与引用检查"]
 ```
 
 ### 6.11.1 依赖类型
@@ -501,11 +557,12 @@ flowchart LR
 依赖已满足、可用资源允许并发的任务可以采用 Fan-out / Fan-in，即分发到多个分支，再汇总结果：
 
 ```mermaid
-flowchart LR
-    P[Planner] --> A[任务 A]
-    P --> B[任务 B]
-    P --> C[任务 C]
-    A --> J[Join / Aggregate]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Planner"] --> A["任务 A"]
+    P --> B["任务 B"]
+    P --> C["任务 C"]
+    A --> J["Join / Aggregate"]
     B --> J
     C --> J
 ```
@@ -673,13 +730,14 @@ Artifact 还应绑定输入版本、生产任务和校验结果；消费者需�
 复杂任务的拆分系统，通常会把下面四类职责分开：
 
 ```mermaid
-flowchart LR
-    G[Goal] --> P[Planner]
-    P --> DAG[Task DAG]
-    DAG --> S[Scheduler]
-    S --> E[Executors]
-    E --> V[Verifiers]
-    V -->|通过| ART[Artifacts]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --> P["Planner"]
+    P --> DAG["Task DAG"]
+    DAG --> S["Scheduler"]
+    S --> E["Executors"]
+    E --> V["Verifiers"]
+    V -->|通过| ART["Artifacts"]
     V -->|局部失败| S
     V -->|计划失效| P
 ```
@@ -766,16 +824,33 @@ flowchart LR
 - 幂等键；
 - 人工确认。
 
-[AWS 的幂等 API 设计说明](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/)强调，用调用者提供的请求标识表达同一次操作，并在服务端协调去重记录与副作用提交。Task ID 本身不会产生 exactly-once 保证；幂等键的有效期、参数一致性和作用域都要明确。补偿也不是时间倒流：退款不等于撤销发货，已发送邮件通常无法回滚。
+AWS 的幂等 API 设计说明<sup>[【466】](../../book/references.zh.md#ref-466)</sup>强调，用调用者提供的请求标识表达同一次操作，并在服务端协调去重记录与副作用提交。Task ID 本身不会产生 exactly-once 保证；幂等键的有效期、参数一致性和作用域都要明确。补偿也不是时间倒流：退款不等于撤销发货，已发送邮件通常无法回滚。
+
+在局部修复瞬时故障与参数错误。
 
 ```mermaid
 flowchart TB
-    F[任务失败] --> C{失败类型}
-    C -->|临时错误| R[退避重试]
-    C -->|参数错误| A[调整参数]
-    C -->|任务过大| S[继续拆分]
-    C -->|计划失效| P[重新规划]
-    C -->|不可逆副作用| H[补偿或人工处理]
+    F[任务失败]
+    C{失败类型}
+    R[退避重试]
+    A[调整参数]
+    F --> C
+    C -->|临时错误| R
+    C -->|参数错误| A
+```
+
+结构性失败与不可逆影响需要不同处理。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["失败类型"]
+    S["继续拆分"]
+    P["重新规划"]
+    H["补偿或人工处理"]
+    C -->|任务过大| S
+    C -->|计划失效| P
+    C -->|不可逆副作用| H
 ```
 
 ## 6.18 自适应拆分控制器
@@ -784,24 +859,15 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    G[Goal] --> P[Hierarchical Planner]
-    P --> DAG[Task DAG]
-    DAG --> SCH[Scheduler]
-    SCH --> EX[Executor Pool]
-    EX --> OBS[Execution Observations]
-    OBS --> VER[Verifier]
-
-    VER --> MET[进度、质量、成本与风险指标]
-    MET --> CTRL{Adaptive Controller}
-
+    P[分层规划器] --> SCH[调度器]
+    SCH --> EX[执行器池]
+    EX --> VER[验证器]
+    VER --> CTRL[自适应控制器]
     CTRL -->|保持| SCH
-    CTRL -->|必要任务与整体验收均通过| DONE[交付结果]
-    CTRL -->|继续拆分| P
-    CTRL -->|合并任务或修改依赖| P
-    CTRL -->|计划失效| P
-    CTRL -->|预算耗尽或无进展| STOP[停止并报告]
-    CTRL -->|高风险| HUMAN[人工审核]
+    CTRL -->|修改计划| P
 ```
+
+目标进入分层规划器，生成的任务 DAG 交给调度器。执行观察结果进入验证器，进度、质量、成本与风险指标再供控制器判断。修改计划包括继续拆分、合并任务、修改依赖或替换失效计划。只有必要任务**与**整体验收均通过，才能交付结果；预算耗尽或无进展时停止并报告，高风险时转人工审核。
 
 图中调整粒度或依赖后重新生成、校验一版 DAG，不直接修改正在运行的图。控制器不应只听 Planner 的自然语言判断，还应使用可观测指标：
 
@@ -824,11 +890,12 @@ flowchart TB
 ### 6.19.1 高层拆分
 
 ```mermaid
-flowchart TB
-    G[竞品研究报告] --> R[资料收集]
-    G --> A[对比分析]
-    G --> W[报告撰写]
-    G --> V[事实验证]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["竞品研究报告"] --> R["资料收集"]
+    G --> A["对比分析"]
+    G --> W["报告撰写"]
+    G --> V["事实验证"]
 ```
 
 这张图列出工作范围，不是并行调度图。对比分析依赖资料，报告依赖分析；资料收集时可以先核查来源，成稿后还要再核查组合出的结论。
@@ -917,23 +984,11 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    G[复杂任务] --> K{步骤是否已知且稳定?}
-    K -->|是| STATIC[静态 Workflow]
-    K -->|部分已知| HYBRID[固定骨架 + 动态子任务]
-    K -->|未知| DYNAMIC[动态 Planner]
-
-    DYNAMIC --> H{任务是否很长?}
-    H -->|是| HIER[分层 + 滚动规划]
-    H -->|否| PLAN[Plan-and-Execute]
-
-    STATIC --> DEP[构建依赖 DAG]
-    HYBRID --> DEP
-    HIER --> DEP
-    PLAN --> DEP
-
-    DEP --> PAR[并行调度]
+    DEP[构建依赖 DAG] --> PAR[并行调度]
     PAR --> ADAPT[运行时自适应调整]
 ```
+
+构建 DAG 前先选择规划结构。已知且稳定的步骤适合静态工作流；部分已知的步骤适合固定结构加动态子任务；步骤未知时需要动态规划器，其中长任务采用分层加滚动规划，其余采用 Plan-and-Execute。这四种选择都汇入图中的依赖 DAG、并行调度与运行时自适应调整。
 
 落地时通常按这个顺序收敛：
 
@@ -997,10 +1052,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LangChain: Planning Agents](https://www.langchain.com/blog/planning-agents)
-- [LLMCompiler: An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models](https://arxiv.org/abs/2305.18323)
-- [AWS Builders' Library: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/)
-- [SHOP 系列规划器：作者项目页与实现](https://www.cs.umd.edu/projects/shop/)
-- [Martin Kleppmann: How to do distributed locking（租约过期后的迟到写入与 fencing）](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-06)。

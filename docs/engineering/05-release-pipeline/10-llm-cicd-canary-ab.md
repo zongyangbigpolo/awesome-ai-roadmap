@@ -9,23 +9,33 @@ description: Add offline evaluation to existing CI, isolate shadow-traffic side 
 LLM CI/CD **adds** an [offline evaluation gate](../04-evaluation-observability/07-offline-eval-eval-driven-development.md) to unit, integration, authorization, and contract tests; it does not replace them. A quality regression may not raise an exception, so a release must also be assessed through business-quality signals, not merely whether the process is alive.
 
 ```mermaid
-flowchart LR
-    A["Submit a prompt / model / routing change"] --> B["Automated offline evaluation<br/>(golden dataset + slice gates)"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Submit change"] --> B["Automated<br/>offline<br/>evaluation"]
     B -->|Fail| A
-    B -->|Pass| C["Choose according to risk:<br/>isolated shadow test or controlled pilot"]
-    C --> D["Small-traffic rollout: 5%-10%"]
-    D --> E{"Do production metrics meet requirements?"}
-    E -->|Yes| F{"Observation at full traffic complete?"}
-    E -->|No| G["Automatic rollback"]
-    F -->|No| NEXT["Advance to the next stage<br/>25% → 50% → 100%"]
+    B -->|Pass| C["Risk-based pilot"]
+    C --> D["Small-traffic<br/>rollout: 5%-10%"]
+    D --> E["Metrics pass?"]
+    E -->|Yes| F["Full-traffic<br/>checks done?"]
+    E -->|No| G["Automatic<br/>rollback"]
+    F -->|No| NEXT["Advance to the<br/>next stage"]
     NEXT --> E
-    F -->|Yes| H["Complete the full rollout"]
+    F -->|Yes| H["Complete the<br/>full rollout"]
     G --> A
 
     style B fill:#fff3cd
     style E fill:#fff3cd
     style G fill:#fce8e6
 ```
+
+Details of the illustrated steps and components:
+
+- Submit a prompt / model / routing change
+- Automated offline evaluation (golden dataset + slice gates)
+- Choose according to risk: isolated shadow test or controlled pilot
+- Do production metrics meet requirements?
+- Observation at full traffic complete?
+- Advance to the next stage 25% → 50% → 100%
 
 ## 10.2 Shadow testing: expose the new version to traffic without serving its answers
 
@@ -147,9 +157,5 @@ Roll back all three together as one versioned snapshot. Otherwise, mismatched ol
 
 ## References
 
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Google SRE Workbook: Canarying Releases](https://sre.google/workbook/canarying-releases/)
-- [SciPy: ttest_ind, independent samples, and Welch’s test assumptions](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html)
-- [Martin Fowler: Continuous Delivery for Machine Learning](https://martinfowler.com/articles/cd4ml.html)
-- [Spinnaker: Canary Analysis](https://spinnaker.io/docs/guides/user/canary/)
-- [Optimizely: Statistical significance in A/B testing](https://www.optimizely.com/optimization-glossary/statistical-significance/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-10) for this chapter’s sources, reading suggestions, and source notes.

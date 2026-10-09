@@ -25,29 +25,22 @@ This is a minimal teaching example, not a field specification shared by every fr
 
 ## 17.3 State transitions within a turn
 
-The Claude Agent SDK describes the internal cycle as four steps: “Receive prompt → Evaluate and respond → Execute tools → Repeat.” Steps 2 and 3 repeat until the model produces a final response without tool calls ([Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)). The OpenAI Agents SDK's `Runner` describes the same basic loop: call the model; exit if the output is final; switch the current agent and re-enter the loop if a handoff is requested; or execute requested tool calls, append their results, and call the model again ([OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)). Abstracted as a state machine:
+The Claude Agent SDK describes the internal cycle as four steps: “Receive prompt → Evaluate and respond → Execute tools → Repeat.” Steps 2 and 3 repeat until the model produces a final response without tool calls (Claude Agent SDK: How the agent loop works<sup>[【545】](../../book/references.md#ref-545)</sup>). The OpenAI Agents SDK's `Runner` describes the same basic loop: call the model; exit if the output is final; switch the current agent and re-enter the loop if a handoff is requested; or execute requested tool calls, append their results, and call the model again (OpenAI Agents SDK: Running agents<sup>[【546】](../../book/references.md#ref-546)</sup>). Abstracted as a state machine:
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Init
-    Init --> ModelCall: Assemble context (Chapter 18)
-    ModelCall --> Deciding: Receive model output
-    Deciding --> FinalOutput: Output contract satisfied; no pending calls
-    Deciding --> ToolExecution: Tool calls requested
-    Deciding --> HandoffSwitch: Agent switch requested
-    ToolExecution --> PermissionCheck: Each tool call (Chapter 20)
-    PermissionCheck --> ToolRunning: Allowed
-    PermissionCheck --> Blocked: Denied
-    PermissionCheck --> Interrupted: Human input required
-    ToolRunning --> CollectResults: Record call result
-    CollectResults --> ModelCall: All calls in this turn handled
-    HandoffSwitch --> ModelCall: Update current agent/input
-    Blocked --> CollectResults: Return denial result (or terminate by policy)
-    Interrupted --> PermissionCheck: Approval received; revalidate bound operation
-    Interrupted --> Stopped: Rejected/expired; no further continuation
-    Stopped --> [*]
-    FinalOutput --> [*]
+flowchart TB
+    M[ModelCall] --> D[Deciding]
+    D -->|Tools requested| P[PermissionCheck]
+    P -->|Allowed| T[ToolRunning]
+    T --> C[CollectResults]
+    C -->|Turn calls handled| M
 ```
+
+Start in `Init`, assemble context (Chapter 18), and enter `ModelCall`. Received model output enters `Deciding`. If the output contract is satisfied and no calls remain, `FinalOutput` ends the run. An agent-switch request instead enters `HandoffSwitch`, updates the current agent/input, and returns to `ModelCall`.
+
+A tool request enters `ToolExecution`; **each** call then passes `PermissionCheck` (Chapter 20). Allowed calls run and record their results in `CollectResults`. Denied calls enter `Blocked`, which writes a denial result into that same collection unless policy terminates the run. Only after every call in the turn is handled does collection return to the model.
+
+Human input suspends the permission check in `Interrupted`. Approval returns to `PermissionCheck` to revalidate the bound operation, never directly to `ToolRunning`. Rejection or expiry with no further continuation enters `Stopped` and ends the run.
 
 The tool branch abstracts a batch of calls: each call must pass its own permission check and have its result recorded. One tool returning does not justify abandoning the others. Ordinary tool requests and a handoff can also appear in the same model output. Whether to handle tools first, transfer control first, or reject mixed output is a contract of the particular runtime; it cannot be inferred from the order of branches in this diagram. An absence of tool calls does not necessarily imply a valid final output either: empty responses, truncation, and malformed output need separate handling.
 
@@ -77,7 +70,7 @@ How these asynchronous events are handled directly limits the harness's reliabil
 From a state-machine perspective, the multi-agent collaboration discussed in Chapter 13 takes two forms:
 
 - **Handoff:** another agent configuration takes over subsequent decisions. The OpenAI Agents SDK updates the current agent and input within the same Runner loop; it does not necessarily terminate an old process or create a new state machine. This corresponds to `HandoffSwitch` in Section 17.3.
-- **Subagent:** within one of its own steps, the current state machine starts a new, independent child state machine with its own `turn_index`, `budget`, and `messages`. Once the child finishes, its result is inserted into the parent as a tool result, and the parent continues. The Claude Agent SDK calls this pattern subagents: “Spawn specialized agents for focused subtasks” (the capability table in [Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview)).
+- **Subagent:** within one of its own steps, the current state machine starts a new, independent child state machine with its own `turn_index`, `budget`, and `messages`. Once the child finishes, its result is inserted into the parent as a tool result, and the parent continues. The Claude Agent SDK calls this pattern subagents: “Spawn specialized agents for focused subtasks” (the capability table in Claude Agent SDK: Overview<sup>[【541】](../../book/references.md#ref-541)</sup>).
 
 The key difference is the calling relationship. A subagent normally returns a result to its caller, which resumes decision-making; a handoff transfers the subsequent conversation to the receiving agent. Both should count toward the same root task's total budget, with costs then allocated by agent. Switching roles must not reset total steps, costs, or permission boundaries.
 
@@ -87,7 +80,7 @@ The key difference is the calling relationship. A subagent normally returns a re
 |---|---|---|---|
 | What drives the loop | Built-in agent loop driven internally by the SDK | Driven internally by `Runner.run`, with synchronous, asynchronous, and streaming entry points | Explicit graph execution engine, with developer-defined nodes and edges |
 | Termination | No tool calls can end a turn; hooks can intervene | Final output or configured tool-stop behavior; `max_turns` triggers an exception | `END` ends the graph; `interrupt()` pauses it and does not mean successful completion |
-| Nesting / transfer | Subagents: nesting | Handoffs: changing the current agent | Subgraphs; see [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs) |
+| Nesting / transfer | Subagents: nesting | Handoffs: changing the current agent | Subgraphs; see LangGraph: Subgraphs<sup>[【547】](../../book/references.md#ref-547)</sup> |
 | State visibility | Exposed through streamed messages such as `SystemMessage` and `AssistantMessage` | Exposed through `RunResult` and `RunResultStreaming` | State consists of explicit graph fields; see [Section 13.15](../04-multi-agent/13-multi-agent-coordination.md) |
 
 All three handle calls, observations, continuation, and stopping, but they do not share a field specification or an identical state machine. Map product events to your own task state during integration, and verify how turns are counted. For example, the Claude Agent SDK's `max_turns` counts tool-use turns; copying another SDK's numeric setting unchanged may not preserve the intended limit.
@@ -106,8 +99,5 @@ A state machine must distinguish the end of a model turn, business success, susp
 
 ## References
 
-- [Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)
-- [OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-17) for this chapter’s sources, reading suggestions, and source notes.

@@ -10,21 +10,36 @@ description: 比较视觉特征拼接、交叉注意力与离散多模态生成�
 
 “融合”指的是不同模态的表示开始共同参与计算的位置。需要分开判断**表示是连续还是离散、交互发生在哪些层、哪些参数参与训练**：输入层拼接的视觉特征也能在后续每层自注意力中参与计算，不能按“接入越早就越强”给架构排序。文献中的 Early/Late Fusion 命名并不统一，下面按具体计算路径比较；传统的 late fusion 还常指各模态独立预测后的决策级融合，不应与 projector 拼接混称。
 
+**连续特征投影与拼接**
+
 ```mermaid
-flowchart LR
-    subgraph Late["连续特征投影与拼接"]
-        L1[冻结或微调的视觉编码器] --> L2[Projector] --> L3[语言模型主干]
-    end
-    subgraph Cross["Cross-Attention Fusion"]
-        C1[视觉编码器] --> C2[Resampler] --> C3["语言模型<br/>交叉注意力层"]
-    end
-    subgraph Early["Early Fusion / 统一 Token 化"]
-        E1[图像离散化] --> E4[统一 Token 序列]
-        E2["音频离散化<br/>可选扩展，非 Chameleon 配置"] --> E4
-        E3[文本 Token] --> E4
-        E4 --> E5[单一 Transformer<br/>联合建模]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1[冻结或微调的视觉编码器] --> L2[Projector] --> L3[语言模型主干]
+
 ```
+
+**Cross-Attention Fusion**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1[视觉编码器] --> C2[Resampler] --> C3["语言模型<br/>交叉注意力层"]
+
+```
+
+**Early Fusion / 统一 Token 化**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    E1[图像 Token] --> E4[统一序列]
+    E3[文本 Token] --> E4
+    E4 --> E5[单一 Transformer]
+
+```
+
+图像先离散化，再与文本 Token 合并为统一序列。离散音频可以作为这种模式的可选扩展，但不属于图中图像与文本路径对应的 Chameleon 配置。单一 Transformer 对统一序列进行联合建模。
 
 三条路线并非互斥的历史阶段，而是当前同时在用的三类工程取舍：
 
@@ -141,15 +156,5 @@ CLIP、SigLIP、ImageBind 的 embedding 本身不生成图像或文本；Chamele
 
 ## 参考资料
 
-- [CLIP: Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020)
-- [Sigmoid Loss for Language Image Pre-Training (SigLIP)](https://arxiv.org/abs/2303.15343)
-- [ImageBind: One Embedding Space To Bind Them All](https://arxiv.org/abs/2305.05665)
-- [Flamingo: a Visual Language Model for Few-Shot Learning](https://arxiv.org/abs/2204.14198)
-- [Perceiver IO: A General Architecture for Structured Inputs & Outputs](https://arxiv.org/abs/2107.14795)
-- [LLaVA: Visual Instruction Tuning](https://arxiv.org/abs/2304.08485)
-- [Qwen-VL：位置感知视觉语言适配器](https://arxiv.org/abs/2308.12966)
-- [Chameleon: Mixed-Modal Early-Fusion Foundation Models](https://arxiv.org/abs/2405.09818)
-- [Neural Discrete Representation Learning (VQ-VAE)](https://arxiv.org/abs/1711.00937)
-- [Taming Transformers for High-Resolution Image Synthesis (VQGAN)](https://arxiv.org/abs/2012.09841)
-- [OpenAI GPT-4o System Card](https://openai.com/index/gpt-4o-system-card/)
-- [GPT-4o System Card（原始报告）](https://arxiv.org/abs/2410.21276)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-01)。

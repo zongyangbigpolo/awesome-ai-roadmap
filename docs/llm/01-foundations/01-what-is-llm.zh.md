@@ -10,18 +10,26 @@ LLM 没有公认的参数量分界线，广义上也不只指 Decoder-only。本
 
 传统 NLP 既有规则与统计流水线，也有端到端神经网络、预训练表示和生成模型。更准确的变化是：**从较多任务专用接口，转向用同一个预训练模型和文本接口复用多种能力**，而不是「以前只能分类，现在才能生成」。
 
+**一种传统客服流水线**
+
 ```mermaid
-flowchart LR
-    subgraph PIPE["一种传统客服流水线"]
-        A["文本"] --> B["分词与实体识别"]
-        B --> C["意图分类"]
-        C --> D["检索或业务规则"]
-    end
-    subgraph GEN["生成式应用"]
-        E["指令 + 输入 + 可选证据"] --> F["语言模型"]
-        F --> G["文本或结构化输出"]
-        G --> H["校验与业务执行"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["文本"] --> B["分词与实体识别"]
+    B --> C["意图分类"]
+    C --> D["检索或业务规则"]
+
+```
+
+**生成式应用**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["指令 + 输入 + 可选证据"] --> F["语言模型"]
+    F --> G["文本或结构化输出"]
+    G --> H["校验与业务执行"]
+
 ```
 
 流水线可能累积误差，但不是前一步错了后面必然全错；联合训练、字级模型和纠错规则都可以缓解。生成式系统减少了一部分任务头与标注工作，却新增了输出不确定性、成本、权限和事实校验问题。
@@ -102,7 +110,8 @@ Scaling Law 拟合的是特定实验条件下损失随参数、数据、算力�
 「涌现」通常描述：在所观测的规模范围内，小模型表现接近随机，较大模型在某些指标上明显提升。要区分真实能力变化与指标效应：
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["每个子步骤的成功概率逐渐提高"] --> B["整题全对才计分"]
     B --> C["观测到较陡的准确率曲线"]
     A --> D["部分得分或连续指标"]
@@ -132,11 +141,5 @@ LLM 的主要工程变化是预训练能力通过通用接口复用，不是传�
 
 ## 参考资料
 
-- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
-- [Language Models are Few-Shot Learners（GPT-3）](https://arxiv.org/abs/2005.14165)
-- [Language Models are Unsupervised Multitask Learners（GPT-2）](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
-- [Emergent Abilities of Large Language Models](https://arxiv.org/abs/2206.07682)
-- [Are Emergent Abilities of Large Language Models a Mirage?](https://arxiv.org/abs/2304.15004)
-- [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)
-- [Training Compute-Optimal Large Language Models（Chinchilla）](https://arxiv.org/abs/2203.15556)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-01)。

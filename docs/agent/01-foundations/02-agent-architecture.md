@@ -30,41 +30,16 @@ One distinction is essential: the LLM does not personally access a database or e
 
 ```mermaid
 flowchart TB
-    U[User goal] --> RT[Agent Runtime / Orchestrator]
-
-    subgraph Context[Context and state layer]
-        ST[Task state]
-        WM[Working memory]
-        LM[Long-term memory]
-        CB[Context Builder]
-        ST --> CB
-        WM --> CB
-        LM --> CB
-    end
-
-    RT --> CB
+    RT[Runtime] --> CB[Context Builder]
     CB --> MP[Model + Planner]
-    MP --> DEC{Next decision}
-
-    DEC -->|Answer| OUT[Result acceptance and output]
-    DEC -->|Call a tool| PG[Policy / Permission Gate]
-    DEC -->|Delegate a task| DG[Delegation permission and budget checks]
-    DG --> A2A[Other agents]
-
-    PG --> TR[Tool Registry / MCP Client]
-    TR --> TS[Tool / MCP Server]
-    TS --> ENV[Search, files, databases, code, APIs]
-    ENV --> OBS[Observation]
-
-    A2A --> OBS
+    MP --> DEC[Next decision]
+    DEC -->|Execute or delegate| OBS[Observation]
     OBS --> RT
-    RT --> ST
-    RT --> WM
-    RT --> LM
-
-    RT -.Execution traces.-> OT[Tracing / Evaluation / Audit]
-    OUT -.Result evaluation.-> OT
 ```
+
+The user goal enters the runtime. The runtime updates task state, working memory, and long-term memory; all three supply the Context Builder. An answer decision goes to result acceptance and output instead of another execution round.
+
+The execution arrow includes two distinct gates. A tool call passes the policy/permission gate, then the Tool Registry / MCP Client, then the tool / MCP Server. Search, files, databases, code, and APIs produce the observation. Delegation instead checks permissions and budget before another agent acts; its result also becomes an observation. Runtime execution traces and output evaluations feed tracing, evaluation, and audit.
 
 A typical execution proceeds as follows:
 
@@ -157,22 +132,22 @@ The sample query is Chinese for “the latest advances in agent technology in 20
 The application then follows this flow:
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
     participant R as Runtime
     participant M as Model
     participant T as Tool
 
-    U->>R: Submit goal
-    R->>M: Goal + context + tool definitions
+    R->>M: Model input
     M-->>R: Tool Call
-    R->>R: Validate arguments and permissions
-    R->>T: Execute tool
+    R->>R: Validate call
+    R->>T: Execute
     T-->>R: Tool Result
-    R->>M: Return Observation
-    M-->>R: Next action or final answer
-    R-->>U: Return result
+    R->>M: Observation
+    M-->>R: Action or answer
 ```
+
+The user submits the goal to the runtime before this exchange. Model input contains the goal, context, and tool definitions. Call validation checks both arguments and permissions before execution. After receiving the observation, the model chooses the next action or final answer; the runtime returns the result to the user.
 
 ### 2.4.2 Safety Boundaries for Tool Calls
 
@@ -200,13 +175,14 @@ MCP has three main roles:
 - **Server**: exposes capabilities such as Tools, Resources, and Prompts to the client.
 
 ```mermaid
-flowchart LR
-    H[Host<br/>AI Application] --> C1[MCP Client]
-    H --> C2[MCP Client]
-    C1 <--> S1[MCP Server<br/>Files]
-    C2 <--> S2[MCP Server<br/>Database]
-    S1 --> F[File system]
-    S2 --> D[Database]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host<br/>AI Application"] --> C1["MCP Client"]
+    H --> C2["MCP Client"]
+    C1 <--> S1["MCP Server<br/>Files"]
+    C2 <--> S2["MCP Server<br/>Database"]
+    S1 --> F["File system"]
+    S2 --> D["Database"]
 ```
 
 “MCP is USB-C for tools” is a useful analogy, with two qualifications:
@@ -313,21 +289,60 @@ Larger tool sets and more similar descriptions can make tool selection and argum
 
 LangChain's context engineering article organizes common techniques into four operations:
 
-```mermaid
-flowchart TB
-    CE[Context Engineering] --> W[Write]
-    CE --> S[Select]
-    CE --> C[Compress]
-    CE --> I[Isolate]
+Write context.
 
-    W --> W1[Scratchpad / note files]
-    W --> W2[Long-term memory]
-    S --> S1[Retrieve memories and documents]
-    S --> S2[Load tools on demand]
-    C --> C1[Summarization / Compaction]
-    C --> C2[Result trimming]
-    I --> I1[Separate sub-agent contexts]
-    I --> I2[Process large objects in a sandbox]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    W["Write"]
+    W1["Scratchpad / note files"]
+    W2["Long-term memory"]
+    CE --> W
+    W --> W1
+    W --> W2
+```
+
+Select context.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    S["Select"]
+    S1["Retrieve memories and<br/>documents"]
+    S2["Load tools on demand"]
+    CE --> S
+    S --> S1
+    S --> S2
+```
+
+Compress context.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    C["Compress"]
+    C1["Summarization /<br/>Compaction"]
+    C2["Result trimming"]
+    CE --> C
+    C --> C1
+    C --> C2
+```
+
+Isolate context.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    I["Isolate"]
+    I1["Separate sub-agent<br/>contexts"]
+    I2["Process large objects in<br/>a sandbox"]
+    CE --> I
+    I --> I1
+    I --> I2
 ```
 
 | Operation | Meaning | Typical techniques |
@@ -496,14 +511,15 @@ A system should not depend on the model exposing its complete hidden reasoning t
 ToT (Tree of Thoughts) expands, evaluates, and backtracks among multiple candidate reasoning paths:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    S[Current state] --> A[Candidate path A]
-    S --> B[Candidate path B]
-    S --> C[Candidate path C]
-    A --> EA[Evaluate]
-    B --> EB[Evaluate]
-    C --> EC[Evaluate]
-    EA --> BEST[Select or backtrack]
+    S["Current<br/>state"] --> A["Candidate<br/>path A"]
+    S --> B["Candidate<br/>path B"]
+    S --> C["Candidate<br/>path C"]
+    A --> EA["Evaluate"]
+    B --> EB["Evaluate"]
+    C --> EC["Evaluate"]
+    EA --> BEST["Select or<br/>backtrack"]
     EB --> BEST
     EC --> BEST
 ```
@@ -517,12 +533,13 @@ It suits tasks with large search spaces and multiple possible solutions, but typ
 Plan-and-Execute generates an overall plan first, then executes it step by step:
 
 ```mermaid
-flowchart LR
-    G[Goal] --> P[Generate a complete plan]
-    P --> S1[Step 1]
-    S1 --> S2[Step 2]
-    S2 --> S3[Step 3]
-    S3 --> R[Result]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --> P["Generate a complete plan"]
+    P --> S1["Step 1"]
+    S1 --> S2["Step 2"]
+    S2 --> S3["Step 3"]
+    S3 --> R["Result"]
 ```
 
 Advantages:
@@ -570,17 +587,18 @@ When a task has both global dependencies and local unknowns, the two patterns ca
 4. Continually check the goal, budget, and stopping conditions.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Goal] --> HP[High-level plan]
-    HP --> M1[Milestone 1]
-    HP --> M2[Milestone 2]
-    HP --> M3[Milestone 3]
+    G["Goal"] --> HP["High-level plan"]
+    HP --> M1["Milestone 1"]
+    HP --> M2["Milestone 2"]
+    HP --> M3["Milestone 3"]
 
-    M1 --> L1[Local Reason-Act-Observe loop]
-    L1 --> C{Milestone complete?}
+    M1 --> L1["Local<br/>Reason-Act-Observe<br/>loop"]
+    L1 --> C["Milestone<br/>complete?"]
     C -->|No| L1
     C -->|Yes| M2
-    C -->|Assumption invalidated| HP
+    C -->|Assumption<br/>invalidated| HP
 ```
 
 This preserves global direction and local adaptability, but adds plan maintenance overhead. Short tasks may not benefit. Compare it against plain ReAct or deterministic workflows under the same budget.
@@ -655,16 +673,5 @@ The four-component model explains an agent's basic capabilities. Runtime control
 
 ## References
 
-- [OpenAI: Function calling—Chat Completions and Responses tool definitions, strict mode](https://developers.openai.com/api/docs/guides/function-calling)
-- [MCP Governance and Stewardship](https://modelcontextprotocol.io/community/governance)
-- [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
-- [Microsoft Agent Framework Overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [AutoGen Maintenance Mode](https://github.com/microsoft/autogen)
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot)
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
-- [Drew Breunig: How Contexts Fail and How to Fix Them](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html)
-- [Anthropic: Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Anthropic: Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp)
-- [Cloudflare: Code Mode — the better way to use MCP](https://blog.cloudflare.com/code-mode/)
-- [RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation](https://arxiv.org/abs/2505.03275)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-02) for this chapter’s sources, reading suggestions, and source notes.

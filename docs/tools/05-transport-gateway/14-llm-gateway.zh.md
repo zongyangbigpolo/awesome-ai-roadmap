@@ -8,29 +8,27 @@ description: 解释 LLM 网关的模型适配、限流、成本与缓存治理�
 
 先看它在系统里的位置。
 
+**没有网关**
+
 ```mermaid
-flowchart TB
-    subgraph NO["没有网关"]
-        A1[订单服务] --> O1[OpenAI API]
-        A1 --> O2[Anthropic API]
-        A2[客服服务] --> O1
-        A2 --> O3[国产模型 API]
-        A3[数据服务] --> O2
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        A1["订单服务"] --> O1["OpenAI API"]
+        A1 --> O2["Anthropic API"]
+        A2["客服服务"] --> O1
+        A2 --> O3["国产模型 API"]
+        A3["数据服务"] --> O2
         A3 --> O3
-    end
-
-    subgraph YES["有网关"]
-        B1[订单服务] --> GW[LLM 网关]
-        B2[客服服务] --> GW
-        B3[数据服务] --> GW
-        GW --> P1[OpenAI]
-        GW --> P2[Anthropic]
-        GW --> P3[国产模型]
-    end
-
-    style NO fill:#fce8e6
-    style YES fill:#e6f4ea
 ```
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["应用服务"] --> GW["LLM 网关"]
+    GW --> PROVIDERS["模型供应商"]
+```
+
+订单、客服和数据服务调用同一网关，不再各自维护与供应商的连接。网关按配置连接 OpenAI、Anthropic 和国产模型供应商；图中把这些候选合并展示，并不规定必须选择某一家。
 
 网关就是**坐在应用和各模型 API 之间的中间人**。应用只认识网关，不直接对接多个厂商。
 
@@ -181,23 +179,26 @@ HTTP 缓存按缓存键、方法及 `Vary` 等规则工作，不是逐字比较�
 这些问题看似接近，但城市、时间、用户偏好或数据版本不同就未必可复用。语义相似只是候选条件，不能单独决定命中。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q[收到新问题] --> P{"是否允许缓存<br/>权限与数据分区已确定?"}
-    P -->|否| MISS[调用 LLM]
-    P -->|是| E[问题向量化 embedding]
-    E --> S[在向量库里做相似度搜索]
-    S --> H{"权限、时间与版本一致<br/>且语义校验通过?"}
-    H -->|是| HIT["返回历史答案<br/>跳过答案生成"]
-    H -->|否| MISS
-    MISS --> C{"请求与新结果<br/>均允许缓存?"}
-    C -->|是| W["写入问题、答案<br/>权限与版本元数据"]
-    C -->|否| R[返回]
-    W --> R[返回]
-    HIT --> R
-
-    style HIT fill:#e6f4ea
-    style MISS fill:#fef7e0
+    P["检查缓存权限"] -->|允许| LOOK["查找有效匹配"]
+    P -->|禁止| MODEL["调用模型"]
+    LOOK -->|命中| R["返回答案"]
+    LOOK -->|未命中| MODEL
+    MODEL --> WRITE["仅在允许时写缓存"]
+    WRITE --> R
 ```
+
+先建立权限和数据分区，再对允许缓存的问题生成 embedding，并检索向量库。只有权限、时间、版本和语义校验全部通过，相似条目才算命中，才能直接返回历史答案而不重新生成。未命中或不允许查询缓存时调用 LLM。只有请求与新结果都可缓存，才写入问题、答案、权限和版本元数据；否则跳过写入，直接返回。
+
+图中各项的完整含义：
+
+- 是否允许缓存 权限与数据分区已确定?
+- 在向量库里做相似度搜索
+- 权限、时间与版本一致 且语义校验通过?
+- 返回历史答案 跳过答案生成
+- 请求与新结果 均允许缓存?
+- 写入问题、答案 权限与版本元数据
 
 **两个关键工程细节：**
 
@@ -304,13 +305,5 @@ Nginx 能转发流量，但**不理解 token、不理解模型语义、不理解
 
 ## 参考资料
 
-- [LiteLLM 文档](https://docs.litellm.ai/)
-- [LiteLLM GitHub](https://github.com/BerriAI/litellm)
-- [Bifrost 官方仓库（Go 实现）](https://github.com/maximhq/bifrost)
-- [LiteLLM 重试与故障转移](https://docs.litellm.ai/docs/proxy/reliability)
-- [RFC 9111：HTTP 缓存](https://www.rfc-editor.org/rfc/rfc9111)
-- [Portkey AI Gateway](https://github.com/Portkey-AI/gateway)
-- [Kong AI Gateway](https://konghq.com/products/kong-ai-gateway)
-- [Envoy AI Gateway](https://aigateway.envoyproxy.io/)
-- [Langfuse: LLM 可观测性](https://langfuse.com/docs)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-14)。

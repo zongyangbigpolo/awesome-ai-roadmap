@@ -9,7 +9,8 @@ description: Explains the control mechanisms of Self-RAG, Corrective RAG, RAPTOR
 Naive, Advanced, and Modular are categories used in a survey, not formal version standards or mandatory stages of development. To understand them, examine their control flow, training requirements, and target problems rather than simply listing names.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     N[Naive RAG<br/>Retrieve once, then generate] --> A[Advanced RAG<br/>Optimize before and after retrieval]
     A --> M[Modular RAG<br/>Composable components,<br/>orchestration, and loops]
 ```
@@ -48,15 +49,18 @@ There is a common naming ambiguity:
 Corrective RAG uses a lightweight evaluator to score retrieval results, then handles them in three categories:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    R[Retrieval results] --> E[Lightweight evaluator<br/>assigns scores]
-    E -->|Correct| C[Refine: remove irrelevant parts,<br/>retain the core evidence]
-    E -->|Incorrect| W[Discard and use<br/>external search instead]
-    E -->|Ambiguous| A[Combine both approaches]
+    R[Retrieval results] --> E[Lightweight evaluator]
+    E -->|Correct| C[Refine]
+    E -->|Incorrect| W[Search externally]
+    E -->|Ambiguous| A[Combine]
     C --> G[Generate]
     W --> G
     A --> G
 ```
+
+For “correct” results, refinement removes irrelevant parts and retains core evidence. For “incorrect” results, discard them and use external search instead. For “ambiguous” results, combine refinement and external search. Each branch then supplies evidence for generation.
 
 **Its value lies in acknowledging a practical fact: retrieval can fail, and the system needs a recovery path.** That is a substantial improvement over simply using whatever retrieval returns.
 
@@ -74,15 +78,18 @@ RAPTOR works as follows:
 4. The original paper compares two retrieval strategies: tree traversal and collapsed tree. The latter retrieves from nodes across multiple levels together; “traverse every level on every query” is not the only implementation.
 
 ```mermaid
-flowchart TB
-    ROOT[Top-level summary<br/>Global perspective] --> M1[Mid-level summary 1]
-    ROOT --> M2[Mid-level summary 2]
-    M1 --> L1[Original chunk]
-    M1 --> L2[Original chunk]
-    M2 --> L3[Original chunk]
-    M2 --> L4[Original chunk]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    ROOT[Global summary] --> M1[Summary 1]
+    ROOT --> M2[Summary 2]
+    M1 --> L1[Chunk 1]
+    M1 --> L2[Chunk 2]
+    M2 --> L3[Chunk 3]
+    M2 --> L4[Chunk 4]
     M2 -.-> L2
 ```
+
+The top-level summary provides a global perspective over two mid-level summaries. The leaves are original chunks. Chunk 2 contributes to both summaries, as the additional dashed edge shows; membership need not be exclusive.
 
 The dashed edge indicates that a passage may also contribute to another cluster’s summary. The original paper uses soft clustering, allowing a node to belong to multiple clusters. “Tree” is an intuitive description of the hierarchy, not a guarantee that each passage has exactly one parent. Deduplication and links back to sources must account for this overlap.
 
@@ -116,6 +123,7 @@ The key shift in Agentic RAG is:
 > **Retrieval changes from “a step in a fixed workflow” to “a tool whose timing, number of calls, and use of results the agent can decide.”**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     Q[User question] --> AG[Agent reasoning]
     AG --> D{Need more information?}
@@ -155,14 +163,14 @@ In most cases, there is no need to start with these advanced paradigms.
 As Chapter 14 explained, **getting the five foundational layers right is usually more effective than blindly stacking advanced paradigms**. Consider an advanced paradigm only when the following conditions hold:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S{Are all five foundational<br/>layers in good shape?} -->|No| BASE[Return to the foundations<br/>Chapter 14]
-    S -->|Yes| E{Can an evaluation set<br/>quantify the gain?}
-    E -->|No| EVAL[Build an evaluation set first]
-    E -->|Yes| N{Do failures reveal a structural<br/>limitation of the basic approach?}
-    N -->|No| TUNE[Continue tuning<br/>the basic approach]
-    N -->|Yes| ADV[Evaluate the relevant<br/>advanced paradigm]
+    S[Verify foundations] --> E[Establish measurable gains]
+    E --> N[Diagnose structural limits]
+    N --> ADV[Evaluate a relevant paradigm]
 ```
+
+These are gates, not an instruction to always adopt an advanced design. If any of the five foundational layers is weak, return to Chapter 14. If no evaluation set can quantify gains, build one first. If failures do not reveal structural limitations of the basic approach, continue tuning it. Only after those checks should the relevant advanced paradigm be evaluated.
 
 **The test for a “structural limitation”** is that **parameter tuning cannot solve the problem**. For example:
 
@@ -214,12 +222,5 @@ A paper prototype, an official library implementation, and validation in a busin
 
 ## References
 
-- [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511)
-- [Corrective Retrieval Augmented Generation](https://arxiv.org/abs/2401.15884)
-- [RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval](https://arxiv.org/abs/2401.18059)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
-- [Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG](https://arxiv.org/abs/2501.09136)
-- [Active Retrieval Augmented Generation](https://arxiv.org/abs/2305.06983)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-
-Source checks for this translation covered the original papers’ reflection tokens, corrective branches, RAPTOR soft clustering and retrieval strategies, Adaptive-RAG routing, and the survey’s three organizational categories. The Agentic RAG survey and Active Retrieval Augmented Generation were checked at the abstract level only; their experiments were not reproduced.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-15) for this chapter’s sources, reading suggestions, and source notes.

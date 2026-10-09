@@ -5,7 +5,7 @@
   "translation_suffix": ".zh.md",
   "reader_roots": ["docs"],
   "extra_pages": ["README.md", "CONTRIBUTING.md", "book/README.md"],
-  "expected_reader_pages": 216,
+  "expected_reader_pages": 217,
   "expected_chapters": 143,
   "sync_file": "book/i18n/sync.json"
 }

@@ -46,7 +46,7 @@ See [Chapter 24: Code Search, Editing, and Verification](../06-coding-agents/24-
 
 Zhou cuts the trajectory just before the incorrect response. A **decision prefix** is not a new prompt saying “you are not finished; continue.” It includes all effective messages and tool definitions the model actually saw, together with the environment state those messages describe.
 
-This division of a failure at a decision boundary can be compared with Bojie Li's discussion of [first-error attribution and prefix regression](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter7.md#L434-L535).
+This division of a failure at a decision boundary can be compared with Bojie Li's discussion of first-error attribution and prefix regression<sup>[【563】](../../book/references.md#ref-563)</sup>.
 
 | What to freeze | Why it matters |
 |---|---|
@@ -74,19 +74,18 @@ This defines a **behavioral boundary**. Several correct paths may be possible, b
 ## 25.4 Choose what to fix before choosing a training signal
 
 ```mermaid
-flowchart TD
-    F["Failed trajectories and feedback"] --> A["First-error attribution and prefix replay"]
-    A --> B{"Correct information, tools, and permissions?"}
-    B -->|No| H["Fix tools or the harness"]
-    B -->|Yes| P["Compare prompts, constraints, and model policy"]
-    P --> C{"Is a parameter update justified?"}
-    C -->|No| R["Runtime fixes and regression"]
-    C -->|Yes| D["Authorized data and training environment"]
-    D --> T["Demonstrations, preferences, or interactive optimization"]
-    H --> E["Prefix regression and independent end-to-end acceptance"]
-    R --> E
-    T --> E
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Attribute first error"] --> B["Check inputs and<br/>permissions"]
+    B -->|Incorrect| H["Repair tools or harness"]
+    B -->|Correct| P["Compare policy<br/>alternatives"]
+    H --> E["Independent acceptance"]
+    P --> E
 ```
+
+Use failed trajectories and feedback for first-error attribution and prefix replay. Check information, tools, and permissions before blaming the model. If these are correct, compare prompts, constraints, and model policy, then decide whether a parameter update is justified.
+
+If no update is justified, make runtime fixes and run regressions. Otherwise, obtain authorized data and a training environment, then use demonstrations, preferences, or interactive optimization. Tool/harness repair, runtime repair, and training all converge on prefix regression plus independent end-to-end acceptance; the policy-alternatives arrow includes this decision and the selected intervention.
 
 Zhou first makes the checking tool return a coverage list and adds a completion gate in the runtime. If a clear prompt reliably prevents false completion claims at an acceptable additional cost, there is no reason to start with a weight update. Hard permission checks and acceptance gates should not be removed after training either.
 
@@ -178,7 +177,7 @@ When expanding the data, vary missing requirements, task origins, and tool combi
 
 ### What does the small-data DPO counterexample show?
 
-At the pinned commit, Bojie Li's companion [premature-completion teaching experiment](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter8/premature-completion-dpo/README.md) uses a small synthetic preference dataset. Its README reports improvements in fixed-candidate comparisons, but excessive caution during free generation and a substantial deterioration in normal completion of already-finished tasks.
+At the pinned commit, Bojie Li's companion premature-completion teaching experiment<sup>[【566】](../../book/references.md#ref-566)</sup> uses a small synthetic preference dataset. Its README reports improvements in fixed-candidate comparisons, but excessive caution during free generation and a substantial deterioration in normal completion of already-finished tasks.
 
 This does not establish that DPO improved overall agent reliability. Candidate scoring measures the relative preference between two specified responses; free generation also depends on wording, length, and the broader output space. Neither replaces actual execution. The useful lesson is to **separate unfinished-task boundary cases from a retention set for normal completion**, not to reuse the experiment's numbers as a promised benefit.
 
@@ -188,16 +187,15 @@ The single-step example directly targets the stopping decision; it says little a
 
 ```mermaid
 flowchart TD
-    Q["Training task and initial snapshot"] --> Z["Reset an isolated environment"]
-    Z --> S["Generate actions with a fixed sampling version"]
-    S --> X["Permission checks and tool execution"]
-    X --> O["Environment observations and event records"]
+    Z["Reset environment"] --> S["Sample actions"]
+    S --> X["Check and execute"]
+    X --> O["Observe and record"]
     O --> S
-    O --> V["Verify at termination or budget exhaustion"]
-    V --> U["Rewards, masks, and policy update"]
-    U --> N["Publish the next sampling snapshot"]
-    N --> Z
+    O -->|Run ends| U["Verify and update"]
+    U --> Z
 ```
+
+Begin with a training task and initial snapshot, resetting an isolated environment. Generate actions with a fixed sampling version, check permissions before tool execution, and record environment observations and events. Repeat sampling until termination or budget exhaustion, then verify, compute rewards and masks, update the policy, and publish the next sampling snapshot before resetting the environment again.
 
 This loop does not mean changing weights arbitrarily while reading results. Each rollout must be traceable to a definite policy version; after an update, synchronize samplers according to the training design. Independent acceptance remains outside this reward loop.
 
@@ -279,8 +277,5 @@ Zhou's deliverable is therefore not simply a lower training loss. It is traceabl
 
 ## References
 
-- Bojie Li, `ai-agent-book`, Chapter 7: [failure attribution, exact-copy diagnosis, and trajectory-prefix regression](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter7.md#L434-L535).
-- Bojie Li, Chapter 8: [multi-turn credit assignment, rewards, and on-policy distillation](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter8.md#L564-L706), and [from failure cases to post-training](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter8.md#L731-L792).
-- Bojie Li, companion experiment: [README for the premature-completion DPO repair](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter8/premature-completion-dpo/README.md), particularly its data, metric definitions, and trust-boundary discussion.
-
-Sources were consulted on 2026-09-14 at pinned commit `985a49d35b9f50937f1f757cf25867672991ded7`. DPO results are reported from the README; training was not independently reproduced. The difference between candidate comparisons and free generation cannot be extrapolated to improved overall task completion. References to methods such as RLVP do not mean that this chapter carried out those training experiments.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-25) for this chapter’s sources, reading suggestions, and source notes.

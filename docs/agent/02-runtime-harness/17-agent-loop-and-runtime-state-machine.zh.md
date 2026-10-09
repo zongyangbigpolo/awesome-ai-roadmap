@@ -25,29 +25,22 @@ description: 将 Agent 循环拆成可恢复状态机，解释停止与成功的
 
 ## 17.3 一次 Turn 内部的状态转移
 
-Claude Agent SDK 把每一轮的内部结构描述为四步循环："Receive prompt → Evaluate and respond → Execute tools → Repeat"，其中第 2、3 步反复进行，直到模型给出不带工具调用的最终输出（[Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)）。OpenAI Agents SDK 的 `Runner` 用同样的结构描述内部循环：调用模型 → 若输出是最终结果则退出；若请求 handoff 则切换当前 agent 并重新进入循环；若请求工具调用则执行并把结果并回，再次调用模型（[OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)）。抽象成状态机：
+Claude Agent SDK 把每一轮的内部结构描述为四步循环："Receive prompt → Evaluate and respond → Execute tools → Repeat"，其中第 2、3 步反复进行，直到模型给出不带工具调用的最终输出（Claude Agent SDK: How the agent loop works<sup>[【545】](../../book/references.zh.md#ref-545)</sup>）。OpenAI Agents SDK 的 `Runner` 用同样的结构描述内部循环：调用模型 → 若输出是最终结果则退出；若请求 handoff 则切换当前 agent 并重新进入循环；若请求工具调用则执行并把结果并回，再次调用模型（OpenAI Agents SDK: Running agents<sup>[【546】](../../book/references.zh.md#ref-546)</sup>）。抽象成状态机：
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Init
-    Init --> ModelCall: 装配上下文（18 章）
-    ModelCall --> Deciding: 收到模型输出
-    Deciding --> FinalOutput: 符合输出契约且无待执行调用
-    Deciding --> ToolExecution: 请求工具调用
-    Deciding --> HandoffSwitch: 请求切换 Agent
-    ToolExecution --> PermissionCheck: 每个 Tool Call（20 章）
-    PermissionCheck --> ToolRunning: 通过
-    PermissionCheck --> Blocked: 拒绝
-    PermissionCheck --> Interrupted: 需人工
-    ToolRunning --> CollectResults: 记录调用结果
-    CollectResults --> ModelCall: 本轮调用均已处理
-    HandoffSwitch --> ModelCall: 更新当前 Agent/Input
-    Blocked --> CollectResults: 回写拒绝结果（或按策略终止）
-    Interrupted --> PermissionCheck: 审批返回，重新校验绑定操作
-    Interrupted --> Stopped: 拒绝/过期且不再继续
-    Stopped --> [*]
-    FinalOutput --> [*]
+flowchart TB
+    M[ModelCall] --> D[Deciding]
+    D -->|请求工具| P[PermissionCheck]
+    P -->|通过| T[ToolRunning]
+    T --> C[CollectResults]
+    C -->|本轮调用均已处理| M
 ```
+
+运行从 `Init` 开始，装配上下文（第 18 章）后进入 `ModelCall`，收到模型输出后进入 `Deciding`。若符合输出契约且没有待执行调用，则进入 `FinalOutput` 并结束。请求切换 Agent 时，则进入 `HandoffSwitch`，更新当前 Agent 与输入后返回 `ModelCall`。
+
+工具请求先进入 `ToolExecution`，其中**每个**调用都要经过 `PermissionCheck`（第 20 章）。获准调用执行后，将结果记录到 `CollectResults`。被拒绝的调用进入 `Blocked`，除非策略要求终止，否则也将拒绝结果写入同一结果集合；只有本轮所有调用都处理完，才返回模型。
+
+需要人工输入时，权限检查暂停于 `Interrupted`。审批通过后须返回 `PermissionCheck`，重新校验绑定的操作，不能直接进入 `ToolRunning`。如果审批被拒绝或已过期，且不再继续，则进入 `Stopped` 并结束。
 
 图中工具分支按一批调用抽象：每个调用分别通过权限判定并记录结果，不能一个工具先返回就丢下其他待完成调用。普通工具请求和 Handoff 也可能出现在同一份模型输出中；是先处理工具、先交接还是拒绝混合输出，要由具体运行时约定，不能从图中的分支顺序推断。无工具调用也不必然是合法最终输出，空响应、截断或格式错误仍需单独处理。
 
@@ -77,7 +70,7 @@ stateDiagram-v2
 第十三章讨论的多 Agent 协作，从状态机角度看有两种形态：
 
 - **Handoff（切换）**：由另一个 Agent 配置接管后续决策。OpenAI Agents SDK 在同一个 Runner 循环中更新 current agent 和输入，并不必然结束旧进程或新建状态机（对应 17.3 图中 `HandoffSwitch`）。
-- **Subagent（嵌套）**：当前状态机在自己的一步之内，启动一个全新的、独立的子状态机（有自己的 `turn_index`、`budget`、`messages`），等子状态机跑完拿到结果后，把结果作为一次"工具调用结果"塞回父状态机继续跑。Claude Agent SDK 把这种模式称为 Subagents："Spawn specialized agents for focused subtasks"（[Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview) 能力表）。
+- **Subagent（嵌套）**：当前状态机在自己的一步之内，启动一个全新的、独立的子状态机（有自己的 `turn_index`、`budget`、`messages`），等子状态机跑完拿到结果后，把结果作为一次"工具调用结果"塞回父状态机继续跑。Claude Agent SDK 把这种模式称为 Subagents："Spawn specialized agents for focused subtasks"（Claude Agent SDK: Overview<sup>[【541】](../../book/references.zh.md#ref-541)</sup> 能力表）。
 
 关键区别是调用关系：Subagent 通常向调用者返回结果，由调用者继续决策；Handoff 则把后续对话交给接手者。二者都应计入同一根任务的总预算，再按 Agent 分摊成本；切换角色不能重置总步数、费用或权限边界。
 
@@ -87,7 +80,7 @@ stateDiagram-v2
 |---|---|---|---|
 | 循环驱动方式 | 内置 agent loop，SDK 内部驱动 | `Runner.run` 内部驱动，暴露三种调用方式（同步/异步/流式） | 显式的图执行引擎，节点与边由开发者定义 |
 | 终止判定 | 无工具调用可结束回合，hooks 可干预 | final output 或配置的工具停止行为；`max_turns` 触发异常 | `END` 表示图结束；`interrupt()` 是暂停，不等于成功终止 |
-| 嵌套/切换 | Subagents（嵌套） | Handoffs（切换 current agent） | 子图（Subgraphs），见 [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs) |
+| 嵌套/切换 | Subagents（嵌套） | Handoffs（切换 current agent） | 子图（Subgraphs），见 LangGraph: Subgraphs<sup>[【547】](../../book/references.zh.md#ref-547)</sup> |
 | 状态可见性 | 通过流式消息（`SystemMessage`/`AssistantMessage`）暴露 | 通过 `RunResult`/`RunResultStreaming` 暴露 | 状态是图上的显式字段，见[第十三章 13.15 节](../04-multi-agent/13-multi-agent-coordination.zh.md) |
 
 三者都要处理调用、观察、继续与停止，但不共享一份字段规范或完全相同的状态机。对接时应把产品事件映射到自己的任务状态，并核对轮数口径：例如 Claude Agent SDK 的 `max_turns` 按工具使用轮数计数，不能直接把另一 SDK 的数值原样搬来。
@@ -106,8 +99,5 @@ stateDiagram-v2
 
 ## 参考资料
 
-- [Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)
-- [OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-17)。

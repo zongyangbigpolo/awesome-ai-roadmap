@@ -118,14 +118,22 @@ LangGraph 同时提供 `StateGraph` 和 **Functional API**。两者**共享同�
 ### 10.5.1 `interrupt()` 的工作方式
 
 ```mermaid
-flowchart LR
-    A["节点内任意位置<br/>触发 interrupt()"] --> B["运行时保存状态<br/>把可序列化的中断载荷交给外部系统"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["节点内任意位置"] --> B["运行时保存状态"]
     B --> C["流程一直等待"]
-    C --> D["用相同 thread_id +<br/>Command(resume=...) 恢复"]
-    D --> E["外部输入成为<br/>interrupt() 的返回值"]
+    C --> D["用相同 thread_id<br/>+"]
+    D --> E["外部输入成为"]
 
     style E fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 节点内任意位置 触发 interrupt()
+- 运行时保存状态 把可序列化的中断载荷交给外部系统
+- 用相同 thread_id + Command(resume=...) 恢复
+- 外部输入成为 interrupt() 的返回值
 
 **这比只支持「确认或取消」更灵活**：审核员可以批准、拒绝，也可以**修改金额、补充证据或给出反馈**，后续路由再根据这份输入决定去哪。多级审批也可以拆成多个节点，**让每个角色只看到自己需要的信息**。
 
@@ -160,13 +168,21 @@ flowchart LR
 ### 10.6.1 节点失败处理的三层与版本边界
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Retry Policy<br/>按异常类型和退避策略重试"] --> B["Timeout<br/>限制单次尝试时间"]
-    B --> C["Error Handler<br/>重试耗尽后接管错误"]
-    C --> D["处理函数可返回 Command<br/>一边更新错误状态<br/>一边把流程送往降级/补偿/人工节点"]
+    A["Retry Policy"] --> B["Timeout"]
+    B --> C["Error Handler"]
+    C --> D["处理函数可返回<br/>Command"]
 
     style D fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- Retry Policy 按异常类型和退避策略重试
+- Timeout 限制单次尝试时间
+- Error Handler 重试耗尽后接管错误
+- 处理函数可返回 Command 一边更新错误状态 一边把流程送往降级/补偿/人工节点
 
 | 能力 | 最低版本 / 条件 | 说明 |
 |---|---|---|
@@ -543,15 +559,5 @@ def resume_from_authenticated_reviewer(
 
 ## 参考资料
 
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph: Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api)
-- [LangGraph: Functional API](https://docs.langchain.com/oss/python/langgraph/functional-api)
-- [LangGraph 持久化文档](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [LangGraph: Time Travel](https://docs.langchain.com/oss/python/langgraph/use-time-travel)
-- [LangGraph: Subgraphs](https://docs.langchain.com/oss/python/langgraph/use-subgraphs)
-- [LangGraph: Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [LangChain: Event streaming](https://docs.langchain.com/oss/python/langchain/event-streaming)
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangGraph Checkpointers：检查点与恢复语义](https://docs.langchain.com/oss/python/langgraph/checkpointers)
-- [LangGraph 并行状态更新错误](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-10)。

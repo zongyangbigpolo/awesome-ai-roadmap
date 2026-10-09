@@ -13,14 +13,15 @@ The same “completed” message might reflect a genuinely successful run, a res
 Business records can be organized by session, task, and turn, but these are not fixed levels in OpenTelemetry. A **session** is an application conversation that may contain several tasks. In this module, a **turn** is one model decision and its associated tool handling. A **trace** describes the operations in a run through related **spans**, each with a start and end time. Model calls and tool execution are good candidates for separate spans; instantaneous state transitions can be recorded as span events rather than creating a new span for every change.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    SESS["Session<br/>May contain several tasks"]
-    RUN["One run of a task<br/>May map to one trace"]
+    SESS["Session<br/>May contain<br/>several<br/>tasks"]
+    RUN["One run of a<br/>task<br/>May map to<br/>one trace"]
     T1["Turn 1"]
     T2["Turn 2"]
-    S1["Span: model call"]
-    S2["Span: tool execution"]
-    S3["Span: permission check"]
+    S1["Span: model<br/>call"]
+    S2["Span: tool<br/>execution"]
+    S3["Span:<br/>permission<br/>check"]
     SESS --> RUN
     RUN --> T1
     RUN --> T2
@@ -33,7 +34,7 @@ This diagram shows business relationships; it does not require every box to be a
 
 ## 23.3 OpenTelemetry GenAI semantic conventions
 
-[The cited revision of the OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md) is still marked **Development**. Its fields must not be described as universally stable. Reuse its model, agent, tool, and MCP attributes where appropriate, but pin both semantic-convention and instrumentation versions and validate the backend mappings. Put custom approval-rule fields in a separate namespace.
+The cited revision of the OpenTelemetry GenAI semantic conventions<sup>[【525】](../../book/references.md#ref-525)</sup> is still marked **Development**. Its fields must not be described as universally stable. Reuse its model, agent, tool, and MCP attributes where appropriate, but pin both semantic-convention and instrumentation versions and validate the backend mappings. Put custom approval-rule fields in a separate namespace.
 
 Model spans record model versions, tokens, and latency; tool spans record tool identity, execution status, and duration; approval spans link rules and approval records. Minimize content collection by default. Arguments, results, user information, and secrets require redaction and access control. Do not record hidden chain of thought in pursuit of a “complete trace.”
 
@@ -68,13 +69,13 @@ This comparison focuses on runtime and product interfaces. For how to locate cod
 
 ### 23.7.1 Claude Code / Claude Agent SDK
 
-The Claude Agent SDK exposes the loop, tools, and context management used by Claude Code ([Agent loop](https://code.claude.com/docs/en/agent-sdk/agent-loop)). Hooks provide points for audit and rule checks; subagents support delegation; sessions support resumption and forking. Permission modes, approval callbacks, and hooks have different coverage, so checks must not all be placed solely in `canUseTool`. Session recovery also does not automatically make external side effects idempotent.
+The Claude Agent SDK exposes the loop, tools, and context management used by Claude Code (Agent loop<sup>[【545】](../../book/references.md#ref-545)</sup>). Hooks provide points for audit and rule checks; subagents support delegation; sessions support resumption and forking. Permission modes, approval callbacks, and hooks have different coverage, so checks must not all be placed solely in `canUseTool`. Session recovery also does not automatically make external side effects idempotent.
 
 ### 23.7.2 OpenAI Codex CLI / Agents SDK
 
-The OpenAI Agents SDK uses `Runner` to coordinate models, tools, and handoffs ([Running agents](https://openai.github.io/openai-agents-python/running_agents/)). Input guardrails run **in parallel** with the agent by default. The model may already consume tokens or execute tools before a guardrail trips; only blocking mode ensures the check finishes before the agent starts. Input guardrails apply only to the first agent in the chain, and output guardrails apply to the final output. Checks on individual tool calls require the corresponding tool-level mechanism ([Guardrails](https://openai.github.io/openai-agents-python/guardrails/)).
+The OpenAI Agents SDK uses `Runner` to coordinate models, tools, and handoffs (Running agents<sup>[【546】](../../book/references.md#ref-546)</sup>). Input guardrails run **in parallel** with the agent by default. The model may already consume tokens or execute tools before a guardrail trips; only blocking mode ensures the check finishes before the agent starts. Input guardrails apply only to the first agent in the chain, and output guardrails apply to the final output. Checks on individual tool calls require the corresponding tool-level mechanism (Guardrails<sup>[【549】](../../book/references.md#ref-549)</sup>).
 
-[Codex CLI](https://github.com/openai/codex) is a separate coding-agent product and codebase. Their shared vendor does not establish that the Agents SDK is Codex's execution core. They can integrate and share loop-design ideas, but sandboxing, approvals, sessions, and tool behavior need to be verified separately.
+Codex CLI<sup>[【558】](../../book/references.md#ref-558)</sup> is a separate coding-agent product and codebase. Their shared vendor does not establish that the Agents SDK is Codex's execution core. They can integrate and share loop-design ideas, but sandboxing, approvals, sessions, and tool behavior need to be verified separately.
 
 ### 23.7.3 GitHub Copilot Coding Agent
 
@@ -98,14 +99,5 @@ Traces should connect runs, tools, approvals, and recovery without collecting co
 
 ## References
 
-- [OpenTelemetry: Generative AI Semantic Conventions](https://github.com/open-telemetry/semantic-conventions-genai)
-- [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/): spans, span events, context propagation, and span links.
-- [Claude Agent SDK: How the agent loop works](https://code.claude.com/docs/en/agent-sdk/agent-loop)
-- [OpenAI Agents SDK: Running agents](https://openai.github.io/openai-agents-python/running_agents/)
-- [OpenAI Agents SDK: Guardrails](https://openai.github.io/openai-agents-python/guardrails/)
-- [OpenAI Codex repository](https://github.com/openai/codex)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Anthropic: How we built our multi-agent research system](https://www.anthropic.com/engineering/multi-agent-research-system)
-
-The GenAI semantic conventions are pinned to commit `0c87594975195608dc91b3f702e250a7b240c151`, accessed in the source review on 2026-09-15. Product claims are bounded by the official documentation cited here; they do not imply knowledge of unpublished internal implementations.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-23) for this chapter’s sources, reading suggestions, and source notes.

@@ -10,7 +10,7 @@ Waiting for approval is an expected control state; execution failure means a ste
 
 ## 22.2 Why involve a human?
 
-[MCP 2026-07-28 Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools) recommends enabling people to deny tool calls and providing tool visibility, invocation indicators, and confirmation prompts. It uses **SHOULD** and explicitly does not mandate a particular interaction model. This is neither a protocol requirement to show a prompt for every call nor a credential that authorizes tool use. The harness must choose automatic execution, per-operation confirmation, or outright denial according to impact and preauthorized scope. Both complete automation and confirmation at every step have costs.
+MCP 2026-07-28 Tools<sup>[【285】](../../book/references.md#ref-285)</sup> recommends enabling people to deny tool calls and providing tool visibility, invocation indicators, and confirmation prompts. It uses **SHOULD** and explicitly does not mandate a particular interaction model. This is neither a protocol requirement to show a prompt for every call nor a credential that authorizes tool use. The harness must choose automatic execution, per-operation confirmation, or outright denial according to impact and preauthorized scope. Both complete automation and confirmation at every step have costs.
 
 ## 22.3 Designing interruption points: where to pause
 
@@ -63,9 +63,5 @@ Human-in-the-loop handling is a recoverable control point, not a simple Boolean 
 
 ## References
 
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [AWS Prescriptive Guidance: Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html): the dual-write problem between state persistence and notification delivery, and idempotent handling of duplicate messages.
-- [LangGraph Chapter 10: Core Advantages of LangGraph](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-22) for this chapter’s sources, reading suggestions, and source notes.

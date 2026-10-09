@@ -15,13 +15,19 @@ description: 区分模型可见工具 Schema 与可信 Runtime 注入，说明�
 | executor（函数/协程） | **应用侧** | 按这些参数执行实际操作 |
 
 ```mermaid
-flowchart LR
-    M["模型生成调用请求<br/>工具名 + 参数"] --> R["运行时执行函数"]
-    R --> T["结果作为 ToolMessage 返回"]
-    T --> M2["模型决定继续调用<br/>还是生成最终回答"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    M["模型生成调用请求"] --> R["运行时执行函数"]
+    R --> T["结果作为<br/>ToolMessage 返回"]
+    T --> M2["模型决定继续调用"]
 
     style M fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 模型生成调用请求 工具名 + 参数
+- 模型决定继续调用 还是生成最终回答
 
 > **工具描述和 Schema 不是普通注释，而是模型与业务代码之间的调用合同。**
 >
@@ -32,19 +38,35 @@ flowchart LR
 不必一开始就继承最底层的类。选择时先判断：**这个工具是否仍然只是一个普通函数？**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"已有函数的名称、类型注解<br/>docstring 能说清用途吗?"}
-    Q1 -->|能| A["直接放入 tools<br/>（普通函数）"]
-    Q1 -->|不能：要改工具名<br/>补参数描述<br/>限制枚举和范围| Q2{"原函数可以修改吗?<br/>需要运行时动态组装<br/>同步与异步实现吗?"}
-    Q2 -->|可以修改，只是要补契约| B["@tool<br/>大多数业务工具的自然选择"]
-    Q2 -->|原函数不能改<br/>或需要动态组装| C["StructuredTool.from_function"]
-    C --> Q3{"工具要长期持有客户端<br/>维护资源、定制完整执行过程?"}
+    Q1["契约清晰？"]
+    Q1 -->|能| A["普通函数"]
+    Q1 -->|"否"| Q2["能修改原函数？"]
+    Q2 -->|"仅调整契约"| B["@tool"]
+    Q2 -->|"动态组装或外部函数"| C["StructuredTool.from_function"]
+    C --> Q3["有状态组件？"]
     B --> Q3
-    Q3 -->|是，它已经是一个组件| D["继承 BaseTool"]
+    Q3 -->|"是"| D["继承 BaseTool"]
 
     style B fill:#e6f4ea
     style D fill:#fff3cd
 ```
+
+图中条件与标签：
+
+- 不能：要改工具名 补参数描述 限制枚举和范围
+- 可以修改，只是要补契约
+- 原函数不能改 或需要动态组装
+- 是，它已经是一个组件
+
+图中各项的完整含义：
+
+- 已有函数的名称、类型注解 docstring 能说清用途吗?
+- 直接放入 tools （普通函数）
+- 原函数可以修改吗? 需要运行时动态组装 同步与异步实现吗?
+- @tool 大多数业务工具的自然选择
+- 工具要长期持有客户端 维护资源、定制完整执行过程?
 
 这四种方式对应的是复杂度逐步上升的实现路径：先让函数把用途说清楚，再补充工具契约，接着处理动态组装，最后才管理组件生命周期。
 
@@ -233,14 +255,21 @@ result = agent.invoke(
 **一个能被 Agent 调用的函数，并不等于一个可以安全上线的工具。** 沿着一次真实调用往下走：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    P1["① 模型准备调用前<br/>名称/描述会不会与其他工具混淆<br/>Schema 有没有限制枚举、范围、必填"]
-    P2["② 进入执行阶段<br/>身份和权限来自可信 Runtime 而非模型参数<br/>远程调用有超时、重试上限、并发限制<br/>会改外部状态就补幂等、审批、审计"]
-    P3["③ 调用结束后<br/>日志与 Trace 要能排查错误<br/>但不能记录密钥、完整身份凭证或不必要的敏感数据"]
+    P1["① 模型准备调用<br/>前"]
+    P2["② 进入执行阶段"]
+    P3["③ 调用结束后"]
     P1 --> P2 --> P3
 
     style P2 fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- ① 模型准备调用前 名称/描述会不会与其他工具混淆 Schema 有没有限制枚举、范围、必填
+- ② 进入执行阶段 身份和权限来自可信 Runtime 而非模型参数 远程调用有超时、重试上限、并发限制 会改外部状态就补幂等、审批、审计
+- ③ 调用结束后 日志与 Trace 要能排查错误 但不能记录密钥、完整身份凭证或不必要的敏感数据
 
 ### 5.8.1 工具数量不是越多越好
 
@@ -308,8 +337,5 @@ Trace 要能排查问题，**但不能落密钥和完整身份凭证**。
 
 ## 参考资料
 
-- [LangChain: Tools 概念文档](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [langchain-core Tools API 参考](https://reference.langchain.com/python/langchain-core/tools/)
-- [Pydantic 官方文档](https://docs.pydantic.dev/latest/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-05)。

@@ -9,12 +9,20 @@ description: 区分训练数据记忆化、成员推断与应用记忆泄漏，�
 传统应用的隐私风险也包括日志、缓存和第三方处理。LLM 场景需区分：权重中的训练数据记忆化，以及应用存储中的会话、摘要和长期记忆。前者可能通过模型输出泄漏，后者往往就是检索授权、租户隔离或生命周期治理失败；不能说记忆泄漏与访问控制无关。
 
 ```mermaid
-flowchart TB
-    P[AI 隐私风险] --> P1[训练数据记忆化<br/>6.2]
-    P --> P2[推理阶段的 PII 处理<br/>6.3]
-    P --> P3[记忆机制泄漏<br/>6.4]
-    P --> P4[数据驻留与跨境合规<br/>6.5]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["AI 隐私风险"] --> P1["训练数据记忆化"]
+    P --> P2["推理阶段的 PII 处理"]
+    P --> P3["记忆机制泄漏"]
+    P --> P4["数据驻留与跨境"]
 ```
+
+图中各项的完整含义：
+
+- 训练数据记忆化 6.2
+- 推理阶段的 PII 处理 6.3
+- 记忆机制泄漏 6.4
+- 数据驻留与跨境合规 6.5
 
 ## 6.2 训练数据记忆化与抽取攻击
 
@@ -60,11 +68,17 @@ DP 要报告 epsilon、delta、样本级还是用户级保护，以及训练步�
 Agent 系统普遍引入了长期记忆机制（见 [Agent 记忆](../../agent/03-memory-context/07-agent-memory.zh.md)），这带来了传统无状态问答系统没有的隐私风险：
 
 ```mermaid
-flowchart LR
-    U1[用户 A 的会话] --> W[写入共享记忆存储]
-    W --> R[检索阶段未做用户维度过滤]
-    R --> U2[用户 B 的会话读到 A 的信息]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U1["用户 A 的会话"] --> W["写入共享记忆存储"]
+    W --> R["检索未按用户隔离"]
+    R --> U2["泄露给用户 B"]
 ```
+
+图中各项的完整含义：
+
+- 检索阶段未做用户维度过滤
+- 用户 B 的会话读到 A 的信息
 
 | 风险 | 场景 |
 |---|---|
@@ -123,11 +137,5 @@ GDPR 的目的限制、数据最小化、合法依据、删除权及其例外、
 
 ## 参考资料
 
-- [Extracting Training Data from Large Language Models](https://arxiv.org/abs/2012.07805)
-- [Quantifying Memorization Across Neural Language Models](https://arxiv.org/abs/2202.07646)
-- [Membership Inference Attacks against Machine Learning Models](https://arxiv.org/abs/1610.05820)
-- [Deep Learning with Differential Privacy (DP-SGD)](https://arxiv.org/abs/1607.00133)
-- [OWASP LLM02:2025 Sensitive Information Disclosure](https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/)
-- [NIST AI 600-1: Generative AI Profile — Privacy risks](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)
-- [OpenAI: Data controls in the API platform](https://developers.openai.com/api/docs/guides/your-data)
-- [GDPR 原文：第 5、6、17 条及第五章](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-06)。

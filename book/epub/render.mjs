@@ -20,17 +20,6 @@ export function validateJob(job) {
   }
 }
 
-export function tiles(width, height) {
-  if (width <= 720 && height <= 1100) return [];
-  const result = [];
-  for (let y = 0; y < height; y += 840) {
-    for (let x = 0; x < width; x += 520) {
-      result.push({ x, y, width: Math.min(560, width - x), height: Math.min(880, height - y) });
-    }
-  }
-  return result;
-}
-
 export function localPath(url) {
   const target = path.resolve(dependencies, `.${decodeURIComponent(new URL(url).pathname)}`);
   if (!target.startsWith(dependencies + path.sep)) throw new Error("resource escapes dependencies");
@@ -176,10 +165,24 @@ export async function render(requestPath, outputDirectory) {
           }
           await document.fonts.ready;
           const rectangle = stage.getBoundingClientRect();
+          const labelCollisions = [];
+          if (job.kind === "mermaid") {
+            for (const label of stage.querySelectorAll(".cluster-label")) {
+              const title = label.getBoundingClientRect();
+              for (const node of stage.querySelectorAll("g.node")) {
+                const box = node.getBoundingClientRect();
+                if (Math.min(title.right, box.right) - Math.max(title.left, box.left) > 1 &&
+                    Math.min(title.bottom, box.bottom) - Math.max(title.top, box.top) > 1) {
+                  labelCollisions.push({ title: label.textContent.trim(), node: node.textContent.trim() });
+                }
+              }
+            }
+          }
           return {
             width: Math.ceil(rectangle.width), height: Math.ceil(rectangle.height),
             svgCount: stage.querySelectorAll("svg").length,
             mathmlCount: stage.querySelectorAll("math").length,
+            labelCollisions,
           };
         }, job);
       } catch (error) {
@@ -195,19 +198,9 @@ export async function render(requestPath, outputDirectory) {
         clip: { x: 0, y: 0, width: geometry.width, height: geometry.height },
         captureBeyondViewport: true,
       });
-      const detail = [];
-      if (job.kind === "mermaid") {
-        for (const [number, clip] of tiles(geometry.width, geometry.height).entries()) {
-          const tileFile = `${cacheKey}-${number + 1}.png`;
-          const data = await page.screenshot({
-            path: path.join(outputDirectory, tileFile), clip, captureBeyondViewport: true,
-          });
-          detail.push({ ...clip, file: tileFile, sha256: sha256(data) });
-        }
-      }
       const result = {
         key: job.key, kind: job.kind, language, version, file, ...geometry,
-        sha256: sha256(screenshot), tiles: detail,
+        sha256: sha256(screenshot), tiles: [],
       };
       const pendingCache = `${cacheFile}.${process.pid}.tmp`;
       await fs.writeFile(pendingCache, JSON.stringify(result));

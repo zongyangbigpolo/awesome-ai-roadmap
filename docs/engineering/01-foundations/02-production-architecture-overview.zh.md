@@ -9,38 +9,31 @@ description: 沿请求、评测和反馈链路梳理 LLM 生产架构，明确�
 Demo 阶段的 LLM 应用往往就是一次 `client.chat.completions.create()` 调用。要撑住真实流量，这一次调用的前后会长出一整条链路：网关、编排、输出校验、可观测性、评测和发布都得补上。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    U["用户 / 上游服务"] --> ENTRY["入口 API 网关<br/>用户鉴权 · 租户限流"]
-    ENTRY --> ORCH["编排层<br/>Agent / RAG / 工具调用"]
-    ORCH --> GW["模型网关<br/>供应商凭据 · 路由 · 回退 · 配额"]
-    GW --> PROVIDER["模型供应商<br/>OpenAI / Anthropic / 自研部署"]
-    PROVIDER --> RESULT["模型响应校验<br/>文本或工具参数"]
-    RESULT --> ORCH
-    ORCH --> TOOL["工具授权与执行<br/>资源权限 · 审批 · 幂等"]
-    TOOL --> ORCH
-    ORCH --> VALIDATE["最终输出校验<br/>契约 · Guardrails"]
-    VALIDATE -->|通过| RESP["返回用户"]
-    VALIDATE -->|不通过| DEGRADE["降级路径"]
-    DEGRADE --> RESP
-
-    ORCH -.trace/metrics.-> OBS["可观测性<br/>日志 · 指标 · Trace"]
-    VALIDATE -.trace/metrics.-> OBS
-    GW -.trace/metrics.-> OBS
-
-    OBS --> EVAL["离线评测<br/>黄金测试集"]
-    EVAL --> CICD["发布流水线<br/>灰度 / Canary / A-B"]
-    CICD --> GW
-    CICD --> ORCH
-
-    RESP -.用户反馈.-> FEEDBACK["反馈闭环"]
-    FEEDBACK --> EVAL
-    FEEDBACK --> DATA["训练/微调数据"]
-
-    style GW fill:#e8f0fe
-    style VALIDATE fill:#fff3cd
-    style OBS fill:#e6f4ea
-    style CICD fill:#fce8e6
+    ENTRY["授权请求"] --> ORCH["编排调用"]
+    ORCH --> CHECK["校验输出"]
+    CHECK --> RESP["安全返回"]
+    RESP -.-> IMPROVE["评估与发布"]
+    IMPROVE -.-> ORCH
 ```
+
+请求从入口 API 网关进入。编排层通过模型网关调用供应商，模型返回的文本或工具参数经过校验后再交回编排层。工具调用走独立的授权与执行路径，结果同样回到编排层。最终输出校验通过后才能返回；未通过时选择合适的降级响应。
+
+改进闭环不是同步请求中的又一步。编排层、输出校验和模型网关产生 trace 与指标。可观测数据和用户反馈进入离线评测集，满足条件的反馈也可以进入训练或微调数据集。评测控制发布门禁，发布流水线再通过灰度方式更新模型网关和编排层。
+
+图中各项的完整含义：
+
+- 入口 API 网关 用户鉴权 · 租户限流
+- 编排层 Agent / RAG / 工具调用
+- 模型网关 供应商凭据 · 路由 · 回退 · 配额
+- 模型供应商 OpenAI / Anthropic / 自研部署
+- 模型响应校验 文本或工具参数
+- 工具授权与执行 资源权限 · 审批 · 幂等
+- 最终输出校验 契约 · Guardrails
+- 可观测性 日志 · 指标 · Trace
+- 离线评测 黄金测试集
+- 发布流水线 灰度 / Canary / A-B
 
 请求先经过入口鉴权，再进入编排层。编排层每次调用模型都经过模型网关，收到响应后判断是继续调用工具，还是结束任务并校验最终回答；工具有独立的授权与执行边界。图中区分的是职责，几个职责可以部署在同一服务中，但不能因此省略其中的检查。
 
@@ -76,16 +69,22 @@ flowchart TB
 不是每个团队都需要图 2.1 的全部模块。一个精简但仍然「生产可用」的起点:
 
 ```mermaid
-flowchart LR
-    U[用户] --> GW["轻量网关<br/>(可先用开源网关代替自建)"]
-    GW --> M[单一模型供应商]
-    M --> V["最基本的<br/>JSON Schema 校验"]
-    V --> R[返回]
-    V -.失败样本.-> LOG[结构化日志]
-    LOG -.人工定期抽查.-> EVAL[小型评测集]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["用户"] --> GW["轻量网关"]
+    GW --> M["单一模型供应商"]
+    M --> V["最基本的"]
+    V --> R["返回"]
+    V -.失败样本.-> LOG["结构化日志"]
+    LOG -.人工定期抽查.-> EVAL["小型评测集"]
 
     style GW fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 轻量网关 (可先用开源网关代替自建)
+- 最基本的 JSON Schema 校验
 
 网关可以先用现成组件，日志先记录请求关联 ID、版本、延迟、状态和用量，**不默认落盘原始输入输出**。人工抽查几十条可以发现明显问题，但不能证明低失败率。即使规模很小，仍需鉴权、总超时、限流、成本上限和可关闭的发布开关；涉及副作用时再补工具授权、审批和幂等。是否需要多模型回退取决于风险与恢复目标，不是所有应用的上线前提。
 
@@ -117,8 +116,5 @@ Demo 里「一次 API 调用直接返回」缺少失败预算和恢复路径。�
 
 ## 参考资料
 
-- [OpenAI: Production best practices](https://platform.openai.com/docs/guides/production-best-practices)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Google SRE Book: Chapter 1 - Introduction](https://sre.google/sre-book/introduction/)
-- [Uber Engineering: Michelangelo Machine Learning Platform](https://www.uber.com/blog/michelangelo-machine-learning-platform/)
-- [Martin Fowler: Continuous Delivery for Machine Learning](https://martinfowler.com/articles/cd4ml.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-02)。

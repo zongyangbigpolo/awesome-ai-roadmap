@@ -15,14 +15,14 @@ This chapter provides a reusable way to organize that information, along with il
 ## 9.2 A framework for discussing a production design
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. Scenario and scale] --> S2[2. Reasons for the choice]
-    S2 --> S3[3. Index and parameters]
-    S3 --> S4[4. Performance metrics]
-    S4 --> S5[5. Bottlenecks encountered]
-    S5 --> S6[6. How they were addressed]
-    S6 --> S7[7. Remaining problems]
+    S1[Scenario and choice] --> S2[Index and measurements]
+    S2 --> S3[Bottlenecks and remedies]
+    S3 --> S4[Remaining problems]
 ```
+
+Explain the scenario and scale before the selection rationale. Then give the index and parameters, measured performance, bottlenecks encountered, how they were addressed, and the problems that remain.
 
 The first four steps describe the current system. The final three determine whether the design is workable: where it gets stuck, how the issue was diagnosed and addressed, and which risks remain.
 
@@ -207,9 +207,5 @@ Quality degradation is silent; periodic regression evaluation is needed to detec
 
 ## References
 
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [hnswlib v0.8.0: internal IDs, base-layer adjacency capacity, and payload layout](https://github.com/nmslib/hnswlib/blob/v0.8.0/hnswlib/hnswalg.h)
-- [pgvector: exact baselines, filtering, and iterative scans](https://github.com/pgvector/pgvector)
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [Matryoshka Representation Learning](https://arxiv.org/abs/2205.13147)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-09) for this chapter’s sources, reading suggestions, and source notes.

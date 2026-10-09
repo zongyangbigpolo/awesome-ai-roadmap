@@ -28,17 +28,28 @@ Here, `task` refers to a synchronous subagent: the parent call waits for it to f
 ## 12.2 The core workflow
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① Clarify the question and scope"] --> S2["② Create a research brief"]
-    S2 --> S3["③ Supervisor divides the research into subtopics"]
-    S3 --> S4["④ Researchers retrieve and verify in parallel"]
-    S4 --> S5["⑤ Compress evidence and check research gaps"]
-    S5 -->|Gaps or conflicts found| S3
-    S5 -->|Sufficient coverage| S6["⑥ Write a unified final report"]
+    S1["① Clarify the<br/>question and<br/>scope"] --> S2["② Create a<br/>research brief"]
+    S2 --> S3["③ Divide<br/>subtopics"]
+    S3 --> S4["④ Parallel<br/>research"]
+    S4 --> S5["⑤ Check<br/>evidence"]
+    S5 -->|"Gaps / conflicts"| S3
+    S5 -->|Sufficient coverage| S6["⑥ Write a<br/>unified final<br/>report"]
 
     style S2 fill:#e8f0fe
     style S6 fill:#e6f4ea
 ```
+
+Figure conditions and labels:
+
+- Gaps or conflicts found
+
+Details of the illustrated steps and components:
+
+- ③ Supervisor divides the research into subtopics
+- ④ Researchers retrieve and verify in parallel
+- ⑤ Compress evidence and check research gaps
 
 | Step | Key point |
 |---|---|
@@ -79,14 +90,21 @@ This isolates the message context, not operating-system permissions or all stora
 To assess quality, work backward through the chain of “source → evidence → conclusion”:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① Is the source trustworthy?<br/>Official docs, papers, regulatory documents, and primary sources are closer to the original facts<br/>Several reposts may all come from one article<br/>Many links do not establish independent corroboration"]
-    A --> B["② Does the source actually support this conclusion?<br/>Separate facts, inferences, and uncertainty<br/>When sources conflict, check publication dates, measurement definitions, and original sources<br/>Do not simply choose the answer that best fits expectations"]
-    B --> C["③ If the conclusion remains uncertain, revisit the research process<br/>Did search terms omit important qualifiers?<br/>Do subtopics overlap?<br/>Did the stopping rule end research too early?<br/>After tool failures, were valid alternative sources used?"]
+    A["① Is the source<br/>trustworthy?"]
+    A --> B["② Check support"]
+    B --> C["③ Revisit<br/>research"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- ① Is the source trustworthy? Official docs, papers, regulatory documents, and primary sources are closer to the original facts Several reposts may all come from one article Many links do not establish independent corroboration
+- ② Does the source actually support this conclusion? Separate facts, inferences, and uncertainty When sources conflict, check publication dates, measurement definitions, and original sources Do not simply choose the answer that best fits expectations
+- ③ If the conclusion remains uncertain, revisit the research process Did search terms omit important qualifiers? Do subtopics overlap? Did the stopping rule end research too early? After tool failures, were valid alternative sources used?
 
 ### 12.4.1 Evaluate both the answer and the trace
 
@@ -153,18 +171,31 @@ The official documentation states that `FilesystemBackend` defaults to `virtual_
 First decide whether dynamic, multi-round evidence gathering is necessary, then whether parallel researchers are worthwhile. The ability to split a task into independent subtopics determines the parallelization strategy; it is not a prerequisite for Deep Research:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"Is the question open-ended enough<br/>to need repeated searches and changes of direction?"}
-    Q1 -->|One authoritative retrieval can answer it| N1["Do not use it<br/>A complex research workflow only adds cost"]
-    Q1 -->|Yes| Q2{"Can it be split into relatively independent subtopics?"}
-    Q2 -->|No| N2["Use sequential research<br/>Do not force parallelism"]
+    Q1["Open-ended research?"]
+    Q1 -->|"One lookup"| N1["Do not use it"]
+    Q1 -->|Yes| Q2["Independent<br/>subtopics?"]
+    Q2 -->|No| N2["Use sequential<br/>research"]
     N2 --> Q3
-    Q2 -->|Yes| Q3{"Does the report's value justify<br/>multiple rounds of model and search costs?"}
+    Q2 -->|Yes| Q3["Worth the cost?"]
     Q3 -->|No| N3["Do not use it"]
-    Q3 -->|Yes| Y["A good fit for Deep Research"]
+    Q3 -->|Yes| Y["A good fit for<br/>Deep Research"]
 
     style Y fill:#e6f4ea
 ```
+
+Figure conditions and labels:
+
+- One authoritative retrieval can answer it
+
+Details of the illustrated steps and components:
+
+- Is the question open-ended enough to need repeated searches and changes of direction?
+- Do not use it A complex research workflow only adds cost
+- Can it be split into relatively independent subtopics?
+- Use sequential research Do not force parallelism
+- Does the report's value justify multiple rounds of model and search costs?
 
 **Typical scenarios** include competitive analysis, research into technical directions, literature reviews, vendor due diligence, policy-impact studies, and analysis that combines internal company material with public information.
 
@@ -250,14 +281,5 @@ The backend determines the permissions of filesystem tools and `execute`; `Local
 
 ## References
 
-- [LangChain official blog: Open Deep Research](https://blog.langchain.com/open-deep-research/)
-- [Official open_deep_research repository](https://github.com/langchain-ai/open_deep_research)
-- [Deep Agents overview](https://docs.langchain.com/oss/python/deepagents/overview)
-- [Deep Agents Backends](https://docs.langchain.com/oss/python/deepagents/backends)
-- [Deep Agents Sandboxes](https://docs.langchain.com/oss/python/deepagents/sandboxes)
-- [Deep Agents synchronous subagents](https://docs.langchain.com/oss/python/deepagents/subagents)
-- [Deep Agents async subagents](https://docs.langchain.com/oss/python/deepagents/async-subagents)
-- [Official deepagents repository](https://github.com/langchain-ai/deepagents)
-- [Official LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangSmith Evaluation documentation](https://docs.langchain.com/langsmith/evaluation)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-12) for this chapter’s sources, reading suggestions, and source notes.

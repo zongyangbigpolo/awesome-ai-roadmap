@@ -40,7 +40,8 @@ Chain 常被理解成从左到右的一根直线。最简单的 Chain 确实如�
 **但真实应用还可能出现并行分支和条件分支**：
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     Q["用户问题"] --> R["知识库检索"]
     Q --> P["原样保留"]
     R --> M["汇合到 Prompt"]
@@ -185,15 +186,24 @@ print(result["title"], result["summary"])
 统一协议的价值不只在「方便串起来」，还在于它让流程可以逐步扩展：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① 可组合<br/>每个步骤只处理自己的输入输出<br/>小链可以继续组成大链<br/>换掉某个模型/解析器/检索器<br/>不必推翻整条业务流程"]
-    A --> B["② 执行方式统一<br/>单次、异步、批量、流式收拢到统一接口<br/>组合后的流程才有机会继承这些能力"]
-    B --> C["③ 声明式数据流<br/>主要表达『数据先去哪，再去哪』<br/>不用把线程调度、回调传递、中间结果搬运<br/>混在业务逻辑里"]
-    C --> D["④ 横切能力可复用<br/>重试、回退、标签、元数据、追踪<br/>可以附着在某个 Runnable，也可作用于整条链"]
-    D --> E["生产排查时看到的不再只是最终报错<br/>而是这次运行究竟经过了哪些子步骤"]
+    A["① 可组合"]
+    A --> B["② 执行方式统一"]
+    B --> C["③ 声明式数据流"]
+    C --> D["④ 复用通用控制"]
+    D --> E["检查执行过程"]
 
     style E fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- ① 可组合 每个步骤只处理自己的输入输出 小链可以继续组成大链 换掉某个模型/解析器/检索器 不必推翻整条业务流程
+- ② 执行方式统一 单次、异步、批量、流式收拢到统一接口 组合后的流程才有机会继承这些能力
+- ③ 声明式数据流 主要表达『数据先去哪，再去哪』 不用把线程调度、回调传递、中间结果搬运 混在业务逻辑里
+- ④ 横切能力可复用 重试、回退、标签、元数据、追踪 可以附着在某个 Runnable，也可作用于整条链
+- 生产排查时看到的不再只是最终报错 而是这次运行究竟经过了哪些子步骤
 
 这里的限制也要一并看到：接口统一只代表调用方式一致，**最终效果仍取决于内部组件是否真正支持对应模式**。
 
@@ -228,19 +238,33 @@ LangChain v1 的迁移指南已经把旧式 chains 明确移到 **`langchain-cla
 Chain 适合固定数据流，不适合把所有流程都塞进一条超长 LCEL。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q1{"主要是固定数据流<br/>还是模型动态选择动作?"}
-    Q1 -->|固定数据流| Q2{"需要跨调用恢复<br/>或长时间等待?"}
-    Q2 -->|否| C["Chain（Runnable + LCEL）<br/>检索、分类、摘要等短流程"]
-    Q2 -->|是| G["LangGraph 显式编排<br/>设计状态与恢复边界"]
-    Q1 -->|模型动态选择| Q3{"标准 Agent 循环<br/>与中间件能否表达?"}
-    Q3 -->|能| A["create_agent<br/>可配置检查点与工具审批"]
+    Q1["固定还是动态？"]
+    Q1 -->|固定数据流| Q2["需要持久化执行？"]
+    Q2 -->|否| C["LCEL 链"]
+    Q2 -->|是| G["LangGraph"]
+    Q1 -->|"动态动作"| Q3["标准循环能满足？"]
+    Q3 -->|能| A["create_agent"]
     Q3 -->|不能| G
 
     style C fill:#e6f4ea
     style A fill:#e8f0fe
     style G fill:#fff3cd
 ```
+
+图中条件与标签：
+
+- 模型动态选择
+
+图中各项的完整含义：
+
+- 主要是固定数据流 还是模型动态选择动作?
+- 需要跨调用恢复 或长时间等待?
+- Chain（Runnable + LCEL） 检索、分类、摘要等短流程
+- LangGraph 显式编排 设计状态与恢复边界
+- 标准 Agent 循环 与中间件能否表达?
+- create_agent 可配置检查点与工具审批
 
 固定、短小的数据流通常先用 Chain；运行时要由模型决定下一步时，考虑 Agent。图中「步骤已知」也不是排除 LangGraph 的条件：确定性的长流程同样可能需要持久化、人工等待和恢复边界，此时可直接选择 LangGraph。
 
@@ -299,9 +323,5 @@ Runnable 是统一调用协议，Chain 是用这些组件组成的数据流，LC
 
 ## 参考资料
 
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [RunnableSequence：LCEL 组合、批处理与流式语义](https://reference.langchain.com/python/langchain-core/runnables/base/RunnableSequence)
-- [Runnable API](https://reference.langchain.com/python/langchain-core/runnables/base/Runnable)
-- [langchain-core Runnables API 参考](https://reference.langchain.com/python/langchain-core/runnables/)
-- [LangChain v1 迁移指南](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-02)。

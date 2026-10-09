@@ -11,17 +11,21 @@ description: 比较全量微调、LoRA 与 QLoRA 的参数和显存预算，区�
 ### 8.1.1 先做错误归因
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    NEED["模型表现不达标"] --> Q1{"主要错误是什么？"}
-    Q1 -->|格式不合法| P1["提示与示例<br/>结构化输出或约束解码"]
-    Q1 -->|事实缺失或过时| P2["检索或数据库工具<br/>检查召回和证据使用"]
-    Q1 -->|稳定的任务行为不佳| P3["SFT 候选实验"]
-    Q1 -->|候选质量有可比较差异| P4["偏好数据与 DPO 等方案"]
-    P1 --> E["同一测试集比较质量、成本与延迟"]
-    P2 --> E
-    P3 --> E
-    P4 --> E
+    NEED["模型表现不达标"] --> Q1["诊断主要错误"]
+    Q1 --> P["选择针对性改进"]
+    P --> E["在同一测试集上比较"]
 ```
+
+诊断结果决定改进方法，并不要求依次完成所有训练阶段：
+
+- **格式不合法：** 尝试提示与示例、结构化输出或约束解码。
+- **事实缺失或过时：** 使用检索或数据库工具，检查召回和证据使用。
+- **稳定任务上的行为不佳：** 开展 SFT 候选实验。
+- **候选质量存在可比较差异：** 收集偏好数据，测试 DPO 等方法。
+
+各方案应在同一测试集上比较质量、成本与延迟。
 
 这些方案可组合。例如，RAG 负责提供最新合同，SFT 教模型基于证据回答并引用出处。若检索没有召回正确条款，继续调生成模型通常解决不了根因。
 
@@ -185,9 +189,5 @@ QLoRA 把冻结基座低比特存储，与可训练的 LoRA 结合。原论文�
 
 ## 参考资料
 
-- [LoRA](https://arxiv.org/abs/2106.09685)
-- [QLoRA](https://arxiv.org/abs/2305.14314)
-- [Transformers v4.46.3：Model training anatomy](https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy)
-- [PEFT：LoRA 配置与初始化](https://huggingface.co/docs/peft/package_reference/lora)
-- [DPO](https://arxiv.org/html/2305.18290v3)
-- [LIMA](https://arxiv.org/abs/2305.11206)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-08)。

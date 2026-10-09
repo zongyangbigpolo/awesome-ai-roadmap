@@ -13,18 +13,19 @@ A developer asks the agent to fix the query API without changing the existing be
 [Chapter 19](../02-runtime-harness/19-tool-registry-and-execution-pipeline.md) explains tool scheduling and error reporting; [Chapter 20](../02-runtime-harness/20-permissions-sandbox-isolation.md) covers execution boundaries; [Chapter 23](../02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study.md) compares products and explains cost tracking. This chapter follows the code-specific process in detail:
 
 ```mermaid
-flowchart TD
-    A["Bug report and expected behavior"] --> B["Locate files and the actual call chain"]
-    B --> C["Read implementation, contract, tests, and file version"]
-    C --> D["Generate a candidate edit"]
-    D --> E{"Valid baseline and unambiguous location?"}
-    E -->|No| C
-    E -->|Yes| F["Apply the edit and inspect the diff"]
-    F --> G["Syntax, types, targeted tests, and related regressions"]
-    G --> H{"Acceptance criteria satisfied?"}
-    H -->|No: follow the error| B
-    H -->|Yes| I["Deliver the change and verification scope"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    B["Locate and read"] --> D["Candidate edit"]
+    D --> E["Check baseline<br/>and location"]
+    E -->|Invalid or<br/>ambiguous| B
+    E -->|Valid| F["Apply and<br/>inspect diff"]
+    F --> G["Verify"]
+    G -->|Acceptance fails| B
 ```
+
+Start with the bug report and expected behavior. Locate files and the actual call chain, then read the implementation, contract, tests, and file version before generating an edit. If the baseline is invalid or the location ambiguous, reread the implementation rather than applying the edit.
+
+Verification covers syntax, types, targeted tests, and related regressions. If acceptance criteria fail, follow the error back to the relevant files and call chain; if they pass, deliver the change together with the scope of verification.
 
 “Found the code” and “may change this code” are separate judgments. Search produces candidate evidence. Before editing, the agent must still confirm call relationships, the target version, and business constraints.
 
@@ -48,7 +49,7 @@ The first command uses ripgrep's file listing and glob filtering to find filenam
 | A known symbol whose users matter | Definitions, references, and call hierarchy | Where it is defined, which sites reference it, and resolvable call relationships | Dynamic imports, reflection, and runtime registration may not be fully resolved |
 | A business description without code terminology | Semantic search, combined with keywords when useful | Which implementations may match the intent | Similarity does not prove execution; the index may lag behind the workspace |
 
-This classification draws on the [discussion of search and editing](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307) in Bojie Li's *Understanding AI Agents*, but no tool ordering is a universal workflow.
+This classification draws on the discussion of search and editing<sup>[【559】](../../book/references.md#ref-559)</sup> in Bojie Li's *Understanding AI Agents*, but no tool ordering is a universal workflow.
 
 If you have an exact error message, search for it first. If you know the class name and have a language service, jump straight to its definition. Glob patterns avoid reading file bodies and are usually useful for narrowing scope, but network filesystems, large directory listings, and existing indexes affect latency. A tool's name alone does not establish that it is always faster.
 
@@ -60,7 +61,7 @@ The agent must trace the route handler to the `take_rows` it actually imports, i
 
 An AST identifies syntax such as functions and call expressions, but an AST alone generally does not resolve cross-module name bindings. LSP is the communication protocol between a client and a language service. Definition, reference, and call-hierarchy support depends on the server implementation and negotiated capabilities; it does not guarantee resolution of every runtime call.
 
-See the [LSP 3.17 definition, reference, and call-hierarchy interfaces](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/) for how clients request these relationships.
+See the LSP 3.17 definition, reference, and call-hierarchy interfaces<sup>[【561】](../../book/references.md#ref-561)</sup> for how clients request these relationships.
 
 If the agent does not yet know about `take_rows`, semantic search for “limit the number of report results” can retrieve candidate functions. Function-based chunks preserve local semantics, but decorators, class state, and callers may remain outside the chunk. After a match, return to the current file and check the commit or file version represented by the index.
 
@@ -145,7 +146,7 @@ If rereading shows that the user has already made an equivalent fix, inspect the
 
 ### A failed edit report does not mean the file is unchanged
 
-The companion [`EditTool`](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py) in Bojie Li's book demonstrates a nonempty-old-string check, unique matching by default, and post-write checks. It writes the file before reporting syntax problems, with no automatic rollback. When the agent receives “syntax check failed,” it should read back the current file instead of retrying the original patch as though no edit occurred.
+The companion `EditTool`<sup>[【560】](../../book/references.md#ref-560)</sup> in Bojie Li's book demonstrates a nonempty-old-string check, unique matching by default, and post-write checks. It writes the file before reporting syntax problems, with no automatic rollback. When the agent receives “syntax check failed,” it should read back the current file instead of retrying the original patch as though no edit occurred.
 
 This small implementation does not provide version comparison or concurrent-write protection; host integration must supply them. Checkers should also use the language version and configuration actually supported by the project. A syntax check is not a complete type check or a business test.
 
@@ -163,7 +164,7 @@ Then use the project's existing tools, moving from inexpensive local checks to r
 | API or integration tests | Whether `limit=0` returns no rows and the entry point still rejects negatives | Whether other callers remain unaffected |
 | Related regressions | Whether export `0` remains unlimited and other report queries are unchanged | A defect-free repository or production environment |
 
-Python's [`ast.parse`](https://docs.python.org/3/library/ast.html#ast.parse) produces an AST without performing every compilation or scoping check. `py_compile` does not execute business assertions either. State the actual checker and its coverage rather than labeling everything “lint passed.”
+Python's `ast.parse`<sup>[【562】](../../book/references.md#ref-562)</sup> produces an AST without performing every compilation or scoping check. `py_compile` does not execute business assertions either. State the actual checker and its coverage rather than labeling everything “lint passed.”
 
 ### First establish that the test catches the old bug
 
@@ -234,7 +235,5 @@ If the same class of failure recurs, use [Chapter 25](../07-post-training/25-age
 
 ## References and source boundaries
 
-- Bojie Li, *Understanding AI Agents: Design Principles and Engineering Practice*, [relevant Chapter 5 passages](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307): search categories, edit formats, and immediate feedback. Pinned commit `985a49d35b9f50937f1f757cf25867672991ded7`; consulted 2026-09-14.
-- [`edit_tool.py` at the same commit](https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py): matching and post-write checking, especially the write-then-check sequence without automatic rollback.
-- [Language Server Protocol 3.17](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/): definitions, references, call hierarchies, and position encodings. Consulted 2026-09-14.
-- [Python `ast.parse` documentation](https://docs.python.org/3/library/ast.html#ast.parse): the boundary between AST parsing and complete compilation checks. Consulted 2026-09-14.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-24) for this chapter’s sources, reading suggestions, and source notes.

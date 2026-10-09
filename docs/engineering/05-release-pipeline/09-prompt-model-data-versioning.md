@@ -9,12 +9,20 @@ description: Link prompt, model snapshot, retrieval, and policy versions in a tr
 Prompts shape system behavior, yet many teams treat them as string constants that can be edited casually and take effect immediately. Without version numbers or change records, they cannot identify the last working version when something goes wrong. **A change to the prompt, model selection, or retrieval data can change the system’s output.** All three deserve the same version-control discipline as application code.
 
 ```mermaid
-flowchart LR
-    P["Prompt change"] --> V["Any of the three changes requires a new version"]
-    M["Model / routing change"] --> V
-    D["Data / knowledge base change"] --> V
-    V --> R["New version number + changelog + rollback support"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["Prompt"] --> V["Version each change"]
+    M["Model / routing"] --> V
+    D["Data / knowledge"] --> V
+    V --> R["Release record"]
 ```
+
+Any change to the prompt, model or routing, or data or knowledge base requires a new version. The release record includes the version number, changelog, and rollback support.
+
+Details of the illustrated steps and components:
+
+- Any of the three changes requires a new version
+- New version number + changelog + rollback support
 
 ## 9.2 Prompt versioning
 
@@ -106,8 +114,5 @@ Downstream systems parse outputs according to a schema version. If an independen
 
 ## References
 
-- [OpenAI: GPT-4o snapshots](https://developers.openai.com/api/docs/models/gpt-4o)
-- [OpenAI: Deprecations](https://developers.openai.com/api/docs/deprecations)
-- [DVC: Data Version Control](https://dvc.org/doc)
-- [MLflow: Model Registry](https://mlflow.org/docs/latest/model-registry.html)
-- [Google Cloud: MLOps continuous delivery and automation pipelines](https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-09) for this chapter’s sources, reading suggestions, and source notes.

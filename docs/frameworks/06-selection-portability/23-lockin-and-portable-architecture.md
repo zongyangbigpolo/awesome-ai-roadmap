@@ -13,11 +13,18 @@ Framework lock-in is often described as a vague risk. Start by separating three 
 3. **Observability and operational lock-in**: if trace formats, alert rules, and evaluation datasets depend on the framework's proprietary toolchain rather than open standards, switching frameworks means rebuilding those operational assets.
 
 ```mermaid
-flowchart TB
-    L["Lock-in risks"] --> L1["State-format lock-in<br/>Proprietary serialization"]
-    L --> L2["Orchestration lock-in<br/>Call ordering and failure handling<br/>coupled to the execution engine"]
-    L --> L3["Operational lock-in<br/>Proprietary trace formats<br/>and evaluation tools"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    L["Lock-in risks"] --> L1["State-format lock-in"]
+    L --> L2["Orchestration lock-in"]
+    L --> L3["Operational lock-in"]
 ```
+
+Details of the illustrated steps and components:
+
+- State-format lock-in Proprietary serialization
+- Orchestration lock-in Call ordering and failure handling coupled to the execution engine
+- Operational lock-in Proprietary trace formats and evaluation tools
 
 Begin with a concrete question: "If we switched frameworks today, which of these three asset groups would cost the most to migrate?" Teams instinctively worry about rewriting code. In practice, moving **historical state data** and **operational assets** is often more expensive than rewriting the business logic itself.
 
@@ -26,22 +33,23 @@ Begin with a concrete question: "If we switched frameworks today, which of these
 A common architectural response borrows from **hexagonal architecture, or ports and adapters**: put the business logic in a core that does not depend on a particular framework, and confine framework-specific code to adapters.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    subgraph Core["Business core: framework-independent"]
-        BL["Domain logic: task definitions,<br/>business rules, evaluation criteria"]
-    end
-    subgraph Adapters["Adapter layer"]
-        A1["LangGraph adapter"]
-        A2["SK / MAF adapter"]
-        A3["Other agent-runtime adapters"]
-    end
-    A1 -->|Depends on domain interfaces| BL
-    A2 -->|Depends on domain interfaces| BL
-    A3 -->|Depends on domain interfaces| BL
-    A1 --> R1["Runtime 1"]
-    A2 --> R2["Runtime 2"]
-    A3 --> R3["Runtime 3"]
+    A["Framework adapter"] -->|Depends on| CORE["Domain interfaces"]
+    A --> RUN["Selected runtime"]
 ```
+
+Keep task definitions, business rules, and evaluation criteria in a framework-independent core. LangGraph, SK/MAF, and other runtime adapters depend on its domain interfaces, not the reverse. Each adapter connects to its corresponding runtime; a framework migration should replace the adapter and runtime without rewriting the domain rules.
+
+Figure conditions and labels:
+
+- Depends on domain interfaces
+- Depends on domain interfaces
+- Depends on domain interfaces
+
+Details of the illustrated steps and components:
+
+- Domain logic: task definitions, business rules, evaluation criteria
 
 The arrows represent code dependencies. Adapters depend on domain interfaces and concrete runtimes; the domain core does not import a framework in return. For an agent system, this means:
 
@@ -58,25 +66,34 @@ A useful minimum contract generally includes a business request/operation ID, te
 The preceding analysis can be organized into a decision process:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"What is the team's primary stack?"}
-    Q1 -->|".NET"| SK["Evaluate MAF for new agents<br/>Check migration and support<br/>for existing SK systems"]
-    Q1 -->|"JVM"| JV["Evaluate LangChain4j / Spring AI<br/>Keep the existing service framework"]
-    Q1 -->|"Python or no mandated stack"| Q2{"Is the main difficulty private-data quality<br/>or model/tool orchestration?"}
-    Q2 -->|"Data quality"| LI["Evaluate LlamaIndex first"]
-    Q2 -->|"Model/tool orchestration"| Q3{"Need long-running execution,<br/>human approval, or fine-grained<br/>state recovery?"}
-    Q3 -->|"Yes"| LG["Evaluate LangGraph / MAF<br/>or an already-integrated<br/>durable workflow engine"]
-    Q3 -->|"No"| Q4{"Need several specialist agents<br/>to collaborate?"}
-    Q4 -->|"Yes, with distributed execution"| AG["Compare runtime and message boundaries<br/>Consider AutoGen only for<br/>maintaining existing systems"]
-    Q4 -->|"Yes, with rapid role-based setup"| CR["Evaluate CrewAI"]
-    Q4 -->|"No; prioritize types and testability"| PA["Evaluate PydanticAI"]
-    Q4 -->|"No; standard tool loop"| LC["LangChain create_agent<br/>or a native SDK"]
-    Q5{"Do prompts have explicit evaluation metrics<br/>and need to transfer across models?"}
-    LC -.Optional addition.-> Q5
-    LI -.Can also optimize subtasks.-> Q5
-    LG -.Can also optimize subtasks.-> Q5
-    Q5 -->|"Yes"| DS["Also evaluate DSPy<br/>for compiling and optimizing subtasks"]
+    STACK["Check team stack"] --> NEED["Find main difficulty"]
+    NEED --> CONTROL["Check execution needs"]
+    CONTROL --> TEST["Evaluate candidates"]
+    TEST -.Optional.-> DSPY["Optimize subtasks"]
 ```
+
+Apply the decision criteria in that order:
+
+- For .NET, evaluate MAF for new agents and check migration and support for existing SK systems. For JVM, evaluate LangChain4j or Spring AI while retaining the service framework.
+- For Python or an unconstrained stack, start with LlamaIndex when private-data quality is the main difficulty. For model/tool orchestration, check whether long-running execution, human approval, or fine-grained recovery requires LangGraph, MAF, or an already-integrated durable workflow engine.
+- Without that durability requirement, ask whether several specialist agents must collaborate. Distributed collaboration calls for comparing runtime and message boundaries; consider AutoGen only for maintaining existing systems. CrewAI is a candidate for rapid role-based collaboration.
+- Without multi-agent collaboration, prioritize PydanticAI for types and testability, or LangChain `create_agent` or a native SDK for a standard tool loop.
+- DSPy is an optional addition when prompts have explicit evaluation metrics and must transfer across models. It can optimize subtasks in LangChain, LlamaIndex, or durable orchestration; it does not replace their runtime responsibilities.
+
+Details of the illustrated steps and components:
+
+- Evaluate MAF for new agents Check migration and support for existing SK systems
+- Evaluate LangChain4j / Spring AI Keep the existing service framework
+- Is the main difficulty private-data quality or model/tool orchestration?
+- Need long-running execution, human approval, or fine-grained state recovery?
+- Evaluate LangGraph / MAF or an already-integrated durable workflow engine
+- Need several specialist agents to collaborate?
+- Compare runtime and message boundaries Consider AutoGen only for maintaining existing systems
+- LangChain create_agent or a native SDK
+- Do prompts have explicit evaluation metrics and need to transfer across models?
+- Also evaluate DSPy for compiling and optimizing subtasks
 
 This diagram narrows the candidate set; it is not a brand-recommendation algorithm. Language affects integration cost, but every branch must still satisfy state, recovery, and permission requirements. MAF succeeds SK and AutoGen, and AutoGen is in maintenance mode. PydanticAI already has durable-execution integrations; Workflows and CrewAI Flow also deserve consideration when their runtimes fit the requirements.
 
@@ -92,15 +109,25 @@ If an existing system is deeply tied to one framework, a wholesale rewrite is a 
 4. **Design state migration separately.** Distinguish completed history, active tasks, and externally hosted sessions. Active tasks can often finish on the old runtime. If they must move, re-enter from confirmed business state and check approvals, idempotency keys, and pending events. A format-conversion script alone does not make migration safe.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    A["Old implementation<br/>Handles all traffic"] --> B["Capture the behavior baseline<br/>in contract tests"]
-    B --> C["Implement one capability<br/>behind a facade or adapter"]
-    C --> D["Validate and release that capability<br/>Use canary traffic if appropriate"]
-    D --> E["Route the accepted capability to the new system<br/>Keep unmigrated capabilities on the old system"]
-    E --> G{"More capabilities to migrate?"}
+    A["Old implementation"] --> B["Capture the behavior<br/>baseline"]
+    B --> C["Implement one<br/>capability"]
+    C --> D["Validate and release<br/>that capability"]
+    D --> E["Switch accepted<br/>traffic"]
+    E --> G["More capabilities to<br/>migrate?"]
     G -->|Yes| C
-    G -->|No| F["Drain or migrate active tasks under control<br/>Retire old dependencies only when<br/>acceptance and rollback conditions are satisfied"]
+    G -->|No| F["Retire safely"]
 ```
+
+Details of the illustrated steps and components:
+
+- Old implementation Handles all traffic
+- Capture the behavior baseline in contract tests
+- Implement one capability behind a facade or adapter
+- Validate and release that capability Use canary traffic if appropriate
+- Route the accepted capability to the new system Keep unmigrated capabilities on the old system
+- Drain or migrate active tasks under control Retire old dependencies only when acceptance and rollback conditions are satisfied
 
 ## 23.5 Common mistakes
 
@@ -143,13 +170,5 @@ If asked, "Does exposing every tool through MCP eliminate lock-in?", distinguish
 
 ## References
 
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [Semantic Kernel: Process Framework](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework)
-- [Microsoft Agent Framework overview and successor relationship](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [SK → MAF migration guide](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/)
-- [AutoGen official maintenance-mode notice](https://github.com/microsoft/autogen)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [OpenTelemetry Generative AI semantic-conventions repository](https://github.com/open-telemetry/semantic-conventions-genai)
-- [Martin Fowler: StranglerFigApplication](https://martinfowler.com/bliki/StranglerFigApplication.html)
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Alistair Cockburn: Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-23) for this chapter’s sources, reading suggestions, and source notes.

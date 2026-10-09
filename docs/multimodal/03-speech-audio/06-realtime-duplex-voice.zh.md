@@ -14,14 +14,22 @@ description: 解释级联与原生语音对话的并发监听、双流建模、�
 
 实现语音对话有两种根本不同的架构路线：
 
+**级联管线**
+
 ```mermaid
-flowchart LR
-    subgraph Cascade["级联管线"]
-        A1[ASR] --> A2[LLM 文本推理] --> A3[TTS]
-    end
-    subgraph Native["原生语音到语音"]
-        B1[音频编码] --> B2["单一模型<br/>联合建模语音理解与生成"] --> B3[音频解码]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1[ASR] --> A2[LLM 文本推理] --> A3[TTS]
+
+```
+
+**原生语音到语音**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1[音频编码] --> B2["单一模型<br/>联合建模语音理解与生成"] --> B3[音频解码]
+
 ```
 
 - **级联管线**：ASR → 文本 LLM → TTS，组件便于替换、审计和接入文本工具。仅传递转写时会丢失部分语调、情绪和背景信息，但可以额外传递时间戳、声学标签或控制 TTS 风格。流式组件能够流水线重叠，不必等整句识别完再开始所有后续工作；代价是部分转写修订可能让已经生成或播出的回复失效。
@@ -95,10 +103,5 @@ WebRTC 提供实时媒体传输、抖动缓冲等机制，但不能消除网络�
 
 ## 参考资料
 
-- [Moshi: a speech-text foundation model for real-time dialogue](https://arxiv.org/abs/2410.00037)
-- [Generative Spoken Dialogue Language Modeling (dGSLM)](https://arxiv.org/abs/2203.16502)
-- [OpenAI GPT-4o System Card](https://openai.com/index/gpt-4o-system-card/)
-- [GPT-4o System Card（原始报告）](https://arxiv.org/abs/2410.21276)
-- [OpenAI Realtime API 官方文档](https://platform.openai.com/docs/guides/realtime)
-- [OpenAI Realtime：会话状态与打断处理](https://developers.openai.com/api/docs/guides/realtime-conversations/)
-- [Kyutai Moshi 项目主页](https://kyutai.org/moshi)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-06)。

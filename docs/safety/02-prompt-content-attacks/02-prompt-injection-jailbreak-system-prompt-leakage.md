@@ -17,12 +17,17 @@ These three attack categories are often conflated, but their goals—and the way
 These attacks can be combined, but they are not synonyms. Role fields and message structure do exist; they simply cannot guarantee that a model always interprets content according to its trust level. Jailbreaks also involve failures of safety alignment to generalize, while system prompt leakage is one possible outcome. To determine whether an actual authorization violation occurred, examine whether tool services and data egress controls enforce authorization independently. A model saying “I have ignored the rules” is not, by itself, evidence of success.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    ROOT["The model may mishandle instruction priority<br/>or safety constraints"] --> PI[Prompt Injection]
-    ROOT --> JB[Jailbreak]
-    PI --> SPL[System prompt leakage]
+    ROOT["Instruction /<br/>safety failure"] --> PI["Prompt<br/>Injection"]
+    ROOT --> JB["Jailbreak"]
+    PI --> SPL["System prompt<br/>leakage"]
     JB --> SPL
 ```
+
+Details of the illustrated steps and components:
+
+- The model may mishandle instruction priority or safety constraints
 
 ## 2.2 Revisiting Prompt Injection and Extending the Taxonomy
 
@@ -57,13 +62,22 @@ Multi-turn detection should consider relevant history, but topic drift is only a
 Unlike prompt injection that redirects the model to another task, a jailbreak aims to circumvent the model's own safety alignment. It usually requires no third-party payload: the attacker initiates the interaction directly.
 
 ```mermaid
-flowchart TB
-    J[Jailbreak techniques] --> J1[Role-play<br/>DAN / fictional personas]
-    J --> J2[Contextual framing<br/>Academic research / fiction / debug mode]
-    J --> J3[Gradual multi-turn escalation<br/>Crescendo]
-    J --> J4[Adversarial suffixes<br/>Hard-to-read suffixes found by automated search]
-    J --> J5[Many-shot techniques<br/>Many in-context examples encourage imitation]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    J["Jailbreak<br/>techniques"] --> J1["Role-play"]
+    J --> J2["Contextual<br/>framing"]
+    J --> J3["Gradual<br/>multi-turn<br/>escalation"]
+    J --> J4["Adversarial<br/>suffixes"]
+    J --> J5["Many-shot<br/>techniques"]
 ```
+
+Details of the illustrated steps and components:
+
+- Role-play DAN / fictional personas
+- Contextual framing Academic research / fiction / debug mode
+- Gradual multi-turn escalation Crescendo
+- Adversarial suffixes Hard-to-read suffixes found by automated search
+- Many-shot techniques Many in-context examples encourage imitation
 
 | Category | Approach | Characteristics |
 |---|---|---|
@@ -144,9 +158,5 @@ Model updates and newly published jailbreak techniques can invalidate existing d
 
 ## References
 
-- [OWASP LLM01:2025 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
-- [OWASP LLM07:2025 System Prompt Leakage](https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/)
-- [Many-shot Jailbreaking (Anthropic)](https://www.anthropic.com/research/many-shot-jailbreaking)
-- [Universal and Transferable Adversarial Attacks on Aligned Language Models](https://arxiv.org/abs/2307.15043)
-- [Ignore This Title and HackAPrompt: Exposing Systemic Vulnerabilities of LLMs](https://arxiv.org/abs/2311.16119)
-- [MITRE ATLAS: Prompt Injection](https://atlas.mitre.org/techniques/AML.T0051)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-02) for this chapter’s sources, reading suggestions, and source notes.

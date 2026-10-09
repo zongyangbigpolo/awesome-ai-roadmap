@@ -63,16 +63,15 @@ $$
 At t=1, the conditioning context contains no generated tokens. Logarithms avoid underflow from multiplying many small probabilities. Once length penalties or constraints are introduced, the search no longer optimizes raw sequence probability.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S["Start with one prefix"] --> E["Expand next-token candidates<br/>for active beams"]
-    E --> EOS{"Has the candidate ended?"}
-    EOS -->|EOS| F["Add to completed candidates"]
-    EOS -->|Not ended| B["Keep B active prefixes<br/>by accumulated score"]
-    B --> STOP{"Stopping condition met?"}
+    E["Expand active beams"] --> B["Separate EOS; prune active beams"]
+    B --> STOP{"Stop?"}
     STOP -->|No| E
-    STOP -->|Yes| R["Return completed sequences<br/>using the specified score"]
-    F --> R
+    STOP -->|Yes| R["Rank completed sequences"]
 ```
+
+Start with one prefix. Each expansion proposes next-token candidates for the active beams. Move EOS candidates to the completed set; among unfinished candidates retain B prefixes by accumulated score. If the stopping condition is not met, expand again. At termination, return completed sequences under the specified scoring rule; reaching EOS for one candidate does not by itself stop all beams.
 
 The diagram omits implementation-specific pruning of the completed set. EOS candidates should not continue to expand like active prefixes. `early_stopping`, maximum length, and the scoring of completed sequences all affect the result.
 
@@ -173,10 +172,5 @@ Selection rules, sequence scoring, output constraints, and execution acceleratio
 
 ## References
 
-- [The Curious Case of Neural Text Degeneration](https://arxiv.org/abs/1904.09751)
-- [If Beam Search Is the Answer, What Was the Question?](https://arxiv.org/abs/2010.02650)
-- [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/html/2211.17192v2)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [PagedAttention: cache sharing, including beam search](https://arxiv.org/abs/2309.06180)
-- [Qwen3-30B-A3B official model card](https://huggingface.co/Qwen/Qwen3-30B-A3B)
-- [vLLM: Batch Invariance](https://docs.vllm.ai/en/stable/features/batch_invariance/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-12) for this chapter’s sources, reading suggestions, and source notes.

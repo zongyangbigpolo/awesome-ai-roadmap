@@ -15,14 +15,14 @@ description: 以容量、ANN 近似召回、业务证据覆盖和请求链路为
 ## 9.2 讨论生产方案时常用的框架
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. 场景与规模] --> S2[2. 选型理由]
-    S2 --> S3[3. 索引与参数]
-    S3 --> S4[4. 性能指标]
-    S4 --> S5[5. 遇到的瓶颈]
-    S5 --> S6[6. 怎么解决的]
-    S6 --> S7[7. 现在还有什么问题]
+    S1[场景与选型] --> S2[索引与测量]
+    S2 --> S3[瓶颈与解决办法]
+    S3 --> S4[剩余问题]
 ```
+
+先说明场景与规模，再解释选型理由。随后给出索引与参数、实测性能、遇到的瓶颈、采取的解决办法，以及仍然存在的问题。
 
 前四步描述的是系统现状，后面三步决定了方案是否真的能落地：系统卡在哪里、怎么定位、怎么处理，以及还剩哪些风险。
 
@@ -207,9 +207,5 @@ P50 正常但 P99 很高，常见原因：
 
 ## 参考资料
 
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [hnswlib v0.8.0：内部 ID、底层邻接容量与载荷布局](https://github.com/nmslib/hnswlib/blob/v0.8.0/hnswlib/hnswalg.h)
-- [pgvector：精确基线、过滤与迭代扫描](https://github.com/pgvector/pgvector)
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [Matryoshka Representation Learning](https://arxiv.org/abs/2205.13147)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-09)。

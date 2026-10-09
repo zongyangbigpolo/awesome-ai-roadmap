@@ -10,21 +10,36 @@ description: Compare visual feature concatenation, cross-attention, and discrete
 
 “Fusion” is the point at which representations from different modalities begin participating in a shared computation. Three questions must be considered separately: **are the representations continuous or discrete, which layers allow them to interact, and which parameters are trained?** Visual features concatenated at the input can participate in self-attention at every subsequent layer; architectures cannot be ranked by assuming that earlier integration is always stronger. The literature does not use Early/Late Fusion consistently, so the comparison below follows the actual computation paths. Traditional late fusion often means combining decisions after each modality makes an independent prediction; this should not be confused with projector-based concatenation.
 
+**Continuous feature projection and concatenation**
+
 ```mermaid
-flowchart LR
-    subgraph Late["Continuous feature projection<br/>and concatenation"]
-        L1[Frozen or fine-tuned<br/>vision encoder] --> L2[Projector] --> L3[Language model backbone]
-    end
-    subgraph Cross["Cross-Attention Fusion"]
-        C1[Vision encoder] --> C2[Resampler] --> C3["Language model<br/>cross-attention layers"]
-    end
-    subgraph Early["Early Fusion /<br/>Unified Tokenization"]
-        E1[Image discretization] --> E4[Unified token sequence]
-        E2["Audio discretization<br/>Optional extension,<br/>not the Chameleon configuration"] --> E4
-        E3[Text tokens] --> E4
-        E4 --> E5[Joint modeling with<br/>a single Transformer]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1[Frozen or fine-tuned<br/>vision encoder] --> L2[Projector] --> L3[Language model backbone]
+
 ```
+
+**Cross-Attention Fusion**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1[Vision encoder] --> C2[Resampler] --> C3["Language model<br/>cross-attention layers"]
+
+```
+
+**Early Fusion / Unified Tokenization**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E1[Image tokens] --> E4[Unified sequence]
+    E3[Text tokens] --> E4
+    E4 --> E5[Single Transformer]
+
+```
+
+Images are discretized before joining text tokens in the unified sequence. Discretized audio can be an optional extension to this pattern, but is not part of the Chameleon configuration shown by the image-and-text paths. A single Transformer jointly models the sequence.
 
 These are not mutually exclusive historical stages. They are three sets of engineering tradeoffs in use alongside one another:
 
@@ -141,15 +156,5 @@ A fixed number of latent tokens controls sequence length on the language side, b
 
 ## References
 
-- [CLIP: Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020)
-- [Sigmoid Loss for Language Image Pre-Training (SigLIP)](https://arxiv.org/abs/2303.15343)
-- [ImageBind: One Embedding Space To Bind Them All](https://arxiv.org/abs/2305.05665)
-- [Flamingo: a Visual Language Model for Few-Shot Learning](https://arxiv.org/abs/2204.14198)
-- [Perceiver IO: A General Architecture for Structured Inputs & Outputs](https://arxiv.org/abs/2107.14795)
-- [LLaVA: Visual Instruction Tuning](https://arxiv.org/abs/2304.08485)
-- [Qwen-VL: Position-aware vision–language adapter](https://arxiv.org/abs/2308.12966)
-- [Chameleon: Mixed-Modal Early-Fusion Foundation Models](https://arxiv.org/abs/2405.09818)
-- [Neural Discrete Representation Learning (VQ-VAE)](https://arxiv.org/abs/1711.00937)
-- [Taming Transformers for High-Resolution Image Synthesis (VQGAN)](https://arxiv.org/abs/2012.09841)
-- [OpenAI GPT-4o System Card](https://openai.com/index/gpt-4o-system-card/)
-- [GPT-4o System Card (original report)](https://arxiv.org/abs/2410.21276)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-01) for this chapter’s sources, reading suggestions, and source notes.

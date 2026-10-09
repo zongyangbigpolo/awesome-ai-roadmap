@@ -58,13 +58,24 @@ print(result.output.label, result.output.score)
 ## 21.3 类型安全带来的工程收益
 
 ```mermaid
-flowchart LR
-    A["模型输出的原始文本"] --> B{"output_type 校验"}
-    B -->|"通过"| C["强类型对象<br/>可直接用于业务逻辑"]
-    B -->|"不通过且有预算"| D["反馈校验错误并重试"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["模型输出的原始文本"] --> B["output_type 校验"]
+    B -->|"通过"| C["强类型对象"]
+    B -->|"允许重试"| D["反馈错误后重试"]
     D --> B
-    B -->|"预算耗尽"| E["失败返回 / 应用回退"]
+    B -->|"预算耗尽"| E["失败或应用降级"]
 ```
+
+图中条件与标签：
+
+- 不通过且有预算
+- 反馈校验错误并重试
+
+图中各项的完整含义：
+
+- 强类型对象 可直接用于业务逻辑
+- 失败返回 / 应用回退
 
 当输出不满足约束时，框架可以将校验错误反馈给模型并有限重试；预算耗尽仍会失败，需要应用处理。工具输出、供应商原生结构化输出、提示式输出有不同支持条件，不能假定所有模型都执行同一种严格 JSON Schema 约束。静态类型工具能检查调用代码，不会验证外部事实。
 
@@ -140,12 +151,5 @@ CrewAI 的 `role`/`goal`/`backstory` 是 Prompt 工程的组织方式，不代�
 
 ## 参考资料
 
-- [PydanticAI 官方文档](https://ai.pydantic.dev/)
-- [PydanticAI: Agents 核心概念](https://pydantic.dev/docs/ai/core-concepts/agent/)
-- [PydanticAI: Function Tools](https://ai.pydantic.dev/tools/)
-- [PydanticAI: Dependencies 依赖注入](https://ai.pydantic.dev/dependencies/)
-- [AutoGen 官方文档](https://microsoft.github.io/autogen/stable/)
-- [CrewAI 官方文档](https://docs.crewai.com/)
-- [PydanticAI: 输出模式与校验](https://pydantic.dev/docs/ai/core-concepts/output/)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [AutoGen: State](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-21)。

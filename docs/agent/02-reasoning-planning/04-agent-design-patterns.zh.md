@@ -21,16 +21,17 @@ description: 比较 ReAct、Plan-and-Execute、Router、Evaluator-Optimizer 等 
 这三类范式经常混用，实际系统里更常见的是分层组合：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[用户目标] --> WF[Workflow / 安全边界]
-    WF --> P[Planner / 全局计划]
-    P --> E[Executor]
-    E --> R[局部 ReAct 循环]
-    R --> V[Verifier / Evaluator]
-    V -->|通过| DONE[完成]
+    G["用户目标"] --> WF["Workflow / 安全边界"]
+    WF --> P["Planner / 全局计划"]
+    P --> E["Executor"]
+    E --> R["局部 ReAct 循环"]
+    R --> V["Verifier / Evaluator"]
+    V -->|通过| DONE["完成"]
     V -->|局部失败| R
     V -->|计划失效| P
-    V -->|需要人工判断| H[Human-in-the-loop]
+    V -->|需要人工判断| H["Human-in-the-loop"]
 ```
 
 ## 4.2 ReAct：推理与行动交替
@@ -39,14 +40,15 @@ ReAct（Reasoning and Acting）将推理与外部行动结合起来。经典表�
 
 > **Thought → Action → Observation → Thought**
 
-这是 [ReAct 原论文](https://arxiv.org/abs/2210.03629)的示意，不要求每次行动前都输出一段 Thought：原文在决策任务中允许稀疏出现推理步骤，也用这些步骤生成、跟踪和更新计划。其主要实验通过上下文示例运行，不在每次工具调用后更新模型权重；论文另有微调实验，不能与提示式 ReAct 混为一谈。
+这是 ReAct 原论文<sup>[【268】](../../book/references.zh.md#ref-268)</sup>的示意，不要求每次行动前都输出一段 Thought：原文在决策任务中允许稀疏出现推理步骤，也用这些步骤生成、跟踪和更新计划。其主要实验通过上下文示例运行，不在每次工具调用后更新模型权重；论文另有微调实验，不能与提示式 ReAct 混为一谈。
 
 ```mermaid
-flowchart LR
-    T[Thought / Decide] --> A[Action]
-    A --> O[Observation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Thought / Decide"] --> A["Action"]
+    A --> O["Observation"]
     O --> T
-    T --> F[Final Answer]
+    T --> F["Final Answer"]
 ```
 
 ### 4.2.1 一轮 ReAct 如何运行
@@ -143,13 +145,14 @@ ReAct 常被概括为“走一步看一步”，其主要风险包括：
 - 关键步骤的外部验证。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    O[Observation] --> D[Decide]
-    D --> C{动作是否无进展或越权?}
-    C -->|是| RP[重新规划或停止]
-    C -->|否| A[Action]
-    A --> U[更新结构化状态]
-    U --> G{仍符合全局目标?}
+    O["Observation"] --> D["Decide"]
+    D --> C["动作是否无进展或越权?"]
+    C -->|是| RP["重新规划或停止"]
+    C -->|否| A["Action"]
+    A --> U["更新结构化状态"]
+    U --> G["仍符合全局目标?"]
     G -->|是| O
     G -->|否| RP
 ```
@@ -164,20 +167,55 @@ Plan-and-Execute 将全局规划与局部执行分开。成熟实现通常包含
 
 Planner、Executor 和 Replanner 可以使用不同模型，也可以由同一个模型在不同上下文中承担。
 
+生成并执行计划。
+
 ```mermaid
 flowchart TB
-    G[目标] --> P[Planner]
-    P --> PLAN[计划 / DAG]
-    PLAN --> E[Executor]
-    E --> O[执行结果]
-    O --> V{计划仍然有效?}
-    V -->|是| N{还有步骤?}
-    N -->|是| E
-    N -->|否| ACCEPT{整体验收通过?}
-    ACCEPT -->|是| DONE[完成]
-    ACCEPT -->|否| RP
-    V -->|否| RP[Replanner]
+    G[目标]
+    P[Planner]
+    PLAN[计划 / DAG]
+    E[Executor]
+    O[执行结果]
+    G --> P
+    P --> PLAN
+    PLAN --> E
+    E --> O
+```
+
+检查执行是否使计划失效。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PLAN["计划 / DAG"]
+    E["Executor"]
+    O["执行结果"]
+    V["计划仍然有效?"]
+    RP["Replanner"]
+    PLAN --> E
+    E --> O
+    O --> V
+    V -->|否| RP
     RP --> PLAN
+```
+
+区分剩余步骤与整体验收。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    V["计划仍然有效?"]
+    N["还有步骤?"]
+    E["Executor"]
+    ACCEPT["整体验收通过?"]
+    DONE["完成"]
+    RP["Replanner"]
+    V -->|是| N
+    N -->|是| E
+    N -->|否| ACCEPT
+    ACCEPT -->|是| DONE
+    ACCEPT -->|否| RP
+    V -->|否| RP
 ```
 
 ### 4.3.1 计划不应只是自然语言列表
@@ -290,11 +328,12 @@ ReWOO（Reasoning WithOut Observation）将 Planner、Worker 和 Solver 解耦�
 当计划包含明确依赖时，可以将其表示为有向无环图：
 
 ```mermaid
-flowchart LR
-    A[调研竞品 A] --> D[对比分析]
-    B[调研竞品 B] --> D
-    C[收集行业趋势] --> E[趋势影响分析]
-    D --> F[生成报告]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["调研竞品 A"] --> D["对比分析"]
+    B["调研竞品 B"] --> D
+    C["收集行业趋势"] --> E["趋势影响分析"]
+    D --> F["生成报告"]
     E --> F
 ```
 
@@ -308,7 +347,7 @@ LLMCompiler 类架构通常包含：
 - Task Fetching Unit：依赖满足后立即调度任务；
 - Executor：实际执行已就绪的工具任务。
 
-这是 [LLMCompiler 论文](https://arxiv.org/abs/2312.04511)列出的三个组件；带重规划的实现还可以加入 Joiner，汇总结果并决定结束或继续。不要把 Joiner 当作执行工具的 Executor。
+这是 LLMCompiler 论文<sup>[【454】](../../book/references.zh.md#ref-454)</sup>列出的三个组件；带重规划的实现还可以加入 Joiner，汇总结果并决定结束或继续。不要把 Joiner 当作执行工具的 Executor。
 
 这类设计关注的不只是规划质量，也关注执行并行度、模型调用次数和总体延迟。
 
@@ -317,11 +356,12 @@ LLMCompiler 类架构通常包含：
 Reflection 在生成或执行之后加入评估环节：
 
 ```mermaid
-flowchart LR
-    G[Generate / Execute] --> E[Evaluate]
-    E --> D{达到标准?}
-    D -->|是| DONE[完成]
-    D -->|否| FB[生成反馈]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --> E["Evaluate"]
+    E --> D["达到标准?"]
+    D -->|是| DONE["完成"]
+    D -->|否| FB["生成反馈"]
     FB --> G
 ```
 
@@ -379,14 +419,15 @@ Reflexion 是 Reflection 的一种具体范式。它不更新模型权重，而�
 这里不是要求调用四个独立模型：记忆是存储，Evaluator 也可以使用环境奖励、规则或测试。模块如何实现取决于任务能提供什么反馈。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    A[Actor] --> ENV[环境 / 工具]
-    ENV --> TRAJ[执行轨迹与结果]
-    TRAJ --> E[Evaluator]
-    E --> PASS{成功?}
-    PASS -->|是| DONE[结束]
-    PASS -->|否| SR[Self-Reflection]
-    SR --> MEM[情景记忆]
+    A["Actor"] --> ENV["环境 / 工具"]
+    ENV --> TRAJ["执行轨迹与结果"]
+    TRAJ --> E["Evaluator"]
+    E --> PASS["成功?"]
+    PASS -->|是| DONE["结束"]
+    PASS -->|否| SR["Self-Reflection"]
+    SR --> MEM["情景记忆"]
     MEM --> A
 ```
 
@@ -433,23 +474,14 @@ Reflexion 论文报告：在其 2023 年的实验设置中，基于 GPT-4 的 Re
 
 ```mermaid
 flowchart TB
-    G[目标] --> P[Plan-and-Execute<br/>生成全局里程碑]
-    P --> S1[步骤 1]
-    P --> S2[步骤 2]
-    P --> S3[步骤 N]
-
-    S1 --> R1[ReAct<br/>局部探索与工具调用]
-    S2 --> R2[ReAct<br/>局部探索与工具调用]
-    S3 --> R3[ReAct<br/>局部探索与工具调用]
-
-    R1 --> V[Reflection / Verifier]
-    R2 --> V
-    R3 --> V
-
+    P[Plan-and-Execute] --> R[各步骤的 ReAct]
+    R --> V[反思与验证]
     V -->|局部失败| RETRY[局部重试]
     V -->|计划失效| P
     V -->|通过| DONE[完成]
 ```
+
+目标进入 Plan-and-Execute，生成全局里程碑以及第 1 至 N 个步骤。每一步都有自己的 ReAct 循环，负责局部探索与工具调用，所有步骤循环汇入同一反思与验证阶段。图中一个 ReAct 方框表示各步骤重复采用的循环，不意味着共享同一个上下文，也不表示这些步骤必须串行执行。
 
 职责划分为：
 
@@ -467,14 +499,15 @@ Agentic Workflow 用确定性流程包围概率性决策：
 按 Anthropic《Building Effective Agents》的术语，Router、固定并行分支和 Evaluator-Optimizer 都可以是 Workflow：分别负责分流、聚合独立工作、按反馈迭代。循环或多次 LLM 调用本身不构成自主 Agent；关键在于后续路径是预先编码，还是由模型在运行时动态选择。
 
 ```mermaid
-flowchart LR
-    IN[输入] --> V[校验]
-    V --> ROUTE[固定路由]
-    ROUTE --> AG[受限 Agent 节点]
-    AG --> CHECK[确定性验证]
-    CHECK -->|通过| OUT[输出]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["输入"] --> V["校验"]
+    V --> ROUTE["固定路由"]
+    ROUTE --> AG["受限 Agent 节点"]
+    AG --> CHECK["确定性验证"]
+    CHECK -->|通过| OUT["输出"]
     CHECK -->|可修复| AG
-    CHECK -->|高风险| HUMAN[人工审核]
+    CHECK -->|高风险| HUMAN["人工审核"]
 ```
 
 以客服系统为例：
@@ -503,19 +536,22 @@ flowchart LR
 还可以从两个基础维度判断：
 
 ```mermaid
+%%{init: {"quadrantChart": {"chartWidth": 440, "chartHeight": 440, "quadrantTextTopPadding": 100}}}%%
 quadrantChart
-    title Task complexity and quality requirements
-    x-axis Low complexity --> High complexity
-    y-axis Low quality requirement --> High quality requirement
-    quadrant-1 Plan-and-Execute plus Reflection
-    quadrant-2 ReAct plus Reflection
-    quadrant-3 Simple workflow
-    quadrant-4 Plan-and-Execute
+    title 复杂度与质量要求
+    x-axis "低复杂度" --> "高复杂度"
+    y-axis "较低质量要求" --> "较高质量要求"
+    quadrant-1 "规划与执行加反思"
+    quadrant-2 "ReAct 加反思"
+    quadrant-3 "简单工作流"
+    quadrant-4 "规划与执行"
     ReAct: [0.30, 0.40]
-    Plan-and-Execute: [0.78, 0.48]
-    Reflection: [0.40, 0.82]
-    Hybrid Agent: [0.82, 0.85]
+    "规划": [0.78, 0.48]
+    "反思": [0.40, 0.82]
+    "混合": [0.82, 0.85]
 ```
+
+图中“规划”指 Plan-and-Execute，“反思”指 Reflection，“混合”指混合型 Agent。
 
 二维图只是帮助理解。实际选择还需考虑风险、延迟、成本、可验证性和环境变化速度。
 
@@ -608,10 +644,5 @@ ReAct、Plan-and-Execute 与 Reflection 分别解决三个不同问题：
 
 ## 参考资料
 
-- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366)
-- [Reflexion 原文实验设置与表 1–2](https://arxiv.org/html/2303.11366v4)
-- [ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models](https://arxiv.org/abs/2305.18323)
-- [An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [LangChain: Planning Agents](https://www.langchain.com/blog/planning-agents)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-04)。

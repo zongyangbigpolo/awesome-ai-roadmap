@@ -6,6 +6,8 @@ An English-first, bilingual handbook for AI engineering interviews, covering mod
 
 For a continuous reading path, start with the [book contents](docs/book/README.md): front matter, nine parts, and closing matter. Every chapter has an English source and a complete Simplified Chinese companion. Each language uses the same source text for its website and EPUB editions.
 
+The [central bibliography](docs/book/references.md) collects numbered sources and chapter-specific reading notes. Superscript citation numbers in the chapters link to those entries.
+
 Start changes in English and review the corresponding Chinese update in **the same PR**. CI checks coverage and synchronization; it does not secretly translate the book or refresh stale records. After merge, separate workflows publish the site and produce downloadable EPUBs. Do not maintain separate prose for web and EPUB or commit generated `.epub` files. Nothing is uploaded to KDP automatically.
 
 **Download an EPUB:** open [Build EPUB](https://github.com/zongyangbigpolo/awesome-ai-roadmap/actions/workflows/epub.yml), select a successful run, and download the English or Chinese artifact from **Artifacts**. The names are `ai-engineering-interview-en-epub` and `ai-engineering-interview-zh-CN-epub`. Unzip it to obtain the book and its build reports. Artifacts are retained for up to 90 days; a maintainer can use **Run workflow** to rebuild an expired download. With the export dependencies installed, run `python3 scripts/build_epub.py --language en` or use `--language zh-CN`. See the [maintenance guide](book/README.md). A valid EPUB is not, by itself, evidence of KDP eligibility or visual acceptance.

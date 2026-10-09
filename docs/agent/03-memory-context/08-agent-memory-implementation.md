@@ -22,15 +22,16 @@ Following this chain raises six main questions:
 A production memory system is not “conversation history plus a vector database,” but a complete data pipeline:
 
 ```mermaid
-flowchart LR
-    O[Observation] --> WM[Working Memory]
-    WM --> C[Memory Candidate]
-    C --> P[Write Policy]
-    P --> S[Hybrid Stores]
-    S --> R[Hybrid Retrieval]
-    R --> RR[Rerank]
-    RR --> CB[Context Builder]
-    CB --> M[Model / Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --> WM["Working Memory"]
+    WM --> C["Memory Candidate"]
+    C --> P["Write Policy"]
+    P --> S["Hybrid Stores"]
+    S --> R["Hybrid Retrieval"]
+    R --> RR["Rerank"]
+    RR --> CB["Context Builder"]
+    CB --> M["Model / Agent"]
     M --> O
 ```
 
@@ -91,35 +92,24 @@ A description closer to implementation is:
 
 > **Short-term memory serves the current task. Afterward, it leaves active context and is cleaned up, archived, or captured for reuse according to policy.**
 
-This describes the lifecycle by task. A framework may instead define short-term memory by thread, and one thread can span multiple runs. [LangGraph](https://docs.langchain.com/oss/python/langgraph/persistence) uses a checkpointer to persist thread state and a store for cross-thread data. Saving history to disk does not mean the model automatically sees it on the next turn; the application still has to read, filter, and assemble context. The `InMemorySaver` / `InMemoryStore` examples also do not survive process restarts.
+This describes the lifecycle by task. A framework may instead define short-term memory by thread, and one thread can span multiple runs. LangGraph<sup>[【483】](../../book/references.md#ref-483)</sup> uses a checkpointer to persist thread state and a store for cross-thread data. Saving history to disk does not mean the model automatically sees it on the next turn; the application still has to read, filter, and assemble context. The `InMemorySaver` / `InMemoryStore` examples also do not survive process restarts.
 
 ## 8.3 How Short- and Long-Term Memory Work Together
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
-    participant A as Agent Runtime
-    participant W as Working Memory
-    participant L as Long-term Memory
+    participant A as Runtime
     participant M as Model
-
-    U->>A: Submit a task
-    A->>L: Retrieve user and project information and similar experiences
-    L-->>A: Return relevant memories
-    A->>W: Initialize goal, plan, and retrieved results
-    A->>M: Build the current context
-
-    loop Execute the task
-        M-->>A: Decision or tool call
-        A->>W: Update state and observations
-        A->>L: Retrieve specific knowledge on demand
-        A->>M: Provide updated context
-    end
-
-    A->>L: Write selected facts and experiences
-    A->>W: Archive or clear temporary state
-    A-->>U: Return the result
+    A->>M: Current context
+    M-->>A: Decision or tool call
+    A->>A: Update memory
+    A->>M: Updated context
 ```
+
+The user first submits a task to the runtime. The runtime retrieves user/project information and similar experiences from long-term memory, receives relevant memories, initializes working memory with the goal, plan, and retrieved results, then builds the model context.
+
+The diagram shows one iteration of the execution loop. Updating memory means updating working-memory state and observations, then retrieving specific knowledge from long-term memory on demand; the runtime supplies the updated context to the model and repeats as needed. After execution, it writes selected facts and experiences to long-term memory, archives or clears temporary working state, and returns the result to the user, in that order.
 
 Their responsibilities broadly differ as follows:
 
@@ -136,14 +126,15 @@ Their responsibilities broadly differ as follows:
 Working memory should not be an ever-growing messages array.
 
 ```mermaid
-flowchart TB
-    WM[Working Memory] --> MSG[Recent Messages]
-    WM --> STATE[Structured Task State]
-    WM --> PLAN[Plan / Todo]
-    WM --> OBS[Recent Observations]
-    WM --> SCRATCH[Scratchpad]
-    WM --> REF[Artifact References]
-    WM --> BUDGET[Budget / Retry / Timeout]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    WM["Working Memory"] --> MSG["Recent Messages"]
+    WM --> STATE["Structured Task State"]
+    WM --> PLAN["Plan / Todo"]
+    WM --> OBS["Recent Observations"]
+    WM --> SCRATCH["Scratchpad"]
+    WM --> REF["Artifact References"]
+    WM --> BUDGET["Budget / Retry / Timeout"]
 ```
 
 ### 8.4.1 Recent Messages
@@ -221,11 +212,12 @@ Search results, code, tables, and reports can be large. Instead of copying every
 Model context is a view of working memory, not a full copy.
 
 ```mermaid
-flowchart LR
-    WM[Full Working Memory] --> SELECT[Select]
-    SELECT --> SUM[Summarize]
-    SUM --> PACK[Pack by Priority]
-    PACK --> CTX[Model Context]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    WM["Full Working Memory"] --> SELECT["Select"]
+    SELECT --> SUM["Summarize"]
+    SUM --> PACK["Pack by Priority"]
+    PACK --> CTX["Model Context"]
 ```
 
 ### 8.5.1 Context Priorities
@@ -265,14 +257,15 @@ After compaction, check:
 ## 8.6 Storage Architecture for Long-Term Memory
 
 ```mermaid
-flowchart TB
-    W[Memory Writer] --> R{Representation Router}
-    R --> PROFILE[Profile / Relational DB]
-    R --> VECTOR[Vector Store]
-    R --> TEXT[Full-text Index]
-    R --> GRAPH[Knowledge Graph]
-    R --> EVENT[Event Store]
-    R --> OBJECT[Object / Artifact Store]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    W["Memory<br/>Writer"] --> R["Representation<br/>Router"]
+    R --> PROFILE["Profile /<br/>Relational<br/>DB"]
+    R --> VECTOR["Vector Store"]
+    R --> TEXT["Full-text<br/>Index"]
+    R --> GRAPH["Knowledge<br/>Graph"]
+    R --> EVENT["Event Store"]
+    R --> OBJECT["Object /<br/>Artifact<br/>Store"]
 ```
 
 ### 8.6.1 Profile / Relational Store
@@ -323,10 +316,11 @@ Embeddings may rank semantically similar content highly while missing exact iden
 Stores entities and relationships:
 
 ```mermaid
-flowchart LR
-    U[User] -->|member_of| TEAM[Risk Team]
-    TEAM -->|owns| SERVICE[Payment Service]
-    SERVICE -->|depends_on| DB[PostgreSQL]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    U["User"] -->|member_of| TEAM["Risk Team"]
+    TEAM -->|owns| SERVICE["Payment Service"]
+    SERVICE -->|depends_on| DB["PostgreSQL"]
 ```
 
 Suitable for relationship traversal, multi-hop queries, and explaining provenance.
@@ -349,10 +343,11 @@ It supports audit, replay, and reconstruction of state from history.
 An embedding model maps text to a vector:
 
 ```mermaid
-flowchart LR
-    T[Memory Text] --> E[Embedding Model]
-    E --> V[Vector]
-    V --> DB[Vector Index]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Memory Text"] --> E["Embedding Model"]
+    E --> V["Vector"]
+    V --> DB["Vector Index"]
 ```
 
 Semantically similar texts are usually closer in vector space.
@@ -405,14 +400,31 @@ Memory granularity depends on future use.
 
 ## 8.9 A Multi-Granularity Memory Model
 
+Group raw events into an episode.
+
 ```mermaid
 flowchart TB
-    RAW[Raw Events] --> TURN[Interaction / Turn]
-    TURN --> EP[Episode]
-    EP --> FACT[Atomic Facts]
-    EP --> ENTITY[Entity Updates]
-    EP --> PROC[Procedural Lessons]
-    EP --> SUMMARY[Task Summary]
+    RAW[Raw Events]
+    TURN[Interaction / Turn]
+    EP[Episode]
+    RAW --> TURN
+    TURN --> EP
+```
+
+Extract distinct representations from that episode.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    EP["Episode"]
+    FACT["Atomic Facts"]
+    ENTITY["Entity Updates"]
+    PROC["Procedural Lessons"]
+    SUMMARY["Task Summary"]
+    EP --> FACT
+    EP --> ENTITY
+    EP --> PROC
+    EP --> SUMMARY
 ```
 
 ### 8.9.1 Raw Event
@@ -537,15 +549,10 @@ A fixed chunk size is often insufficient. Practical segmentation commonly consid
 ```mermaid
 flowchart TB
     INPUT[Interaction Stream] --> DETECT[Boundary Detector]
-    DETECT --> TOPIC[Topic Boundary]
-    DETECT --> TASK[Task Boundary]
-    DETECT --> EVENT[Event Boundary]
-    DETECT --> ENTITY[Entity Boundary]
-    TOPIC --> CHUNK[Memory Units]
-    TASK --> CHUNK
-    EVENT --> CHUNK
-    ENTITY --> CHUNK
+    DETECT --> CHUNK[Memory Units]
 ```
+
+The detector identifies topic, task, event, and entity boundaries. Each boundary type can define memory units; the arrow does not imply that fixed-size chunks replace these semantic boundaries.
 
 Long episodes can use a parent–child hierarchy:
 
@@ -566,15 +573,16 @@ Keep a fallback path for searching raw events directly. If a summary omits a key
 ## 8.12 Memory Write Pipeline
 
 ```mermaid
-flowchart LR
-    O[Observation] --> X[Extract]
-    X --> CLASS[Classify]
-    CLASS --> SAFE[Privacy / Trust]
-    SAFE --> DEDUP[Deduplicate]
-    DEDUP --> CONFLICT[Conflict Check]
-    CONFLICT --> SCORE[Value Score]
-    SCORE --> ROUTE[Storage Router]
-    ROUTE --> STORE[Persist + Index]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --> X["Extract"]
+    X --> CLASS["Classify"]
+    CLASS --> SAFE["Privacy / Trust"]
+    SAFE --> DEDUP["Deduplicate"]
+    DEDUP --> CONFLICT["Conflict Check"]
+    CONFLICT --> SCORE["Value Score"]
+    SCORE --> ROUTE["Storage Router"]
+    ROUTE --> STORE["Persist + Index"]
 ```
 
 ### 8.12.1 Extract
@@ -691,23 +699,53 @@ If “remember this preference” requires a success confirmation in the current
 
 ## 8.14 Memory Retrieval Pipeline
 
+Generate a query and enforce scope.
+
 ```mermaid
+flowchart TB
+    TASK[Current Task]
+    INTENT[Retrieval Intent]
+    Q[Query Generation]
+    SCOPE[Server-side Identity and Mandatory Filters]
+    TASK --> INTENT
+    INTENT --> Q
+    Q --> SCOPE
+```
+
+Fuse authorized retrieval channels.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart LR
-    TASK[Current Task] --> INTENT[Retrieval Intent]
-    INTENT --> Q[Query Generation]
-    Q --> SCOPE[Server-side Identity and Mandatory Filters]
-    SCOPE --> V[Authorized Vector Search]
-    SCOPE --> K[Authorized Keyword Search]
-    SCOPE --> SQL[Authorized SQL / Metadata]
-    SCOPE --> G[Authorized Graph Query]
-    V --> F[Fusion]
+    SCOPE["Server-side<br/>Identity and<br/>Mandatory<br/>Filters"]
+    V["Authorized<br/>Vector Search"]
+    K["Authorized<br/>Keyword Search"]
+    SQL["Authorized SQL /<br/>Metadata"]
+    G["Authorized Graph<br/>Query"]
+    F["Fusion"]
+    SCOPE --> V
+    SCOPE --> K
+    SCOPE --> SQL
+    SCOPE --> G
+    V --> F
     K --> F
     SQL --> F
     G --> F
-    F --> ACL[Version and Permission Recheck]
-    ACL --> RR[Rerank]
-    RR --> DD[Deduplicate]
-    DD --> CP[Context Packing]
+```
+
+Recheck versions and permissions before context packing.
+
+```mermaid
+flowchart TB
+    F[Fusion]
+    ACL[Version and Permission Recheck]
+    RR[Rerank]
+    DD[Deduplicate]
+    CP[Context Packing]
+    F --> ACL
+    ACL --> RR
+    RR --> DD
+    DD --> CP
 ```
 
 ### 8.14.1 Retrieval Intent
@@ -828,13 +866,14 @@ Proactive retrieval must therefore follow the minimum-necessary principle too.
 Do not concatenate everything returned by the retriever directly into the prompt.
 
 ```mermaid
-flowchart LR
-    R[Retrieved Memories] --> P[Permission Check]
-    P --> D[Deduplicate]
-    D --> C[Conflict Annotation]
-    C --> S[Summarize / Select]
-    S --> B[Budget Packing]
-    B --> CTX[Context]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Retrieved Memories"] --> P["Permission Check"]
+    P --> D["Deduplicate"]
+    D --> C["Conflict Annotation"]
+    C --> S["Summarize / Select"]
+    S --> B["Budget Packing"]
+    B --> CTX["Context"]
 ```
 
 Use a structured presentation:
@@ -860,13 +899,14 @@ Do not disguise memory as high-priority system instructions. Preserve each memor
 Long-term memory must support change:
 
 ```mermaid
-flowchart LR
-    OLD[Existing Memory] --> NEW[New Evidence]
-    NEW --> C{Consistent?}
-    C -->|Yes| MERGE[Deduplicate and Preserve Sources and Times]
-    C -->|No| AUTH{Same Scope and Evidence of Supersession?}
-    AUTH -->|Yes| SUPERSEDE[Valid New Version Supersedes Old Within the Same Scope]
-    AUTH -->|No| CONFLICT[Retain Conflict]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    OLD["Existing<br/>Memory"] --> NEW["New Evidence"]
+    NEW --> C["Consistent?"]
+    C -->|Yes| MERGE["Deduplicate<br/>and Preserve<br/>Sources and<br/>Times"]
+    C -->|No| AUTH["Same Scope<br/>and Evidence<br/>of<br/>Supersession?"]
+    AUTH -->|Yes| SUPERSEDE["Valid New<br/>Version<br/>Supersedes<br/>Old Within<br/>the Same<br/>Scope"]
+    AUTH -->|No| CONFLICT["Retain<br/>Conflict"]
 ```
 
 Suggested fields:
@@ -947,11 +987,12 @@ Memory retrieval must enforce access control before considering similarity.
 `tenant_id`, `user_id`, and `thread_id` are identifiers, not authorization credentials. Knowing someone else's ID grants no read permission. Check permissions at least at query entry, before candidates reach a reranker or model, when reading artifacts, and before tool execution. Cache keys must also include scope, permission version, and memory version. Revoke or reauthorize cached access when permissions are withdrawn.
 
 ```mermaid
-flowchart LR
-    Q[Query] --> ID[User / Tenant Identity]
-    ID --> ACL[ACL Filter]
-    ACL --> SEARCH[Search Authorized Scope]
-    SEARCH --> R[Results]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Query"] --> ID["User / Tenant Identity"]
+    ID --> ACL["ACL Filter"]
+    ACL --> SEARCH["Search Authorized Scope"]
+    SEARCH --> R["Results"]
 ```
 
 Do not:
@@ -1136,7 +1177,7 @@ Take complete user histories and feed them into the write pipeline chronological
 
 Inject at least these failures: the primary write succeeds but the index update fails; a write event is consumed twice; deletion and consolidation run concurrently; a cache hits after permission revocation; two agents update the same fact; and a tool succeeds before the checkpoint commits. Assert storage versions, visibility scopes, and external side effects. Do not merely ask an LLM whether the reply “looks correct.”
 
-Use knowledge-update and abstention questions from [LongMemEval](https://github.com/xiaowu0162/LongMemEval) to test retrieval, and [LongMemEval-V2](https://github.com/xiaowu0162/LongMemEval-V2) to test extraction of environment experience from trajectories. Neither replaces the consistency and permission tests above, and scores cannot be compared directly across dataset versions.
+Use knowledge-update and abstention questions from LongMemEval<sup>[【480】](../../book/references.md#ref-480)</sup> to test retrieval, and LongMemEval-V2<sup>[【482】](../../book/references.md#ref-482)</sup> to test extraction of environment experience from trajectories. Neither replaces the consistency and permission tests above, and scores cannot be compared directly across dataset versions.
 
 ## 8.25 Common Anti-Patterns
 
@@ -1179,37 +1220,19 @@ Can create false memories, privacy problems, and persistent prompt injection.
 ## 8.26 An Architecture You Can Trim to Fit
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    INPUT[User / Tool / Environment] --> RUNTIME[Agent Runtime]
-
-    RUNTIME --> WM[Working Memory<br/>State + Recent Context]
-    RUNTIME --> WRITER[Memory Writer]
-
-    WRITER --> POLICY[Privacy + Importance + Trust]
-    POLICY --> PROFILE[Relational Profile]
-    POLICY --> VECTOR[Vector Store]
-    POLICY --> TEXT[Full-text Index]
-    POLICY --> EVENT[Event Store]
-    POLICY --> ART[Artifact Store]
-
-    RUNTIME --> RET[Retrieval Router Within Authorized Scope]
-    RET --> PROFILE
-    RET --> VECTOR
-    RET --> TEXT
-    RET --> EVENT
-    RET --> ART
-
-    PROFILE --> FUSION[Permission and Version Recheck + Fusion + Rerank]
-    VECTOR --> FUSION
-    TEXT --> FUSION
-    EVENT --> FUSION
-    ART --> FUSION
-
-    FUSION --> CB[Context Builder]
+    RUNTIME["Agent Runtime"] --> WM["Working Memory"]
+    RUNTIME --> RET["Authorized retrieval"]
+    RET --> CB["Context Builder"]
     WM --> CB
-    CB --> MODEL[Model]
+    CB --> MODEL["Model"]
     MODEL --> RUNTIME
 ```
+
+User, tool, and environment input enters the runtime. It updates working memory with state and recent context, and sends memory candidates to a writer whose privacy, importance, and trust policy governs five stores: relational profiles, vectors, full-text indexes, events, and artifacts.
+
+The runtime's retrieval router queries those same stores within authorized scope. Before the retrieval arrow reaches the Context Builder, results undergo permission/version rechecks, fusion, and reranking. Working memory supplies the other context input; the model returns control to the runtime.
 
 The diagram maps optional capabilities; it is not a default deployment checklist for every project. Choose according to need:
 
@@ -1258,16 +1281,5 @@ Structured storage provides constraints, queries, and update capabilities; it do
 
 ## References
 
-- [CoALA: Cognitive Architectures for Language Agents](https://arxiv.org/abs/2309.02427)
-- [MemGPT: Towards LLMs as Operating Systems](https://arxiv.org/abs/2310.08560)
-- [Generative Agents: Interactive Simulacra of Human Behavior](https://arxiv.org/abs/2304.03442)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence) ([documentation snapshot 3edafc8](https://github.com/langchain-ai/docs/blob/3edafc8c187b52be4e2196cd0955dda4a7592cba/src/oss/langgraph/persistence.mdx))
-- [LangGraph: Checkpointers](https://docs.langchain.com/oss/python/langgraph/checkpointers)
-- [LangGraph: Memory overview](https://docs.langchain.com/oss/python/concepts/memory) ([documentation snapshot 1fa2214](https://github.com/langchain-ai/docs/blob/1fa2214237b7a7506c34a30b394c26023d61bf4b/src/oss/concepts/memory.mdx))
-- [AWS Prescriptive Guidance: Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html) (illustrates dual writes, duplicate delivery, and ordering; it does not imply end-to-end exactly-once guarantees for arbitrary queues)
-- [etcd v3.5: Transaction comparisons and revisions](https://etcd.io/docs/v3.5/learning/api/) (a specific implementation of atomic conditional updates; check each other database's own guarantees)
-- [LongMemEval official README snapshot 9e0b455](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md) (distinguishes the original release from the September 2025 cleaned version)
-- [LongMemEval-V2 official README snapshot 2cc8c54](https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md)
-
-Source review in the Chinese manuscript: September 15, 2026. The consistency, idempotency, and deletion designs are recommendations, not guarantees automatically provided by the cited frameworks or any vector database. Translation checks on September 20, 2026 covered the pinned LangGraph scope and persistence descriptions, the current checkpointer documentation, the AWS outbox discussion, etcd v3.5 transactions, and the pinned benchmark descriptions. Checks were limited to the relevant documentation sections; no framework deployment, API experiment, or benchmark reproduction was performed.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-08) for this chapter’s sources, reading suggestions, and source notes.

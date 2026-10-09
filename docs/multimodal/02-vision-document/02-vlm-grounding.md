@@ -90,13 +90,5 @@ Models may use normalized coordinates, quantized location tokens, or absolute pi
 
 ## References
 
-- [Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection](https://arxiv.org/abs/2303.05499)
-- [Grounded Language-Image Pre-training (GLIP)](https://arxiv.org/abs/2112.03857)
-- [Simple Open-Vocabulary Object Detection with Vision Transformers (OWL-ViT)](https://arxiv.org/abs/2205.06230)
-- [PaliGemma: A versatile 3B VLM for transfer](https://arxiv.org/abs/2407.07726)
-- [Qwen-VL: A Versatile Vision-Language Model](https://arxiv.org/abs/2308.12966)
-- [Molmo and PixMo: Open Weights and Open Data for State-of-the-Art Multimodal Models](https://arxiv.org/abs/2409.17146)
-- [Visual Genome: Connecting Language and Vision Using Crowdsourced Dense Image Annotations](https://arxiv.org/abs/1602.07332)
-- [Generation and Comprehension of Unambiguous Object Descriptions (RefCOCOg)](https://arxiv.org/abs/1511.02283)
-- [ReferItGame: Referring to Objects in Photographs of Natural Scenes](https://aclanthology.org/D14-1086/)
-- [REFER: Dataset origins and split documentation](https://github.com/lichengunc/refer)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-multimodal-02) for this chapter’s sources, reading suggestions, and source notes.

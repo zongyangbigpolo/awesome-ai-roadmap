@@ -9,12 +9,18 @@ description: Distinguish reasoning models, tool-calling APIs, and MCP support, i
 First, separate the links in the chain:
 
 ```mermaid
-flowchart LR
-    A["Reasoning model does not support<br/>a particular function-calling interface"] --> B["This host's FC bridge is unavailable"]
-    B --> C["Use another model interface<br/>or deterministic MCP calls"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Reasoning model<br/>does not<br/>support"] --> B["This host's FC<br/>bridge is<br/>unavailable"]
+    B --> C["Use another<br/>model interface"]
 
     style A fill:#fce8e6
 ```
+
+Details of the illustrated steps and components:
+
+- Reasoning model does not support a particular function-calling interface
+- Use another model interface or deterministic MCP calls
 
 As [Chapter 6](../02-mcp/06-mcp-vs-function-calling.md) explains, many hosts convert a server's tool definitions into the model's native function-calling format. This **model-driven** bridge depends on the model interface. If that interface is unavailable, the host can instead use structured output, a rule-based workflow, or a human-triggered `tools/call`. MCP itself does not require a model with function calling.
 
@@ -24,17 +30,28 @@ Ask precisely **which model snapshot, API, and host adapter lack which capabilit
 
 Some models offer an explicit reasoning/thinking mode that performs additional reasoning before a final answer or between tool calls. Internal reasoning, publicly visible thinking text, and API-returned summaries are different things. Their existence does not imply that ordinary models do no reasoning at all.
 
-```mermaid
-flowchart TB
-    subgraph NORMAL["Ordinary model"]
-        N1[Question] --> N2[Generate an answer directly]
-    end
+**Ordinary model**
 
-    subgraph REASONING["Reasoning model"]
-        R1[Question] --> R2["Additional reasoning<br/>Budget and visibility depend on the interface"]
-        R2 --> R3[Final answer]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["Question"] --> N2["Generate an<br/>answer directly"]
+
 ```
+
+**Reasoning model**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        R1["Question"] --> R2["Additional<br/>reasoning"]
+        R2 --> R3["Final answer"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Additional reasoning Budget and visibility depend on the interface
 
 Tool results become part of subsequent input. The central engineering issue is preserving the history items and correlation identifiers required by the model API, not keeping a particular allocation of GPU memory alive indefinitely.
 
@@ -95,14 +112,19 @@ Distinguish preview releases, released models, and today's API pages. The curren
 One common compromise is to **issue tool calls only after the thinking phase has finished**.
 
 ```mermaid
-flowchart LR
-    Q[Question] --> T["Think first in this turn<br/>then issue a tool call"]
-    T --> TC[Output tool_calls]
-    TC --> EX[Execute tool]
-    EX --> A[Generate final answer]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["Question"] --> T["Think first in<br/>this turn"]
+    T --> TC["Output<br/>tool_calls"]
+    TC --> EX["Execute tool"]
+    EX --> A["Generate final<br/>answer"]
 
     style T fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Think first in this turn then issue a tool call
 
 This is an application-flow choice, not a general guarantee of reasoning quality.
 
@@ -112,19 +134,24 @@ Tasks requiring external data should obtain evidence before performing reasoning
 
 ### 7.6.2 Approach two: interleaved thinking
 
-Anthropic's [Claude 4 announcement](https://www.anthropic.com/news/claude-4) explicitly describes alternating thinking and tool use, introduced in beta at the time. By contrast, the early official Claude 3.7 Cookbook tool example states that no new thinking block appears in the same tool-result round. That old example must not be treated as the behavior of every current model.
+Anthropic's Claude 4 announcement<sup>[【298】](../../book/references.md#ref-298)</sup> explicitly describes alternating thinking and tool use, introduced in beta at the time. By contrast, the early official Claude 3.7 Cookbook tool example states that no new thinking block appears in the same tool-result round. That old example must not be treated as the behavior of every current model.
 
 ```mermaid
-flowchart LR
-    Q[Question] --> T1[Thinking segment 1]
-    T1 --> C1[Call tool A]
-    C1 --> T2["Thinking segment 2<br/>Based on tool A's result"]
-    T2 --> C2[Call tool B]
-    C2 --> T3[Thinking segment 3]
-    T3 --> A[Final answer]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["Question"] --> T1["Thinking<br/>segment 1"]
+    T1 --> C1["Call tool A"]
+    C1 --> T2["Thinking<br/>segment 2"]
+    T2 --> C2["Call tool B"]
+    C2 --> T3["Thinking<br/>segment 3"]
+    T3 --> A["Final answer"]
 
     style T2 fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Thinking segment 2 Based on tool A's result
 
 This substantially reduces the limitation of a thinking phase that cannot access tool results: the model can retrieve evidence and reason about it in alternation.
 
@@ -202,15 +229,5 @@ For clearly defined workflows, first compare an ordinary model with deterministi
 
 ## References
 
-- [OpenAI: Reasoning Models guide](https://developers.openai.com/api/docs/guides/reasoning)
-- [OpenAI: Function Calling and returning reasoning items](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: o1-preview model page](https://developers.openai.com/api/docs/models/o1-preview)
-- [OpenAI: o1 model and snapshots](https://developers.openai.com/api/docs/models/o1)
-- [OpenAI Cookbook: Early o1-preview limitations on structured outputs](https://github.com/openai/openai-cookbook/blob/main/examples/o1/Using_chained_calls_for_o1_structured_outputs.ipynb)
-- [Anthropic: Claude 4 announcement of interleaved tool use](https://www.anthropic.com/news/claude-4)
-- [Anthropic Cookbook: Early Claude 3.7 example of thinking-block preservation](https://github.com/anthropics/anthropic-cookbook/blob/main/extended_thinking/extended_thinking_with_tool_use.ipynb)
-- [Anthropic: Extended Thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
-- [DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning](https://arxiv.org/abs/2501.12948)
-- [ReTool: Reinforcement Learning for Strategic Tool Use in LLMs](https://arxiv.org/abs/2504.11536)
-- [ToolRL: Reward is All Tool Learning Needs](https://arxiv.org/abs/2504.13958)
-- [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-07) for this chapter’s sources, reading suggestions, and source notes.

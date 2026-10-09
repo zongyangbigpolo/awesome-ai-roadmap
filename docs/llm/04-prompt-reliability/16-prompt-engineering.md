@@ -27,15 +27,13 @@ The following five elements are a checklist, not a mandatory template. A simple 
 Review the responsibilities, task, background, format, and examples, and add only the information that is genuinely missing. These five elements are not stock phrases. For each addition, explain which ambiguity or acceptance problem it resolves.
 
 ```mermaid
-flowchart LR
-    Q["Choose checks for the task"] --> R["Role<br/>Responsibilities and perspective"]
-    Q --> T["Task<br/>Goal and boundaries"]
-    Q --> C["Context<br/>Relevant background and evidence"]
-    Q --> F["Format<br/>Output contract"]
-    Q --> E["Examples<br/>Representative examples when needed"]
-
-    style E fill:#e6f4ea
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Task requirements"] --> C["Select prompt checks"]
+    C --> P["Prompt under test"]
 ```
+
+Select the relevant checks rather than treating them as sequential steps: **role** defines responsibilities and perspective; **task** sets goals and boundaries; **context** supplies background and evidence; **format** defines the output contract; **examples** provide representative cases when needed.
 
 ### 16.2.1 Role: defining responsibilities
 
@@ -246,18 +244,15 @@ Applications still need restricted tool permissions, parameter validation, isola
 **Prompt engineering is a cycle of forming hypotheses, testing, and improving—not a one-time writing exercise.**
 
 ```mermaid
-flowchart LR
-    A["Separate development<br/>and held-out test sets<br/>Cover normal, edge,<br/>and adversarial inputs"] --> B["Propose a testable change"]
-    B --> C["Compare on the development set<br/>Quality, cost, and metrics<br/>by task group"]
-    C --> D{"Acceptance targets met?"}
-    D -->|Overall improvement| E["Keep the change"]
-    D -->|Mixed results| F["Analyze task groups<br/>and failure causes<br/>Then decide whether to branch"]
-    E --> B
-    F --> B
-    E -->|After freezing the candidate| H["Run milestone acceptance<br/>on the held-out set<br/>Do not reuse it repeatedly<br/>for tuning"]
-
-    style B fill:#e8f0fe
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["Testable change"] --> C["Development-set comparison"]
+    C --> D["Accept or diagnose"]
+    D -->|Iterate| B
+    D -->|Freeze candidate| H["Held-out acceptance"]
 ```
+
+Keep development and held-out sets separate, covering normal, edge, and adversarial inputs. Compare quality, cost, and task-group metrics on development data. Keep overall improvements; for mixed results, examine task groups and failure causes before deciding whether to branch. Both decisions can lead to another proposed change. Only after freezing a candidate run milestone acceptance on the held-out set; do not repeatedly reuse it for tuning.
 
 Fix the model snapshot, decoding parameters, input data, and scoring criteria. Changing one factor at a time helps attribution but is not a rigid rule. Ablation or factorial experiments can distinguish the contributions of multiple changes. Repeatedly using the held-out test set to revise a prompt will indirectly overfit that set too.
 
@@ -330,12 +325,5 @@ Check that each critical piece of evidence and each qualification survives, and 
 
 ## References
 
-- [Language Models are Few-Shot Learners (GPT-3, few-shot learning)](https://arxiv.org/abs/2005.14165)
-- [Calibrate Before Use: Improving Few-Shot Performance of Language Models (example and ordering biases)](https://arxiv.org/abs/2102.09690)
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners (Let's think step by step)](https://arxiv.org/abs/2205.11916)
-- [LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models](https://arxiv.org/abs/2310.05736)
-- [LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression](https://arxiv.org/abs/2310.06839)
-- [The Power of Scale for Parameter-Efficient Prompt Tuning (soft prompts)](https://arxiv.org/abs/2104.08691)
-- [OpenAI: Reasoning best practices (including the scope of delimiters and CoT prompts)](https://developers.openai.com/api/docs/guides/reasoning-best-practices)
-- [OpenAI: Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-16) for this chapter’s sources, reading suggestions, and source notes.

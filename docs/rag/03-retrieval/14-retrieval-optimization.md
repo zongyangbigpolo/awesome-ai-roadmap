@@ -13,18 +13,15 @@ The common problem is not a lack of options, but discussing “change chunk size
 A layered framework groups improvements by pipeline stage, giving us a way to locate the problem.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    L1[Layer 1: Indexing<br/>Did we store the right material?] --> L2[Layer 2: Queries<br/>Are we asking the right way?]
-    L2 --> L3[Layer 3: Retrieval<br/>Do the paths cover the evidence?]
-    L3 --> L4[Layer 4: Reranking and context<br/>Is evidence ordered and assembled well?]
-    L4 --> L5[Layer 5: Generation and grounding<br/>Does evidence support the answer?]
-
-    L1 -.-> P1[Tradeoff: chunk granularity]
-    L2 -.-> P2[Gap: different wording]
-    L3 -.-> P3[Blind spots:<br/>systematic single-path misses]
-    L4 -.-> P4[Precision:<br/>ranking and context contamination]
-    L5 -.-> P5[Trust:<br/>citations, conflicts, and abstention]
+    L1[Indexing] --> L2[Queries]
+    L2 --> L3[Retrieval]
+    L3 --> L4[Reranking and context]
+    L4 --> L5[Generation and grounding]
 ```
+
+At indexing, ask whether the right material was stored and examine chunk granularity. At the query layer, look for wording gaps. At retrieval, test evidence coverage and systematic single-path misses. At reranking and context assembly, check ordering, precision, and contamination. At generation and grounding, verify that evidence supports the answer, including citations, conflicts, and abstention.
 
 Each layer offers a different diagnostic starting point, but the problems are not independent, and no optimization order fits every project. Find where evidence is lost or distorted, then fix that layer. Security, observability, and evaluation cut across all five.
 
@@ -107,19 +104,15 @@ Candidate evidence coverage constrains the current pipeline's attainable ceiling
 A framework only classifies methods. Diagnosis is what makes it useful for optimization.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    BAD[Poor answer quality] --> C1{Is the correct chunk<br/>in Top-50?}
-    C1 -->|No| C2{Does the knowledge base<br/>contain the information?}
-    C2 -->|No| FIX1[Indexing: parsing or chunking problem,<br/>or missing source material]
-    C2 -->|Yes| C3{Can a rephrased query<br/>retrieve it?}
-    C3 -->|Yes| FIX2[Queries: wording gap]
-    C3 -->|No| FIX3[Retrieval: change or add paths]
-    C1 -->|Yes| C4{Is it in Top-5?}
-    C4 -->|No| FIX4[Reranking: add or change reranker]
-    C4 -->|Yes| C5{Is evidence complete and applicable<br/>in the actual prompt?}
-    C5 -->|No| FIX5[Context: truncation, deduplication,<br/>parent expansion, or version filtering]
-    C5 -->|Yes| FIX6[Generation and validation:<br/>check misreading, citations, and abstention]
+    C1{Correct chunk in Top-50?} -->|No| UP[Check indexing and retrieval]
+    C1 -->|Yes| DOWN[Check ranking and generation]
 ```
+
+**If absent from Top-50:** first ask whether the knowledge base contains the information. If not, inspect parsing, chunking, or missing source material. If it does, try rephrasing: successful retrieval identifies a wording gap; continued failure calls for changing or adding retrieval paths.
+
+**If present in Top-50:** check Top-5 next. Absence there calls for adding or changing the reranker. If present, inspect the actual prompt: incomplete or inapplicable evidence points to truncation, deduplication, parent expansion, or version filtering. When evidence is complete and applicable, investigate generation and validation—misreading, citations, and abstention.
 
 The value of this decision tree is that it turns a vague “poor performance” complaint into a sequence of yes/no questions that data can answer.
 
@@ -161,20 +154,25 @@ An evaluation set does not itself change answers, but it makes the results of ea
 The following is one starting point for experiments, not an architecture every enterprise system must eventually adopt:
 
 ```mermaid
-flowchart LR
-    subgraph 离线["Offline"]
-        A[Hierarchical parsing<br/>and quality checks] --> B[Structure-aware chunking<br/>and parent–child chunks]
-        B --> C[Contextual enrichment]
-        C --> D[Dense and sparse indexes]
-    end
-    subgraph 在线["Online"]
-        E[Reference resolution<br/>and lightweight routing] --> F[Parallel BM25<br/>and vector retrieval]
-        F --> G[RRF fusion and deduplication]
-        G --> H[Cross-encoder reranking<br/>and calibrated abstention]
-        H --> I[Constrained generation<br/>and citation validation]
-    end
-    D -.-> F
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[Parse and check] --> B[Structure-aware chunks]
+    B --> C[Contextual enrichment]
+    C --> D[Dense and sparse indexes]
 ```
+
+Offline, hierarchical parsing and quality checks precede structure-aware and parent–child chunking. Contextual enrichment feeds both dense and sparse indexes. Online retrieval reads those indexes:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E[Resolve references; route] --> F[Parallel BM25 and vectors]
+    F --> G[RRF fusion; deduplicate]
+    G --> H[Cross-encoder; abstention gate]
+    H --> I[Generate; validate citations]
+```
+
+Routing is lightweight. Calibrate the abstention policy after cross-encoder reranking; only accepted evidence continues to constrained generation and citation validation.
 
 **This design does not depend on experimental components**, yet it covers the main methods across all five layers. Whether each component belongs in a particular system still needs validation against its evaluation set, latency targets, and cost budget.
 
@@ -223,7 +221,5 @@ This prevents attribution of gains to a specific change and makes rollback diffi
 
 ## References
 
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-14) for this chapter’s sources, reading suggestions, and source notes.

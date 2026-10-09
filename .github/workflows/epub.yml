@@ -9,6 +9,8 @@ on:
       - "scripts/build_book.py"
       - "scripts/build_epub.py"
       - "scripts/check_translations.py"
+      - "scripts/markdown_links.py"
+      - "scripts/migrate_bibliography.py"
       - "scripts/install_epub_tools.py"
       - "scripts/tests/**"
       - ".github/workflows/epub.yml"
@@ -19,6 +21,8 @@ on:
       - "scripts/build_book.py"
       - "scripts/build_epub.py"
       - "scripts/check_translations.py"
+      - "scripts/markdown_links.py"
+      - "scripts/migrate_bibliography.py"
       - "scripts/install_epub_tools.py"
       - "scripts/tests/**"
       - ".github/workflows/epub.yml"
@@ -61,8 +65,10 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - name: Check bilingual source completeness before compilation
-        run: python3 scripts/check_translations.py
+      - name: Check bilingual sources and bibliography before compilation
+        run: |
+          python3 scripts/migrate_bibliography.py --check
+          python3 scripts/check_translations.py
       - name: Install pinned export tools
         run: |
           python3 scripts/install_epub_tools.py

@@ -16,13 +16,19 @@ description: 按线程状态与跨线程 Store 设计记忆，区分上下文裁
 | 一周后新建会话，Agent 仍知道他不吃辣、喜欢住地铁附近 | **跨会话仍然有效** | 长期记忆 |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["当前线程运行到了哪里"] --> B["State + Checkpointer"]
-    C["未来其他线程仍可能用到的<br/>用户偏好与事实"] --> D["Store"]
+    A["当前线程进度"] --> B["State +<br/>Checkpointer"]
+    C["未来其他线程仍可<br/>能用到的"] --> D["Store"]
 
     style B fill:#e8f0fe
     style D fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 当前线程运行到了哪里
+- 未来其他线程仍可能用到的 用户偏好与事实
 
 ## 6.2 短期记忆如何实现
 
@@ -173,15 +179,23 @@ def remember_preference(
 ## 6.7 生产环境要注意什么
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    P1["① 数据能否可靠保存<br/>内存实现随进程退出而丢失<br/>线上要数据库型 Checkpointer 和 Store<br/>表结构与迁移纳入部署流程"]
-    P2["② 这是谁的记忆<br/>thread_id / tenant_id / user_id 必须来自可信身份体系<br/>不信任模型生成的身份<br/>不允许客户端随意指定别人的 namespace"]
-    P3["③ 记忆会过时、冲突、被纠正<br/>去重、更新、过期淘汰<br/>支持用户查看/更正/导出/删除<br/>敏感信息默认不记，需保存的加密并限权<br/>日志与 Trace 不能成为另一个泄漏口"]
-    P4["④ 记忆是否真的改善结果<br/>不能只看写入了多少条"]
+    P1["① 数据能否可靠<br/>保存"]
+    P2["② 这是谁的记忆"]
+    P3["③ 维护记忆"]
+    P4["④ 评估实际收益"]
     P1 --> P2 --> P3 --> P4
 
     style P2 fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- ① 数据能否可靠保存 内存实现随进程退出而丢失 线上要数据库型 Checkpointer 和 Store 表结构与迁移纳入部署流程
+- ② 这是谁的记忆 thread_id / tenant_id / user_id 必须来自可信身份体系 不信任模型生成的身份 不允许客户端随意指定别人的 namespace
+- ③ 记忆会过时、冲突、被纠正 去重、更新、过期淘汰 支持用户查看/更正/导出/删除 敏感信息默认不记，需保存的加密并限权 日志与 Trace 不能成为另一个泄漏口
+- ④ 记忆是否真的改善结果 不能只看写入了多少条
 
 ### 6.7.1 评测必须沿整条链路走
 
@@ -272,9 +286,5 @@ LangChain 的记忆按作用域分成两套机制：线程内用 State 和持久
 
 ## 参考资料
 
-- [LangChain: Short-term Memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [LangChain: Long-term Memory](https://docs.langchain.com/oss/python/langchain/long-term-memory)
-- [LangGraph 持久化文档](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph Store 文档](https://docs.langchain.com/oss/python/langgraph/stores)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain v1 迁移指南](https://docs.langchain.com/oss/python/migrate/langchain-v1)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-06)。

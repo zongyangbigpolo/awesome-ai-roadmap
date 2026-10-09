@@ -78,16 +78,14 @@ BM25 可补充罕见词的词项匹配，但不天然理解“不含糖”、数
 第六章 6.3.4 已介绍原理。这里补充它在检索范式中的定位：
 
 ```mermaid
-flowchart LR
-    A[稀疏 BM25<br/>字面精确] --- B[稠密双塔<br/>语义相似]
-    B --- C[后期交互 ColBERT<br/>词级语义匹配]
-    C --- D[Cross-Encoder<br/>完整交互]
-
-    A -.-> A1[快 无需训练<br/>不懂同义]
-    B -.-> B1[快 懂同义<br/>细粒度弱]
-    C -.-> C1[较快 兼顾两者<br/>存储成本高]
-    D -.-> D1[在线跨文本交互<br/>不能缓存独立文档分数]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    A[BM25：字面] --- B[双塔：语义]
+    B --- C[ColBERT：词级]
+    C --- D[Cross-Encoder：联合]
 ```
+
+连线用于比较方法，并不要求按此顺序组成流水线。BM25 速度快且无需训练，但字面匹配不理解同义词。稠密双塔速度快，能够处理包括同义词在内的语义相似性，但细粒度匹配较弱，可能遗漏区别。ColBERT 使用词级后期交互，以更高存储成本兼顾这些特性。Cross-Encoder 在查询时进行完整跨文本交互，不能缓存与 Query 无关的文档相关性分数。
 
 后期交互保留 Token 级语义匹配，可能缓解单向量压缩造成的细节丢失，文档表示也仍可离线预计算。但它不保证型号、词序或数字约束精确成立，质量仍依赖训练和分词。
 
@@ -178,10 +176,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Lucene 9.12 BM25Similarity：词频饱和、长度归一化与 IDF 实现](https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [SPLADE: Sparse Lexical and Expansion Model for First Stage Ranking](https://arxiv.org/abs/2107.05720)
-- [Elastic：ELSER 官方文档](https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-elser)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-11)。

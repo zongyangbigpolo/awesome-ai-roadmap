@@ -10,16 +10,30 @@ In common uses of the [LangChain ecosystem](../01-langchain/README.md) and [Llam
 
 DSPy (Declarative Self-improving Python) starts by separating those concerns. Declare the inputs, outputs, and task objective first, then choose modules and program structure so an optimizer can improve instructions, examples, or model weights within a specified search space. Ordinary prompt optimization does not automatically decide how many steps a business process needs; a DSPy program can also run without compilation.
 
+**Imperative prompt engineering**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph Old["Imperative prompt engineering"]
-        O1["Handwrite a prompt string"] --> O2["Run it and inspect the result"] --> O3["Guess how to revise the wording"] --> O1
-    end
-    subgraph New["DSPy declarative programming"]
-        N1["Declare a Signature: input/output contract"] --> N2["Choose a Module: Predict / CoT / ReAct"]
-        N2 --> N3["Compile with an optimizer: search for better parameters within budget"]
-    end
+        O1["Handwrite a<br/>prompt string"] --> O2["Run it and<br/>inspect the<br/>result"] --> O3["Guess how to<br/>revise the<br/>wording"] --> O1
+
 ```
+
+**DSPy declarative programming**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["Declare<br/>Signature"] --> N2["Choose Module"]
+        N2 --> N3["Compile within<br/>budget"]
+
+```
+
+Details of the illustrated steps and components:
+
+- Declare a Signature: input/output contract
+- Choose a Module: Predict / CoT / ReAct
+- Compile with an optimizer: search for better parameters within budget
 
 ## 16.2 Signature: declare fields and task instructions, not a full request template
 
@@ -117,7 +131,5 @@ DSPy is therefore more than another way to write prompts. It turns prompt engine
 
 ## References
 
-- [Official DSPy documentation](https://dspy.ai/)
-- [DSPy: Class-based signatures](https://dspy.ai/getting-started/class-based-signatures/)
-- [DSPy: Changing modules](https://dspy.ai/getting-started/changing-modules/)
-- [DSPy paper: Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"](https://arxiv.org/abs/2310.03714)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-16) for this chapter’s sources, reading suggestions, and source notes.

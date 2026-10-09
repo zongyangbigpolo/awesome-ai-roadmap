@@ -13,14 +13,15 @@ It must assemble the instructions, tool definitions, history, and new input that
 A request sent to a model typically combines five independently maintained sources:
 
 ```mermaid
-flowchart TB
-    SP["System Prompt<br/>Identity, general rules, and output-format constraints"]
-    INST["Instructions / Memory<br/>Project configuration: AGENTS.md, skills, long-term memory"]
-    TOOLS["Tool Definitions<br/>Schemas for tools available this turn"]
-    HIST["Conversation History<br/>Historical messages in working memory"]
-    USER["Current Turn Input<br/>New user input or tool results this turn"]
-    ASSEMBLE["Assembly pipeline"]
-    REQ["Final request payload"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    SP["System Prompt"]
+    INST["Instructions /<br/>Memory"]
+    TOOLS["Tool Definitions"]
+    HIST["Conversation<br/>History"]
+    USER["Current Turn<br/>Input"]
+    ASSEMBLE["Assembly<br/>pipeline"]
+    REQ["Final request<br/>payload"]
 
     SP --> ASSEMBLE
     INST --> ASSEMBLE
@@ -30,6 +31,8 @@ flowchart TB
     ASSEMBLE --> REQ
 ```
 
+The five inputs remain distinct: the system prompt supplies identity, general rules, and output-format constraints; instructions/memory supply project configuration such as `AGENTS.md`, skills, and long-term memory; tool definitions supply schemas available this turn; conversation history supplies historical messages from working memory; and current-turn input supplies new user input or tool results. The assembly pipeline combines them into the final request payload.
+
 These sources have different lifecycles. The system prompt is usually relatively stable; instructions and memory vary by task or project; tool definitions may be dynamically narrowed for the current context (Section 19.7); conversation history grows or is compressed; and the current turn brings new input. The assembly pipeline must preserve message structure and source authority, not flatten everything into one block of text with equal privileges.
 
 ## 18.3 Why does assembly order matter?
@@ -38,7 +41,7 @@ Assembly order is not a matter of aesthetics. It affects three things at once:
 
 1. **Prompt-cache hit rate.** With prefix-based caching, placing volatile content first also prevents reuse of stable content that follows it. OpenAI Prompt Caching, for example, requires a matching rendered prefix and is subject to model support, minimum lengths, breakpoints, and retention policies (see References). Prefer stable content first and volatile content later, provided that this does not change message semantics or trust levels. Other caching interfaces do not necessarily accept the same parameters.
 2. **Whether important information is used effectively.** Constraints in the middle of a long history may be overlooked, but the effect depends on the model, task, length, and message roles. “Later is better” is not a guarantee. Test layouts with regression cases for omitted constraints rather than judging them by position alone.
-3. **Stable serialization of tool lists.** MCP 2026-07-28 uses **SHOULD** for deterministic list ordering, which helps tool-list and prompt caching. It is not **MUST**, and it certainly does not guarantee deterministic tool selection by the model ([Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)).
+3. **Stable serialization of tool lists.** MCP 2026-07-28 uses **SHOULD** for deterministic list ordering, which helps tool-list and prompt caching. It is not **MUST**, and it certainly does not guarantee deterministic tool selection by the model (Tools<sup>[【285】](../../book/references.md#ref-285)</sup>).
 
 These are cache-layout principles, not a reason to override trust boundaries. Retrieved documents, long-term memory, skill content, and model-generated summaries must not become system-level instructions merely because they are “stable.” Source and permission labels must be retained independently. APIs differ in their internal serialization order for tool fields and their support for explicit and prefix caching; follow the relevant provider's contract.
 
@@ -49,7 +52,7 @@ No. The host must distinguish configuration sources, then assemble them accordin
 - **Product-level default instructions**, expressing product behavior and rules; genuinely non-bypassable safety boundaries still need enforcement by the executor.
 - **Organization- or project-level configuration**, including the AGENTS.md files discussed in Section 3.6, typically read once at session startup.
 - **Skills and commands**, such as the skills in Section 3.5, disclosed progressively on demand. Often only a summary is injected until the skill is explicitly invoked.
-- **Application-supplied system-prompt configuration**, such as the Claude Agent SDK's presets, `append`, and custom `system_prompt` (see [Modifying system prompts](https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts)). Configuring a system prompt does not imply support for hot updates at arbitrary times. Project-file content may also be injected into conversation context rather than rewriting the system field.
+- **Application-supplied system-prompt configuration**, such as the Claude Agent SDK's presets, `append`, and custom `system_prompt` (see Modifying system prompts<sup>[【548】](../../book/references.md#ref-548)</sup>). Configuring a system prompt does not imply support for hot updates at arbitrary times. Project-file content may also be injected into conversation context rather than rewriting the system field.
 
 Loading times differ too: some sources are read at session startup, others on demand. Source authority, loading time, and final message role are three separate decisions; a single string concatenation cannot substitute for them.
 
@@ -109,9 +112,5 @@ Context assembly must first ensure valid messages, prevent elevation of source a
 
 ## References
 
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Claude Agent SDK: Modifying system prompts](https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts)
-- [OpenAI: Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching): prefix matching, model differences, and cache breakpoints; accessed in the source review on 2026-09-15.
-- [Anthropic Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching): retained as the original technical source. Access during the source review redirected to a region-unavailable page, so it was not used to confirm current parameters.
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-18) for this chapter’s sources, reading suggestions, and source notes.

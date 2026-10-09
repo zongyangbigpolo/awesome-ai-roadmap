@@ -26,18 +26,27 @@ LangChain 的做法是在这些差异之上定义稳定接口：厂商集成负�
 **可观测性贯穿各层**，通过运行事件和 Trace 记录模型调用、工具调用、耗时和异常。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["核心协议层<br/>Message / Runnable / Model / Tool"]
-    B["集成适配层<br/>各 Provider 独立包"]
-    C["Agent 开发层<br/>create_agent / Middleware / 结构化输出"]
-    D["编排运行层<br/>LangGraph Runtime"]
-    O["可观测性<br/>运行事件与 Trace"]
+    A["核心协议层"]
+    B["集成适配层"]
+    C["Agent 开发层"]
+    D["编排运行层"]
+    O["可观测性"]
     A --- B --- C --- D
     O -.贯穿.- A
     O -.贯穿.- D
 
     style O fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 核心协议层 Message / Runnable / Model / Tool
+- 集成适配层 各 Provider 独立包
+- Agent 开发层 create_agent / Middleware / 结构化输出
+- 编排运行层 LangGraph Runtime
+- 可观测性 运行事件与 Trace
 
 这张图描述的是职责边界，不是严格的单向调用顺序。例如模型和编译后的 Agent 都遵循 Runnable 调用方式，但它们承担的架构角色不同。
 
@@ -82,17 +91,22 @@ result = chain.invoke({"question": "什么是 Agent？"})
 Agent 与普通单次调用的区别，在于模型和工具之间可能反复多轮执行。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
     H["HumanMessage"] --> M["Model"]
     M --> A["AIMessage"]
-    A --> D{"包含 tool_calls?"}
+    A --> D["包含 tool_calls?"]
     D -->|否| F["最终回答"]
     D -->|是| T["Tool Runtime"]
-    T --> TM["ToolMessage<br/>带 tool_call_id"]
+    T --> TM["ToolMessage"]
     TM --> M
 
     style F fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- ToolMessage 带 tool_call_id
 
 ### 3.4.1 `tool_call_id` 为什么重要
 
@@ -125,16 +139,24 @@ Context 的可信性来自应用的认证边界，不来自 dataclass 或类型�
 **如果把这些逻辑全部塞进 Prompt 或 Tool，代码会很快纠缠在一起。**
 
 ```mermaid
-flowchart LR
-    R["请求"] --> M1["进入模型前<br/>按用户身份生成系统提示词<br/>历史过长先做摘要"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    R["请求"] --> M1["进入模型前"]
     M1 --> LLM["模型"]
-    LLM --> M2["决定调工具后<br/>检查权限<br/>敏感动作暂停等审批"]
-    M2 --> T["执行工具<br/>临时网络故障做有上限的重试"]
-    T --> M3["结果返回后<br/>补格式或安全校验"]
+    LLM --> M2["决定调工具后"]
+    M2 --> T["执行工具"]
+    T --> M3["结果返回后"]
     M3 --> O["输出"]
 
     style M2 fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 进入模型前 按用户身份生成系统提示词 历史过长先做摘要
+- 决定调工具后 检查权限 敏感动作暂停等审批
+- 执行工具 临时网络故障做有上限的重试
+- 结果返回后 补格式或安全校验
 
 > **Middleware 并不是另一套运行时。** 它运行在 `create_agent` 编译出的 LangGraph 内部，对执行行为进行**组合式扩展**。
 
@@ -221,11 +243,5 @@ LangChain 提供高层组件和标准 Agent 架构，LangGraph 提供底层执�
 
 ## 参考资料
 
-- [LangChain 官方文档](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Messages 概念文档](https://docs.langchain.com/oss/python/langchain/messages)
-- [LangChain: Tools 概念文档](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Middleware 概念文档](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain v1 迁移指南](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangGraph 官方文档](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LangGraph Checkpointers：super-step 与 pending writes](https://docs.langchain.com/oss/python/langgraph/checkpointers)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-03)。

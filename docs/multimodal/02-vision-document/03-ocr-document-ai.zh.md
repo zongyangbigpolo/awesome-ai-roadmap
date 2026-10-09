@@ -85,16 +85,5 @@ CER/WER 低不代表下游任务可用：大量正文识别正确，也可能掩
 
 ## 参考资料
 
-- [LayoutLM: Pre-training of Text and Layout for Document Image Understanding](https://arxiv.org/abs/1912.13318)
-- [LayoutLMv3: Pre-training for Document AI with Unified Text and Image Masking](https://arxiv.org/abs/2204.08387)
-- [OCR-free Document Understanding Transformer (Donut)](https://arxiv.org/abs/2111.15664)
-- [PubTables-1M: Towards Comprehensive Table Extraction From Unstructured Documents](https://arxiv.org/abs/2110.00061)
-- [GriTS: Grid Table Similarity](https://arxiv.org/abs/2203.12555)
-- [Image-based table recognition: data, model, and evaluation (PubTabNet / TEDS)](https://arxiv.org/abs/1911.10683)
-- [ChartQA: A Benchmark for Question Answering about Charts](https://arxiv.org/abs/2203.10244)
-- [DocVQA: A Dataset for VQA on Document Images](https://arxiv.org/abs/2007.00398)
-- [Azure AI Document Intelligence 官方文档](https://learn.microsoft.com/azure/ai-services/document-intelligence/overview)
-- [Azure Document Intelligence：准确率与置信度](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/concept/accuracy-confidence?view=doc-intel-4.0.0)
-- [Google Cloud Document AI 官方文档](https://cloud.google.com/document-ai/docs/overview)
-- [Amazon Textract 官方文档](https://docs.aws.amazon.com/textract/latest/dg/what-is.html)
-- [Amazon Textract：AnalyzeDocument 与 FeatureTypes](https://docs.aws.amazon.com/textract/latest/APIReference/API_AnalyzeDocument.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-03)。

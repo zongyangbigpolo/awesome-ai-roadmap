@@ -128,15 +128,5 @@ FID 对图像分辨率、参考数据集选择和特征提取网络版本敏感�
 
 ## 参考资料
 
-- [Denoising Diffusion Probabilistic Models (DDPM)](https://arxiv.org/abs/2006.11239)
-- [Denoising Diffusion Implicit Models (DDIM)](https://arxiv.org/abs/2010.02502)
-- [Score-Based Generative Modeling through Stochastic Differential Equations](https://arxiv.org/abs/2011.13456)
-- [High-Resolution Image Synthesis with Latent Diffusion Models (Stable Diffusion)](https://arxiv.org/abs/2112.10752)
-- [Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598)
-- [Flow Matching for Generative Modeling](https://arxiv.org/abs/2210.02747)
-- [Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow](https://arxiv.org/abs/2209.03003)
-- [Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (Stable Diffusion 3)](https://arxiv.org/abs/2403.03206)
-- [Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding (Imagen)](https://arxiv.org/abs/2205.11487)
-- [OpenAI DALL·E 3: Improving Image Generation with Better Captions](https://cdn.openai.com/papers/dall-e-3.pdf)
-- [GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium (FID)](https://arxiv.org/abs/1706.08500)
-- [CLIPScore: A Reference-free Evaluation Metric for Image Captioning](https://arxiv.org/abs/2104.08718)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-07)。

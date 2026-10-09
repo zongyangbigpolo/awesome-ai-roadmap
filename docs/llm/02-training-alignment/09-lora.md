@@ -103,16 +103,22 @@ After merging, the computation graph is the same as the original linear layer, w
 
 For QLoRA, distinguish merging into a dequantized base from reloading the original floating-point base and merging into that. These bases have different weights. Quantizing after merging introduces further rounding error and requires reevaluation.
 
-```mermaid
-flowchart LR
-    subgraph AD["Typical nonlinear adapter"]
-        X1["Input"] --> L1["Transformer sublayer"] --> AD1["Additional bottleneck network"] --> O1["Output"]
-    end
-    subgraph LR2["Merged LoRA"]
-        X2["Input"] --> M1["Original linear layer<br/>W + ΔW"] --> O2["Output"]
-    end
+**Typical nonlinear adapter**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X1["Input"] --> L1["Transformer sublayer"] --> AD1["Additional bottleneck network"] --> O1["Output"]
     style AD1 fill:#fdecea
+```
+
+**Merged LoRA**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X2["Input"] --> M1["Original linear layer<br/>W + ΔW"] --> O2["Output"]
+
 ```
 
 Typical bottleneck adapters contain nonlinearities and generally cannot be folded into the same linear weight matrix. This does not establish a fixed number of extra milliseconds per layer; latency must be measured.
@@ -234,11 +240,5 @@ LoRA's central idea is to **constrain updates through low-rank parameterization 
 
 ## References
 
-- [LoRA: equations, initialization, and rank experiments](https://arxiv.org/abs/2106.09685)
-- [QLoRA](https://arxiv.org/abs/2305.14314)
-- [Parameter-Efficient Transfer Learning for NLP](https://arxiv.org/abs/1902.00751)
-- [PEFT v0.17.0: LoRA configuration, initialization, and scaling](https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora)
-- [PEFT: Model merging and add_weighted_adapter](https://huggingface.co/docs/peft/developer_guides/model_merging)
-- [PEFT v0.17.0: weighted-adapter implementation and limitations](https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py)
-- [vLLM: LoRA adapters](https://docs.vllm.ai/en/stable/features/lora/)
-- [Transformers: memory components of model training](https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-09) for this chapter’s sources, reading suggestions, and source notes.

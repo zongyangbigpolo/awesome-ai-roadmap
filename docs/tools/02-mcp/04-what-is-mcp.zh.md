@@ -30,19 +30,17 @@ MCP 解决的是完全不同的一组问题：
 3. **工具方升级 API**：所有接入方各自改代码。
 
 ```mermaid
-flowchart LR
-    subgraph BEFORE["分别适配的简化模型：M×N 条对接关系"]
-        A1[Claude Desktop] --- T1[GitHub]
-        A1 --- T2[Slack]
-        A1 --- T3[Postgres]
-        A2[Cursor] --- T1
-        A2 --- T2
-        A2 --- T3
-        A3[自研 Agent] --- T1
-        A3 --- T2
-        A3 --- T3
-    end
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["M 个应用"] --- PAIRS["M × N 个集成关系"]
+    PAIRS --- TOOLS["N 个外部系统"]
 ```
+
+例如，Claude Desktop、Cursor 和自研 Agent 分别对接 GitHub、Slack、Postgres，会产生九组两两集成关系，用来说明简化的 `M × N` 维护模型。连线表示集成关系，而不是执行顺序。
+
+图中各项的完整含义：
+
+- 分别适配的简化模型：M×N 条对接关系
 
 如果每个应用都独立适配每个工具，接口组合数为 M×N。这是说明重复劳动的简化模型，不是历史统计；共享 SDK、内部 API 和适配层本来也能减少重复实现。
 
@@ -53,16 +51,17 @@ flowchart LR
 MCP 为「AI 接工具」定了同一种标准：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart LR
-    subgraph AFTER["共享协议的简化模型：M 个 Client + N 个 Server"]
-        A1[Claude Desktop] --> P((MCP 协议))
-        A2[Cursor] --> P
-        A3[自研 Agent] --> P
-        P --> S1[GitHub MCP Server]
-        P --> S2[Slack MCP Server]
-        P --> S3[Postgres MCP Server]
-    end
+    CLIENTS["M 个 Client"] --> MCP["共享 MCP 契约"]
+    MCP --> SERVERS["N 个 Server"]
 ```
+
+同样的三个应用可以通过 MCP Client 使用 GitHub、Slack 和 Postgres 的 MCP Server。简化后的成本模型是 `M 个 Client + N 个 Server`。共享契约不是额外的中央代理，Host 仍要建立相应的 Client–Server 连接。
+
+图中各项的完整含义：
+
+- 共享协议的简化模型：M 个 Client + N 个 Server
 
 工具方实现 Server 后，支持相同版本、传输和能力的应用可复用接入。认证、数据映射、权限和部署仍要配置，不能承诺“任意客户端零代码接入”。
 
@@ -73,9 +72,11 @@ flowchart LR
 MCP 采用 client-host-server 架构，注意是三个角色而不是两个——这里最容易被讲错。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph HOST["Host 进程（如 Claude Desktop / Cursor / 你的 Agent）"]
-        H["Host<br/>协调者：管理生命周期、执行安全策略、处理用户授权"]
+    subgraph HOST["Host 进程"]
+        direction TB
+        H["Host"]
         C1["Client 1"]
         C2["Client 2"]
         C3["Client 3"]
@@ -85,18 +86,28 @@ flowchart TB
     end
 
     subgraph LOCAL["本地"]
-        S1["Server 1<br/>文件系统"]
-        S2["Server 2<br/>数据库"]
+        direction TB
+        S1["Server 1"]
+        S2["Server 2"]
     end
 
     subgraph REMOTE["远程"]
-        S3["Server 3<br/>外部 API"]
+        direction TB
+        S3["Server 3"]
     end
 
     C1 --> S1
     C2 --> S2
     C3 --> S3
 ```
+
+图中各项的完整含义：
+
+- Host 进程（如 Claude Desktop / Cursor / 你的 Agent）
+- Host 协调者：管理生命周期、执行安全策略、处理用户授权
+- Server 1 文件系统
+- Server 2 数据库
+- Server 3 外部 API
 
 | 角色 | 职责 | 数量关系 |
 |---|---|---|
@@ -186,7 +197,7 @@ JSON-RPC 使用可读的 JSON 和统一的请求、结果、错误结构，便�
 
 与旧版 Server 互操作时，只有明确支持新旧两代协议的实现（dual-era）才能按兼容矩阵回退到 `initialize`、`notifications/initialized` 和旧版会话语义。现代协议专用 SDK 不一定具备这条路径，不能把旧握手继续写成所有 MCP 调用的必经步骤。
 
-2026-07-28 所有结果还要求 `resultType`；读取与列表结果有 `ttlMs`、`cacheScope`。Sampling、Roots、Logging 已 **Deprecated**，仍保留兼容但新实现不应再采用；Tasks 已移到 `io.modelcontextprotocol/tasks` 官方可选扩展。扩展、草案 SEP 和核心协议不是同一发布层级，详见[变更记录](https://modelcontextprotocol.io/specification/2026-07-28/changelog)。
+2026-07-28 所有结果还要求 `resultType`；读取与列表结果有 `ttlMs`、`cacheScope`。Sampling、Roots、Logging 已 **Deprecated**，仍保留兼容但新实现不应再采用；Tasks 已移到 `io.modelcontextprotocol/tasks` 官方可选扩展。扩展、草案 SEP 和核心协议不是同一发布层级，详见变更记录<sup>[【277】](../../book/references.zh.md#ref-277)</sup>。
 
 ### 4.7.3 工程上要注意什么
 
@@ -214,7 +225,7 @@ if __name__ == "__main__":
 
 这里的工具参数类型用于生成输入 JSON Schema，docstring 用于工具描述。SDK 省去了部分报文构造，但不代替业务权限检查和部署配置。
 
-**工具接入可复用**。要区分官方维护、社区实现和归档示例。旧 `@modelcontextprotocol/server-github` 已归档，GitHub 官方实现是 [github/github-mcp-server](https://github.com/github/github-mcp-server)。下面用本地自有 Server 示意宿主配置，而不是安装归档包：
+**工具接入可复用**。要区分官方维护、社区实现和归档示例。旧 `@modelcontextprotocol/server-github` 已归档，GitHub 官方实现是 github/github-mcp-server<sup>[【284】](../../book/references.zh.md#ref-284)</sup>。下面用本地自有 Server 示意宿主配置，而不是安装归档包：
 
 ```json
 {
@@ -269,12 +280,5 @@ Client 是 Host 内的协议连接器，不是安全沙箱。Host 控制用户�
 
 ## 参考资料
 
-- 版本状态核对：2026-09-15 复核下列固定版变更与兼容说明；采用固定协议基准，不将动态页面的“最新”当作 SDK 已支持的证明。
-- [MCP 版本状态](https://modelcontextprotocol.io/specification/versioning)
-- [MCP 2026-07-28 变更记录](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
-- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP 规范 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [MCP 版本兼容说明](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)
-- [MCP 架构说明](https://modelcontextprotocol.io/specification/2026-07-28/architecture)
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
-- [JSON-RPC 2.0 规范](https://www.jsonrpc.org/specification)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-04)。

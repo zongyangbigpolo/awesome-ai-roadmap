@@ -97,7 +97,8 @@ $$
 所以“优势永远等于最终奖励减 V”只是一步任务的简化直觉，不能代替一般 token 级公式。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     P["采样旧策略"] --> DATA["回答与旧 log probabilities"]
     DATA --> R["RM 与 KL 奖励"]
     R --> V["价值估计与优势"]
@@ -230,9 +231,17 @@ $$
 这里的 `ε` 是数值保护。结果监督版本把同一优势赋给回答中的 token，再结合截断概率比与 KL。全组奖励相同则任务优势为零；组内归一化也可能引入难度加权和噪声敏感问题。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     ONLINE["在线采样与奖励优化"] --> PPO["PPO<br/>学习价值基线"]
     ONLINE --> GRPO["GRPO<br/>组内相对基线"]
+```
+
+离线偏好优化的内部循环不同：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OFFLINE["固定偏好对"] --> DPO["离线 DPO<br/>直接偏好损失"]
     DPO -.->|可外接采样与标注循环| OFFLINE
 ```
@@ -264,12 +273,5 @@ PPO-RLHF 用在线奖励、优势估计和截断策略更新；DPO 通过特定�
 
 ## 参考资料
 
-- [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
-- [OpenAI Spinning Up：PPO-Clip 公式与约束边界](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [DPO：§4 与附录 A 推导](https://arxiv.org/html/2305.18290v3)
-- [DeepSeekMath：GRPO](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1，初版](https://arxiv.org/html/2501.12948v1)
-- [Llama 2](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-11)。

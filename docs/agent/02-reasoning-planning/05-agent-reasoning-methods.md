@@ -10,22 +10,52 @@ Must you choose between ReAct and CoT? No. ReAct organizes an action-and-feedbac
 
 > **A reasoning method determines how an individual problem-solving attempt generates, searches, and selects candidates. An agent pattern determines how the system organizes models, tools, state, and environmental feedback.**
 
+Reasoning sits inside agent control.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    W[Workflow orchestration layer] --> A[Agent control pattern]
-    A --> R[Model reasoning and search methods]
-    A --> T[Tools]
-    A --> M[State / Memory]
+    W["Workflow orchestration<br/>layer"]
+    A["Agent control pattern"]
+    R["Model reasoning and<br/>search methods"]
+    T["Tools"]
+    M["State / Memory"]
+    W --> A
+    A --> R
+    A --> T
+    A --> M
+```
 
-    A --> REACT[ReAct]
-    A --> PLAN[Plan-and-Execute]
-    A --> REFLEX[Reflection / Reflexion]
+Agent control patterns.
 
-    R --> COT[CoT]
-    R --> DECOMP[Task decomposition]
-    R --> SC[Self-Consistency]
-    R --> TOT[ToT / Graph Search]
-    R --> VER[Verifier-guided Reasoning]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    A["Agent control pattern"]
+    REACT["ReAct"]
+    PLAN["Plan-and-Execute"]
+    REFLEX["Reflection / Reflexion"]
+    A --> REACT
+    A --> PLAN
+    A --> REFLEX
+```
+
+Reasoning and search methods.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    R["Model reasoning and<br/>search methods"]
+    COT["CoT"]
+    DECOMP["Task decomposition"]
+    SC["Self-Consistency"]
+    TOT["ToT / Graph Search"]
+    VER["Verifier-guided<br/>Reasoning"]
+    R --> COT
+    R --> DECOMP
+    R --> SC
+    R --> TOT
+    R --> VER
 ```
 
 For example:
@@ -76,26 +106,61 @@ A trained reasoning model can also use test-time search. Using test feedback to 
 
 Common methods fall into four groups according to how they organize test-time computation. These are not rungs on a capability ladder that every system must climb; they can also be combined:
 
+Single-path reasoning.
+
 ```mermaid
 flowchart TB
-    R[Test-time compute] --> S1[Single-path reasoning]
-    R --> S2[Task decomposition]
-    R --> S3[Multiple-candidate sampling]
-    R --> S4[Search and verification]
+    R[Test-time compute]
+    S1[Single-path reasoning]
+    DIRECT[Direct Answer]
+    COT[Chain of Thought]
+    R --> S1
+    S1 --> DIRECT
+    S1 --> COT
+```
 
-    S1 --> DIRECT[Direct Answer]
-    S1 --> COT[Chain of Thought]
+Decomposition.
 
-    S2 --> LTM[Least-to-Most]
-    S2 --> PS[Plan-and-Solve]
+```mermaid
+flowchart TB
+    R[Test-time compute]
+    S2[Task decomposition]
+    LTM[Least-to-Most]
+    PS[Plan-and-Solve]
+    R --> S2
+    S2 --> LTM
+    S2 --> PS
+```
 
-    S3 --> SC[Self-Consistency]
-    S3 --> BON[Best-of-N]
+Sampling multiple candidates.
 
-    S4 --> TOT[Tree of Thoughts]
-    S4 --> GOT[Graph of Thoughts]
-    S4 --> MCTS[MCTS-style search]
-    S4 --> VG[Verifier-guided]
+```mermaid
+flowchart TB
+    R[Test-time compute]
+    S3[Multiple-candidate sampling]
+    SC[Self-Consistency]
+    BON[Best-of-N]
+    R --> S3
+    S3 --> SC
+    S3 --> BON
+```
+
+Search and verification.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    R["Test-time<br/>compute"]
+    S4["Search and<br/>verification"]
+    TOT["Tree of Thoughts"]
+    GOT["Graph of<br/>Thoughts"]
+    MCTS["MCTS-style<br/>search"]
+    VG["Verifier-guided"]
+    R --> S4
+    S4 --> TOT
+    S4 --> GOT
+    S4 --> MCTS
+    S4 --> VG
 ```
 
 For the same base model and similar per-generation lengths, costs can be compared roughly:
@@ -144,11 +209,12 @@ This section focuses on CoT's reasoning mechanism and limitations. See [Chapter 
 CoT (Chain of Thought) generates intermediate reasoning steps, breaking a complex problem into a continuous reasoning chain:
 
 ```mermaid
-flowchart LR
-    Q[Question] --> S1[Intermediate step 1]
-    S1 --> S2[Intermediate step 2]
-    S2 --> S3[Intermediate step N]
-    S3 --> A[Answer]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Question"] --> S1["Intermediate step 1"]
+    S1 --> S2["Intermediate step 2"]
+    S2 --> S3["Intermediate step N"]
+    S3 --> A["Answer"]
 ```
 
 In probabilistic terms, the intermediate reasoning sequence can be represented by an auxiliary variable $z$. Marginalizing it out gives the distribution of the final answer:
@@ -171,7 +237,7 @@ Provide examples with intermediate steps in the prompt so the model can follow a
 
 Instead of complete examples, use a short instruction requesting stepwise analysis. A historically common prompt is “Let's think step by step.”
 
-For models trained for reasoning, repeatedly asking them to “think step by step” does not necessarily help. [OpenAI's reasoning prompting guidance](https://developers.openai.com/api/docs/guides/reasoning-best-practices) explicitly recommends direct, clear task instructions for its reasoning models without an additional request to elaborate CoT. That is not a universal rule for every vendor or model version.
+For models trained for reasoning, repeatedly asking them to “think step by step” does not necessarily help. OpenAI's reasoning prompting guidance<sup>[【109】](../../book/references.md#ref-109)</sup> explicitly recommends direct, clear task instructions for its reasoning models without an additional request to elaborate CoT. That is not a universal rule for every vendor or model version.
 
 ### 5.5.3 Do not treat a complete chain of thought as a reliable explanation
 
@@ -211,7 +277,7 @@ For users, prefer to show:
 - Tokens, latency, and cost increase.
 - Without external verification, an answer can be internally consistent but wrong.
 
-The [original paper](https://arxiv.org/abs/2201.11903) reports gains for the tested models, scales, and arithmetic, commonsense, and symbolic tasks. It does not establish that adding one instruction gives any model reliable planning ability. Research on explanation faithfulness also finds that biased information in prompts can influence models without those influences being acknowledged in CoT.
+The original paper<sup>[【104】](../../book/references.md#ref-104)</sup> reports gains for the tested models, scales, and arithmetic, commonsense, and symbolic tasks. It does not establish that adding one instruction gives any model reliable planning ability. Research on explanation faithfulness also finds that biased information in prompts can influence models without those influences being acknowledged in CoT.
 
 ## 5.6 Task decomposition: make the problem smaller first
 
@@ -222,11 +288,12 @@ Decomposition aims to make each subproblem easier, not to make reasoning longer.
 Least-to-Most Prompting first identifies simpler subproblems, then solves them in dependency order.
 
 ```mermaid
-flowchart LR
-    Q[Complex problem] --> D[Decompose into subproblems]
-    D --> E1[Solve the basic subproblem]
-    E1 --> E2[Use E1 to solve the next problem]
-    E2 --> EN[Solve the final problem]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Complex problem"] --> D["Decompose into<br/>subproblems"]
+    D --> E1["Solve the basic<br/>subproblem"]
+    E1 --> E2["Use E1 to solve the next<br/>problem"]
+    E2 --> EN["Solve the final problem"]
 ```
 
 It is suitable when:
@@ -273,14 +340,15 @@ Dependencies, interfaces, and the final combined result still need checking.
 Self-Consistency samples multiple candidate reasoning paths rather than generating just one, then aggregates their final answers.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    Q[Question] --> P1[Reasoning path 1]
-    Q --> P2[Reasoning path 2]
-    Q --> P3[Reasoning path N]
-    P1 --> V[Answer aggregation]
+    Q["Question"] --> P1["Reasoning<br/>path 1"]
+    Q --> P2["Reasoning<br/>path 2"]
+    Q --> P3["Reasoning<br/>path N"]
+    P1 --> V["Answer<br/>aggregation"]
     P2 --> V
     P3 --> V
-    V --> A[Final answer]
+    V --> A["Final answer"]
 ```
 
 If path $i$ produces answer $y_i$, majority voting can be written as:
@@ -325,14 +393,15 @@ $$
 Here, $V$ is the verifier or scoring function.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q[Input] --> C1[Candidate 1]
-    Q --> C2[Candidate 2]
-    Q --> CN[Candidate N]
-    C1 --> V[Verifier / Reward Model]
+    Q["Input"] --> C1["Candidate 1"]
+    Q --> C2["Candidate 2"]
+    Q --> CN["Candidate N"]
+    C1 --> V["Verifier / Reward Model"]
     C2 --> V
     CN --> V
-    V --> BEST[Highest-scoring candidate]
+    V --> BEST["Highest-scoring<br/>candidate"]
 ```
 
 The distinction from Self-Consistency is:
@@ -363,22 +432,56 @@ ToT (Tree of Thoughts) treats intermediate reasoning states as search-tree nodes
 
 In the original method, an external controller maintains partial solutions, candidates, and the search strategy; the model generates and evaluates units of text. A single prompt saying “simulate three experts and backtrack” does not implement the paper's ToT search.
 
+Start with three candidate branches.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    S0["Initial state"]
+    A1["Candidate A"]
+    B1["Candidate B"]
+    C1["Candidate C"]
+    S0 --> A1
+    S0 --> B1
+    S0 --> C1
+```
+
+Expand A and send its successors to scoring.
+
 ```mermaid
 flowchart TB
-    S0[Initial state] --> A1[Candidate A]
-    S0 --> B1[Candidate B]
-    S0 --> C1[Candidate C]
-
-    A1 --> A2[Expansion A1]
-    A1 --> A3[Expansion A2]
-    B1 --> B2[Expansion B1]
-    B1 --> B3[Expansion B2]
-    C1 --> C2[Expansion C1]
-
-    A2 --> E[Scoring and selection]
+    A1[Candidate A]
+    A2[Expansion A1]
+    A3[Expansion A2]
+    E[Scoring and selection]
+    A1 --> A2
+    A1 --> A3
+    A2 --> E
     A3 --> E
+```
+
+Expand B into the same scoring stage.
+
+```mermaid
+flowchart TB
+    B1[Candidate B]
+    B2[Expansion B1]
+    B3[Expansion B2]
+    E[Scoring and selection]
+    B1 --> B2
+    B1 --> B3
     B2 --> E
     B3 --> E
+```
+
+Expand C into that shared scoring stage.
+
+```mermaid
+flowchart TB
+    C1[Candidate C]
+    C2[Expansion C1]
+    E[Scoring and selection]
+    C1 --> C2
     C2 --> E
 ```
 
@@ -428,14 +531,15 @@ A tree assumes that paths expand independently downward. Real reasoning may need
 Graph of Thoughts organizes reasoning states as a graph:
 
 ```mermaid
-flowchart LR
-    A[Candidate analysis A] --> M[Merge]
-    B[Candidate analysis B] --> M
-    C[External evidence C] --> M
-    M --> R[Revise]
-    R --> V[Verify]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Candidate<br/>analysis A"] --> M["Merge"]
+    B["Candidate<br/>analysis B"] --> M
+    C["External<br/>evidence C"] --> M
+    M --> R["Revise"]
+    R --> V["Verify"]
     V -->|Fail| R
-    V -->|Pass| O[Output]
+    V -->|Pass| O["Output"]
 ```
 
 A graph can represent:
@@ -460,10 +564,11 @@ Monte Carlo tree search methods commonly repeat four operations over candidate s
 Selection usually balances exploration of new branches against exploitation of high-scoring ones using visit counts and accumulated values. Evaluation may use environmental returns from rollouts or a learned value estimate. Here, backpropagation updates tree-node statistics; it is not neural-network backpropagation and does not automatically update LLM weights.
 
 ```mermaid
-flowchart LR
-    S[Selection] --> E[Expansion]
-    E --> V[Evaluation]
-    V --> B[Backpropagation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Selection"] --> E["Expansion"]
+    E --> V["Evaluation"]
+    V --> B["Backpropagation"]
     B --> S
 ```
 
@@ -483,20 +588,20 @@ Action search also requires states that can be copied, reset, or simulated. Back
 Models are not reliable executors of long arithmetic, exact state updates, or complex symbolic operations. Program-Aided Language Models (PAL) and Program of Thoughts (PoT) have the model generate a program, then delegate execution to an interpreter.
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
     participant M as Model
     participant R as Runtime
-    participant P as Python / Solver
+    participant P as Solver
 
-    U->>M: Submit a calculation problem
-    M-->>R: Generate a program or expression
+    M-->>R: Program or expression
     R->>R: Safety checks
-    R->>P: Execute in a sandbox
-    P-->>R: Return result or error
-    R->>M: Supply the execution result
-    M-->>U: Explain the answer
+    R->>P: Sandbox execution
+    P-->>R: Result or error
+    R->>M: Execution result
 ```
+
+The user submits a calculation problem to the model before this exchange. The solver is Python or another external solver: the runtime checks safety before sandboxed execution and supplies the result or error back to the model. The model then explains the answer to the user.
 
 Suitable tasks include:
 
@@ -520,12 +625,13 @@ Program execution does not automatically guarantee numerical exactness either. F
 Reasoning cannot compensate for missing or outdated facts. Agents can obtain external evidence from search, databases, code executors, and domain APIs.
 
 ```mermaid
-flowchart LR
-    Q[Question] --> M[Model]
-    M --> NEED{External information needed?}
-    NEED -->|No| A[Generate answer]
-    NEED -->|Yes| T[Call tool]
-    T --> O[Observation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Question"] --> M["Model"]
+    M --> NEED["External information<br/>needed?"]
+    NEED -->|No| A["Generate answer"]
+    NEED -->|Yes| T["Call tool"]
+    T --> O["Observation"]
     O --> M
 ```
 
@@ -553,14 +659,15 @@ RAG supplies external knowledge, but retrieval and reasoning still need to work 
 7. Retrieve again if necessary.
 
 ```mermaid
-flowchart LR
-    Q[Question] --> QR[Query Rewrite]
-    QR --> RET[Retrieval]
-    RET --> RR[Re-rank]
-    RR --> REASON[Reason with Evidence]
-    REASON --> CHECK{Enough evidence?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Question"] --> QR["Query Rewrite"]
+    QR --> RET["Retrieval"]
+    RET --> RR["Re-rank"]
+    RR --> REASON["Reason with Evidence"]
+    REASON --> CHECK["Enough evidence?"]
     CHECK -->|No| QR
-    CHECK -->|Yes| ANSWER[Answer with citations]
+    CHECK -->|Yes| ANSWER["Answer with citations"]
 ```
 
 Multiple retrieval rounds may improve coverage but also introduce noise. Record which evidence supports each conclusion.
@@ -577,7 +684,7 @@ $$
 
 Here, $e_i$ may contain test results, execution trajectories, or external evidence.
 
-An outcome reward model (ORM) usually scores a complete candidate. A process reward model (PRM) supplies finer-grained signals for intermediate steps, useful for pruning or allocating search budgets. [Let's Verify Step by Step](https://arxiv.org/abs/2305.20050) studies training verifiers with process supervision. Training a PRM updates its parameters; ranking candidates with a fixed PRM does not. A PRM score is not a formal proof, and scores for correlated steps cannot simply be multiplied into an “answer correctness probability” without assumptions.
+An outcome reward model (ORM) usually scores a complete candidate. A process reward model (PRM) supplies finer-grained signals for intermediate steps, useful for pruning or allocating search budgets. Let's Verify Step by Step<sup>[【463】](../../book/references.md#ref-463)</sup> studies training verifiers with process supervision. Training a PRM updates its parameters; ranking candidates with a fixed PRM does not. A PRM score is not a formal proof, and scores for correlated steps cannot simply be multiplied into an “answer correctness probability” without assumptions.
 
 The system can:
 
@@ -587,12 +694,13 @@ The system can:
 - Stop when a threshold is reached.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Generator] --> C[Candidates]
-    C --> V[Verifier]
-    V --> PASS{Threshold reached?}
-    PASS -->|Yes| OUT[Output]
-    PASS -->|No| FB[Structured feedback]
+    G["Generator"] --> C["Candidates"]
+    C --> V["Verifier"]
+    V --> PASS["Threshold reached?"]
+    PASS -->|Yes| OUT["Output"]
+    PASS -->|No| FB["Structured feedback"]
     FB --> G
 ```
 
@@ -638,7 +746,7 @@ It is a test-time feedback-and-revision method and can be part of the reflection
 
 ## 5.17 Reasoning models and test-time scaling
 
-A reasoning model usually undergoes post-training that strengthens multistep reasoning; applications do not necessarily need to explicitly request lengthy CoT. For example, the January 2025 [DeepSeek-R1 technical report](https://arxiv.org/abs/2501.12948) discusses incentivizing reasoning with RL and distillation. A model generating text that checks or backtracks does not establish that the service internally runs ToT or MCTS. Do not infer undisclosed architecture from the appearance of an answer.
+A reasoning model usually undergoes post-training that strengthens multistep reasoning; applications do not necessarily need to explicitly request lengthy CoT. For example, the January 2025 DeepSeek-R1 technical report<sup>[【301】](../../book/references.md#ref-301)</sup> discusses incentivizing reasoning with RL and distillation. A model generating text that checks or backtracks does not establish that the service internally runs ToT or MCTS. Do not infer undisclosed architecture from the appearance of an answer.
 
 Inference-time scaling allocates more reasoning compute to difficult problems, for example by:
 
@@ -663,7 +771,7 @@ Where:
 
 A larger budget does not guarantee a better answer. Allocate compute dynamically according to difficulty instead of applying maximum reasoning effort to every request.
 
-[Research on test-time compute allocation](https://arxiv.org/abs/2408.03314) finds that the relative benefits of sequential revision and parallel search vary with problem difficulty. This supports routing based on measurement, not shrinking budgets solely because the model claims confidence. Higher risk should first strengthen acceptance checks and approval requirements, not automatically enlarge the search tree.
+Research on test-time compute allocation<sup>[【464】](../../book/references.md#ref-464)</sup> finds that the relative benefits of sequential revision and parallel search vary with problem difficulty. This supports routing based on measurement, not shrinking budgets solely because the model claims confidence. Higher risk should first strengthen acceptance checks and approval requirements, not automatically enlarge the search tree.
 
 The runtime must decide whether to let one candidate reason longer or generate several candidates and select among them. Increasing per-attempt budget `T` is different from increasing candidate count `N`: the former gives one path more reasoning room, while the latter also requires candidate comparison and verification. See [LLM Chapter 17, §17.6.7](../../llm/04-prompt-reliability/17-cot.md) for concrete controls. To choose, follow §5.22: fix the total budget, include verification overhead, and compare task success and latency.
 
@@ -677,14 +785,32 @@ A one-sentence answer does not mean a cheap call. OpenAI bills reasoning tokens 
 
 Adaptive reasoning first estimates task difficulty or confidence, then selects a strategy:
 
+Direct and moderately difficult cases.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q[Input] --> E[Difficulty and risk assessment]
-    E -->|Simple, low risk| D[Direct Answer]
-    E -->|Moderate| C[CoT / Decomposition]
-    E -->|Answers can be aggregated| S[Self-Consistency]
-    E -->|Complex search| T[ToT / Graph Search]
-    E -->|Verifiable, high risk| V[Verifier-guided]
+    Q["Input"]
+    E["Difficulty and risk<br/>assessment"]
+    D["Direct Answer"]
+    C["CoT / Decomposition"]
+    Q --> E
+    E -->|Simple, low risk| D
+    E -->|Moderate| C
+```
+
+Aggregation, search, and verifiable high-risk cases.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    E["Difficulty<br/>and risk<br/>assessment"]
+    S["Self-Consistency"]
+    T["ToT / Graph<br/>Search"]
+    V["Verifier-guided"]
+    E -->|Answers can<br/>be<br/>aggregated| S
+    E -->|Complex<br/>search| T
+    E -->|Verifiable,<br/>high risk| V
 ```
 
 Dynamic routing can lower average cost:
@@ -711,16 +837,15 @@ A complete combination might look like:
 
 ```mermaid
 flowchart TB
-    G[Goal] --> AR[Adaptive Reasoning Router]
-    AR --> P[Planner<br/>Decomposition + ToT]
-    P --> E[Executor<br/>ReAct + Tools]
-    E --> V[Verifier<br/>Tests + Rules]
+    P[Planner] --> E[Executor]
+    E --> V[Verifier]
     V -->|Local failure| E
     V -->|Plan failure| P
-    V -->|Pass| S[Synthesizer<br/>Best-of-N]
-    S --> FINAL[Verify final draft and evidence]
-    FINAL --> OUT[Return result or report failed checks]
+    V -->|Pass| S[Synthesizer]
+    S --> FINAL[Final verification]
 ```
+
+The goal first passes an adaptive reasoning router. The planner uses decomposition and ToT; the executor uses ReAct and tools; the verifier uses tests and rules. After verification passes, the synthesizer applies Best-of-N. Final verification checks the completed draft and evidence, then returns the result or reports the checks that failed.
 
 Final synthesis can introduce new errors. Passing earlier tests does not automatically validate a newly generated answer. Check the final draft's citations, numbers, and task constraints; if it fails, revise within the remaining budget or report incompleteness.
 
@@ -755,27 +880,17 @@ Also consider:
 A practical reasoning controller usually needs at least these elements:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    IN[Input] --> SAFE[Input and authorization checks]
-    SAFE --> ROUTER[Difficulty / Risk routing]
-
-    ROUTER --> GEN[Candidate Generator]
-    GEN --> TOOLS[Tools / Retrieval / Code]
+    GEN["Candidate Generator"] --> TOOLS["Tools / Retrieval /<br/>Code"]
     TOOLS --> GEN
-
-    GEN --> VERIFY[Verifier]
-    VERIFY --> SCORE[Score, confidence, and evidence checks]
-    SCORE --> DEC{Criteria met?}
-
-    DEC -->|Yes| OUT[Answer + Evidence]
-    DEC -->|No, improvable| REFINE[Refine / Search]
+    GEN --> VERIFY["Verifier"]
+    VERIFY -->|Criteria met| OUT["Answer + Evidence"]
+    VERIFY -->|Improvable| REFINE["Refine / Search"]
     REFINE --> GEN
-    DEC -->|Budget exhausted| PARTIAL[Report partial results and limitations]
-    DEC -->|High risk| HUMAN[Human Review]
-
-    GEN -.Trace.-> OBS[Observability]
-    VERIFY -.Metrics.-> OBS
 ```
+
+Before entering this loop, input and authorization checks precede difficulty/risk routing. Verification includes score, confidence, and evidence checks. The refinement branch applies only when criteria are unmet and improvement is possible; budget exhaustion instead returns partial results and limitations, while high risk requires human review. Generator traces and verifier metrics feed observability.
 
 A reasoning system is responsible not only for generation, but also for verification, budget allocation, and failure reporting.
 
@@ -887,22 +1002,5 @@ These methods ultimately support the agent's system-level control:
 
 ## References
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners](https://arxiv.org/abs/2205.11916)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601) — Game of 24 conditions checked against [v2, §4.1 and Table 2](https://arxiv.org/html/2305.10601v2).
-- [Graph of Thoughts: Solving Elaborate Problems with Large Language Models](https://arxiv.org/abs/2308.09687)
-- [PAL: Program-aided Language Models](https://arxiv.org/abs/2211.10435)
-- [Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651)
-- [Plan-and-Solve Prompting](https://arxiv.org/abs/2305.04091)
-- [Program of Thoughts Prompting](https://arxiv.org/abs/2211.12588)
-- [Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting](https://arxiv.org/abs/2305.04388)
-- [Let's Verify Step by Step](https://arxiv.org/abs/2305.20050)
-- [DeepSeek-R1](https://arxiv.org/abs/2501.12948) — the discussion refers to the [January 2025 v1 technical report](https://arxiv.org/html/2501.12948v1), not an inference about a current hosted service.
-- [Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters](https://arxiv.org/abs/2408.03314)
-- [s1: Simple test-time scaling](https://arxiv.org/abs/2501.19393)
-- [OpenAI: Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices) — vendor-specific guidance, including historical o-series examples; not a universal prompting rule.
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning) — reasoning-token accounting and opaque continuation state; supported behavior depends on the model and API.
-- [Amazon Bedrock: Extended thinking](https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html) — returned thinking forms and tool-continuation requirements; the page distinguishes full output for Claude 3.7 Sonnet from summarized output for Claude 4.
-- [Python 3.13: decimal — precision, rounding, and decimal arithmetic](https://docs.python.org/3.13/library/decimal.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-05) for this chapter’s sources, reading suggestions, and source notes.

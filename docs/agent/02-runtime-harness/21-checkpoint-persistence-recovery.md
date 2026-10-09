@@ -20,7 +20,7 @@ Chapters 7 and 8 distinguish working memory from long-term memory by their **con
 
 | Level | Scope | Typical implementation | Purpose |
 |---|---|---|---|
-| Within-thread persistence: checkpoint | One session or task | LangGraph checkpointers “persist a thread's graph state” for “short-term, thread-scoped memory, including conversation continuity, human-in-the-loop workflows, time travel, and fault tolerance” ([LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)) | Supports the recovery capabilities discussed here |
+| Within-thread persistence: checkpoint | One session or task | LangGraph checkpointers “persist a thread's graph state” for “short-term, thread-scoped memory, including conversation continuity, human-in-the-loop workflows, time travel, and fault tolerance” (LangGraph: Persistence<sup>[【483】](../../book/references.md#ref-483)</sup>) | Supports the recovery capabilities discussed here |
 | Cross-thread persistence: store | Across sessions and tasks | LangGraph stores “persist application-defined data” for “long-term, cross-thread memory” | Supports the long-term memory storage in Chapters 7 and 8 |
 
 Separate their data models, access permissions, and retention policies, even if both use the same physical storage system, such as PostgreSQL. A “thread” here is the framework's conversation identifier, not an operating-system thread. Short-term memory can be durably retained for a long time, and a cross-thread store can be updated frequently.
@@ -32,7 +32,7 @@ Not every failure is suitable for automatic retry. The criteria are **whether th
 - **Candidates for automatic retry:** rate limits and transient infrastructure failures, provided the operation is safe to resend and respects `Retry-After`, backoff, attempt limits, and a total time limit. A network timeout does not prove that execution never occurred. For side-effecting calls, query the operation's status first or use its already-persisted idempotency key.
 - **Do not blindly repeat the same request:** invalid arguments need correction; unknown side-effect outcomes require a status query or a retry under the business idempotency contract; genuinely infeasible tasks need an explanation of missing prerequisites or a handoff. A model saying “I cannot do this” is not an infrastructure error classification either. Check permissions, information, and available tools.
 
-[Temporal's default behavior](https://docs.temporal.io/encyclopedia/retry-policies) is to **retry Activities automatically, but not Workflow Executions**. Applications need to configure retry limits, non-retryable errors, and timeouts; an absent configuration does not mean retries are disabled. Workflow Task retries are yet another layer. Custom tool clients often use exponential backoff with jitter. The $n$th wait can be written as:
+Temporal's default behavior<sup>[【555】](../../book/references.md#ref-555)</sup> is to **retry Activities automatically, but not Workflow Executions**. Applications need to configure retry limits, non-retryable errors, and timeouts; an absent configuration does not mean retries are disabled. Workflow Task retries are yet another layer. Custom tool clients often use exponential backoff with jitter. The $n$th wait can be written as:
 
 $$
 t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\right)
@@ -56,7 +56,7 @@ A child call must inherit the parent's remaining deadline. Its effective duratio
 
 ## 21.6 Idempotency: making retries safe
 
-Idempotency means replaying the same logical operation does not add extra effects. A common approach is to **persist the operation key and an argument digest before execution**. The server atomically records the key's status and result, returns the same result for duplicate requests, and rejects changed arguments. The design must also address concurrent duplicates, record lifetimes, in-progress states, and atomicity between the business write and the deduplication record. [Stripe's idempotent-request documentation](https://docs.stripe.com/api/idempotent_requests) describes one specific API contract, not a guarantee shared by all tools.
+Idempotency means replaying the same logical operation does not add extra effects. A common approach is to **persist the operation key and an argument digest before execution**. The server atomically records the key's status and result, returns the same result for duplicate requests, and rejects changed arguments. The design must also address concurrent duplicates, record lifetimes, in-progress states, and atomicity between the business write and the deduplication record. Stripe's idempotent-request documentation<sup>[【556】](../../book/references.md#ref-556)</sup> describes one specific API contract, not a guarantee shared by all tools.
 
 **A model tool-call ID, a JSON-RPC request ID, and a business idempotency key are different identifiers.** Replanning may generate a new model call ID, and MCP multi-round-trip requests may require new JSON-RPC IDs. Use a separate, stable logical-operation key and map multiple attempts to it. If a service supports neither idempotency nor status queries, an unknown outcome may require human reconciliation or compensation. A checkpoint does not justify claiming exactly-once side effects.
 
@@ -81,9 +81,5 @@ A checkpoint saves execution state, not the outside world, and does not guarante
 
 ## References
 
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts): recovery re-enters the node, so code before the interruption runs again.
-- [LangGraph: Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [Temporal: Retry Policies](https://docs.temporal.io/encyclopedia/retry-policies)
-- [Stripe: Idempotent requests](https://docs.stripe.com/api/idempotent_requests)
-- [LangGraph Chapter 10: Core Advantages of LangGraph](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.md)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-21) for this chapter’s sources, reading suggestions, and source notes.

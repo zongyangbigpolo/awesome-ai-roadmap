@@ -20,7 +20,7 @@ description: 准确定义 Agent Harness 与 Runtime，比较 Model、Agent、Wor
 
 ### 16.2.2 Agent
 
-本主题讨论的 LLM Agent 是"模型 + 工具 + 循环"这三者的组合：模型在运行时允许的动作和预算内，动态选择下一步工具调用或提出结束（[Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)区分了预定义代码路径的 workflow 与由模型动态指挥的 agent）。模型并不独占控制权，Harness 仍可因权限、验收或预算而拒绝动作、要求继续或停止任务。Agent 在这里描述一种**控制关系**，不是说系统的每一个决定都交给模型。
+本主题讨论的 LLM Agent 是"模型 + 工具 + 循环"这三者的组合：模型在运行时允许的动作和预算内，动态选择下一步工具调用或提出结束（Anthropic: Building Effective Agents<sup>[【275】](../../book/references.zh.md#ref-275)</sup>区分了预定义代码路径的 workflow 与由模型动态指挥的 agent）。模型并不独占控制权，Harness 仍可因权限、验收或预算而拒绝动作、要求继续或停止任务。Agent 在这里描述一种**控制关系**，不是说系统的每一个决定都交给模型。
 
 ### 16.2.3 Workflow
 
@@ -28,13 +28,13 @@ Workflow 的控制结构由代码或流程图约束，节点内部可以使用�
 
 ### 16.2.4 Framework
 
-Framework 从开发者使用的 API、DSL 和组件来组织能力，**不代表只在开发时起作用**。LangGraph 的 Graph API 与 Functional API 共享运行时和持久化能力；OpenAI Agents SDK 内含 Runner；Microsoft Agent Framework 也提供 Harness Agent。框架与 Harness 可以由同一产品提供，区别是观察视角，不是互斥的软件分类（见 [Graph API](https://docs.langchain.com/oss/python/langgraph/use-graph-api)、[Functional API](https://docs.langchain.com/oss/python/langgraph/functional-api)）。
+Framework 从开发者使用的 API、DSL 和组件来组织能力，**不代表只在开发时起作用**。LangGraph 的 Graph API 与 Functional API 共享运行时和持久化能力；OpenAI Agents SDK 内含 Runner；Microsoft Agent Framework 也提供 Harness Agent。框架与 Harness 可以由同一产品提供，区别是观察视角，不是互斥的软件分类（见 Graph API<sup>[【543】](../../book/references.zh.md#ref-543)</sup>、Functional API<sup>[【544】](../../book/references.zh.md#ref-544)</sup>）。
 
 ### 16.2.5 Runtime / Harness
 
 Runtime/Harness 指执行宿主的职责：驱动循环、装配上下文、执行工具、管理权限与预算、持久化状态、处理中断并记录轨迹。不同项目对 Harness、Runtime、Scaffolding 的边界并不完全一致，本章把它们作为工程术语，而不是标准化产品类别。
 
-[SWE-agent](https://arxiv.org/abs/2405.15793) 的 **Agent-Computer Interface（ACI）** 重点研究模型如何使用命令、编辑器和反馈，它是 Harness 的重要组成部分，不等同于整个运行时。[METR 的长任务评测](https://arxiv.org/abs/2503.14499)还提醒读者区分人类完成任务的时长与 Agent 自身运行时间；任务时长能力受模型、任务集、成功阈值和 scaffolding 共同影响，不能归结为某个固定倍数。
+SWE-agent<sup>[【538】](../../book/references.zh.md#ref-538)</sup> 的 **Agent-Computer Interface（ACI）** 重点研究模型如何使用命令、编辑器和反馈，它是 Harness 的重要组成部分，不等同于整个运行时。METR 的长任务评测<sup>[【539】](../../book/references.zh.md#ref-539)</sup>还提醒读者区分人类完成任务的时长与 Agent 自身运行时间；任务时长能力受模型、任务集、成功阈值和 scaffolding 共同影响，不能归结为某个固定倍数。
 
 ### 16.2.6 Control Plane
 
@@ -46,12 +46,12 @@ Control Plane 负责跨实例的配置、资源调度、策略与治理，Runtim
 
 ```mermaid
 flowchart TB
-    M["Model<br/>根据有效输入生成内容与工具请求"]
-    A["Agent<br/>模型在约束内动态选择下一步"]
-    W["Workflow<br/>代码约束控制结构，节点可含 Agent"]
-    H["Runtime / Harness<br/>驱动循环执行的运行时基础设施"]
-    F["Framework<br/>API 与编排抽象，也可提供运行时"]
-    C["Control Plane<br/>跨会话的配置、调度与治理"]
+    M["Model"]
+    A["Agent"]
+    W["Workflow"]
+    H["Runtime / Harness"]
+    F["Framework"]
+    C["Control Plane"]
 
     M --> A
     M --> W
@@ -62,6 +62,8 @@ flowchart TB
     F -. 可提供 .-> H
     H --> C
 ```
+
+模型根据有效输入生成内容与工具请求。在 Agent 中，模型在约束内动态选择下一步；在 Workflow 中，代码约束控制结构，但节点可以包含 Agent。Runtime / Harness 提供驱动循环的运行时基础设施。Framework 提供 API 与编排抽象，也可能提供运行时。Control Plane 负责跨会话的配置、调度与治理。
 
 Agent 和 Workflow 都需要执行宿主，区别主要在于谁决定下一步。Framework 是横向的开发抽象，也可以附带执行宿主；Control Plane 管理多个运行实例及组织策略。这张图表示职责关系，不是必须分开部署的六层架构。
 
@@ -78,29 +80,23 @@ Agent 和 Workflow 都需要执行宿主，区别主要在于谁决定下一步�
 本模块按七类职责拆解 Harness，对应剩余七章；具体系统可以合并组件：
 
 ```mermaid
-flowchart LR
-    subgraph Harness["Runtime / Harness"]
-        L["Agent Loop<br/>状态机（17 章）"]
-        CTX["Context Assembly<br/>上下文装配（18 章）"]
-        T["Tool Pipeline<br/>工具执行管线（19 章）"]
-        S["Permission & Sandbox<br/>权限与沙箱（20 章）"]
-        P["Checkpoint & Recovery<br/>持久化与恢复（21 章）"]
-        HI["HITL & Interrupt<br/>人在环与中断（22 章）"]
-        OBS["Tracing & Cost<br/>可观测性与成本（23 章）"]
-    end
+flowchart TB
+    L["Agent 循环"]
+    CTX["上下文装配"]
+    T["工具执行管线"]
+    S["权限与沙箱"]
     L --> CTX --> T --> S
-    L --> P
-    L --> HI
-    L --> OBS
 ```
+
+这些组件都属于 Runtime / Harness：循环状态机见第 17 章，上下文装配见第 18 章，工具执行见第 19 章，权限与沙箱见第 20 章。循环还直接连接检查点持久化与恢复（第 21 章）、人在环与中断（第 22 章），以及追踪、可观测性与成本统计（第 23 章）。这些是配套能力的连接，不是沙箱之后额外执行的顺序步骤。
 
 这些子系统不是严格顺序执行的流水线：装配上下文服务于模型调用，工具管线和权限沙箱在请求执行时触发，checkpoint 和可观测性贯穿生命周期，HITL 提供可恢复的暂停点。
 
 ## 16.6 案例对照：两种 Harness 的分层落地
 
-**Claude Agent SDK** 把 Claude Code 本身的执行内核暴露为一个可编程的库："The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript"（[Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview)）。它的能力表直接对应 16.5 节的子系统：内置工具与 MCP 对应工具管线，Hooks 和 Permissions 对应权限与沙箱，Sessions 对应持久化，Subagents 对应嵌套的 Agent Loop。
+**Claude Agent SDK** 把 Claude Code 本身的执行内核暴露为一个可编程的库："The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript"（Claude Agent SDK: Overview<sup>[【541】](../../book/references.zh.md#ref-541)</sup>）。它的能力表直接对应 16.5 节的子系统：内置工具与 MCP 对应工具管线，Hooks 和 Permissions 对应权限与沙箱，Sessions 对应持久化，Subagents 对应嵌套的 Agent Loop。
 
-**GitHub Copilot Coding Agent** 则把 harness 落地为一次性的、隔离的 GitHub Actions 运行：模型驱动的循环运行在"由 GitHub Actions 提供的一次性开发环境"里，开发者可以用 `copilot-setup-steps.yml` 预装依赖、切换 Runner 规格、启用 LFS，但不能改写循环本身的调度逻辑（[GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)）。这里能清楚看到 harness（一次性环境 + 循环调度）和 control plane（组织级 Runner 与防火墙配置，见 20.8 节）的分工。
+**GitHub Copilot Coding Agent** 则把 harness 落地为一次性的、隔离的 GitHub Actions 运行：模型驱动的循环运行在"由 GitHub Actions 提供的一次性开发环境"里，开发者可以用 `copilot-setup-steps.yml` 预装依赖、切换 Runner 规格、启用 LFS，但不能改写循环本身的调度逻辑（GitHub Docs: Configure the development environment for Copilot cloud agent<sup>[【542】](../../book/references.zh.md#ref-542)</sup>）。这里能清楚看到 harness（一次性环境 + 循环调度）和 control plane（组织级 Runner 与防火墙配置，见 20.8 节）的分工。
 
 这两个产品都让开发者通过配置和扩展点复用已有循环，不必从零实现调度。但这不是 Harness 的定义限制：自建 Harness 或使用显式图编排时，开发者仍可能直接定义下一步如何选择、何时停止。
 
@@ -117,11 +113,5 @@ Model 提供推理，Agent/Workflow 描述控制方式，Harness 承担执行职
 
 ## 参考资料
 
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering](https://arxiv.org/abs/2405.15793)
-- [METR: Measuring AI Ability to Complete Long Software Tasks](https://arxiv.org/abs/2503.14499)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Claude Agent SDK: Overview](https://code.claude.com/docs/en/agent-sdk/overview)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [Microsoft Agent Framework Overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-16)。

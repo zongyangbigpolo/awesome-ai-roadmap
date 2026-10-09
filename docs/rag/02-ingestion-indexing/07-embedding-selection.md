@@ -17,17 +17,13 @@ Leaderboards help narrow the field, but cannot replace the selection process. Th
 MTEB is currently the most widely used text embedding benchmark, covering tasks such as classification, clustering, retrieval, and reranking. It is valuable, but has **four common limitations**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    M[Rely only on<br/>MTEB rankings] --> P1[Leaderboard overfitting]
-    M --> P2[Retrieval scores do not predict<br/>end-to-end quality]
-    M --> P3[Language and text-style bias]
-    M --> P4[Length-distribution bias]
-
-    P1 --> D1[Tuning for public datasets<br/>can inflate scores]
-    P2 --> D2[Good recall does not imply<br/>good answers]
-    P3 --> D3[Languages and domains in a sub-leaderboard<br/>may not match the application]
-    P4 --> D4[Check subtask length distributions,<br/>not just the aggregate score]
+    M[MTEB rankings] --> S[Shortlist only]
+    S --> E[Evaluate on application data]
 ```
+
+Rankings have four limitations: tuning for public datasets can inflate scores; good retrieval recall does not guarantee good end-to-end answers; a sub-leaderboard's languages, domains, and text styles may not match the application; and its length distribution may differ. Inspect subtask lengths, not just the aggregate score.
 
 ### 7.2.1 Leaderboard overfitting
 
@@ -52,14 +48,14 @@ Inspect the actual sub-leaderboard and datasets you use. MMTEB already includes 
 ## 7.3 A sound selection process
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. Use leaderboards to shortlist<br/>3-5 models] --> S2[2. Build an application-specific<br/>evaluation set]
-    S2 --> S3[3. Build a separate index for each model<br/>with the same chunking and settings]
-    S3 --> S4[4. Measure retrieval metrics<br/>Hit@K MRR NDCG]
-    S4 --> S5[5. Evaluate end-to-end<br/>answer quality]
-    S5 --> S6[6. Assess cost, latency,<br/>and deployment constraints]
-    S6 --> S7[7. Decide]
+    S1[Shortlist 3–5 models] --> S2[Build matched evaluations]
+    S2 --> S3[Measure retrieval and answers]
+    S3 --> S4[Assess costs and decide]
 ```
+
+Build an application-specific evaluation set and a separate index per model, holding chunking and settings constant. Measure Hit@K, MRR, and NDCG, then end-to-end answer quality. Assess cost, latency, and deployment constraints before deciding.
 
 **A leaderboard should define the candidate pool, not make the decision.**
 
@@ -104,6 +100,7 @@ For a fixed data type, raw vector storage grows linearly with dimensionality, as
 MRL trains designated prefixes of a vector to satisfy representation objectives too. Only models that explicitly support this use can be shortened according to their contract. Truncation usually requires renormalization, and quality loss must be measured. Arbitrarily taking the first dimensions of an ordinary vector is not equivalent.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
 flowchart LR
     V[3072-dimensional vector] --> C1[First 256 dimensions<br/>Coarse ranking with very low storage]
     V --> C2[First 1024 dimensions<br/>Standard retrieval]
@@ -198,11 +195,5 @@ Use failure cases to determine whether representation quality is the bottleneck.
 
 ## References
 
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [Matryoshka Representation Learning](https://arxiv.org/abs/2205.13147)
-- [OpenAI: New embedding models and API updates (2024-01-25)](https://openai.com/index/new-embedding-models-and-api-updates/)
-- [OpenAI: Embedding API and the dimensions parameter](https://developers.openai.com/api/docs/guides/embeddings)
-- [Qwen3-Embedding-0.6B model card](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-- [M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation](https://arxiv.org/abs/2402.03216)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-07) for this chapter’s sources, reading suggestions, and source notes.

@@ -13,14 +13,15 @@ description: 解释请求上下文的来源、信任层级、工具调用配对�
 一次发给模型的请求，通常由五类互相独立维护的来源拼接而成：
 
 ```mermaid
-flowchart TB
-    SP["System Prompt<br/>身份、总则、输出格式约束"]
-    INST["Instructions / Memory<br/>项目级配置（AGENTS.md、Skill、长期记忆）"]
-    TOOLS["Tool Definitions<br/>本轮可用工具的 Schema"]
-    HIST["Conversation History<br/>Working Memory 中的历史消息"]
-    USER["Current Turn Input<br/>本轮新增的用户输入/工具结果"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    SP["系统提示词"]
+    INST["指令与记忆"]
+    TOOLS["工具定义"]
+    HIST["对话历史"]
+    USER["本轮输入"]
     ASSEMBLE["装配管线"]
-    REQ["最终 Request Payload"]
+    REQ["最终 Request<br/>Payload"]
 
     SP --> ASSEMBLE
     INST --> ASSEMBLE
@@ -30,6 +31,8 @@ flowchart TB
     ASSEMBLE --> REQ
 ```
 
+五类输入各有作用：系统提示词提供身份、总则与输出格式约束；指令与记忆提供 `AGENTS.md`、Skill、长期记忆等项目级配置；工具定义提供本轮可用工具的 Schema；对话历史提供工作记忆中的历史消息；本轮输入提供新增用户输入或工具结果。装配管线将它们组合为最终请求载荷。
+
 这五类来源的生命周期不同：System Prompt 通常较稳定；Instructions/Memory 按任务或项目变化；Tool Definitions 可能随本轮上下文动态收缩（第 19 章 19.7 节）；Conversation History 追加或压缩；Current Turn Input 带来新输入。装配管线要保持消息结构和来源层级，不是把这些内容拼成同权限的一段文本。
 
 ## 18.3 装配顺序为什么重要
@@ -38,7 +41,7 @@ flowchart TB
 
 1. **Prompt Cache 命中率。** 对按前缀复用的缓存，易变内容放在前面，会使后面的稳定内容也失去复用机会。例如 OpenAI 的 Prompt Caching 要求渲染后的前缀匹配，并受模型、最小长度、断点和保留策略约束（见参考资料）。在不改变消息语义和信任层级的前提下，优先让稳定内容在前、易变内容在后；其他缓存接口不能直接套用相同参数。
 2. **关键信息能否被有效利用。** 历史中间的约束可能被忽略，但效果取决于模型、任务、长度与消息角色，不能把“越靠后越好”当保证。应通过遗漏约束的回归样例判断布局是否有效，而不是只凭位置猜测。
-3. **工具列表序列化的稳定性。** MCP 2026-07-28 对确定性列表顺序使用的是 **SHOULD**，有助于工具列表与提示缓存；它不是 **MUST**，更不保证模型选择工具具有确定性（[Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)）。
+3. **工具列表序列化的稳定性。** MCP 2026-07-28 对确定性列表顺序使用的是 **SHOULD**，有助于工具列表与提示缓存；它不是 **MUST**，更不保证模型选择工具具有确定性（Tools<sup>[【285】](../../book/references.zh.md#ref-285)</sup>）。
 
 这些是缓存布局原则，不能覆盖信任层级。检索文档、长期记忆、Skill 内容和模型摘要不应仅因“稳定”就被提升为系统级指令；来源与权限标签必须独立保存。不同 API 对工具字段的内部序列化顺序、显式缓存和前缀缓存支持不同，应以对应提供商为准。
 
@@ -49,7 +52,7 @@ flowchart TB
 - **产品层默认指令**（表达产品行为与规则；真正不可绕过的安全边界仍由执行器强制实施）；
 - **组织/项目级配置**（第三章 3.6 节讨论的 AGENTS.md 属于这一层，通常在会话开始时读取一次）；
 - **技能与命令**（第三章 3.5 节的 Skill，按需渐进式披露，往往只注入摘要而非全文，直到被显式调用）；
-- **应用传入的系统提示配置**（例如 Claude Agent SDK 的预设、`append` 和自定义 `system_prompt`，见 [Modifying system prompts](https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts)）。配置系统提示不等于 SDK 支持任意时刻热更新；项目文件的内容也可能作为对话上下文注入，而不是改写 system 字段。
+- **应用传入的系统提示配置**（例如 Claude Agent SDK 的预设、`append` 和自定义 `system_prompt`，见 Modifying system prompts<sup>[【548】](../../book/references.zh.md#ref-548)</sup>）。配置系统提示不等于 SDK 支持任意时刻热更新；项目文件的内容也可能作为对话上下文注入，而不是改写 system 字段。
 
 这些来源的加载时机也不同：有的在会话启动时读取，有的按需加载。来源层级、加载时机和最终消息角色是三个独立决定，不能用一次字符串拼接代替。
 
@@ -109,9 +112,5 @@ def assemble_context(session, turn_input):
 
 ## 参考资料
 
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Claude Agent SDK: Modifying system prompts](https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts)
-- [OpenAI: Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching)：前缀匹配、模型差异与缓存断点，查阅于 2026-09-15。
-- [Anthropic Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)：保留原技术来源；本轮访问跳转至区域不可用页面，未据此确认当前参数。
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-18)。

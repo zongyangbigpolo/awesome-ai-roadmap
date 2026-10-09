@@ -173,14 +173,31 @@ Anthropic 在 2024 年 11 月提出了 MCP。2025 年 12 月，Anthropic 将 MCP
 
 MCP 为 AI 应用连接外部工具和数据源提供了标准接口，可以将它类比为 AI 工具生态中的“USB-C 接口”。
 
+连接到服务端。
+
 ```mermaid
-flowchart LR
-    A[AI 应用或 Agent] --> B[MCP Client]
-    B --> C[MCP Server]
-    C --> D[工具]
-    C --> E[数据库]
-    C --> F[文件与资源]
-    C --> G[外部 API]
+flowchart TB
+    A[AI 应用或 Agent]
+    B[MCP Client]
+    C[MCP Server]
+    A --> B
+    B --> C
+```
+
+该服务端提供的能力。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["MCP Server"]
+    D["工具"]
+    E["数据库"]
+    F["文件与资源"]
+    G["外部 API"]
+    C --> D
+    C --> E
+    C --> F
+    C --> G
 ```
 
 MCP 主要包含三个角色：
@@ -220,6 +237,7 @@ Google 在 2025 年 4 月推出了 A2A。2025 年 6 月，A2A 项目进入 Linux
 > Agent Card 更像一份“能力名片”，而“正在做什么”和执行进度主要由 Task 等对象表达。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant A as 调度 Agent
     participant B as 专业 Agent
@@ -228,7 +246,7 @@ sequenceDiagram
     B-->>A: 返回能力与协作方式
     A->>B: 发送任务请求消息
     B-->>A: 返回 Task 及当前状态
-    B-->>A: 按所选交互方式返回后续状态与 Artifact
+    B-->>A: 按所选交互方式返回后续状<br/>态与 Artifact
 ```
 
 图中展示的是需要持续跟踪的任务。A2A v1.0.1 发布规范中的消息发送也允许直接返回 `Message`，不是每次交互都必须创建 `Task`；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。
@@ -250,28 +268,21 @@ sequenceDiagram
 一个 MCP Tool 的背后也可以运行 Agent；A2A 服务也可以执行确定性工作流。二者都不自动解决任务分解、权限委派或分布式事务，多 Agent 系统也不必须同时采用这两个协议。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    U[用户目标] --> O[调度 Agent]
+    U["用户目标"] --> O["调度 Agent"]
 
-    O <-->|A2A| R[研究 Agent]
-    O <-->|A2A| C[编程 Agent]
-    O <-->|A2A| W[写作 Agent]
+    O <-->|A2A| R["研究 Agent"]
+    O <-->|A2A| C["编程 Agent"]
+    O <-->|A2A| W["写作 Agent"]
 
-    O -->|MCP| T1[业务工具]
-    R -->|MCP| T2[搜索与知识库]
-    C -->|MCP| T3[代码执行器]
-    W -->|MCP| T4[文档系统]
 ```
+
+双向 A2A 连接将调度 Agent 与研究、编程、写作 Agent 连接起来。工具访问是另一层关系：通过 MCP，调度 Agent 使用业务工具，研究 Agent 使用搜索与知识库，编程 Agent 使用代码执行器，写作 Agent 使用文档系统。
 
 MCP 让每个 Agent 能够方便地“伸手拿工具”，A2A 则让多个 Agent 能够“相互沟通与分工”。二者共同构成多 Agent 系统走向标准化和互操作的重要基础。
 
 ## 参考资料
 
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
-- [OpenAI Agents SDK: Agents](https://openai.github.io/openai-agents-python/agents/)
-- [LangChain: Short-term memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [MCP joins the Agentic AI Foundation](https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/)
-- [Linux Foundation: Agent2Agent Protocol Project](https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents)
-- [A2A v1.0.1 发布规范：核心对象与消息发送](https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto)
-- [A2A Protocol: Core Concepts](https://a2a-protocol.org/latest/topics/key-concepts/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-01)。

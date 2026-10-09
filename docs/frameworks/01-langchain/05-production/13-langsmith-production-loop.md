@@ -11,19 +11,27 @@ An agent failure is rarely just a problem with the final answer. It may involve 
 > A production feedback loop typically follows “trace redaction → root-cause analysis and labeling → dataset → offline experiment → release gate → production evaluation and feedback → regression tests from failed traces,” rather than responding to every failure with a prompt edit.
 
 ```mermaid
-flowchart LR
-    A["Production traces<br/>Redact and minimize first"] --> B["Select failures, feedback, and samples"]
-    B --> C["Label and add to a dataset"]
-    C --> D["Offline experiments<br/>Compare versions"]
-    D --> E{"Release gate"}
-    E -->|Pass| F["Limited-traffic rollout + online evaluation"]
-    E -->|Fail| G["Fix the agent, tools, or policies"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Production<br/>traces"] --> B["Select examples"]
+    B --> C["Label and add<br/>to a dataset"]
+    C --> D["Offline<br/>experiments"]
+    D --> E["Release gate"]
+    E -->|Pass| F["Roll out and<br/>evaluate"]
+    E -->|Fail| G["Fix the agent,<br/>tools, or<br/>policies"]
     F --> B
     G --> D
 
     style E fill:#fff3cd
     style F fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Production traces Redact and minimize first
+- Select failures, feedback, and samples
+- Offline experiments Compare versions
+- Limited-traffic rollout + online evaluation
 
 ## 13.2 Define trace data boundaries first
 
@@ -134,13 +142,18 @@ Targeted sampling gives scores for the selected population, not the site-wide fa
 Collect thumbs-up/down feedback, corrected answers, reasons for human takeover, and reasons for denied approval in the product. Link feedback to the trace ID, version, and user-visible output. Redact, deduplicate, check for abuse, and triage feedback manually before deciding whether it belongs in a dataset.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    U["User/reviewer feedback"] --> T["Link trace ID and version"]
-    T --> R["Redact, deduplicate, and triage by root cause"]
-    R --> D["Add to a dataset slice"]
-    D --> X["Offline experiments and release gate"]
+    U["User/reviewer<br/>feedback"] --> T["Link trace ID<br/>and version"]
+    T --> R["Prepare<br/>feedback"]
+    R --> D["Add to a<br/>dataset slice"]
+    D --> X["Offline<br/>experiments and<br/>release gate"]
     X --> P["Gradual rollout"]
 ```
+
+Details of the illustrated steps and components:
+
+- Redact, deduplicate, and triage by root cause
 
 > A single thumbs-up is not proof of quality, and user text must not directly rewrite the system prompt or authorization policy. Feedback is input to evaluation and improvement; it still needs deterministic safety controls and human review.
 
@@ -179,10 +192,5 @@ The same class of problem will recur. Every confirmed root cause should become p
 
 ## References
 
-- [LangSmith Observability](https://docs.langchain.com/langsmith/observability)
-- [LangSmith Evaluation](https://docs.langchain.com/langsmith/evaluation)
-- [LangSmith dataset management](https://docs.langchain.com/langsmith/manage-datasets)
-- [LangSmith Online evaluation](https://docs.langchain.com/langsmith/online-evaluations-llm-as-judge)
-- [LangSmith user feedback](https://docs.langchain.com/langsmith/attach-user-feedback)
-- [LangSmith: hide and transform sensitive data before transmission](https://docs.langchain.com/langsmith/mask-inputs-outputs)
-- [LangSmith experiment repetitions, concurrency, and caching](https://docs.langchain.com/langsmith/experiment-configuration)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-13) for this chapter’s sources, reading suggestions, and source notes.

@@ -10,27 +10,24 @@ Approving a command means consenting to that operation. It does not mean the pro
 
 ## 20.2 Permission models: from a Boolean switch to a layered rule engine
 
-The simplest permission model is a global Boolean switch: allow command execution or disallow it. A production harness needs finer-grained rules based on tool type (read versus write), command patterns (argument-matching rules such as `Bash(rm *)`), and whether the target is a critical path. The Claude Agent SDK is a representative implementation of this layered approach. It defines an **ordered** decision chain for every tool request ([Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)):
+The simplest permission model is a global Boolean switch: allow command execution or disallow it. A production harness needs finer-grained rules based on tool type (read versus write), command patterns (argument-matching rules such as `Bash(rm *)`), and whether the target is a critical path. The Claude Agent SDK is a representative implementation of this layered approach. It defines an **ordered** decision chain for every tool request (Claude Agent SDK: Configure permissions<sup>[【550】](../../book/references.md#ref-550)</sup>):
 
 ```mermaid
 flowchart TB
-    REQ["Tool-call request"] --> HOOK["1. Hooks<br/>Can deny outright; allow cannot skip later deny/ask rules"]
-    HOOK -->|Deny| BLOCK["Block execution"]
+    HOOK["1. Hooks"]
     HOOK -->|Continue| DENY["2. Deny rules"]
-    DENY -->|Match| BLOCK["Block execution"]
     DENY -->|No match| ASK["3. Ask rules"]
-    ASK -->|Match| PROMPT{"Prompting permitted?"}
-    PROMPT -->|Yes| CALLBACK["Delegate to human-confirmation callback"]
-    PROMPT -->|dontAsk| BLOCK
-    ASK -->|No match| MODE["4. Permission mode<br/>(bypass / acceptEdits / plan / other)"]
-    MODE -->|Approved by mode| ALLOW["Execute"]
-    MODE -->|File edit or shell write in plan mode| CALLBACK
+    ASK -->|No match| MODE["4. Permission mode"]
     MODE -->|Not covered| ALLOWRULE["5. Allow rules"]
-    ALLOWRULE -->|Match| ALLOW
-    ALLOWRULE -->|No match| PROMPT
-    CALLBACK -->|Approve| ALLOW
-    CALLBACK -->|Reject/timeout| BLOCK
 ```
+
+This is the precedence path for a tool-call request, not an unconditional approval path:
+
+- Hooks can deny immediately. A hook's allow result cannot skip later deny/ask rules.
+- A matching deny rule blocks execution. A matching ask rule checks whether prompting is permitted: if so, invoke the human-confirmation callback; `dontAsk` blocks instead.
+- If no ask rule matches, evaluate the permission mode (`bypass`, `acceptEdits`, `plan`, or another mode). Mode approval permits execution. File edits or shell writes in plan mode go to the confirmation callback.
+- If the mode does not cover the action, a matching allow rule permits execution. Without a match, return to the prompting-permitted check.
+- The callback permits execution only on approval; rejection or timeout blocks it.
 
 This diagram simplifies the Claude Agent SDK's path; it is not a permission standard for all harnesses. Matching a deny rule means rejection, not referral to a person. In `dontAsk`, calls that require confirmation are denied. In `plan`, file edits and shell writes cannot be automatically approved through allow rules. Critical-path deletion, `auto` mode, and configurations that disable permission prompts have additional branches that must be checked against the specific version. The documented critical-path exceptions are not universal protection for every dangerous operation.
 
@@ -78,7 +75,7 @@ A harness instance often serves several independent sessions at once, involving 
 
 ## 20.8 Case study: GitHub Copilot Coding Agent's sandbox and firewall
 
-GitHub Copilot Coding Agent runs each task in an “ephemeral development environment, powered by GitHub Actions,” where it explores code, modifies files, and runs tests and linters ([GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)). This design illustrates several principles from this chapter:
+GitHub Copilot Coding Agent runs each task in an “ephemeral development environment, powered by GitHub Actions,” where it explores code, modifies files, and runs tests and linters (GitHub Docs: Configure the development environment for Copilot cloud agent<sup>[【542】](../../book/references.md#ref-542)</sup>). This design illustrates several principles from this chapter:
 
 - **An ephemeral environment** reduces residue in a running instance, but external databases, caches, build artifacts, and credentials do not automatically disappear when the process is destroyed. Tenant isolation still depends on runner, storage, and access-control configuration.
 - **`copilot-setup-steps.yml` supports only a fixed set of configurable fields**, including `steps`, `permissions`, `runs-on`, `services`, `snapshot`, and `timeout-minutes`. Repository configuration cannot override the remaining runtime behavior. This is a concrete example of the control-plane/harness division in Section 16.2.6: repository developers can configure what is preinstalled, but cannot rewrite how the loop is scheduled.
@@ -99,11 +96,5 @@ Approval, authorization, and isolation answer different questions: “Has someon
 
 ## References
 
-- [Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)
-- [gVisor documentation](https://gvisor.dev/docs/)
-- [GitHub Docs: Configure the development environment for Copilot cloud agent](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment)
-- [GitHub Docs: Customizing or disabling the firewall](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
-
-The source review checked SDK permission order and GitHub environment/firewall coverage against official documentation on 2026-09-15. The v2.1.199 requirement for `anthropic/requiresUserInteraction` is retained. No SDK permission experiments or cloud-environment configuration were performed in that review.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-20) for this chapter’s sources, reading suggestions, and source notes.

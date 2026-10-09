@@ -13,7 +13,8 @@ Computer Use 让模型观察截图，生成点击、拖拽、滚动和输入等�
 ## 4.2 感知-决策-行动闭环
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A[截图/无障碍树] --> B[屏幕状态理解]
     B --> C[下一步动作规划]
     C --> D["动作执行<br/>点击/输入/滚动"]
@@ -85,12 +86,5 @@ Computer Use 是多步骤、有状态的任务，单步动作准确率高不等�
 
 ## 参考资料
 
-- [Anthropic: Developing a computer use model](https://www.anthropic.com/news/developing-computer-use)
-- [Anthropic：升级版 Claude 3.5 Sonnet 与 Computer Use 公开测试](https://www.anthropic.com/news/3-5-models-and-computer-use)
-- [Anthropic Computer Use 官方文档](https://docs.claude.com/en/docs/agents-and-tools/tool-use/computer-use-tool)
-- [OpenAI: Computer-Using Agent](https://openai.com/index/computer-using-agent/)
-- [OpenAI Operator](https://openai.com/index/introducing-operator/)
-- [OpenAI：Computer Use 工具与执行环境](https://developers.openai.com/api/docs/guides/tools-computer-use/)
-- [UI-TARS: Pioneering Automated GUI Interaction with Native Agents](https://arxiv.org/abs/2501.12326)
-- [OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments](https://arxiv.org/abs/2404.07972)
-- [WebArena: A Realistic Web Environment for Building Autonomous Agents](https://arxiv.org/abs/2307.13854)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-04)。

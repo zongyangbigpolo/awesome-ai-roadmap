@@ -21,26 +21,58 @@ description: 区分 Agent 的工作记忆、情景记忆、语义记忆和程序
 
 这里采用的是设计视角，不是统一的生物学分类或行业标准。CoALA 用工作记忆及情景、语义、程序性长期记忆组织认知架构；LangGraph 则首先按 thread 内与跨 thread 的作用域区分短期、长期记忆。需要先声明所用定义，不能把名称相同当成实现相同。
 
+时间与生命周期。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    M[Agent Memory] --> T[时间与生命周期]
-    M --> C[内容与认知类型]
-    M --> S[存储与检索实现]
+    M["Agent Memory"]
+    T["时间与生命周<br/>期"]
+    O["Observation<br/>Buffer"]
+    W["Working<br/>Memory"]
+    L["Long-term<br/>Memory"]
+    M --> T
+    T --> O
+    T --> W
+    T --> L
+```
 
-    T --> O[Observation Buffer]
-    T --> W[Working Memory]
-    T --> L[Long-term Memory]
+内容与认知类型。
 
-    C --> SEM[Semantic]
-    C --> EPI[Episodic]
-    C --> PROC[Procedural]
-    C --> ENT[Entity]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M["Agent Memory"]
+    C["内容与认知类型"]
+    SEM["Semantic"]
+    EPI["Episodic"]
+    PROC["Procedural"]
+    ENT["Entity"]
+    M --> C
+    C --> SEM
+    C --> EPI
+    C --> PROC
+    C --> ENT
+```
 
-    S --> CTX[Context Window]
-    S --> REL[Relational / KV]
-    S --> VEC[Vector Store]
-    S --> GRAPH[Knowledge Graph]
-    S --> EVENT[Event / Artifact Store]
+存储与检索实现。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    M["Agent Memory"]
+    S["存储与检索实<br/>现"]
+    CTX["Context<br/>Window"]
+    REL["Relational /<br/>KV"]
+    VEC["Vector Store"]
+    GRAPH["Knowledge<br/>Graph"]
+    EVENT["Event /<br/>Artifact<br/>Store"]
+    M --> S
+    S --> CTX
+    S --> REL
+    S --> VEC
+    S --> GRAPH
+    S --> EVENT
 ```
 
 三条轴分别回答：
@@ -64,12 +96,13 @@ flowchart TB
 它们之间的关系是：
 
 ```mermaid
-flowchart LR
-    ST[State Store] --> CB[Context Builder]
-    MEM[Memory Stores] --> RET[Retriever]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    ST["State Store"] --> CB["Context Builder"]
+    MEM["Memory Stores"] --> RET["Retriever"]
     RET --> CB
-    OBS[Recent Observations] --> CB
-    CB --> CTX[Current Model Context]
+    OBS["Recent<br/>Observations"] --> CB
+    CB --> CTX["Current Model<br/>Context"]
 ```
 
 工程上容易混淆的点有四个：
@@ -79,7 +112,7 @@ flowchart LR
 - State 需要精确、结构化和可恢复，不应完全依赖自然语言对话；
 - 外部长期记忆需要被读取，并以文本、工具结果或其他支持的表示进入 Context，才能影响本轮模型生成；程序性记忆也可能由 Runtime 直接执行而不全文送入模型。
 
-持久化与长期记忆不是同义词。保存到数据库的 thread checkpoint 仍可属于短期记忆，重启后恢复它也不代表其他 thread 自动能用它。反过来，内存中的跨 thread Store 虽有长期记忆接口，进程退出后仍可能丢数据。[LangGraph 的官方区分](https://docs.langchain.com/oss/python/concepts/memory)强调的是作用域，而不是 RAM 与磁盘的区别。
+持久化与长期记忆不是同义词。保存到数据库的 thread checkpoint 仍可属于短期记忆，重启后恢复它也不代表其他 thread 自动能用它。反过来，内存中的跨 thread Store 虽有长期记忆接口，进程退出后仍可能丢数据。LangGraph 的官方区分<sup>[【472】](../../book/references.zh.md#ref-472)</sup>强调的是作用域，而不是 RAM 与磁盘的区别。
 
 本章主要讨论可显式读写的外部记忆。模型权重中的参数化知识、推理时 KV Cache 和对话服务保存的历史属于不同机制：一次“记住了”的回复不意味着更新了权重，也不证明应用已经完成持久化。
 
@@ -96,11 +129,12 @@ flowchart LR
 - 传感器输入。
 
 ```mermaid
-flowchart LR
-    ENV[用户 / Tool / 环境] --> RAW[Raw Observation]
-    RAW --> N[解析与规范化]
-    N --> WM[Working Memory]
-    N --> CAND[Memory Candidates]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    ENV["用户 / Tool / 环境"] --> RAW["Raw Observation"]
+    RAW --> N["解析与规范化"]
+    N --> WM["Working Memory"]
+    N --> CAND["Memory Candidates"]
 ```
 
 原始输入本身不一定已经成为“记忆”。只有被保留、加工或持久化后，它才进入后续记忆系统。
@@ -126,12 +160,13 @@ Working Memory 保存完成当前任务所需的信息，例如：
 - 当前预算和错误状态。
 
 ```mermaid
-flowchart TB
-    G[Goal] --> WM[Working Memory]
-    P[Plan] --> WM
-    O[Observations] --> WM
-    A[Artifacts Summary] --> WM
-    WM --> M[Model Context]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["Goal"] --> WM["Working<br/>Memory"]
+    P["Plan"] --> WM
+    O["Observations"] --> WM
+    A["Artifacts<br/>Summary"] --> WM
+    WM --> M["Model<br/>Context"]
 ```
 
 ### 7.4.1 Working Memory 不只存在于 Context Window
@@ -288,20 +323,44 @@ Entity Memory 信息密度通常较高，也便于更新和精确查询。从建
 
 Agent Memory 不只是“存入向量库，再检索出来”。完整生命周期包括：
 
+筛选、规范化并索引记忆。
+
 ```mermaid
-flowchart LR
-    O[Observe] --> X[Extract Candidates]
-    X --> F[Filter / Privacy]
-    F --> E[Evaluate Importance]
-    E --> N[Normalize / Deduplicate]
-    N --> W[Write]
-    W --> I[Index]
-    I --> R[Retrieve]
-    R --> RR[Filter / Rerank]
-    RR --> C[Build Context]
-    C --> U[Use]
-    U --> FB[Feedback]
-    FB --> UP[Update / Decay / Delete]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    O["Observe"]
+    X["Extract Candidates"]
+    F["Filter / Privacy"]
+    E["Evaluate Importance"]
+    N["Normalize / Deduplicate"]
+    W["Write"]
+    I["Index"]
+    O --> X
+    X --> F
+    F --> E
+    E --> N
+    N --> W
+    W --> I
+```
+
+使用记忆，并将生命周期变化反馈至索引。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    I["Index"]
+    R["Retrieve"]
+    RR["Filter / Rerank"]
+    C["Build Context"]
+    U["Use"]
+    FB["Feedback"]
+    UP["Update / Decay / Delete"]
+    I --> R
+    R --> RR
+    RR --> C
+    C --> U
+    U --> FB
+    FB --> UP
     UP --> I
 ```
 
@@ -351,14 +410,15 @@ Memory Writer 通常会综合这些信号：
 - User Intent：用户是否要求记住或删除。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    C[Memory Candidate] --> P{隐私与权限允许?}
-    P -->|否| DROP[拒绝或脱敏]
-    P -->|是| D{重复或已被替代?}
-    D -->|是| UPDATE[合并或更新]
-    D -->|否| V{重要且可信?}
-    V -->|否| TEMP[仅保留在当前任务]
-    V -->|是| STORE[写入长期记忆]
+    C["Memory Candidate"] --> P["隐私与权限允许?"]
+    P -->|否| DROP["拒绝或脱敏"]
+    P -->|是| D["重复或已被替代?"]
+    D -->|是| UPDATE["合并或更新"]
+    D -->|否| V["重要且可信?"]
+    V -->|否| TEMP["仅保留在当前任务"]
+    V -->|是| STORE["写入长期记忆"]
 ```
 
 ## 7.10 如何存：按访问模式选择存储
@@ -377,14 +437,15 @@ flowchart TB
 | 操作流程和方法 | Skill / Workflow Repository | 名称和能力匹配 |
 
 ```mermaid
-flowchart TB
-    MW[Memory Writer] --> ROUTE{按数据类型路由}
-    ROUTE --> REL[Relational / KV]
-    ROUTE --> VEC[Vector Store]
-    ROUTE --> GRAPH[Knowledge Graph]
-    ROUTE --> EVENT[Event Store]
-    ROUTE --> ART[Artifact Store]
-    ROUTE --> SKILL[Skill / Workflow Store]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    MW["Memory<br/>Writer"] --> ROUTE["按数据类型路<br/>由"]
+    ROUTE --> REL["Relational /<br/>KV"]
+    ROUTE --> VEC["Vector Store"]
+    ROUTE --> GRAPH["Knowledge<br/>Graph"]
+    ROUTE --> EVENT["Event Store"]
+    ROUTE --> ART["Artifact<br/>Store"]
+    ROUTE --> SKILL["Skill /<br/>Workflow<br/>Store"]
 ```
 
 ### 7.10.1 Vector Store
@@ -522,30 +583,49 @@ flowchart TB
 - 是否晋升长期记忆的判断。
 
 ```mermaid
-flowchart LR
-    START[Task Start] --> PRE[Proactive Retrieval]
-    PRE --> RUN[Agent Execution]
-    RUN --> NEED{需要额外知识?}
-    NEED -->|是| ON[On-demand Retrieval]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    START["Task Start"] --> PRE["Proactive Retrieval"]
+    PRE --> RUN["Agent Execution"]
+    RUN --> NEED["需要额外知识?"]
+    NEED -->|是| ON["On-demand Retrieval"]
     ON --> RUN
-    NEED -->|否| END[Task End]
-    END --> CONS[Memory Consolidation]
+    NEED -->|否| END["Task End"]
+    END --> CONS["Memory Consolidation"]
 ```
 
 ## 7.13 如何取：Retrieval Pipeline
 
 检索不只是一次向量搜索：
 
+检索前确定授权范围。
+
 ```mermaid
-flowchart LR
-    Q[Task / Query] --> QR[Query Rewrite]
-    QR --> SCOPE[服务端身份与授权范围]
-    SCOPE --> MR[授权范围内多源检索]
-    MR --> ACL[返回前复核权限]
-    ACL --> TF[Time / Metadata Filter]
-    TF --> DD[Deduplicate]
-    DD --> RR[Rerank]
-    RR --> PACK[Context Packing]
+flowchart TB
+    Q[Task / Query]
+    QR[Query Rewrite]
+    SCOPE[服务端身份与授权范围]
+    MR[授权范围内多源检索]
+    Q --> QR
+    QR --> SCOPE
+    SCOPE --> MR
+```
+
+复核并装配检索结果。
+
+```mermaid
+flowchart TB
+    MR[授权范围内多源检索]
+    ACL[返回前复核权限]
+    TF[Time / Metadata Filter]
+    DD[Deduplicate]
+    RR[Rerank]
+    PACK[Context Packing]
+    MR --> ACL
+    ACL --> TF
+    TF --> DD
+    DD --> RR
+    RR --> PACK
 ```
 
 ### 7.13.1 Query Rewrite
@@ -621,13 +701,14 @@ Context Builder 应考虑：
 - 是否需要完整内容或只需摘要。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Retrieved Memories] --> C1[去重]
-    C1 --> C2[冲突标记]
-    C2 --> C3[按任务重排]
-    C3 --> C4[摘要或截取]
-    C4 --> C5[按 Token Budget 装箱]
-    C5 --> CTX[Model Context]
+    R["Retrieved Memories"] --> C1["去重"]
+    C1 --> C2["冲突标记"]
+    C2 --> C3["按任务重排"]
+    C3 --> C4["摘要或截取"]
+    C4 --> C5["按 Token Budget 装箱"]
+    C5 --> CTX["Model Context"]
 ```
 
 “充分”需要按任务检验。例如比较两个历史政策版本时，旧版本虽然不是当前有效规则，仍可能是必需证据；只留下最新摘要反而无法回答问题。
@@ -657,17 +738,37 @@ flowchart TB
 
 ### 7.16.2 冲突策略
 
+判断记忆是否描述同一事实。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 20, "rankSpacing": 30, "padding": 10}}}%%
 flowchart TB
-    NEW[新记忆] --> MATCH{存在同主体同属性同作用域记录?}
-    MATCH -->|否| ADD[新增]
-    MATCH -->|是| SAME{内容一致?}
-    SAME -->|是| MERGE[去重并合并来源记录]
-    SAME -->|否| AUTH{来源优先级明确?}
-    AUTH -->|是| CHECK{生效时间与替代关系明确?}
-    CHECK -->|是| VERSION[按生效时间建立新版本]
+    NEW[新记忆]
+    MATCH{存在同主体同属性同作用域记录?}
+    ADD[新增]
+    SAME{内容一致?}
+    NEW --> MATCH
+    MATCH -->|否| ADD
+    MATCH -->|是| SAME
+```
+
+合并重复记忆，或判断版本与来源优先级。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SAME["内容一致?"]
+    MERGE["去重并合并来源记<br/>录"]
+    AUTH["来源优先级明确?"]
+    CHECK["生效时间与替代关<br/>系明确?"]
+    VERSION["按生效时间建立新<br/>版本"]
+    CONFLICT["保留冲突并请求验<br/>证"]
+    SAME -->|是| MERGE
+    SAME -->|否| AUTH
+    AUTH -->|是| CHECK
+    CHECK -->|是| VERSION
     CHECK -->|否| CONFLICT
-    AUTH -->|否| CONFLICT[保留冲突并请求验证]
+    AUTH -->|否| CONFLICT
 ```
 
 不要用同一条优先级列表同时解决“听谁的指令”和“事实是什么”：
@@ -720,12 +821,13 @@ $$
 Consolidation 将大量低层 Episode 转化为更稳定的 Semantic 或 Procedural Memory。
 
 ```mermaid
-flowchart LR
-    E1[Episode 1] --> C[Consolidation]
-    E2[Episode 2] --> C
-    E3[Episode N] --> C
-    C --> S[Semantic Rule]
-    C --> P[Procedural Skill]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    E1["Episode 1"] --> C["Consolidation"]
+    E2["Episode 2"] --> C
+    E3["Episode N"] --> C
+    C --> S["Semantic Rule"]
+    C --> P["Procedural Skill"]
 ```
 
 例如，轨迹显示某 API 在并发超过 5 时频繁限流，可以先形成候选经验：
@@ -747,11 +849,12 @@ flowchart LR
 当某条经验稳定、可验证、可跨任务复用时，可以从 Episodic Memory 晋升为 Skill：
 
 ```mermaid
-flowchart LR
-    E[多次任务经验] --> R[提炼重复模式]
-    R --> V[验证]
-    V -->|不稳定| M[继续保留为 Memory]
-    V -->|稳定| S[Skill / Workflow / Rule]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    E["多次任务经验"] --> R["提炼重复模式"]
+    R --> V["验证"]
+    V -->|不稳定| M["继续保留为 Memory"]
+    V -->|稳定| S["Skill / Workflow /<br/>Rule"]
 ```
 
 区别是：
@@ -778,13 +881,14 @@ flowchart LR
 - **Audit Log**：不可随意修改的完整轨迹。
 
 ```mermaid
-flowchart TB
-    A1[Agent A] --> P1[Private Memory A]
-    A2[Agent B] --> P2[Private Memory B]
-    A1 --> WS[Shared Task Workspace]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    A1["Agent A"] --> P1["Private<br/>Memory A"]
+    A2["Agent B"] --> P2["Private<br/>Memory B"]
+    A1 --> WS["Shared Task<br/>Workspace"]
     A2 --> WS
-    WS --> TEAM[Validated Team Memory]
-    A1 --> AUDIT[Audit Log]
+    WS --> TEAM["Validated<br/>Team Memory"]
+    A1 --> AUDIT["Audit Log"]
     A2 --> AUDIT
 ```
 
@@ -916,9 +1020,9 @@ Documentation preference:
 
 可参考的一手评测：
 
-- [LongMemEval](https://github.com/xiaowu0162/LongMemEval)：信息抽取、跨会话推理、知识更新、时间推理与证据不足时的弃答；需注明原始版或 2025 年 9 月清洗版，不能混报成绩。弃答题没有应召回的证据位置，不能直接套用普通证据召回率。
-- [LoCoMo](https://github.com/snap-research/locomo)：长对话问答与事件摘要；ACL 2024 发布集包含十段生成后经人工标注者核验和编辑的对话，所引固定版本以 `data/locomo10.zip` 分发，内含十份按对话划分的 JSON 文件。不等同于最初的五十段版本，也不能代表真实用户总体表现。
-- [LongMemEval-V2](https://github.com/xiaowu0162/LongMemEval-V2)：面向 Web Agent 轨迹的状态、流程和环境经验，评估证据问答与查询延迟；这仍不等于实际执行任务的成功率。
+- LongMemEval<sup>[【480】](../../book/references.zh.md#ref-480)</sup>：信息抽取、跨会话推理、知识更新、时间推理与证据不足时的弃答；需注明原始版或 2025 年 9 月清洗版，不能混报成绩。弃答题没有应召回的证据位置，不能直接套用普通证据召回率。
+- LoCoMo<sup>[【481】](../../book/references.zh.md#ref-481)</sup>：长对话问答与事件摘要；ACL 2024 发布集包含十段生成后经人工标注者核验和编辑的对话，所引固定版本以 `data/locomo10.zip` 分发，内含十份按对话划分的 JSON 文件。不等同于最初的五十段版本，也不能代表真实用户总体表现。
+- LongMemEval-V2<sup>[【482】](../../book/references.zh.md#ref-482)</sup>：面向 Web Agent 轨迹的状态、流程和环境经验，评估证据问答与查询延迟；这仍不等于实际执行任务的成功率。
 
 业务回归集还应覆盖删除后再检索、权限撤销、同名跨租户实体、错误摘要、过期事实及污染写入；这些不能由普通问答分数替代。
 
@@ -926,38 +1030,16 @@ Documentation preference:
 
 ```mermaid
 flowchart TB
-    INPUT[User / Tool / Environment] --> OBS[Observation Buffer]
-    OBS --> EXTRACT[Memory Candidate Extractor]
-    EXTRACT --> POLICY[Privacy / Trust / Write Policy]
-
-    POLICY -->|Temporary| WORK[Working Memory]
-    POLICY -->|Structured| REL[Relational / KV]
-    POLICY -->|需相似度检索| VEC[Vector Store]
-    POLICY -->|Entity Relation| GRAPH[Knowledge Graph]
-    POLICY -->|Event| EVENT[Event Store]
-    POLICY -->|Large Result| ART[Artifact Store]
-
-    TASK[Current Task] --> QUERY[授权范围内 Retrieval Router]
-    QUERY --> REL
-    QUERY --> VEC
-    QUERY --> GRAPH
-    QUERY --> EVENT
-    QUERY --> ART
-
-    REL --> RERANK[权限与版本复核 / Rerank]
-    VEC --> RERANK
-    GRAPH --> RERANK
-    EVENT --> RERANK
-    ART --> RERANK
-
-    RERANK --> CONTEXT[Context Builder]
-    WORK --> CONTEXT
-    CONTEXT --> MODEL[Model / Agent]
-
-    MODEL --> FEEDBACK[Outcome Feedback]
-    FEEDBACK --> CONSOLIDATE[Update / Consolidate / Forget]
-    CONSOLIDATE --> POLICY
+    POLICY[写入策略] --> STORE[记忆存储]
+    STORE --> CHECK[复核与重排]
+    CHECK --> CONTEXT[上下文构建器]
+    CONTEXT --> MODEL[模型 / Agent]
+    MODEL -->|结果反馈| POLICY
 ```
+
+用户、工具与环境输入先进入观察缓冲区，再经过记忆候选提取器和隐私、可信度、写入策略检查。临时信息进入工作记忆，直接供上下文构建器使用。持久化路由按类型区分：结构化数据进入关系型或 KV 存储，相似度检索数据进入向量存储，实体关系进入知识图谱，事件进入事件存储，大型结果进入产物存储。
+
+当前任务驱动检索路由器，在**授权范围内**查询这五类持久化存储。各存储的结果都要经过权限与版本复核及重排，再进入上下文构建器。模型结果反馈先触发更新、整合或遗忘，再返回写入策略，不是未经检查就直接写入记忆。
 
 图中有两条主线：写入侧决定哪些观察值得留下，读取侧按当前任务选择证据。反馈可以改变下一次的写入策略，但不能跳过来源、权限与版本核对；这些存储组件也可以按需要删减，而不是全部部署。
 
@@ -1038,14 +1120,5 @@ Agent 记忆不能只用“四层记忆 + 向量数据库”概括。更完整�
 
 ## 参考资料
 
-- [CoALA: Cognitive Architectures for Language Agents](https://arxiv.org/abs/2309.02427)
-- [MemGPT: Towards LLMs as Operating Systems](https://arxiv.org/abs/2310.08560)
-- [Generative Agents: Interactive Simulacra of Human Behavior](https://arxiv.org/abs/2304.03442)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366)
-- [LangGraph: Memory overview](https://docs.langchain.com/oss/python/concepts/memory)（[文档快照 1fa2214](https://github.com/langchain-ai/docs/blob/1fa2214237b7a7506c34a30b394c26023d61bf4b/src/oss/concepts/memory.mdx)，用于区分 thread 与跨 thread 作用域）
-- [OpenAI: Safety in building agents](https://developers.openai.com/api/docs/guides/agent-builder-safety)（引用信任边界原则，不依赖其中的产品默认模型建议）
-- [LongMemEval 论文](https://arxiv.org/abs/2410.10813)与[官方说明快照 9e0b455](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md)
-- [LoCoMo 论文](https://arxiv.org/abs/2402.17753)与[ACL 2024 发布说明快照 9228632](https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD)
-- [LongMemEval-V2 官方说明快照 2cc8c54](https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md)
-
-资料核对：2026-09-15。框架文档为滚动更新，上述快照固定本文引用的概念与评测说明，不代表已复现其基准结果。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-07)。

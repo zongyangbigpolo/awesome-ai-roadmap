@@ -101,16 +101,14 @@ MLA may cache compressed latent states and position-related components, while sl
 Suppose many requests start with the same long system prompt. Retain the state produced by the first prefill; later requests can continue directly after their longest matching prefix.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    R1["First request"] --> C1["Compute and retain<br/>a cacheable prefix"]
-    C1 --> POOL[("KV block pool and prefix index")]
-    R2["Later request"] --> M{"Longest reusable<br/>prefix available?"}
-    POOL --> M
-    M -->|Yes| HIT["Reference existing blocks<br/>Compute the unmatched suffix"]
-    M -->|No| MISS["Run prefill<br/>Cache according to policy"]
-    HIT --> D["Generate a new answer"]
-    MISS --> D
+    R["Request"] --> M["Look up reusable prefix"]
+    M --> P["Prefill unmatched tokens"]
+    P --> D["Generate a new answer"]
 ```
+
+The first request computes a cacheable prefix and retains it in the KV block pool and prefix index. Later requests look up the **longest reusable prefix**: on a hit, reference its existing blocks and compute only the unmatched suffix; on a miss, run full prefill and cache according to policy. Both paths generate a new answer rather than reusing a previous answer.
 
 Common hit conditions include:
 
@@ -233,13 +231,5 @@ KV caching relies on unchanged causal-prefix state. It avoids historical recompu
 
 ## References
 
-- [PagedAttention paper](https://arxiv.org/abs/2309.06180)
-- [MQA paper](https://arxiv.org/abs/1911.02150)
-- [GQA paper](https://arxiv.org/abs/2305.13245)
-- [Anthropic official prompt caching cookbook](https://github.com/anthropics/anthropic-cookbook/blob/main/misc/prompt_caching.ipynb)
-- [Anthropic official SDK: cache TTL type](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/cache_control_ephemeral_param.py)
-- [OpenAI: Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching)
-- [KIVI paper](https://arxiv.org/html/2402.02750v2)
-- [vLLM: Automatic Prefix Caching design](https://docs.vllm.ai/en/stable/design/prefix_caching/)
-
-Interface review scope in the source manuscript: official documentation and SDK as of 2026-09-08, with the OpenAI caching guide checked again on 2026-09-15. The example did not make a billable request and does not report a real cache hit.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-14) for this chapter’s sources, reading suggestions, and source notes.

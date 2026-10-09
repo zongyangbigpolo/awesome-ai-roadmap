@@ -90,13 +90,5 @@ IoU 超过 0.5 是 RefCOCO 类基准的常见约定，不是普适标准。小�
 
 ## 参考资料
 
-- [Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection](https://arxiv.org/abs/2303.05499)
-- [Grounded Language-Image Pre-training (GLIP)](https://arxiv.org/abs/2112.03857)
-- [Simple Open-Vocabulary Object Detection with Vision Transformers (OWL-ViT)](https://arxiv.org/abs/2205.06230)
-- [PaliGemma: A versatile 3B VLM for transfer](https://arxiv.org/abs/2407.07726)
-- [Qwen-VL: A Versatile Vision-Language Model](https://arxiv.org/abs/2308.12966)
-- [Molmo and PixMo: Open Weights and Open Data for State-of-the-Art Multimodal Models](https://arxiv.org/abs/2409.17146)
-- [Visual Genome: Connecting Language and Vision Using Crowdsourced Dense Image Annotations](https://arxiv.org/abs/1602.07332)
-- [Generation and Comprehension of Unambiguous Object Descriptions（RefCOCOg）](https://arxiv.org/abs/1511.02283)
-- [ReferItGame: Referring to Objects in Photographs of Natural Scenes](https://aclanthology.org/D14-1086/)
-- [REFER：数据集来源与划分说明](https://github.com/lichengunc/refer)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-multimodal-02)。

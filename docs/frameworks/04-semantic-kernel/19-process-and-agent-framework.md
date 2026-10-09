@@ -13,14 +13,23 @@ The Agent Framework in older SK documentation is not the standalone Microsoft Ag
 - **Microsoft Agent Framework (MAF)**: A standalone successor SDK incorporating lessons from SK and AutoGen. The official repository describes 1.0 as production-ready. The core release status does not imply equal stability for every provider, Workflow extension, or language SDK; check individual packages. The current overview explicitly identifies the Go SDK as public preview.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    C["Sources of process complexity"] --> B1["Business process has stages and state transitions"]
-    C --> B2["Multiple specialist agents must collaborate"]
-    B1 --> PF["SK Process<br/>Experimental Step / Event"]
-    B2 --> AF["SK Agent Orchestration<br/>Experimental collaboration layer"]
-    PF -.Check capabilities before migrating.-> MAF["Standalone Microsoft Agent Framework<br/>Agents / Workflows / Session"]
+    C["Sources of<br/>process<br/>complexity"] --> B1["Process stages"]
+    C --> B2["Agent<br/>collaboration"]
+    B1 --> PF["SK Process"]
+    B2 --> AF["SK Agent<br/>Orchestration"]
+    PF -.Check capabilities before migrating.-> MAF["Standalone<br/>Microsoft Agent<br/>Framework"]
     AF -.Migration guide.-> MAF
 ```
+
+Details of the illustrated steps and components:
+
+- Business process has stages and state transitions
+- Multiple specialist agents must collaborate
+- SK Process Experimental Step / Event
+- SK Agent Orchestration Experimental collaboration layer
+- Standalone Microsoft Agent Framework Agents / Workflows / Session
 
 ## 19.2 Process Framework: an explicit state machine for business processes
 
@@ -130,14 +139,5 @@ Understanding SK abstractions remains valuable when maintaining older projects. 
 
 ## References
 
-- [Semantic Kernel: Process Framework](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework)
-- [Semantic Kernel: Agent Framework overview](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/)
-- [Semantic Kernel: Agent Orchestration](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/)
-- [Semantic Kernel: Complete Group Chat runtime example](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/group-chat)
-- [Semantic Kernel official repository's MAF 1.0 statement, pinned commit](https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md)
-- [Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [SK → MAF migration guide](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/)
-- [Microsoft: Semantic Kernel and MAF support transition announcement](https://devblogs.microsoft.com/agent-framework/semantic-kernel-and-microsoft-agent-framework/)
-- [LangGraph official documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-
-Version note: MAF 1.0, the Go public preview, the experimental labels for SK Process/Orchestration, and the transition announcement were checked on 2026-09-15. The transition announcement retains its original description of MAF as still in Preview; it must not override the later 1.0 release statement or be used to infer an exact SK EOL date.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-19) for this chapter’s sources, reading suggestions, and source notes.

@@ -48,11 +48,23 @@ Early versions used Planners such as Stepwise. Current official Planning documen
 For example, in C#, `FunctionChoiceBehavior.Auto()` works with a chat service and Kernel to enable automatic invocation. Giving the model responsibility for selection does not move transactions, permissions, or reliable recovery "into the model." Those remain under application control.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    G["Business objective"] --> D{"Can a standard tool loop express<br/>the required business controls?"}
-    D -->|"Yes: open-ended but bounded tool selection"| M["Use Function Calling to select Plugins<br/>Application executes and enforces budgets"]
-    D -->|"No: approval order or recovery boundaries need separate control"| PF["Explicit workflow<br/>Check experimental SK packages or MAF Workflows"]
+    G["Business<br/>objective"] --> D["Standard loop fits?"]
+    D -->|"Yes"| M["Select Plugins"]
+    D -->|"No"| PF["Explicit<br/>workflow"]
 ```
+
+Figure conditions and labels:
+
+- Yes: open-ended but bounded tool selection
+- No: approval order or recovery boundaries need separate control
+
+Details of the illustrated steps and components:
+
+- Can a standard tool loop express the required business controls?
+- Use Function Calling to select Plugins Application executes and enforces budgets
+- Explicit workflow Check experimental SK packages or MAF Workflows
 
 This resembles the decision discussed in [LangChain Ecosystem, Chapter 9](../01-langchain/04-langgraph/09-langchain-vs-langgraph.md), but the trigger is not simply the number of steps. Even one money transfer needs explicit permissions and approval; multiple rounds of read-only search may still fit a budget-limited function-calling loop.
 
@@ -107,11 +119,5 @@ When maintaining an SK project, follow a single call: where Kernel obtains the m
 
 ## References
 
-- [Semantic Kernel official documentation: Introduction](https://learn.microsoft.com/en-us/semantic-kernel/overview/)
-- [Semantic Kernel: Kernel concepts](https://learn.microsoft.com/en-us/semantic-kernel/concepts/kernel)
-- [Semantic Kernel: Plugin concepts](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/)
-- [Semantic Kernel: Planning concepts](https://learn.microsoft.com/en-us/semantic-kernel/concepts/planning)
-- [Semantic Kernel: Filter concepts](https://learn.microsoft.com/en-us/semantic-kernel/concepts/enterprise-readiness/filters)
-- [Semantic Kernel official repository and successor-framework announcement, pinned commit](https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md)
-
-Version note: The MAF successor relationship and 1.0 release statement were checked on 2026-09-15. This statement does not cover every language or experimental extension; Chapter 19 explains the boundaries.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-18) for this chapter’s sources, reading suggestions, and source notes.

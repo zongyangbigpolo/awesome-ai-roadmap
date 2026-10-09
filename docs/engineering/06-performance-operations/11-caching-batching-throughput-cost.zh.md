@@ -9,12 +9,20 @@ description: 区分答案缓存与前缀缓存，核算批处理、并发与重�
 对按用量计费的模型 API，token 用量、工具使用和调用次数直接影响费用；自托管还要算算力利用率与运维。常用的四个杠杆是：**减少重复计算（缓存）、把可延迟任务交给异步批处理、换更便宜的模型（路由）、压缩上下文（减少 token）**。这里先看前两个应用层杠杆，路由降本已在[第 3 章](../02-request-reliability/03-model-gateway-routing-fallback.zh.md)讨论，推理引擎内部的量化、KV Cache 等降本手段见 [LLM · 推理与部署](../../llm/03-inference-serving/README.zh.md)。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    COST["调用成本"] --> CACHE["缓存:<br/>避免重复计算"]
-    COST --> BATCH["批处理:<br/>摊薄单位开销"]
-    COST --> ROUTE["路由降本:<br/>见第3章"]
-    COST --> CTX["上下文压缩:<br/>减少输入token"]
+    COST["调用成本"] --> CACHE["缓存:"]
+    COST --> BATCH["批处理:"]
+    COST --> ROUTE["路由降本:"]
+    COST --> CTX["上下文压缩:"]
 ```
+
+图中各项的完整含义：
+
+- 缓存: 避免重复计算
+- 批处理: 摊薄单位开销
+- 路由降本: 见第3章
+- 上下文压缩: 减少输入token
 
 ## 11.2 语义缓存:应用层最直接的降本手段
 
@@ -126,8 +134,5 @@ Semaphore 只限制单进程活跃调用，不限制等待队列长度，也不�
 
 ## 参考资料
 
-- [Anthropic: Prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
-- [OpenAI: Prompt caching](https://platform.openai.com/docs/guides/prompt-caching)
-- [OpenAI: Batch API](https://platform.openai.com/docs/guides/batch)
-- [Anthropic: Message Batches API](https://docs.anthropic.com/en/docs/build-with-claude/batch-processing)
-- [Google Cloud: Cost optimization for AI and ML workloads](https://cloud.google.com/architecture/framework/cost-optimization/ai-ml)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-11)。

@@ -9,12 +9,13 @@ description: 分析 MCP 等工具协议面临的提示注入、权限提升、�
 MCP 和 A2A 都让不受模型控制的数据、描述和动作进入 Agent 链路。协议可互操作，不等于对端、工具描述或参数可信。
 
 ```mermaid
-flowchart LR
-    U[用户] --> H[Host / 调用方]
-    H --> M[模型]
-    H --> P[MCP 或 A2A 对端]
-    P --> X[外部系统]
-    H --> A[审批与审计]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["用户"] --> H["Host / 调用方"]
+    H --> M["模型"]
+    H --> P["MCP 或 A2A 对端"]
+    P --> X["外部系统"]
+    H --> A["审批与审计"]
 ```
 
 Host/调用方应是策略执行点：验证身份和来源、限制工具与数据、审批高风险动作、记录可追溯证据。不要让模型文本、Agent Card 或工具 description 自行决定权限。
@@ -131,12 +132,5 @@ Client 向令牌指定的 MCP Server 携带令牌是正常流程；MCP Server �
 
 ## 参考资料
 
-- [MCP 2026-07-28 Authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
-- [MCP 2026-07-28 Security Best Practices](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices)
-- [MCP 2026-07-28 Transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-- [A2A v1.0.1 发布规范](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [RFC 9728: OAuth 2.0 Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728)
-- [RFC 8252: 原生应用 OAuth 与 loopback 回调](https://www.rfc-editor.org/rfc/rfc8252)
-- [RFC 9700: OAuth 2.0 Security Best Current Practice](https://www.rfc-editor.org/rfc/rfc9700)
-- [RFC 7636: PKCE](https://www.rfc-editor.org/rfc/rfc7636)
-- [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-15)。

@@ -101,16 +101,14 @@ MLA 可能缓存压缩 latent 与位置相关分量，滑动窗口层只保留�
 假设许多请求都以同一份长系统提示开头。第一次 prefill 产生状态后保留它，后续请求可直接从最长匹配前缀之后继续。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    R1["首次请求"] --> C1["计算并保留可缓存前缀"]
-    C1 --> POOL[("KV 块池与前缀索引")]
-    R2["后续请求"] --> M{"最长可复用前缀存在？"}
-    POOL --> M
-    M -->|是| HIT["引用已有块<br/>计算未命中的后缀"]
-    M -->|否| MISS["执行 prefill<br/>按策略写入缓存"]
-    HIT --> D["生成新回答"]
-    MISS --> D
+    R["请求"] --> M["查找可复用前缀"]
+    M --> P["对未命中部分做 prefill"]
+    P --> D["生成新回答"]
 ```
+
+首次请求计算可缓存前缀，将其保留在 KV 块池和前缀索引中。后续请求查找**最长可复用前缀**：命中时引用已有块，仅计算未命中的后缀；未命中时执行完整 prefill，按策略写入缓存。两条路径都会生成新回答，并非复用此前的回答。
 
 常见的命中条件包括：
 
@@ -233,13 +231,5 @@ KV Cache 的依据是因果前缀状态不变；收益是避免历史重算，�
 
 ## 参考资料
 
-- [PagedAttention 原论文](https://arxiv.org/abs/2309.06180)
-- [MQA 原论文](https://arxiv.org/abs/1911.02150)
-- [GQA 原论文](https://arxiv.org/abs/2305.13245)
-- [Anthropic 官方 Prompt Caching cookbook](https://github.com/anthropics/anthropic-cookbook/blob/main/misc/prompt_caching.ipynb)
-- [Anthropic 官方 SDK：缓存 TTL 类型](https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/cache_control_ephemeral_param.py)
-- [OpenAI：Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching)
-- [KIVI 原论文](https://arxiv.org/html/2402.02750v2)
-- [vLLM：Automatic Prefix Caching 设计](https://docs.vllm.ai/en/stable/design/prefix_caching/)
-
-接口资料核对范围：2026-09-08 的官方文档与 SDK；OpenAI 缓存指南另于 2026-09-15 复核。示例没有发起计费请求，不代表一次真实缓存命中结果。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-14)。

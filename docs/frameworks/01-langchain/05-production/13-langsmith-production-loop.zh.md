@@ -11,19 +11,27 @@ description: 将脱敏 Trace 转为版本化数据集和评测实验，解释重
 > 生产闭环通常沿着「Trace 脱敏 → 归因与标注 → 数据集 → 离线实验 → 发布门禁 → 线上评测与反馈 → 失败 Trace 回归」推进，而不是看到失败就只改 Prompt。
 
 ```mermaid
-flowchart LR
-    A["线上 Trace<br/>先脱敏、最小化"] --> B["筛选失败/反馈/抽样"]
-    B --> C["标注后加入 Dataset"]
-    C --> D["离线实验<br/>比较版本"]
-    D --> E{"Release gate"}
-    E -->|通过| F["小流量发布 + 在线评测"]
-    E -->|不通过| G["修复 Agent/Tool/策略"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["线上 Trace"] --> B["筛选样本"]
+    B --> C["标注后加入<br/>Dataset"]
+    C --> D["离线实验"]
+    D --> E["Release gate"]
+    E -->|通过| F["小流量发布并评估"]
+    E -->|不通过| G["修复 Agent/Tool/<br/>策略"]
     F --> B
     G --> D
 
     style E fill:#fff3cd
     style F fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- 线上 Trace 先脱敏、最小化
+- 筛选失败/反馈/抽样
+- 离线实验 比较版本
+- 小流量发布 + 在线评测
 
 ## 13.2 先定义 Trace 数据边界
 
@@ -133,13 +141,18 @@ Dataset 不应只收集漂亮的 Demo。每个 example 至少应包含：版本�
 在产品中收集点赞/点踩、纠正答案、人工接管原因和审批拒绝原因，并把反馈关联到 Trace ID、版本和用户可见输出。反馈应经过脱敏、去重、滥用检测和人工分诊后，再决定是否进入 Dataset。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    U["用户/审核员反馈"] --> T["关联 Trace ID 与版本"]
-    T --> R["脱敏、去重、按根因分诊"]
-    R --> D["加入 Dataset 切片"]
-    D --> X["离线实验与 Release gate"]
+    U["用户/审核员反馈"] --> T["关联 Trace ID 与<br/>版本"]
+    T --> R["整理反馈"]
+    R --> D["加入 Dataset 切<br/>片"]
+    D --> X["离线实验与<br/>Release gate"]
     X --> P["灰度发布"]
 ```
+
+图中各项的完整含义：
+
+- 脱敏、去重、按根因分诊
 
 > 单次点赞不能直接当成质量证明，用户文本也不应直接改写系统 Prompt 或授权策略。反馈是评测与改进的输入，仍要经过确定性安全控制和人工审核。
 
@@ -178,10 +191,5 @@ flowchart TB
 
 ## 参考资料
 
-- [LangSmith Observability](https://docs.langchain.com/langsmith/observability)
-- [LangSmith Evaluation](https://docs.langchain.com/langsmith/evaluation)
-- [LangSmith 管理 Dataset](https://docs.langchain.com/langsmith/manage-datasets)
-- [LangSmith Online evaluation](https://docs.langchain.com/langsmith/online-evaluations-llm-as-judge)
-- [LangSmith 用户反馈](https://docs.langchain.com/langsmith/attach-user-feedback)
-- [LangSmith 发送前隐藏与转换敏感数据](https://docs.langchain.com/langsmith/mask-inputs-outputs)
-- [LangSmith 实验重复次数、并发与缓存](https://docs.langchain.com/langsmith/experiment-configuration)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-13)。

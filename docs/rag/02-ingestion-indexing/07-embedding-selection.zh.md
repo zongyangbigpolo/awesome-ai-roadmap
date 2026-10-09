@@ -17,17 +17,13 @@ description: 用业务证据标签与 BM25 对照评估 Embedding 模型，分�
 MTEB 是当前最常用的文本嵌入评测基准，覆盖分类、聚类、检索、重排等多类任务。它很有价值，但**有四个常见局限**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    M[只看 MTEB 排名] --> P1[榜单过拟合]
-    M --> P2[检索分数不预测端到端质量]
-    M --> P3[语言与文体偏置]
-    M --> P4[长度分布偏置]
-
-    P1 --> D1[模型针对公开集调优<br/>分数虚高]
-    P2 --> D2[召回好 不等于 答案好]
-    P3 --> D3[所选子榜的语言与领域<br/>未必匹配业务]
-    P4 --> D4[检查子任务长度分布<br/>而非只看总分]
+    M[MTEB 排名] --> S[仅用于候选筛选]
+    S --> E[在业务数据上评测]
 ```
+
+排名有四个局限：针对公开集调优可能使分数虚高；召回好不保证端到端答案好；子榜的语言、领域和文体未必匹配业务；长度分布也可能不同。应检查子任务的长度分布，而不只看总分。
 
 ### 7.2.1 榜单过拟合
 
@@ -52,14 +48,14 @@ MTEB 原始版本以英语和通用文本为主。你的场景可能是中文的
 ## 7.3 正确的选型流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. 用榜单圈定候选<br/>3-5 个模型] --> S2[2. 构造业务评测集]
-    S2 --> S3[3. 同一套切分和参数下<br/>分别建库]
-    S3 --> S4[4. 测检索指标<br/>Hit@K MRR NDCG]
-    S4 --> S5[5. 测端到端答案质量]
-    S5 --> S6[6. 评估成本 延迟 部署约束]
-    S6 --> S7[7. 决策]
+    S1[筛选 3–5 个模型] --> S2[构造可比评测]
+    S2 --> S3[评测检索与答案]
+    S3 --> S4[评估成本并决策]
 ```
+
+构造业务评测集，在相同切分与参数下为每个模型分别建库。先测 Hit@K、MRR 和 NDCG，再测端到端答案质量。决策前还要评估成本、延迟和部署约束。
 
 **榜单的正确用法是「筛选候选池」，而不是「给出答案」。**
 
@@ -198,11 +194,5 @@ BGE-M3 可输出稠密、学习式稀疏和多向量表示，一次编码可服�
 
 ## 参考资料
 
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [Matryoshka Representation Learning](https://arxiv.org/abs/2205.13147)
-- [OpenAI：New embedding models and API updates（2024-01-25）](https://openai.com/index/new-embedding-models-and-api-updates/)
-- [OpenAI：Embedding API 与 dimensions 参数](https://developers.openai.com/api/docs/guides/embeddings)
-- [Qwen3-Embedding-0.6B 模型卡](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-- [M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation](https://arxiv.org/abs/2402.03216)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-07)。

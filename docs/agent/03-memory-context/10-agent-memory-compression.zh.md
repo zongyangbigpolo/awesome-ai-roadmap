@@ -69,13 +69,14 @@ $$
 | Structured Extraction | 对话文本是否是最佳表示 | 转换为结构化状态 | 一般有损；仅对完整可逆表示例外 |
 
 ```mermaid
-flowchart TB
-    H[Long Interaction History] --> W[Sliding Window<br/>按时间截断]
-    H --> S[Summarization<br/>语义压缩]
-    H --> I[Importance Filtering<br/>按价值选择]
-    H --> E[Structured Extraction<br/>改变表示]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    H["Long<br/>Interaction<br/>History"] --> W["Sliding<br/>Window<br/>按时间截断"]
+    H --> S["Summarization<br/>语义压缩"]
+    H --> I["Importance<br/>Filtering<br/>按价值选择"]
+    H --> E["Structured<br/>Extraction<br/>改变表示"]
 
-    W --> C[Compact Context]
+    W --> C["Compact<br/>Context"]
     S --> C
     I --> C
     E --> C
@@ -90,16 +91,17 @@ flowchart TB
 Sliding Window 只在活跃 Context 保留最近若干轮或若干 Token，移除更早内容；是否删除持久化原记录由另一套保留策略决定。
 
 ```mermaid
-flowchart LR
-    M1[Message 1] --> M2[Message 2]
-    M2 --> M3[Message 3]
-    M3 --> M4[Message 4]
-    M4 --> M5[Message 5]
-    M5 --> M6[Message 6]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    M1["Message 1"] --> M2["Message 2"]
+    M2 --> M3["Message 3"]
+    M3 --> M4["Message 4"]
+    M4 --> M5["Message 5"]
+    M5 --> M6["Message 6"]
 
-    M1 -.丢弃.-> X[Evicted]
+    M1 -.丢弃.-> X["Evicted"]
     M2 -.丢弃.-> X
-    M3 --> K[Current Window]
+    M3 --> K["Current Window"]
     M4 --> K
     M5 --> K
     M6 --> K
@@ -157,10 +159,11 @@ flowchart LR
 Pin 的是当前仍有效的受信内容，不是永久固定历史文本。用户改了目标或权限已撤销，应更新或撤销相应项；权限判断始终由运行时执行，不能只依靠上下文中的一句规则。若必需项本身超过预算，应拆分任务或停止请求，而不是静默截断。
 
 ```mermaid
-flowchart TB
-    PIN[Pinned Context] --> CTX[Current Context]
-    RECENT[Recent Window] --> CTX
-    RET[Retrieved Memory] --> CTX
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PIN["Pinned Context"] --> CTX["Current Context"]
+    RECENT["Recent Window"] --> CTX
+    RET["Retrieved Memory"] --> CTX
 ```
 
 ### 10.3.3 不要切断 Tool 交互
@@ -190,11 +193,12 @@ Tool Call 和对应 Tool Result 应视为一个逻辑单元。只保留调用、
 Summarization 在删除早期历史前，先提取重要信息形成更短表示。
 
 ```mermaid
-flowchart LR
-    H[Old Messages] --> S[Summarizer]
-    S --> SUM[Compact Summary]
-    SUM --> CTX[Current Context]
-    R[Recent Messages] --> CTX
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Old Messages"] --> S["Summarizer"]
+    S --> SUM["Compact Summary"]
+    SUM --> CTX["Current Context"]
+    R["Recent Messages"] --> CTX
 ```
 
 ### 10.4.1 Rolling Summary
@@ -224,11 +228,12 @@ new_summary = summarize(old_summary + newly_evicted_messages)
 先生成局部摘要，再合并成阶段或任务摘要：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    M1[Messages 1-10] --> S1[Stage Summary A]
-    M2[Messages 11-20] --> S2[Stage Summary B]
-    M3[Messages 21-30] --> S3[Stage Summary C]
-    S1 --> T[Task Summary]
+    M1["Messages<br/>1-10"] --> S1["Stage<br/>Summary A"]
+    M2["Messages<br/>11-20"] --> S2["Stage<br/>Summary B"]
+    M3["Messages<br/>21-30"] --> S3["Stage<br/>Summary C"]
+    S1 --> T["Task Summary"]
     S2 --> T
     S3 --> T
 ```
@@ -281,11 +286,12 @@ flowchart TB
 多轮摘要可能发生：
 
 ```mermaid
-flowchart LR
-    RAW[Raw History] --> S1[Summary 1]
-    S1 --> S2[Summary 2]
-    S2 --> S3[Summary 3]
-    S3 --> D[Meaning Drift]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw History"] --> S1["Summary 1"]
+    S1 --> S2["Summary 2"]
+    S2 --> S3["Summary 3"]
+    S3 --> D["Meaning Drift"]
 ```
 
 缓解方式：
@@ -308,10 +314,11 @@ Verifier 也可能漏判，尤其当它与摘要器只读取同一份有缺陷�
 Importance Filtering 根据当前任务选择应保留的内容。
 
 ```mermaid
-flowchart LR
-    H[History Items] --> SCORE[Importance Scoring]
-    SCORE --> HIGH[High Value<br/>保留]
-    SCORE --> LOW[Low Value<br/>删除或外部化]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["History Items"] --> SCORE["Importance Scoring"]
+    SCORE --> HIGH["High Value<br/>保留"]
+    SCORE --> LOW["Low Value<br/>删除或外部化"]
 ```
 
 ### 10.5.1 重要性信号
@@ -380,14 +387,15 @@ $$
 自然语言对话通常冗长、重复且难以精确更新。Structured Extraction 将历史转换为高密度状态。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart LR
-    CHAT[Conversation] --> EX[Extractor + Evidence Validation]
-    EX --> FACTS[Facts]
-    EX --> STATE[Task State]
-    EX --> TODO[Todo]
-    EX --> DEC[Decisions]
-    EX --> ENT[Entities]
-    EX --> ART[Artifact References]
+    CHAT["Conversation"] --> EX["Extractor +<br/>Evidence<br/>Validation"]
+    EX --> FACTS["Facts"]
+    EX --> STATE["Task State"]
+    EX --> TODO["Todo"]
+    EX --> DEC["Decisions"]
+    EX --> ENT["Entities"]
+    EX --> ART["Artifact<br/>References"]
 ```
 
 ### 10.6.1 示例
@@ -488,17 +496,49 @@ Schema 合法只证明字段形状正确，不证明内容真实。运行状态�
 
 工程上通常把这几种方法串起来用：
 
+分离历史前，先保护约束并提取状态。
+
 ```mermaid
 flowchart TB
-    H[Full History] --> PIN[Pin Hard Constraints]
-    PIN --> EXT[Externalize Large Artifacts]
-    EXT --> STR[Structured Extraction]
-    STR --> SPLIT[划分近期交互与较早历史]
-    SPLIT --> IMP[较早历史 Importance Filtering]
-    IMP --> SUM[Summarize Older History]
-    SPLIT --> WIN[Keep Recent Sliding Window]
-    SUM --> PACK[Context Packing]
-    WIN --> PACK[Context Packing]
+    H[Full History]
+    PIN[Pin Hard Constraints]
+    EXT[Externalize Large Artifacts]
+    STR[Structured Extraction]
+    SPLIT[划分近期交互与较早历史]
+    H --> PIN
+    PIN --> EXT
+    EXT --> STR
+    STR --> SPLIT
+```
+
+较早与近期交互沿不同路径汇入同一装配器。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SPLIT["划分近期交互与较早历史"]
+    IMP["较早历史 Importance<br/>Filtering"]
+    SUM["Summarize Older History"]
+    WIN["Keep Recent Sliding<br/>Window"]
+    PACK["Context Packing"]
+    SPLIT --> IMP
+    IMP --> SUM
+    SPLIT --> WIN
+    SUM --> PACK
+    WIN --> PACK
+```
+
+受保护的信息也直接进入该装配器。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PIN["Pin Hard Constraints"]
+    EXT["Externalize Large<br/>Artifacts"]
+    STR["Structured Extraction"]
+    PACK["Context Packing"]
+    PIN --> EXT
+    EXT --> STR
     PIN -->|有效约束| PACK
     STR -->|核对后的状态| PACK
     EXT -->|Artifact 引用| PACK
@@ -545,11 +585,12 @@ Deduplication 可以：
 - 将重复来源折叠为引用列表。
 
 ```mermaid
-flowchart LR
-    I[Context Items] --> H[Exact Hash]
-    H --> S[Semantic Similarity]
-    S --> E[Entity / Fact Merge]
-    E --> O[Deduplicated Items]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Context Items"] --> H["Exact Hash"]
+    H --> S["Semantic Similarity"]
+    S --> E["Entity / Fact Merge"]
+    E --> O["Deduplicated Items"]
 ```
 
 去重时应避免误删：
@@ -596,13 +637,14 @@ Externalization 将大内容移出 Context，只保留摘要和引用。
 分层记忆同时保留不同粒度：
 
 ```mermaid
-flowchart TB
-    TASK[Task Summary] --> S1[Stage Summary A]
-    TASK --> S2[Stage Summary B]
-    S1 --> E1[Raw Events]
-    S1 --> E2[Artifacts]
-    S2 --> E3[Raw Events]
-    S2 --> E4[Artifacts]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Task Summary"] --> S1["Stage<br/>Summary A"]
+    TASK --> S2["Stage<br/>Summary B"]
+    S1 --> E1["Raw Events"]
+    S1 --> E2["Artifacts"]
+    S2 --> E3["Raw Events"]
+    S2 --> E4["Artifacts"]
 ```
 
 Agent 先读取 Task Summary；只有需要细节时，才展开 Stage Summary 或 Raw Event。
@@ -630,11 +672,12 @@ Agent 先读取 Task Summary；只有需要细节时，才展开 Stage Summary �
 - 从 Snapshot + Delta 恢复当前状态。
 
 ```mermaid
-flowchart LR
-    SNAP[Snapshot] --> D1[Delta 1]
-    D1 --> D2[Delta 2]
-    D2 --> D3[Delta N]
-    D3 --> NEW[New Snapshot]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    SNAP["Snapshot"] --> D1["Delta 1"]
+    D1 --> D2["Delta 2"]
+    D2 --> D3["Delta N"]
+    D3 --> NEW["New Snapshot"]
 ```
 
 这种方法主要减少状态存储和传输，不等同于自然语言摘要。
@@ -728,16 +771,17 @@ $$
 Prompt Caching 缓存重复 Prompt 前缀的中间计算结果，使后续请求可以复用。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant A as Application
     participant C as Prompt Cache
     participant M as Model
 
-    A->>M: Stable Prefix + New Suffix
+    A->>M: Stable Prefix + New<br/>Suffix
     M->>C: 缓存稳定前缀计算
-    A->>M: Same Prefix + Another Suffix
+    A->>M: Same Prefix + Another<br/>Suffix
     C-->>M: 复用前缀计算
-    M-->>A: 命中时可减少重复 Prefill 开销
+    M-->>A: 命中时可减少重复 Prefill<br/>开销
 ```
 
 适合缓存：
@@ -769,11 +813,12 @@ sequenceDiagram
 ## 10.16 Prompt Caching 与压缩如何配合
 
 ```mermaid
-flowchart LR
-    RAW[Raw Information] --> COMP[Memory Compression]
-    COMP --> KEEP[Selected Context]
-    KEEP --> CACHE[Prompt Caching]
-    CACHE --> MODEL[Model]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw Information"] --> COMP["Memory Compression"]
+    COMP --> KEEP["Selected Context"]
+    KEEP --> CACHE["Prompt Caching"]
+    CACHE --> MODEL["Model"]
 ```
 
 实践里通常先做两步：
@@ -803,7 +848,7 @@ flowchart LR
 
 Prompt 设计时通常将稳定内容放在前面，动态内容放在后面，以提高缓存复用。
 
-[OpenAI 官方文档](https://developers.openai.com/api/docs/guides/prompt-caching)说明，需匹配实际渲染的前缀；模型、工具 Schema、顺序及相关设置变化都可能改变可复用部分。缓存最低长度、断点方式、写入费用和保留时间依模型与服务版本而异，不能把某个型号的数字推广为统一规则。
+OpenAI 官方文档<sup>[【80】](../../book/references.zh.md#ref-80)</sup>说明，需匹配实际渲染的前缀；模型、工具 Schema、顺序及相关设置变化都可能改变可复用部分。缓存最低长度、断点方式、写入费用和保留时间依模型与服务版本而异，不能把某个型号的数字推广为统一规则。
 
 频繁改写前面的摘要可能使后续缓存失效，压缩调用自身也有成本。对照总账单和首 Token 延迟，分别测量冷缓存、热缓存及压缩后的请求；不要为了缓存命中继续发送失效权限或过期敏感数据。
 
@@ -825,7 +870,7 @@ Prompt Caching 是模型服务对应用暴露的跨请求复用能力，底层�
 
 ### 10.18.1 服务端 Compaction 也不等于 Prompt Cache
 
-[OpenAI Responses 的 Compaction](https://developers.openai.com/api/docs/guides/compaction)会产生不透明的加密 compaction item，供后续请求继续使用。这是缩减后续 Context 的服务能力，不是仅复用前缀计算，也不能假定其内部就是可读的自然语言摘要。
+OpenAI Responses 的 Compaction<sup>[【495】](../../book/references.zh.md#ref-495)</sup>会产生不透明的加密 compaction item，供后续请求继续使用。这是缩减后续 Context 的服务能力，不是仅复用前缀计算，也不能假定其内部就是可读的自然语言摘要。
 
 要区分两条接口路径：
 
@@ -931,7 +976,7 @@ Agent 能否从压缩后的 Context 和外部 State：
 
 测试步数来自业务轨迹分布，不是可靠性的统一门槛。要记录累计压缩次数，检查远期信息是否逐轮丢失；总成本应包含摘要生成、写入索引、额外检索和恢复调用。
 
-公开数据可以参考 [LoCoMo](https://github.com/snap-research/locomo) 的事件摘要与问答、[LongMemEval](https://github.com/xiaowu0162/LongMemEval) 的知识更新与弃答，以及 [LongMemEval-V2](https://github.com/xiaowu0162/LongMemEval-V2) 的轨迹经验检索。它们不直接验证你自己的 checkpoint、ACL 或副作用恢复；固定数据版本，按会话/轨迹分组统计，避免把相关问题当作独立用户样本。
+公开数据可以参考 LoCoMo<sup>[【481】](../../book/references.zh.md#ref-481)</sup> 的事件摘要与问答、LongMemEval<sup>[【480】](../../book/references.zh.md#ref-480)</sup> 的知识更新与弃答，以及 LongMemEval-V2<sup>[【482】](../../book/references.zh.md#ref-482)</sup> 的轨迹经验检索。它们不直接验证你自己的 checkpoint、ACL 或副作用恢复；固定数据版本，按会话/轨迹分组统计，避免把相关问题当作独立用户样本。
 
 ## 10.21 常见反模式
 
@@ -985,33 +1030,16 @@ Agent 能否从压缩后的 Context 和外部 State：
 
 ```mermaid
 flowchart TB
-    INPUT[Messages + Tool Results + State] --> CLASS[Classify]
-
-    CLASS --> PIN[当前有效的 Pinned Constraints]
-    CLASS --> STATE[经执行证据核对的 Structured State]
-    CLASS --> LARGE[Large Artifacts]
-    CLASS --> HISTORY[Historical Messages]
-
-    LARGE --> EXT[Externalize + Reference]
-    HISTORY --> SPLIT[按完整交互与阶段分组]
-    SPLIT --> RECENT[近期完整交互]
-    SPLIT --> DEDUP[较早历史去重]
-    DEDUP --> IMP[Importance Filter]
-    IMP --> SUM[Hierarchical Summary]
-
-    PIN --> PACK[Context Packer]
-    STATE --> PACK
-    EXT --> PACK
-    SUM --> PACK
-    RECENT --> PACK
-    RET[经权限与版本复核的 Long-term Memory] --> PACK
-
-    PACK --> CACHE[Prompt Cache Stable Prefix]
-    CACHE --> MODEL[Model]
-
-    MODEL --> OBS[New Observation]
-    OBS --> INPUT
+    CLASS[输入分类] --> PACK[上下文装配器]
+    PACK --> CACHE[提示词缓存稳定前缀]
+    CACHE --> MODEL[模型]
+    MODEL --> OBS[新观察结果]
+    OBS --> CLASS
 ```
+
+输入包含消息、工具结果与状态。分类时区分当前有效的固定约束、经执行证据核对的结构化状态、大型产物与历史消息。约束与已验证状态直接进入装配器，大型产物先外置并替换为引用。
+
+历史按完整交互与阶段分组。近期完整交互直接进入装配器；较早历史先去重、按重要性筛选，再生成分层摘要。长期记忆同样可以进入装配器，但必须先复核权限与版本。装配后的上下文通过稳定前缀使用提示词缓存，再交给模型；新观察结果重新进入输入分类。
 
 可按任务需要选择以下组合；短任务不一定需要摘要和分层存储：
 
@@ -1068,16 +1096,5 @@ Prompt Caching 与这些方法位于不同层次：
 
 ## 参考资料
 
-- [MemGPT: Towards LLMs as Operating Systems](https://arxiv.org/abs/2310.08560)
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Chroma Research: Context Rot](https://research.trychroma.com/context-rot)
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
-- [Anthropic Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
-- [OpenAI Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching)
-- [OpenAI Compaction](https://developers.openai.com/api/docs/guides/compaction)
-- [LangGraph Memory](https://docs.langchain.com/oss/python/langgraph/add-memory)
-- [LoCoMo 官方发布说明快照 9228632](https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD)（ACL 2024 发布集；固定版本的 `data/locomo10.zip` 内含十份按对话划分的 JSON 文件）
-- [LongMemEval 官方说明快照 9e0b455](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md)（区分原始版与 2025 年 9 月清洗版）
-- [LongMemEval-V2 官方说明快照 2cc8c54](https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md)
-
-资料核对：2026-09-15。OpenAI 缓存与 Compaction 引用的是 Responses API 滚动文档，不承诺跨模型或跨版本相同的价格、阈值与历史传递规则；本次未实测服务端接口。Anthropic 缓存条目保留为补充阅读，未据此新增具体参数结论。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-10)。

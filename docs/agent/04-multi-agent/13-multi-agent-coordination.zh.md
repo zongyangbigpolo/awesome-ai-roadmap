@@ -26,18 +26,38 @@ description: 解释 Multi-Agent 的协作、路由、交接与共享状态，分
 
 这些问题可以分为四层：
 
-```mermaid
-flowchart TB
-    C[Multi-Agent Coordination] --> COM[Communication]
-    C --> ST[State]
-    C --> RT[Routing]
-    C --> CT[Control Transfer]
+通信与状态。
 
-    COM --> MSG[Message / RPC / Event]
-    ST --> SHARED[Shared State / Artifact]
-    RT --> STATIC[Static / Dynamic / Hybrid]
-    CT --> DELEGATE[Delegation]
-    CT --> HANDOFF[Handoff]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Multi-Agent Coordination"]
+    COM["Communication"]
+    MSG["Message / RPC / Event"]
+    ST["State"]
+    SHARED["Shared State / Artifact"]
+    C --> COM
+    C --> ST
+    COM --> MSG
+    ST --> SHARED
+```
+
+路由与控制权转移。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Multi-Agent Coordination"]
+    RT["Routing"]
+    STATIC["Static / Dynamic /<br/>Hybrid"]
+    CT["Control Transfer"]
+    DELEGATE["Delegation"]
+    HANDOFF["Handoff"]
+    C --> RT
+    C --> CT
+    RT --> STATIC
+    CT --> DELEGATE
+    CT --> HANDOFF
 ```
 
 ## 13.2 协作拓扑
@@ -56,12 +76,13 @@ flowchart TB
 Agent 按预定义顺序依次执行：
 
 ```mermaid
-flowchart LR
-    R[Research Agent] --> W[Writer Agent]
-    W --> V[Reviewer Agent]
-    V --> G{验收与发布授权通过?}
-    G -->|是| P[Publisher]
-    G -->|否| RWORK[修订或停止]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Research Agent"] --> W["Writer Agent"]
+    W --> V["Reviewer Agent"]
+    V --> G["验收与发布授权通过?"]
+    G -->|是| P["Publisher"]
+    G -->|否| RWORK["修订或停止"]
 ```
 
 ### 13.3.1 适用场景
@@ -100,12 +121,13 @@ Orchestrator 负责：
 - 重试或重新规划。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    U[User] --> O[Orchestrator]
-    O --> R[Research Agent]
-    O --> C[Coding Agent]
-    O --> V[Review Agent]
-    R --> A[Artifact Store]
+    U["User"] --> O["Orchestrator"]
+    O --> R["Research<br/>Agent"]
+    O --> C["Coding Agent"]
+    O --> V["Review Agent"]
+    R --> A["Artifact<br/>Store"]
     C --> A
     V --> A
     A --> O
@@ -133,11 +155,12 @@ flowchart TB
 多个 Agent 通过共享工作区交换 Task、事实和 Artifact。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    B[Shared Workspace<br/>Task Ledger + Artifacts + Facts]
-    A1[Agent A] <--> B
-    A2[Agent B] <--> B
-    A3[Agent C] <--> B
+    B["Shared Workspace<br/>Task Ledger + Artifacts<br/>+ Facts"]
+    A1["Agent A"] <--> B
+    A2["Agent B"] <--> B
+    A3["Agent C"] <--> B
 ```
 
 优势：
@@ -162,10 +185,11 @@ flowchart TB
 Agent 之间直接通信、协商或委派：
 
 ```mermaid
-flowchart LR
-    A[Agent A] <--> B[Agent B]
-    B <--> C[Agent C]
-    C <--> D[Agent D]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] <--> B["Agent B"]
+    B <--> C["Agent C"]
+    C <--> D["Agent D"]
     D <--> A
 ```
 
@@ -239,11 +263,12 @@ sequenceDiagram
 Producer 将 Task 放入队列，Worker 竞争消费。
 
 ```mermaid
-flowchart LR
-    P[Producer] --> Q[Task Queue]
-    Q --> W1[Worker 1]
-    Q --> W2[Worker 2]
-    Q --> W3[Worker N]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Producer"] --> Q["Task Queue"]
+    Q --> W1["Worker 1"]
+    Q --> W2["Worker 2"]
+    Q --> W3["Worker N"]
 ```
 
 适合：
@@ -265,18 +290,19 @@ flowchart LR
 
 分布式系统中很难依赖“绝对只执行一次”，更常见做法是至少一次投递配合幂等执行。
 
-例如 [SQS Standard Queue](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)明确允许重复投递。ACK、消息去重与外部副作用是不同层次：Worker 退款成功后在 ACK 前崩溃，重投仍可能再次退款。应以稳定的业务操作 ID 调用支持幂等的退款 API，记录回执，并在超时后先查询结果。队列即使在自身边界内提供 exactly-once 处理，也不能自动覆盖外部系统的副作用。
+例如 SQS Standard Queue<sup>[【511】](../../book/references.zh.md#ref-511)</sup>明确允许重复投递。ACK、消息去重与外部副作用是不同层次：Worker 退款成功后在 ACK 前崩溃，重投仍可能再次退款。应以稳定的业务操作 ID 调用支持幂等的退款 API，记录回执，并在超时后先查询结果。队列即使在自身边界内提供 exactly-once 处理，也不能自动覆盖外部系统的副作用。
 
 ## 13.10 Pub/Sub
 
 Publisher 将事件发送到 Topic，不需要知道具体订阅者：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    P[Publisher Agent] --> T[Topic]
-    T --> A[Subscriber A]
-    T --> B[Subscriber B]
-    T --> C[Subscriber C]
+    P["Publisher Agent"] --> T["Topic"]
+    T --> A["Subscriber A"]
+    T --> B["Subscriber B"]
+    T --> C["Subscriber C"]
 ```
 
 “发送方不需要知道谁在等待结果”准确描述的是 Pub/Sub，而不是所有消息传递。
@@ -362,12 +388,13 @@ URI 必须指向可定位的不可变版本；`latest` 指针会让 Worker 读�
 ## 13.13 共享状态如何分层
 
 ```mermaid
-flowchart TB
-    S[System State] --> G[Global State]
-    S --> T[Task State]
-    S --> P[Private Agent State]
-    S --> A[Artifact State]
-    S --> E[Event / Audit State]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    S["System State"] --> G["Global State"]
+    S --> T["Task State"]
+    S --> P["Private Agent State"]
+    S --> A["Artifact State"]
+    S --> E["Event / Audit State"]
 ```
 
 ### 13.13.1 Global State
@@ -459,15 +486,16 @@ LangGraph 并不是所有字段都“只追加”：
 - 某些场景可以显式 Overwrite。
 
 ```mermaid
-flowchart LR
-    OLD[Current State Value] --> R[Reducer]
-    UPDATE[Node Update] --> R
-    R --> NEW[New State Value]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    OLD["Current State Value"] --> R["Reducer"]
+    UPDATE["Node Update"] --> R
+    R --> NEW["New State Value"]
 ```
 
 因此，必须为每个字段明确设计合并语义。
 
-同一 super-step 的多个节点并行写入没有合并语义的同一字段，会触发 [`INVALID_CONCURRENT_GRAPH_UPDATE`](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)，不是“最后完成的节点覆盖其他节点”。`operator.add` 合并列表能处理并发追加，却不会自动去重；`add_messages` 则按消息 ID 支持新增和替换，并有删除机制，不能把它当作普通列表追加。
+同一 super-step 的多个节点并行写入没有合并语义的同一字段，会触发 `INVALID_CONCURRENT_GRAPH_UPDATE`<sup>[【507】](../../book/references.zh.md#ref-507)</sup>，不是“最后完成的节点覆盖其他节点”。`operator.add` 合并列表能处理并发追加，却不会自动去重；`add_messages` 则按消息 ID 支持新增和替换，并有删除机制，不能把它当作普通列表追加。
 
 Reducer 是图运行时的状态合并函数，不是跨进程数据库事务或分布式锁。Checkpointer 的线程内恢复也不自动解决多个运行竞争业务资源的问题；内存 Checkpointer 在进程退出后不能恢复。所谓 Private State 是数据组织方式，不是访问控制或日志脱敏承诺，应单独审查流式输出、Trace 和存储权限。
 
@@ -542,7 +570,7 @@ Agent 失联后 Lease 过期，任务可以重新分配。
 
 Lease 过期不代表旧进程已经停止。暂停的 Worker 恢复后仍可能写入；每次领取应生成单调递增的 fencing token，由接受写入的存储或副作用网关原子地拒绝旧 token。只在 Prompt 中传入 token 没有约束力；外部 API 不支持 fencing 时，需要由可控网关串行化或使用业务幂等与对账，不能声称排除了全部晚到副作用。
 
-仅记住“见过的最大 token”的接收端，要先见到新 token 才能拒绝旧持有者；这不等于租约一过期就即时禁止写入。若要求后者，需要让提交原子地验证当前租约/Owner，例如 [etcd Lock 的事务保护方式](https://etcd.io/docs/v3.6/dev-guide/api_concurrency_reference_v3/)。跨系统副作用仍不在该事务保证内。
+仅记住“见过的最大 token”的接收端，要先见到新 token 才能拒绝旧持有者；这不等于租约一过期就即时禁止写入。若要求后者，需要让提交原子地验证当前租约/Owner，例如 etcd Lock 的事务保护方式<sup>[【513】](../../book/references.zh.md#ref-513)</sup>。跨系统副作用仍不在该事务保证内。
 
 ### 13.16.5 强一致需要到哪一层
 
@@ -555,7 +583,7 @@ Lease 过期不代表旧进程已经停止。暂停的 Worker 恢复后仍可能
 
 “三个 Agent 一致认为应该退款”只是应用层意见，不是 Raft/Paxos 共识。Raft 让副本对日志顺序达成一致，并不判断退款是否合规；要抵抗不可信 Agent，也不能直接套用 Raft 的崩溃故障假设。强共识、线性一致性和事务隔离是相关但不同的概念，应按底层 API 的实际保证设计。
 
-例如 [etcd 的 API 保证](https://etcd.io/docs/v3.6/learning/api_guarantees/)区分 KV 的默认线性一致性与可能延迟的 Watch；收到某条 Watch 事件不等于此刻读取到了全局最新状态。预算扣减不能依赖可能过期的进度看板。丢失多数派时，依赖共识的提交可能无法推进；此时可继续只读探索，但不要绕过账本继续提交不可逆操作。
+例如 etcd 的 API 保证<sup>[【512】](../../book/references.zh.md#ref-512)</sup>区分 KV 的默认线性一致性与可能延迟的 Watch；收到某条 Watch 事件不等于此刻读取到了全局最新状态。预算扣减不能依赖可能过期的进度看板。丢失多数派时，依赖共识的提交可能无法推进；此时可继续只读探索，但不要绕过账本继续提交不可逆操作。
 
 ## 13.17 错误必须成为一等状态
 
@@ -608,11 +636,12 @@ Routing 不一定意味着控制权永久转移，也可能只是委派一个子
 使用规则、状态机或固定 Edge：
 
 ```mermaid
-flowchart LR
-    I[Input] --> R{Intent}
-    R -->|退款| REF[Refund Agent]
-    R -->|技术问题| TECH[Technical Agent]
-    R -->|普通咨询| FAQ[FAQ Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Input"] --> R["Intent"]
+    R -->|退款| REF["Refund Agent"]
+    R -->|技术问题| TECH["Technical<br/>Agent"]
+    R -->|普通咨询| FAQ["FAQ Agent"]
 ```
 
 优势：
@@ -745,12 +774,13 @@ Runtime 应：
 - 记录路由原因和 Trace。
 
 ```mermaid
-flowchart LR
-    L[LLM Route Proposal] --> A[Allowlist]
-    A --> P[Permission Check]
-    P --> S[Schema Check]
-    S --> B[Budget / Loop Check]
-    B --> D[Dispatch]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    L["LLM Route Proposal"] --> A["Allowlist"]
+    A --> P["Permission Check"]
+    P --> S["Schema Check"]
+    S --> B["Budget / Loop Check"]
+    B --> D["Dispatch"]
 ```
 
 ## 13.24 Hybrid Routing
@@ -758,16 +788,17 @@ flowchart LR
 Hybrid Routing 将确定性控制与模型判断组合：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    S[Current State] --> H{High-risk or Fixed Path?}
-    H -->|是| STATIC[Static Route]
-    H -->|否| RULE{Rule Match?}
+    S["Current State"] --> H["High-risk or Fixed Path?"]
+    H -->|是| STATIC["Static Route"]
+    H -->|否| RULE["Rule Match?"]
     RULE -->|是| STATIC
-    STATIC --> CHECK{Policy and Validation Pass?}
-    RULE -->|否| LLM[LLM Router within Allowlist]
+    STATIC --> CHECK["Policy and Validation<br/>Pass?"]
+    RULE -->|否| LLM["LLM Router within<br/>Allowlist"]
     LLM --> CHECK
-    CHECK -->|是| TARGET[Target Agent]
-    CHECK -->|否| SAFE[Safe Stop / Human / Orchestrator]
+    CHECK -->|是| TARGET["Target Agent"]
+    CHECK -->|否| SAFE["Safe Stop / Human /<br/>Orchestrator"]
 ```
 
 静态路由也必须经过授权、参数和预算检查；“路径预先写好”不等于当前请求获得了执行许可。
@@ -814,13 +845,14 @@ sequenceDiagram
 当前 Agent 将后续对话或任务控制权转给另一个 Agent：
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant U as User
     participant T as Triage Agent
     participant R as Refund Agent
 
     U->>T: 请求退款
-    T->>R: Handoff + Structured Context
+    T->>R: Handoff + Structured<br/>Context
     R->>U: 接管后续交互
 ```
 
@@ -864,7 +896,7 @@ transfer_to_refund_agent
 
 模型选择该 Tool 后，Runtime 将控制权转给对应 Agent。
 
-框架提供这些能力不意味着默认完成所有授权和恢复。按 [Handoffs 文档](https://openai.github.io/openai-agents-python/handoffs/)，`input_type` 定义模型生成的交接参数，并不替换接收方的整段输入，也不是身份凭据；需要按参数授权时，在产生副作用前检查。`Agent.as_tool()` 更适合返回结果给原调用方，Handoff 则让接收 Agent 接管后续执行。具体参数与 Guardrail 覆盖范围应按部署时锁定的 SDK 版本确认。
+框架提供这些能力不意味着默认完成所有授权和恢复。按 Handoffs 文档<sup>[【510】](../../book/references.zh.md#ref-510)</sup>，`input_type` 定义模型生成的交接参数，并不替换接收方的整段输入，也不是身份凭据；需要按参数授权时，在产生副作用前检查。`Agent.as_tool()` 更适合返回结果给原调用方，Handoff 则让接收 Agent 接管后续执行。具体参数与 Guardrail 覆盖范围应按部署时锁定的 SDK 版本确认。
 
 ## 13.27 Handoff Contract
 
@@ -927,13 +959,14 @@ transfer_to_refund_agent
 - 完整隐藏推理。
 
 ```mermaid
-flowchart LR
-    FULL[Full Source Context] --> FILTER[Handoff Input Filter]
-    FILTER --> GOAL[Goal]
-    FILTER --> FACTS[Verified Facts]
-    FILTER --> ART[Artifacts]
-    FILTER --> RECENT[Relevant History]
-    GOAL --> TARGET[Target Agent Context]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    FULL["Full Source<br/>Context"] --> FILTER["Handoff<br/>Input Filter"]
+    FILTER --> GOAL["Goal"]
+    FILTER --> FACTS["Verified<br/>Facts"]
+    FILTER --> ART["Artifacts"]
+    FILTER --> RECENT["Relevant<br/>History"]
+    GOAL --> TARGET["Target Agent<br/>Context"]
     FACTS --> TARGET
     ART --> TARGET
     RECENT --> TARGET
@@ -953,11 +986,12 @@ flowchart LR
 - Goal Progress 没有变化。
 
 ```mermaid
-flowchart LR
-    A[Agent A] --> B[Agent B]
-    B --> C[Agent C]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] --> B["Agent B"]
+    B --> C["Agent C"]
     C --> A
-    A -.No Progress Detected.-> STOP[Stop / Orchestrator / Human]
+    A -.No Progress Detected.-> STOP["Stop / Orchestrator /<br/>Human"]
 ```
 
 允许合理的回访，但要求：
@@ -993,11 +1027,12 @@ Router 无法可靠选择时，应返回：
 动态系统需要 Capability Registry：
 
 ```mermaid
-flowchart LR
-    A[Agent Registration] --> R[Capability Registry]
-    Q[Task Requirement] --> R
-    R --> C[Candidate Agents]
-    C --> ROUTER[Router]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent Registration"] --> R["Capability Registry"]
+    Q["Task Requirement"] --> R
+    R --> C["Candidate Agents"]
+    C --> ROUTER["Router"]
 ```
 
 Registry 应记录：
@@ -1030,9 +1065,10 @@ A2A 为独立 Agent 系统提供：
 
 它允许 Agent 在不了解彼此内部 Memory、Tools 和实现细节的情况下协作。
 
-以 [v1.0.1 发布标签的规范](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)为例，线上协议版本为 `1.0`，与规范补丁号、SDK 和 Agent 软件版本分开。对接时固定协议绑定（binding），不能混用旧字段或 RPC 名。Streaming、Push Notification 等还要检查能力声明；发送 Message 可以返回 Task 或直接返回 Message，不是每次调用都创建任务。
+以 v1.0.1 发布标签的规范<sup>[【311】](../../book/references.zh.md#ref-311)</sup>为例，线上协议版本为 `1.0`，与规范补丁号、SDK 和 Agent 软件版本分开。对接时固定协议绑定（binding），不能混用旧字段或 RPC 名。Streaming、Push Notification 等还要检查能力声明；发送 Message 可以返回 Task 或直接返回 Message，不是每次调用都创建任务。
 
 ```mermaid
+%%{init: {"sequence": {"width": 150, "height": 45, "actorMargin": 30, "diagramMarginX": 5, "messageMargin": 18, "wrap": false, "mirrorActors": false}}}%%
 sequenceDiagram
     participant C as A2A Client
     participant S as Remote Agent
@@ -1041,13 +1077,15 @@ sequenceDiagram
     S-->>C: Capabilities + Auth
     C->>S: Send Message
     alt 返回任务
-        S-->>C: Task + 当前状态与可用产物
-        C->>S: 查询进度或按能力订阅
-        S-->>C: 后续状态与产物
+        S-->>C: 任务快照
+        C->>S: 查询或订阅
+        S-->>C: 任务更新
     else 直接回复
         S-->>C: Message
     end
 ```
+
+任务快照包含 Task、当前状态与可用产物。客户端可以查询进度，或在服务端**支持时**订阅；后续更新包含状态与产物。另一种分支是直接返回 Message，不进入 Task 生命周期。
 
 A2A 解决互操作协议，不替代：
 
@@ -1107,12 +1145,13 @@ A2A 的 binding、Agent Card 与 Task 状态机详见 [Tools：A2A 协议](../..
 - 尚未完成的 Handoff。
 
 ```mermaid
-flowchart TB
-    CANCEL[Cancel Global Task] --> O[Orchestrator]
-    O --> W1[Cancel Worker A]
-    O --> W2[Cancel Worker B]
-    O --> Q[Remove Queued Tasks]
-    O --> T[Cancel Tool Calls]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    CANCEL["Cancel<br/>Global Task"] --> O["Orchestrator"]
+    O --> W1["Cancel<br/>Worker A"]
+    O --> W2["Cancel<br/>Worker B"]
+    O --> Q["Remove<br/>Queued Tasks"]
+    O --> T["Cancel Tool<br/>Calls"]
 ```
 
 对可控 Agent 和 Tool 应实现 Cancellation Token 或任务状态检查；外部服务未必支持取消，即使支持也可能来不及阻止已发生的副作用。先在权威账本持久化取消意图，再停止新增派发并向执行者传播；队列消息即使无法删除，领取时也应检查任务状态。迟到结果只留审计、不再推进下游。
@@ -1168,12 +1207,13 @@ Multi-Agent 必须记录：
 - 最终结果来源。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    O[Orchestrator] -.Trace.-> OBS[Observability]
-    A1[Agent A] -.Trace.-> OBS
-    A2[Agent B] -.Trace.-> OBS
-    Q[Queue / State] -.Metrics.-> OBS
-    T[Tools] -.Logs.-> OBS
+    O["Orchestrator"] -.Trace.-> OBS["Observability"]
+    A1["Agent A"] -.Trace.-> OBS
+    A2["Agent B"] -.Trace.-> OBS
+    Q["Queue / State"] -.Metrics.-> OBS
+    T["Tools"] -.Logs.-> OBS
 ```
 
 建议统一：
@@ -1217,22 +1257,13 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    U[User Request] --> T[Triage Workflow]
-    T --> R{Static Rules}
-
-    R -->|订单查询| O[Order Agent]
-    R -->|退款| F[Refund Agent]
-    R -->|技术问题| X[Technical Agent]
-    R -->|无法识别| L[LLM Router]
-
-    L --> C{Validated Route}
-    C -->|通过| TARGET[Allowed Agent]
-    C -->|未通过或无法确认| H[Human Support]
-
-    F --> APPROVE{Refund Approval}
-    APPROVE -->|批准| TOOL[Refund Tool]
-    APPROVE -->|拒绝| H
+    R[静态规则] -->|无法识别| L[LLM 路由器]
+    L --> C[校验路由]
+    C -->|通过| TARGET[获准 Agent]
+    C -->|未通过或无法确认| H[人工客服]
 ```
+
+用户请求先进入采用静态规则的分诊工作流：订单查询交给订单 Agent，退款交给退款 Agent，技术问题交给技术 Agent。只有无法识别的请求才走图中的 LLM 路由路径。另一个独立约束是，退款 Agent 必须先获得退款批准，才能调用退款工具；审批拒绝时转人工客服。
 
 设计要点：
 
@@ -1245,20 +1276,49 @@ flowchart TB
 
 ## 13.39 代码协作示例
 
+探索生成供编码使用的架构产物。
+
 ```mermaid
 flowchart TB
-    G[User Goal] --> O[Coding Orchestrator]
-    O --> E[Explore Agent]
-    E --> A[Architecture Artifact]
-    A --> C[Coding Agent]
-    C --> D[Patch Artifact]
-    D --> TEST{必需测试通过?}
+    G[User Goal]
+    O[Coding Orchestrator]
+    E[Explore Agent]
+    A[Architecture Artifact]
+    C[Coding Agent]
+    G --> O
+    O --> E
+    E --> A
+    A --> C
+```
+
+必需测试决定能否进入评审，失败证据返回编码者。
+
+```mermaid
+flowchart TB
+    C[Coding Agent]
+    D[Patch Artifact]
+    TEST{必需测试通过?}
+    R[Review Agent]
+    C --> D
+    D --> TEST
     TEST -->|否，返回失败证据| C
-    TEST -->|是| R[Review Agent]
-    R --> V{Pass?}
+    TEST -->|是| R
+```
+
+评审发现可触发重新编码，最终验收仍由编排器负责。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    R["Review Agent"]
+    V["Pass?"]
+    C["Coding Agent"]
+    ACCEPT["Orchestrator 最终验收"]
+    DONE["交付结果"]
+    R --> V
     V -->|否，返回有效 Finding| C
-    V -->|是| ACCEPT[Orchestrator 最终验收]
-    ACCEPT --> DONE[交付结果]
+    V -->|是| ACCEPT
+    ACCEPT --> DONE
 ```
 
 图中先探索接口和依赖，再生成补丁；测试与审查各有失败出口。Orchestrator 管理整个流程，审查通过后进入最终验收，不是回到用户目标重新启动一轮探索。超预算、缺少权限或无法修复时则停止并报告未完成项。
@@ -1294,43 +1354,20 @@ flowchart TB
 ## 13.41 推荐生产架构
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    INPUT[User / Event] --> WF[Deterministic Workflow]
-    WF --> ROUTER[Hybrid Router]
-
-    ROUTER --> REG[Capability Registry]
-    REG --> POLICY[Permission + Risk Policy]
-    POLICY --> LEDGER[Task Ledger]
-
-    LEDGER --> QUEUE[Task Queue]
-    QUEUE --> A1[Agent A]
-    QUEUE --> A2[Agent B]
-    QUEUE --> AN[Agent N]
-
-    A1 --> ART[Artifact Store]
-    A2 --> ART
-    AN --> ART
-
-    A1 --> EVENTS[Event Stream]
-    A2 --> EVENTS
-    AN --> EVENTS
-
-    EVENTS --> STATE[Materialized State]
-    STATE -.Progress hints.-> ROUTER
-    ART --> VERIFY[Verifier]
-    VERIFY -->|验收通过| JOIN[Result Aggregator]
+    WF["确定性工作流"] --> ROUTER["混合路由器"]
+    ROUTER --> WORK["队列中的工作节点"]
+    WORK --> ART["产物存储"]
+    ART --> VERIFY["验证器"]
+    VERIFY -->|验收通过| JOIN["结果聚合器"]
     VERIFY -->|失败或证据不足| WF
     JOIN --> WF
-
-    LEDGER -->|获准 Handoff| SPECIAL[Specialist Agent]
-    ROUTER -->|Unresolved or Invalid Route| HUMAN[Human Review]
-
-    WF -.Trace.-> OBS[Observability]
-    ROUTER -.Route Decisions.-> OBS
-    A1 -.Spans.-> OBS
-    A2 -.Spans.-> OBS
-    AN -.Spans.-> OBS
 ```
+
+用户或事件输入进入确定性工作流。派发前，混合路由器依次查询能力注册表、权限与风险策略、任务账本。账本向任务队列提供任务，由队列派发给 A、B 至 N 等 Agent；它们是独立工作节点，不是串行阶段。获准的 Handoff 还可以从账本转交给专家 Agent；无法确定或无效的路由转人工审核。
+
+每个工作节点都写入产物并发出事件。事件流构建物化状态，向路由器提供进度提示，但这本身不代表产物已经验收。验证器检查产物存储，将通过的工作交给聚合器，将失败或证据不足的情况交回工作流；聚合结果也返回工作流。可观测性系统接收工作流轨迹、路由决策，以及每个工作节点的 Span。
 
 核心原则：
 
@@ -1344,7 +1381,7 @@ flowchart TB
 8. Handoff 只用于真正需要转移控制权的场景；
 9. 无法可靠路由或未通过风险校验的请求安全停止或转人工。
 
-这是功能分解示意，不要求每项都部署成独立服务。尤其不要把异步 `Materialized State` 当作领取、预算或提交的授权依据；这些检查应回到权威 Task Ledger。若选用账本作为真相源，可用同一事务写入状态变化与待发送事件（[Transactional Outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)），再异步投递；否则“状态已提交但通知未发送”的崩溃窗口会造成任务遗漏。事件溯源则是另一种真相源选择，不能同时把两份可独立修改的数据都当权威。
+这是功能分解示意，不要求每项都部署成独立服务。尤其不要把异步 `Materialized State` 当作领取、预算或提交的授权依据；这些检查应回到权威 Task Ledger。若选用账本作为真相源，可用同一事务写入状态变化与待发送事件（Transactional Outbox<sup>[【486】](../../book/references.zh.md#ref-486)</sup>），再异步投递；否则“状态已提交但通知未发送”的崩溃窗口会造成任务遗漏。事件溯源则是另一种真相源选择，不能同时把两份可独立修改的数据都当权威。
 
 ### 13.41.1 并行调度与 Join
 
@@ -1491,18 +1528,5 @@ Handoff 适合让专业 Agent 接管后续交互；Delegation 则把子任务结
 
 ## 参考资料
 
-框架行为按 2026-09-15 可访问的官方文档核对；实际部署仍需锁定 SDK 版本。A2A [v1.0.1 Release](https://github.com/a2aproject/A2A/releases/tag/v1.0.1)发布于 2026-05-28，但该标签中的规范页提示仍写 v1.0.0；本章按发布标签而非页面的 latest 提示确定规范版本。
-
-- [LangGraph Graph API](https://docs.langchain.com/oss/python/langgraph/graph-api)
-- [LangGraph：并行状态更新错误](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
-- [LangGraph Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-- [OpenAI Swarm：迁移至 Agents SDK 的官方说明](https://github.com/openai/swarm)
-- [OpenAI Agents SDK: Handoffs](https://openai.github.io/openai-agents-python/handoffs/)
-- [A2A v1.0.1 Protocol Specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [Amazon SQS：至少一次投递](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)
-- [etcd v3.6：API 一致性与租约保证](https://etcd.io/docs/v3.6/learning/api_guarantees/)
-- [etcd v3.6：Lock 与事务保护](https://etcd.io/docs/v3.6/dev-guide/api_concurrency_reference_v3/)
-- [AWS：Transactional Outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
-- [Raft：作者维护的算法与论文入口](https://raft.github.io/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-13)。

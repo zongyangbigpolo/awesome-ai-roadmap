@@ -8,29 +8,27 @@ description: Explain model adaptation, rate limits, cost accounting, and cache g
 
 Start with its position in the system.
 
+**Without a gateway**
+
 ```mermaid
-flowchart TB
-    subgraph NO["Without a gateway"]
-        A1[Order service] --> O1[OpenAI API]
-        A1 --> O2[Anthropic API]
-        A2[Customer support service] --> O1
-        A2 --> O3[Chinese model provider API]
-        A3[Data service] --> O2
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        A1["Order service"] --> O1["OpenAI API"]
+        A1 --> O2["Anthropic API"]
+        A2["Customer support<br/>service"] --> O1
+        A2 --> O3["Chinese model<br/>provider API"]
+        A3["Data service"] --> O2
         A3 --> O3
-    end
-
-    subgraph YES["With a gateway"]
-        B1[Order service] --> GW[LLM gateway]
-        B2[Customer support service] --> GW
-        B3[Data service] --> GW
-        GW --> P1[OpenAI]
-        GW --> P2[Anthropic]
-        GW --> P3[Chinese model providers]
-    end
-
-    style NO fill:#fce8e6
-    style YES fill:#e6f4ea
 ```
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["Application services"] --> GW["LLM gateway"]
+    GW --> PROVIDERS["Model providers"]
+```
+
+Order, customer-support, and data services call the same gateway rather than maintaining separate provider connections. The gateway connects to OpenAI, Anthropic, and Chinese model providers as configured; the diagram groups these alternatives rather than prescribing one provider.
 
 A gateway is **an intermediary between applications and model APIs**. Applications know the gateway rather than integrating directly with multiple providers.
 
@@ -183,23 +181,26 @@ HTTP caching works through cache keys, methods, and rules such as `Vary`, not by
 The questions look similar, but different cities, times, user preferences, or data versions can make reuse invalid. Semantic similarity only identifies candidates; it cannot determine a cache hit by itself.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q[Receive a new question] --> P{"Caching allowed?<br/>Permissions and data partitions established?"}
-    P -->|No| MISS[Call the LLM]
-    P -->|Yes| E[Embed the question]
-    E --> S[Run similarity search in the vector store]
-    S --> H{"Permissions, time, and versions match<br/>and semantic validation passes?"}
-    H -->|Yes| HIT["Return a previous answer<br/>Skip answer generation"]
-    H -->|No| MISS
-    MISS --> C{"Are both the request and<br/>new result cacheable?"}
-    C -->|Yes| W["Store question, answer,<br/>permissions, and version metadata"]
-    C -->|No| R[Return]
-    W --> R[Return]
-    HIT --> R
-
-    style HIT fill:#e6f4ea
-    style MISS fill:#fef7e0
+    P["Check cache permission"] -->|Allowed| LOOK["Find valid match"]
+    P -->|Denied| MODEL["Call model"]
+    LOOK -->|Hit| R["Return answer"]
+    LOOK -->|Miss| MODEL
+    MODEL --> WRITE["Store only if allowed"]
+    WRITE --> R
 ```
+
+Establish permissions and data partitions before embedding a cache-eligible question and searching the vector store. A semantic match is a hit only when permissions, time, versions, and semantic validation all pass; then return the previous answer without generating another. A miss or forbidden lookup calls the LLM. Store the question, answer, permissions, and version metadata only if both the request and the new result are cacheable; otherwise skip storage and return.
+
+Details of the illustrated steps and components:
+
+- Caching allowed? Permissions and data partitions established?
+- Run similarity search in the vector store
+- Permissions, time, and versions match and semantic validation passes?
+- Return a previous answer Skip answer generation
+- Are both the request and new result cacheable?
+- Store question, answer, permissions, and version metadata
 
 **Two engineering details matter especially:**
 
@@ -306,13 +307,5 @@ Do not put all business decisions, agent-task recovery, and RAG retrieval strate
 
 ## References
 
-- [LiteLLM Documentation](https://docs.litellm.ai/)
-- [LiteLLM GitHub](https://github.com/BerriAI/litellm)
-- [Bifrost Official Repository (Go Implementation)](https://github.com/maximhq/bifrost)
-- [LiteLLM Retries and Failover](https://docs.litellm.ai/docs/proxy/reliability)
-- [RFC 9111: HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111)
-- [Portkey AI Gateway](https://github.com/Portkey-AI/gateway)
-- [Kong AI Gateway](https://konghq.com/products/kong-ai-gateway)
-- [Envoy AI Gateway](https://aigateway.envoyproxy.io/)
-- [Langfuse: LLM Observability](https://langfuse.com/docs)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-14) for this chapter’s sources, reading suggestions, and source notes.

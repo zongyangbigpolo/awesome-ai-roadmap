@@ -17,18 +17,13 @@ description: 从业务验收、数据处理边界和部署形态出发选择模�
 > **选型看的是「合规、成本、延迟、能力特征」四个维度和业务需求的匹配，不是跑分。**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    B["业务需求"] --> C1["① 合规<br/>数据分类分级、出境、审批"]
-    B --> C2["② 成本<br/>完整任务用量、重试与运维"]
-    B --> C3["③ 延迟<br/>内部串行步骤也计入关键路径<br/>测量完整任务尾延迟"]
-    B --> C4["④ 能力特征<br/>推理 / 结构化输出 / 长上下文 / 工具调用"]
-    C1 --> S["选型决策"]
-    C2 --> S
-    C3 --> S
-    C4 --> S
-
-    style C1 fill:#fdecea
+    B["业务需求"] --> C["联合评估约束"]
+    C --> S["选型决策"]
 ```
+
+同时评估四个维度：**合规**包括数据分类分级、出境与审批；**成本**包括完整任务用量、重试与运维；**延迟**包括关键路径上的内部串行步骤以及完整任务尾延迟；**能力**包括推理、结构化输出、长上下文和工具调用。
 
 先筛选硬约束，再在可行候选中权衡。除了数据与许可要求，必须达到的正确率、安全规则和响应时限也可能是硬约束；不能用低成本补偿越权或关键任务失败。
 
@@ -75,24 +70,36 @@ DeepSeek、Qwen、豆包、GPT、Claude 等可按需求进入候选池，但国�
 
 ### 22.3.2 按节点分配
 
-```mermaid
-flowchart TB
-    subgraph N1["主调度节点 / 格式严格的节点"]
-        A1["需求：结构化输出稳定<br/>Tool Use 准确率高<br/>长上下文指令遵循好"]
-        A2["原因：Agent 频繁调用内部 API<br/>JSON、函数参数、字段名都不能乱"]
-        A3["→ 『稳定』比『榜单第一』更重要"]
-    end
-    subgraph N2["字段提取与复杂分析分别评测"]
-        B1["需求：满足各自成功率与延迟门槛"]
-        B2["简单提取先试小模型或规则<br/>复杂分析比较推理模型与工具"]
-        B3["内部错误也会传递到最终结果<br/>不能只按是否展示给用户定质量"]
-    end
-    subgraph N3["敏感数据链路"]
-        C1["按获批数据策略选择端点<br/>主模型与兜底模型均适用"]
-    end
+**主调度节点 / 格式严格的节点**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    A1["频繁调用内部 API"] --> A2["正确的输出契约"]
+    A2 --> A3["优先考虑可靠性"]
     style A3 fill:#e6f4ea
+```
+
+主编排与严格格式节点需要稳定的结构化输出、准确的工具调用和良好的长上下文指令遵循。调用内部 API 时，JSON、函数参数和字段名都必须正确；可靠性比榜单第一更重要。
+
+**字段提取与复杂分析分别评测**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    B1["按任务设定门槛"] --> B2["比较适合的方法"]
+    B2 --> B3["检查端到端影响"]
     style B3 fill:#e6f4ea
+```
+
+分别测量各任务的成功率与延迟门槛。简单字段提取先试小模型或规则，复杂分析则比较推理模型与工具。内部错误也会传递到最终结果，不能只按是否展示给用户来决定质量要求。
+
+**敏感数据链路**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1["按获批数据策略选择端点<br/>主模型与兜底模型均适用"]
     style C1 fill:#fdecea
 ```
 
@@ -187,12 +194,5 @@ $$
 
 ## 参考资料
 
-- [Holistic Evaluation of Language Models（HELM）](https://arxiv.org/abs/2211.09110)
-- [Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena](https://arxiv.org/abs/2306.05685)
-- [DeepSeek-V3 Technical Report](https://arxiv.org/abs/2412.19437)
-- [Qwen3 Technical Report](https://arxiv.org/abs/2505.09388)
-- [tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains](https://arxiv.org/abs/2406.12045)
-- [RouteLLM: Learning to Route LLMs with Preference Data](https://arxiv.org/abs/2406.18665)
-- [FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance](https://arxiv.org/abs/2305.05176)
-- [OpenAI: Data controls in the OpenAI platform](https://developers.openai.com/api/docs/guides/your-data)
-- [OpenAI: Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-22)。

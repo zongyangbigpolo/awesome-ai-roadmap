@@ -196,13 +196,19 @@ Evaluate selection accuracy as well as cost. A new tool can improve success if i
 A common solution is **dynamic tool filtering**:
 
 ```mermaid
-flowchart LR
-    Q[User request] --> R["Routing layer<br/>Lightweight classification or vector retrieval"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["User request"] --> R["Routing layer"]
     POOL[("Tool library")] --> R
-    R --> SEL["Filter by task<br/>Choose count through evaluation"]
-    SEL --> M[Model]
-    M --> CALL[tool_calls]
+    R --> SEL["Filter by task"]
+    SEL --> M["Model"]
+    M --> CALL["tool_calls"]
 ```
+
+Details of the illustrated steps and components:
+
+- Routing layer Lightweight classification or vector retrieval
+- Filter by task Choose count through evaluation
 
 Routing can use rules, retrieval, or a model. First exclude tools the user is not authorized to use, then evaluate missed candidates and added latency. If retrieval omits a necessary tool, the main model cannot call it from the current candidate set.
 
@@ -336,9 +342,5 @@ This is especially hard to notice. A description change triggers neither compile
 
 ## References
 
-- [Anthropic: Writing Effective Tools for Agents](https://www.anthropic.com/engineering/writing-tools-for-agents)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [OpenAI: Function Calling guide](https://developers.openai.com/api/docs/guides/function-calling)
-- [OpenAI: Schemas supported by Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
-- [JSON Schema specification](https://json-schema.org/)
-- [Berkeley Function Calling Leaderboard](https://gorilla.cs.berkeley.edu/leaderboard.html)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-03) for this chapter’s sources, reading suggestions, and source notes.

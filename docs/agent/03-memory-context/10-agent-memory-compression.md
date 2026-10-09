@@ -69,13 +69,14 @@ Four common methods address different problems:
 | Structured extraction | Whether conversational text is the best representation | Convert it into structured state | Generally; except for complete, reversible representations |
 
 ```mermaid
-flowchart TB
-    H[Long Interaction History] --> W[Sliding Window<br/>Trim by Time]
-    H --> S[Summarization<br/>Semantic Compression]
-    H --> I[Importance Filtering<br/>Select by Value]
-    H --> E[Structured Extraction<br/>Change Representation]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    H["Long<br/>Interaction<br/>History"] --> W["Sliding<br/>Window<br/>Trim by Time"]
+    H --> S["Summarization<br/>Semantic<br/>Compression"]
+    H --> I["Importance<br/>Filtering<br/>Select by<br/>Value"]
+    H --> E["Structured<br/>Extraction<br/>Change<br/>Representation"]
 
-    W --> C[Compact Context]
+    W --> C["Compact<br/>Context"]
     S --> C
     I --> C
     E --> C
@@ -90,16 +91,17 @@ Externalization moves content out of the active context without necessarily redu
 A sliding window keeps only the most recent turns or tokens in the active context and removes earlier content. A separate retention policy determines whether the persisted originals are deleted.
 
 ```mermaid
-flowchart LR
-    M1[Message 1] --> M2[Message 2]
-    M2 --> M3[Message 3]
-    M3 --> M4[Message 4]
-    M4 --> M5[Message 5]
-    M5 --> M6[Message 6]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    M1["Message 1"] --> M2["Message 2"]
+    M2 --> M3["Message 3"]
+    M3 --> M4["Message 4"]
+    M4 --> M5["Message 5"]
+    M5 --> M6["Message 6"]
 
-    M1 -.Discard.-> X[Evicted]
+    M1 -.Discard.-> X["Evicted"]
     M2 -.Discard.-> X
-    M3 --> K[Current Window]
+    M3 --> K["Current Window"]
     M4 --> K
     M5 --> K
     M6 --> K
@@ -157,10 +159,11 @@ The following usually needs to be pinned:
 Pin trusted content that is still valid, not historical text forever. If the user changes the goal or permission is revoked, update or remove the corresponding item. Authorization must always be enforced by the runtime, not merely by a sentence in the context. If the required items alone exceed the budget, split the task or stop the request rather than silently truncating them.
 
 ```mermaid
-flowchart TB
-    PIN[Pinned Context] --> CTX[Current Context]
-    RECENT[Recent Window] --> CTX
-    RET[Retrieved Memory] --> CTX
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PIN["Pinned Context"] --> CTX["Current Context"]
+    RECENT["Recent Window"] --> CTX
+    RET["Retrieved Memory"] --> CTX
 ```
 
 ### 10.3.3 Do Not Break Tool Interactions
@@ -190,11 +193,12 @@ It is a truncation strategy, not a comprehension strategy.
 Before deleting earlier history, summarization extracts important information into a shorter representation.
 
 ```mermaid
-flowchart LR
-    H[Old Messages] --> S[Summarizer]
-    S --> SUM[Compact Summary]
-    SUM --> CTX[Current Context]
-    R[Recent Messages] --> CTX
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Old Messages"] --> S["Summarizer"]
+    S --> SUM["Compact Summary"]
+    SUM --> CTX["Current Context"]
+    R["Recent Messages"] --> CTX
 ```
 
 ### 10.4.1 Rolling Summary
@@ -224,11 +228,12 @@ For example, “The test timed out; payment outcome unknown; do not retry” mig
 First generate local summaries, then combine them into stage or task summaries:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    M1[Messages 1-10] --> S1[Stage Summary A]
-    M2[Messages 11-20] --> S2[Stage Summary B]
-    M3[Messages 21-30] --> S3[Stage Summary C]
-    S1 --> T[Task Summary]
+    M1["Messages<br/>1-10"] --> S1["Stage<br/>Summary A"]
+    M2["Messages<br/>11-20"] --> S2["Stage<br/>Summary B"]
+    M3["Messages<br/>21-30"] --> S3["Stage<br/>Summary C"]
+    S1 --> T["Task Summary"]
     S2 --> T
     S3 --> T
 ```
@@ -281,11 +286,12 @@ Summarize key events:
 Repeated summarization can lead to:
 
 ```mermaid
-flowchart LR
-    RAW[Raw History] --> S1[Summary 1]
-    S1 --> S2[Summary 2]
-    S2 --> S3[Summary 3]
-    S3 --> D[Meaning Drift]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw History"] --> S1["Summary 1"]
+    S1 --> S2["Summary 2"]
+    S2 --> S3["Summary 3"]
+    S3 --> D["Meaning Drift"]
 ```
 
 Mitigations:
@@ -308,10 +314,11 @@ Chronological order does not determine information value. A safety constraint in
 Importance filtering selects what to retain based on the current task.
 
 ```mermaid
-flowchart LR
-    H[History Items] --> SCORE[Importance Scoring]
-    SCORE --> HIGH[High Value<br/>Retain]
-    SCORE --> LOW[Low Value<br/>Remove or Externalize]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["History Items"] --> SCORE["Importance Scoring"]
+    SCORE --> HIGH["High Value<br/>Retain"]
+    SCORE --> LOW["Low Value<br/>Remove or Externalize"]
 ```
 
 ### 10.5.1 Importance Signals
@@ -380,14 +387,15 @@ Original material that still has a legitimate purpose can therefore be externali
 Natural-language conversations are often verbose, repetitive, and difficult to update precisely. Structured extraction converts history into a compact state representation.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart LR
-    CHAT[Conversation] --> EX[Extractor + Evidence Validation]
-    EX --> FACTS[Facts]
-    EX --> STATE[Task State]
-    EX --> TODO[Todo]
-    EX --> DEC[Decisions]
-    EX --> ENT[Entities]
-    EX --> ART[Artifact References]
+    CHAT["Conversation"] --> EX["Extractor +<br/>Evidence<br/>Validation"]
+    EX --> FACTS["Facts"]
+    EX --> STATE["Task State"]
+    EX --> TODO["Todo"]
+    EX --> DEC["Decisions"]
+    EX --> ENT["Entities"]
+    EX --> ART["Artifact<br/>References"]
 ```
 
 ### 10.6.1 Example
@@ -492,17 +500,49 @@ Schema validity proves only that fields have the right shape, not that their con
 
 In practice, these methods are often arranged in a pipeline:
 
+Protect constraints and extract state before splitting history.
+
 ```mermaid
 flowchart TB
-    H[Full History] --> PIN[Pin Hard Constraints]
-    PIN --> EXT[Externalize Large Artifacts]
-    EXT --> STR[Structured Extraction]
-    STR --> SPLIT[Separate Recent Interactions from Older History]
-    SPLIT --> IMP[Importance Filtering for Older History]
-    IMP --> SUM[Summarize Older History]
-    SPLIT --> WIN[Keep Recent Sliding Window]
-    SUM --> PACK[Context Packing]
-    WIN --> PACK[Context Packing]
+    H[Full History]
+    PIN[Pin Hard Constraints]
+    EXT[Externalize Large Artifacts]
+    STR[Structured Extraction]
+    SPLIT[Separate Recent Interactions from Older History]
+    H --> PIN
+    PIN --> EXT
+    EXT --> STR
+    STR --> SPLIT
+```
+
+Older and recent interactions take different paths into the same packer.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SPLIT["Separate Recent<br/>Interactions from Older<br/>History"]
+    IMP["Importance Filtering for<br/>Older History"]
+    SUM["Summarize Older History"]
+    WIN["Keep Recent Sliding<br/>Window"]
+    PACK["Context Packing"]
+    SPLIT --> IMP
+    IMP --> SUM
+    SPLIT --> WIN
+    SUM --> PACK
+    WIN --> PACK
+```
+
+Protected information also reaches that packer directly.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PIN["Pin Hard Constraints"]
+    EXT["Externalize Large<br/>Artifacts"]
+    STR["Structured<br/>Extraction"]
+    PACK["Context Packing"]
+    PIN --> EXT
+    EXT --> STR
     PIN -->|Valid Constraints| PACK
     STR -->|Validated State| PACK
     EXT -->|Artifact References| PACK
@@ -549,11 +589,12 @@ Deduplication can:
 - Collapse repeated sources into a reference list.
 
 ```mermaid
-flowchart LR
-    I[Context Items] --> H[Exact Hash]
-    H --> S[Semantic Similarity]
-    S --> E[Entity / Fact Merge]
-    E --> O[Deduplicated Items]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Context Items"] --> H["Exact Hash"]
+    H --> S["Semantic Similarity"]
+    S --> E["Entity / Fact Merge"]
+    E --> O["Deduplicated Items"]
 ```
 
 Avoid incorrectly removing:
@@ -602,13 +643,14 @@ This requires references that resolve, identify a version, and have not expired,
 Hierarchical memory retains multiple levels of detail:
 
 ```mermaid
-flowchart TB
-    TASK[Task Summary] --> S1[Stage Summary A]
-    TASK --> S2[Stage Summary B]
-    S1 --> E1[Raw Events]
-    S1 --> E2[Artifacts]
-    S2 --> E3[Raw Events]
-    S2 --> E4[Artifacts]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Task Summary"] --> S1["Stage<br/>Summary A"]
+    TASK --> S2["Stage<br/>Summary B"]
+    S1 --> E1["Raw Events"]
+    S1 --> E2["Artifacts"]
+    S2 --> E3["Raw Events"]
+    S2 --> E4["Artifacts"]
 ```
 
 The agent first reads the task summary and expands a stage summary or raw event only when it needs details.
@@ -636,11 +678,12 @@ The system can:
 - Recover current state from a snapshot plus deltas.
 
 ```mermaid
-flowchart LR
-    SNAP[Snapshot] --> D1[Delta 1]
-    D1 --> D2[Delta 2]
-    D2 --> D3[Delta N]
-    D3 --> NEW[New Snapshot]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    SNAP["Snapshot"] --> D1["Delta 1"]
+    D1 --> D2["Delta 2"]
+    D2 --> D3["Delta N"]
+    D3 --> NEW["New Snapshot"]
 ```
 
 This mainly reduces state storage and transfer; it is not equivalent to natural-language summarization.
@@ -734,16 +777,17 @@ Budgets should change with the task stage. For example:
 Prompt caching saves intermediate computation for repeated prompt prefixes so later requests can reuse it.
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant A as Application
     participant C as Prompt Cache
     participant M as Model
 
-    A->>M: Stable Prefix + New Suffix
-    M->>C: Cache stable-prefix computation
-    A->>M: Same Prefix + Another Suffix
+    A->>M: Stable Prefix + New<br/>Suffix
+    M->>C: Cache stable-prefix<br/>computation
+    A->>M: Same Prefix + Another<br/>Suffix
     C-->>M: Reuse prefix computation
-    M-->>A: A hit can reduce repeated prefill work
+    M-->>A: A hit can reduce<br/>repeated prefill work
 ```
 
 Good caching candidates include:
@@ -775,11 +819,12 @@ Even with a cache hit, the model still “sees” the same content. The server m
 ## 10.16 Combining Prompt Caching and Compression
 
 ```mermaid
-flowchart LR
-    RAW[Raw Information] --> COMP[Memory Compression]
-    COMP --> KEEP[Selected Context]
-    KEEP --> CACHE[Prompt Caching]
-    CACHE --> MODEL[Model]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw Information"] --> COMP["Memory Compression"]
+    COMP --> KEEP["Selected Context"]
+    KEEP --> CACHE["Prompt Caching"]
+    CACHE --> MODEL["Model"]
 ```
 
 In practice, start with two steps:
@@ -809,7 +854,7 @@ Do not compare only “how much smaller this turn's input became.” Total cost 
 
 Prompt designs usually place stable content first and dynamic content later to improve cache reuse.
 
-The [official OpenAI documentation](https://developers.openai.com/api/docs/guides/prompt-caching) explains that the actual rendered prefix must match. Changes to the model, tool schemas, ordering, or relevant settings can change the reusable portion. Minimum cacheable lengths, breakpoint mechanisms, write charges, and retention periods vary by model and service version. Numbers for one model must not be generalized into universal rules.
+The official OpenAI documentation<sup>[【80】](../../book/references.md#ref-80)</sup> explains that the actual rendered prefix must match. Changes to the model, tool schemas, ordering, or relevant settings can change the reusable portion. Minimum cacheable lengths, breakpoint mechanisms, write charges, and retention periods vary by model and service version. Numbers for one model must not be generalized into universal rules.
 
 Frequent rewrites of an early summary can invalidate the cache for later content, and compression calls themselves cost money. Compare total bills and time to first token, measuring cold-cache, warm-cache, and post-compression requests separately. Do not keep sending revoked permissions or expired sensitive data merely to preserve cache hits.
 
@@ -831,7 +876,7 @@ KV-cache quantization, eviction, and offloading are another set of inference-sys
 
 ### 10.18.1 Server-Side Compaction Is Not a Prompt Cache Either
 
-[Compaction in OpenAI Responses](https://developers.openai.com/api/docs/guides/compaction) produces an opaque, encrypted compaction item for subsequent requests. This service capability reduces later context rather than merely reusing prefix computation. Nor should its internal representation be assumed to be a readable natural-language summary.
+Compaction in OpenAI Responses<sup>[【495】](../../book/references.md#ref-495)</sup> produces an opaque, encrypted compaction item for subsequent requests. This service capability reduces later context rather than merely reusing prefix computation. Nor should its internal representation be assumed to be a readable natural-language summary.
 
 Distinguish two API paths:
 
@@ -937,7 +982,7 @@ Have the agent execute dozens or hundreds of steps, checking for:
 
 The number of test steps should come from the distribution of business-task traces, not a universal reliability threshold. Record the cumulative number of compression passes and check whether older information disappears over successive rounds. Total cost should include summary generation, index writes, extra retrieval, and recovery calls.
 
-For public datasets, consider [LoCoMo](https://github.com/snap-research/locomo) for event summarization and question answering, [LongMemEval](https://github.com/xiaowu0162/LongMemEval) for knowledge updates and abstention, and [LongMemEval-V2](https://github.com/xiaowu0162/LongMemEval-V2) for retrieving experience from trajectories. They do not directly validate your own checkpoints, ACLs, or side-effect recovery. Pin dataset versions and group statistics by conversation or trajectory rather than treating related questions as independent user samples.
+For public datasets, consider LoCoMo<sup>[【481】](../../book/references.md#ref-481)</sup> for event summarization and question answering, LongMemEval<sup>[【480】](../../book/references.md#ref-480)</sup> for knowledge updates and abstention, and LongMemEval-V2<sup>[【482】](../../book/references.md#ref-482)</sup> for retrieving experience from trajectories. They do not directly validate your own checkpoints, ACLs, or side-effect recovery. Pin dataset versions and group statistics by conversation or trajectory rather than treating related questions as independent user samples.
 
 ## 10.21 Common Antipatterns
 
@@ -991,33 +1036,16 @@ Also write important decisions to external files or structured state—the exter
 
 ```mermaid
 flowchart TB
-    INPUT[Messages + Tool Results + State] --> CLASS[Classify]
-
-    CLASS --> PIN[Currently Valid Pinned Constraints]
-    CLASS --> STATE[Structured State Checked Against Execution Evidence]
-    CLASS --> LARGE[Large Artifacts]
-    CLASS --> HISTORY[Historical Messages]
-
-    LARGE --> EXT[Externalize + Reference]
-    HISTORY --> SPLIT[Group by Complete Interactions and Stages]
-    SPLIT --> RECENT[Recent Complete Interactions]
-    SPLIT --> DEDUP[Deduplicate Older History]
-    DEDUP --> IMP[Importance Filter]
-    IMP --> SUM[Hierarchical Summary]
-
-    PIN --> PACK[Context Packer]
-    STATE --> PACK
-    EXT --> PACK
-    SUM --> PACK
-    RECENT --> PACK
-    RET[Long-term Memory with Permissions and Versions Rechecked] --> PACK
-
+    CLASS[Classify inputs] --> PACK[Context Packer]
     PACK --> CACHE[Prompt Cache Stable Prefix]
     CACHE --> MODEL[Model]
-
     MODEL --> OBS[New Observation]
-    OBS --> INPUT
+    OBS --> CLASS
 ```
+
+Inputs are messages, tool results, and state. Classification separates currently valid pinned constraints, structured state checked against execution evidence, large artifacts, and historical messages. Constraints and validated state go directly to the packer; large artifacts are externalized and replaced by references.
+
+Group history by complete interactions and stages. Recent complete interactions go directly to the packer; older history is deduplicated, filtered by importance, and hierarchically summarized first. Long-term memory also enters the packer, but only after permission and version rechecks. The packed context uses a stable prefix for prompt caching before reaching the model; new observations re-enter input classification.
 
 Choose combinations from the following according to the task. Short tasks do not necessarily need summaries or hierarchical storage:
 
@@ -1074,16 +1102,5 @@ After compression, check the goal, unresolved state, key evidence, and readabili
 
 ## References
 
-- [MemGPT: Towards LLMs as Operating Systems](https://arxiv.org/abs/2310.08560)
-- [Anthropic: Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-- [Chroma Research: Context Rot](https://research.trychroma.com/context-rot)
-- [LangChain: Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/)
-- [Anthropic Prompt Caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)
-- [OpenAI Prompt Caching](https://developers.openai.com/api/docs/guides/prompt-caching)
-- [OpenAI Compaction](https://developers.openai.com/api/docs/guides/compaction)
-- [LangGraph Memory](https://docs.langchain.com/oss/python/langgraph/add-memory)
-- [LoCoMo official release notes, snapshot 9228632](https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD) (ACL 2024 release; this snapshot's `data/locomo10.zip` contains ten per-conversation JSON files)
-- [LongMemEval official documentation, snapshot 9e0b455](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md) (distinguishes the original release from the September 2025 cleaned release)
-- [LongMemEval-V2 official documentation, snapshot 2cc8c54](https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md)
-
-Source review recorded in the original manuscript: 2026-09-15. The OpenAI caching and compaction references are rolling Responses API documentation and do not promise identical pricing, thresholds, or history-passing rules across models or versions. The server-side APIs were not tested in that review. The Anthropic caching entry remains supplementary reading; it was not used to add conclusions about specific parameters.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-10) for this chapter’s sources, reading suggestions, and source notes.

@@ -18,17 +18,13 @@ Users naturally phrase questions differently from the way documents are written.
 These four rows illustrate **four different gaps**. Query-rewriting methods address different parts of this mismatch:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    G[The gap between<br/>queries and documents] --> G1[Wording gap<br/>Same meaning, different phrasing]
-    G --> G2[Reference gap<br/>Omitted context across turns]
-    G --> G3[Granularity gap<br/>Broad or compound questions]
-    G --> G4[Abstraction gap<br/>Too specific or too abstract]
-
-    G1 --> M1[Direct rewriting /<br/>multi-query expansion / HyDE]
-    G2 --> M2[Reference resolution]
-    G3 --> M3[Query decomposition]
-    G4 --> M4[Step-back questions]
+    G[Query–document gap] --> D[Diagnose the mismatch]
+    D --> M[Choose a rewrite method]
 ```
+
+Match the method to the gap: different wording for the same meaning calls for direct rewriting, multi-query expansion, or HyDE; omitted multi-turn context calls for reference resolution; broad or compound questions call for decomposition; an inappropriate abstraction level calls for step-back questions.
 
 > **Understand which gap each method addresses, rather than just memorizing method names.**
 
@@ -79,12 +75,15 @@ The costs are clear: an LLM call, N times the retrieval work—which can run in 
 Instead of searching directly with the query, HyDE **first asks an LLM to generate a hypothetical answer document, then uses that document for vector retrieval**.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q["Query: How do I<br/>request annual leave?"] --> LLM[LLM generates<br/>a hypothetical answer]
-    LLM --> H["Hypothetical document:<br/>Submit an annual leave request<br/>in the system 3 working days ahead,<br/>with direct manager approval..."]
+    LLM --> H[Hypothetical leave policy]
     H --> EMB[Embed]
     EMB --> SEARCH[Retrieve real documents]
 ```
+
+For “How do I request annual leave?”, the hypothetical text might say “Submit an annual leave request in the system 3 working days ahead, with direct manager approval…”. This is a generated retrieval aid, not verified company policy; embedding it is a way to retrieve real documents.
 
 The diagram translates the sample query “年假怎么请” and hypothetical text “员工申请年休假需提前 3 个工作日在系统提交经直属主管审批...”. The sample document says employees must submit an annual leave request in the system 3 working days in advance, with approval from their direct manager.
 
@@ -209,8 +208,5 @@ Combining methods without ablations adds cost and makes attribution difficult. D
 
 ## References
 
-- [Precise Zero-Shot Dense Retrieval without Relevance Labels](https://arxiv.org/abs/2212.10496)
-- [Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models](https://arxiv.org/abs/2310.06117)
-- [Query Rewriting for Retrieval-Augmented Large Language Models](https://arxiv.org/abs/2305.14283)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-12) for this chapter’s sources, reading suggestions, and source notes.

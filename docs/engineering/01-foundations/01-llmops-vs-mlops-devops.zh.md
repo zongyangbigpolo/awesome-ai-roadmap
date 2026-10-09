@@ -8,21 +8,43 @@ description: 区分 DevOps、MLOps 与 LLMOps 的重叠职责，理解生成式�
 
 DevOps、MLOps 与 LLMOps 不是互斥岗位，也没有统一的行业分界。可以按主要管理的资产来理解，但它们共享发布、监控、数据治理和事故响应能力；LLMOps 还可能包括自托管、微调和训练，不只是调用第三方 API。
 
+**DevOps**
+
 ```mermaid
-flowchart LR
-    subgraph DevOps["DevOps"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
         D1["资产：应用代码"]
-        D2["问题：构建、测试、发布、回滚"]
-    end
-    subgraph MLOps["MLOps"]
-        M1["资产：数据、模型与 ML 流水线"]
-        M2["问题：训练、评估、部署、漂移监控"]
-    end
-    subgraph LLMOps["LLMOps"]
-        L1["资产：模型、Prompt、上下文与工具配置"]
-        L2["问题：Prompt、路由、评测、成本、幻觉治理"]
-    end
+        D2["DevOps 关注点"]
+
 ```
+
+**MLOps**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["MLOps 资产"]
+        M2["MLOps 关注点"]
+
+```
+
+**LLMOps**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        L1["LLMOps 资产"]
+        L2["LLMOps 关注点"]
+
+```
+
+图中各项的完整含义：
+
+- 问题：构建、测试、发布、回滚
+- 资产：数据、模型与 ML 流水线
+- 问题：训练、评估、部署、漂移监控
+- 资产：模型、Prompt、上下文与工具配置
+- 问题：Prompt、路由、评测、成本、幻觉治理
 
 DevOps 关注软件交付与运行，MLOps 把数据和模型生命周期纳入工程管理，LLMOps 则强调生成式应用中的 Prompt、上下文、开放式输出和工具执行链。使用托管 API 会增加供应商版本、配额和数据处理边界的约束；自托管模型减少部分外部依赖，却需要承担推理调度、算力和模型更新责任。
 
@@ -44,18 +66,24 @@ MLOps 的数据版本管理、训练流水线、模型注册表和 A/B 测试仍
 LLMOps 不是抛弃 DevOps 另起炉灶，而是在 CI/CD、可观测性这些 DevOps 已经解决得很好的基础设施之上，**插入一层模型和 Prompt 特有的质量门禁**。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Code["代码变更"] --> UnitTest["单元测试 / 集成测试"]
-    Prompt["Prompt / 模型 / 路由变更"] --> EvalGate["离线评测门禁（LLMOps 新增）"]
+    Code["代码变更"] --> UnitTest["单元测试 / 集成<br/>测试"]
+    Prompt["Prompt / 模型 /<br/>路由变更"] --> EvalGate["离线评估门禁"]
     UnitTest --> Build["构建镜像"]
     EvalGate --> Build
     Build --> Deploy["灰度发布"]
-    Deploy --> Observe["可观测性：日志/指标/Trace"]
+    Deploy --> Observe["可观测性"]
     Observe -.反馈.-> Prompt
     Observe -.反馈.-> Code
 
     style EvalGate fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 离线评测门禁（LLMOps 新增）
+- 可观测性：日志/指标/Trace
 
 Schema、授权、金额计算、幂等和状态机仍应做确定性测试；开放式生成则补充带采样误差的质量评测。传统 ML 评测也有统计不确定性，LLM 的额外难点是可接受答案往往不唯一。同一问题重复采样用于观察波动，不能冒充更多独立业务样本。
 
@@ -95,8 +123,5 @@ LLMOps 是既有软件与 ML 工程能力在生成式应用中的延伸，不以
 
 ## 参考资料
 
-- [Google Cloud: MLOps: Continuous delivery and automation pipelines in machine learning](https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning)
-- [a16z: What Is LLMOps?](https://a16z.com/emerging-architectures-for-llm-applications/)
-- [Chip Huyen: Building LLM applications for production](https://huyenchip.com/2023/04/11/llm-engineering.html)
-- [OpenAI: Best practices for production deployments](https://platform.openai.com/docs/guides/production-best-practices)
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-01)。

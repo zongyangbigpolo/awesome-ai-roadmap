@@ -13,11 +13,18 @@ description: "拆解 Agent 框架锁定来源，以业务契约、状态所有�
 3. **可观测性与运维锁定**：Trace 数据格式、告警规则、评测 Dataset 如果绑定在框架自带的私有工具链上（而不是开放标准），换框架意味着这套运维资产需要重建。
 
 ```mermaid
-flowchart TB
-    L["Lock-in 风险"] --> L1["状态格式锁定<br/>私有序列化结构"]
-    L --> L2["编排逻辑锁定<br/>调用顺序/失败处理耦合执行引擎"]
-    L --> L3["运维资产锁定<br/>私有 Trace 格式、私有评测工具链"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    L["Lock-in 风险"] --> L1["状态格式锁定"]
+    L --> L2["编排逻辑锁定"]
+    L --> L3["运维资产锁定"]
 ```
+
+图中各项的完整含义：
+
+- 状态格式锁定 私有序列化结构
+- 编排逻辑锁定 调用顺序/失败处理耦合执行引擎
+- 运维资产锁定 私有 Trace 格式、私有评测工具链
 
 识别 lock-in 时，先要判断「如果今天切换框架，这三类资产里哪一类迁移成本最高」。很多团队直觉上担心的是「代码要重写」，但实践中真正昂贵的往往是**历史状态数据**和**运维资产**的迁移，而不是业务逻辑代码本身。
 
@@ -26,22 +33,19 @@ flowchart TB
 解决 lock-in 的通用架构模式借用了软件工程里熟悉的**六边形架构（Hexagonal Architecture）/端口适配器模式**：把业务核心逻辑放在一个不依赖任何具体框架的内核里，框架特定的代码全部收缩到「适配器」层。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    subgraph Core["业务核心（框架无关）"]
-        BL["领域逻辑：任务定义、业务规则、评测标准"]
-    end
-    subgraph Adapters["适配器层"]
-        A1["LangGraph 适配器"]
-        A2["SK / MAF 适配器"]
-        A3["其他 Agent 运行时适配器"]
-    end
-    A1 -->|依赖领域接口| BL
-    A2 -->|依赖领域接口| BL
-    A3 -->|依赖领域接口| BL
-    A1 --> R1["运行时 1"]
-    A2 --> R2["运行时 2"]
-    A3 --> R3["运行时 3"]
+    A["框架适配器"] -->|依赖| CORE["领域接口"]
+    A --> RUN["选定的运行时"]
 ```
+
+将任务定义、业务规则和评估标准保留在与框架无关的业务核心中。LangGraph、SK/MAF 及其他运行时的适配器依赖领域接口，而不是让业务核心反向依赖框架。每个适配器连接对应的运行时；迁移框架时，应替换适配器与运行时，而不必重写领域规则。
+
+图中条件与标签：
+
+- 依赖领域接口
+- 依赖领域接口
+- 依赖领域接口
 
 图中箭头表示代码依赖：适配器依赖领域接口和具体运行时，领域核心不反向导入框架。具体到 Agent 系统，这意味着：
 
@@ -58,25 +62,32 @@ flowchart TB
 结合前面的分析，选型可以归纳成一个决策流程：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    Q1{"团队主要使用哪种技术栈？"}
-    Q1 -->|".NET"| SK["新 Agent 评估 MAF<br/>存量 SK 核对迁移与支持"]
-    Q1 -->|"JVM"| JV["评估 LangChain4j / Spring AI<br/>沿用现有服务框架"]
-    Q1 -->|"Python 或无强制约束"| Q2{"核心难题是私有数据质量<br/>还是模型/工具编排？"}
-    Q2 -->|"数据质量"| LI["优先评估 LlamaIndex"]
-    Q2 -->|"模型/工具编排"| Q3{"是否需要长时间运行、<br/>人工审批、精细状态恢复？"}
-    Q3 -->|"是"| LG["评估 LangGraph / MAF<br/>或已集成的持久工作流引擎"]
-    Q3 -->|"否"| Q4{"是否需要多个专精 Agent 协作？"}
-    Q4 -->|"是，且有分布式需求"| AG["比较运行时与消息边界<br/>AutoGen 仅作存量维护候选"]
-    Q4 -->|"是，且需要快速搭建角色化协作"| CR["评估 CrewAI"]
-    Q4 -->|"否，重视类型与可测试性"| PA["评估 PydanticAI"]
-    Q4 -->|"否，标准工具循环"| LC["LangChain create_agent<br/>或原生 SDK"]
-    Q5{"Prompt 有明确评估指标，<br/>且需要跨模型迁移？"}
-    LC -.可选叠加.-> Q5
-    LI -.也可优化子任务.-> Q5
-    LG -.也可优化子任务.-> Q5
-    Q5 -->|"是"| DS["叠加评估 DSPy 做子任务编译优化"]
+    STACK["检查团队技术栈"] --> NEED["找出主要难点"]
+    NEED --> CONTROL["检查执行需求"]
+    CONTROL --> TEST["评估候选方案"]
+    TEST -.可选.-> DSPY["优化子任务"]
 ```
+
+按上述顺序应用选择条件：
+
+- .NET 新 Agent 评估 MAF，已有 SK 系统要核查迁移与支持情况。JVM 团队评估 LangChain4j 或 Spring AI，同时保留现有服务框架。
+- Python 或没有强制技术栈约束时，如果主要困难是私有数据质量，先评估 LlamaIndex。如果难点是模型与工具编排，先检查长时运行、人工审批或细粒度恢复是否需要 LangGraph、MAF，或已经集成的持久化工作流引擎。
+- 不需要上述持久化能力时，再判断是否需要多个专业 Agent 协作。分布式协作要比较运行时和消息边界；AutoGen 只作为维护既有系统的候选。需要快速搭建角色化协作时，可以评估 CrewAI。
+- 不需要多 Agent 协作时，重视类型和可测试性可评估 PydanticAI，标准工具循环可采用 LangChain `create_agent` 或原生 SDK。
+- 当提示词有明确评估指标且需要跨模型迁移时，可额外评估 DSPy。它能优化 LangChain、LlamaIndex 或持久化编排中的子任务，但不替代这些系统的运行时职责。
+
+图中各项的完整含义：
+
+- 新 Agent 评估 MAF 存量 SK 核对迁移与支持
+- 评估 LangChain4j / Spring AI 沿用现有服务框架
+- 核心难题是私有数据质量 还是模型/工具编排？
+- 是否需要长时间运行、 人工审批、精细状态恢复？
+- 评估 LangGraph / MAF 或已集成的持久工作流引擎
+- 比较运行时与消息边界 AutoGen 仅作存量维护候选
+- LangChain create_agent 或原生 SDK
+- Prompt 有明确评估指标， 且需要跨模型迁移？
 
 这张图用于缩小候选范围，不是品牌推荐算法。语言只约束接入成本，任何分支都还需检查状态、恢复和权限要求。MAF 是 SK/AutoGen 后继，AutoGen 已进入维护模式；PydanticAI 已有持久执行集成，Workflows、CrewAI Flow 也应按运行时需求参与评估。
 
@@ -92,15 +103,24 @@ flowchart TB
 4. **状态迁移单独设计**：先区分已完成历史、活跃任务和外部托管会话。活跃任务通常可留在旧运行时排空；必须迁移时，从已确认的业务状态重新入场并核对审批、幂等键与待处理事件，不默认写个格式转换脚本就安全。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["旧框架实现<br/>处理全部流量"] --> B["契约测试固化行为基线"]
-    B --> C["在门面或适配器后<br/>实现一个业务能力"]
-    C --> D["验证并发布该能力<br/>按需采用 canary 灰度流量"]
-    D --> E["已验收能力交给新系统<br/>未迁移能力仍由旧系统承担"]
-    E --> G{"还有待迁移的能力？"}
+    A["旧框架实现"] --> B["契约测试固化行为<br/>基线"]
+    B --> C["在门面或适配器后"]
+    C --> D["验证并发布该能力"]
+    D --> E["切换已验收能力的<br/>流量"]
+    E --> G["还有待迁移的能力<br/>？"]
     G -->|是| C
-    G -->|否| F["活跃任务排空或受控迁移<br/>满足验收与回滚条件后<br/>下线旧依赖"]
+    G -->|否| F["安全退役"]
 ```
+
+图中各项的完整含义：
+
+- 旧框架实现 处理全部流量
+- 在门面或适配器后 实现一个业务能力
+- 验证并发布该能力 按需采用 canary 灰度流量
+- 已验收能力交给新系统 未迁移能力仍由旧系统承担
+- 活跃任务排空或受控迁移 满足验收与回滚条件后 下线旧依赖
 
 ## 23.5 常见错误
 
@@ -143,13 +163,5 @@ flowchart TB
 
 ## 参考资料
 
-- [LangGraph: Persistence 概念](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [Semantic Kernel: Process Framework](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework)
-- [Microsoft Agent Framework 概览与后继关系](https://learn.microsoft.com/en-us/agent-framework/overview/)
-- [SK → MAF 迁移指南](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/)
-- [AutoGen 官方维护模式说明](https://github.com/microsoft/autogen)
-- [PydanticAI: Durable Execution](https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/)
-- [OpenTelemetry Generative AI 语义约定仓库](https://github.com/open-telemetry/semantic-conventions-genai)
-- [Martin Fowler: StranglerFigApplication](https://martinfowler.com/bliki/StranglerFigApplication.html)
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Alistair Cockburn: Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-23)。

@@ -8,6 +8,8 @@ Use the existing Chinese manuscript to preserve the scope, examples, assumptions
 
 Keep historical claims tied to their stated version. Do not silently replace a documented interface with the latest one, invent unavailable source details, or claim to have run an experiment that was not run. Record conflicts and the evidence used to resolve them.
 
+See [Maintaining the shared bibliography](bibliography.md) ([简体中文](bibliography.zh.md)) for stable citation numbers, paired source notes, lossless migration, and the shared website/EPUB citation syntax.
+
 Write idiomatic technical English rather than translating Chinese sentence structure word for word. Answer the actual question, explain the mechanism, and introduce limitations where they affect the argument. Preserve useful examples and derivations; do not replace a full section with a summary.
 
 ## File and edition contract

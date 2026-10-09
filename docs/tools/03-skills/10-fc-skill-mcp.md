@@ -23,12 +23,12 @@ Different speakers, different counterparts, and different granularities explain 
 ### 10.1.1 Release milestones do not establish dependencies
 
 ```mermaid
-timeline
-    title Representative release milestones for the three mechanisms
-    2023 : Function Calling : Problem - a model generates text<br/>How can it request an external call?
-    2024 : MCP : Problem - every application repeats<br/>the work of integrating different tools
-    2025 : Agent Skill : Problem - tools are available<br/>but the agent lacks a procedure for using them
+flowchart TB
+    FC["2023 · Function Calling"] --> MCP["2024 · MCP"]
+    MCP --> SK["2025 · Agent Skill"]
 ```
+
+These representative release milestones address different problems, not successive replacements: Function Calling lets a text-generating model request an external call; MCP reduces repeated integration work across applications; Agent Skills supply procedures for using available tools.
 
 The timeline marks the releases of OpenAI Function Calling, MCP, and Anthropic Agent Skills. It does not date the origins of tool use, interface standardization, or reusable procedures. Their respective concerns are:
 
@@ -39,29 +39,17 @@ The timeline marks the releases of OpenAI Function Calling, MCP, and Anthropic A
 ## 10.2 Identify the communicating parties
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph L3["Layer 3 · Skill"]
-        direction LR
-        AGENT[Agent] <-->|"Scan / load"| KM["Knowledge module<br/>SKILL.md + scripts + templates"]
-    end
-
-    subgraph L2["Layer 2 · MCP"]
-        direction LR
-        CLIENT[MCP Client] <-->|"JSON-RPC<br/>tools/list · tools/call"| SERVER[MCP Server]
-    end
-
-    subgraph L1["Layer 1 · Function Calling"]
-        direction LR
-        MODEL[Model] <-->|"tool_calls JSON<br/>Results returned in tool messages"| HOST[Host application]
-    end
-
-    L3 -.->|"Optional: use MCP in the procedure"| L2
-    L2 -.->|"Optional: host converts to FC format<br/>and returns results"| L1
-
-    style L3 fill:#e6f4ea
-    style L2 fill:#e8f0fe
-    style L1 fill:#fef7e0
+    SK["3 · Skill procedure"] -.Optional.-> MCP["2 · MCP integration"]
+    MCP -.Optional.-> FC["1 · Function Calling"]
 ```
+
+Within the Skill layer, the agent scans and loads a knowledge module containing `SKILL.md`, scripts, and templates. Within MCP, Client and Server exchange JSON-RPC messages such as `tools/list` and `tools/call`. Within Function Calling, the model emits `tool_calls` JSON and the host returns tool messages. The cross-layer links are optional: a Skill may use MCP, and a host may translate MCP definitions and results to a model's function-calling format. These are bidirectional exchanges within each layer, not a mandatory three-step execution sequence.
+
+Details of the illustrated steps and components:
+
+- Knowledge module SKILL.md + scripts + templates
 
 | Layer | Communicating parties | Nature | Granularity |
 |---|---|---|---|
@@ -76,17 +64,25 @@ Notice the difference in granularity. Querying an order table is an **MCP tool**
 Counterexamples help reveal whether responsibilities have been confused:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S["Skill<br/>Defines the procedure"] --> H["Host / Agent<br/>Selection and execution"]
-    H --> M["MCP Client<br/>Calls the server"]
-    H --> LOCAL["Local function / CLI / API"]
-    F["Function Calling<br/>Model proposes a call"] --> H
-    RULE["Rule-based workflow / human action"] --> H
+    S["Skill"] --> H["Host / Agent"]
+    H --> M["MCP Client"]
+    H --> LOCAL["Local function<br/>/ CLI / API"]
+    F["Function<br/>Calling"] --> H
+    RULE["Rule-based<br/>workflow /<br/>human action"] --> H
 
     style S fill:#e6f4ea
     style M fill:#e8f0fe
     style F fill:#fef7e0
 ```
+
+Details of the illustrated steps and components:
+
+- Skill Defines the procedure
+- Host / Agent Selection and execution
+- MCP Client Calls the server
+- Function Calling Model proposes a call
 
 All of these paths are possible:
 
@@ -111,43 +107,46 @@ Function calling with an executor can work on its own. A deterministic program c
 The user asks in Chinese: **“帮我分析最近三个月的销售数据，找出下滑的产品线，给改进建议。”** In English: “Analyze sales data from the last three months, identify declining product lines, and suggest improvements.”
 
 ```mermaid
-sequenceDiagram
-    participant U as User
-    participant A as Agent
-    participant SK as Skill layer
-    participant MC as MCP Client
-    participant MS as MCP Servers
-    participant M as Model
-
-    U->>A: Analyze sales data and suggest improvements
-    A->>SK: Scan Skill metadata
-    SK-->>A: Match the data-analysis report Skill
-    A->>SK: Load the SKILL.md body
-    SK-->>A: Procedure: fetch data → analyze trends → write from template
-
-    Note over A,MS: Step 1: Fetch data
-    A->>M: Task + procedure + available tool definitions
-    M-->>A: tool_calls: query_database(sql=...)
-    A->>A: Validate query scope, arguments, and user authorization
-    A->>MC: Route the call
-    MC->>MS: tools/call → database Server
-    MS-->>MC: Query results
-    MC-->>A: Results
-    A->>M: Return results in a tool message
-
-    Note over A,MS: Step 2: Analyze trends
-    M-->>A: tool_calls: run_python(code=...)
-    A->>A: Check execution permissions, isolation, and resource budgets
-    A->>MC: Route the call
-    MC->>MS: tools/call → Python executor Server
-    MS-->>MC: Analysis results
-    MC-->>A: Results
-    A->>M: Return results in a tool message
-
-    Note over A,SK: Step 3: Write using the Skill template
-    M-->>A: Structured analysis report
-    A-->>U: Return the report
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Load matching Skill"]
+    S1["Authorize data query"]
+    S2["Fetch via MCP"]
+    S3["Authorize execution"]
+    S4["Analyze via MCP"]
+    S5["Report from template"]
+    S0 --> S1 --> S2 --> S3 --> S4 --> S5
 ```
+
+Complete exchange, including phase notes:
+
+| Participants | Message or action |
+| --- | --- |
+| User → Agent | Analyze sales data and suggest improvements |
+| Agent → Skill layer | Scan Skill metadata |
+| Skill layer → Agent (return) | Match the data-analysis report Skill |
+| Agent → Skill layer | Load the SKILL.md body |
+| Skill layer → Agent (return) | Procedure: fetch data → analyze trends → write from template |
+| Note: Agent, MCP Servers | Step 1: Fetch data |
+| Agent → Model | Task + procedure + available tool definitions |
+| Model → Agent (return) | tool_calls: query_database(sql=...) |
+| Agent → Agent | Validate query scope, arguments, and user authorization |
+| Agent → MCP Client | Route the call |
+| MCP Client → MCP Servers | tools/call → database Server |
+| MCP Servers → MCP Client (return) | Query results |
+| MCP Client → Agent (return) | Results |
+| Agent → Model | Return results in a tool message |
+| Note: Agent, MCP Servers | Step 2: Analyze trends |
+| Model → Agent (return) | tool_calls: run_python(code=...) |
+| Agent → Agent | Check execution permissions, isolation, and resource budgets |
+| Agent → MCP Client | Route the call |
+| MCP Client → MCP Servers | tools/call → Python executor Server |
+| MCP Servers → MCP Client (return) | Analysis results |
+| MCP Client → Agent (return) | Results |
+| Agent → Model | Return results in a tool message |
+| Note: Agent, Skill layer | Step 3: Write using the Skill template |
+| Model → Agent (return) | Structured analysis report |
+| Agent → User (return) | Return the report |
 
 Within this process, the three responsibilities are:
 
@@ -197,9 +196,5 @@ When explaining the three mechanisms, walking through a concrete scenario that c
 
 ## References
 
-- [OpenAI: Function calling guide](https://platform.openai.com/docs/guides/function-calling)
-- [Model Context Protocol official documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP specification 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Agent Skills specification](https://agentskills.io/specification)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-10) for this chapter’s sources, reading suggestions, and source notes.

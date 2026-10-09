@@ -15,19 +15,15 @@ This means you cannot blindly update just one existing chunk, not that increment
 ## 19.2 The Complete Update Pipeline
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S[Source data changes] --> D[1. Detect changes]
-    D --> C[2. Classify changes]
-    C -->|Addition| ADD[Parse, chunk,<br/>embed, and write]
-    C -->|Modification| MOD[Build new versions<br/>of chunks and indexes]
-    C -->|Deletion or revocation| DEL[Block access first,<br/>then update affected artifacts]
-    ADD --> V[3. Validate consistency<br/>and permissions]
-    MOD --> V
-    DEL --> V
-    V --> A[4. Publish a consistent<br/>version manifest]
-    A --> G[5. Roll out gradually]
-    G --> M[6. Monitor quality]
+    D[Detect and classify changes] --> C[Apply change-specific handling]
+    C --> V[Validate consistency and access]
+    V --> A[Publish version manifest]
+    A --> G[Gradual rollout; monitor]
 ```
+
+For additions, parse, chunk, embed, and write. For modifications, build new versions of chunks and indexes. For deletions or permission revocations, **block access first**, then update affected artifacts. All paths require consistency and permission validation before publishing a consistent version manifest; roll out gradually and monitor quality.
 
 ## 19.3 Step 1: Change Detection
 
@@ -50,14 +46,15 @@ One robust approach is **copy-on-write** with immutable versions: build and vali
 A database alias usually points to a collection or index; it does not automatically provide a version transaction for each document. For document-level releases, a transactional table or manifest can maintain the active version. When a release spans vector search, BM25, and source-document storage, publish their combined versions as one snapshot and bind queries to that snapshot. Switching a vector database alias alone does not guarantee an atomic change across the other systems.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[doc_id: v17 active] --> B[Build an isolated v18<br/>Parse, chunk, embed, and index]
-    B --> C[Validate content, ACLs,<br/>retrieval, and index readiness]
-    C -->|Pass| D[Atomically update the<br/>active-version mapping<br/>v17 → v18]
-    C -->|Fail| E[Discard v18;<br/>continue serving v17]
-    D --> F[Observe; retain<br/>rollback capability]
-    F --> G[Reclaim v17]
+    B[Build isolated v18] --> C{Validation passes?}
+    C -->|Yes| D[Activate v18 atomically]
+    C -->|No| E[Discard v18; keep v17]
+    D --> F[Observe before reclaiming v17]
 ```
+
+Start with `doc_id: v17 active`. Building v18 includes parsing, chunking, embedding, and indexing; validation covers content, ACLs, retrieval, and index readiness. On success, atomically change the active-version mapping from v17 to v18. Retain rollback capability while observing v18, and only then reclaim v17. Failed validation leaves v17 serving.
 
 This avoids both obsolete chunks left behind by boundary shifts and the read gap between deletion and insertion. Each request is bound to one release snapshot, which may contain the respective versions of many documents; it must not inadvertently mix partially updated content. A historical comparison can explicitly select and label two versions. Current restrictions imposed by deletion and permission revocation apply independently of the snapshot, and rollback must not restore prohibited access.
 
@@ -128,7 +125,8 @@ Some vector databases provide exact scans over data that does not yet have an AN
 Large updates—changing the embedding model or chunking strategy, or importing a new corpus—**must be rolled out gradually**.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OLD[(Old index)] --> R[Traffic routing]
     NEW[(New index)] --> R
     R --> U[Users]
@@ -230,9 +228,5 @@ Expanded user lists embedded in chunks may require extensive updates. Stable res
 
 ## References
 
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [Official pgvector README: updates, deletion, and VACUUM](https://github.com/pgvector/pgvector)
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data](https://arxiv.org/abs/2403.04871)
-- [LightRAG: Simple and Fast Retrieval-Augmented Generation](https://arxiv.org/abs/2410.05779)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-19) for this chapter’s sources, reading suggestions, and source notes.

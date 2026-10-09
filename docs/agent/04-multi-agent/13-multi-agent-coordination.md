@@ -26,18 +26,38 @@ A complete coordination system must also answer:
 
 These questions fall into four layers:
 
-```mermaid
-flowchart TB
-    C[Multi-Agent Coordination] --> COM[Communication]
-    C --> ST[State]
-    C --> RT[Routing]
-    C --> CT[Control Transfer]
+Communication and state.
 
-    COM --> MSG[Message / RPC / Event]
-    ST --> SHARED[Shared State / Artifact]
-    RT --> STATIC[Static / Dynamic / Hybrid]
-    CT --> DELEGATE[Delegation]
-    CT --> HANDOFF[Handoff]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Multi-Agent Coordination"]
+    COM["Communication"]
+    MSG["Message / RPC / Event"]
+    ST["State"]
+    SHARED["Shared State / Artifact"]
+    C --> COM
+    C --> ST
+    COM --> MSG
+    ST --> SHARED
+```
+
+Routing and control transfer.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Multi-Agent Coordination"]
+    RT["Routing"]
+    STATIC["Static / Dynamic /<br/>Hybrid"]
+    CT["Control Transfer"]
+    DELEGATE["Delegation"]
+    HANDOFF["Handoff"]
+    C --> RT
+    C --> CT
+    RT --> STATIC
+    CT --> DELEGATE
+    CT --> HANDOFF
 ```
 
 ## 13.2 Coordination Topologies
@@ -56,12 +76,13 @@ Real systems often combine them.
 Agents execute in a predefined sequence:
 
 ```mermaid
-flowchart LR
-    R[Research Agent] --> W[Writer Agent]
-    W --> V[Reviewer Agent]
-    V --> G{Accepted and Authorized to Publish?}
-    G -->|Yes| P[Publisher]
-    G -->|No| RWORK[Revise or Stop]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Research Agent"] --> W["Writer Agent"]
+    W --> V["Reviewer Agent"]
+    V --> G["Accepted and Authorized<br/>to Publish?"]
+    G -->|Yes| P["Publisher"]
+    G -->|No| RWORK["Revise or Stop"]
 ```
 
 ### 13.3.1 When to Use It
@@ -100,12 +121,13 @@ The orchestrator is responsible for:
 - Retrying or replanning.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    U[User] --> O[Orchestrator]
-    O --> R[Research Agent]
-    O --> C[Coding Agent]
-    O --> V[Review Agent]
-    R --> A[Artifact Store]
+    U["User"] --> O["Orchestrator"]
+    O --> R["Research<br/>Agent"]
+    O --> C["Coding Agent"]
+    O --> V["Review Agent"]
+    R --> A["Artifact<br/>Store"]
     C --> A
     V --> A
     A --> O
@@ -133,11 +155,12 @@ Hierarchical orchestrators are an option when top-level context or scheduling be
 Multiple agents exchange tasks, facts, and artifacts through a shared workspace.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    B[Shared Workspace<br/>Task Ledger + Artifacts + Facts]
-    A1[Agent A] <--> B
-    A2[Agent B] <--> B
-    A3[Agent C] <--> B
+    B["Shared Workspace<br/>Task Ledger + Artifacts<br/>+ Facts"]
+    A1["Agent A"] <--> B
+    A2["Agent B"] <--> B
+    A3["Agent C"] <--> B
 ```
 
 Advantages:
@@ -162,10 +185,11 @@ A shared workspace needs schemas, versions, ownership, and write rules.
 Agents communicate, negotiate, or delegate directly:
 
 ```mermaid
-flowchart LR
-    A[Agent A] <--> B[Agent B]
-    B <--> C[Agent C]
-    C <--> D[Agent D]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] <--> B["Agent B"]
+    B <--> C["Agent C"]
+    C <--> D["Agent D"]
     D <--> A
 ```
 
@@ -239,11 +263,12 @@ Limitations:
 A producer puts tasks into a queue, and workers compete to consume them.
 
 ```mermaid
-flowchart LR
-    P[Producer] --> Q[Task Queue]
-    Q --> W1[Worker 1]
-    Q --> W2[Worker 2]
-    Q --> W3[Worker N]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Producer"] --> Q["Task Queue"]
+    Q --> W1["Worker 1"]
+    Q --> W2["Worker 2"]
+    Q --> W3["Worker N"]
 ```
 
 Suitable for:
@@ -265,18 +290,19 @@ Consider:
 
 It is difficult to rely on an absolute promise of exactly-once execution in distributed systems. At-least-once delivery combined with idempotent execution is more common.
 
-For example, [SQS Standard queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html) explicitly allow duplicate delivery. Acknowledgments, message deduplication, and external side effects belong to different layers: if a worker successfully issues a refund and crashes before acknowledging the message, redelivery may issue the refund again. Use a stable business-operation ID with a refund API that supports idempotency, record the receipt, and query the outcome before retrying after a timeout. Even a queue that provides exactly-once processing within its own boundary does not automatically extend that guarantee to external side effects.
+For example, SQS Standard queues<sup>[【511】](../../book/references.md#ref-511)</sup> explicitly allow duplicate delivery. Acknowledgments, message deduplication, and external side effects belong to different layers: if a worker successfully issues a refund and crashes before acknowledging the message, redelivery may issue the refund again. Use a stable business-operation ID with a refund API that supports idempotency, record the receipt, and query the outcome before retrying after a timeout. Even a queue that provides exactly-once processing within its own boundary does not automatically extend that guarantee to external side effects.
 
 ## 13.10 Pub/Sub
 
 A publisher sends events to a topic without needing to know the individual subscribers:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    P[Publisher Agent] --> T[Topic]
-    T --> A[Subscriber A]
-    T --> B[Subscriber B]
-    T --> C[Subscriber C]
+    P["Publisher Agent"] --> T["Topic"]
+    T --> A["Subscriber A"]
+    T --> B["Subscriber B"]
+    T --> C["Subscriber C"]
 ```
 
 “The sender does not need to know who is waiting for the result” accurately describes pub/sub, not all message passing.
@@ -364,12 +390,13 @@ The URI must identify a retrievable, immutable version. A `latest` pointer can c
 ## 13.13 Layers of Shared State
 
 ```mermaid
-flowchart TB
-    S[System State] --> G[Global State]
-    S --> T[Task State]
-    S --> P[Private Agent State]
-    S --> A[Artifact State]
-    S --> E[Event / Audit State]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    S["System State"] --> G["Global State"]
+    S --> T["Task State"]
+    S --> P["Private Agent State"]
+    S --> A["Artifact State"]
+    S --> E["Event / Audit State"]
 ```
 
 ### 13.13.1 Global State
@@ -461,15 +488,16 @@ Not every LangGraph field is append-only:
 - Some cases allow an explicit overwrite.
 
 ```mermaid
-flowchart LR
-    OLD[Current State Value] --> R[Reducer]
-    UPDATE[Node Update] --> R
-    R --> NEW[New State Value]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    OLD["Current State Value"] --> R["Reducer"]
+    UPDATE["Node Update"] --> R
+    R --> NEW["New State Value"]
 ```
 
 The merge semantics of each field therefore need an explicit design.
 
-When multiple nodes in the same super-step concurrently write to a field with no merge semantics, LangGraph raises [`INVALID_CONCURRENT_GRAPH_UPDATE`](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE). It does not let the last node to finish overwrite the others. Merging lists with `operator.add` handles concurrent appends but does not automatically deduplicate them. By contrast, `add_messages` supports additions and replacements by message ID, as well as a deletion mechanism; it is not ordinary list concatenation.
+When multiple nodes in the same super-step concurrently write to a field with no merge semantics, LangGraph raises `INVALID_CONCURRENT_GRAPH_UPDATE`<sup>[【507】](../../book/references.md#ref-507)</sup>. It does not let the last node to finish overwrite the others. Merging lists with `operator.add` handles concurrent appends but does not automatically deduplicate them. By contrast, `add_messages` supports additions and replacements by message ID, as well as a deletion mechanism; it is not ordinary list concatenation.
 
 A reducer is a state-merge function in the graph runtime, not a cross-process database transaction or a distributed lock. A checkpointer's thread-scoped recovery does not automatically resolve competition for business resources across runs, either. An in-memory checkpointer cannot recover after process exit. “Private state” describes how data is organized, not a guarantee of access control or log redaction. Streaming output, traces, and storage permissions need separate review.
 
@@ -544,7 +572,7 @@ If the agent becomes unreachable and its lease expires, the task can be reassign
 
 Lease expiry does not mean the old process has stopped. A paused worker may resume and write again. Each claim should generate a monotonically increasing fencing token, and the storage system or side-effect gateway receiving writes must atomically reject stale tokens. Putting a token in the prompt alone enforces nothing. If an external API does not support fencing, serialize operations through a gateway you control, or use business-level idempotency and reconciliation; do not claim that all late side effects have been eliminated.
 
-A receiver that remembers only the highest token it has seen must first see a newer token before it can reject the old holder. That is not the same as immediately prohibiting writes when a lease expires. If immediate prohibition is required, commits must atomically validate the current lease or owner, as in [transactional protection with etcd Lock](https://etcd.io/docs/v3.6/dev-guide/api_concurrency_reference_v3/). Side effects in other systems remain outside that transaction's guarantee.
+A receiver that remembers only the highest token it has seen must first see a newer token before it can reject the old holder. That is not the same as immediately prohibiting writes when a lease expires. If immediate prohibition is required, commits must atomically validate the current lease or owner, as in transactional protection with etcd Lock<sup>[【513】](../../book/references.md#ref-513)</sup>. Side effects in other systems remain outside that transaction's guarantee.
 
 ### 13.16.5 Which Layers Need Strong Consistency?
 
@@ -557,7 +585,7 @@ A receiver that remembers only the highest token it has seen must first see a ne
 
 “Three agents agree that a refund should be issued” is an application-level opinion, not Raft/Paxos consensus. Raft makes replicas agree on log order; it does not determine whether a refund complies with policy. Nor can Raft's crash-fault assumptions simply be applied to defend against untrustworthy agents. Strong consensus, linearizability, and transaction isolation are related but distinct concepts. Design against the actual guarantees of the underlying API.
 
-For example, [etcd's API guarantees](https://etcd.io/docs/v3.6/learning/api_guarantees/) distinguish default linearizability for KV operations from potentially delayed Watch delivery. Receiving a Watch event does not mean reading the globally latest state at that moment. Budget deductions must not rely on a potentially stale progress dashboard. If a majority is unavailable, commits that depend on consensus may stop making progress. Read-only exploration can continue, but irreversible operations must not bypass the ledger.
+For example, etcd's API guarantees<sup>[【512】](../../book/references.md#ref-512)</sup> distinguish default linearizability for KV operations from potentially delayed Watch delivery. Receiving a Watch event does not mean reading the globally latest state at that moment. Budget deductions must not rely on a potentially stale progress dashboard. If a majority is unavailable, commits that depend on consensus may stop making progress. Read-only exploration can continue, but irreversible operations must not bypass the ledger.
 
 ## 13.17 Errors Must Be First-Class State
 
@@ -610,11 +638,12 @@ Common strategies:
 Use rules, a state machine, or fixed edges:
 
 ```mermaid
-flowchart LR
-    I[Input] --> R{Intent}
-    R -->|Refund| REF[Refund Agent]
-    R -->|Technical Issue| TECH[Technical Agent]
-    R -->|General Inquiry| FAQ[FAQ Agent]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Input"] --> R["Intent"]
+    R -->|Refund| REF["Refund Agent"]
+    R -->|Technical<br/>Issue| TECH["Technical<br/>Agent"]
+    R -->|General<br/>Inquiry| FAQ["FAQ Agent"]
 ```
 
 Advantages:
@@ -749,12 +778,13 @@ The runtime should:
 - Record routing reasons and traces.
 
 ```mermaid
-flowchart LR
-    L[LLM Route Proposal] --> A[Allowlist]
-    A --> P[Permission Check]
-    P --> S[Schema Check]
-    S --> B[Budget / Loop Check]
-    B --> D[Dispatch]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    L["LLM Route Proposal"] --> A["Allowlist"]
+    A --> P["Permission Check"]
+    P --> S["Schema Check"]
+    S --> B["Budget / Loop Check"]
+    B --> D["Dispatch"]
 ```
 
 ## 13.24 Hybrid Routing
@@ -762,16 +792,17 @@ flowchart LR
 Hybrid routing combines deterministic control with model judgment:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    S[Current State] --> H{High-risk or Fixed Path?}
-    H -->|Yes| STATIC[Static Route]
-    H -->|No| RULE{Rule Match?}
+    S["Current State"] --> H["High-risk or Fixed Path?"]
+    H -->|Yes| STATIC["Static Route"]
+    H -->|No| RULE["Rule Match?"]
     RULE -->|Yes| STATIC
-    STATIC --> CHECK{Policy and Validation Pass?}
-    RULE -->|No| LLM[LLM Router within Allowlist]
+    STATIC --> CHECK["Policy and Validation<br/>Pass?"]
+    RULE -->|No| LLM["LLM Router within<br/>Allowlist"]
     LLM --> CHECK
-    CHECK -->|Yes| TARGET[Target Agent]
-    CHECK -->|No| SAFE[Safe Stop / Human / Orchestrator]
+    CHECK -->|Yes| TARGET["Target Agent"]
+    CHECK -->|No| SAFE["Safe Stop / Human /<br/>Orchestrator"]
 ```
 
 Static routes must also pass authorization, parameter, and budget checks. A predefined path does not mean that the current request has permission to execute.
@@ -818,14 +849,15 @@ Suitable when:
 The current agent transfers control of the subsequent conversation or task to another agent:
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant U as User
     participant T as Triage Agent
     participant R as Refund Agent
 
     U->>T: Request a Refund
-    T->>R: Handoff + Structured Context
-    R->>U: Take Over Subsequent Interaction
+    T->>R: Handoff + Structured<br/>Context
+    R->>U: Take Over Subsequent<br/>Interaction
 ```
 
 Suitable when:
@@ -868,7 +900,7 @@ transfer_to_refund_agent
 
 After the model selects that tool, the runtime transfers control to the corresponding agent.
 
-These framework features do not mean that all authorization and recovery are handled by default. According to the [Handoffs documentation](https://openai.github.io/openai-agents-python/handoffs/), `input_type` defines model-generated handoff arguments. It neither replaces the receiving agent's entire input nor serves as an identity credential. When authorization depends on those arguments, check them before any side effects. `Agent.as_tool()` is better suited to returning a result to the original caller; a handoff lets the receiving agent take over subsequent execution. Confirm exact parameters and guardrail coverage against the SDK version pinned for deployment.
+These framework features do not mean that all authorization and recovery are handled by default. According to the Handoffs documentation<sup>[【510】](../../book/references.md#ref-510)</sup>, `input_type` defines model-generated handoff arguments. It neither replaces the receiving agent's entire input nor serves as an identity credential. When authorization depends on those arguments, check them before any side effects. `Agent.as_tool()` is better suited to returning a result to the original caller; a handoff lets the receiving agent take over subsequent execution. Confirm exact parameters and guardrail coverage against the SDK version pinned for deployment.
 
 ## 13.27 Handoff Contract
 
@@ -933,13 +965,14 @@ Do not pass these by default:
 - Full hidden reasoning.
 
 ```mermaid
-flowchart LR
-    FULL[Full Source Context] --> FILTER[Handoff Input Filter]
-    FILTER --> GOAL[Goal]
-    FILTER --> FACTS[Verified Facts]
-    FILTER --> ART[Artifacts]
-    FILTER --> RECENT[Relevant History]
-    GOAL --> TARGET[Target Agent Context]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    FULL["Full Source<br/>Context"] --> FILTER["Handoff<br/>Input Filter"]
+    FILTER --> GOAL["Goal"]
+    FILTER --> FACTS["Verified<br/>Facts"]
+    FILTER --> ART["Artifacts"]
+    FILTER --> RECENT["Relevant<br/>History"]
+    GOAL --> TARGET["Target Agent<br/>Context"]
     FACTS --> TARGET
     ART --> TARGET
     RECENT --> TARGET
@@ -959,11 +992,12 @@ More robust detection signals include:
 - No change in progress toward the goal.
 
 ```mermaid
-flowchart LR
-    A[Agent A] --> B[Agent B]
-    B --> C[Agent C]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] --> B["Agent B"]
+    B --> C["Agent C"]
     C --> A
-    A -.No Progress Detected.-> STOP[Stop / Orchestrator / Human]
+    A -.No Progress Detected.-> STOP["Stop / Orchestrator /<br/>Human"]
 ```
 
 Allow reasonable revisits, but require:
@@ -1001,11 +1035,12 @@ Do not:
 A dynamic system needs a capability registry:
 
 ```mermaid
-flowchart LR
-    A[Agent Registration] --> R[Capability Registry]
-    Q[Task Requirement] --> R
-    R --> C[Candidate Agents]
-    C --> ROUTER[Router]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent Registration"] --> R["Capability Registry"]
+    Q["Task Requirement"] --> R
+    R --> C["Candidate Agents"]
+    C --> ROUTER["Router"]
 ```
 
 The registry should record:
@@ -1038,9 +1073,10 @@ A2A provides independent agent systems with:
 
 It lets agents collaborate without knowing one another's internal memory, tools, or implementation details.
 
-For example, in the [specification at the v1.0.1 release tag](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md), the wire protocol version is `1.0`, separate from the specification's patch number, the SDK version, and the agent software version. Pin the protocol binding when integrating; do not mix in older fields or RPC names. Features such as streaming and push notifications also require checking declared capabilities. Sending a message can return a task or a direct message response; not every call creates a task.
+For example, in the specification at the v1.0.1 release tag<sup>[【311】](../../book/references.md#ref-311)</sup>, the wire protocol version is `1.0`, separate from the specification's patch number, the SDK version, and the agent software version. Pin the protocol binding when integrating; do not mix in older fields or RPC names. Features such as streaming and push notifications also require checking declared capabilities. Sending a message can return a task or a direct message response; not every call creates a task.
 
 ```mermaid
+%%{init: {"sequence": {"width": 150, "height": 45, "actorMargin": 30, "diagramMarginX": 5, "messageMargin": 18, "wrap": false, "mirrorActors": false}}}%%
 sequenceDiagram
     participant C as A2A Client
     participant S as Remote Agent
@@ -1049,13 +1085,15 @@ sequenceDiagram
     S-->>C: Capabilities + Auth
     C->>S: Send Message
     alt Task Returned
-        S-->>C: Task + Current Status and Available Artifacts
-        C->>S: Query Progress or Subscribe if Supported
-        S-->>C: Subsequent Status and Artifacts
+        S-->>C: Task snapshot
+        C->>S: Query or subscribe
+        S-->>C: Task updates
     else Direct Reply
         S-->>C: Message
     end
 ```
+
+The task snapshot includes the Task, current status, and available artifacts. The client may query progress or subscribe **if supported**; subsequent updates contain status and artifacts. The alternative is a direct Message reply, not a Task lifecycle.
 
 A2A supplies an interoperability protocol. It does not replace:
 
@@ -1117,12 +1155,13 @@ When the user cancels the overall task, cancellation needs to reach:
 - Incomplete handoffs.
 
 ```mermaid
-flowchart TB
-    CANCEL[Cancel Global Task] --> O[Orchestrator]
-    O --> W1[Cancel Worker A]
-    O --> W2[Cancel Worker B]
-    O --> Q[Remove Queued Tasks]
-    O --> T[Cancel Tool Calls]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    CANCEL["Cancel<br/>Global Task"] --> O["Orchestrator"]
+    O --> W1["Cancel<br/>Worker A"]
+    O --> W2["Cancel<br/>Worker B"]
+    O --> Q["Remove<br/>Queued Tasks"]
+    O --> T["Cancel Tool<br/>Calls"]
 ```
 
 Implement cancellation tokens or task-status checks for agents and tools under your control. External services may not support cancellation, and even when they do, it may be too late to prevent side effects that have already occurred. First persist the cancellation intent in the authoritative ledger, then stop new dispatches and propagate it to executors. Even if queued messages cannot be removed, workers should check task status when claiming them. Retain late results only for auditing; they must not advance downstream work.
@@ -1178,12 +1217,13 @@ A multi-agent system must record:
 - Where the final result came from.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    O[Orchestrator] -.Trace.-> OBS[Observability]
-    A1[Agent A] -.Trace.-> OBS
-    A2[Agent B] -.Trace.-> OBS
-    Q[Queue / State] -.Metrics.-> OBS
-    T[Tools] -.Logs.-> OBS
+    O["Orchestrator"] -.Trace.-> OBS["Observability"]
+    A1["Agent A"] -.Trace.-> OBS
+    A2["Agent B"] -.Trace.-> OBS
+    Q["Queue / State"] -.Metrics.-> OBS
+    T["Tools"] -.Logs.-> OBS
 ```
 
 Standardize:
@@ -1227,22 +1267,13 @@ Defenses:
 
 ```mermaid
 flowchart TB
-    U[User Request] --> T[Triage Workflow]
-    T --> R{Static Rules}
-
-    R -->|Order Inquiry| O[Order Agent]
-    R -->|Refund| F[Refund Agent]
-    R -->|Technical Issue| X[Technical Agent]
-    R -->|Unrecognized| L[LLM Router]
-
-    L --> C{Validated Route}
+    R[Static Rules] -->|Unrecognized| L[LLM Router]
+    L --> C[Validate route]
     C -->|Pass| TARGET[Allowed Agent]
     C -->|Fail or Uncertain| H[Human Support]
-
-    F --> APPROVE{Refund Approval}
-    APPROVE -->|Approved| TOOL[Refund Tool]
-    APPROVE -->|Rejected| H
 ```
+
+User requests first enter a triage workflow with static rules: order inquiries go to the order agent, refunds to the refund agent, and technical issues to the technical agent. Only unrecognized requests take the LLM routing path shown here. Separately, the refund agent must obtain refund approval before calling the refund tool; rejection goes to human support.
 
 Design points:
 
@@ -1255,20 +1286,49 @@ Design points:
 
 ## 13.39 Collaborative Coding Example
 
+Exploration produces the architecture artifact used for coding.
+
 ```mermaid
 flowchart TB
-    G[User Goal] --> O[Coding Orchestrator]
-    O --> E[Explore Agent]
-    E --> A[Architecture Artifact]
-    A --> C[Coding Agent]
-    C --> D[Patch Artifact]
-    D --> TEST{Required Tests Pass?}
+    G[User Goal]
+    O[Coding Orchestrator]
+    E[Explore Agent]
+    A[Architecture Artifact]
+    C[Coding Agent]
+    G --> O
+    O --> E
+    E --> A
+    A --> C
+```
+
+Required tests gate review; failures return evidence to the coder.
+
+```mermaid
+flowchart TB
+    C[Coding Agent]
+    D[Patch Artifact]
+    TEST{Required Tests Pass?}
+    R[Review Agent]
+    C --> D
+    D --> TEST
     TEST -->|No - Return Failure Evidence| C
-    TEST -->|Yes| R[Review Agent]
-    R --> V{Pass?}
-    V -->|No - Return Valid Findings| C
-    V -->|Yes| ACCEPT[Final Acceptance by Orchestrator]
-    ACCEPT --> DONE[Deliver Results]
+    TEST -->|Yes| R
+```
+
+Review findings can reopen coding; acceptance remains with the orchestrator.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    R["Review Agent"]
+    V["Pass?"]
+    C["Coding Agent"]
+    ACCEPT["Final Acceptance by<br/>Orchestrator"]
+    DONE["Deliver Results"]
+    R --> V
+    V -->|No - Return Valid<br/>Findings| C
+    V -->|Yes| ACCEPT
+    ACCEPT --> DONE
 ```
 
 The diagram explores interfaces and dependencies before generating a patch. Testing and review each have a failure path. The orchestrator manages the whole process: a successful review leads to final acceptance, not back to the user goal for another round of exploration. If the process exceeds its budget, lacks permissions, or cannot fix a problem, it stops and reports unfinished work.
@@ -1304,43 +1364,20 @@ When extending this design to parallel coding workers, first fix the interfaces 
 ## 13.41 A Recommended Production Architecture
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    INPUT[User / Event] --> WF[Deterministic Workflow]
-    WF --> ROUTER[Hybrid Router]
-
-    ROUTER --> REG[Capability Registry]
-    REG --> POLICY[Permission + Risk Policy]
-    POLICY --> LEDGER[Task Ledger]
-
-    LEDGER --> QUEUE[Task Queue]
-    QUEUE --> A1[Agent A]
-    QUEUE --> A2[Agent B]
-    QUEUE --> AN[Agent N]
-
-    A1 --> ART[Artifact Store]
-    A2 --> ART
-    AN --> ART
-
-    A1 --> EVENTS[Event Stream]
-    A2 --> EVENTS
-    AN --> EVENTS
-
-    EVENTS --> STATE[Materialized State]
-    STATE -.Progress hints.-> ROUTER
-    ART --> VERIFY[Verifier]
-    VERIFY -->|Accepted| JOIN[Result Aggregator]
-    VERIFY -->|Failed or Insufficient Evidence| WF
+    WF["Deterministic Workflow"] --> ROUTER["Hybrid Router"]
+    ROUTER --> WORK["Queued workers"]
+    WORK --> ART["Artifact Store"]
+    ART --> VERIFY["Verifier"]
+    VERIFY -->|Accepted| JOIN["Result Aggregator"]
+    VERIFY -->|Failed or Insufficient<br/>Evidence| WF
     JOIN --> WF
-
-    LEDGER -->|Authorized Handoff| SPECIAL[Specialist Agent]
-    ROUTER -->|Unresolved or Invalid Route| HUMAN[Human Review]
-
-    WF -.Trace.-> OBS[Observability]
-    ROUTER -.Route Decisions.-> OBS
-    A1 -.Spans.-> OBS
-    A2 -.Spans.-> OBS
-    AN -.Spans.-> OBS
 ```
+
+User or event input enters the deterministic workflow. Before dispatch, the hybrid router consults the capability registry, then permission/risk policy, then the task ledger. The ledger feeds the task queue, which dispatches agents A, B, through N; these are separate workers, not sequential stages. An authorized handoff can also transfer from the ledger to a specialist. Unresolved or invalid routes go to human review.
+
+Every worker writes artifacts and emits events. The event stream builds materialized state, which supplies progress hints to the router; it is not itself artifact acceptance. The verifier checks the artifact store, sending accepted work to the aggregator and failed or insufficient evidence back to the workflow. Aggregated results also return to the workflow. Observability receives workflow traces, router decisions, and spans from every worker.
 
 Core principles:
 
@@ -1354,7 +1391,7 @@ Core principles:
 8. Handoffs are used only where control genuinely needs to transfer.
 9. Requests that cannot be routed reliably or fail risk checks stop safely or go to a person.
 
-This is a functional decomposition, not a requirement to deploy every component as a separate service. In particular, asynchronous `Materialized State` must not authorize task claims, budget use, or commits; those checks belong in the authoritative task ledger. If the ledger is the source of truth, write the state change and the pending event in the same transaction using a [transactional outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html), then deliver the event asynchronously. Otherwise, a crash after committing state but before sending the notification can leave work undispatched. Event sourcing makes a different choice of source of truth; two independently mutable copies cannot both be authoritative.
+This is a functional decomposition, not a requirement to deploy every component as a separate service. In particular, asynchronous `Materialized State` must not authorize task claims, budget use, or commits; those checks belong in the authoritative task ledger. If the ledger is the source of truth, write the state change and the pending event in the same transaction using a transactional outbox<sup>[【486】](../../book/references.md#ref-486)</sup>, then deliver the event asynchronously. Otherwise, a crash after committing state but before sending the notification can leave work undispatched. Event sourcing makes a different choice of source of truth; two independently mutable copies cannot both be authoritative.
 
 ### 13.41.1 Parallel Scheduling and Joins
 
@@ -1501,23 +1538,5 @@ A handoff lets a specialist take over subsequent interaction; delegation returns
 
 ## References
 
-The Chinese source checked framework behavior against official documentation accessible on 2026-09-15; the English review rechecked the relevant documentation on 2026-09-20. Deployment still requires a pinned SDK version. The A2A [v1.0.1 release](https://github.com/a2aproject/A2A/releases/tag/v1.0.1) was published on 2026-05-28, although the specification page at that tag still labels v1.0.0 as the latest release. This chapter identifies the specification by its release tag, not by the page's “latest” notice.
-
-Live framework documentation and the LangGraph source checked during translation are not snapshots of a deployed SDK. Raft's replicated-log and non-Byzantine failure assumptions were checked against the authors' overview and Ongaro's thesis source, not the linked paper PDF. Anthropic's article now notes that its tooling discussion dates from December 2024; it is used here for architectural patterns, not current interface guarantees.
-
-- [LangGraph Graph API](https://docs.langchain.com/oss/python/langgraph/graph-api)
-- [LangGraph: Concurrent State Update Error](https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE)
-- [LangGraph Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/)
-- [OpenAI Swarm: Official Guidance on Migrating to the Agents SDK](https://github.com/openai/swarm)
-- [OpenAI Agents SDK: Handoffs](https://openai.github.io/openai-agents-python/handoffs/)
-- [A2A v1.0.1 Protocol Specification](https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md)
-- [Amazon SQS: At-Least-Once Delivery](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/standard-queues-at-least-once-delivery.html)
-- [etcd v3.6: API Consistency and Lease Guarantees](https://etcd.io/docs/v3.6/learning/api_guarantees/)
-- [etcd v3.6: Lock and Transactional Protection](https://etcd.io/docs/v3.6/dev-guide/api_concurrency_reference_v3/)
-- [AWS: Transactional Outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
-- [Raft: Authors' Algorithm and Paper Resources](https://raft.github.io/)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LangGraph: `add_messages` Implementation](https://raw.githubusercontent.com/langchain-ai/langgraph/main/libs/langgraph/langgraph/graph/message.py)
-- [OpenAI Agents SDK: Manager and Handoff Patterns](https://openai.github.io/openai-agents-python/agents/)
-- [Diego Ongaro's Thesis: Replicated State Machines and Failure Assumptions](https://raw.githubusercontent.com/ongardie/dissertation/master/motivation/problem.tex)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-13) for this chapter’s sources, reading suggestions, and source notes.

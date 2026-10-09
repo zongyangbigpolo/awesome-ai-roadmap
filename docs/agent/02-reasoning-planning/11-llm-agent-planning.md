@@ -22,14 +22,15 @@ Planning therefore needs to make the following explicit:
 - Completion conditions.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Reasoning] --> Q[Answer why, what, and what follows]
-    P[Planning] --> A[Answer what to do next to reach the goal]
+    R["Reasoning"] --> Q["Answer why, what,<br/>and what follows"]
+    P["Planning"] --> A["Answer what to do<br/>next to reach the<br/>goal"]
 
-    Q --> COT[CoT / ToT / GoT]
-    A --> PLAN[Plan / DAG / Policy]
-    PLAN --> EXEC[Execution]
-    EXEC --> OBS[Observation]
+    Q --> COT["CoT / ToT / GoT"]
+    A --> PLAN["Plan / DAG /<br/>Policy"]
+    PLAN --> EXEC["Execution"]
+    EXEC --> OBS["Observation"]
     OBS --> PLAN
 ```
 
@@ -116,21 +117,59 @@ The system layer turns model outputs into reliable plans through:
 - A replanner;
 - Budgets and guardrails.
 
+Validate the structured plan before scheduling.
+
 ```mermaid
 flowchart TB
-    G[Goal + Constraints] --> P[LLM Planner]
-    P --> S[Structured Plan]
-    S --> V[Plan Validator]
+    G[Goal + Constraints]
+    P[LLM Planner]
+    S[Structured Plan]
+    V[Plan Validator]
+    SCH[Scheduler]
+    G --> P
+    P --> S
+    S --> V
     V -->|Fail| P
-    V -->|Pass| SCH[Scheduler]
-    SCH --> E[Executor]
-    E --> O[Observation]
-    O --> CHECK{Acceptance and plan status}
+    V -->|Pass| SCH
+```
+
+Execute and inspect the result.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SCH["Scheduler"]
+    E["Executor"]
+    O["Observation"]
+    CHECK["Acceptance and plan<br/>status"]
+    SCH --> E
+    E --> O
+    O --> CHECK
+    CHECK -->|Step passes and tasks<br/>remain| SCH
+```
+
+Continue or replan from the acceptance check.
+
+```mermaid
+flowchart TB
+    CHECK{Acceptance and plan status}
+    SCH[Scheduler]
+    RP[Replanner]
+    S[Structured Plan]
     CHECK -->|Step passes and tasks remain| SCH
-    CHECK -->|Plan invalidated| RP[Replanner]
-    CHECK -->|Goal complete| DONE[Finish]
-    CHECK -->|Budget exhausted or approval needed| STOP[Stop or hand off to a human]
+    CHECK -->|Plan invalidated| RP
     RP --> S
+```
+
+Finish or stop when continuation is inappropriate.
+
+```mermaid
+flowchart TB
+    CHECK{Acceptance and plan status}
+    DONE[Finish]
+    STOP[Stop or hand off to a human]
+    CHECK -->|Goal complete| DONE
+    CHECK -->|Budget exhausted or approval needed| STOP
 ```
 
 A strong model can still produce an unexecutable plan without a runtime and verification. A less capable model paired with a well-designed schema, tools, and verifier may be more reliable.
@@ -187,11 +226,12 @@ Classical deterministic planning typically assumes observable state and known ac
 CoT (chain of thought) leads a model toward a conclusion through a chain of intermediate reasoning:
 
 ```mermaid
-flowchart LR
-    Q[Question] --> S1[Step 1]
-    S1 --> S2[Step 2]
-    S2 --> S3[Step N]
-    S3 --> A[Answer or initial plan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Question"] --> S1["Step 1"]
+    S1 --> S2["Step 2"]
+    S2 --> S3["Step N"]
+    S3 --> A["Answer or initial plan"]
 ```
 
 It can help the model:
@@ -220,12 +260,13 @@ CoT text may include “reconsidering” or preliminary checks, but that does no
 The first step in planning is usually to break a goal into executable tasks.
 
 ```mermaid
-flowchart TB
-    G[Complex goal] --> M1[Milestone 1]
-    G --> M2[Milestone 2]
-    G --> M3[Milestone 3]
-    M1 --> T11[Subtask 1.1]
-    M1 --> T12[Subtask 1.2]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Complex goal"] --> M1["Milestone 1"]
+    G --> M2["Milestone 2"]
+    G --> M3["Milestone 3"]
+    M1 --> T11["Subtask 1.1"]
+    M1 --> T12["Subtask 1.2"]
 ```
 
 A well-defined subtask should have:
@@ -268,19 +309,44 @@ ToT (Tree of Thoughts) organizes intermediate reasoning states into a tree. At e
 3. Selects a subset to continue;
 4. Backtracks when necessary.
 
+Initial candidates.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    S0["Initial State"]
+    A["Candidate A"]
+    B["Candidate B"]
+    C["Candidate C"]
+    S0 --> A
+    S0 --> B
+    S0 --> C
+```
+
+Expand A and evaluate its successors.
+
 ```mermaid
 flowchart TB
-    S0[Initial State] --> A[Candidate A]
-    S0 --> B[Candidate B]
-    S0 --> C[Candidate C]
-
-    A --> A1[Expand A1]
-    A --> A2[Expand A2]
-    B --> B1[Expand B1]
-    B --> B2[Expand B2]
-
-    A1 --> E[Evaluate / Select]
+    A[Candidate A]
+    A1[Expand A1]
+    A2[Expand A2]
+    E[Evaluate / Select]
+    A --> A1
+    A --> A2
+    A1 --> E
     A2 --> E
+```
+
+Expand B into the same evaluation stage.
+
+```mermaid
+flowchart TB
+    B[Candidate B]
+    B1[Expand B1]
+    B2[Expand B2]
+    E[Evaluate / Select]
+    B --> B1
+    B --> B2
     B1 --> E
     B2 --> E
 ```
@@ -343,14 +409,15 @@ GoT (Graph of Thoughts) allows multiple reasoning paths to:
 - Establish dependencies.
 
 ```mermaid
-flowchart LR
-    A[Analysis A] --> M[Merge]
-    B[Analysis B] --> M
-    C[Evidence C] --> M
-    M --> R[Refine]
-    R --> V[Verify]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Analysis A"] --> M["Merge"]
+    B["Analysis B"] --> M
+    C["Evidence C"] --> M
+    M --> R["Refine"]
+    R --> V["Verify"]
     V -->|Revision needed| R
-    V -->|Pass| O[Output]
+    V -->|Pass| O["Output"]
 ```
 
 It addresses limitations of tree structures:
@@ -386,13 +453,14 @@ They do not rely solely on free-form thought text. A textual partial solution ca
 For production systems, it is more useful to define graph nodes as executable tasks:
 
 ```mermaid
-flowchart LR
-    A[Collect Product Data] --> D[Compare Products]
-    B[Collect Pricing Data] --> D
-    C[Collect Market Data] --> E[Analyze Market]
-    D --> F[Generate Report]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Collect<br/>Product Data"] --> D["Compare<br/>Products"]
+    B["Collect<br/>Pricing Data"] --> D
+    C["Collect<br/>Market Data"] --> E["Analyze<br/>Market"]
+    D --> F["Generate<br/>Report"]
     E --> F
-    F --> V[Verify Sources]
+    F --> V["Verify<br/>Sources"]
 ```
 
 Each node should include:
@@ -412,16 +480,17 @@ A scheduler, verifier, and runtime can use this graph directly.
 One possible system architecture is:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Goal] --> P[Planner]
-    P --> PLAN[Structured Plan]
-    PLAN --> E[Executor]
-    E --> O[Observation]
-    O --> V{Is the plan still valid?}
+    G["Goal"] --> P["Planner"]
+    P --> PLAN["Structured Plan"]
+    PLAN --> E["Executor"]
+    E --> O["Observation"]
+    O --> V["Is the plan still valid?"]
     V -->|Yes| E
-    V -->|No| RP[Replanner]
+    V -->|No| RP["Replanner"]
     RP --> PLAN
-    V -->|Goal complete| DONE[Finish]
+    V -->|Goal complete| DONE["Finish"]
 ```
 
 ### 11.13.1 Planner
@@ -500,19 +569,20 @@ A better approach is to:
 Hierarchical planning establishes high-level milestones first, then expands the current phase as needed:
 
 ```mermaid
-flowchart TB
-    G[Global Goal] --> M1[Research]
-    G --> M2[Implementation]
-    G --> M3[Validation]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Global Goal"] --> M1["Research"]
+    G --> M2["Implementation"]
+    G --> M3["Validation"]
 
-    M1 --> T11[Search Sources]
-    M1 --> T12[Extract Facts]
+    M1 --> T11["Search<br/>Sources"]
+    M1 --> T12["Extract<br/>Facts"]
 
-    M2 --> T21[Design]
-    M2 --> T22[Code]
+    M2 --> T21["Design"]
+    M2 --> T22["Code"]
 
-    M3 --> T31[Test]
-    M3 --> T32[Review]
+    M3 --> T31["Test"]
+    M3 --> T32["Review"]
 ```
 
 Advantages:
@@ -528,11 +598,12 @@ Advantages:
 Rolling horizon planning plans only the near-term steps in detail:
 
 ```mermaid
-flowchart LR
-    S[Current State] --> P[Plan Next Horizon]
-    P --> E[Execute Next Step]
-    E --> O[Observe]
-    O --> U[Update State]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current State"] --> P["Plan Next Horizon"]
+    P --> E["Execute Next Step"]
+    E --> O["Observe"]
+    O --> U["Update State"]
     U --> P
 ```
 
@@ -593,13 +664,14 @@ Use execution results to check:
 - Which lessons can inform later planning.
 
 ```mermaid
-flowchart LR
-    P[Plan] --> C[Critic]
-    C --> V{Plan Valid?}
-    V -->|No| R[Revise]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Plan"] --> C["Critic"]
+    C --> V["Plan Valid?"]
+    V -->|No| R["Revise"]
     R --> P
-    V -->|Yes| E[Execute]
-    E --> F[Feedback]
+    V -->|Yes| E["Execute"]
+    E --> F["Feedback"]
     F --> C
 ```
 
@@ -646,13 +718,14 @@ Before execution, check a plan along the following five dimensions. “Pass” m
 - Concurrency limits.
 
 ```mermaid
-flowchart LR
-    PLAN[Candidate Plan] --> S[Schema]
-    S --> D[Dependencies]
-    D --> C[Capabilities]
-    C --> R[Risk]
-    R --> B[Budget]
-    B --> EXEC[Executable Plan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    PLAN["Candidate Plan"] --> S["Schema"]
+    S --> D["Dependencies"]
+    D --> C["Capabilities"]
+    C --> R["Risk"]
+    R --> B["Budget"]
+    B --> EXEC["Executable Plan"]
 ```
 
 ## 11.20 Using External Planners
@@ -693,6 +766,7 @@ Within the given formal model, the solver is responsible for:
 - Providing a proof of optimality or infeasibility when the algorithm, objective function, and budget support it.
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant U as User
     participant M as LLM
@@ -700,18 +774,18 @@ sequenceDiagram
     participant R as Runtime
 
     U->>M: Natural-language goal
-    M-->>R: Structured goal and constraints
+    M-->>R: Structured goal and<br/>constraints
     R->>S: Solve
     S-->>R: Feasible plan
-    R->>M: Plan and constraint results
-    M-->>U: Explanation or plan for execution
+    R->>M: Plan and constraint<br/>results
+    M-->>U: Explanation or plan for<br/>execution
 ```
 
 > **For these problems, language models are better used for modeling and explanation, while deterministic algorithms handle search or solving.**
 
-Check separately whether “the solver solved the model correctly” and whether “the model correctly represents the user's requirements.” If a budget is omitted, units are mistranslated, or action effects are wrong, a solver may still return a formally valid plan that is unusable in practice. For example, in [OR-Tools CP-SAT](https://developers.google.com/optimization/cp/cp_solver), `FEASIBLE` is not the same as `OPTIMAL`, and `UNKNOWN` after a timeout does not mean infeasibility has been proved.
+Check separately whether “the solver solved the model correctly” and whether “the model correctly represents the user's requirements.” If a budget is omitted, units are mistranslated, or action effects are wrong, a solver may still return a formally valid plan that is unusable in practice. For example, in OR-Tools CP-SAT<sup>[【499】](../../book/references.md#ref-499)</sup>, `FEASIBLE` is not the same as `OPTIMAL`, and `UNKNOWN` after a timeout does not mean infeasibility has been proved.
 
-[LLM-Modulo](https://arxiv.org/abs/2402.01817) proposes a more tightly coupled loop of candidate generation and external verification. The LLM does more than convert formats: it can also propose plans or augment the model, while verifiers return specific constraint violations to guide revision. The paper's strong claims about LLM planning abilities reflect its research position, not a permanent conclusion about every subsequent model. The transferable mechanism is the feedback between generation and independent checking.
+LLM-Modulo<sup>[【497】](../../book/references.md#ref-497)</sup> proposes a more tightly coupled loop of candidate generation and external verification. The LLM does more than convert formats: it can also propose plans or augment the model, while verifiers return specific constraint violations to guide revision. The paper's strong claims about LLM planning abilities reflect its research position, not a permanent conclusion about every subsequent model. The transferable mechanism is the feedback between generation and independent checking.
 
 ## 11.21 Ways to Represent a Plan
 
@@ -802,12 +876,13 @@ Planning needs to retain:
 - The budget.
 
 ```mermaid
-flowchart TB
-    PLAN[Plan] --> STATE[Planning State]
-    OBS[Observations] --> STATE
-    FAIL[Failures] --> STATE
-    BUDGET[Budget] --> STATE
-    STATE --> RP[Replanner]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PLAN["Plan"] --> STATE["Planning<br/>State"]
+    OBS["Observations"] --> STATE
+    FAIL["Failures"] --> STATE
+    BUDGET["Budget"] --> STATE
+    STATE --> RP["Replanner"]
 ```
 
 If a plan lives only in a single prompt, it is difficult to track versions, restore runtime state, or restart safely during execution. A more robust approach is to store it in a structured state store with checkpoint support.
@@ -833,7 +908,7 @@ In high-risk settings, however, language-model predictions alone are insufficien
 
 World-model errors accumulate with prediction depth, especially in unfamiliar states or after shifts in the distribution of tools encountered. An API schema describes parameter structure, not a complete environment-transition model. Simulators, read-only queries, and feedback from real execution also have different coverage limits.
 
-[SayCan](https://arxiv.org/abs/2204.01691) provides a concrete example. A language model estimates how well a skill fits the goal, while a skill value function estimates whether it can succeed in the current environment; these estimates are combined to select a skill. This depends on an existing skill library and corresponding feasibility estimates. A language model's ability to describe an action does not imply that a robot can perform it.
+SayCan<sup>[【498】](../../book/references.md#ref-498)</sup> provides a concrete example. A language model estimates how well a skill fits the goal, while a skill value function estimates whether it can succeed in the current environment; these estimates are combined to select a skill. This depends on an existing skill library and corresponding feasibility estimates. A language model's ability to describe an action does not imply that a robot can perform it.
 
 ## 11.25 Uncertainty in Planning
 
@@ -903,15 +978,34 @@ Possible budget policies include:
 
 An adaptive planner chooses planning effort based on task difficulty and risk:
 
+Simple, known, and decomposable tasks.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    G[Goal] --> A[Assess Complexity / Risk]
-    A -->|Simple| C[CoT / Checklist]
-    A -->|Known path| W[Workflow]
-    A -->|Complex but decomposable| P[Plan-and-Execute]
-    A -->|Many candidates| T[ToT / Search]
-    A -->|Strict constraints| S[External Solver]
-    A -->|Dynamic environment| R[Rolling Replanning]
+    G["Goal"]
+    A["Assess<br/>Complexity /<br/>Risk"]
+    C["CoT /<br/>Checklist"]
+    W["Workflow"]
+    P["Plan-and-Execute"]
+    G --> A
+    A -->|Simple| C
+    A -->|Known path| W
+    A -->|Complex but<br/>decomposable| P
+```
+
+Search, strict constraints, and changing environments.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Assess<br/>Complexity /<br/>Risk"]
+    T["ToT / Search"]
+    S["External Solver"]
+    R["Rolling<br/>Replanning"]
+    A -->|Many candidates| T
+    A -->|Strict<br/>constraints| S
+    A -->|Dynamic<br/>environment| R
 ```
 
 Applying expensive search indiscriminately to every task is usually not worthwhile.
@@ -1016,39 +1110,17 @@ Decomposition, search, and replanning continue indefinitely.
 
 ```mermaid
 flowchart TB
-    INPUT[User Goal] --> NORMALIZE[Goal / Constraint Parser]
-    NORMALIZE --> ROUTER[Planning Strategy Router]
-
-    ROUTER -->|Fixed process| WF[Workflow]
-    ROUTER -->|Dynamic task| PLANNER[LLM Planner]
-    ROUTER -->|Strict constraints| SOLVER[External Solver]
-
-    PLANNER --> PLAN[Structured Plan / DAG]
-    SOLVER --> PLAN
-    WF --> PLAN
-
-    PLAN --> VALIDATE[Schema + Dependency + Risk Validation]
-    VALIDATE -->|Fail| PLANNER
-    VALIDATE -->|Pass| SCHED[Scheduler]
-
-    SCHED --> GATE{Permissions and approval valid before execution?}
-    GATE -->|Yes| EXEC[Executor / ReAct]
-    GATE -->|No| HUMAN[Human Approval / Denial]
-    HUMAN -->|Revalidate after approval| GATE
+    SCHED[Scheduler] --> GATE[Permission gate]
+    GATE -->|Valid approval| EXEC[Executor / ReAct]
     EXEC --> OBS[Observation + Artifact]
     OBS --> VERIFY[Verifier]
-
     VERIFY -->|Step passes| SCHED
     VERIFY -->|Retry local failure| GATE
-    VERIFY -->|Plan invalidated| REPLAN[Replanner]
-    REPLAN --> PLAN
-    VERIFY -->|Human judgment needed| HUMAN
-    VERIFY -->|Goal complete| DONE[Final Result]
-
-    PLAN --> STATE[Planning State Store]
-    OBS --> STATE
-    STATE --> REPLAN
 ```
+
+To reach the scheduler, parse the user goal and constraints, then route fixed processes to a workflow, dynamic tasks to an LLM planner, and strict constraints to an external solver. Each produces a structured plan/DAG. Schema, dependency, and risk validation must pass before scheduling; failure returns to the LLM planner.
+
+The permission gate checks permissions and approval before execution. Missing authorization goes to human approval or denial; approval returns to the gate for revalidation, not directly to execution. The verifier sends invalid plans to a replanner, human-judgment cases to human review, and completed goals to the final result. Plans and observations enter the planning state store, which supplies the replanner; replanning produces a new structured plan that must be validated again.
 
 The scheduler dispatches only tasks whose dependencies have passed acceptance checks. The verifier distinguishes a passing step from a completed goal. Validation failures, retries, and replanning share a hard budget. Unrecoverable failures, denied approval, and exhausted budgets must all have stopping paths; the system must not follow the diagram's cycles indefinitely.
 
@@ -1129,13 +1201,5 @@ To judge whether an LLM can plan, do not look only at whether it can “think st
 
 ## References
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601)
-- [Graph of Thoughts: Solving Elaborate Problems with Large Language Models](https://arxiv.org/abs/2308.09687)
-- [Plan-and-Solve Prompting](https://arxiv.org/abs/2305.04091)
-- [LLMCompiler: An LLM Compiler for Parallel Function Calling](https://arxiv.org/abs/2312.04511)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks](https://arxiv.org/abs/2402.01817)
-- [Do As I Can, Not As I Say: Grounding Language in Robotic Affordances](https://arxiv.org/abs/2204.01691)
-- [OR-Tools: CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver)
-- [DeepSeek-R1](https://arxiv.org/abs/2501.12948)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-11) for this chapter’s sources, reading suggestions, and source notes.

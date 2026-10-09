@@ -18,17 +18,13 @@ description: 解释指代消解、多查询扩展、HyDE、Step-back、查询分
 这四行对应了**四种不同的鸿沟**，而 Query 改写的各种方法，正是分别针对这四种鸿沟：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    G[Query 与文档之间的鸿沟] --> G1[表述鸿沟<br/>同一意思不同说法]
-    G --> G2[指代鸿沟<br/>多轮对话中的省略]
-    G --> G3[粒度鸿沟<br/>问题太宽泛或太复合]
-    G --> G4[抽象层级鸿沟<br/>问题太具体或太抽象]
-
-    G1 --> M1[直接改写 / 多 Query 扩展 / HyDE]
-    G2 --> M2[指代消解]
-    G3 --> M3[查询分解]
-    G4 --> M4[Step-back 提问]
+    G[Query 与文档的鸿沟] --> D[诊断不匹配原因]
+    D --> M[选择改写方法]
 ```
+
+方法要对应具体鸿沟：同一意思的不同表述可用直接改写、多 Query 扩展或 HyDE；多轮对话中省略的上下文需要指代消解；宽泛或复合问题需要查询分解；抽象层级不合适时可用 Step-back 提问。
 
 > **理解这些方法时，重点是它们分别对应哪种鸿沟，而不是只记方法名。**
 
@@ -75,12 +71,15 @@ flowchart TB
 HyDE 不直接用 Query 检索，而是**先让 LLM 生成一个“假想的答案文档”，再用这个假想文档去做向量检索**。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query: 年假怎么请] --> LLM[LLM 生成假想答案]
-    LLM --> H["假想文档: 员工申请年休假<br/>需提前 3 个工作日在系统提交<br/>经直属主管审批..."]
+    LLM --> H[假想年假政策]
     H --> EMB[向量化]
     EMB --> SEARCH[检索真实文档]
 ```
+
+针对“年假怎么请”，假想文本可能写成“员工申请年休假需提前 3 个工作日在系统提交，经直属主管审批……”。这是生成的检索辅助材料，不是已核实的公司政策；将它向量化是为了检索真实文档。
 
 它之所以有效，是因为向量检索本质上在比较两段文本的相似度，而**问题和答案在语义空间里并不天然接近**：问题是疑问句、通常很短；文档是陈述句、通常更长。
 
@@ -201,8 +200,5 @@ Step-back 提问会先把具体问题**抽象成一个更宽泛的问题**，先
 
 ## 参考资料
 
-- [Precise Zero-Shot Dense Retrieval without Relevance Labels](https://arxiv.org/abs/2212.10496)
-- [Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models](https://arxiv.org/abs/2310.06117)
-- [Query Rewriting for Retrieval-Augmented Large Language Models](https://arxiv.org/abs/2305.14283)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-12)。

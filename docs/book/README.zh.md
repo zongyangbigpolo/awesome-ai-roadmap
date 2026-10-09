@@ -185,4 +185,5 @@ description: 按九篇、篇内原章号排列的中文简体书稿完整阅读�
 ## 后记与许可
 
 - [致谢](acknowledgments.zh.md)
+- [参考资料与延伸阅读](references.zh.md)
 - [作者与许可](colophon.zh.md)

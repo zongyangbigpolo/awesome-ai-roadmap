@@ -17,12 +17,20 @@ Once an agent enters a business process, further questions emerge:
 A complete agent is more than a model invocation. It requires an engineering process that runs from task design and capability integration through execution control, testing, and monitoring.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① Define task boundaries"] --> S2["② Choose the model<br/>and tools"] --> S3["③ Constrain behavior<br/>and output"] --> S4["④ Assemble the agent"] --> S5["⑤ Add state management<br/>and safety controls"] --> S6["⑥ Choose an<br/>invocation mode"] --> S7["⑦ Test and monitor"]
+    S1["① Define task<br/>boundaries"] --> S2["② Choose the<br/>model"] --> S3["③ Constrain<br/>behavior"] --> S4["④ Assemble the<br/>agent"] --> S5["⑤ Add state<br/>management"] --> S6["⑥ Choose an"] --> S7["⑦ Test and<br/>monitor"]
 
     style S1 fill:#e8f0fe
     style S7 fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- ② Choose the model and tools
+- ③ Constrain behavior and output
+- ⑤ Add state management and safety controls
+- ⑥ Choose an invocation mode
 
 ## 4.2 Step One: Define Task Boundaries
 
@@ -173,16 +181,22 @@ Passing a Pydantic type directly lets the framework choose `ProviderStrategy` (p
 **Underlying execution flow** (see [Chapter 3](../01-foundations/03-langchain-architecture.md)):
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
     U["User message"] --> M["Model decision"]
-    M --> D{"Any tool calls?"}
+    M --> D["Any tool calls?"]
     D -->|No| F["Final result"]
-    D -->|Yes| T["LangGraph runtime<br/>executes tools"]
-    T --> TM["ToolMessage written<br/>back to message state"]
+    D -->|Yes| T["LangGraph<br/>runtime"]
+    T --> TM["ToolMessage<br/>written"]
     TM --> M
 
     style F fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- LangGraph runtime executes tools
+- ToolMessage written back to message state
 
 > **Existing projects may still use `create_tool_calling_agent` and `AgentExecutor` from older materials, but new projects should prefer `create_agent`.**
 
@@ -228,15 +242,22 @@ Stopping conditions need separate budgets: track model calls, tool calls, total 
 **Agent output is probabilistic, so tests cannot stop at comparing final text.**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    L1["Layer 1: Test tools<br/>Valid inputs, invalid arguments, permission errors,<br/>timeouts, and idempotency<br/>Tools are relatively deterministic business code;<br/>make them reliable first"]
-    L2["Layer 2: Test agent trajectories<br/>Correct tools and arguments<br/>No unauthorized calls;<br/>structured output conforms to the schema"]
-    L3["Layer 3: End-to-end evaluation + production monitoring<br/>Build datasets from typical questions,<br/>edge cases, and past incidents<br/>Compare model, prompt, and tool versions<br/>Use traces to track latency, tokens,<br/>failure rates, and human-handoff rates"]
+    L1["Layer 1: Test<br/>tools"]
+    L2["Layer 2: Test<br/>agent<br/>trajectories"]
+    L3["3 · End-to-end<br/>checks"]
     L1 --> L2 --> L3
 
     style L1 fill:#e6f4ea
     style L3 fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Layer 1: Test tools Valid inputs, invalid arguments, permission errors, timeouts, and idempotency Tools are relatively deterministic business code; make them reliable first
+- Layer 2: Test agent trajectories Correct tools and arguments No unauthorized calls; structured output conforms to the schema
+- Layer 3: End-to-end evaluation + production monitoring Build datasets from typical questions, edge cases, and past incidents Compare model, prompt, and tool versions Use traces to track latency, tokens, failure rates, and human-handoff rates
 
 For connecting traces, production feedback, datasets, offline experiments, and release gates into a feedback loop, see [The LangSmith Production Quality Loop](../05-production/13-langsmith-production-loop.md).
 
@@ -310,13 +331,5 @@ Getting `create_agent` to run is only the starting point. Putting an agent into 
 
 ## References
 
-- [LangChain: Agents Concepts](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Tools Concepts](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Structured Output](https://docs.langchain.com/oss/python/langchain/structured-output)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain: Short-term Memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [LangChain: Long-term Memory](https://docs.langchain.com/oss/python/langchain/long-term-memory)
-- [LangChain: Streaming](https://docs.langchain.com/oss/python/langchain/streaming)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangChain: Human-in-the-Loop Approval and Resumption](https://docs.langchain.com/oss/python/langchain/human-in-the-loop)
-- [LangGraph Graph API: Recursion Limit](https://docs.langchain.com/oss/python/langgraph/graph-api#recursion-limit)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-04) for this chapter’s sources, reading suggestions, and source notes.

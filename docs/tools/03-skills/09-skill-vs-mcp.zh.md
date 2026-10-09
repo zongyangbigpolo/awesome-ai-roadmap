@@ -22,23 +22,24 @@ description: 比较 MCP 通信协议与 Agent Skills 文件格式，纠正全量
 任务：**审查这个 PR**。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    TASK["用户：帮我审查这个 PR"] --> AGENT[Agent]
-
-    AGENT -->|"自动发现并加载"| SKILL["code-review Skill<br/>知道：先看什么、按哪四个维度查、<br/>用什么格式输出"]
-
-    SKILL --> H["Host 按指令编排<br/>校验权限与执行结果"]
-    H -->|"流程第一步：拿到 diff"| M1["GitHub MCP Server<br/>get_pull_request_diff"]
-    H -->|"流程第二步：跑静态扫描"| SC["Skill 自带脚本<br/>scripts/check_security.py"]
-    H -->|"流程第三步：查历史缺陷"| M2["内部知识库 MCP Server<br/>search_past_incidents"]
-    H -->|"流程第四步：按模板输出"| TPL["Skill 自带模板<br/>assets/report_template.md"]
-
-    TPL --> OUT[结构化审查报告]
-
-    style SKILL fill:#e6f4ea
-    style M1 fill:#e8f0fe
-    style M2 fill:#e8f0fe
+    SKILL["加载审查 Skill"] --> DIFF["获取 PR 差异"]
+    DIFF --> SCAN["运行静态扫描"]
+    SCAN --> HISTORY["查询历史缺陷"]
+    HISTORY --> REPORT["撰写审查报告"]
 ```
+
+面对“帮我审查这个 PR”，Agent 自动发现并加载 `code-review` Skill。指令规定先读什么、四个审查维度及输出格式，Host 负责授权检查和结果校验。第一步调用 GitHub MCP Server 的 `get_pull_request_diff`；第二步运行随 Skill 提供的 `scripts/check_security.py`；第三步调用内部知识库 MCP Server 的 `search_past_incidents`；第四步按 `assets/report_template.md` 生成结构化报告。Skill 提供流程，MCP Server、本地脚本和模板分别实现流程中的不同部分。
+
+图中各项的完整含义：
+
+- code-review Skill 知道：先看什么、按哪四个维度查、 用什么格式输出
+- Host 按指令编排 校验权限与执行结果
+- GitHub MCP Server get_pull_request_diff
+- Skill 自带脚本 scripts/check_security.py
+- 内部知识库 MCP Server search_past_incidents
+- Skill 自带模板 assets/report_template.md
 
 拆开看：
 
@@ -74,23 +75,31 @@ MCP 的 `tools/list` 结果不等于模型上下文。Host 可分页拉取、按
 
 Skill 推荐渐进加载，但元数据也随安装数量增长。一个冗长的 Skill 加载后仍可能占据大量上下文。
 
+**MCP 的加载**
+
 ```mermaid
-flowchart LR
-    subgraph MCP_L["MCP 的加载"]
-        M1[已知 Server] --> M2[tools/list 分页与缓存]
-        M2 --> M3["Host 按权限与任务筛选<br/>再注入工具定义"]
-    end
-
-    subgraph SKILL_L["Skill 的加载"]
-        S1[扫描 Skill 目录] --> S2["只读 name + description"]
-        S2 --> S3{任务匹配?}
-        S3 -->|是| S4[加载正文]
-        S3 -->|否| S5[仅保留发现元数据]
-    end
-
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["已知 Server"] --> M2["tools/list 分页与缓存"]
+        M2 --> M3["Host 筛选工具"]
     style M3 fill:#fce8e6
+```
+
+**Skill 的加载**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["扫描 Skill 目录"] --> S2["只读 name +<br/>description"]
+        S2 --> S3["任务匹配?"]
+        S3 -->|是| S4["加载正文"]
+        S3 -->|否| S5["仅保留发现元数据"]
     style S5 fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- Host 按权限与任务筛选 再注入工具定义
 
 两者都涉及发现成本和运行时注入成本。工具搜索可以延迟暴露完整 Schema，Skill 也要维护可发现目录；比较时应统计实际模型输入，而不是只比较 Server 和文件夹数量。
 
@@ -101,14 +110,26 @@ flowchart LR
 可以按这个标准判断：
 
 ```mermaid
-flowchart TB
-    Q{"你要给 Agent 加的<br/>是什么?"}
-    Q -->|"访问外部系统的能力<br/>（数据库、API、文件）"| MCP["可选：实现 / 接入 MCP Server"]
-    Q -->|"完成某类任务的方法<br/>（步骤、标准、格式）"| SKILL["写一个 Skill"]
-    Q -->|"两者都要"| BOTH["Host 按 Skill 指令<br/>编排 MCP 工具"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    Q["需要哪种能力？"]
+    Q -->|"系统访问"| MCP["考虑 MCP"]
+    Q -->|"操作流程"| SKILL["写一个 Skill"]
+    Q -->|"两者都要"| BOTH["结合两者"]
 
     style BOTH fill:#e6f4ea
 ```
+
+图中条件与标签：
+
+- 访问外部系统的能力 （数据库、API、文件）
+- 完成某类任务的方法 （步骤、标准、格式）
+
+图中各项的完整含义：
+
+- 你要给 Agent 加的 是什么?
+- 可选：实现 / 接入 MCP Server
+- Host 按 Skill 指令 编排 MCP 工具
 
 具体一点：
 
@@ -127,22 +148,18 @@ flowchart TB
 典型的组合形态是**分层**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    subgraph LAYER1["流程层 · Skill"]
-        SK["定义步骤、标准、输出格式<br/>决定「先做什么后做什么」"]
-    end
-
-    subgraph LAYER2["能力层 · MCP"]
-        T1[数据库 Server]
-        T2[GitHub Server]
-        T3[文件系统 Server]
-    end
-
-    SK --> H["Host 编排与权限检查"]
-    H --> T1
-    H --> T2
-    H --> T3
+    SK["Skill 操作流程"] --> H["Host 授权检查"]
+    H --> MCP["MCP 能力"]
 ```
+
+Skill 定义步骤、标准、输出格式和执行顺序。Host 编排调用并检查授权，能力层可以是数据库、GitHub 或文件系统 MCP Server。流程说明本身不会授予权限。
+
+图中各项的完整含义：
+
+- 定义步骤、标准、输出格式 决定「先做什么后做什么」
+- Host 编排与权限检查
 
 在 `SKILL.md` 里直接引用 MCP 工具是很自然的写法：
 
@@ -208,9 +225,5 @@ MCP 不强制全量注入，Skill 元数据也非零成本。两者都应按实�
 
 ## 参考资料
 
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Agent Skills 规范](https://agentskills.io/specification)
-- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP 2026-07-28 工具发现与 Schema](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Anthropic: Equipping Agents for the Real World with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Anthropic: Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-09)。

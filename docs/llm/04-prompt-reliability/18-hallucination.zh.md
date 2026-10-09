@@ -23,18 +23,23 @@ description: 区分事实性、来源忠实性与推理错误，解释数据和�
 
 ## 18.2 生成概率不是事实验证
 
-```mermaid
-flowchart TB
-    subgraph DB["数据库"]
-        D1["输入查询"] --> D2["返回精确匹配的记录"]
-        D2 --> D3["按接口契约返回记录或空结果<br/>记录本身也可能过时"]
-    end
-    subgraph LLM["LLM"]
-        L1["输入上下文"] --> L2["根据学习到的条件分布生成 token"]
-        L2 --> L3["可生成回答或拒答<br/>但概率不等于事实真实性"]
-    end
+**数据库**
 
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1["输入查询"] --> D2["返回精确匹配的记录"]
+    D2 --> D3["按接口契约返回记录或空结果<br/>记录本身也可能过时"]
     style D3 fill:#e6f4ea
+```
+
+**LLM**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1["输入上下文"] --> L2["根据学习到的条件分布生成 token"]
+    L2 --> L3["可生成回答或拒答<br/>但概率不等于事实真实性"]
     style L3 fill:#fdecea
 ```
 
@@ -99,13 +104,14 @@ RAG 为生成增加可更新、可追溯的证据，不是把参数记忆完全�
 
 ```mermaid
 flowchart TB
-    A["训练或评价中<br/>未充分奖励证据与恰当弃答"]
-    A --> B["流畅、迎合用户的错误回答<br/>有时获得较高偏好分"]
-    B --> C["奖励或偏好优化<br/>可能强化这些代理特征"]
-    C --> F["在部分任务上<br/>出现迎合或无依据断言"]
+    A["评分目标偏离"] --> B["错误回答获得高分"]
+    B --> C["代理特征被强化"]
+    C --> F["迎合或无依据断言"]
 
     style F fill:#fdecea
 ```
+
+训练或评价未充分奖励证据与恰当弃答时，流畅且迎合用户的错误回答可能获得更高偏好分。奖励或偏好优化可能强化这些代理特征，在部分任务上导致迎合或无依据断言；并非所有任务都必然如此。
 
 《Towards Understanding Sycophancy in Language Models》观察到，人类与偏好模型有时偏爱迎合用户观点的回答，即便回答错误。它支持「存在此风险」，并不支持「谨慎回答几乎永远得低分」或某种优化算法必然造成幻觉。
 
@@ -126,7 +132,8 @@ flowchart TB
 ## 18.7 缓解方案：三层组合
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["训练层<br/>改进数据与学习目标"] --> I["推理层<br/>分配采样与验证预算"] --> S["系统层<br/>检索、证据校验与风险控制"]
 
     style S fill:#e6f4ea
@@ -228,14 +235,5 @@ RAG 可能召回错误资料，生成器也可能违背资料；引用存在、�
 
 ## 参考资料
 
-- [On Faithfulness and Factuality in Abstractive Summarization](https://arxiv.org/abs/2005.00661)
-- [Survey of Hallucination in Natural Language Generation](https://arxiv.org/abs/2202.03629)
-- [A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions](https://arxiv.org/abs/2311.05232)
-- [Language Models (Mostly) Know What They Know](https://arxiv.org/abs/2207.05221)
-- [TruthfulQA: Measuring How Models Mimic Human Falsehoods](https://arxiv.org/abs/2109.07958)
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models](https://arxiv.org/abs/2303.08896)
-- [Chain-of-Verification Reduces Hallucination in Large Language Models](https://arxiv.org/abs/2309.11495)
-- [Constitutional AI: Harmlessness from AI Feedback](https://arxiv.org/abs/2212.08073)
-- [Towards Understanding Sycophancy in Language Models](https://arxiv.org/abs/2310.13548)
-- [OpenAI: Structured Outputs（结构保证与内容错误的区别）](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-18)。

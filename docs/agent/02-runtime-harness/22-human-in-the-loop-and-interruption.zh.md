@@ -10,7 +10,7 @@ description: 解释人工审批的暂停与恢复机制，绑定操作参数、�
 
 ## 22.2 为什么需要人在环
 
-[MCP 2026-07-28 Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)建议让人能够拒绝工具调用，并提供工具可见性、调用指示与确认提示，使用的是 **SHOULD**，同时明确不强制特定交互模型。这不是“所有调用必须弹窗”的协议要求，更不是工具获权凭证。Harness 需要按影响面与预授权范围选择自动执行、逐次确认或直接拒绝；完全自动化和每步询问都有代价。
+MCP 2026-07-28 Tools<sup>[【285】](../../book/references.zh.md#ref-285)</sup>建议让人能够拒绝工具调用，并提供工具可见性、调用指示与确认提示，使用的是 **SHOULD**，同时明确不强制特定交互模型。这不是“所有调用必须弹窗”的协议要求，更不是工具获权凭证。Harness 需要按影响面与预授权范围选择自动执行、逐次确认或直接拒绝；完全自动化和每步询问都有代价。
 
 ## 22.3 中断点的设计：在哪里暂停
 
@@ -63,9 +63,5 @@ description: 解释人工审批的暂停与恢复机制，绑定操作参数、�
 
 ## 参考资料
 
-- [Model Context Protocol: Tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Simon Willison: Designing agentic loops](https://simonwillison.net/2025/Sep/30/designing-agentic-loops/)
-- [Claude Agent SDK: Configure permissions](https://code.claude.com/docs/en/agent-sdk/permissions)
-- [LangGraph: Human-in-the-loop](https://docs.langchain.com/oss/python/langgraph/interrupts)
-- [AWS Prescriptive Guidance: Transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)：状态写入与通知投递的双写问题，以及重复消息的幂等处理。
-- [LangGraph 第十章：LangGraph 的核心优势](../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages.zh.md)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-22)。

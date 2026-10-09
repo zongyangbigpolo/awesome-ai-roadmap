@@ -9,12 +9,13 @@ description: Separate probabilistic content guardrails from deterministic author
 Contract validation in [Chapter 5](05-structured-output-contracts.md) asks whether the output has the right format. Guardrails ask something different: **is the content safe, and is it within what the business permits?** Even text that fully conforms to a JSON Schema can disclose private information, include instructions for unauthorized actions, or simply go off topic.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    IN["User input"] --> INGUARD["Input guardrails:<br/>Prompt-injection detection · Unauthorized-request detection"]
-    INGUARD -->|Block| REJECT1["Refuse / Human review"]
-    INGUARD -->|Pass| MODEL["Model generation"]
-    MODEL --> OUTGUARD["Output guardrails:<br/>PII filtering · Content safety · Factual checks"]
-    OUTGUARD -->|Block| DEGRADE["Degraded-service path"]
+    IN["User input"] --> INGUARD["Input<br/>guardrails:"]
+    INGUARD -->|Block| REJECT1["Refuse / Human<br/>review"]
+    INGUARD -->|Pass| MODEL["Model<br/>generation"]
+    MODEL --> OUTGUARD["Output<br/>guardrails:"]
+    OUTGUARD -->|Block| DEGRADE["Degraded-service<br/>path"]
     OUTGUARD -->|Pass| RESP["Return to user"]
     DEGRADE --> RESP
 
@@ -22,6 +23,11 @@ flowchart TB
     style OUTGUARD fill:#e8f0fe
     style DEGRADE fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Input guardrails: Prompt-injection detection · Unauthorized-request detection
+- Output guardrails: PII filtering · Content safety · Factual checks
 
 ## 6.2 Input guardrails: intercept risks before the model sees them
 
@@ -60,15 +66,24 @@ Once streamed output has been sent, it cannot be taken back. Reviewing chunks ad
 A guardrail block is not necessarily a service failure, and need not start with a 500 response. Depending on the cause, choose a limited retry, a narrower task, a valid cached result, or an explicit refusal or human review. The levels below are options, not a mandatory sequence. Being able to return some text does not mean the original task was completed.
 
 ```mermaid
-flowchart TB
-    CAUSE{"Choose by the reason for the block and the risk"} --> L1["Lv1: Limited retries for permitted tasks<br/>Keep the same policy"]
-    CAUSE --> L2["Lv2: Narrow the task to an authorized scope"]
-    CAUSE --> L3["Lv3: Return a cache entry checked for permission and freshness"]
-    CAUSE --> L4["Lv4: Explicit refusal, template response, or human review"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    CAUSE["Choose safe response"] --> L1["Lv1: Bounded retry"]
+    CAUSE --> L2["Lv2: Narrow scope"]
+    CAUSE --> L3["Lv3: Validated cache"]
+    CAUSE --> L4["Lv4: Refuse / review"]
 
     style L1 fill:#e6f4ea
     style L4 fill:#fce8e6
 ```
+
+Details of the illustrated steps and components:
+
+- Choose by the reason for the block and the risk
+- Lv1: Limited retries for permitted tasks Keep the same policy
+- Lv2: Narrow the task to an authorized scope
+- Lv3: Return a cache entry checked for permission and freshness
+- Lv4: Explicit refusal, template response, or human review
 
 | Level | Trigger | User experience |
 |---|---|---|
@@ -118,8 +133,5 @@ The rules are static, but input distributions and attack techniques keep changin
 
 ## References
 
-- [OpenAI: Moderation API](https://platform.openai.com/docs/guides/moderation)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
-- [Anthropic: Guardrails against misuse](https://www.anthropic.com/news/expanding-our-model-safety-bug-bounty-program)
-- [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework)
-- [Google Cloud: Responsible AI practices](https://ai.google/responsibility/responsible-ai-practices/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-06) for this chapter’s sources, reading suggestions, and source notes.

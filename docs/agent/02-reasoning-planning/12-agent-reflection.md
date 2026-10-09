@@ -11,12 +11,13 @@ Agent reflection is better understood as a feedback-driven control mechanism tha
 > **Generate or execute → Evaluate → Locate problems → Make targeted revisions → Verify again**
 
 ```mermaid
-flowchart LR
-    G[Generate / Execute] --> E[Evaluate]
-    E --> D{Meets the criteria?}
-    D -->|Yes| DONE[Finish]
-    D -->|No| F[Structured Feedback]
-    F --> R[Refine / Retry / Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --> E["Evaluate"]
+    E --> D["Meets the criteria?"]
+    D -->|Yes| DONE["Finish"]
+    D -->|No| F["Structured Feedback"]
+    F --> R["Refine / Retry / Replan"]
     R --> G
 ```
 
@@ -57,19 +58,21 @@ A separate evaluation stage can focus attention on these dimensions.
 In tasks with strong dependencies, an early error can become the input to later steps:
 
 ```mermaid
-flowchart LR
-    A[Wrong search terms] --> B[Wrong material]
-    B --> C[Wrong analysis]
-    C --> D[Wrong conclusion]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Wrong search terms"] --> B["Wrong material"]
+    B --> C["Wrong analysis"]
+    C --> D["Wrong conclusion"]
 ```
 
 Verification at key points creates an opportunity to intervene:
 
 ```mermaid
-flowchart LR
-    A[Search results] --> V{Sources and relevance pass?}
-    V -->|Yes| B[Continue analysis]
-    V -->|No| R[Revise query and retry]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Search results"] --> V["Sources and relevance<br/>pass?"]
+    V -->|Yes| B["Continue analysis"]
+    V -->|No| R["Revise query and retry"]
 ```
 
 This can stop an error before it enters downstream analysis, provided that the verifier actually checks sources and relevance rather than merely checking whether the search interface returned success.
@@ -128,11 +131,12 @@ First ask, “What evidence can establish whether this requirement is met?” Th
 | Whether wording is clear or an approach is appropriate | Human domain review or calibrated model evaluation | Scoring consistency and evidence coverage |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    RESULT[Candidate Result] --> DET[Deterministic Verifier]
-    DET -->|Verifiable| DECISION[Pass / Fail]
-    DET -->|Cannot fully verify| HUMAN[Human or Domain Review]
-    HUMAN -->|Further assistance needed| JUDGE[LLM Judge]
+    RESULT["Candidate Result"] --> DET["Deterministic Verifier"]
+    DET -->|Verifiable| DECISION["Pass / Fail"]
+    DET -->|Cannot fully verify| HUMAN["Human or Domain Review"]
+    HUMAN -->|Further assistance<br/>needed| JUDGE["LLM Judge"]
 ```
 
 Language-model evaluation is useful for quality dimensions that are difficult to formalize completely, but should not replace available objective verification.
@@ -144,11 +148,12 @@ HTTP 200 may mean only that a request was accepted, and a real system may return
 Beyond step-level and task-level reflection, a system can include milestone-level checks and cross-task consolidation.
 
 ```mermaid
-flowchart TB
-    R[Reflection Granularity] --> S[Step-level]
-    R --> M[Milestone-level]
-    R --> T[Task-level]
-    R --> C[Cross-task Consolidation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection<br/>Granularity"] --> S["Step-level"]
+    R --> M["Milestone-level"]
+    R --> T["Task-level"]
+    R --> C["Cross-task<br/>Consolidation"]
 ```
 
 ## 12.6 Step-level Reflection
@@ -156,12 +161,13 @@ flowchart TB
 Step-level reflection checks results after a tool call, reasoning step, or state transition.
 
 ```mermaid
-flowchart LR
-    S[Execute Step] --> O[Observation]
-    O --> V{Step Valid?}
-    V -->|Yes| N[Next Step]
-    V -->|No| F[Feedback]
-    F --> R[Retry or Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Execute Step"] --> O["Observation"]
+    O --> V["Step Valid?"]
+    V -->|Yes| N["Next Step"]
+    V -->|No| F["Feedback"]
+    F --> R["Retry or Replan"]
     R --> S
 ```
 
@@ -218,11 +224,12 @@ The call count may approach twice the original only when an LLM critic is invoke
 Milestone-level reflection evaluates a completed phase rather than checking every microstep.
 
 ```mermaid
-flowchart LR
-    S1[Stage Steps] --> M[Milestone Artifact]
-    M --> V{Milestone Valid?}
-    V -->|Yes| NEXT[Next Milestone]
-    V -->|No| FIX[Repair Affected Stage]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S1["Stage Steps"] --> M["Milestone Artifact"]
+    M --> V["Milestone Valid?"]
+    V -->|Yes| NEXT["Next Milestone"]
+    V -->|No| FIX["Repair Affected Stage"]
 ```
 
 This reduces the number of checks but does not guarantee lower total cost: discovering an error at the end of a phase may require repeating more steps. It generally catches deviations earlier than checking only the final result, provided that the phase has a clear artifact that can be accepted or repaired as a whole.
@@ -245,12 +252,13 @@ For example:
 Task-level reflection evaluates the whole task after it is complete.
 
 ```mermaid
-flowchart LR
-    TASK[Complete Task] --> OUT[Final Candidate]
-    OUT --> E[Holistic Evaluation]
-    E --> D{Pass?}
-    D -->|Yes| DONE[Deliver]
-    D -->|No| R[Revise Result or Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TASK["Complete Task"] --> OUT["Final Candidate"]
+    OUT --> E["Holistic Evaluation"]
+    E --> D["Pass?"]
+    D -->|Yes| DONE["Deliver"]
+    D -->|No| R["Revise Result or Replan"]
 ```
 
 ### 12.8.1 Suitable Scenarios
@@ -292,13 +300,14 @@ Cross-task reflection resembles a retrospective. It focuses on identifying:
 - Which tools or prompts need improvement.
 
 ```mermaid
-flowchart LR
-    T1[Task 1] --> C[Consolidation]
-    T2[Task 2] --> C
-    T3[Task N] --> C
-    C --> M[Validated Memory]
-    C --> S[Skill / Workflow Update]
-    C --> E[Evaluation Set]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T1["Task 1"] --> C["Consolidation"]
+    T2["Task 2"] --> C
+    T3["Task N"] --> C
+    C --> M["Validated<br/>Memory"]
+    C --> S["Skill /<br/>Workflow<br/>Update"]
+    C --> E["Evaluation<br/>Set"]
 ```
 
 Cross-task lessons must be validated, deduplicated, and checked for applicability. A model's one-time self-evaluation must not automatically become a permanent rule.
@@ -317,12 +326,13 @@ Cross-task lessons must be validated, deduplicated, and checked for applicabilit
 Production systems usually combine these approaches:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    STEP[Low-risk Steps] --> MILESTONE[Milestone Verification]
-    RISK[High-risk Step] --> IMMEDIATE[Immediate Verification]
-    MILESTONE --> TASK[Task-level Review]
+    STEP["Low-risk Steps"] --> MILESTONE["Milestone<br/>Verification"]
+    RISK["High-risk Step"] --> IMMEDIATE["Immediate<br/>Verification"]
+    MILESTONE --> TASK["Task-level Review"]
     IMMEDIATE --> TASK
-    TASK --> CONS[Optional Consolidation]
+    TASK --> CONS["Optional<br/>Consolidation"]
 ```
 
 ## 12.11 Adaptive Reflection
@@ -342,11 +352,12 @@ Trigger signals include:
 - A low verifier score.
 
 ```mermaid
-flowchart LR
-    O[Observation] --> R[Risk / Anomaly Detector]
-    R -->|Normal| NEXT[Continue]
-    R -->|Anomaly| REFLECT[Reflect / Verify]
-    REFLECT --> FIX[Repair / Replan]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --> R["Risk / Anomaly Detector"]
+    R -->|Normal| NEXT["Continue"]
+    R -->|Anomaly| REFLECT["Reflect / Verify"]
+    REFLECT --> FIX["Repair / Replan"]
 ```
 
 Compared with a fixed “one critic call per step” policy, adaptive triggering usually makes costs easier to control.
@@ -362,19 +373,44 @@ A complete implementation usually includes:
 5. A stop controller;
 6. An optional memory writer.
 
+Produce evidence and structured feedback.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["Generator / Executor"]
+    A["Artifact + Trace"]
+    V["Verifier / Critic"]
+    F["Structured Feedback"]
+    S["Stop Controller"]
+    G --> A
+    A --> V
+    V --> F
+    F --> S
+```
+
+The stop controller selects revision or an exit.
+
 ```mermaid
 flowchart TB
-    G[Generator / Executor] --> A[Artifact + Trace]
-    A --> V[Verifier / Critic]
-    V --> F[Structured Feedback]
-    F --> S{Stop Controller}
-    S -->|Revision allowed| R[Refiner]
+    S{Stop Controller}
+    R[Refiner]
+    G[Generator / Executor]
+    S -->|Revision allowed| R
     R --> G
-    S -->|Pass| DONE[Finish]
-    S -->|Budget Exhausted| PARTIAL[Report Incomplete]
-    S -->|Human judgment needed| HUMAN[Human Review]
-    DONE --> MV[Validate Reusable Experience]
-    MV -->|Pass| MW[Optional Memory Writer]
+```
+
+The other controller outcomes exit this revision path: a pass finishes; budget exhaustion reports incompleteness; a case requiring human judgment goes to human review.
+
+Validate reusable experience before an optional write.
+
+```mermaid
+flowchart TB
+    DONE[Finish]
+    MV[Validate Reusable Experience]
+    MW[Optional Memory Writer]
+    DONE --> MV
+    MV -->|Pass| MW
 ```
 
 The stop controller decides whether continuation is allowed before invoking the refiner, preventing revisions from being triggered after a stop signal. Raw feedback can remain in task-local diagnostic records. Long-term memory should receive validated lessons with an explicit scope of applicability, not every critic opinion.
@@ -600,19 +636,20 @@ Self-reflection uses the same model or agent to evaluate its own results.
 
 Self-reflection can serve as an initial screen, but should not be treated as objective verification.
 
-Experimental conclusions need their scope attached. [Huang et al.](https://arxiv.org/abs/2310.01798) found that, for the models tested at the time, attempts to correct reasoning without external feedback often produced no gains or even degraded performance. This is not a theorem that “models can never self-correct.” [SCoRe](https://arxiv.org/abs/2409.12917) subsequently used multi-turn online RL specifically to train self-correction, without requiring external corrective feedback at test time. That differs from merely adding “check your answer” to a frozen model's prompt: rewards were used and parameters were updated during training.
+Experimental conclusions need their scope attached. Huang et al.<sup>[【503】](../../book/references.md#ref-503)</sup> found that, for the models tested at the time, attempts to correct reasoning without external feedback often produced no gains or even degraded performance. This is not a theorem that “models can never self-correct.” SCoRe<sup>[【505】](../../book/references.md#ref-505)</sup> subsequently used multi-turn online RL specifically to train self-correction, without requiring external corrective feedback at test time. That differs from merely adding “check your answer” to a frozen model's prompt: rewards were used and parameters were updated during training.
 
 ## 12.19 Critic Agent
 
 A critic agent specializes in checking an executor's artifacts or trajectories.
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
     participant E as Executor Agent
     participant C as Critic Agent
     participant V as Verifier
 
-    E->>C: Candidate + Rubric + Evidence
+    E->>C: Candidate + Rubric +<br/>Evidence
     C-->>E: Structured Findings
     E->>E: Refine
     E->>V: Revised Candidate
@@ -662,12 +699,13 @@ Multiple critics can check different dimensions:
 - Domain compliance.
 
 ```mermaid
-flowchart TB
-    OUT[Candidate] --> F[Fact Critic]
-    OUT --> S[Safety Critic]
-    OUT --> L[Logic Critic]
-    OUT --> D[Domain Critic]
-    F --> J[Finding Aggregator]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    OUT["Candidate"] --> F["Fact Critic"]
+    OUT --> S["Safety<br/>Critic"]
+    OUT --> L["Logic Critic"]
+    OUT --> D["Domain<br/>Critic"]
+    F --> J["Finding<br/>Aggregator"]
     S --> J
     L --> J
     D --> J
@@ -691,13 +729,14 @@ Costs:
 Debate has multiple agents challenge one another's candidate proposals.
 
 ```mermaid
-flowchart LR
-    P[Proposer] --> O[Opponent]
-    O --> R[Rebuttal]
-    R --> J[Judge / Verifier]
-    J --> D{Pass?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Proposer"] --> O["Opponent"]
+    O --> R["Rebuttal"]
+    R --> J["Judge / Verifier"]
+    J --> D["Pass?"]
     D -->|No| P
-    D -->|Yes| OUT[Final Decision]
+    D -->|Yes| OUT["Final Decision"]
 ```
 
 Suitable when:
@@ -725,12 +764,13 @@ The basic Self-Refine process is:
 > **Generate → Feedback → Refine**
 
 ```mermaid
-flowchart LR
-    G[Generate] --> F[Self Feedback]
-    F --> R[Refine]
-    R --> V{Pass?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate"] --> F["Self Feedback"]
+    F --> R["Refine"]
+    R --> V["Pass?"]
     V -->|No| F
-    V -->|Yes| OUT[Output]
+    V -->|Yes| OUT["Output"]
 ```
 
 The original Self-Refine method uses the same LLM for generation, feedback, and refinement. It requires no additional training or RL and primarily improves the current candidate rather than model weights. The paper reports gains across seven types of tasks, but evaluation criteria, models, and stopping methods vary by task. Its average gain should not be treated as a universal improvement for any business application.
@@ -756,14 +796,15 @@ Its classic components are:
 - Episodic memory.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    A[Actor] --> ENV[Environment]
-    ENV --> TRAJ[Trajectory + Reward]
-    TRAJ --> E[Evaluator]
-    E --> D{Success?}
-    D -->|Yes| DONE[Finish]
-    D -->|No| SR[Self-Reflection]
-    SR --> MEM[Episodic Memory]
+    A["Actor"] --> ENV["Environment"]
+    ENV --> TRAJ["Trajectory + Reward"]
+    TRAJ --> E["Evaluator"]
+    E --> D["Success?"]
+    D -->|Yes| DONE["Finish"]
+    D -->|No| SR["Self-Reflection"]
+    SR --> MEM["Episodic Memory"]
     MEM --> A
 ```
 
@@ -818,23 +859,24 @@ LATS (Language Agent Tree Search) combines the following in a single Monte Carlo
 Selection balances exploring less-visited branches against exploiting branches with high estimated value. Expansion generates actions; simulated trajectories (rollouts) or execution in the environment produce feedback; value estimates and returns are then propagated back through the tree nodes. This is not neural-network gradient backpropagation, and the original method does not update LLM parameters through online fine-tuning.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    ROOT[Current State] --> A[Action A]
-    ROOT --> B[Action B]
-    ROOT --> C[Action C]
+    ROOT["Current<br/>State"] --> A["Action A"]
+    ROOT --> B["Action B"]
+    ROOT --> C["Action C"]
 
-    A --> OA[Observation A]
-    B --> OB[Observation B]
-    C --> OC[Observation C]
+    A --> OA["Observation<br/>A"]
+    B --> OB["Observation<br/>B"]
+    C --> OC["Observation<br/>C"]
 
-    OA --> VA[Value + Reflection]
-    OB --> VB[Value + Reflection]
-    OC --> VC[Value + Reflection]
+    OA --> VA["Value +<br/>Reflection"]
+    OB --> VB["Value +<br/>Reflection"]
+    OC --> VC["Value +<br/>Reflection"]
 
-    VA --> SELECT[Tree Policy]
+    VA --> SELECT["Tree Policy"]
     VB --> SELECT
     VC --> SELECT
-    SELECT --> EXPAND[Expand Promising Path]
+    SELECT --> EXPAND["Expand<br/>Promising<br/>Path"]
 ```
 
 ### 12.24.1 Main Benefits
@@ -875,12 +917,13 @@ If a request's latency budget cannot accommodate multibranch execution, first co
 Reflection can target different objects:
 
 ```mermaid
-flowchart TB
-    R[Reflection] --> OUT[Output Reflection]
-    R --> STEP[Step Reflection]
-    R --> PLAN[Plan Reflection]
-    R --> TRACE[Trajectory Reflection]
-    R --> MEMORY[Memory Reflection]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection"] --> OUT["Output Reflection"]
+    R --> STEP["Step Reflection"]
+    R --> PLAN["Plan Reflection"]
+    R --> TRACE["Trajectory Reflection"]
+    R --> MEMORY["Memory Reflection"]
 ```
 
 - Output reflection: is the result correct?
@@ -895,20 +938,58 @@ In Plan-and-Execute, reflection may trigger a replanner rather than merely rewri
 
 Production systems usually confine reflection to workflow nodes:
 
+Deterministic failures go directly to repair.
+
 ```mermaid
-flowchart LR
-    IN[Input] --> G[Generate]
-    G --> DET[Deterministic Checks]
-    DET -->|Pass| C[Critic]
-    DET -->|Fail| FIX[Direct Repair]
+flowchart TB
+    IN[Input]
+    G[Generate]
+    DET[Deterministic Checks]
+    FIX[Direct Repair]
+    C[Critic]
+    IN --> G
+    G --> DET
+    DET -->|Pass| C
+    DET -->|Fail| FIX
     FIX --> DET
-    C --> D{Verdict}
-    D -->|PASS| OUT[Output]
-    D -->|REVISE| R[Refiner]
-    D -->|REPLAN| P[Planner]
-    D -->|HUMAN| H[Human Review]
+```
+
+Revision returns to deterministic checks.
+
+```mermaid
+flowchart TB
+    DET[Deterministic Checks]
+    C[Critic]
+    D{Verdict}
+    R[Refiner]
+    DET -->|Pass| C
+    C --> D
+    D -->|REVISE| R
     R --> DET
+```
+
+Replanning returns to generation.
+
+```mermaid
+flowchart TB
+    C[Critic]
+    D{Verdict}
+    P[Planner]
+    G[Generate]
+    C --> D
+    D -->|REPLAN| P
     P --> G
+```
+
+The other verdicts return output or request human review.
+
+```mermaid
+flowchart TB
+    D{Verdict}
+    OUT[Output]
+    H[Human Review]
+    D -->|PASS| OUT
+    D -->|HUMAN| H
 ```
 
 Both repair and replanning in the diagram are constrained by the same stop controller. Required checks must run again after revision and cannot be skipped because a critic returns PASS. Actions such as sending, deploying, and paying need separate pre-execution authorization gates; they cannot rely solely on this quality loop after the fact.
@@ -937,15 +1018,16 @@ Goal:
 First reproduce the `IndexError` with an empty list, then inspect where it fails. If the exception comes from directly accessing the first element, the next step is still not to immediately decide that “empty input should return 0.” Check the function's contract first: should it return an empty result, raise a specified exception, or use a default value? Reflection proposes a root cause and a repair hypothesis; tests check whether that hypothesis satisfies the requirements.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    G[Generate Patch] --> T[Run Tests]
-    T --> D{Tests Pass?}
-    D -->|Yes| R[Code Review]
-    D -->|No| F[Extract Failure]
-    F --> REF[Reflect on Root Cause]
+    G["Generate Patch"] --> T["Run Tests"]
+    T --> D["Tests Pass?"]
+    D -->|Yes| R["Code Review"]
+    D -->|No| F["Extract Failure"]
+    F --> REF["Reflect on Root Cause"]
     REF --> G
-    R --> Q{Review Pass?}
-    Q -->|Yes| DONE[Finish]
+    R --> Q["Review Pass?"]
+    Q -->|Yes| DONE["Finish"]
     Q -->|No| G
 ```
 
@@ -1024,15 +1106,16 @@ Key fields:
 ## 12.30 Preventing Endless Reflection Loops
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Reflection Round] --> V[Verify]
-    V --> P{Pass?}
-    P -->|Yes| DONE[Finish]
-    P -->|No| B{Budget Remaining?}
-    B -->|No| STOP[Stop and Report]
-    B -->|Yes| I{Finding Changed?}
-    I -->|No| ESC[Escalate / Human]
-    I -->|Yes| FIX[Refine]
+    R["Reflection<br/>Round"] --> V["Verify"]
+    V --> P["Pass?"]
+    P -->|Yes| DONE["Finish"]
+    P -->|No| B["Budget<br/>Remaining?"]
+    B -->|No| STOP["Stop and<br/>Report"]
+    B -->|Yes| I["Finding<br/>Changed?"]
+    I -->|No| ESC["Escalate /<br/>Human"]
+    I -->|Yes| FIX["Refine"]
     FIX --> R
 ```
 
@@ -1143,37 +1226,19 @@ Discussion among multiple agents cannot replace authoritative data.
 
 ```mermaid
 flowchart TB
-    TASK[Task] --> BUDGET{Budget remains and continuation allowed?}
-    BUDGET -->|Yes| GATE{Permissions and approval pass before execution?}
-    BUDGET -->|No| PARTIAL[Report Incomplete]
-    GATE -->|Yes| EXEC[Executor]
-    GATE -->|No| HUMAN[Human Review / Denial]
-    HUMAN -->|Authorization obtained again| GATE
-    EXEC --> ART[Artifact + Trace]
-
-    ART --> DV[Deterministic Verifiers]
-    DV --> HARD{Required checks pass?}
-    HARD -->|No| FAILURE[Record hard failure and generate repair feedback]
-    HARD -->|Yes| NEED{Subjective quality evaluation needed?}
-    NEED -->|No| DONE[Finish]
-    NEED -->|Yes| CRITIC[Critic]
-
-    CRITIC --> VERDICT{Verdict}
-    VERDICT -->|PASS| DONE
-    VERDICT -->|REVISE| REFINE[Refiner]
-    VERDICT -->|REPLAN| PLAN[Replanner]
-    VERDICT -->|BLOCKED| HUMAN
-    FAILURE --> REFINE
-
-    REFINE --> BUDGET
-    PLAN --> BUDGET
-
-    DONE --> CONS{Lesson worth retaining?}
-    CONS -->|No| END[End]
-    CONS -->|Yes| VALIDATE[Validate Reflection]
-    VALIDATE -->|Pass| MEMORY[Memory / Skill Candidate]
-    VALIDATE -->|Unverified| END
+    EXEC[Executor] --> DV[Required checks]
+    DV -->|Pass, subjective review needed| CRITIC[Critic]
+    DV -->|Hard failure| REFINE[Refiner]
+    CRITIC -->|REVISE| REFINE
+    REFINE --> GATE[Budget and permissions]
+    GATE -->|Revalidated| EXEC
 ```
+
+Every task starts with the budget/continuation check, followed by execution-time permission and approval checks. No remaining budget or permission to continue means reporting incompleteness. Missing authorization goes to human review or denial; newly obtained authorization must pass the permission gate again.
+
+The executor supplies an artifact and trace to deterministic verifiers. A hard failure is recorded with repair feedback for the refiner. Passing required checks finishes the task if subjective quality review is unnecessary; otherwise the critic issues `PASS` (finish), `REVISE` (refiner), `REPLAN` (replanner), or `BLOCKED` (human review). Both refinement and replanning return to the budget check, then the permission gate, before execution.
+
+After finishing, retain a lesson only if it is worth keeping and reflection validation passes. A validated lesson becomes a memory/skill candidate; an unverified or unneeded lesson ends the process without a memory write.
 
 There is no shortcut from a hard failure to a critic's PASS in this diagram. The entry point shows the overall gate, but the runtime must also check remaining budget before every model or tool call, including calls to the critic, refiner, and replanner. Every change must be bound to a new candidate version and pass acceptance checks again. The executor here consumes the current candidate or plan; it should not unconditionally discard the refiner's changes and generate from scratch.
 
@@ -1215,10 +1280,5 @@ Self-Refine, Reflexion, critic agents, debate, and LATS provide feedback mechani
 
 ## References
 
-- [Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning (v4)](https://arxiv.org/abs/2303.11366v4)
-- [Language Agent Tree Search Unifies Reasoning, Acting, and Planning (v3)](https://arxiv.org/abs/2310.04406v3)
-- [Improving Factuality and Reasoning in Language Models through Multiagent Debate](https://arxiv.org/abs/2305.14325)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
-- [Large Language Models Cannot Self-Correct Reasoning Yet](https://arxiv.org/abs/2310.01798)
-- [Training Language Models to Self-Correct via Reinforcement Learning (SCoRe, v1)](https://arxiv.org/abs/2409.12917v1)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-12) for this chapter’s sources, reading suggestions, and source notes.

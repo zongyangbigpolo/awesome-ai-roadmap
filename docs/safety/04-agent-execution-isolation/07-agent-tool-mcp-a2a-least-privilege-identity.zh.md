@@ -9,19 +9,30 @@ description: 区分 Agent 工作负载与用户委托身份，用受验证的令
 [Tool Protocol 安全](../../tools/02-mcp/15-tool-protocol-security.zh.md) 讨论认证、令牌受众和协议边界。本章关注跨系统的三个问题：谁能代表谁行动、权限如何在委托链上收紧、工具接入和撤权由谁负责。即使每个接口单独符合其协议，也不能证明整条委托链没有越权。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph L1["协议层（见 Tool Protocol 安全）"]
-        OAUTH[OAuth 2.1 / PKCE / audience]
+    subgraph L1["协议层"]
+        direction TB
+        OAUTH["OAuth 2.1 / PKCE<br/>/ audience"]
     end
-    subgraph L2["身份联邦层（本章 7.2-7.3）"]
-        WI[工作负载身份] --> DC[委托链]
+    subgraph L2["身份联邦层"]
+        direction TB
+        WI["工作负载身份"] --> DC["委托链"]
     end
-    subgraph L3["治理层（本章 7.4-7.5）"]
-        REG[工具注册中心] --> POL[策略即代码]
-        POL --> AUDIT[舰队级审计]
+    subgraph L3["治理层"]
+        direction TB
+        REG["工具注册中心"] --> POL["策略即代码"]
+        POL --> AUDIT["舰队级审计"]
     end
     L1 --> L2 --> L3
 ```
+
+协议层见《工具协议安全》；身份联邦在本章 7.2–7.3 节展开，治理层在 7.4–7.5 节展开。
+
+图中各项的完整含义：
+
+- 协议层（见 Tool Protocol 安全）
+- 身份联邦层（本章 7.2-7.3）
 
 MCP 与 A2A 不共享一套完全相同的授权规范。本章引用的 MCP 2026-07-28 授权规范针对 HTTP 传输，引用 OAuth 2.1 草案；STDIO 的凭据处理不同。A2A 的具体认证方案需核对其规范和服务配置，不能把 MCP 的每条要求直接套过去。
 
@@ -46,11 +57,17 @@ MCP 与 A2A 不共享一套完全相同的授权规范。本章引用的 MCP 202
 Confused Deputy（迷惑的代理人）问题最早出现在传统操作系统安全领域：一个拥有较高权限的程序被诱导代表低权限的调用方执行了后者本不该有权限做的操作。在 Agent 系统里，这个模式反复出现在不同层面，token passthrough（详见 [Tool Protocol 安全 15.2.1](../../tools/02-mcp/15-tool-protocol-security.zh.md)）只是其中一种具体表现。
 
 ```mermaid
-flowchart LR
-    U[低权限调用方] -->|请求| D[高权限 Agent/代理]
-    D -->|使用自己的高权限凭据执行| R[资源]
-    R -->|资源无法区分<br/>是谁的真实意图| X[越权发生]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["低权限调用方"] -->|请求| D["高权限 Agent/代<br/>理"]
+    D -->|"自身高权限凭据"| R["资源"]
+    R -->|"缺少调用方上下文"| X["越权发生"]
 ```
+
+图中条件与标签：
+
+- 使用自己的高权限凭据执行
+- 资源无法区分 是谁的真实意图
 
 其他常见变体：
 
@@ -85,13 +102,22 @@ A2A 等跨 Agent 协议让不同团队、甚至不同组织运营的 Agent 可�
 当组织内 Agent 和工具数量达到一定规模，逐个人工审批已经不可持续，需要系统化的治理机制：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    REG[统一工具/MCP Server 注册中心] --> META[记录：发布者/版本/请求权限/数据分类]
-    META --> POLICY[策略即代码<br/>按角色/环境/数据敏感度定义可用工具集]
-    POLICY --> DEPLOY[Agent 部署时按策略自动生成 allowlist]
-    DEPLOY --> AUDIT[集中审计：谁在何时以何身份调用了什么]
-    AUDIT --> REVIEW[定期复核：权限是否仍然必要]
+    REG["统一工具/MCP<br/>Server 注册中心"] --> META["记录工具元数据"]
+    META --> POLICY["策略即代码"]
+    POLICY --> DEPLOY["按白名单部署"]
+    DEPLOY --> AUDIT["审计调用"]
+    AUDIT --> REVIEW["定期复核权限"]
 ```
+
+图中各项的完整含义：
+
+- 记录：发布者/版本/请求权限/数据分类
+- 策略即代码 按角色/环境/数据敏感度定义可用工具集
+- Agent 部署时按策略自动生成 allowlist
+- 集中审计：谁在何时以何身份调用了什么
+- 定期复核：权限是否仍然必要
 
 - **统一注册中心**：所有可被 Agent 使用的工具/MCP Server 在接入前必须登记发布者、版本、请求的权限范围和涉及的数据分类，禁止"团队私下拉一个工具就接进 Agent"；
 - **策略即代码**：工具的可用范围（哪些 Agent、哪些环境、哪些数据敏感度下可以使用）用可版本化、可评审的策略描述，而不是散落在各个 Agent 的配置文件里；
@@ -136,10 +162,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Confused Deputy Problem (Norm Hardy, 1988)](https://cap-lore.com/CapTheory/ConfusedDeputy.html)
-- [MCP 2026-07-28 Authorization: Confused Deputy Considerations](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
-- [RFC 8693: OAuth 2.0 Token Exchange，尤其 1.1、4.1 节](https://www.rfc-editor.org/rfc/rfc8693.html)
-- [RFC 7662: OAuth 2.0 Token Introspection](https://www.rfc-editor.org/rfc/rfc7662.html)
-- [OWASP Agentic AI Threats and Mitigations: Identity and Authorization](https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/)
-- [NIST SP 800-207: Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
-- [SPIFFE/SPIRE: Workload Identity Framework](https://spiffe.io/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-07)。

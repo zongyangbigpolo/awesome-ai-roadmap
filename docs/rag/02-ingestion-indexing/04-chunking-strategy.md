@@ -23,16 +23,13 @@ An embedding vector has limited representational capacity. Compressing a long do
 ## 4.2 The Fundamental Granularity Tradeoff
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    G[Chunk granularity] --> S[Too small]
-    G --> L[Too large]
-
-    S --> S1[Focused meaning<br/>Precise retrieval]
-    S --> S2[Missing context<br/>Unclear references;<br/>conclusions without premises]
-
-    L --> L1[Complete context]
-    L --> L2[Diluted meaning<br/>Irrelevant content;<br/>imprecise retrieval]
+    G[Chunk size] --> S[Small: focused retrieval]
+    G --> L[Large: fuller context]
 ```
+
+Small chunks focus meaning and can improve retrieval precision, but may lose context: references become unclear and conclusions lose their premises. Large chunks preserve more complete context, but irrelevant content can dilute meaning and make retrieval less precise.
 
 This tradeoff **cannot be eliminated entirely, only mitigated**. The methods in Chapter 5 all address it.
 
@@ -74,7 +71,8 @@ Here, semantic chunking mainly means methods that use embedding similarity to id
 ## 4.4 Common Chunking Strategies
 
 ```mermaid
-flowchart TB
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     C[Chunking strategies] --> F[Fixed size + overlap]
     C --> R[Recursive separators]
     C --> ST[Structure-aware<br/>Heading hierarchy]
@@ -188,8 +186,5 @@ Repeated content in the top-K results takes slots away from other useful passage
 
 ## References
 
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Dense X Retrieval: What Retrieval Granularity Should We Use?](https://arxiv.org/abs/2312.06648)
-- [Qwen3-Embedding-0.6B Model Card](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-04) for this chapter’s sources, reading suggestions, and source notes.

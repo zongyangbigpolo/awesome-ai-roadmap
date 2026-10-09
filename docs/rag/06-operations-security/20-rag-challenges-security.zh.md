@@ -9,11 +9,13 @@ description: 讨论 RAG 预处理、检索与评估的工程难点，以及语�
 RAG 落地时，反复出现的难点通常集中在三类。
 
 ```mermaid
-flowchart TB
-    H[RAG 落地三难] --> H1[难点一: 文档预处理<br/>脏活累活 决定效果上限]
-    H --> H2[难点二: 检索质量调优<br/>变量多 需系统性方法]
-    H --> H3[难点三: 效果评估<br/>缺乏客观标准 全靠感觉]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    H1[文档预处理] --> H2[检索质量调优]
+    H2 --> H3[客观评估]
 ```
+
+预处理需要大量工作，并限制下游可达到的质量。检索调优变量多，需要系统性方法。评估需要客观标准，否则决策只能依赖直觉。这些是相互关联的难点，不能彼此替代。
 
 ### 20.1.1 第一难：文档预处理
 
@@ -60,17 +62,13 @@ RAG 扩大了应用处理不可信外部内容的攻击面：
 > **检索到的内容会进入模型的上下文，而这些内容可能是攻击者控制的。**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A[RAG 的外部内容攻击面] --> A1[语料投毒]
-    A --> A2[间接 Prompt 注入]
-    A --> A3[数据泄漏]
-    A --> A4[资源耗尽]
-
-    A1 --> B1[往知识库注入误导性内容<br/>操纵特定问题的答案]
-    A2 --> B2[文档里藏指令<br/>劫持模型行为]
-    A3 --> B3[越权检索到不该看的内容]
-    A4 --> B4[构造高成本查询]
+    A[外部内容] --> C[内容与指令攻击]
+    A --> R[访问与资源滥用]
 ```
+
+内容攻击包括**语料投毒**，即加入误导材料以操纵特定问题的答案，以及**间接 Prompt 注入**，即在文档中隐藏指令以劫持模型行为。访问与资源滥用包括越权检索导致的**数据泄漏**，以及高成本查询导致的**资源耗尽**。
 
 ### 20.3.1 语料投毒
 
@@ -238,8 +236,5 @@ PoisonedRAG 在论文所测威胁模型中表明，攻击者有能力把文本�
 
 ## 参考资料
 
-- [PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models](https://arxiv.org/abs/2402.07867)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-20)。

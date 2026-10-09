@@ -9,22 +9,23 @@ description: Design model routing and fallback under quality, data-residency, an
 [Tools · LLM Gateways](../../tools/05-transport-gateway/14-llm-gateway.md) covers the capabilities of **the gateway component itself**: a unified interface, load balancing, rate limits, quotas, and so on. The harder question arises after a request reaches the gateway: **what policy should decide which model receives it, and when to abandon that model and try another?** This **routing policy** sits on top of gateway infrastructure and is among the configurations LLMOps teams adjust most frequently.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    REQ["Request enters gateway"] --> POLICY{"Routing policy"}
-    POLICY -->|Cost| CHEAP["Prefer a lower-cost model"]
-    POLICY -->|Capability| CAPABLE["Strong reasoning needed → flagship model"]
-    POLICY -->|Latency| FAST["Latency-sensitive → fastest provider"]
-    POLICY -->|Canary rollout| CANARY["Send a share of traffic to the new version"]
-    CHEAP --> CALL["Make the call"]
-    CAPABLE --> CALL
-    FAST --> CALL
-    CANARY --> CALL
-    CALL -->|Failure| CHECK{"Fallback allowed, with<br/>budget and eligible candidates remaining?"}
-    CHECK -->|Yes| FALLBACK["Try the next candidate in the fallback chain"]
-    CHECK -->|No| STOP["Explicit failure or limited service"]
-    FALLBACK --> CALL
-    CALL -->|Success| DONE["Return"]
+    POLICY["Choose candidate"] --> CALL["Call model"]
+    CALL -->|Success| DONE["Return result"]
+    CALL -->|Failure| CHECK["Check fallback"]
+    CHECK -->|Allowed| CALL
+    CHECK -->|Stop| STOP["Fail or limit service"]
 ```
+
+The routing policy chooses a candidate by cost, capability, latency, or canary allocation: prefer a lower-cost model for suitable tasks, a flagship model when strong reasoning is required, the fastest provider for latency-sensitive requests, or the new version for its allocated traffic. On failure, retry the call with the next eligible fallback candidate only if policy permits fallback and both budget and candidates remain. Otherwise return an explicit failure or limited service; the loop is not unbounded.
+
+Details of the illustrated steps and components:
+
+- Strong reasoning needed → flagship model
+- Send a share of traffic to the new version
+- Fallback allowed, with budget and eligible candidates remaining?
+- Try the next candidate in the fallback chain
 
 ## 3.2 Three common routing policies
 
@@ -134,8 +135,5 @@ When the same request produces different results on two occasions, identifying t
 
 ## References
 
-- [LiteLLM: Routing](https://docs.litellm.ai/docs/routing)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [Amazon Bedrock: Model routing (intelligent prompt routing)](https://docs.aws.amazon.com/bedrock/latest/userguide/intelligent-prompt-routing.html)
-- [Martin Fowler: CanaryRelease](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Netflix Tech Blog: Fault Tolerance in a High Volume, Distributed System](https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-03) for this chapter’s sources, reading suggestions, and source notes.

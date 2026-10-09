@@ -10,22 +10,52 @@ ReAct 和 CoT 是二选一吗？不是。前者组织行动与反馈循环，后
 
 > **推理方法决定一次求解如何生成、搜索和选择候选，Agent 范式决定系统如何组织模型、工具、状态和环境反馈。**
 
+推理位于 Agent 控制之内。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    W[Workflow 编排层] --> A[Agent 控制范式]
-    A --> R[模型推理与搜索方法]
-    A --> T[Tools]
-    A --> M[State / Memory]
+    W["Workflow 编排层"]
+    A["Agent 控制范式"]
+    R["模型推理与搜索方法"]
+    T["Tools"]
+    M["State / Memory"]
+    W --> A
+    A --> R
+    A --> T
+    A --> M
+```
 
-    A --> REACT[ReAct]
-    A --> PLAN[Plan-and-Execute]
-    A --> REFLEX[Reflection / Reflexion]
+Agent 控制模式。
 
-    R --> COT[CoT]
-    R --> DECOMP[任务分解]
-    R --> SC[Self-Consistency]
-    R --> TOT[ToT / Graph Search]
-    R --> VER[Verifier-guided Reasoning]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    A["Agent 控制范式"]
+    REACT["ReAct"]
+    PLAN["Plan-and-Execute"]
+    REFLEX["Reflection / Reflexion"]
+    A --> REACT
+    A --> PLAN
+    A --> REFLEX
+```
+
+推理与搜索方法。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    R["模型推理与搜索方法"]
+    COT["CoT"]
+    DECOMP["任务分解"]
+    SC["Self-Consistency"]
+    TOT["ToT / Graph Search"]
+    VER["Verifier-guided<br/>Reasoning"]
+    R --> COT
+    R --> DECOMP
+    R --> SC
+    R --> TOT
+    R --> VER
 ```
 
 例如：
@@ -76,26 +106,61 @@ $$
 
 可以按照推理时组织计算的方式，将常见方法分成四组。它们不是必须逐级升级的能力阶梯，也可以组合使用：
 
+单路径推理。
+
 ```mermaid
 flowchart TB
-    R[推理时计算] --> S1[单路径推理]
-    R --> S2[任务分解]
-    R --> S3[多候选采样]
-    R --> S4[搜索与验证]
+    R[推理时计算]
+    S1[单路径推理]
+    DIRECT[Direct Answer]
+    COT[Chain of Thought]
+    R --> S1
+    S1 --> DIRECT
+    S1 --> COT
+```
 
-    S1 --> DIRECT[Direct Answer]
-    S1 --> COT[Chain of Thought]
+任务分解。
 
-    S2 --> LTM[Least-to-Most]
-    S2 --> PS[Plan-and-Solve]
+```mermaid
+flowchart TB
+    R[推理时计算]
+    S2[任务分解]
+    LTM[Least-to-Most]
+    PS[Plan-and-Solve]
+    R --> S2
+    S2 --> LTM
+    S2 --> PS
+```
 
-    S3 --> SC[Self-Consistency]
-    S3 --> BON[Best-of-N]
+采样多个候选。
 
-    S4 --> TOT[Tree of Thoughts]
-    S4 --> GOT[Graph of Thoughts]
-    S4 --> MCTS[MCTS 类搜索]
-    S4 --> VG[Verifier-guided]
+```mermaid
+flowchart TB
+    R[推理时计算]
+    S3[多候选采样]
+    SC[Self-Consistency]
+    BON[Best-of-N]
+    R --> S3
+    S3 --> SC
+    S3 --> BON
+```
+
+搜索与验证。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    R["推理时计算"]
+    S4["搜索与验证"]
+    TOT["Tree of Thoughts"]
+    GOT["Graph of Thoughts"]
+    MCTS["MCTS 类搜索"]
+    VG["Verifier-guided"]
+    R --> S4
+    S4 --> TOT
+    S4 --> GOT
+    S4 --> MCTS
+    S4 --> VG
 ```
 
 在相同基础模型、相近单次生成长度下，可以粗略比较成本：
@@ -144,11 +209,12 @@ flowchart LR
 CoT（Chain of Thought）通过生成中间推理步骤，将复杂问题拆成一条连续推理链：
 
 ```mermaid
-flowchart LR
-    Q[问题] --> S1[中间步骤 1]
-    S1 --> S2[中间步骤 2]
-    S2 --> S3[中间步骤 N]
-    S3 --> A[答案]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["问题"] --> S1["中间步骤 1"]
+    S1 --> S2["中间步骤 2"]
+    S2 --> S3["中间步骤 N"]
+    S3 --> A["答案"]
 ```
 
 从概率角度，可以将中间推理序列表示为辅助变量 $z$；当只关心最终答案时将其边缘化：
@@ -171,7 +237,7 @@ $$
 
 不提供完整示例，只通过简短指令要求模型分步骤分析。历史上常见的提示是“Let's think step by step”。
 
-对经过推理训练的模型，反复要求“逐步思考”不一定继续带来收益。[OpenAI 的 reasoning 提示建议](https://developers.openai.com/api/docs/guides/reasoning-best-practices)明确建议对其推理模型使用直接、清晰的任务指令，不必额外要求展开 CoT；这不是所有厂商、模型版本的统一规定。
+对经过推理训练的模型，反复要求“逐步思考”不一定继续带来收益。OpenAI 的 reasoning 提示建议<sup>[【109】](../../book/references.zh.md#ref-109)</sup>明确建议对其推理模型使用直接、清晰的任务指令，不必额外要求展开 CoT；这不是所有厂商、模型版本的统一规定。
 
 ### 5.5.3 不要把完整思维链当作可靠解释
 
@@ -211,7 +277,7 @@ $$
 - 增加 Token、延迟和成本；
 - 缺少外部验证时容易自洽但错误。
 
-[原论文](https://arxiv.org/abs/2201.11903)的收益来自所测模型、规模和算术／常识／符号任务。不能由此推断任何模型加一句提示就具备可靠规划能力；解释忠实性研究也发现模型可能受提示中的偏置信息影响，却不在 CoT 中承认这些影响。
+原论文<sup>[【104】](../../book/references.zh.md#ref-104)</sup>的收益来自所测模型、规模和算术／常识／符号任务。不能由此推断任何模型加一句提示就具备可靠规划能力；解释忠实性研究也发现模型可能受提示中的偏置信息影响，却不在 CoT 中承认这些影响。
 
 ## 5.6 任务分解：先把问题变小
 
@@ -222,11 +288,12 @@ $$
 Least-to-Most Prompting 先识别较简单的子问题，再按依赖顺序逐步解决。
 
 ```mermaid
-flowchart LR
-    Q[复杂问题] --> D[分解子问题]
-    D --> E1[解决基础子问题]
-    E1 --> E2[利用 E1 解决下一问题]
-    E2 --> EN[解决最终问题]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["复杂问题"] --> D["分解子问题"]
+    D --> E1["解决基础子问题"]
+    E1 --> E2["利用 E1 解决下一问题"]
+    E2 --> EN["解决最终问题"]
 ```
 
 适合：
@@ -273,14 +340,15 @@ Plan:
 Self-Consistency 不只生成一条推理链，而是通过采样得到多个候选路径，再聚合最终答案。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    Q[问题] --> P1[推理路径 1]
-    Q --> P2[推理路径 2]
-    Q --> P3[推理路径 N]
-    P1 --> V[答案聚合]
+    Q["问题"] --> P1["推理路径 1"]
+    Q --> P2["推理路径 2"]
+    Q --> P3["推理路径 N"]
+    P1 --> V["答案聚合"]
     P2 --> V
     P3 --> V
-    V --> A[最终答案]
+    V --> A["最终答案"]
 ```
 
 若第 $i$ 条路径得到答案 $y_i$，多数投票可以写为：
@@ -363,22 +431,55 @@ ToT（Tree of Thoughts）把中间推理状态视为搜索树节点，在每个�
 
 原方法由外部控制程序维护部分解、候选和搜索策略，模型负责生成与评价文本单元。仅在一个 Prompt 中写“请模拟三位专家并回溯”，不等于实现了原论文的 ToT 搜索。
 
+先展开三个候选分支。
+
 ```mermaid
 flowchart TB
-    S0[初始状态] --> A1[候选 A]
-    S0 --> B1[候选 B]
-    S0 --> C1[候选 C]
+    S0[初始状态]
+    A1[候选 A]
+    B1[候选 B]
+    C1[候选 C]
+    S0 --> A1
+    S0 --> B1
+    S0 --> C1
+```
 
-    A1 --> A2[扩展 A1]
-    A1 --> A3[扩展 A2]
-    B1 --> B2[扩展 B1]
-    B1 --> B3[扩展 B2]
-    C1 --> C2[扩展 C1]
+展开 A，并将后继节点送入评分。
 
-    A2 --> E[评分与选择]
+```mermaid
+flowchart TB
+    A1[候选 A]
+    A2[扩展 A1]
+    A3[扩展 A2]
+    E[评分与选择]
+    A1 --> A2
+    A1 --> A3
+    A2 --> E
     A3 --> E
+```
+
+展开 B，并汇入同一个评分阶段。
+
+```mermaid
+flowchart TB
+    B1[候选 B]
+    B2[扩展 B1]
+    B3[扩展 B2]
+    E[评分与选择]
+    B1 --> B2
+    B1 --> B3
     B2 --> E
     B3 --> E
+```
+
+展开 C，也汇入该评分阶段。
+
+```mermaid
+flowchart TB
+    C1[候选 C]
+    C2[扩展 C1]
+    E[评分与选择]
+    C1 --> C2
     C2 --> E
 ```
 
@@ -428,14 +529,15 @@ ToT 通常需要：
 Graph of Thoughts 将推理状态组织成图：
 
 ```mermaid
-flowchart LR
-    A[候选分析 A] --> M[合并]
-    B[候选分析 B] --> M
-    C[外部证据 C] --> M
-    M --> R[修订]
-    R --> V[验证]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["候选分析 A"] --> M["合并"]
+    B["候选分析 B"] --> M
+    C["外部证据 C"] --> M
+    M --> R["修订"]
+    R --> V["验证"]
     V -->|不通过| R
-    V -->|通过| O[输出]
+    V -->|通过| O["输出"]
 ```
 
 图结构可以表达：
@@ -460,10 +562,11 @@ flowchart LR
 Selection 通常依据访问次数与累计价值，在探索新分支和利用高分分支之间取舍；Evaluation 可以是 rollout 的环境回报，也可以是学习到的价值估计。这里的 Backpropagation 是向树节点回传统计量，不是神经网络反向传播，不自动更新 LLM 权重。
 
 ```mermaid
-flowchart LR
-    S[Selection] --> E[Expansion]
-    E --> V[Evaluation]
-    V --> B[Backpropagation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Selection"] --> E["Expansion"]
+    E --> V["Evaluation"]
+    V --> B["Backpropagation"]
     B --> S
 ```
 
@@ -483,20 +586,20 @@ flowchart LR
 模型不擅长稳定执行长算术、精确状态更新和复杂符号操作。Program-Aided Language Models（PAL）或 Program of Thoughts（PoT）让模型生成程序，再由解释器执行。
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
-    participant M as Model
-    participant R as Runtime
-    participant P as Python / Solver
+    participant M as 模型
+    participant R as 运行时
+    participant P as 求解器
 
-    U->>M: 提交计算问题
-    M-->>R: 生成程序或表达式
+    M-->>R: 程序或表达式
     R->>R: 安全校验
-    R->>P: 在沙箱中执行
-    P-->>R: 返回计算结果或错误
-    R->>M: 提供执行结果
-    M-->>U: 解释答案
+    R->>P: 沙箱执行
+    P-->>R: 结果或错误
+    R->>M: 执行结果
 ```
+
+这段交互开始前，用户先向模型提交计算问题。求解器可以是 Python 或其他外部求解器；运行时先检查安全性，再在沙箱中执行，将结果或错误交回模型，最后由模型向用户解释答案。
 
 适合：
 
@@ -520,12 +623,13 @@ sequenceDiagram
 推理不能弥补缺失或过时的事实。Agent 可以通过搜索、数据库、代码执行器和领域 API 获取外部证据。
 
 ```mermaid
-flowchart LR
-    Q[问题] --> M[Model]
-    M --> NEED{需要外部信息?}
-    NEED -->|否| A[生成答案]
-    NEED -->|是| T[调用 Tool]
-    T --> O[Observation]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["问题"] --> M["Model"]
+    M --> NEED["需要外部信息?"]
+    NEED -->|否| A["生成答案"]
+    NEED -->|是| T["调用 Tool"]
+    T --> O["Observation"]
     O --> M
 ```
 
@@ -553,14 +657,15 @@ RAG 为模型提供外部知识，但检索与推理之间仍需协同：
 7. 必要时继续检索。
 
 ```mermaid
-flowchart LR
-    Q[问题] --> QR[Query Rewrite]
-    QR --> RET[Retrieval]
-    RET --> RR[Re-rank]
-    RR --> REASON[Reason with Evidence]
-    REASON --> CHECK{证据充分?}
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["问题"] --> QR["Query Rewrite"]
+    QR --> RET["Retrieval"]
+    RET --> RR["Re-rank"]
+    RR --> REASON["Reason with Evidence"]
+    REASON --> CHECK["证据充分?"]
     CHECK -->|否| QR
-    CHECK -->|是| ANSWER[带引用答案]
+    CHECK -->|是| ANSWER["带引用答案"]
 ```
 
 多轮检索可以提升覆盖率，但也可能增加噪音。系统应记录哪些结论由哪些证据支持。
@@ -577,7 +682,7 @@ $$
 
 其中 $e_i$ 可以是测试结果、执行轨迹或外部证据。
 
-结果奖励模型（ORM）通常给完整候选评分；过程奖励模型（PRM）给中间步骤提供更细的信号，适合剪枝或分配搜索预算。[Let's Verify Step by Step](https://arxiv.org/abs/2305.20050)研究了过程监督训练验证器。训练 PRM 会更新其参数，使用固定 PRM 排序候选则不会；PRM 分数也不是形式化证明，多个相关步骤的分数不能不加假设地乘成“答案正确概率”。
+结果奖励模型（ORM）通常给完整候选评分；过程奖励模型（PRM）给中间步骤提供更细的信号，适合剪枝或分配搜索预算。Let's Verify Step by Step<sup>[【463】](../../book/references.zh.md#ref-463)</sup>研究了过程监督训练验证器。训练 PRM 会更新其参数，使用固定 PRM 排序候选则不会；PRM 分数也不是形式化证明，多个相关步骤的分数不能不加假设地乘成“答案正确概率”。
 
 系统可以：
 
@@ -638,7 +743,7 @@ Self-Refine 让模型对自己的输出生成反馈，再根据反馈修订：
 
 ## 5.17 Reasoning Models 与推理时扩展
 
-Reasoning Model 通常经过强化多步推理的后训练，应用不一定需要手工要求其输出冗长 CoT。例如 [DeepSeek-R1 技术报告](https://arxiv.org/abs/2501.12948)讨论了 RL 激励推理行为和蒸馏。模型能生成检查、回退式文本，不代表服务内部必然运行 ToT 或 MCTS；未公开的架构细节不应从回答外观反推。
+Reasoning Model 通常经过强化多步推理的后训练，应用不一定需要手工要求其输出冗长 CoT。例如 DeepSeek-R1 技术报告<sup>[【301】](../../book/references.zh.md#ref-301)</sup>讨论了 RL 激励推理行为和蒸馏。模型能生成检查、回退式文本，不代表服务内部必然运行 ToT 或 MCTS；未公开的架构细节不应从回答外观反推。
 
 推理时扩展（Inference-time Scaling）指为困难问题分配更多推理计算，例如：
 
@@ -663,7 +768,7 @@ $$
 
 预算越高不意味着结果必然越好。系统需要根据任务难度动态分配计算，而不是对所有请求使用最大推理强度。
 
-[推理时计算分配研究](https://arxiv.org/abs/2408.03314)显示，顺序修订与并行搜索的相对收益随题目难度改变。这个结论支持测量后路由，而不是仅凭模型自报“有信心”缩减预算；更高风险时应先加强验收和审批，并非自动加大搜索树。
+推理时计算分配研究<sup>[【464】](../../book/references.zh.md#ref-464)</sup>显示，顺序修订与并行搜索的相对收益随题目难度改变。这个结论支持测量后路由，而不是仅凭模型自报“有信心”缩减预算；更高风险时应先加强验收和审批，并非自动加大搜索树。
 
 运行时要决定的是：让一个候选多想一会儿，还是多生成几个候选再挑选。增加单次思考预算 `T` 与增加候选数 `N` 不是同一件事；前者给一条路径更多思考空间，后者还需要比较和验证候选。具体控制接口见 [LLM 第 17 章 §17.6.7](../../llm/04-prompt-reliability/17-cot.zh.md)。选择哪种方案，应按 §5.22 的方法固定总预算，把验证开销也算进去，再比较任务成功率与延迟。
 
@@ -677,14 +782,32 @@ $$
 
 Adaptive Reasoning 先估计任务难度或置信度，再选择推理策略：
 
+直接回答与中等难度情形。
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q[输入] --> E[难度与风险评估]
-    E -->|简单、低风险| D[Direct Answer]
-    E -->|中等| C[CoT / Decomposition]
-    E -->|答案可聚合| S[Self-Consistency]
-    E -->|复杂搜索| T[ToT / Graph Search]
-    E -->|可验证、高风险| V[Verifier-guided]
+    Q["输入"]
+    E["难度与风险评估"]
+    D["Direct Answer"]
+    C["CoT / Decomposition"]
+    Q --> E
+    E -->|简单、低风险| D
+    E -->|中等| C
+```
+
+可聚合答案、复杂搜索与可验证的高风险情形。
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    E["难度与风险评<br/>估"]
+    S["Self-Consistency"]
+    T["ToT / Graph<br/>Search"]
+    V["Verifier-guided"]
+    E -->|答案可聚合| S
+    E -->|复杂搜索| T
+    E -->|可验证、高风<br/>险| V
 ```
 
 动态路由可以降低平均成本：
@@ -711,16 +834,15 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    G[目标] --> AR[Adaptive Reasoning Router]
-    AR --> P[Planner<br/>Decomposition + ToT]
-    P --> E[Executor<br/>ReAct + Tools]
-    E --> V[Verifier<br/>Tests + Rules]
+    P[规划器] --> E[执行器]
+    E --> V[验证器]
     V -->|局部失败| E
     V -->|计划失败| P
-    V -->|通过| S[Synthesizer<br/>Best-of-N]
-    S --> FINAL[最终成稿与证据核验]
-    FINAL --> OUT[输出结果或报告未通过项]
+    V -->|通过| S[综合生成器]
+    S --> FINAL[最终核验]
 ```
+
+目标先经过自适应推理路由器。规划器采用任务分解与 ToT，执行器采用 ReAct 与工具，验证器使用测试与规则。验证通过后，综合生成器采用 Best-of-N。最终核验检查完整成稿与证据，再输出结果或报告未通过项。
 
 最后一次综合也可能引入新错误，所以前面的测试通过不代表新生成的答案自动通过。成稿仍要核对引用、数值和任务约束；若未通过，按剩余预算修订或报告未完成。
 
@@ -755,27 +877,17 @@ flowchart TB
 一个能落地的推理控制器通常至少有这些环节：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    IN[Input] --> SAFE[输入与权限检查]
-    SAFE --> ROUTER[难度 / 风险路由]
-
-    ROUTER --> GEN[Candidate Generator]
-    GEN --> TOOLS[Tools / Retrieval / Code]
+    GEN["候选生成器"] --> TOOLS["工具、检索与代码"]
     TOOLS --> GEN
-
-    GEN --> VERIFY[Verifier]
-    VERIFY --> SCORE[评分、置信度与证据检查]
-    SCORE --> DEC{满足标准?}
-
-    DEC -->|是| OUT[Answer + Evidence]
-    DEC -->|否，可改进| REFINE[Refine / Search]
+    GEN --> VERIFY["验证器"]
+    VERIFY -->|满足标准| OUT["答案与证据"]
+    VERIFY -->|可改进| REFINE["优化与搜索"]
     REFINE --> GEN
-    DEC -->|预算耗尽| PARTIAL[报告部分结果与限制]
-    DEC -->|高风险| HUMAN[Human Review]
-
-    GEN -.Trace.-> OBS[Observability]
-    VERIFY -.Metrics.-> OBS
 ```
+
+进入循环前，先进行输入与权限检查，再按难度和风险路由。验证包含评分、置信度与证据检查。只有未满足标准且仍可改进时才进入优化分支；预算耗尽时应报告部分结果与限制，高风险时转人工审核。生成器的运行轨迹与验证器的指标共同进入可观测性系统。
 
 推理系统不只负责生成，还要负责验证、预算分配和失败报告。
 
@@ -887,22 +999,5 @@ LLM Judge 仍可能偏置、被欺骗或与生成器共享盲点。
 
 ## 参考资料
 
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners](https://arxiv.org/abs/2205.11916)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [Least-to-Most Prompting Enables Complex Reasoning in Large Language Models](https://arxiv.org/abs/2205.10625)
-- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/abs/2305.10601)
-- [Graph of Thoughts: Solving Elaborate Problems with Large Language Models](https://arxiv.org/abs/2308.09687)
-- [PAL: Program-aided Language Models](https://arxiv.org/abs/2211.10435)
-- [Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651)
-- [Plan-and-Solve Prompting](https://arxiv.org/abs/2305.04091)
-- [Program of Thoughts Prompting](https://arxiv.org/abs/2211.12588)
-- [Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting](https://arxiv.org/abs/2305.04388)
-- [Let's Verify Step by Step](https://arxiv.org/abs/2305.20050)
-- [DeepSeek-R1](https://arxiv.org/abs/2501.12948)
-- [Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters](https://arxiv.org/abs/2408.03314)
-- [s1: Simple test-time scaling](https://arxiv.org/abs/2501.19393)
-- [OpenAI: Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices)
-- [OpenAI: Reasoning models](https://developers.openai.com/api/docs/guides/reasoning)
-- [Amazon Bedrock: Extended thinking](https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html)（thinking 返回形式与工具调用时的状态回传要求）
-- [Python 3.13: decimal — 精度、舍入与十进制计算](https://docs.python.org/3.13/library/decimal.html)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-agent-05)。

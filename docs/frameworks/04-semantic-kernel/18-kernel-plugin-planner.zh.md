@@ -48,11 +48,23 @@ class OrderPlugin:
 例如 C# 的 `FunctionChoiceBehavior.Auto()` 配合聊天服务和 Kernel 启用自动调用。模型负责选择，不代表执行事务、权限或可靠恢复也「下沉给模型」；这些仍由应用控制。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    G["业务目标"] --> D{"标准工具循环能否表达<br/>所需业务控制?"}
-    D -->|"能：开放但有界的工具选择"| M["用 Function Calling 选择 Plugin<br/>应用执行并限制预算"]
-    D -->|"不能：审批顺序或恢复边界独立"| PF["显式工作流<br/>核对 SK 实验包或 MAF Workflows"]
+    G["业务目标"] --> D["标准循环能满足？"]
+    D -->|"是"| M["选择 Plugin"]
+    D -->|"否"| PF["显式工作流"]
 ```
+
+图中条件与标签：
+
+- 能：开放但有界的工具选择
+- 不能：审批顺序或恢复边界独立
+
+图中各项的完整含义：
+
+- 标准工具循环能否表达 所需业务控制?
+- 用 Function Calling 选择 Plugin 应用执行并限制预算
+- 显式工作流 核对 SK 实验包或 MAF Workflows
 
 这与 [LangChain 生态 · 第九章](../01-langchain/04-langgraph/09-langchain-vs-langgraph.zh.md) 的判断类似，但触发因素不是单纯的步骤数：即使只有一次转账，也需要明确权限与审批；即使有多轮只读搜索，也可能用受预算限制的函数调用循环。
 
@@ -107,11 +119,5 @@ Filter 的价值不只是记录日志，还包括在函数调用前做权限校�
 
 ## 参考资料
 
-- [Semantic Kernel 官方文档：Introduction](https://learn.microsoft.com/en-us/semantic-kernel/overview/)
-- [Semantic Kernel: Kernel 概念](https://learn.microsoft.com/en-us/semantic-kernel/concepts/kernel)
-- [Semantic Kernel: Plugins 概念](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/)
-- [Semantic Kernel: Planning 概念](https://learn.microsoft.com/en-us/semantic-kernel/concepts/planning)
-- [Semantic Kernel: Filters 概念](https://learn.microsoft.com/en-us/semantic-kernel/concepts/enterprise-readiness/filters)
-- [Semantic Kernel 官方仓库与后继框架说明（固定提交）](https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md)
-
-版本说明：MAF 后继关系与 1.0 发布声明于 2026-09-15 复核；该声明不覆盖全部语言和实验性扩展，具体边界见第十九章。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-18)。

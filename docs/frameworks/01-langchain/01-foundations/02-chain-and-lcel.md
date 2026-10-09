@@ -40,10 +40,11 @@ User input → Prompt template → Chat Model → Output parser → String answe
 **Real applications can also have parallel and conditional branches**:
 
 ```mermaid
-flowchart LR
-    Q["User question"] --> R["Knowledge-base retrieval"]
-    Q --> P["Pass through unchanged"]
-    R --> M["Merge into the prompt"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["User question"] --> R["Knowledge-base<br/>retrieval"]
+    Q --> P["Pass through<br/>unchanged"]
+    R --> M["Merge into the<br/>prompt"]
     P --> M
     M --> L["Model"]
 
@@ -189,15 +190,24 @@ Retry scope also changes cost and semantics. Applying `with_retry` to the entire
 A common protocol does more than make components easy to connect. It also lets the workflow grow incrementally:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① Composability<br/>Each step handles its own inputs and outputs<br/>Small chains compose into larger ones<br/>Replace a model, parser, or retriever<br/>without rebuilding the entire business workflow"]
-    A --> B["② Unified execution<br/>Single, async, batch, and streaming calls share interfaces<br/>Composed workflows can inherit these capabilities"]
-    B --> C["③ Declarative dataflow<br/>Express where data goes first, then next<br/>Keep thread scheduling, callback propagation, and<br/>intermediate-result handling out of business logic"]
-    C --> D["④ Reusable cross-cutting capabilities<br/>Retries, fallbacks, tags, metadata, and tracing<br/>Attach to one Runnable or apply to the entire chain"]
-    D --> E["Production debugging reveals not just the final error<br/>but the actual substeps traversed by this run"]
+    A["① Composability"]
+    A --> B["② Unified<br/>execution"]
+    B --> C["③ Declarative<br/>dataflow"]
+    C --> D["④ Reusable<br/>controls"]
+    D --> E["Inspect<br/>execution"]
 
     style E fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- ① Composability Each step handles its own inputs and outputs Small chains compose into larger ones Replace a model, parser, or retriever without rebuilding the entire business workflow
+- ② Unified execution Single, async, batch, and streaming calls share interfaces Composed workflows can inherit these capabilities
+- ③ Declarative dataflow Express where data goes first, then next Keep thread scheduling, callback propagation, and intermediate-result handling out of business logic
+- ④ Reusable cross-cutting capabilities Retries, fallbacks, tags, metadata, and tracing Attach to one Runnable or apply to the entire chain
+- Production debugging reveals not just the final error but the actual substeps traversed by this run
 
 Keep the limitation in view as well: a shared interface only guarantees a consistent way to invoke components. **The actual behavior still depends on whether each component truly supports the corresponding execution mode.**
 
@@ -232,19 +242,33 @@ The LangChain v1 migration guide explicitly moves legacy chains into **`langchai
 Chains are suitable for fixed dataflows, not for forcing every process into one enormous LCEL expression.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q1{"Mostly a fixed dataflow,<br/>or model-selected actions?"}
-    Q1 -->|Fixed dataflow| Q2{"Need cross-invocation recovery<br/>or long waits?"}
-    Q2 -->|No| C["Chain (Runnable + LCEL)<br/>Short retrieval, classification, or summarization flows"]
-    Q2 -->|Yes| G["Explicit LangGraph orchestration<br/>Design state and recovery boundaries"]
-    Q1 -->|Model-selected actions| Q3{"Can the standard agent loop<br/>and middleware express it?"}
-    Q3 -->|Yes| A["create_agent<br/>Configurable checkpointing and tool approval"]
+    Q1["Fixed or<br/>dynamic?"]
+    Q1 -->|Fixed dataflow| Q2["Durable<br/>execution?"]
+    Q2 -->|No| C["LCEL chain"]
+    Q2 -->|Yes| G["LangGraph"]
+    Q1 -->|"Dynamic actions"| Q3["Standard loop<br/>fits?"]
+    Q3 -->|Yes| A["create_agent"]
     Q3 -->|No| G
 
     style C fill:#e6f4ea
     style A fill:#e8f0fe
     style G fill:#fff3cd
 ```
+
+Figure conditions and labels:
+
+- Model-selected actions
+
+Details of the illustrated steps and components:
+
+- Mostly a fixed dataflow, or model-selected actions?
+- Need cross-invocation recovery or long waits?
+- Chain (Runnable + LCEL) Short retrieval, classification, or summarization flows
+- Explicit LangGraph orchestration Design state and recovery boundaries
+- Can the standard agent loop and middleware express it?
+- create_agent Configurable checkpointing and tool approval
 
 For a short, fixed dataflow, start with a Chain. Consider an agent when the model must decide the next step at runtime. Having known steps does not rule out LangGraph in the diagram: a long deterministic workflow may also need persistence, waits for human input, and recovery boundaries. In that case, choosing LangGraph directly is appropriate.
 
@@ -303,9 +327,5 @@ Runnable is the common invocation protocol; a Chain is the dataflow assembled fr
 
 ## References
 
-- [LangChain documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [RunnableSequence: LCEL composition, batching, and streaming semantics](https://reference.langchain.com/python/langchain-core/runnables/base/RunnableSequence)
-- [Runnable API](https://reference.langchain.com/python/langchain-core/runnables/base/Runnable)
-- [langchain-core Runnables API reference](https://reference.langchain.com/python/langchain-core/runnables/)
-- [LangChain v1 migration guide](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangGraph documentation](https://docs.langchain.com/oss/python/langgraph/overview)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-02) for this chapter’s sources, reading suggestions, and source notes.

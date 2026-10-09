@@ -23,12 +23,12 @@ description: 从模型输出、任务知识和外部能力连接三个层次比�
 ### 10.1.1 代表性发布节点不等于依赖关系
 
 ```mermaid
-timeline
-    title 三种机制的代表性发布时间
-    2023 : Function Calling : 问题「模型只会生成文本<br/>怎么让它触发外部调用」
-    2024 : MCP : 问题「每个应用都在重复<br/>写对接各种工具的代码」
-    2025 : Agent Skill : 问题「工具有了<br/>但 Agent 不知道该按什么流程用」
+flowchart TB
+    FC["2023 · Function Calling"] --> MCP["2024 · MCP"]
+    MCP --> SK["2025 · Agent Skill"]
 ```
+
+这些代表性发布时间对应不同问题，并不是前后替代关系：Function Calling 让生成文本的模型能够提出外部调用请求；MCP 减少不同应用重复编写集成代码的工作；Agent Skill 为已有工具提供使用流程。
 
 这条时间线指 OpenAI Function Calling、MCP 和 Anthropic Agent Skills 的发布节点，不是工具调用、接口标准化或流程复用思想的起源。三者分别处理：
 
@@ -39,29 +39,17 @@ timeline
 ## 10.2 从「谁和谁通信」定位三者
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph L3["第三层 · Skill"]
-        direction LR
-        AGENT[Agent] <-->|"扫描 / 加载"| KM["知识模块<br/>SKILL.md + 脚本 + 模板"]
-    end
-
-    subgraph L2["第二层 · MCP"]
-        direction LR
-        CLIENT[MCP Client] <-->|"JSON-RPC<br/>tools/list · tools/call"| SERVER[MCP Server]
-    end
-
-    subgraph L1["第一层 · Function Calling"]
-        direction LR
-        MODEL[模型] <-->|"tool_calls JSON<br/>tool 消息回填"| HOST[宿主程序]
-    end
-
-    L3 -.->|"可选：流程中使用 MCP"| L2
-    L2 -.->|"可选：Host 转成 FC 格式<br/>并回传结果"| L1
-
-    style L3 fill:#e6f4ea
-    style L2 fill:#e8f0fe
-    style L1 fill:#fef7e0
+    SK["3 · Skill 操作流程"] -.可选.-> MCP["2 · MCP 集成"]
+    MCP -.可选.-> FC["1 · Function Calling"]
 ```
+
+Skill 层中，Agent 扫描和加载包含 `SKILL.md`、脚本及模板的知识模块。MCP 层中，Client 与 Server 交换 `tools/list`、`tools/call` 等 JSON-RPC 消息。Function Calling 层中，模型输出 `tool_calls` JSON，宿主回填工具消息。跨层连接是可选的：Skill 可以使用 MCP，Host 也可以把 MCP 定义与结果转换成模型的函数调用格式。每层内部都有双向交互，并不是强制执行的三步流水线。
+
+图中各项的完整含义：
+
+- 知识模块 SKILL.md + 脚本 + 模板
 
 | 层次 | 发生在哪两个角色之间 | 本质 | 粒度 |
 |---|---|---|---|
@@ -76,17 +64,25 @@ flowchart TB
 可以用反例检查是否混淆了职责：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S["Skill<br/>定义流程"] --> H["Host / Agent<br/>选择与执行"]
-    H --> M["MCP Client<br/>调用 Server"]
-    H --> LOCAL["本地函数 / CLI / API"]
-    F["Function Calling<br/>模型提出调用"] --> H
-    RULE["规则工作流 / 人工操作"] --> H
+    S["Skill"] --> H["Host / Agent"]
+    H --> M["MCP Client"]
+    H --> LOCAL["本地函数 / CLI /<br/>API"]
+    F["Function Calling"] --> H
+    RULE["规则工作流 / 人<br/>工操作"] --> H
 
     style S fill:#e6f4ea
     style M fill:#e8f0fe
     style F fill:#fef7e0
 ```
+
+图中各项的完整含义：
+
+- Skill 定义流程
+- Host / Agent 选择与执行
+- MCP Client 调用 Server
+- Function Calling 模型提出调用
 
 这些路径都能成立：
 
@@ -111,43 +107,46 @@ flowchart TB
 用户说：**「帮我分析最近三个月的销售数据，找出下滑的产品线，给改进建议。」**
 
 ```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant A as Agent
-    participant SK as Skill 层
-    participant MC as MCP Client
-    participant MS as MCP Servers
-    participant M as 模型
-
-    U->>A: 分析销售数据并给建议
-    A->>SK: 扫描 Skill 元数据
-    SK-->>A: 匹配到「数据分析报告」Skill
-    A->>SK: 加载 SKILL.md 正文
-    SK-->>A: 流程：取数 → 趋势分析 → 按模板成文
-
-    Note over A,MS: 第一步：取数
-    A->>M: 任务 + 流程 + 可用工具定义
-    M-->>A: tool_calls: query_database(sql=...)
-    A->>A: 校验查询范围、参数与用户权限
-    A->>MC: 路由调用
-    MC->>MS: tools/call → 数据库 Server
-    MS-->>MC: 查询结果
-    MC-->>A: 结果
-    A->>M: tool 消息回填
-
-    Note over A,MS: 第二步：趋势分析
-    M-->>A: tool_calls: run_python(code=...)
-    A->>A: 检查执行权限、隔离与资源预算
-    A->>MC: 路由调用
-    MC->>MS: tools/call → Python 执行器 Server
-    MS-->>MC: 分析结果
-    MC-->>A: 结果
-    A->>M: tool 消息回填
-
-    Note over A,SK: 第三步：按 Skill 模板成文
-    M-->>A: 结构化分析报告
-    A-->>U: 返回报告
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["加载匹配的 Skill"]
+    S1["授权数据查询"]
+    S2["通过 MCP 取数"]
+    S3["授权代码执行"]
+    S4["通过 MCP 分析"]
+    S5["按模板生成报告"]
+    S0 --> S1 --> S2 --> S3 --> S4 --> S5
 ```
+
+完整消息顺序（含阶段说明）：
+
+| 交互双方 | 消息或动作 |
+| --- | --- |
+| 用户 → Agent | 分析销售数据并给建议 |
+| Agent → Skill 层 | 扫描 Skill 元数据 |
+| Skill 层 → Agent（返回） | 匹配到「数据分析报告」Skill |
+| Agent → Skill 层 | 加载 SKILL.md 正文 |
+| Skill 层 → Agent（返回） | 流程：取数 → 趋势分析 → 按模板成文 |
+| 说明：Agent, MCP Servers | 第一步：取数 |
+| Agent → 模型 | 任务 + 流程 + 可用工具定义 |
+| 模型 → Agent（返回） | tool_calls: query_database(sql=...) |
+| Agent → Agent | 校验查询范围、参数与用户权限 |
+| Agent → MCP Client | 路由调用 |
+| MCP Client → MCP Servers | tools/call → 数据库 Server |
+| MCP Servers → MCP Client（返回） | 查询结果 |
+| MCP Client → Agent（返回） | 结果 |
+| Agent → 模型 | tool 消息回填 |
+| 说明：Agent, MCP Servers | 第二步：趋势分析 |
+| 模型 → Agent（返回） | tool_calls: run_python(code=...) |
+| Agent → Agent | 检查执行权限、隔离与资源预算 |
+| Agent → MCP Client | 路由调用 |
+| MCP Client → MCP Servers | tools/call → Python 执行器 Server |
+| MCP Servers → MCP Client（返回） | 分析结果 |
+| MCP Client → Agent（返回） | 结果 |
+| Agent → 模型 | tool 消息回填 |
+| 说明：Agent, Skill 层 | 第三步：按 Skill 模板成文 |
+| 模型 → Agent（返回） | 结构化分析报告 |
+| Agent → 用户（返回） | 返回报告 |
 
 放到这个流程里看，三层分工分别是：
 
@@ -197,9 +196,5 @@ MCP 不是 FC 的替代实现，也不建立在 FC 之上。同一个 MCP Server
 
 ## 参考资料
 
-- [OpenAI: Function Calling 指南](https://platform.openai.com/docs/guides/function-calling)
-- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP 规范 2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Agent Skills 规范](https://agentskills.io/specification)
-- [Anthropic: Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-tools-10)。

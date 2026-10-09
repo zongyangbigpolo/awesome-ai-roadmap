@@ -21,26 +21,58 @@ In engineering, it is useful to consider agent memory along three axes.
 
 This is a design perspective, not a universal biological taxonomy or an industry standard. CoALA organizes a cognitive architecture around working memory and episodic, semantic, and procedural long-term memory. LangGraph first distinguishes short- and long-term memory by their within-thread and cross-thread scopes. State which definition you are using; identical names do not imply identical implementations.
 
+Time and lifecycle.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    M[Agent Memory] --> T[Time and Lifecycle]
-    M --> C[Content and Cognitive Type]
-    M --> S[Storage and Retrieval Implementation]
+    M["Agent Memory"]
+    T["Time and<br/>Lifecycle"]
+    O["Observation<br/>Buffer"]
+    W["Working<br/>Memory"]
+    L["Long-term<br/>Memory"]
+    M --> T
+    T --> O
+    T --> W
+    T --> L
+```
 
-    T --> O[Observation Buffer]
-    T --> W[Working Memory]
-    T --> L[Long-term Memory]
+Content and cognitive type.
 
-    C --> SEM[Semantic]
-    C --> EPI[Episodic]
-    C --> PROC[Procedural]
-    C --> ENT[Entity]
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M["Agent Memory"]
+    C["Content and Cognitive<br/>Type"]
+    SEM["Semantic"]
+    EPI["Episodic"]
+    PROC["Procedural"]
+    ENT["Entity"]
+    M --> C
+    C --> SEM
+    C --> EPI
+    C --> PROC
+    C --> ENT
+```
 
-    S --> CTX[Context Window]
-    S --> REL[Relational / KV]
-    S --> VEC[Vector Store]
-    S --> GRAPH[Knowledge Graph]
-    S --> EVENT[Event / Artifact Store]
+Storage and retrieval implementation.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    M["Agent Memory"]
+    S["Storage /<br/>Retrieval"]
+    CTX["Context<br/>Window"]
+    REL["Relational /<br/>KV"]
+    VEC["Vector Store"]
+    GRAPH["Knowledge<br/>Graph"]
+    EVENT["Event /<br/>Artifact<br/>Store"]
+    M --> S
+    S --> CTX
+    S --> REL
+    S --> VEC
+    S --> GRAPH
+    S --> EVENT
 ```
 
 The three axes answer:
@@ -64,12 +96,13 @@ They are not three non-overlapping datasets. For example, “the report still ne
 Their relationship is:
 
 ```mermaid
-flowchart LR
-    ST[State Store] --> CB[Context Builder]
-    MEM[Memory Stores] --> RET[Retriever]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    ST["State Store"] --> CB["Context Builder"]
+    MEM["Memory Stores"] --> RET["Retriever"]
     RET --> CB
-    OBS[Recent Observations] --> CB
-    CB --> CTX[Current Model Context]
+    OBS["Recent<br/>Observations"] --> CB
+    CB --> CTX["Current Model<br/>Context"]
 ```
 
 Four points often cause confusion in implementation:
@@ -79,7 +112,7 @@ Four points often cause confusion in implementation:
 - State must be precise, structured, and recoverable; it should not depend entirely on natural-language conversation.
 - External long-term memory must be read and enter context as text, tool results, or another supported representation to affect the current generation. Procedural memory may also be executed directly by the runtime without being sent to the model in full.
 
-Persistence and long-term memory are not synonyms. A thread checkpoint saved to a database can still be short-term memory; restoring it after a restart does not automatically make it available to other threads. Conversely, an in-memory cross-thread store may expose a long-term memory interface yet lose its data when the process exits. [LangGraph's official distinction](https://docs.langchain.com/oss/python/concepts/memory) concerns scope, not RAM versus disk.
+Persistence and long-term memory are not synonyms. A thread checkpoint saved to a database can still be short-term memory; restoring it after a restart does not automatically make it available to other threads. Conversely, an in-memory cross-thread store may expose a long-term memory interface yet lose its data when the process exits. LangGraph's official distinction<sup>[【472】](../../book/references.md#ref-472)</sup> concerns scope, not RAM versus disk.
 
 This chapter focuses on external memory that can be read and written explicitly. Parametric knowledge in model weights, the inference-time KV cache, and history retained by a conversation service are different mechanisms. A reply saying “I'll remember that” does not mean the weights were updated or prove that the application persisted anything.
 
@@ -96,11 +129,12 @@ It holds raw information that has just entered the system, such as:
 - Sensor input.
 
 ```mermaid
-flowchart LR
-    ENV[User / Tool / Environment] --> RAW[Raw Observation]
-    RAW --> N[Parse and Normalize]
-    N --> WM[Working Memory]
-    N --> CAND[Memory Candidates]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    ENV["User / Tool /<br/>Environment"] --> RAW["Raw Observation"]
+    RAW --> N["Parse and Normalize"]
+    N --> WM["Working Memory"]
+    N --> CAND["Memory Candidates"]
 ```
 
 Raw input is not necessarily “memory” yet. It enters the subsequent memory system only after it is retained, processed, or persisted.
@@ -126,12 +160,13 @@ Working memory holds information needed to complete the current task, such as:
 - The remaining budget and current error state.
 
 ```mermaid
-flowchart TB
-    G[Goal] --> WM[Working Memory]
-    P[Plan] --> WM
-    O[Observations] --> WM
-    A[Artifacts Summary] --> WM
-    WM --> M[Model Context]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["Goal"] --> WM["Working<br/>Memory"]
+    P["Plan"] --> WM
+    O["Observations"] --> WM
+    A["Artifacts<br/>Summary"] --> WM
+    WM --> M["Model<br/>Context"]
 ```
 
 ### 7.4.1 Working Memory Is Not Confined to the Context Window
@@ -288,20 +323,44 @@ The categories are therefore not mutually exclusive folders. They help the syste
 
 Agent memory involves more than “put it in a vector database and retrieve it later.” Its full lifecycle includes:
 
+Select, normalize, and index memories.
+
 ```mermaid
-flowchart LR
-    O[Observe] --> X[Extract Candidates]
-    X --> F[Filter / Privacy]
-    F --> E[Evaluate Importance]
-    E --> N[Normalize / Deduplicate]
-    N --> W[Write]
-    W --> I[Index]
-    I --> R[Retrieve]
-    R --> RR[Filter / Rerank]
-    RR --> C[Build Context]
-    C --> U[Use]
-    U --> FB[Feedback]
-    FB --> UP[Update / Decay / Delete]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    O["Observe"]
+    X["Extract Candidates"]
+    F["Filter / Privacy"]
+    E["Evaluate Importance"]
+    N["Normalize / Deduplicate"]
+    W["Write"]
+    I["Index"]
+    O --> X
+    X --> F
+    F --> E
+    E --> N
+    N --> W
+    W --> I
+```
+
+Use memories and feed lifecycle changes back into the index.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    I["Index"]
+    R["Retrieve"]
+    RR["Filter / Rerank"]
+    C["Build Context"]
+    U["Use"]
+    FB["Feedback"]
+    UP["Update / Decay / Delete"]
+    I --> R
+    R --> RR
+    RR --> C
+    C --> U
+    U --> FB
+    FB --> UP
     UP --> I
 ```
 
@@ -351,14 +410,15 @@ A memory writer typically combines these signals:
 - User intent: whether the user asked to remember or delete it.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    C[Memory Candidate] --> P{Allowed by Privacy and Permissions?}
-    P -->|No| DROP[Reject or Redact]
-    P -->|Yes| D{Duplicate or Superseded?}
-    D -->|Yes| UPDATE[Merge or Update]
-    D -->|No| V{Important and Credible?}
-    V -->|No| TEMP[Keep Only for the Current Task]
-    V -->|Yes| STORE[Write to Long-term Memory]
+    C["Memory<br/>Candidate"] --> P["Allowed by<br/>Privacy and<br/>Permissions?"]
+    P -->|No| DROP["Reject or<br/>Redact"]
+    P -->|Yes| D["Duplicate or<br/>Superseded?"]
+    D -->|Yes| UPDATE["Merge or<br/>Update"]
+    D -->|No| V["Important<br/>and<br/>Credible?"]
+    V -->|No| TEMP["Keep Only<br/>for the<br/>Current Task"]
+    V -->|Yes| STORE["Write to<br/>Long-term<br/>Memory"]
 ```
 
 ## 7.10 How to Store It: Choose by Access Pattern
@@ -377,14 +437,15 @@ Combining storage types according to access patterns is usually more appropriate
 | Operating procedures and methods | Skill / workflow repository | Name and capability matching |
 
 ```mermaid
-flowchart TB
-    MW[Memory Writer] --> ROUTE{Route by Data Type}
-    ROUTE --> REL[Relational / KV]
-    ROUTE --> VEC[Vector Store]
-    ROUTE --> GRAPH[Knowledge Graph]
-    ROUTE --> EVENT[Event Store]
-    ROUTE --> ART[Artifact Store]
-    ROUTE --> SKILL[Skill / Workflow Store]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    MW["Memory<br/>Writer"] --> ROUTE["Route by<br/>Data Type"]
+    ROUTE --> REL["Relational /<br/>KV"]
+    ROUTE --> VEC["Vector Store"]
+    ROUTE --> GRAPH["Knowledge<br/>Graph"]
+    ROUTE --> EVENT["Event Store"]
+    ROUTE --> ART["Artifact<br/>Store"]
+    ROUTE --> SKILL["Skill /<br/>Workflow<br/>Store"]
 ```
 
 ### 7.10.1 Vector Store
@@ -522,30 +583,50 @@ Retrieval after a task mainly supports memory maintenance rather than continued 
 - Decisions about promotion to long-term memory.
 
 ```mermaid
-flowchart LR
-    START[Task Start] --> PRE[Proactive Retrieval]
-    PRE --> RUN[Agent Execution]
-    RUN --> NEED{Need Additional Knowledge?}
-    NEED -->|Yes| ON[On-demand Retrieval]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    START["Task Start"] --> PRE["Proactive Retrieval"]
+    PRE --> RUN["Agent Execution"]
+    RUN --> NEED["Need Additional<br/>Knowledge?"]
+    NEED -->|Yes| ON["On-demand Retrieval"]
     ON --> RUN
-    NEED -->|No| END[Task End]
-    END --> CONS[Memory Consolidation]
+    NEED -->|No| END["Task End"]
+    END --> CONS["Memory Consolidation"]
 ```
 
 ## 7.13 How to Retrieve: The Retrieval Pipeline
 
 Retrieval involves more than a single vector search:
 
+Establish authorized scope before retrieval.
+
 ```mermaid
-flowchart LR
-    Q[Task / Query] --> QR[Query Rewrite]
-    QR --> SCOPE[Server-side Identity and Authorized Scope]
-    SCOPE --> MR[Multi-source Retrieval Within Authorized Scope]
-    MR --> ACL[Recheck Permissions Before Returning]
-    ACL --> TF[Time / Metadata Filter]
-    TF --> DD[Deduplicate]
-    DD --> RR[Rerank]
-    RR --> PACK[Context Packing]
+flowchart TB
+    Q[Task / Query]
+    QR[Query Rewrite]
+    SCOPE[Server-side Identity and Authorized Scope]
+    MR[Multi-source Retrieval Within Authorized Scope]
+    Q --> QR
+    QR --> SCOPE
+    SCOPE --> MR
+```
+
+Recheck and pack the retrieved results.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    MR["Multi-source Retrieval<br/>Within Authorized Scope"]
+    ACL["Recheck Permissions<br/>Before Returning"]
+    TF["Time / Metadata Filter"]
+    DD["Deduplicate"]
+    RR["Rerank"]
+    PACK["Context Packing"]
+    MR --> ACL
+    ACL --> TF
+    TF --> DD
+    DD --> RR
+    RR --> PACK
 ```
 
 ### 7.13.1 Query Rewrite
@@ -621,13 +702,14 @@ The context builder should consider:
 - Whether full content is needed or a summary will suffice.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart TB
-    R[Retrieved Memories] --> C1[Deduplicate]
-    C1 --> C2[Annotate Conflicts]
-    C2 --> C3[Rerank for the Task]
-    C3 --> C4[Summarize or Select Excerpts]
-    C4 --> C5[Pack Within the Token Budget]
-    C5 --> CTX[Model Context]
+    R["Retrieved Memories"] --> C1["Deduplicate"]
+    C1 --> C2["Annotate Conflicts"]
+    C2 --> C3["Rerank for the Task"]
+    C3 --> C4["Summarize or Select<br/>Excerpts"]
+    C4 --> C5["Pack Within the Token<br/>Budget"]
+    C5 --> CTX["Model Context"]
 ```
 
 “Sufficient” must be tested against the task. When comparing two historical policy versions, for example, the older version may be essential evidence even though it is no longer in force. Keeping only the latest summary could make the question impossible to answer.
@@ -657,17 +739,37 @@ Versioning does not mean retaining all personal data forever. Deletion requests 
 
 ### 7.16.2 Conflict Policies
 
+Identify whether a memory describes the same fact.
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    NEW[New Memory] --> MATCH{Same Subject, Attribute, and Scope?}
-    MATCH -->|No| ADD[Add]
-    MATCH -->|Yes| SAME{Same Content?}
-    SAME -->|Yes| MERGE[Deduplicate and Merge Source Records]
-    SAME -->|No| AUTH{Clear Source Precedence?}
-    AUTH -->|Yes| CHECK{Effective Time and Supersession Clear?}
-    CHECK -->|Yes| VERSION[Create a Version by Effective Time]
+    NEW["New Memory"]
+    MATCH["Same Subject, Attribute,<br/>and Scope?"]
+    ADD["Add"]
+    SAME["Same Content?"]
+    NEW --> MATCH
+    MATCH -->|No| ADD
+    MATCH -->|Yes| SAME
+```
+
+Merge duplicates or resolve version and source precedence.
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SAME["Same Content?"]
+    MERGE["Deduplicate and<br/>Merge Source<br/>Records"]
+    AUTH["Clear Source<br/>Precedence?"]
+    CHECK["Effective Time<br/>and Supersession<br/>Clear?"]
+    VERSION["Create a Version<br/>by Effective<br/>Time"]
+    CONFLICT["Retain Conflict<br/>and Request<br/>Verification"]
+    SAME -->|Yes| MERGE
+    SAME -->|No| AUTH
+    AUTH -->|Yes| CHECK
+    CHECK -->|Yes| VERSION
     CHECK -->|No| CONFLICT
-    AUTH -->|No| CONFLICT[Retain Conflict and Request Verification]
+    AUTH -->|No| CONFLICT
 ```
 
 Do not use a single priority list to answer both “Whose instructions should we follow?” and “What is factually true?”:
@@ -720,12 +822,13 @@ Ranking decay is not deletion. Low-scoring content may still be readable by ID a
 Consolidation turns many low-level episodes into more stable semantic or procedural memory.
 
 ```mermaid
-flowchart LR
-    E1[Episode 1] --> C[Consolidation]
-    E2[Episode 2] --> C
-    E3[Episode N] --> C
-    C --> S[Semantic Rule]
-    C --> P[Procedural Skill]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    E1["Episode 1"] --> C["Consolidation"]
+    E2["Episode 2"] --> C
+    E3["Episode N"] --> C
+    C --> S["Semantic Rule"]
+    C --> P["Procedural Skill"]
 ```
 
 For example, if traces show frequent rate limiting when concurrency exceeds 5 for an API, a candidate lesson could be:
@@ -747,11 +850,12 @@ Also rule out confounding factors such as request rate, tokens per request, acco
 When a lesson is stable, verifiable, and reusable across tasks, it can be promoted from episodic memory to a skill:
 
 ```mermaid
-flowchart LR
-    E[Experience Across Tasks] --> R[Extract Recurring Patterns]
-    R --> V[Validate]
-    V -->|Unstable| M[Retain as Memory]
-    V -->|Stable| S[Skill / Workflow / Rule]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    E["Experience Across Tasks"] --> R["Extract Recurring<br/>Patterns"]
+    R --> V["Validate"]
+    V -->|Unstable| M["Retain as Memory"]
+    V -->|Stable| S["Skill / Workflow / Rule"]
 ```
 
 The distinction is:
@@ -778,13 +882,14 @@ A common design separates sharing scopes into several levels:
 - **Audit log**: a complete trace that cannot be arbitrarily modified.
 
 ```mermaid
-flowchart TB
-    A1[Agent A] --> P1[Private Memory A]
-    A2[Agent B] --> P2[Private Memory B]
-    A1 --> WS[Shared Task Workspace]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    A1["Agent A"] --> P1["Private<br/>Memory A"]
+    A2["Agent B"] --> P2["Private<br/>Memory B"]
+    A1 --> WS["Shared Task<br/>Workspace"]
     A2 --> WS
-    WS --> TEAM[Validated Team Memory]
-    A1 --> AUDIT[Audit Log]
+    WS --> TEAM["Validated<br/>Team Memory"]
+    A1 --> AUDIT["Audit Log"]
     A2 --> AUDIT
 ```
 
@@ -916,9 +1021,9 @@ Separate failures into “not written,” “written incorrectly,” “not retr
 
 Useful primary-source evaluations include:
 
-- [LongMemEval](https://github.com/xiaowu0162/LongMemEval): information extraction, multi-session reasoning, knowledge updates, temporal reasoning, and abstention when evidence is insufficient. Specify the original release or the September 2025 cleaned version; do not mix their scores. Abstention questions have no evidence locations that should be retrieved, so ordinary evidence recall cannot be applied directly.
-- [LoCoMo](https://github.com/snap-research/locomo): long-conversation question answering and event summarization. The ACL 2024 release contains ten generated conversations verified and edited by human annotators. The cited snapshot distributes ten per-conversation JSON files in `data/locomo10.zip`. This is not the initial fifty-conversation version and does not represent the performance of the overall real-user population.
-- [LongMemEval-V2](https://github.com/xiaowu0162/LongMemEval-V2): state, workflow, and environment experience from web-agent trajectories, evaluated through evidence-based question answering and query latency. This is still not the same as success in executing actual tasks.
+- LongMemEval<sup>[【480】](../../book/references.md#ref-480)</sup>: information extraction, multi-session reasoning, knowledge updates, temporal reasoning, and abstention when evidence is insufficient. Specify the original release or the September 2025 cleaned version; do not mix their scores. Abstention questions have no evidence locations that should be retrieved, so ordinary evidence recall cannot be applied directly.
+- LoCoMo<sup>[【481】](../../book/references.md#ref-481)</sup>: long-conversation question answering and event summarization. The ACL 2024 release contains ten generated conversations verified and edited by human annotators. The cited snapshot distributes ten per-conversation JSON files in `data/locomo10.zip`. This is not the initial fifty-conversation version and does not represent the performance of the overall real-user population.
+- LongMemEval-V2<sup>[【482】](../../book/references.md#ref-482)</sup>: state, workflow, and environment experience from web-agent trajectories, evaluated through evidence-based question answering and query latency. This is still not the same as success in executing actual tasks.
 
 Business regression sets must also cover retrieval after deletion, revoked permissions, same-named entities across tenants, incorrect summaries, expired facts, and poisoned writes. Ordinary question-answering scores cannot replace these tests.
 
@@ -926,38 +1031,16 @@ Business regression sets must also cover retrieval after deletion, revoked permi
 
 ```mermaid
 flowchart TB
-    INPUT[User / Tool / Environment] --> OBS[Observation Buffer]
-    OBS --> EXTRACT[Memory Candidate Extractor]
-    EXTRACT --> POLICY[Privacy / Trust / Write Policy]
-
-    POLICY -->|Temporary| WORK[Working Memory]
-    POLICY -->|Structured| REL[Relational / KV]
-    POLICY -->|Similarity Retrieval Needed| VEC[Vector Store]
-    POLICY -->|Entity Relation| GRAPH[Knowledge Graph]
-    POLICY -->|Event| EVENT[Event Store]
-    POLICY -->|Large Result| ART[Artifact Store]
-
-    TASK[Current Task] --> QUERY[Retrieval Router Within Authorized Scope]
-    QUERY --> REL
-    QUERY --> VEC
-    QUERY --> GRAPH
-    QUERY --> EVENT
-    QUERY --> ART
-
-    REL --> RERANK[Permission and Version Recheck / Rerank]
-    VEC --> RERANK
-    GRAPH --> RERANK
-    EVENT --> RERANK
-    ART --> RERANK
-
-    RERANK --> CONTEXT[Context Builder]
-    WORK --> CONTEXT
+    POLICY[Write policy] --> STORE[Memory stores]
+    STORE --> CHECK[Recheck and rerank]
+    CHECK --> CONTEXT[Context Builder]
     CONTEXT --> MODEL[Model / Agent]
-
-    MODEL --> FEEDBACK[Outcome Feedback]
-    FEEDBACK --> CONSOLIDATE[Update / Consolidate / Forget]
-    CONSOLIDATE --> POLICY
+    MODEL -->|Outcome feedback| POLICY
 ```
+
+User, tool, and environment input first enters an observation buffer, then a memory-candidate extractor, then the privacy/trust/write policy. Temporary information goes to working memory, which feeds the Context Builder directly. Persistent routing is type-specific: structured data to relational/KV storage, similarity retrieval to a vector store, entity relations to a knowledge graph, events to an event store, and large results to an artifact store.
+
+The current task drives a retrieval router **within authorized scope** over those five persistent stores. Each store's results undergo permission and version rechecks and reranking before reaching the Context Builder. Model outcome feedback triggers update, consolidation, or forgetting before returning to the write policy; it is not an unchecked direct memory write.
 
 The diagram has two main paths: the write path decides which observations are worth retaining, and the read path selects evidence for the current task. Feedback can change future write policy, but cannot bypass source, permission, and version checks. Storage components can also be omitted according to need; deploying every one is not required.
 
@@ -1038,14 +1121,5 @@ When investigating a memory failure, trace the source, write, index, retrieval, 
 
 ## References
 
-- [CoALA: Cognitive Architectures for Language Agents](https://arxiv.org/abs/2309.02427)
-- [MemGPT: Towards LLMs as Operating Systems](https://arxiv.org/abs/2310.08560)
-- [Generative Agents: Interactive Simulacra of Human Behavior](https://arxiv.org/abs/2304.03442)
-- [Reflexion: Language Agents with Verbal Reinforcement Learning](https://arxiv.org/abs/2303.11366)
-- [LangGraph: Memory overview](https://docs.langchain.com/oss/python/concepts/memory) ([documentation snapshot 1fa2214](https://github.com/langchain-ai/docs/blob/1fa2214237b7a7506c34a30b394c26023d61bf4b/src/oss/concepts/memory.mdx), used to distinguish within-thread and cross-thread scope)
-- [OpenAI: Safety in building agents](https://developers.openai.com/api/docs/guides/agent-builder-safety) (cited for trust-boundary principles, not for its product-specific default model recommendations)
-- [LongMemEval paper](https://arxiv.org/abs/2410.10813) and [official README snapshot 9e0b455](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md)
-- [LoCoMo paper](https://arxiv.org/abs/2402.17753) and [ACL 2024 release notes snapshot 9228632](https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD)
-- [LongMemEval-V2 official README snapshot 2cc8c54](https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md)
-
-Source review: 2026-09-15. Framework documentation is continuously updated; the snapshots fix the concepts and evaluation descriptions cited here, not a claim that their benchmark results were reproduced.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-07) for this chapter’s sources, reading suggestions, and source notes.

@@ -11,7 +11,8 @@ description: 解释 BPE、WordPiece、Unigram 与 SentencePiece 的区别，讨�
 ID 用于查找 embedding，Transformer 的主体实际处理连续向量；多模态模型还可能接收图像或音频特征，不能把「只接收整数」作为所有大模型的定义。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     TXT["人类文字<br/>「你好，世界」"] -->|编码 encode| IDS["token ID 序列<br/>具体数值由 tokenizer 决定"]
     IDS --> MODEL["Embedding + 模型"]
     MODEL --> OUT["下一个 token 的<br/>概率分布"]
@@ -57,15 +58,18 @@ BPE、Unigram、WordPiece 是子词算法；**SentencePiece 是工具库和处�
 BPE（Byte Pair Encoding，字节对编码）原理很简单，三步：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1["① 初始化<br/>把语料拆成最小单元（单字节/字符）<br/>每个字符是一个基础 token"]
-    S1 --> S2["② 反复合并<br/>统计所有相邻 token pair 的频率<br/>把最高频的一对合并成新 token"]
-    S2 --> S3{"词汇表达到<br/>预设大小?"}
+    S1["初始化基础 token"]
+    S1 --> S2["合并最高频相邻对"]
+    S2 --> S3{"达到预设大小？"}
     S3 -->|否| S2
-    S3 -->|是| S4["③ 结束<br/>得到词汇表 + 一组合并规则"]
+    S3 -->|是| S4["词汇表 + 合并规则"]
 
     style S4 fill:#e6f4ea
 ```
+
+初始化时，将语料拆为基础单元：字节级 BPE 使用字节，字符级 BPE 使用字符。每轮统计所有相邻 token 对的频率，将最高频的一对替换为新 token。重复直到词汇表达到预设大小，最终保留词汇表和合并规则。
 
 **合并过程举例**：
 
@@ -233,13 +237,5 @@ Tokenizer 负责离散编码，embedding 把 ID 映射为模型使用的向量�
 
 ## 参考资料
 
-- [Neural Machine Translation of Rare Words with Subword Units（BPE）](https://arxiv.org/abs/1508.07909)
-- [SentencePiece: A simple and language independent subword tokenizer](https://arxiv.org/abs/1808.06226)
-- [Subword Regularization: Improving NMT Models with Multiple Subword Candidates（Unigram）](https://arxiv.org/abs/1804.10959)
-- [Hugging Face: Tokenizers 教程](https://huggingface.co/learn/nlp-course/chapter6/1)
-- [OpenAI tiktoken](https://github.com/openai/tiktoken)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
-- [Meta Llama 3 Tokenizer 官方实现](https://github.com/meta-llama/llama3/blob/main/llama/tokenizer.py)
-- [Google SentencePiece 官方实现与配置说明](https://github.com/google/sentencepiece)
-- [Hugging Face Transformers：Tokenization algorithms](https://huggingface.co/docs/transformers/tokenizer_summary)
-- [Hugging Face Transformers：Chat templates](https://huggingface.co/docs/transformers/chat_templating)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-05)。

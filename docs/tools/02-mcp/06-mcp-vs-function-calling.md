@@ -27,18 +27,25 @@ Copying one schema looks cheap. The calculation changes at team scale.
 
 If **5 applications** independently integrate **8 tools**, there are **40 integration combinations**. Shared SDKs or internal services can reduce duplicated code; MCP is one way to standardize these integrations.
 
+**Separate adapters**
+
 ```mermaid
-flowchart TB
-    subgraph PAIN["Maintenance risks without shared adapters"]
-        P1["Upstream API field changes"] --> R1["Each application adapts separately"]
-        P2["Migration to another model API"] --> R2["Check schemas and result-message formats"]
-        P3["A new application needs access"] --> R3["Reimplement discovery and authorization"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        P1["Upstream API<br/>field changes"] --> R1["Each application<br/>adapts<br/>separately"]
+        P2["Migration to<br/>another model<br/>API"] --> R2["Check API<br/>contracts"]
+        P3["A new<br/>application<br/>needs access"] --> R3["Rebuild<br/>integration"]
 
     style R1 fill:#fce8e6
     style R2 fill:#fce8e6
     style R3 fill:#fce8e6
 ```
+
+Details of the illustrated steps and components:
+
+- Maintenance risks without shared adapters
+- Check schemas and result-message formats
+- Reimplement discovery and authorization
 
 The core risk is maintaining the same tool integration in multiple applications because no shared adapter exists. Function calling itself does not manage tools or interoperability across applications. MCP can fill that role, but so can an existing shared SDK or internal service.
 
@@ -47,25 +54,33 @@ The core risk is maintaining the same tool integration in multiple applications 
 A common project architecture uses function calling in the Host to route MCP Tools.
 
 ```mermaid
-sequenceDiagram
-    participant M as Model
-    participant H as Host application containing an MCP Client
-    participant S as MCP Server
-
-    Note over H,S: Startup
-    H->>S: tools/list
-    S-->>H: Tool definitions in MCP format
-    Note over H: Convert to the model's native<br/>function-calling schema
-
-    Note over M,H: Runtime
-    H->>M: messages + tools in ordinary FC format
-    M-->>H: tool_calls in ordinary FC output
-    Note over M: This bridge does not require<br/>understanding MCP transport
-    H->>S: tools/call routed to the appropriate Server
-    S-->>H: Execution result
-    H->>M: Supply the tool result in the model API format
-    M-->>H: Final answer
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Discover MCP tools"]
+    S1["Translate schemas"]
+    S2["Model proposes call"]
+    S3["Host routes to MCP"]
+    S4["Return tool result"]
+    S5["Model answers"]
+    S0 --> S1 --> S2 --> S3 --> S4 --> S5
 ```
+
+Complete exchange, including phase notes:
+
+| Participants | Message or action |
+| --- | --- |
+| Note: Host application containing an MCP Client, MCP Server | Startup |
+| Host application containing an MCP Client → MCP Server | tools/list |
+| MCP Server → Host application containing an MCP Client (return) | Tool definitions in MCP format |
+| Note: Host application containing an MCP Client | Convert to the model's native; function-calling schema |
+| Note: Model, Host application containing an MCP Client | Runtime |
+| Host application containing an MCP Client → Model | messages + tools in ordinary FC format |
+| Model → Host application containing an MCP Client (return) | tool_calls in ordinary FC output |
+| Note: Model | This bridge does not require; understanding MCP transport |
+| Host application containing an MCP Client → MCP Server | tools/call routed to the appropriate Server |
+| MCP Server → Host application containing an MCP Client (return) | Execution result |
+| Host application containing an MCP Client → Model | Supply the tool result in the model API format |
+| Model → Host application containing an MCP Client (return) | Final answer |
 
 From the model's perspective, this is ordinary function calling. Capability discovery, schema conversion, call routing, and result delivery happen in the Host. The bridge is common, but not required by the MCP specification.
 
@@ -109,14 +124,15 @@ These dimensions matter more than tool code size. A function of a few dozen line
 ### 6.4.3 A decision flow
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    START{Integrate a tool} --> Q1{Is there an existing<br/>community MCP Server?}
-    Q1 -->|Yes| USE_MCP["Review maintenance, permissions,<br/>and version compatibility before reuse"]
-    Q1 -->|No| Q2{Must it be reused across<br/>projects or teams?}
-    Q2 -->|Yes| BUILD_MCP["Implement an MCP Server"]
-    Q2 -->|No| Q3{Can an existing local function<br/>or API meet the need?}
-    Q3 -->|Yes| USE_FC["Implement or keep a local function / API<br/>Optionally drive it with function calling"]
-    Q3 -->|No| Q4{Do you still need standard discovery<br/>and interoperability across Hosts?}
+    START["Integrate a tool"] --> Q1["Existing MCP<br/>server?"]
+    Q1 -->|Yes| USE_MCP["Review before<br/>reuse"]
+    Q1 -->|No| Q2["Cross-team<br/>reuse?"]
+    Q2 -->|Yes| BUILD_MCP["Implement an MCP<br/>Server"]
+    Q2 -->|No| Q3["Local API<br/>sufficient?"]
+    Q3 -->|Yes| USE_FC["Local function /<br/>API"]
+    Q3 -->|No| Q4["Need<br/>interoperability?"]
     Q4 -->|Yes| BUILD_MCP
     Q4 -->|No| USE_FC
 
@@ -124,6 +140,15 @@ flowchart TB
     style BUILD_MCP fill:#e6f4ea
     style USE_FC fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Is there an existing community MCP Server?
+- Review maintenance, permissions, and version compatibility before reuse
+- Must it be reused across projects or teams?
+- Can an existing local function or API meet the need?
+- Implement or keep a local function / API Optionally drive it with function calling
+- Do you still need standard discovery and interoperability across Hosts?
 
 ### 6.4.4 Combining them is normal
 
@@ -160,7 +185,7 @@ Run a local experiment against a read-only directory and record versions, config
 
 This is illustrative configuration. Replace the entry point with an installed, reviewed, version-pinned program. Whether the Host needs a restart depends on the product. The directory argument configures the filesystem Server implementation; it is **not the Roots protocol itself**. Roots are context hints, not an enforced sandbox, and are deprecated in 2026-07-28. Filesystem access still needs Server-side path validation and OS isolation.
 
-The old `@modelcontextprotocol/server-github` is archived; see [github/github-mcp-server](https://github.com/github/github-mcp-server) for GitHub's official implementation. Inject tokens through a credential manager or controlled environment; do not commit them to a configuration repository.
+The old `@modelcontextprotocol/server-github` is archived; see github/github-mcp-server<sup>[【284】](../../book/references.md#ref-284)</sup> for GitHub's official implementation. Inject tokens through a credential manager or controlled environment; do not commit them to a configuration repository.
 
 ### 6.5.2 Write a Server
 
@@ -239,10 +264,5 @@ Local Servers involve code execution; remote Servers involve sending data outsid
 
 ## References
 
-- [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP Server development quickstart](https://modelcontextprotocol.io/docs/develop/build-server)
-- [MCP Servers official examples](https://github.com/modelcontextprotocol/servers)
-- [Archived MCP examples](https://github.com/modelcontextprotocol/servers-archived)
-- [MCP Roots: deprecation and the absence of a security boundary](https://modelcontextprotocol.io/specification/2026-07-28/client/roots)
-- [OpenAI: Function calling guide](https://platform.openai.com/docs/guides/function-calling)
-- [Anthropic: Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-06) for this chapter’s sources, reading suggestions, and source notes.

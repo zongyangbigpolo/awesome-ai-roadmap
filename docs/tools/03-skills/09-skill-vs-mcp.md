@@ -22,23 +22,24 @@ They address different concerns:
 The task is: **review this PR**.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    TASK["User: Review this PR"] --> AGENT[Agent]
-
-    AGENT -->|"Discover and load automatically"| SKILL["code-review Skill<br/>What to read first, four review dimensions,<br/>and the output format"]
-
-    SKILL --> H["Host follows the instructions<br/>and checks authorization and results"]
-    H -->|"Step 1: Get the diff"| M1["GitHub MCP Server<br/>get_pull_request_diff"]
-    H -->|"Step 2: Run a static scan"| SC["Script bundled with the Skill<br/>scripts/check_security.py"]
-    H -->|"Step 3: Look up past defects"| M2["Internal knowledge-base MCP Server<br/>search_past_incidents"]
-    H -->|"Step 4: Use the output template"| TPL["Template bundled with the Skill<br/>assets/report_template.md"]
-
-    TPL --> OUT[Structured review report]
-
-    style SKILL fill:#e6f4ea
-    style M1 fill:#e8f0fe
-    style M2 fill:#e8f0fe
+    SKILL["Load review Skill"] --> DIFF["Get PR diff"]
+    DIFF --> SCAN["Run static scan"]
+    SCAN --> HISTORY["Check past defects"]
+    HISTORY --> REPORT["Write review report"]
 ```
+
+For “Review this PR,” the agent discovers and loads the `code-review` Skill. Its instructions specify what to read first, four review dimensions, and the output format; the host enforces authorization and checks results. Step 1 calls `get_pull_request_diff` on the GitHub MCP Server. Step 2 runs the bundled `scripts/check_security.py`. Step 3 calls `search_past_incidents` on the internal knowledge-base MCP Server. Step 4 uses `assets/report_template.md` to produce the structured report. The Skill supplies the procedure; MCP servers, a local script, and a template supply different parts of its implementation.
+
+Details of the illustrated steps and components:
+
+- code-review Skill What to read first, four review dimensions, and the output format
+- Host follows the instructions and checks authorization and results
+- GitHub MCP Server get_pull_request_diff
+- Script bundled with the Skill scripts/check_security.py
+- Internal knowledge-base MCP Server search_past_incidents
+- Template bundled with the Skill assets/report_template.md
 
 Consider each mechanism separately:
 
@@ -74,23 +75,31 @@ The result of MCP's `tools/list` is not the model's context. A host can fetch pa
 
 Skills recommend progressive disclosure, but their metadata grows with the number installed. A verbose Skill can still consume substantial context once loaded.
 
+**MCP loading**
+
 ```mermaid
-flowchart LR
-    subgraph MCP_L["MCP loading"]
-        M1[Known servers] --> M2[tools/list pagination and caching]
-        M2 --> M3["Host filters by authorization and task<br/>before injecting tool definitions"]
-    end
-
-    subgraph SKILL_L["Skill loading"]
-        S1[Scan Skill directories] --> S2["Read only name + description"]
-        S2 --> S3{Does the task match?}
-        S3 -->|Yes| S4[Load the body]
-        S3 -->|No| S5[Keep only discovery metadata]
-    end
-
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["Known servers"] --> M2["tools/list pagination<br/>and caching"]
+        M2 --> M3["Host filters tools"]
     style M3 fill:#fce8e6
+```
+
+**Skill loading**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["Scan Skill directories"] --> S2["Read only name +<br/>description"]
+        S2 --> S3["Does the task match?"]
+        S3 -->|Yes| S4["Load the body"]
+        S3 -->|No| S5["Keep only discovery<br/>metadata"]
     style S5 fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Host filters by authorization and task before injecting tool definitions
 
 Both have discovery costs and runtime context-injection costs. Tool search can defer exposure of complete schemas, while Skills still need a discoverable catalog. Compare actual model input, not just the number of servers or directories.
 
@@ -101,14 +110,26 @@ For both tools and Skills, test routing recall, false activations, context budge
 Start with the kind of addition you need:
 
 ```mermaid
-flowchart TB
-    Q{"What do you want<br/>to add to the agent?"}
-    Q -->|"Access to external systems<br/>(databases, APIs, files)"| MCP["One option: implement or connect an MCP server"]
-    Q -->|"A method for a class of tasks<br/>(steps, standards, formats)"| SKILL["Write a Skill"]
-    Q -->|"Both"| BOTH["Host orchestrates MCP tools<br/>following Skill instructions"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    Q["What is needed?"]
+    Q -->|"System access"| MCP["Consider MCP"]
+    Q -->|"Procedure"| SKILL["Write a Skill"]
+    Q -->|"Both"| BOTH["Combine both"]
 
     style BOTH fill:#e6f4ea
 ```
+
+Figure conditions and labels:
+
+- Access to external systems (databases, APIs, files)
+- A method for a class of tasks (steps, standards, formats)
+
+Details of the illustrated steps and components:
+
+- What do you want to add to the agent?
+- One option: implement or connect an MCP server
+- Host orchestrates MCP tools following Skill instructions
 
 Some concrete examples:
 
@@ -127,22 +148,18 @@ The central question is whether you are delivering a common remote capability in
 A typical combination uses **layers**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    subgraph LAYER1["Procedure layer · Skill"]
-        SK["Defines steps, standards, and output formats<br/>Specifies the order of work"]
-    end
-
-    subgraph LAYER2["Capability layer · MCP"]
-        T1[Database Server]
-        T2[GitHub Server]
-        T3[Filesystem Server]
-    end
-
-    SK --> H["Host orchestration and authorization checks"]
-    H --> T1
-    H --> T2
-    H --> T3
+    SK["Skill procedure"] --> H["Host authorization"]
+    H --> MCP["MCP capabilities"]
 ```
+
+The Skill defines steps, standards, output formats, and their order. The host orchestrates and authorizes calls to the capability layer, represented here by database, GitHub, and filesystem MCP Servers. A procedure never grants permissions by itself.
+
+Details of the illustrated steps and components:
+
+- Defines steps, standards, and output formats Specifies the order of work
+- Host orchestration and authorization checks
 
 It is natural to reference MCP tools directly in `SKILL.md`. This Chinese instruction example first requests the PR diff, requires module-by-module review with coverage tracking if it exceeds the context budget, and forbids silently skipping configuration, dependencies, or other directories. It then asks for production incidents involving those files during the past six months:
 
@@ -208,9 +225,5 @@ Distinguish changeable workflow preferences from business rules that must not be
 
 ## References
 
-- [Anthropic: Introducing Agent Skills](https://www.anthropic.com/news/skills)
-- [Agent Skills specification](https://agentskills.io/specification)
-- [Model Context Protocol official documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP 2026-07-28 tool discovery and schemas](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)
-- [Anthropic: Equipping Agents for the Real World with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [Anthropic: Effective Context Engineering for AI Agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-tools-09) for this chapter’s sources, reading suggestions, and source notes.

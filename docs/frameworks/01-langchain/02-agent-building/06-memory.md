@@ -16,13 +16,19 @@ Suppose a user is planning a trip to Hangzhou:
 | In a new conversation a week later, the agent still knows the user avoids spicy food and prefers staying near a subway station | **Still valid across conversations** | Long-term memory |
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["How far the current thread has progressed"] --> B["State + Checkpointer"]
-    C["User preferences and facts<br/>that future threads may need"] --> D["Store"]
+    A["Current thread"] --> B["State +<br/>Checkpointer"]
+    C["User<br/>preferences and<br/>facts"] --> D["Store"]
 
     style B fill:#e8f0fe
     style D fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- How far the current thread has progressed
+- User preferences and facts that future threads may need
 
 ## 6.2 How Is Short-Term Memory Implemented?
 
@@ -175,15 +181,23 @@ Current facts such as order amounts, account balances, and inventory must still 
 ## 6.7 What Matters in Production?
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    P1["① Can data be saved reliably?<br/>In-memory data disappears when the process exits<br/>Production needs database-backed<br/>checkpointers and stores<br/>Include schemas and migrations in deployment"]
-    P2["② Whose memory is this?<br/>thread_id / tenant_id / user_id<br/>must come from a trusted identity system<br/>Do not trust model-generated identities<br/>Do not let clients choose another user's namespace"]
-    P3["③ Memories become stale, conflict, and need correction<br/>Deduplicate, update, and expire records<br/>Let users view, correct, export, and delete<br/>Do not remember sensitive information by default;<br/>encrypt and restrict access to what must be retained<br/>Logs and traces must not become another leak"]
-    P4["④ Does memory actually improve results?<br/>Counting written records is not enough"]
+    P1["① Can data be<br/>saved reliably?"]
+    P2["② Whose memory<br/>is this?"]
+    P3["③ Maintain<br/>memories"]
+    P4["④ Evaluate<br/>benefit"]
     P1 --> P2 --> P3 --> P4
 
     style P2 fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- ① Can data be saved reliably? In-memory data disappears when the process exits Production needs database-backed checkpointers and stores Include schemas and migrations in deployment
+- ② Whose memory is this? thread_id / tenant_id / user_id must come from a trusted identity system Do not trust model-generated identities Do not let clients choose another user's namespace
+- ③ Memories become stale, conflict, and need correction Deduplicate, update, and expire records Let users view, correct, export, and delete Do not remember sensitive information by default; encrypt and restrict access to what must be retained Logs and traces must not become another leak
+- ④ Does memory actually improve results? Counting written records is not enough
 
 ### 6.7.1 Evaluate the Entire Memory Process
 
@@ -274,9 +288,5 @@ LangChain divides memory into two mechanisms by scope: within a thread, state an
 
 ## References
 
-- [LangChain: Short-term Memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [LangChain: Long-term Memory](https://docs.langchain.com/oss/python/langchain/long-term-memory)
-- [LangGraph: Persistence](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangGraph: Stores](https://docs.langchain.com/oss/python/langgraph/stores)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain v1 Migration Guide](https://docs.langchain.com/oss/python/migrate/langchain-v1)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-06) for this chapter’s sources, reading suggestions, and source notes.

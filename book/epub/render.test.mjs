@@ -4,16 +4,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { localPath, render, tiles, validateJob } from "./render.mjs";
+import { localPath, render, validateJob } from "./render.mjs";
 
 
-test("detail tiles preserve the entire large figure, with overlap", () => {
-  assert.deepEqual(tiles(400, 400), []);
-  const panels = tiles(1300, 1700);
-  assert.equal(panels.length, 9);
-  assert.equal(Math.max(...panels.map((p) => p.x + p.width)), 1300);
-  assert.equal(Math.max(...panels.map((p) => p.y + p.height)), 1700);
-  assert.ok(panels.every((p) => p.width <= 560 && p.height <= 880));
+test("renderer rejects remote resources and unsupported languages", () => {
   assert.throws(() => localPath("http://localhost/%2e%2e%2fsecret"), /escapes/);
   assert.throws(() => validateJob({
     key: "a".repeat(64), kind: "mermaid",
@@ -47,6 +41,7 @@ test("real offline bilingual diagrams and math, language-safe cache, and hard ma
       assert.equal(png.subarray(1, 4).toString(), "PNG");
       assert.ok(["en", "zh-CN"].includes(image.language));
       assert.ok(image.width > 10 && image.height > 10);
+      assert.deepEqual(image.tiles, [], "render only complete images, never cropped panels");
       if (image.kind !== "mermaid") {
         assert.equal(image.svgCount, 1, "capture exactly one rendered formula");
         assert.equal(image.mathmlCount, 0, "assistive MathML must not be visibly captured");
@@ -58,6 +53,32 @@ test("real offline bilingual diagrams and math, language-safe cache, and hard ma
     const invalid = { kind: "inline", source: "\\notARealCommand{x}", key: "a".repeat(64) };
     await fs.writeFile(request, JSON.stringify([invalid]));
     await assert.rejects(render(request, scratch), /Undefined control sequence|merror/);
+  } finally {
+    await fs.rm(scratch, { recursive: true, force: true });
+  }
+});
+
+test("renderer detects subgraph titles overlapping nodes", async () => {
+  const scratch = await fs.mkdtemp(path.join(os.tmpdir(), "epub-label-test-"));
+  try {
+    const jobs = [0, 30].map((bottom) => {
+      const config = { flowchart: { nodeSpacing: 16, rankSpacing: 20,
+        subGraphTitleMargin: { top: 4, bottom } } };
+      const source = `%%{init: ${JSON.stringify(config)}}%%\nflowchart TB
+subgraph G["Logical blocks"]
+direction LR
+A["Block 0"] --> B["Block 1"] --> C["Block 2"]
+end
+G --> D["Block table"]`;
+      return { kind: "mermaid", language: "en", source,
+        key: createHash("sha256").update(source).digest("hex") };
+    });
+    const request = path.join(scratch, "jobs.json");
+    await fs.writeFile(request, JSON.stringify(jobs));
+    const result = await render(request, scratch);
+    assert.deepEqual(result.results[0].labelCollisions, [{ title: "Logical blocks", node: "Block 1" }]);
+    assert.deepEqual(result.results[1].labelCollisions, []);
+    assert.ok(result.results.every((image) => image.tiles.length === 0));
   } finally {
     await fs.rm(scratch, { recursive: true, force: true });
   }

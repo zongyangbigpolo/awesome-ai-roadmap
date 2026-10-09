@@ -9,12 +9,18 @@ description: 为授权红队定义范围、成功判据和攻击预算，成对�
 前面章节多次提到"某类攻击在标准评测中不可见""对齐是概率性缓解"——这意味着 AI 系统的安全水位不是一次测试能确定的常量，而是随模型版本、Prompt 变化、新工具接入、新越狱手法公开而持续波动的变量。[Agent 安全 15.13](../../agent/05-production/15-agent-security.zh.md) 和 [RAG 安全 20.4](../../rag/06-operations-security/20-rag-challenges-security.zh.md) 已经给出了单个应用场景下"ASR（攻击成功率）与 Utility（效用）必须成对报告"的评测原则；放到组织里，就得把它变成红队方法论、自动化工具链和持续保障流程。
 
 ```mermaid
-flowchart LR
-    A[上线前红队] --> B[持续自动化评测]
-    B --> C[生产监控与事件响应]
-    C --> D[反馈进新一轮评测集]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["上线前红队"] --> B["持续自动化评测"]
+    B --> C["监控与事件响应"]
+    C --> D["补充回归用例"]
     D --> B
 ```
+
+图中各项的完整含义：
+
+- 生产监控与事件响应
+- 反馈进新一轮评测集
 
 ## 9.2 红队方法论
 
@@ -59,17 +65,22 @@ flowchart LR
 ## 9.4 持续保障：把安全评测嵌进研发流程
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    C1[代码/Prompt/工具变更] --> G1{CI 安全门禁}
-    G1 -->|通过| C2[部署到预发布]
-    G1 -->|不通过| BLOCK[阻断并反馈]
-    C2 --> G2{预发布回归评测}
-    G2 -->|通过| PROD[生产发布]
+    C1["代码/Prompt/工具<br/>变更"] --> G1["CI 安全门禁"]
+    G1 -->|通过| C2["部署到预发布"]
+    G1 -->|不通过| BLOCK["阻断并反馈"]
+    C2 --> G2["预发布回归评测"]
+    G2 -->|通过| PROD["生产发布"]
     G2 -->|不通过| BLOCK
-    PROD --> MON[生产监控]
-    MON -->|发现新攻击模式| NEWCASE[沉淀为新回归用例]
+    PROD --> MON["生产监控"]
+    MON -->|"新攻击模式"| NEWCASE["沉淀为新回归用例"]
     NEWCASE --> G1
 ```
+
+图中条件与标签：
+
+- 发现新攻击模式
 
 - **CI 安全门禁**：任何 System Prompt、工具授权范围、模型版本的变更都触发一轮自动化安全回归，而不只是功能测试；
 - **分级评测集**：参照 [RAG 安全上线检查清单](../../rag/06-operations-security/20-rag-challenges-security.zh.md) 的 Smoke/Regression/Full 三档思路，安全评测同样应分层——每次提交跑最小冒烟集，合并前跑完整回归集，定期跑覆盖新披露攻击手法的全量集；
@@ -122,9 +133,5 @@ flowchart TB
 
 ## 参考资料
 
-- [NIST AI RMF: Measure Function](https://www.nist.gov/itl/ai-risk-management-framework)
-- [garak: LLM Vulnerability Scanner](https://github.com/leondz/garak)
-- [PyRIT: Python Risk Identification Tool for generative AI](https://github.com/Azure/PyRIT)
-- [HarmBench: A Standardized Evaluation Framework for Automated Red Teaming](https://arxiv.org/abs/2402.04249)
-- [Red Teaming Language Models with Language Models](https://arxiv.org/abs/2202.03286)
-- [OWASP LLM Applications Cybersecurity and Governance Checklist](https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-safety-09)。

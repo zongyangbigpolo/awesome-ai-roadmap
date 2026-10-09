@@ -17,8 +17,9 @@ description: 以订单助手说明 create_agent 的工具、结构化输出、�
 完整 Agent 关注的不只是一次模型调用，而是一条从任务设计、能力接入、运行控制走到测试监控的工程链路。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① 明确任务边界"] --> S2["② 选模型与 Tools"] --> S3["③ 约束行为与输出"] --> S4["④ 组装 Agent"] --> S5["⑤ 补齐状态与安全"] --> S6["⑥ 选择调用方式"] --> S7["⑦ 测试与监控"]
+    S1["① 明确任务边界"] --> S2["② 选模型与<br/>Tools"] --> S3["③ 约束行为与输<br/>出"] --> S4["④ 组装 Agent"] --> S5["⑤ 补齐状态与安<br/>全"] --> S6["⑥ 选择调用方式"] --> S7["⑦ 测试与监控"]
 
     style S1 fill:#e8f0fe
     style S7 fill:#e6f4ea
@@ -169,12 +170,13 @@ reply: SupportReply = result["structured_response"]
 **底层执行流程**（详见 [第三章](../01-foundations/03-langchain-architecture.zh.md)）：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
     U["用户消息"] --> M["模型判断"]
-    M --> D{"有工具调用?"}
+    M --> D["有工具调用?"]
     D -->|否| F["最终结果"]
-    D -->|是| T["LangGraph 运行时执行工具"]
-    T --> TM["ToolMessage 写回消息状态"]
+    D -->|是| T["LangGraph 运行时<br/>执行工具"]
+    T --> TM["ToolMessage 写回<br/>消息状态"]
     TM --> M
 
     style F fill:#e6f4ea
@@ -224,15 +226,22 @@ flowchart TB
 **Agent 输出具有概率性，所以测试不能只比较最终文本。**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    L1["第一层：测 Tool<br/>正常输入、非法参数、权限错误、超时、幂等性<br/>Tool 是相对确定的业务代码，应优先做到稳定"]
-    L2["第二层：测 Agent 轨迹<br/>是否选对工具、参数是否正确<br/>是否越权调用、结构化输出是否符合 Schema"]
-    L3["第三层：端到端评测 + 线上监控<br/>典型问题/边界案例/历史故障整理成数据集<br/>对比模型、Prompt、Tool 版本<br/>Trace 观察延迟、Token、失败率、人工转接率"]
+    L1["第一层：测 Tool"]
+    L2["第二层：测 Agent<br/>轨迹"]
+    L3["3 · 端到端检查"]
     L1 --> L2 --> L3
 
     style L1 fill:#e6f4ea
     style L3 fill:#fff3cd
 ```
+
+图中各项的完整含义：
+
+- 第一层：测 Tool 正常输入、非法参数、权限错误、超时、幂等性 Tool 是相对确定的业务代码，应优先做到稳定
+- 第二层：测 Agent 轨迹 是否选对工具、参数是否正确 是否越权调用、结构化输出是否符合 Schema
+- 第三层：端到端评测 + 线上监控 典型问题/边界案例/历史故障整理成数据集 对比模型、Prompt、Tool 版本 Trace 观察延迟、Token、失败率、人工转接率
 
 如何把 Trace、生产反馈、Dataset、离线实验和发布门禁连成闭环，见 [LangSmith 生产质量闭环](../05-production/13-langsmith-production-loop.zh.md)。
 
@@ -306,13 +315,5 @@ Prompt 可以影响模型选择，但不能保证拦住退款；最终权限校�
 
 ## 参考资料
 
-- [LangChain: Agents 概念文档](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Tools 概念文档](https://docs.langchain.com/oss/python/langchain/tools)
-- [LangChain: Structured Output](https://docs.langchain.com/oss/python/langchain/structured-output)
-- [LangChain: Middleware](https://docs.langchain.com/oss/python/langchain/middleware)
-- [LangChain: Short-term Memory](https://docs.langchain.com/oss/python/langchain/short-term-memory)
-- [LangChain: Long-term Memory](https://docs.langchain.com/oss/python/langchain/long-term-memory)
-- [LangChain: Streaming](https://docs.langchain.com/oss/python/langchain/streaming)
-- [LangGraph 持久化文档](https://docs.langchain.com/oss/python/langgraph/persistence)
-- [LangChain Human-in-the-loop：审批与恢复](https://docs.langchain.com/oss/python/langchain/human-in-the-loop)
-- [LangGraph Graph API：recursion limit](https://docs.langchain.com/oss/python/langgraph/graph-api#recursion-limit)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-04)。

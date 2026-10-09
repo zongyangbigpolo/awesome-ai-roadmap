@@ -19,7 +19,8 @@ Approximation error must be measured alongside latency. ANN is an indexing techn
 ## 8.2 Common ANN indexes
 
 ```mermaid
-flowchart TB
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     ANN[Vector search approaches] --> HNSW[HNSW<br/>Graph index]
     ANN --> IVF[IVF<br/>Inverted lists of clusters]
     ANN --> DISK[DiskANN<br/>Disk-based graph index]
@@ -106,6 +107,7 @@ This is one of the easiest production problems to encounter and one of the least
 It looks like adding a `WHERE` clause, but filters can **interact badly with ANN indexes**.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     F[Filtered vector retrieval] --> PRE[Pre-filtering]
     F --> POST[Post-filtering]
@@ -142,17 +144,13 @@ Tenant partitioning reduces the search space and clarifies isolation boundaries,
 Selection criteria matter more than a list of products.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    SEL[Selection] --> D1[Data scale]
-    SEL --> D2[Deployment model]
-    SEL --> D3[Functional requirements]
-    SEL --> D4[Operational capacity]
-
-    D1 --> A1[Below 100,000 / Millions /<br/>Hundreds of millions]
-    D2 --> A2[Embedded / Self-hosted /<br/>Managed service]
-    D3 --> A3[Hybrid retrieval / Metadata filtering /<br/>Multi-tenancy]
-    D4 --> A4[Can the team operate<br/>another independent component?]
+    SEL[Application requirements] --> D[Scale, features, operations]
+    D --> A[Choose deployment model]
 ```
+
+Compare data scales below 100,000, in the millions, and in the hundreds of millions. Consider embedded, self-hosted, and managed deployments against required hybrid retrieval, metadata filtering, and multi-tenancy. Ask whether the team can operate another independent component; scale alone does not decide the deployment model.
 
 | Type | Examples | Suitable use |
 |---|---|---|
@@ -218,9 +216,5 @@ Rebuilding an index can take hours or even days. Without a backup strategy, ther
 
 ## References
 
-- [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/abs/1603.09320)
-- [pgvector official README: filtering, iterative scans, VACUUM, and scaling](https://github.com/pgvector/pgvector)
-- [FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search](https://arxiv.org/abs/2105.09613)
-- [ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data](https://arxiv.org/abs/2403.04871)
-- [Billion-scale similarity search with GPUs](https://arxiv.org/abs/1702.08734)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-08) for this chapter’s sources, reading suggestions, and source notes.

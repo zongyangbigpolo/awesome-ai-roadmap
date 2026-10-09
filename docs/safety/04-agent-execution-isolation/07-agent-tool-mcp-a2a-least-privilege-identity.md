@@ -9,19 +9,30 @@ description: Distinguish agent workload identities from delegated user identitie
 [Tool Protocol Security](../../tools/02-mcp/15-tool-protocol-security.md) covers authentication, token audiences, and protocol trust boundaries. This chapter addresses three cross-system questions: who may act on whose behalf, how permissions narrow along a delegation chain, and who is responsible for onboarding tools and revoking access. Even if every interface individually conforms to its protocol, that does not establish that the entire delegation chain respects authorization.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
 flowchart TB
-    subgraph L1["Protocol layer — see Tool Protocol Security"]
-        OAUTH[OAuth 2.1 / PKCE / audience]
+    subgraph L1["Protocol layer"]
+        direction TB
+        OAUTH["OAuth 2.1 / PKCE /<br/>audience"]
     end
-    subgraph L2["Identity federation layer — Sections 7.2-7.3"]
-        WI[Workload identity] --> DC[Delegation chain]
+    subgraph L2["Identity federation"]
+        direction TB
+        WI["Workload identity"] --> DC["Delegation chain"]
     end
-    subgraph L3["Governance layer — Sections 7.4-7.5"]
-        REG[Tool registry] --> POL[Policy as code]
-        POL --> AUDIT[Fleet-wide auditing]
+    subgraph L3["Governance"]
+        direction TB
+        REG["Tool registry"] --> POL["Policy as code"]
+        POL --> AUDIT["Fleet-wide auditing"]
     end
     L1 --> L2 --> L3
 ```
+
+The protocol layer is covered in Tool Protocol Security; identity federation is developed in Sections 7.2–7.3, and governance in Sections 7.4–7.5.
+
+Details of the illustrated steps and components:
+
+- Protocol layer — see Tool Protocol Security
+- Identity federation layer — Sections 7.2-7.3
 
 MCP and A2A do not share an identical authorization specification. The MCP 2026-07-28 authorization specification cited here applies to HTTP transports and references the OAuth 2.1 draft; credential handling for STDIO is different. Check A2A's specification and the service configuration for its particular authentication scheme rather than applying every MCP requirement unchanged.
 
@@ -46,11 +57,17 @@ In a real deployment spanning multiple clouds and services, giving every agent o
 The confused deputy problem originated in conventional operating-system security: a privileged program is induced to perform an operation on behalf of a less-privileged caller that the caller is not authorized to perform. In agent systems, this pattern recurs at several layers. Token passthrough, discussed in [Tool Protocol Security, Section 15.2.1](../../tools/02-mcp/15-tool-protocol-security.md), is just one manifestation.
 
 ```mermaid
-flowchart LR
-    U[Low-privilege caller] -->|Request| D[High-privilege agent/proxy]
-    D -->|Acts using its own privileged credentials| R[Resource]
-    R -->|Cannot distinguish<br/>whose intent is being served| X[Unauthorized access]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["Low-privilege<br/>caller"] -->|Request| D["High-privilege<br/>agent/proxy"]
+    D -->|"Own credentials"| R["Resource"]
+    R -->|"No caller context"| X["Unauthorized<br/>access"]
 ```
+
+Figure conditions and labels:
+
+- Acts using its own privileged credentials
+- Cannot distinguish whose intent is being served
 
 Other common variants include:
 
@@ -85,13 +102,22 @@ For multi-agent collaboration patterns, routing, and architectural approaches to
 Once an organization's agents and tools reach sufficient scale, individual manual approvals are no longer sustainable. Governance needs a systematic approach:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    REG[Central tool/MCP server registry] --> META[Record publisher/version/requested permissions/data classification]
-    META --> POLICY[Policy as code<br/>Define available tools by role/environment/data sensitivity]
-    POLICY --> DEPLOY[Generate an allowlist from policy at agent deployment]
-    DEPLOY --> AUDIT[Central audit: who called what, when, and under which identity]
-    AUDIT --> REVIEW[Periodic review: are these permissions still necessary?]
+    REG["Central<br/>tool/MCP server<br/>registry"] --> META["Record tool<br/>metadata"]
+    META --> POLICY["Policy as code"]
+    POLICY --> DEPLOY["Deploy with<br/>allowlist"]
+    DEPLOY --> AUDIT["Audit calls"]
+    AUDIT --> REVIEW["Review<br/>permissions"]
 ```
+
+Details of the illustrated steps and components:
+
+- Record publisher/version/requested permissions/data classification
+- Policy as code Define available tools by role/environment/data sensitivity
+- Generate an allowlist from policy at agent deployment
+- Central audit: who called what, when, and under which identity
+- Periodic review: are these permissions still necessary?
 
 - **Central registry:** before integration, every tool or MCP server available to agents must register its publisher, version, requested permissions, and relevant data classifications. Teams must not simply connect an unregistered tool to an agent.
 - **Policy as code:** describe tool availability—which agents, environments, and data sensitivity levels permit its use—in versioned, reviewable policies rather than scattered agent configuration files.
@@ -136,10 +162,5 @@ In most organizations, privilege creep stems from never proactively revoking per
 
 ## References
 
-- [Confused Deputy Problem (Norm Hardy, 1988)](https://cap-lore.com/CapTheory/ConfusedDeputy.html)
-- [MCP 2026-07-28 Authorization: Confused Deputy Considerations](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
-- [RFC 8693: OAuth 2.0 Token Exchange, especially Sections 1.1 and 4.1](https://www.rfc-editor.org/rfc/rfc8693.html)
-- [RFC 7662: OAuth 2.0 Token Introspection](https://www.rfc-editor.org/rfc/rfc7662.html)
-- [OWASP Agentic AI Threats and Mitigations: Identity and Authorization](https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/)
-- [NIST SP 800-207: Zero Trust Architecture](https://csrc.nist.gov/pubs/sp/800/207/final)
-- [SPIFFE/SPIRE: Workload Identity Framework](https://spiffe.io/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-07) for this chapter’s sources, reading suggestions, and source notes.

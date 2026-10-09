@@ -11,12 +11,14 @@ RAG is a multistage pipeline. **A poor final answer could result from a failure 
 A single end-to-end score tells you that performance is poor, but not **where it is poor**. Layer-specific metrics can identify the responsible layer in the framework introduced in Chapter 14.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    E[RAG evaluation] --> E1[Retrieval<br/>Was evidence found and ranked highly?]
-    E --> E2[Generation<br/>Is the answer faithful and relevant?]
-    E --> E3[End to end<br/>Was the user's problem solved?]
-    E --> E4[Production<br/>What do real users report?]
+    E[Offline evaluation] --> R[Retrieval and generation]
+    R --> T[End-to-end success]
+    T --> P[Production feedback]
 ```
+
+At retrieval, measure whether evidence was found and ranked highly; at generation, whether the answer is faithful and relevant; end to end, whether the user's problem was solved. Production feedback adds what real users report rather than replacing these offline checks.
 
 End-to-end scores alone detect regression without diagnosing its cause. Retrieval scores alone cannot establish whether the full pipeline completes the task. Both kinds of evaluation are necessary.
 
@@ -221,14 +223,15 @@ Thumbs-down feedback is a valuable diagnostic lead, but it may reflect factual e
 ## 18.8 The Right Order for Establishing Evaluation
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S1[1. Collect real questions] --> S2[2. Manually label correct chunks<br/>and reference answers]
-    S2 --> S3[3. Establish retrieval-metric baselines]
-    S3 --> S4[4. Add programmatic assertions]
-    S4 --> S5[5. Introduce and calibrate<br/>an LLM judge]
-    S5 --> S6[6. Feed production feedback<br/>into evaluation]
-    S6 --> S1
+    S1[Collect and label questions] --> S2[Retrieval baselines]
+    S2 --> S3[Assertions and calibrated judge]
+    S3 --> S4[Production feedback]
+    S4 --> S1
 ```
+
+Humans label correct chunks and reference answers for real questions. Establish retrieval-metric baselines before adding programmatic assertions, then introduce and calibrate an LLM judge. Feed production feedback into the next collection of evaluation questions.
 
 This is a feedback loop: production feedback supplements development and regression sets, which guide further improvements. Keep the frozen test set isolated and refresh it on an agreed schedule. Questions repeatedly used to choose thresholds or tune prompts are no longer unseen test examples.
 
@@ -286,15 +289,5 @@ Production thumbs-down feedback is a valuable diagnostic source, but needs triag
 
 ## References
 
-- [Ragas: Automated Evaluation of Retrieval Augmented Generation](https://arxiv.org/abs/2309.15217)
-- [Ragas: Context Recall](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/)
-- [Ragas: Context Precision](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/)
-- [Ragas: Faithfulness](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)
-- [Ragas: Answer / Response Relevancy](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/)
-- [ALCE: Enabling Large Language Models to Generate Text with Citations](https://arxiv.org/abs/2305.14627)
-- [Evaluation of Retrieval-Augmented Generation: A Survey](https://arxiv.org/abs/2405.07437)
-- [CRAG - Comprehensive RAG Benchmark](https://arxiv.org/abs/2406.04744)
-- [TREC RAG Track](https://trec-rag.github.io/)
-- [Fact, Fetch, and Reason: A Unified Evaluation of Retrieval-Augmented Generation](https://arxiv.org/abs/2409.12941)
-
-The Ragas online metric documentation was consulted on 2026-09-15. API names here distinguish measurement definitions; they do not imply that every historical version provides classes with those names.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-18) for this chapter’s sources, reading suggestions, and source notes.

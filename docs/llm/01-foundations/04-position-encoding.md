@@ -85,7 +85,8 @@ $$
 For fixed content vectors `q,k`, the **explicit positional term** enters the dot product only through `n−m`. The score still depends on content. In deeper layers, q/k already contain contextual information, so this property does not imply that the entire model's output depends only on distance.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q["Content q"] --> RQ["Rotate by position m"]
     K["Content k"] --> RK["Rotate by position n"]
     RQ --> DOT["Dot product"]
@@ -158,12 +159,5 @@ Positional encoding is only one part of a long-context solution. Training data, 
 
 ## References
 
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [RoFormer: Enhanced Transformer with Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
-- [ALiBi: Train Short, Test Long](https://arxiv.org/abs/2108.12409)
-- [Position Interpolation](https://arxiv.org/abs/2306.15595)
-- [YaRN: Efficient Context Window Extension of Large Language Models](https://arxiv.org/abs/2309.00071)
-- [Hugging Face Transformers: RoPE parameters and variants](https://huggingface.co/docs/transformers/main/en/internal/rope_utils)
-- [BLOOM model card](https://huggingface.co/bigscience/bloom)
-- [MosaicML: MPT-7B release announcement and ALiBi configuration](https://www.databricks.com/blog/mpt-7b)
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-04) for this chapter’s sources, reading suggestions, and source notes.

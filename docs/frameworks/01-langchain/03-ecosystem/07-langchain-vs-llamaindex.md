@@ -29,13 +29,21 @@ Both frameworks support model calls, tools, RAG, agents, and workflows. Looking 
 **When a project needs multiple models, search, databases, browsers, MCP servers, and internal company APIs**, the largest engineering cost is often **adapting between different interfaces**.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Unify Model / Message / Tool / Structured Output interfaces<br/>Abstract away provider differences"] --> B["Assemble models and tools with create_agent"]
-    B --> C["Apply middleware consistently<br/>Authorization, retries, summarization, dynamic model selection, human approval"]
-    C --> D["When workflows need finer control over branching, parallelism, and recovery<br/>Move down to LangGraph<br/>Keep the existing model and tool definitions"]
+    A["Unify<br/>interfaces"] --> B["Assemble<br/>create_agent"]
+    B --> C["Apply<br/>middleware<br/>consistently"]
+    C --> D["Control<br/>execution"]
 
     style D fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Unify Model / Message / Tool / Structured Output interfaces Abstract away provider differences
+- Assemble models and tools with create_agent
+- Apply middleware consistently Authorization, retries, summarization, dynamic model selection, human approval
+- When workflows need finer control over branching, parallelism, and recovery Move down to LangGraph Keep the existing model and tool definitions
 
 **The main challenge** is getting the model to **choose the right tool and supply the right arguments**, while consistently integrating authorization, retries, and approval into execution.
 
@@ -54,8 +62,9 @@ flowchart TB
 > **Difficulties propagate through ingestion → indexing → retrieval → context assembly. No single vector database can solve them all.**
 
 ```mermaid
-flowchart LR
-    A["Data ingestion"] --> B["Parsing and chunking"] --> C["Indexing"] --> D["Retrieval and reranking"] --> E["Query Engine"] --> F["Agent"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Data ingestion"] --> B["Parsing and<br/>chunking"] --> C["Indexing"] --> D["Retrieval and<br/>reranking"] --> E["Query Engine"] --> F["Agent"]
 
     style B fill:#e8f0fe
     style D fill:#e8f0fe
@@ -162,10 +171,5 @@ Tenant authorization, citation sources, timeouts, and observability **do not app
 
 ## References
 
-- [LangChain official documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain: Agents](https://docs.langchain.com/oss/python/langchain/agents)
-- [LangChain: Retrieval](https://docs.langchain.com/oss/python/langchain/retrieval)
-- [LangGraph official documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [LlamaIndex official documentation](https://docs.llamaindex.ai/)
-- [LlamaIndex: Building an Agent](https://docs.llamaindex.ai/en/stable/understanding/agent/)
-- [LlamaIndex: Workflows](https://docs.llamaindex.ai/en/stable/understanding/workflows/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-07) for this chapter’s sources, reading suggestions, and source notes.

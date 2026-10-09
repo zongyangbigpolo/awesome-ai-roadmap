@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "language": "en",
-  "edition": "en-rc-1",
+  "edition": "en-rc-2",
   "title": "AI Engineering Interviews: From Model Foundations to Field Delivery",
   "chapter_count": 143,
   "source_url": "https://github.com/zongyangbigpolo/awesome-ai-roadmap/blob/main/",
@@ -211,6 +211,7 @@
   ],
   "back_matter": [
     {"id": "acknowledgments", "path": "docs/book/acknowledgments.md"},
+    {"id": "references", "path": "docs/book/references.md"},
     {"id": "colophon", "path": "docs/book/colophon.md"}
   ]
 }

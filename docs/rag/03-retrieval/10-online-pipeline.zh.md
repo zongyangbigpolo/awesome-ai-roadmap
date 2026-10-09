@@ -19,22 +19,36 @@ description: 拆解 RAG 在线路由、改写、召回、重排、上下文装�
 ## 10.2 完整链路
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    Q[用户 Query] --> S0[0. 前置判断<br/>要不要检索]
-    S0 -->|不需要| DIRECT[直接生成]
-    S0 -->|需要| S1[1. Query 理解与改写]
-    S1 --> S2[2. Query 向量化]
-    S2 --> S3[3. 多路召回]
-    S3 --> S4[4. 融合去重]
-    S4 --> S5[5. Rerank 精排]
-    S5 --> S6[6. 上下文裁剪与组装]
-    S6 --> GATE{证据充分且有权使用?}
-    GATE -->|否| STOP[拒答、澄清或受控补检]
-    GATE -->|是| S7[7. Prompt 拼装]
-    S7 --> S8[8. 生成]
-    S8 --> S9[9. 引用标注与校验]
+    Q[用户 Query] --> S0{需要检索？}
+    S0 -->|否| DIRECT[直接生成]
+    S0 -->|是| S1[准备查询]
+    S1 --> S2[检索证据]
+```
+
+查询准备包括理解与改写问题，再进行向量化。检索分支继续经过以下证据筛选阶段：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S3[多路召回] --> S4[融合去重]
+    S4 --> S5[Rerank 精排]
+    S5 --> S6[裁剪并组装上下文]
+```
+
+筛选出的上下文必须先通过证据与授权检查，才能进入生成：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GATE{证据可用？} -->|否| STOP[拒答或补救]
+    GATE -->|是| S7[拼装 Prompt；生成]
+    S7 --> S9[引用标注与校验]
     S9 --> OUT[返回答案]
 ```
+
+“可用”同时要求证据充分且有权使用。不通过时，拒答、请求澄清或进行受控补检。引用标注与校验在生成后执行，不能用生成前的检查替代。
 
 第 0 步和第 9 步在基础版 RAG 的示意图里常被省略，但在生产系统里往往必需。
 
@@ -227,8 +241,5 @@ Prompt 需要明确约束模型的行为（第十七章详细展开）：
 
 ## 参考资料
 
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
-- [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-10)。

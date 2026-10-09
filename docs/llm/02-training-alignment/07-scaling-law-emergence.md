@@ -92,7 +92,8 @@ Under a fixed budget, the question is how to choose a smaller `N` and a larger `
 ### 7.3.1 Training Optimality Is Not Lifecycle Cost Optimality
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Fixed training budget<br/>Choose N and D<br/>Minimize validation loss"]
     B["Fixed serving demand<br/>Balance training<br/>and inference costs<br/>Meet quality and<br/>latency requirements"]
     A -.->|Different objectives| B
@@ -159,6 +160,7 @@ Even if `p` improves smoothly, the probability of getting the entire sequence ri
 Schaeffer and colleagues' Mirage paper uses mathematical models and experiments to show that **nonlinear or discontinuous metrics can produce apparent emergence**. For the same model outputs, finer-grained measures such as token-level edit distance or probabilities can sometimes reveal smoother trends.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     OUT["The same model outputs"] --> EXACT["All-or-nothing scoring<br/>May show an abrupt change"]
     OUT --> FINE["Fine-grained distance<br/>or probability metrics<br/>May show gradual improvement"]
@@ -216,11 +218,5 @@ Scaling laws are tools for budget planning. Chinchilla studies training-budget a
 
 ## References
 
-- [Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)
-- [Chinchilla: §3, Table 2, and the compute-optimal derivation](https://arxiv.org/html/2203.15556v1)
-- [Emergent Abilities of Large Language Models](https://arxiv.org/abs/2206.07682)
-- [Are Emergent Abilities of Large Language Models a Mirage?](https://arxiv.org/abs/2304.15004)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [Qwen3 Technical Report, initial version](https://arxiv.org/html/2505.09388v1)
-- [DeepSeekMath: data construction and GRPO](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1, initial version](https://arxiv.org/html/2501.12948v1)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-07) for this chapter’s sources, reading suggestions, and source notes.

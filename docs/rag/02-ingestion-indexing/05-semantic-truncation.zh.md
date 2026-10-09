@@ -11,20 +11,13 @@ description: 比较句子窗口、父子块、命题化、Contextual Retrieval �
 常见解法可以分成两个方向：
 
 ```mermaid
-flowchart TB
-    P[语义被切断] --> D1[方向一: 切的时候别切错]
-    P --> D2[方向二: 切完了把上下文补回来]
-
-    D1 --> M1[重叠切分]
-    D1 --> M2[语义边界切分]
-    D1 --> M3[结构化切分]
-
-    D2 --> M4[句子窗口检索]
-    D2 --> M5[父子切分]
-    D2 --> M6[命题化改写]
-    D2 --> M7[上下文增强 Contextual Retrieval]
-    D2 --> M8[Late Chunking]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    P[语义被切断] --> D1[避免有害边界]
+    P --> D2[补足缺失语境]
 ```
+
+边界类方法包括重叠切分、语义边界切分和结构化切分。语境类方法包括句子窗口检索、父子切分、命题化改写、上下文增强（Contextual Retrieval）和 Late Chunking。两组方法按保护的内容分类，并非要求语境恢复都在切分后发生：Late Chunking 先编码较大的上下文，再按块边界池化。
 
 - **方向一是预防**：在切分时尽量不破坏语义单元；
 - **方向二是补足语境**：句子窗口和父子切分在命中后扩展阅读材料；命题化、上下文增强和 Late Chunking 则在建库时改善片段表示。小片段是否检索更准仍需评测。
@@ -58,7 +51,8 @@ flowchart TB
 做法是用**小单元**（句子或短片段）建索引参与检索，命中后返回它**前后若干个单元**一起送给模型。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query] --> IDX[小片段索引]
     IDX --> HIT[命中片段 N]
     HIT --> EXP[取 N-2 到 N+2]
@@ -76,7 +70,7 @@ flowchart LR
 - **子片段**（小）：参与向量化和检索；
 - **父片段**（大）：命中子片段后实际返回的单元，可以是整篇原文、一个章节，也可以是按长度或递归分隔生成的大块。
 
-原文不必已有标题层级。例如，[LangChain 的 `ParentDocumentRetriever`](https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py) 既支持直接以原文档为父片段，也支持先切出较大的父块。
+原文不必已有标题层级。例如，LangChain 的 `ParentDocumentRetriever`<sup>[【366】](../../book/references.zh.md#ref-366)</sup> 既支持直接以原文档为父片段，也支持先切出较大的父块。
 
 | 对比 | 句子窗口 | 父子切分 |
 |---|---|---|
@@ -117,7 +111,8 @@ flowchart LR
 **思路**：不改写原文，而是在每个 chunk 前**拼接一段由 LLM 生成的、说明该片段在整篇文档中位置和背景的短说明**，然后再做向量化和关键词索引。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     DOC[整篇文档] --> LLM[LLM 生成上下文说明]
     CH[原始 chunk] --> LLM
     LLM --> NEW[上下文说明 + 原始 chunk]
@@ -146,19 +141,26 @@ flowchart LR
 
 **思路更进一步**：先编码能装进窗口的文档文本，得到 Token 级表示，再按 chunk 边界做池化。论文采用的双向编码器让 Token 表示能够结合窗口内前后文；如果使用因果注意力，每个位置只能读取此前内容，不能照搬“每个 Token 都看到全文”的解释。块边界仍需确定，只是池化放到编码之后。
 
-```mermaid
-flowchart TB
-    subgraph TRAD[传统方式]
-        D1[文档] --> C1[先切分]
-        C1 --> E1[各片段独立编码]
-        E1 --> V1[片段向量<br/>看不到全文]
-    end
+**传统方式**
 
-    subgraph LATE[Late Chunking]
-        D2[文档] --> E2[整篇长上下文编码]
-        E2 --> C2[按边界池化 Token 向量]
-        C2 --> V2[片段向量<br/>融合编码窗口内语境]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1[文档] --> C1[先切分]
+    C1 --> E1[各片段独立编码]
+    E1 --> V1[片段向量<br/>看不到全文]
+
+```
+
+**Late Chunking**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D2[文档] --> E2[整篇长上下文编码]
+    E2 --> C2[按边界池化 Token 向量]
+    C2 --> V2[片段向量<br/>融合编码窗口内语境]
+
 ```
 
 它的巧妙之处在于：**上下文信息是在编码阶段自然注入的，不需要额外调用 LLM 生成说明。**
@@ -235,9 +237,5 @@ Prompt Caching 的机制、与 KV Cache/记忆压缩的边界及生命周期限�
 
 ## 参考资料
 
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
-- [Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models](https://arxiv.org/abs/2409.04701)
-- [Jina AI：Late Chunking 的编码后池化与边界说明](https://jina.ai/news/late-chunking-in-long-context-embedding-models/)
-- [Dense X Retrieval: What Retrieval Granularity Should We Use?](https://arxiv.org/abs/2312.06648)
-- [RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval](https://arxiv.org/abs/2401.18059)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-05)。

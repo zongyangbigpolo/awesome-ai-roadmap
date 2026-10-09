@@ -187,11 +187,54 @@ test(`actual ${language} EPUB at 375px and 16/24/32px: tables, math and code rem
     ]);
     assert.equal(page.url(), back);
     assert.ok(await page.evaluate(() => Boolean(document.getElementById(location.hash.slice(1)))));
+    const figureDocuments = await Promise.all((await fs.readdir(path.join(extracted, "EPUB/figures")))
+      .filter((file) => file.endsWith(".xhtml")).map(async (file) => ({
+        file: `EPUB/figures/${file}`,
+        source: await fs.readFile(path.join(extracted, "EPUB/figures", file), "utf8"),
+      })));
+    const diagramDocuments = [...documents, ...figureDocuments].filter(({ source }) =>
+      /class="[^"]*\bdiagram\b/.test(source));
+    const diagramMeasurements = [];
+    for (const { file } of diagramDocuments) {
+      await page.goto(`${origin}/${file}`, { waitUntil: "load" });
+      for (const width of [375, 768]) {
+        await page.setViewport({ width, height: 812 });
+        const diagrams = await page.evaluate(async () => {
+          await document.fonts.ready;
+          return [...document.querySelectorAll("img.diagram")].map((image) => {
+            const box = image.getBoundingClientRect();
+            const style = getComputedStyle(image);
+            const contentWidth = box.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+            const contentHeight = box.height - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+            return {
+              src: image.getAttribute("src"), width: box.width, height: box.height,
+              nativeWidth: image.naturalWidth / 2, nativeHeight: image.naturalHeight / 2,
+              ratio: contentWidth / contentHeight, naturalRatio: image.naturalWidth / image.naturalHeight,
+              breakInside: style.breakInside,
+            };
+          });
+        });
+        assert.ok(diagrams.length, `${file}: selected document must contain diagrams`);
+        assert.equal(await page.$$eval(".diagram-details, img.diagram-detail", (nodes) => nodes.length), 0);
+        for (const image of diagrams) {
+          assert.ok(image.nativeWidth > 0 && image.nativeWidth <= 480, `${file}: native diagram width`);
+          assert.ok(image.nativeHeight > 0 && image.nativeHeight <= 650, `${file}: native diagram height`);
+          assert.ok(image.width <= 480 && image.height <= 650, `${file}: diagram must not be upscaled`);
+          assert.ok(Math.abs(image.ratio / image.naturalRatio - 1) < 0.02, `${file}: preserve complete image ratio`);
+          assert.equal(image.breakInside, "avoid", `${file}: keep image together`);
+        }
+        diagramMeasurements.push({ file, viewport: width, diagrams });
+      }
+    }
+    const build = JSON.parse(await fs.readFile(path.join(path.dirname(epub), "build.json"), "utf8"));
+    assert.equal(diagramMeasurements.filter((item) => item.viewport === 375)
+      .reduce((sum, item) => sum + item.diagrams.length, 0), 2 * build.occurrences.mermaid,
+    "inspect every diagram occurrence in both chapter text and its complete-image page");
     await fs.writeFile(path.join(path.dirname(epub), "layout.json"), JSON.stringify({
       epub_sha256: createHash("sha256").update(await fs.readFile(epub)).digest("hex"),
       language, mode: fixture ? "fixture" : "full-book",
       selected_chapters: chapters, formula_return: { ...formulaChapter, occurrence: target.occurrence },
-      viewport_width: 375, passed: true, measurements,
+      viewport_width: 375, passed: true, measurements, diagramMeasurements,
     }, null, 2));
   } finally {
     if (browser) await browser.close();

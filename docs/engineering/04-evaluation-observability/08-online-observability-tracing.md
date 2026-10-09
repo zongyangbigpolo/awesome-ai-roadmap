@@ -9,15 +9,21 @@ description: Correlate model and tool calls through tracing, with precise defini
 A single agent request may involve several model, tool, and retrieval calls. Structured logs can also be correlated through a request ID, but tracing shows the timing and dependencies of individual steps more directly. Ordinary calls form a tree of parent and child spans. Asynchronous queues, batch jobs, and fan-in from multiple sources also need span links; not every causal relationship can be forced into a single parent-child relationship.
 
 ```mermaid
-flowchart TB
-    ROOT["Root span: one user request"]
-    ROOT --> S1["Span: model call #1 (routing decision)"]
-    ROOT --> S2["Span: tool call (order lookup)"]
-    ROOT --> S3["Span: model call #2 (answer generation)"]
-    ROOT --> S4["Span: output contract validation"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    ROOT["Root span: one<br/>user request"]
+    ROOT --> S1["Model span #1"]
+    ROOT --> S2["Span: tool call<br/>(order lookup)"]
+    ROOT --> S3["Model span #2"]
+    ROOT --> S4["Span: output<br/>contract<br/>validation"]
 
     style ROOT fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Span: model call #1 (routing decision)
+- Span: model call #2 (answer generation)
 
 ## 8.2 The roles of the three observability signals
 
@@ -31,7 +37,7 @@ Metrics can tell you that the error rate rose over the past hour; correlated log
 
 ## 8.3 What should a GenAI span record?
 
-OpenTelemetry’s generative AI [semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai) define field meanings across implementations, but continuously updated documentation should not be mistaken for a stable, uniform interface. Pin both the convention and instrumentation versions, and check each field’s stability and provider support. The following table lists semantic categories to collect, not standard field names that can be copied directly:
+OpenTelemetry’s generative AI semantic conventions<sup>[【524】](../../book/references.md#ref-524)</sup> define field meanings across implementations, but continuously updated documentation should not be mistaken for a stable, uniform interface. Pin both the convention and instrumentation versions, and check each field’s stability and provider support. The following table lists semantic categories to collect, not standard field names that can be copied directly:
 
 | Field category | Examples |
 |---|---|
@@ -126,11 +132,5 @@ As discussed in [Chapter 2](../01-foundations/02-production-architecture-overvie
 
 ## References
 
-The original GenAI documentation has moved to a dedicated repository, and the old location is no longer maintained. The Chinese source manuscript records a check of the migration notice on 2026-09-15.
-
-- [OpenTelemetry: Semantic conventions for generative AI systems](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
-- [OpenTelemetry: GenAI semantic conventions repository](https://github.com/open-telemetry/semantic-conventions-genai)
-- [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/)
-- [LangSmith Observability](https://docs.langchain.com/langsmith/observability)
-- [Arize Phoenix: Tracing](https://docs.arize.com/phoenix/tracing/llm-traces)
-- [Honeycomb: Observability for LLMs](https://www.honeycomb.io/blog/pillars-observability)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-08) for this chapter’s sources, reading suggestions, and source notes.

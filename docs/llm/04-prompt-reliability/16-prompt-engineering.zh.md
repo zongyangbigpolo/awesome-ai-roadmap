@@ -27,15 +27,13 @@ Prompt 为模型提供任务条件，会影响它调用已有能力的方式，�
 把职责、任务、背景、格式和示例逐项对照，补上真正缺失的信息。下面的五个要素不是固定套话：每增加一项，都应能说明它解决了哪个歧义或验收问题。
 
 ```mermaid
-flowchart LR
-    Q["按任务选择检查项"] --> R["Role<br/>职责与观察角度"]
-    Q --> T["Task<br/>目标与边界"]
-    Q --> C["Context<br/>相关背景与证据"]
-    Q --> F["Format<br/>输出契约"]
-    Q --> E["Examples<br/>必要时提供代表性示例"]
-
-    style E fill:#e6f4ea
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["任务需求"] --> C["选择提示检查项"]
+    C --> P["待测提示"]
 ```
+
+按需选择检查项，而非将它们视为顺序步骤：**Role** 明确职责与观察角度；**Task** 明确目标与边界；**Context** 提供背景与证据；**Format** 定义输出契约；**Examples** 在必要时给出代表性示例。
 
 ### 16.2.1 Role：角色设定
 
@@ -220,18 +218,15 @@ flowchart LR
 **Prompt 工程更像「提出假设 → 测试 → 优化」的循环，不是一次写完就完事。**
 
 ```mermaid
-flowchart LR
-    A["分离开发集与保留测试集<br/>覆盖正常、边缘和攻击输入"] --> B["提出可检验的修改假设"]
-    B --> C["在开发集上比较<br/>质量、成本与分层指标"]
-    C --> D{"是否达到验收目标?"}
-    D -->|整体变好| E["保留改动"]
-    D -->|有些变好有些变差| F["分析任务分层与失败原因<br/>再决定是否拆分支"]
-    E --> B
-    F --> B
-    E -->|候选冻结后| H["使用保留测试集阶段验收<br/>不反复用于调参"]
-
-    style B fill:#e8f0fe
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["可检验的修改"] --> C["开发集比较"]
+    C --> D["接受或诊断"]
+    D -->|继续迭代| B
+    D -->|冻结候选| H["保留测试集验收"]
 ```
+
+开发集和保留测试集应相互隔离，覆盖正常、边缘和攻击输入。在开发集上比较质量、成本和任务分层指标。整体变好就保留改动；有好有坏时，先分析任务分层与失败原因，再决定是否拆分支。两种决定都可以进入下一轮修改。只有冻结候选后才在保留测试集上做阶段验收，不能反复用它调参。
 
 固定模型快照、解码参数、输入数据和评分标准。单因素修改便于归因，但不是硬规则；多项修改可以用消融实验或因子实验辨别贡献。保留测试集不能反复用于改 Prompt，否则也会被间接过拟合。
 
@@ -304,12 +299,5 @@ flowchart LR
 
 ## 参考资料
 
-- [Language Models are Few-Shot Learners（GPT-3，Few-shot）](https://arxiv.org/abs/2005.14165)
-- [Calibrate Before Use: Improving Few-Shot Performance of Language Models（示例与顺序偏差）](https://arxiv.org/abs/2102.09690)
-- [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
-- [Large Language Models are Zero-Shot Reasoners（Let's think step by step）](https://arxiv.org/abs/2205.11916)
-- [LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models](https://arxiv.org/abs/2310.05736)
-- [LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression](https://arxiv.org/abs/2310.06839)
-- [The Power of Scale for Parameter-Efficient Prompt Tuning（Soft Prompt）](https://arxiv.org/abs/2104.08691)
-- [OpenAI: Reasoning best practices（含分隔符与 CoT 提示的适用边界）](https://developers.openai.com/api/docs/guides/reasoning-best-practices)
-- [OpenAI: Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-16)。

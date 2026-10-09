@@ -33,6 +33,7 @@ InstructGPT is a representative application of RLHF to language models, not the 
 ### 10.2.1 A Three-Step Workflow
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     S1["Collect comparisons of answers<br/>to the same question"] --> S2["Train a reward model, RM"]
     S2 --> S3["Policy samples answers<br/>RM scoring and PPO updates"]
@@ -130,6 +131,7 @@ $$
 `sr` is the within-group reward standard deviation. The small positive `ε` shown here is an implementation safeguard against division by zero. The original outcome-supervised version assigns an answer's normalized reward to each of its tokens, using PPO-style probability-ratio clipping and KL regularization.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     Q["The same question"] --> G["Sample G answers"]
     G --> R["Score with rules or a reward model"]
@@ -231,13 +233,5 @@ Understand post-training through **supervision signals, policy optimizers, and d
 
 ## References
 
-- [InstructGPT](https://arxiv.org/abs/2203.02155)
-- [Deep Reinforcement Learning from Human Preferences](https://arxiv.org/abs/1706.03741)
-- [DPO](https://arxiv.org/html/2305.18290v3)
-- [DeepSeekMath: GRPO and iterative training](https://arxiv.org/html/2402.03300v2)
-- [DeepSeek-R1: initial report, §2](https://arxiv.org/html/2501.12948v1)
-- [Llama 2](https://arxiv.org/html/2307.09288v2)
-- [The Llama 3 Herd of Models](https://arxiv.org/html/2407.21783v3)
-- [Constitutional AI](https://arxiv.org/abs/2212.08073)
-- [RLAIF vs. RLHF](https://arxiv.org/abs/2309.00267)
-- [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-10) for this chapter’s sources, reading suggestions, and source notes.

@@ -9,15 +9,21 @@ description: 为模型与工具调用建立可关联的追踪，明确 TTFT、�
 一次 Agent 请求可能包含多次模型、工具和检索调用。结构化日志也能通过请求 ID 关联，但 Tracing 更直接地展示子步骤的时序和依赖。常见调用形成父子 Span 树，异步队列、批任务和多来源合并还需要 Span links，不能强行用一个父子关系表示所有因果。
 
 ```mermaid
-flowchart TB
-    ROOT["根 Span: 一次用户请求"]
-    ROOT --> S1["Span: 模型调用#1(路由决策)"]
-    ROOT --> S2["Span: 工具调用(检索订单)"]
-    ROOT --> S3["Span: 模型调用#2(生成回答)"]
-    ROOT --> S4["Span: 输出契约校验"]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    ROOT["根 Span: 一次用<br/>户请求"]
+    ROOT --> S1["模型调用 span<br/>#1"]
+    ROOT --> S2["Span: 工具调用(<br/>检索订单)"]
+    ROOT --> S3["模型调用 span<br/>#2"]
+    ROOT --> S4["Span: 输出契约<br/>校验"]
 
     style ROOT fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- Span: 模型调用#1(路由决策)
+- Span: 模型调用#2(生成回答)
 
 ## 8.2 三种可观测性信号的分工
 
@@ -31,7 +37,7 @@ flowchart TB
 
 ## 8.3 GenAI 场景下 Span 该记录什么字段
 
-OpenTelemetry 的生成式 AI [语义约定](https://github.com/open-telemetry/semantic-conventions-genai)提供跨实现的字段含义，但不能把滚动文档当成已稳定的统一接口。实施时固定约定版本和 instrumentation 版本，核对各字段稳定性与供应商支持；下面是需要采集的语义类别，不是可直接复制的标准字段表：
+OpenTelemetry 的生成式 AI 语义约定<sup>[【524】](../../book/references.zh.md#ref-524)</sup>提供跨实现的字段含义，但不能把滚动文档当成已稳定的统一接口。实施时固定约定版本和 instrumentation 版本，核对各字段稳定性与供应商支持；下面是需要采集的语义类别，不是可直接复制的标准字段表：
 
 | 字段类别 | 示例 |
 |---|---|
@@ -126,11 +132,5 @@ Trace 堆积如山但没有形成 p99 延迟、错误率这类可以设阈值告
 
 ## 参考资料
 
-原 GenAI 文档入口已迁移至独立仓库，旧入口不再维护；本次于 2026-09-15 核对迁移说明。
-
-- [OpenTelemetry: Semantic conventions for generative AI systems](https://opentelemetry.io/docs/specs/semconv/gen-ai/)
-- [OpenTelemetry: GenAI semantic conventions repository](https://github.com/open-telemetry/semantic-conventions-genai)
-- [Google SRE Book: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/)
-- [LangSmith Observability](https://docs.langchain.com/langsmith/observability)
-- [Arize Phoenix: Tracing](https://docs.arize.com/phoenix/tracing/llm-traces)
-- [Honeycomb: Observability for LLMs](https://www.honeycomb.io/blog/pillars-observability)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-engineering-08)。

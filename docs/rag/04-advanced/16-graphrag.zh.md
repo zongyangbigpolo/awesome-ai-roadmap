@@ -19,16 +19,20 @@ description: 介绍图关系与社区摘要检索，区分 Microsoft GraphRAG �
 **单次向量检索的困难**：它通常把 Query 编码为一个向量，返回最相似的片段；若没有片段同时提到 A、B、C，单次召回未必能给出完整关系链。这个限制不等于向量方法“做不到”多跳：查询分解、多轮检索、实体扩展、后期交互或 Agent 都可以组合多个证据，只是需要额外的控制逻辑与验证。
 
 ```mermaid
-flowchart LR
-    subgraph 向量检索
-        Q1[整个问题一个向量] --> M1[找最相似的片段]
-        M1 --> F1[单轮候选可能<br/>覆盖不全关系链]
-    end
-    subgraph 图检索
-        Q2[识别实体 A] --> N1[节点 A]
-        N1 -->|供应关系| N2[节点 B]
-        N2 -->|竞争关系| N3[节点 C]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[整个问题一个向量] --> M1[最相似的片段]
+    M1 --> F1[关系链可能不完整]
+```
+
+图检索将关系路径显式表示出来：
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[识别实体 A] --> N1[节点 A]
+    N1 -->|供应关系| N2[节点 B]
+    N2 -->|竞争关系| N3[节点 C]
 ```
 
 > **标准的单轮向量召回不显式表示图拓扑，也不会自行沿关系边遍历。** 对关系链问题，它更适合作为找到证据入口的一环，而非完整推理器。
@@ -46,14 +50,15 @@ GraphRAG 泛指利用图结构辅助检索生成的路线。本章构图与社�
 ### 16.2.1 构建阶段
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    D[文档] --> C[切分]
-    C --> E[LLM 抽取实体与关系]
-    E --> G[构建知识图谱]
-    G --> COM[社区检测<br/>把强关联节点聚成社区]
-    COM --> SUM[为每个社区生成摘要]
-    SUM --> IDX[(图 + 社区摘要索引)]
+    D[文档切分] --> E[抽取实体与关系]
+    E --> G[构建图谱]
+    G --> COM[社区检测]
+    COM --> SUM[生成摘要并索引]
 ```
+
+LLM 从块中抽取实体与关系。社区检测将强关联节点聚成社区；为每个社区生成摘要，随后构建图与社区摘要索引。
 
 关键在于**社区摘要**这一步：把图划分成若干个紧密关联的子图（社区），为每个社区生成一段摘要。**这些摘要就是回答全局性问题的素材。**
 
@@ -130,15 +135,15 @@ Standard 路线依赖 LLM 抽取实体与关系，Fast 路线的 NLP 抽取与�
 ## 16.5 什么时候值得用
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S{问题类型} -->|具体事实查找| NO[先以基础 RAG 为基线<br/>再做对照评测]
-    S -->|需要多跳关系推理| M{关系是否<br/>本身就重要?}
-    S -->|需要全局主题综合| G{语料规模与<br/>预算允许吗?}
-    M -->|是| YES1[考虑图检索]
-    M -->|否| ALT[先试 Agentic RAG<br/>多轮检索也能做多跳]
-    G -->|是| YES2[考虑 GraphRAG]
-    G -->|否| ALT2[比较分组摘要或 RAPTOR<br/>实测构建与查询成本]
+    S[问题类型] --> P[选择基线]
+    P --> E[比较质量与成本]
 ```
+
+- **具体事实查找：** 从基础 RAG 开始，再做对照评测。
+- **多跳推理：** 关系本身重要时，考虑图检索；否则先试 Agentic RAG，多轮检索也可以处理多跳问题。
+- **全局主题综合：** 语料规模和预算允许时考虑 GraphRAG；否则比较分组摘要或 RAPTOR，测量构建与查询成本。
 
 **值得用的信号**：
 
@@ -212,15 +217,5 @@ Agentic 多轮检索、元数据实体关联都能覆盖部分需求。
 
 ## 参考资料
 
-- [From Local to Global: A Graph RAG Approach to Query-Focused Summarization](https://arxiv.org/abs/2404.16130)
-- [Microsoft GraphRAG 官方文档](https://microsoft.github.io/graphrag/)
-- [Microsoft GraphRAG：索引方法](https://microsoft.github.io/graphrag/index/methods/)
-- [Microsoft GraphRAG：CLI（含更新方法）](https://microsoft.github.io/graphrag/cli/)
-- [Microsoft GraphRAG：查询模式](https://microsoft.github.io/graphrag/query/overview/)
-- [Microsoft GraphRAG：Local Search](https://microsoft.github.io/graphrag/query/local_search/)
-- [LightRAG: Simple and Fast Retrieval-Augmented Generation](https://arxiv.org/abs/2410.05779)
-- [HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models](https://arxiv.org/abs/2405.14831)
-- [PathRAG: Pruning Graph-based Retrieval Augmented Generation with Relational Paths](https://arxiv.org/abs/2502.14902)
-- [Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG](https://arxiv.org/abs/2501.09136)
-
-微软在线文档查阅于 2026-09-15；CLI 选项与库实现会变化，复现时以锁定版本及其配置为准。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-16)。

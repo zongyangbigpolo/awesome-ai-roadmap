@@ -71,6 +71,13 @@ img { max-width: 100%; height: auto; }
   background: white;
   padding: 0.2em;
 }
+img.diagram {
+  display: block;
+  margin: 0 auto;
+  box-sizing: border-box;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
 img.inline-math {
   max-width: 100%;
   height: auto;

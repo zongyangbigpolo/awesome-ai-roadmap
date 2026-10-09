@@ -13,18 +13,33 @@ description: "分析 AutoGen 的维护状态、Core/AgentChat 分层与 CrewAI �
 - **AutoGen**：从底层运行时开始设计，把 Agent 之间的通信建模为**异步消息传递的 Actor 模型**，目标是「事件驱动、可分布式部署、可扩展」的多智能体系统；
 - **CrewAI**：以角色、任务和 Crew 描述协作，同时提供 Flow 管理流程状态、路由与多个 Crew；可用 Python 或 YAML 定义，不是仅有角色 Prompt 的轻量封装。
 
+**AutoGen 的路线**
+
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    subgraph AG["AutoGen 的路线"]
-        A1["Actor 模型运行时"] --> A2["Agent 间异步消息通信"]
-        A2 --> A3["AgentChat：面向对话场景的高层封装"]
-    end
-    subgraph CR["CrewAI 的路线"]
-        C1["Agent：角色 + 目标 + 背景故事"]
-        C1 --> C2["Crew：顺序/层级协作的团队"]
-        C1 --> C3["Flow：事件驱动的确定性控制流"]
-    end
+        A1["Actor 模型运行<br/>时"] --> A2["异步消息"]
+        A2 --> A3["AgentChat"]
+
 ```
+
+**CrewAI 的路线**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Agent：角色 +<br/>目标 + 背景故事"]
+        C1 --> C2["Crew"]
+        C1 --> C3["Flow"]
+
+```
+
+图中各项的完整含义：
+
+- Agent 间异步消息通信
+- AgentChat：面向对话场景的高层封装
+- Crew：顺序/层级协作的团队
+- Flow：事件驱动的确定性控制流
 
 ## 20.2 AutoGen：分层的运行时——Core 与 AgentChat
 
@@ -131,15 +146,5 @@ AutoGen 用 Actor 模型处理分布式协作问题，CrewAI 用团队协作隐�
 
 ## 参考资料
 
-- [AutoGen 官方文档](https://microsoft.github.io/autogen/stable/)
-- [AutoGen: Core 用户指南](https://microsoft.github.io/autogen/stable/user-guide/core-user-guide/index.html)
-- [AutoGen: AgentChat 用户指南](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/index.html)
-- [AutoGen 官方仓库：Maintenance Mode（固定提交）](https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/README.md)
-- [AutoGen → MAF 迁移指南](https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-autogen/)
-- [AutoGen: 保存与加载 Agent/Team 状态](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html)
-- [CrewAI 官方文档](https://docs.crewai.com/)
-- [CrewAI: Flows 概念](https://docs.crewai.com/en/concepts/flows)
-- [CrewAI: Crews 概念](https://docs.crewai.com/en/concepts/crews)
-- [CrewAI: Processes 的顺序与层级执行](https://docs.crewai.com/en/concepts/processes)
-
-版本说明：AutoGen 维护模式及后继建议于 2026-09-15 对照上述固定提交复核；本章代码保留 Core/AgentChat 代际，不改写成 MAF API。
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-frameworks-20)。

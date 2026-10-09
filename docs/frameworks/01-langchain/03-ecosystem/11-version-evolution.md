@@ -11,15 +11,23 @@ description: Explain LangChain's package split, Runnable, LangGraph, and v1 agen
 **But problems accumulated at several layers**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["Layer 1: Dependencies<br/>One third-party SDK update<br/>could affect the entire dependency tree"]
-    B["Layer 2: Inconsistent APIs<br/>Chains differed in invocation and composition<br/>Developers had to learn more and more specialized APIs"]
-    C["Layer 3: Limited execution control<br/>Complex agent loops were hidden inside executors<br/>Branching, approval, and recovery were hard to insert"]
+    A["Layer 1:<br/>Dependencies"]
+    B["Layer 2:<br/>Inconsistent<br/>APIs"]
+    C["Layer 3:<br/>Limited<br/>execution<br/>control"]
     A --> B --> C
-    C --> D["More and more features<br/>Less clarity about core responsibilities"]
+    C --> D["More and more<br/>features"]
 
     style D fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- Layer 1: Dependencies One third-party SDK update could affect the entire dependency tree
+- Layer 2: Inconsistent APIs Chains differed in invocation and composition Developers had to learn more and more specialized APIs
+- Layer 3: Limited execution control Complex agent loops were hidden inside executors Branching, approval, and recovery were hard to insert
+- More and more features Less clarity about core responsibilities
 
 > **Major-version changes are not simply about adding features; they redefine boundaries**: which protocols should stay stable, which integrations should evolve independently, and which workflows belong in a lower-level runtime.
 
@@ -83,14 +91,21 @@ The sample question is Chinese for "What is an agent?"
 **Start with the entry points developers use most often**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["① High-level entry point converges on create_agent<br/>Supply a model, tools, and a system prompt<br/>LangGraph runs the agent loop underneath<br/>Persistence, streaming, and human intervention remain available"]
-    A --> B["② middleware becomes the main extension mechanism<br/>Dynamic prompts, model selection, tool filtering<br/>Conversation summarization, retries, human approval<br/>Extend key execution stages instead of copying the whole loop"]
-    B --> C["③ The main namespace is streamlined<br/>Legacy Chain, Retriever, Indexing, and Hub functionality<br/>Moves primarily to langchain-classic"]
+    A["① create_agent"]
+    A --> B["② middleware"]
+    B --> C["③ The main<br/>namespace is<br/>streamlined"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- ① High-level entry point converges on create_agent Supply a model, tools, and a system prompt LangGraph runs the agent loop underneath Persistence, streaming, and human intervention remain available
+- ② middleware becomes the main extension mechanism Dynamic prompts, model selection, tool filtering Conversation summarization, retries, human approval Extend key execution stages instead of copying the whole loop
+- ③ The main namespace is streamlined Legacy Chain, Retriever, Indexing, and Hub functionality Moves primarily to langchain-classic
 
 > **LangChain retains the easy-to-use interface; LangGraph handles complex execution.**
 
@@ -117,16 +132,24 @@ flowchart TB
 **A major-version upgrade takes more than one dependency update.**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    S1["① Before making changes<br/>Lock current dependencies and a reproducible environment<br/>Read the target version's migration guide<br/>Otherwise simultaneous package changes obscure the source of failures"]
-    S2["② Check compatibility along the new layers<br/>langchain, LangGraph, and model integrations have separate release cadences<br/>Confirm version combinations before replacing deprecated imports and internal APIs<br/>Change and run in small steps"]
-    S3["③ Starting successfully only proves imports are resolved<br/>Tool calling, structured output, streaming responses, and persistence<br/>Each still needs regression testing"]
-    S4["④ Paths with side effects<br/>Verify idempotency for payments and messages in an isolated environment<br/>Then roll out to a small share of traffic"]
+    S1["① Before making<br/>changes"]
+    S2["② Check<br/>compatibility"]
+    S3["③ Regression<br/>tests"]
+    S4["④ Paths with<br/>side effects"]
     S1 --> S2 --> S3 --> S4
 
     style S3 fill:#fff3cd
     style S4 fill:#fff3cd
 ```
+
+Details of the illustrated steps and components:
+
+- ① Before making changes Lock current dependencies and a reproducible environment Read the target version's migration guide Otherwise simultaneous package changes obscure the source of failures
+- ② Check compatibility along the new layers langchain, LangGraph, and model integrations have separate release cadences Confirm version combinations before replacing deprecated imports and internal APIs Change and run in small steps
+- ③ Starting successfully only proves imports are resolved Tool calling, structured output, streaming responses, and persistence Each still needs regression testing
+- ④ Paths with side effects Verify idempotency for payments and messages in an isolated environment Then roll out to a small share of traffic
 
 ### 11.7.1 An Easily Overlooked Stability Boundary
 
@@ -157,15 +180,24 @@ Upgrading a resumable system also requires testing old checkpoints. Renaming nod
 Taken together, these architectural changes form a continuous path:
 
 ```mermaid
-flowchart LR
-    A["langchain-core<br/>Stable foundational protocols"] --> B["Separate integration packages<br/>Decouple the release cadences<br/>of the core and external SDKs"]
-    B --> C["Runnable + LCEL<br/>Unify composition of deterministic workflows"]
-    C --> D["LangGraph<br/>Manage complex state and execution"]
-    D --> E["create_agent + middleware<br/>Provide an easier agent entry point"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["langchain-core"] --> B["Separate<br/>integration<br/>packages"]
+    B --> C["Runnable + LCEL"]
+    C --> D["LangGraph"]
+    D --> E["create_agent +<br/>middleware"]
 
     style A fill:#e8f0fe
     style E fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- langchain-core Stable foundational protocols
+- Separate integration packages Decouple the release cadences of the core and external SDKs
+- Runnable + LCEL Unify composition of deterministic workflows
+- LangGraph Manage complex state and execution
+- create_agent + middleware Provide an easier agent entry point
 
 > **This direction moves LangChain from wrapping many LLM features toward a clearly layered approach to agent engineering.**
 >
@@ -226,14 +258,5 @@ It is important context, **but the package split, Runnable, LangGraph, and v1 ar
 
 ## References
 
-- [LangChain v1 migration guide](https://docs.langchain.com/oss/python/migrate/langchain-v1)
-- [LangChain official documentation](https://docs.langchain.com/oss/python/langchain/overview)
-- [LangChain v1 release notes](https://docs.langchain.com/oss/python/releases/langchain-v1)
-- [LangChain v0.3 official release notes: Pydantic 2 migration](https://blog.langchain.com/announcing-langchain-v0-3/)
-- [LangChain official blog](https://blog.langchain.com/)
-- [LangGraph official documentation](https://docs.langchain.com/oss/python/langgraph/overview)
-- [Pydantic migration guide](https://docs.pydantic.dev/latest/migration/)
-- [LangChain Structured output: capabilities and minimum versions](https://docs.langchain.com/oss/python/langchain/structured-output)
-- [LangGraph Fault tolerance](https://docs.langchain.com/oss/python/langgraph/fault-tolerance)
-- [LangGraph Graph API: graph migrations](https://docs.langchain.com/oss/python/langgraph/graph-api#graph-migrations)
-- [LangChain Event streaming](https://docs.langchain.com/oss/python/langchain/event-streaming)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-11) for this chapter’s sources, reading suggestions, and source notes.

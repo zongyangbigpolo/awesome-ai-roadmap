@@ -13,16 +13,13 @@ description: 从知识更新、行为学习、上下文长度、成本和可追�
 更合适的比较方式，是把微调、长上下文和 RAG 放在一起看，再决定是否组合使用。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    NEED[需求] --> Q1{要改变的是<br/>知识还是行为?}
-    Q1 -->|行为/风格/格式| FT[微调]
-    Q1 -->|知识| Q2{知识规模与时效?}
-    Q2 -->|小且稳定| LC[长上下文直接塞]
-    Q2 -->|大或频繁变化<br/>或需权限过滤| RAG[RAG]
-    FT --> COMBO[实践中通常组合使用]
-    LC --> COMBO
-    RAG --> COMBO
+    NEED[需求] --> Q1[区分行为与知识]
+    Q1 --> CHOICE[选择或组合方案]
 ```
+
+要改变行为、风格或格式，可以考虑微调。对知识需求，小且稳定的材料可以直接放入长上下文；语料规模大、频繁变化或需要权限过滤时，更倾向于 RAG。实践中经常组合使用这些方法。
 
 ## 2.2 三种方案的区别
 
@@ -80,17 +77,13 @@ flowchart TB
 ### 2.4.1 但它有四个硬约束
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
 flowchart TB
-    LC[长上下文直接塞] --> C1[规模约束]
-    LC --> C2[时效约束]
-    LC --> C3[权限约束]
-    LC --> C4[质量约束]
-
-    C1 --> D1[语料远超窗口时装不下]
-    C2 --> D2[高频更新导致缓存频繁失效]
-    C3 --> D3[输入前仍须执行 ACL<br/>不同权限降低缓存复用]
-    C4 --> D4[位置与干扰内容<br/>可能影响有效利用率]
+    LC[全文放入上下文] --> C[检查四项约束]
+    C --> D[测量有效利用率]
 ```
+
+四项约束分别是：**规模**（语料超过窗口就装不下）、**时效**（频繁更新使缓存失效）、**权限**（输入前执行 ACL，不同权限降低缓存复用）和**质量**（位置与干扰内容可能降低有效利用率）。
 
 前三条是常见工程约束，**第四条直接影响最终效果**。
 
@@ -155,19 +148,14 @@ Anthropic 的 Contextual Retrieval 博客在所测设置中比较了 5、10、20
 ## 2.7 怎么选：一套可执行的判断顺序
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S[需求] --> A{要改行为还是补知识?}
-    A -->|行为/格式/风格| FT[微调]
-    A -->|补知识| B{语料能装进窗口吗?}
-    B -->|不能| RAG[RAG]
-    B -->|能| C{更新频繁吗?}
-    C -->|是| COMP[比较更新、授权过滤<br/>缓存与检索总成本]
-    C -->|否| D{需要按用户过滤吗?}
-    D -->|是| COMP
-    D -->|否| E{调用量大吗?}
-    E -->|是| COMP
-    E -->|否| LC[长上下文直接塞]
+    B{语料能装入窗口？} -->|否| RAG[RAG]
+    B -->|是| C[检查工作负载条件]
+    C --> D[比较总成本]
 ```
+
+这一步针对知识需求；行为、格式或风格变化仍然对应微调。语料能装入窗口时，依次检查**更新是否频繁**、**是否按用户过滤**、**调用量是否很大**。任何一项为“是”，都应比较更新、授权过滤、缓存与检索的总成本。只有三项都为“否”时，直接将全部材料放入长上下文才是简单的起点。
 
 可以按四个问题依次判断：**装不装得下 → 更不更新 → 要不要过滤 → 调用量大不大**。超出窗口时必须筛选、分组或分轮处理；频繁更新和权限差异则要求比较方案，不自动排除长上下文。即使选择全量输入，也要在固定任务集上检验漏读和干扰。
 
@@ -225,10 +213,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
-- [Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance](https://research.trychroma.com/context-rot)
-- [Can Long-Context Language Models Subsume Retrieval, RAG, SQL, and More?](https://arxiv.org/abs/2406.13121)
-- [Long-Context LLMs Meet RAG: Overcoming Challenges for Long Inputs in RAG](https://arxiv.org/abs/2410.05983)
-- [LongRAG: Enhancing Retrieval-Augmented Generation with Long-context LLMs](https://arxiv.org/abs/2406.15319)
-- [RAFT: Adapting Language Model to Domain Specific RAG](https://arxiv.org/abs/2403.10131)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-02)。

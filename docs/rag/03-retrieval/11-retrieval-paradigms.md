@@ -78,16 +78,14 @@ BM25 can add term-level matching for rare words, but it does not inherently unde
 Section 6.3.4 introduced the mechanism. The following places it alongside other matching architectures:
 
 ```mermaid
-flowchart LR
-    A[Sparse BM25<br/>Literal matching] --- B[Dense dual encoder<br/>Semantic similarity]
-    B --- C[Late interaction: ColBERT<br/>Token-level semantic matching]
-    C --- D[Cross-encoder<br/>Full interaction]
-
-    A -.-> A1[Fast; no training<br/>No synonym understanding]
-    B -.-> B1[Fast; handles synonyms<br/>Weak fine-grained matching]
-    C -.-> C1[Relatively fast; bridges both<br/>High storage cost]
-    D -.-> D1[Query-time cross-text interaction<br/>No independent document-score cache]
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[BM25: lexical] --- B[Dual encoder: semantic]
+    B --- C[ColBERT: token-level]
+    C --- D[Cross-encoder: joint]
 ```
+
+The line compares methods; it is not a required pipeline. BM25 is fast and needs no training, but literal matching does not understand synonyms. Dense dual encoders are fast and handle semantic similarity, including synonyms, but weaker fine-grained matching can miss distinctions. ColBERT uses token-level late interaction, balancing these properties with higher storage cost. Cross-encoders perform full query-time cross-text interaction and cannot cache a query-independent document relevance score.
 
 Late interaction retains token-level semantic matching and may reduce the loss of detail caused by single-vector compression. Document representations can still be precomputed offline. It does not, however, guarantee exact model numbers, word order, or numerical constraints; quality still depends on training and tokenization.
 
@@ -112,6 +110,7 @@ It is worth using as a comparison baseline because:
 - Costs can be controlled.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     Q[Query] --> B[BM25 retrieval]
     Q --> D[Dense vector retrieval]
@@ -178,10 +177,5 @@ It has advantages on particular visual tasks, but that does not establish a univ
 
 ## References
 
-- [Lucene 9.12 BM25Similarity: term-frequency saturation, length normalization, and IDF implementation](https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [SPLADE: Sparse Lexical and Expansion Model for First Stage Ranking](https://arxiv.org/abs/2107.05720)
-- [Elastic: official ELSER documentation](https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-elser)
-- [ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction](https://arxiv.org/abs/2112.01488)
-- [ColPali: Efficient Document Retrieval with Vision Language Models](https://arxiv.org/abs/2407.01449)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-11) for this chapter’s sources, reading suggestions, and source notes.

@@ -9,7 +9,8 @@ description: 解释 Self-RAG、Corrective RAG、RAPTOR 和 Agentic RAG 的控制
 Naive、Advanced、Modular 是综述中的组织方式，不是严格的版本标准或必经代际。理解时应看控制流、训练要求和适用问题，而不是只列名字。
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     N[Naive RAG<br/>检索一次 直接生成] --> A[Advanced RAG<br/>检索前后加优化环节]
     A --> M[Modular RAG<br/>组件化 可编排 可循环]
 ```
@@ -48,15 +49,18 @@ Self-RAG 的做法是训练模型在生成过程中输出特殊的**反思标记
 Corrective RAG 的做法是用一个轻量的评估器给检索结果打分，再按分数分三档处理：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
 flowchart TB
-    R[检索结果] --> E[轻量评估器打分]
-    E -->|正确| C[精炼: 去掉无关部分 保留核心]
-    E -->|错误| W[丢弃 改用外部搜索]
-    E -->|模糊| A[两者结合]
+    R[检索结果] --> E[轻量评估器]
+    E -->|正确| C[精炼]
+    E -->|错误| W[外部搜索]
+    E -->|模糊| A[结合两者]
     C --> G[生成]
     W --> G
     A --> G
 ```
+
+评为“正确”时，精炼会去掉无关部分，保留核心证据；评为“错误”时，丢弃原结果，改用外部搜索；评为“模糊”时，结合精炼与外部搜索。各分支随后向生成阶段提供证据。
 
 **它的价值在于承认了一个现实：检索是会失败的，系统需要有失败后的补救路径。** 这比「检索到什么就用什么」进了一大步。
 
@@ -74,15 +78,18 @@ RAPTOR 的流程如下：
 4. 原论文比较了 tree traversal 与 collapsed tree 两种检索方式，后者把多层节点放在一起检索；不能把“每次遍历所有层”视为唯一实现。
 
 ```mermaid
-flowchart TB
-    ROOT[顶层摘要<br/>全局视角] --> M1[中层摘要 1]
-    ROOT --> M2[中层摘要 2]
-    M1 --> L1[原始 chunk]
-    M1 --> L2[原始 chunk]
-    M2 --> L3[原始 chunk]
-    M2 --> L4[原始 chunk]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    ROOT[全局摘要] --> M1[摘要 1]
+    ROOT --> M2[摘要 2]
+    M1 --> L1[块 1]
+    M1 --> L2[块 2]
+    M2 --> L3[块 3]
+    M2 --> L4[块 4]
     M2 -.-> L2
 ```
+
+顶层摘要从全局视角概括两个中层摘要，叶节点是原始块。额外的虚线表示块 2 同时属于两个摘要，成员关系不必互斥。
 
 图中虚线表示一个片段也可能参与另一个簇的摘要。原论文采用软聚类，节点可属于多个簇；“树”是分层组织的直观称呼，不能据此假定每个片段只有唯一父节点。去重和来源回链需处理这种重叠。
 
@@ -116,6 +123,7 @@ Agentic RAG 的关键转变是：
 > **从「固定流程中的一个步骤」，变成「Agent 可以自主决定何时调用、调用几次、怎么用结果的一个工具」。**
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
     Q[用户问题] --> AG[Agent 推理]
     AG --> D{需要更多信息?}
@@ -155,14 +163,14 @@ flowchart TB
 第十四章已经说过——**先把基础五层做对，通常比盲目叠加高级范式更有效**。高级范式应该在满足以下条件时才考虑：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S{基础五层<br/>都做扎实了吗?} -->|没有| BASE[回去做基础<br/>第十四章]
-    S -->|做了| E{有评测集能<br/>量化收益吗?}
-    E -->|没有| EVAL[先建评测集]
-    E -->|有| N{失败案例属于<br/>基础方案的结构性缺陷吗?}
-    N -->|不是| TUNE[继续调基础参数]
-    N -->|是| ADV[评估对应的高级范式]
+    S[验证基础] --> E[建立可量化收益]
+    E --> N[诊断结构性限制]
+    N --> ADV[评估对应高级范式]
 ```
+
+这些是门槛，不是要求一律采用高级设计。基础五层中有任何一层薄弱，就回到第十四章；没有能量化收益的评测集，就先构造评测集；失败并未暴露基础方案的结构性限制，就继续调整基础方案。通过这些检查后，才评估相应的高级范式。
 
 **「结构性缺陷」的判断标准**：这个问题**不是调参能解决的**。例如：
 
@@ -215,10 +223,5 @@ flowchart TB
 
 ## 参考资料
 
-- [Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection](https://arxiv.org/abs/2310.11511)
-- [Corrective Retrieval Augmented Generation](https://arxiv.org/abs/2401.15884)
-- [RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval](https://arxiv.org/abs/2401.18059)
-- [Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity](https://arxiv.org/abs/2403.14403)
-- [Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG](https://arxiv.org/abs/2501.09136)
-- [Active Retrieval Augmented Generation](https://arxiv.org/abs/2305.06983)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-rag-15)。

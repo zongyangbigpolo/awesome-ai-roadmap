@@ -19,16 +19,20 @@ Answering requires three steps:
 **The difficulty for a single vector search**: It usually encodes the query into one vector and returns the most similar passages. If no passage mentions A, B, and C together, one retrieval round may not provide the complete relationship chain. This does not mean that vector-based methods “cannot do” multi-hop reasoning. Query decomposition, multi-round retrieval, entity expansion, late interaction, and agents can all combine multiple pieces of evidence, but require additional control logic and verification.
 
 ```mermaid
-flowchart LR
-    subgraph Vector retrieval
-        Q1[One vector for<br/>the entire question] --> M1[Find the most<br/>similar passages]
-        M1 --> F1[Single-round candidates may<br/>miss parts of the relationship chain]
-    end
-    subgraph Graph retrieval
-        Q2[Identify entity A] --> N1[Node A]
-        N1 -->|Supply relationship| N2[Node B]
-        N2 -->|Competitive relationship| N3[Node C]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[One vector for the question] --> M1[Most similar passages]
+    M1 --> F1[Relationship chain may be incomplete]
+```
+
+Graph retrieval makes the relationship path explicit:
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Identify entity A] --> N1[Node A]
+    N1 -->|Supply relationship| N2[Node B]
+    N2 -->|Competitive relationship| N3[Node C]
 ```
 
 > **Standard single-round vector retrieval does not explicitly represent graph topology or traverse relationship edges on its own.** For relationship-chain questions, it is better viewed as a way to find an entry point into the evidence than as a complete reasoning system.
@@ -46,14 +50,15 @@ GraphRAG broadly refers to approaches that use graph structures to support retri
 ### 16.2.1 Construction
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    D[Documents] --> C[Chunking]
-    C --> E[LLM entity and<br/>relationship extraction]
-    E --> G[Build a knowledge graph]
-    G --> COM[Community detection:<br/>group strongly connected nodes]
-    COM --> SUM[Generate a summary<br/>for each community]
-    SUM --> IDX[(Graph and community<br/>summary index)]
+    D[Chunk documents] --> E[Extract entities and relations]
+    E --> G[Build graph]
+    G --> COM[Detect communities]
+    COM --> SUM[Summarize and index]
 ```
+
+An LLM extracts entities and relationships from chunks. Community detection groups strongly connected graph nodes; generate a summary for each community, then index the graph and community summaries.
 
 The key step is **community summarization**: divide the graph into closely connected subgraphs, or communities, and generate a summary for each. **These summaries provide the material for answering global questions.**
 
@@ -130,15 +135,15 @@ These approaches differ in graph construction, retrieval, and update strategies.
 ## 16.5 When Is It Worth Using?
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S{Question type} -->|Specific fact lookup| NO[Start with basic RAG,<br/>then compare experimentally]
-    S -->|Multi-hop relationship reasoning| M{Are the relationships<br/>themselves important?}
-    S -->|Global thematic synthesis| G{Do corpus size and<br/>budget permit it?}
-    M -->|Yes| YES1[Consider graph retrieval]
-    M -->|No| ALT[Try Agentic RAG first:<br/>multiple rounds can handle multiple hops]
-    G -->|Yes| YES2[Consider GraphRAG]
-    G -->|No| ALT2[Compare grouped summaries or RAPTOR;<br/>measure construction and query costs]
+    S[Question type] --> P[Select a baseline]
+    P --> E[Compare quality and costs]
 ```
+
+- **Specific fact lookup:** start with basic RAG and compare experimentally.
+- **Multi-hop reasoning:** if the relationships themselves matter, consider graph retrieval. Otherwise try Agentic RAG first; multiple retrieval rounds can also handle multiple hops.
+- **Global thematic synthesis:** consider GraphRAG when corpus scale and budget permit. Otherwise compare grouped summaries or RAPTOR, measuring construction and query costs.
 
 **Signals in favor**:
 
@@ -211,17 +216,5 @@ Agentic multi-round retrieval and metadata-based entity linking can cover some o
 
 ## References
 
-- [From Local to Global: A Graph RAG Approach to Query-Focused Summarization](https://arxiv.org/abs/2404.16130)
-- [Microsoft GraphRAG documentation](https://microsoft.github.io/graphrag/)
-- [Microsoft GraphRAG: Indexing Methods](https://microsoft.github.io/graphrag/index/methods/)
-- [Microsoft GraphRAG: CLI Reference, including update methods](https://microsoft.github.io/graphrag/cli/)
-- [Microsoft GraphRAG: Query Modes](https://microsoft.github.io/graphrag/query/overview/)
-- [Microsoft GraphRAG: Local Search](https://microsoft.github.io/graphrag/query/local_search/)
-- [LightRAG: Simple and Fast Retrieval-Augmented Generation](https://arxiv.org/abs/2410.05779)
-- [HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models](https://arxiv.org/abs/2405.14831)
-- [PathRAG: Pruning Graph-based Retrieval Augmented Generation with Relational Paths](https://arxiv.org/abs/2502.14902)
-- [Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG](https://arxiv.org/abs/2501.09136)
-
-The Chinese source records access to Microsoft’s online documentation on 2026-09-15. CLI options and library implementations can change; use a pinned version and its configuration when reproducing behavior.
-
-For this translation, the linked official documentation was checked for Standard/Fast extraction, English-oriented NLP defaults, update methods, and Local/Global/DRIFT/Basic behavior. Relevant passages in the GraphRAG, LightRAG, HippoRAG, and PathRAG papers were also checked; the Agentic RAG survey was checked at the abstract level only. No indexing runs, update tests, or comparative benchmarks were performed.
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-16) for this chapter’s sources, reading suggestions, and source notes.

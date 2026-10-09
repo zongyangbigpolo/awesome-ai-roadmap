@@ -16,15 +16,30 @@ response = query_engine.query("公司差旅报销的额度上限是多少？")
 When a system has multiple indexes—for example, a `VectorStoreIndex` for the employee handbook and a `PropertyGraphIndex` for financial policies—`RouterQueryEngine` uses a selector to choose one or more Query Engines. Selecting multiple engines also requires combining their results. The diagram shows the single-selection path:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
 flowchart TB
-    Q["User question"] --> R["RouterQueryEngine<br/>Use an LLM to identify the question type"]
-    R -->|"Semantic similarity question"| V["VectorStoreIndex Query Engine"]
-    R -->|"Multi-hop relationship question"| P["PropertyGraphIndex Query Engine"]
-    R -->|"Requires full-text coverage"| S["SummaryIndex Query Engine"]
-    V --> A["Answer + source nodes<br/>Citation accuracy requires validation"]
+    Q["User question"] --> R["RouterQueryEngine"]
+    R -->|"Similarity"| V["Vector query"]
+    R -->|"Relationships"| P["Graph query"]
+    R -->|"Full coverage"| S["Summary query"]
+    V --> A["Answer + source nodes"]
     P --> A
     S --> A
 ```
+
+Figure conditions and labels:
+
+- Semantic similarity question
+- Multi-hop relationship question
+- Requires full-text coverage
+- VectorStoreIndex Query Engine
+- PropertyGraphIndex Query Engine
+- SummaryIndex Query Engine
+
+Details of the illustrated steps and components:
+
+- RouterQueryEngine Use an LLM to identify the question type
+- Answer + source nodes Citation accuracy requires validation
 
 The commonly documented LLM/Pydantic selectors add model-based routing overhead; synthesizing answers after multiple selections may add further calls. `description` matters, but routing quality also depends on the model, the candidate set, the question distribution, and the multiple-selection strategy. Having source nodes does not mean every claim in the answer has an accurate citation. Citation quality needs its own evaluation.
 
@@ -83,14 +98,22 @@ Both require a design for consistency under concurrency. In Workflows, multiple 
 1. **LlamaIndex as a data tool**: Expose `query_engine.query()` / `aquery()` and give top-level orchestration to an external agent framework. This suits projects whose data layer can be encapsulated independently or that already have an orchestration or approval system. The external orchestration need not itself be lightweight.
 2. **LlamaIndex Workflows as the runtime**: Orchestrate the entire multi-step process—retrieval → reflection → retry → generation—inside Workflows, with the external framework making a single `workflow.run()` call at the entry point. This suits projects with substantial data processing and orchestration that want to reduce cross-framework state synchronization.
 
+**LlamaIndex as a tool**
+
 ```mermaid
-flowchart LR
-    subgraph A["LlamaIndex as a tool"]
-        A1["External agent / workflow"] -->|"One call"| A2["LlamaIndex Query Engine"]
-    end
-    subgraph B["LlamaIndex Workflows as the runtime"]
-        B1["External system"] -->|"One trigger"| B2["Multi-step loop inside Workflows"]
-    end
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        A1["External agent<br/>/ workflow"] -->|"One call"| A2["LlamaIndex<br/>Query Engine"]
+
+```
+
+**LlamaIndex Workflows as the runtime**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        B1["External system"] -->|"One trigger"| B2["Multi-step loop<br/>inside<br/>Workflows"]
+
 ```
 
 The key is who owns intermediate state. If intermediate results—retrieved nodes, reflection feedback, and retry counts—must be shared with an external agent's memory or approval process, the first arrangement lets the external framework retain control. If this state matters only within data processing and the caller wants only the final answer, the second arrangement reduces cross-framework serialization costs. This is also the principle of "state ownership before tool choice" in [Framework Selection and Portable Architectures](../06-selection-portability/README.md).
@@ -131,11 +154,5 @@ LlamaIndex's orchestration layer continues its data-centered design: Query Engin
 
 ## References
 
-- [LlamaIndex: Query Engine concepts](https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/)
-- [LlamaIndex: Routers and selectors](https://developers.llamaindex.ai/python/framework/module_guides/querying/router/)
-- [LlamaIndex: Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/)
-- [LlamaIndex: Shared state in Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/managing_state/)
-- [LlamaIndex: Durable Workflows](https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/)
-- [LlamaIndex: WorkflowServer deployment](https://developers.llamaindex.ai/python/llamaagents/workflows/deployment/)
-- [LlamaIndex: BaseSynthesizer query / nodes interface](https://github.com/run-llama/llama_index/blob/main/llama-index-core/llama_index/core/response_synthesizers/base.py)
-- [LangGraph official documentation](https://docs.langchain.com/oss/python/langgraph/overview)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-frameworks-15) for this chapter’s sources, reading suggestions, and source notes.

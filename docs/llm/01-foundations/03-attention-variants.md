@@ -107,14 +107,15 @@ Naive attention first writes `S = QKᵀ` to GPU device memory, then reads it to 
 FlashAttention tiles Q/K/V, computes local scores in on-chip memory, and uses **online softmax** to combine statistics across tiles. This avoids materializing the full `N × N` matrix in device memory.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    A["Load a Q tile and a K/V tile"] --> B["Compute local logits"]
-    B --> C["Update row maxima, normalization sums, and weighted-value sums"]
-    C --> D{"More K/V tiles?"}
-    D -->|Yes| A
-    D -->|No| E["Normalize to obtain the output"]
-    E --> F["Recompute local probabilities in the backward pass using saved statistics"]
+    A["Q tile + K/V tile"] --> B["Local logits"]
+    B --> C["Update row statistics"]
+    C -->|Next K/V tile| A
+    C -->|All tiles processed| E["Normalize output"]
 ```
+
+For each Q tile, accumulate the row maxima, normalization sums, and weighted-value sums across all K/V tiles. In the backward pass, recompute local probabilities from the saved statistics rather than storing the full attention matrix.
 
 Why not normalize each tile's softmax independently and simply add the results? The denominator must span the entire row. Let the previous tiles have maximum `m` and exponential sum `l`, and the new tile have `m_b, l_b`:
 
@@ -163,15 +164,5 @@ In an interview, distinguish changes to connections, cached representations, and
 
 ## References
 
-- [Fast Transformer Decoding: One Write-Head is All You Need (MQA)](https://arxiv.org/abs/1911.02150)
-- [GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/abs/2305.13245)
-- [Llama 2](https://arxiv.org/abs/2307.09288)
-- [The Llama 3 Herd of Models](https://arxiv.org/abs/2407.21783)
-- [DeepSeek-V2 paper and official implementation](https://github.com/deepseek-ai/DeepSeek-V2)
-- [FlashAttention](https://arxiv.org/abs/2205.14135)
-- [FlashAttention official repository and version requirements (README snapshot, 2026-07-06)](https://github.com/Dao-AILab/flash-attention/blob/1f7ce2f7cb503473559f3d44d575ae05b1ed8557/README.md)
-- [Online normalizer calculation for softmax](https://arxiv.org/abs/1805.02867)
-- [Mistral 7B](https://arxiv.org/abs/2310.06825)
-- [Linformer](https://arxiv.org/abs/2006.04768)
-- [Rethinking Attention with Performers](https://arxiv.org/abs/2009.14794)
-- [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-llm-03) for this chapter’s sources, reading suggestions, and source notes.

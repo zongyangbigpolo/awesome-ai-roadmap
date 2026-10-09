@@ -15,12 +15,13 @@ Three changes make agent security qualitatively different from LLM content safet
 3. **Multistep propagation.** Greater autonomy makes it less feasible to rely on a person catching every error. Contamination can propagate through summaries, memory, and delegation.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
 flowchart LR
-    LLM[LLM content safety] --> R1[Risk: inappropriate text output]
-    LLM --> M1[Mitigation: content filtering]
+    LLM["LLM content safety"] --> R1["Risk:<br/>inappropriate text<br/>output"]
+    LLM --> M1["Mitigation:<br/>content filtering"]
 
-    AG[Agent security] --> R2[Risk: inappropriate actions / data exfiltration]
-    AG --> M2[Mitigation: permissions + isolation + architectural constraints]
+    AG["Agent security"] --> R2["Risk:<br/>inappropriate<br/>actions / data<br/>exfiltration"]
+    AG --> M2["Mitigation:<br/>permissions +<br/>isolation +<br/>architectural<br/>constraints"]
 ```
 
 Model training and detection can reduce risk, but they should not be the sole basis for authorizing privileged actions. Architecture, permissions, and data-flow controls provide execution boundaries independent of the model's judgment.
@@ -40,30 +41,21 @@ Using natural language for both instructions and data makes the maintenance of s
 ## 15.3 Threat Modeling: Where Is the Attack Surface?
 
 ```mermaid
-flowchart TB
-    A[Agent attack surface] --> IN[Input channels]
-    A --> TOOL[Tool layer]
-    A --> MEM[Memory layer]
-    A --> MULTI[Multi-agent layer]
-    A --> OUT[Output channels]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    A["Agent attack surface"] --> IN["Input channels"]
+    A --> TOOL["Tool layer"]
+    A --> MEM["Memory layer"]
+    A --> MULTI["Multi-agent layer"]
+    A --> OUT["Output channels"]
 
-    IN --> IN1[Direct user input]
-    IN --> IN2[Web pages / emails / documents]
-    IN --> IN3[Tool results]
-
-    TOOL --> T1[Poisoned tool descriptions]
-    TOOL --> T2[Excessive tool permissions]
-    TOOL --> T3[Untrusted MCP servers]
-
-    MEM --> ME1[Malicious content written to long-term memory]
-    MEM --> ME2[Poisoned RAG corpus]
-
-    MULTI --> MU1[Injection in inter-agent messages]
-    MULTI --> MU2[Privileged agent used as a confused deputy]
-
-    OUT --> OU1[Data leaked through outbound tools]
-    OU1 --> OU2[Exfiltration through Markdown images / links]
 ```
+
+- **Input channels:** direct user input, web pages, emails, documents, and tool results.
+- **Tool layer:** poisoned descriptions, excessive permissions, and untrusted MCP servers.
+- **Memory layer:** malicious content persisted in long-term memory or a poisoned RAG corpus.
+- **Multi-agent layer:** injected inter-agent messages or a privileged agent acting as a confused deputy.
+- **Output channels:** data leakage through outbound tools, including exfiltration through Markdown images or links.
 
 **Tool results also require source checks.** Filtering only user input while treating search results, web page bodies, or database query results as trusted instructions leaves an opening for indirect injection. A trusted tool may faithfully return content written by an attacker. “The tool call succeeded” does not mean “the returned text is trustworthy.”
 
@@ -82,20 +74,19 @@ Indirect injection is particularly difficult to defend against in agents. The pa
 A typical sequence:
 
 ```mermaid
+%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
 sequenceDiagram
-    participant U as User
     participant A as Agent
-    participant W as Compromised web page
+    participant W as Web page
     participant T as Email tool
 
-    U->>A: Summarize this page for me
-    A->>W: Fetch the page content
-    W-->>A: Page body + hidden injection instructions
-    Note over A: The model incorrectly follows the page's instructions<br/>and the execution layer fails to block an unauthorized action
-    A->>T: Send the user's address book to attacker@evil.com
-    T-->>A: Sent successfully
-    A->>U: Here is the page summary, which looks entirely normal
+    A->>W: Fetch content
+    W-->>A: Body + injection
+    A->>T: Unauthorized send
+    T-->>A: Sent
 ```
+
+The user asked only for a page summary. The compromised page contains hidden injection instructions alongside its body. In this failure case, the model incorrectly follows those instructions and the execution layer fails to block the unauthorized action: sending the user's address book to `attacker@evil.com`. The email tool reports success, while the agent returns a seemingly normal page summary to the user.
 
 The user requested a page summary, but data was exfiltrated instead. The summary returned to the user looks entirely normal: **the attack is invisible from the user's perspective**.
 
@@ -106,12 +97,13 @@ Payloads can be hidden in white text on a white background, CSS-hidden elements,
 This is a practical framework for identifying **high-risk preconditions** for agent data exfiltration. When all three conditions below are present, the attack surface and potential impact increase substantially. That does not mean compromise is inevitable: isolation, egress policy, authorization, and confirmation still affect exploitability and consequences.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    T1[① Access to private data] --> RISK{All three present?}
-    T2[② Exposure to untrusted content] --> RISK
-    T3[③ Ability to communicate externally] --> RISK
-    RISK -->|Yes| BREACH[High risk: assess and add controls]
-    RISK -->|No| SAFE[This exfiltration path may be curtailed; auditing is still needed]
+    T1["① Access to<br/>private data"] --> RISK["All three<br/>present?"]
+    T2["② Exposure to<br/>untrusted<br/>content"] --> RISK
+    T3["③ Ability to<br/>communicate<br/>externally"] --> RISK
+    RISK -->|Yes| BREACH["High risk:<br/>assess and add<br/>controls"]
+    RISK -->|No| SAFE["This<br/>exfiltration<br/>path may be<br/>curtailed;<br/>auditing is<br/>still needed"]
 ```
 
 | Element | Meaning | Examples |
@@ -194,13 +186,14 @@ Use two models with strictly separated responsibilities:
 After the quarantined LLM finishes processing, its result is stored in a variable rather than returned as natural-language text. The privileged LLM receives only an opaque reference, such as `$VAR_1`, for subsequent orchestration.
 
 ```mermaid
-flowchart LR
-    U[User request] --> P[Privileged LLM<br/>Tools available; no untrusted input]
-    P -->|Dispatch| Q[Quarantined LLM<br/>No tools; processes untrusted content]
-    W[Web pages / emails] --> Q
-    Q -->|Store result in a variable| V[(Variable store)]
-    V -->|Opaque reference| P
-    P --> T[Execute tools]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 10, "padding": 6}}}%%
+flowchart TB
+    U["User request"] --> P["Privileged<br/>LLM<br/>Tools available;<br/>no untrusted<br/>input"]
+    P -->|Dispatch| Q["Quarantined<br/>LLM<br/>No tools;<br/>processes<br/>untrusted<br/>content"]
+    W["Web pages /<br/>emails"] --> Q
+    Q -->|Store result<br/>in a<br/>variable| V[("Variable<br/>store")]
+    V -->|Opaque<br/>reference| P
+    P --> T["Execute<br/>tools"]
 ```
 
 For example, the user explicitly asks, “Summarize this email and save it to my drafts.” The quarantined model produces a summary, and the execution layer stores it as a variable. The privileged model only arranges for that variable to be written to the authorized draft. It does not reread the summary to choose recipients or add actions. An opaque reference does not automatically sanitize its contents: the execution layer must still restrict which tool parameters the variable can flow into. Its text must not be treated as a shell command, code, or unapproved outbound content.
@@ -234,14 +227,14 @@ CaMeL is a capability/information-flow control approach described in a paper and
 ### 15.8.7 Choosing a Pattern
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
 flowchart TB
-    Q{Must the task read untrusted content?} -->|No| N[Conventional agent + least privilege]
-    Q -->|Yes| Q2{Are high-risk actions needed afterward?}
-    Q2 -->|No| CM[Context-Minimization]
-    Q2 -->|Yes| Q3{Can the action set be determined in advance?}
-    Q3 -->|Yes| PE[Plan-Then-Execute / Action-Selector]
-    Q3 -->|No| DL[Dual LLM / CaMeL + human confirmation]
+    Q3["Action set known in<br/>advance?"]
+    Q3 -->|Yes| PE["Plan-Then-Execute /<br/>Action-Selector"]
+    Q3 -->|No| DL["Dual LLM / CaMeL + human<br/>confirmation"]
 ```
+
+First ask whether the task must read untrusted content. If not, use a conventional agent with least privilege. If it must read such content but needs no high-risk actions afterward, use Context-Minimization. Only when both untrusted reading and subsequent high-risk actions are required does the diagram's action-set question apply.
 
 This diagram helps shortlist designs; it is not a security ranking. Even when “no high-risk action follows,” check whether final output, image loading, or synchronized files could leak data. Context minimization cannot replace policy checks at these egress points.
 
@@ -414,16 +407,5 @@ In implementation, start with the lethal trifecta to identify high-risk precondi
 
 ## References
 
-- [Simon Willison: The lethal trifecta for AI agents](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
-- [Simon Willison: The Dual LLM pattern for building AI assistants that can resist prompt injection](https://simonwillison.net/2023/Apr/25/dual-llm-pattern/)
-- [Design Patterns for Securing LLM Agents against Prompt Injections (v1)](https://arxiv.org/abs/2506.08837v1)
-- [Defeating Prompt Injections by Design (CaMeL, v2)](https://arxiv.org/abs/2503.18813v2)
-- [Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection](https://arxiv.org/abs/2302.12173)
-- [AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents](https://arxiv.org/abs/2406.13352)
-- [The Task Shield: Enforcing Task Alignment to Defend Against Indirect Prompt Injection in LLM Agents](https://arxiv.org/abs/2412.16682)
-- [System-Level Defense against Indirect Prompt Injection Attacks: An Information Flow Control Perspective](https://arxiv.org/abs/2409.19091)
-- [Bypassing LLM Guardrails: An Empirical Analysis of Evasion Attacks against Prompt Injection and Jailbreak Detection Systems (v3)](https://arxiv.org/abs/2504.11168v3)
-- [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/)
-- [Docker Engine: seccomp configuration and boundaries for Linux containers](https://docs.docker.com/engine/security/seccomp/)
-- [Anthropic: Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-- [MCP 2026-07-28: Security Best Practices](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-agent-15) for this chapter’s sources, reading suggestions, and source notes.

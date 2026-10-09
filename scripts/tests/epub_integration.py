@@ -33,10 +33,10 @@ class EpubIntegration(unittest.TestCase):
         third = fixtures.builder.language_path(fixture.third, language)
         title = "# Chapter 1: Models" if english else "# 第一章：模型"
         section = "## 1.1 Mechanism" if english else "## 1.1 中文机制"
-        diagram = ('```mermaid\nflowchart LR\n A["Retrieve context"] --> B["Generate an answer"]'
-                   ' --> C["Verify facts and sources"] --> D["Human review and delivery"] --> E["Review and update"]\n```\n'
-                   if english else '```mermaid\nflowchart LR\n A["中文检索"] --> B["生成答案"]'
-                   ' --> C["核对事实与来源"] --> D["人工审阅与交付"] --> E["复盘与更新"]\n```\n')
+        diagram = ('```mermaid\nflowchart TB\n A["Retrieve"] --> B["Generate"]'
+                   ' --> C["Verify"] --> D["Review"]\n```\n'
+                   if english else '```mermaid\nflowchart TB\n A["检索"] --> B["生成"]'
+                   ' --> C["核验"] --> D["审阅"]\n```\n')
         links = ("[Next chapter](../02-second/02-second.md#21-mechanism) [Contents](../../README.md)"
                  if english else "[跨章中文标题](../02-second/02-second.zh.md#21-机制) "
                  "[目录](../../README.zh.md)")
@@ -83,7 +83,8 @@ class EpubIntegration(unittest.TestCase):
         self.assertEqual(report["nonlinear_figure_documents"], 2)
         self.assertEqual(report["nonlinear_formula_documents"], 2)
         self.assertNotIn("diagram-detail", report["image_occurrences"])
-        self.assertGreater(report["supplemental_image_occurrences"]["diagram-detail"], 0)
+        self.assertEqual(report["supplemental_image_occurrences"].get("diagram-detail", 0), 0)
+        self.assertEqual(report["diagram_detail_tiles"], 0)
         filename = output / f"ai-engineering-interview-{language}.epub"
         previous = filename.read_bytes()
         with zipfile.ZipFile(filename) as archive:
@@ -119,6 +120,13 @@ class EpubIntegration(unittest.TestCase):
         self.assertTrue(layout["passed"])
         self.assertEqual(layout["language"], language)
         self.assertEqual(layout["epub_sha256"], report["sha256"])
+        oversized = '```mermaid\nflowchart TB\n' + '\n'.join(
+            f'N{i}["Step {i}"] --> N{i + 1}["Step {i + 1}"]' for i in range(12)) + '\n```\n'
+        fixture.write(first, title + "\n\n" + oversized)
+        result, errors = build()
+        self.assertEqual(result, 1)
+        self.assertIn("simplify the source", errors)
+        self.assertEqual(filename.read_bytes(), previous, "an oversized diagram must not replace the EPUB")
         fixture.write(first, title + "\n\n$\\notARealCommand{x}$\n")
         result, errors = build()
         self.assertEqual(result, 1)

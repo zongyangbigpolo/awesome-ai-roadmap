@@ -137,16 +137,23 @@ SupportReply reply = assistant.chat("conversation-1001", "订单 A1024 到哪了
 **The entry point is just `assistant.chat()`, but it connects a complete sequence behind the scenes**:
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["AI Service proxy<br/>Read prior messages by MemoryId and assemble input"] --> B["Retriever adds knowledge-base content"]
+    A["AI Service<br/>proxy"] --> B["Retrieve<br/>context"]
     B --> C["Model decides"]
     C -->|Order lookup needed| D["Call OrderTools"]
     D --> C
-    C -->|Result obtained| E["Update the current memory window"]
-    E --> F["Framework converts model output into SupportReply"]
+    C -->|Result obtained| E["Update the<br/>current memory<br/>window"]
+    E --> F["Convert<br/>SupportReply"]
 
     style F fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- AI Service proxy Read prior messages by MemoryId and assemble input
+- Retriever adds knowledge-base content
+- Framework converts model output into SupportReply
 
 ### 8.3.2 Three Engineering Details of Structured Output
 
@@ -233,11 +240,16 @@ Start with the team's existing service framework, configuration practices, and m
 When investigating an incorrect support response, do not inspect only the final text. A single invocation may already have passed through RAG retrieval, model decisions, and tool execution.
 
 ```mermaid
-flowchart LR
-    A["What the retriever found"] --> B["Messages sent to the model"] --> C["Tool arguments and results"] --> D["Whether input/output validation caught problematic content"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["What the<br/>retriever found"] --> B["Messages sent<br/>to the model"] --> C["Tool arguments<br/>and results"] --> D["Inspect<br/>validation"]
 
     style A fill:#e8f0fe
 ```
+
+Details of the illustrated steps and components:
+
+- Whether input/output validation caught problematic content
 
 The diagram lists investigative clues, not a rule that all validation runs at the end; checks may occur at several stages. `ChatModelListener` observes model requests, responses, and errors. It does not automatically create spans across retrieval, tools, approvals, and the rest of the workflow. Observing the whole invocation also requires AI Service events or application-level instrumentation correlated by the same trace ID. Spring Boot or Quarkus integrations can connect to the team's existing metrics and tracing systems.
 
@@ -347,13 +359,5 @@ Pay particular attention to execution order: the documented Input Guardrail runs
 
 ## References
 
-- [LangChain4j official documentation](https://docs.langchain4j.dev/)
-- [LangChain4j GitHub repository](https://github.com/langchain4j/langchain4j)
-- [LangChain4j: AI Services tutorial](https://docs.langchain4j.dev/tutorials/ai-services)
-- [LangChain4j: Tools tutorial](https://docs.langchain4j.dev/tutorials/tools)
-- [LangChain4j: Chat Memory tutorial](https://docs.langchain4j.dev/tutorials/chat-memory)
-- [LangChain4j: RAG tutorial](https://docs.langchain4j.dev/tutorials/rag)
-- [LangChain4j: Guardrails and execution order](https://docs.langchain4j.dev/tutorials/guardrails)
-- [LangChain4j: AI Service Observability](https://docs.langchain4j.dev/tutorials/observability)
-- [Quarkus LangChain4j](https://docs.quarkiverse.io/quarkus-langchain4j/dev/)
-- [Spring AI official documentation](https://docs.spring.io/spring-ai/reference/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../../book/references.md#reading-frameworks-08) for this chapter’s sources, reading suggestions, and source notes.

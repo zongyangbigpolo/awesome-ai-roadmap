@@ -11,6 +11,8 @@ The hierarchy is **topic, module, chapter**. A topic index shows how its modules
 
 For a continuous reading path, start with the [book contents](book/README.md). The book has nine parts and preserves chapter numbering within each part. The title page, preface, reading guide, and acknowledgments are separate from the technical chapters. Choose a language on the website or download that language's EPUB; neither format has its own independently maintained prose.
 
+The [central bibliography](book/references.md) contains the numbered sources linked by superscripts throughout the chapters, plus each chapter’s reading suggestions and source qualifications.
+
 ## The overall structure
 
 ```mermaid

@@ -135,16 +135,23 @@ SupportReply reply = assistant.chat("conversation-1001", "订单 A1024 到哪了
 **入口只有一句 `assistant.chat()`，背后却串起了一条完整链路**：
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
 flowchart TB
-    A["AI Service 代理<br/>按 MemoryId 读取历史并组织输入"] --> B["Retriever 补充知识库内容"]
+    A["AI Service 代理"] --> B["检索上下文"]
     B --> C["模型判断"]
     C -->|需要查订单| D["调用 OrderTools"]
     D --> C
     C -->|得到结果| E["更新当前记忆窗口"]
-    E --> F["框架把模型输出转换成 SupportReply"]
+    E --> F["转换为<br/>SupportReply"]
 
     style F fill:#e6f4ea
 ```
+
+图中各项的完整含义：
+
+- AI Service 代理 按 MemoryId 读取历史并组织输入
+- Retriever 补充知识库内容
+- 框架把模型输出转换成 SupportReply
 
 ### 8.3.2 结构化输出的三个工程细节
 
@@ -231,11 +238,16 @@ LangChain4j 通过 `@Tool` 暴露对象方法，也支持运行时提供工具�
 排查一次客服回答出错，不能只盯最终文本，因为一次调用可能已经经过 RAG 检索、模型判断和工具执行。
 
 ```mermaid
-flowchart LR
-    A["Retriever 找回了什么"] --> B["送给模型的消息"] --> C["Tool 的参数与结果"] --> D["输入输出校验是否拦住异常内容"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Retriever 找回了<br/>什么"] --> B["送给模型的消息"] --> C["Tool 的参数与结<br/>果"] --> D["检查校验效果"]
 
     style A fill:#e8f0fe
 ```
+
+图中各项的完整含义：
+
+- 输入输出校验是否拦住异常内容
 
 图中列的是排查线索，校验可能分布在多个阶段，并非统一在最后执行。`ChatModelListener` 观察的是模型请求、响应和错误，不会自动成为 Retriever、Tool 和审批等全链路的 span。整次调用还需 AI Service 事件或应用级 instrumentation，并关联同一个 trace ID；Spring Boot 或 Quarkus 集成能帮助接入团队已有的指标与追踪系统。
 
@@ -345,13 +357,5 @@ flowchart LR
 
 ## 参考资料
 
-- [LangChain4j 官方文档](https://docs.langchain4j.dev/)
-- [LangChain4j GitHub 仓库](https://github.com/langchain4j/langchain4j)
-- [LangChain4j: AI Services 教程](https://docs.langchain4j.dev/tutorials/ai-services)
-- [LangChain4j: Tools 教程](https://docs.langchain4j.dev/tutorials/tools)
-- [LangChain4j: Chat Memory 教程](https://docs.langchain4j.dev/tutorials/chat-memory)
-- [LangChain4j: RAG 教程](https://docs.langchain4j.dev/tutorials/rag)
-- [LangChain4j: Guardrails 与执行顺序](https://docs.langchain4j.dev/tutorials/guardrails)
-- [LangChain4j: AI Service Observability](https://docs.langchain4j.dev/tutorials/observability)
-- [Quarkus LangChain4j](https://docs.quarkiverse.io/quarkus-langchain4j/dev/)
-- [Spring AI 官方文档](https://docs.spring.io/spring-ai/reference/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../../book/references.zh.md#reading-frameworks-08)。

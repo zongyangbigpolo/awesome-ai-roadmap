@@ -43,10 +43,9 @@ LABELS = {
         "formula_title": "Complete formula",
         "formula_back": "Return to this formula in the text",
         "diagram_alt": "{heading}: flow or structure diagram",
-        "diagram_view": "View the full diagram and details",
+        "diagram_view": "View this diagram separately",
         "diagram_title": "Complete diagram",
         "diagram_back": "Return to this diagram in the text",
-        "diagram_part": "{label}, detail {number}/{total} (left to right, top to bottom)",
     },
     "zh-CN": {
         "toc": "目录",
@@ -56,10 +55,9 @@ LABELS = {
         "formula_title": "完整公式",
         "formula_back": "返回正文中的此公式",
         "diagram_alt": "{heading}：流程或结构示意图",
-        "diagram_view": "查看大图与细节",
+        "diagram_view": "单独查看此图",
         "diagram_title": "完整示意图",
         "diagram_back": "返回正文中的此图",
-        "diagram_part": "{label}，局部 {number}/{total}（从左到右、从上到下）",
     },
 }
 
@@ -124,6 +122,8 @@ def prepare_markdown(manuscript):
     # Move assembler-owned anchors onto headings BEFORE Pandoc splits files.
     # Protect code/math so a Markdown example cannot become an actual chapter.
     masked, restore = protect(segments(manuscript, "assembled manuscript"))
+    masked = re.sub(r'<a id="(ref-[1-9]\d*|reading-[a-z0-9-]+)"></a>',
+                    lambda m: f"[]{{#{m[1]}}}", masked)
     masked = re.sub(r'<a id="([a-z0-9-]+)"></a>\n\n(#{1,6}) ([^\n]+)',
                     lambda m: f"{m[2]} {m[3]} {{#{m[1]}}}", masked)
     return restore(masked)
@@ -219,7 +219,12 @@ def prepare_ast(ast, book, directory):
             blocks.append(block)
     ast["blocks"] = blocks
     found = {node["c"][1][0] for node in walk(ast) if node["t"] == "Header"}
-    require(book.anchors - {"contents"} <= found, "Pandoc lost stable chapter/section anchors")
+    citation_anchors = {anchor for anchor in book.anchors
+                        if re.fullmatch(r"ref-[1-9]\d*|reading-[a-z0-9-]+", anchor)}
+    spans = {node["c"][0][0] for node in walk(ast) if node["t"] == "Span"}
+    require(citation_anchors <= spans, "Pandoc lost stable bibliography anchors")
+    require(book.anchors - {"contents"} - citation_anchors <= found,
+            "Pandoc lost stable chapter/section anchors")
     ast["meta"] = {
         "title": metadata(book.manifest["title"]),
         "author": {"t": "MetaList", "c": [metadata("Polo Li")]},
@@ -268,9 +273,19 @@ def apply_images(ast, rendered, language=None):
     assets = {item["key"]: item for item in rendered["results"]}
     figure_number = 0
     formula_number = 0
+    for item in assets.values():
+        if item["kind"] == "mermaid":
+            require(0 < item["width"] <= 480 and 0 < item["height"] <= 650,
+                    f"diagram {item['key']} is {item['width']}x{item['height']} CSS px; "
+                    "simplify the source to at most 480x650, moving details into prose")
+            require(not item.get("tiles"), f"diagram {item['key']}: cropped detail tiles are not supported")
+            require(not item.get("labelCollisions"),
+                    f"diagram {item['key']}: subgraph titles overlap nodes: {item.get('labelCollisions')}")
 
     def image(item, label, classes, inline=False):
         pairs = [("style", f"width:{item['width'] / 20:.2f}em;")] if inline else []
+        if "diagram" in classes:
+            pairs = [("style", f"width:{item['width']}px;")]
         return {"t": "Image", "c": [attr(classes, pairs), [string(label)],
                                   ["rendered/" + item["file"], ""]]}
 
@@ -300,16 +315,6 @@ def apply_images(ast, rendered, language=None):
                               attr(["figure-link"]), [string(labels["diagram_view"])],
                               ["rendered/" + item["file"], ""],
                           ]}]}]
-                details = []
-                for number, tile in enumerate(item["tiles"], 1):
-                    caption = labels["diagram_part"].format(
-                        label=label, number=number, total=len(item["tiles"]))
-                    details.extend([
-                        {"t": "Para", "c": [string(caption)]},
-                        {"t": "Para", "c": [image(tile, caption, ["diagram-detail"])]},
-                    ])
-                if details:
-                    blocks.append({"t": "Div", "c": [attr(["diagram-details"]), details]})
                 return {"t": "Div", "c": [[f"figure-{figure_number}", ["diagram"], []], blocks]}
             return {key: transform(child) for key, child in value.items()}
         if isinstance(value, list):
@@ -457,21 +462,15 @@ def repair_links(path, resource_hashes=None, book=None):
                         "href": posixpath.relpath(name, "EPUB/figures") + "#" + origin_id,
                     }).text = labels["formula_back" if is_formula else "diagram_back"]
                     ET.SubElement(body, f"{{{XHTML}}}p").text = visible_title
-                    ET.SubElement(body, f"{{{XHTML}}}img", {
+                    full_image = ET.SubElement(body, f"{{{XHTML}}}img", {
                         "src": posixpath.relpath(target, "EPUB/figures"), "alt": alt,
                         "class": "full-formula" if is_formula else "diagram",
                     })
-                    details = next((child for child in container
-                                    if "diagram-details" in child.get("class", "").split()), None)
-                    if details is not None:
-                        container.remove(details)
-                        for node in details.iter():
-                            for key in ("src", "href"):
-                                if node.get(key):
-                                    asset_path, fragment_id = package_target(name, node.get(key))
-                                    node.set(key, posixpath.relpath(asset_path, "EPUB/figures") +
-                                             ("#" + fragment_id if fragment_id else ""))
-                        body.append(details)
+                    if not is_formula:
+                        original = next(image for image in images
+                                        if package_target(name, image.get("src"))[0] == target)
+                        if original.get("style"):
+                            full_image.set("style", original.get("style"))
                     figures[figure] = figure_tree
                 element.set("href", posixpath.relpath(figure, posixpath.dirname(name)))
                 fixed += 1
@@ -601,7 +600,8 @@ def audit_epub(path, book, occurrences=None):
         files.append(global_ids[identifier][0])
     require(len(files) == len(set(files)), "chapters must have separate XHTML documents")
     require(spine == files, "spine differs from manifest reading order")
-    require(images["diagram-detail"] == 0, "detail panels must not repeat inside chapter text")
+    require(images["diagram-detail"] == 0 and supplemental_images["diagram-detail"] == 0,
+            "cropped diagram panels are not supported in text or supplemental pages")
     nav_files = [name for name, tree in trees.items()
                  if tree.find(".//h:nav[@{http://www.idpf.org/2007/ops}type='toc']", NS) is not None]
     require(len(nav_files) == 1, "expected exactly one EPUB TOC")
@@ -679,10 +679,9 @@ def build(args):
         run(["node", EPUB_DIR / "render.mjs", request, cache, render_report], cwd=EPUB_DIR)
         rendered = json.loads(render_report.read_text(encoding="utf-8"))
         (stage / "rendered").mkdir()
-        for item in rendered["results"]:
-            for asset in [item] + item["tiles"]:
-                shutil.copyfile(cache / asset["file"], stage / "rendered" / asset["file"])
         ast = apply_images(ast, rendered, language)
+        for item in rendered["results"]:
+            shutil.copyfile(cache / item["file"], stage / "rendered" / item["file"])
         ast_path = Path(temporary) / "book.json"
         ast_path.write_text(json.dumps(ast, ensure_ascii=False), encoding="utf-8")
         epub = stage / f"ai-engineering-interview-{language}.epub"
@@ -716,6 +715,8 @@ def build(args):
             "repaired_internal_links": repaired, "renderer": rendered["version"],
             "epubcheck_errors": 0, "epubcheck_warnings": 0,
             "kindle_previewer": "not performed", "kdp_acceptance": "not claimed",
+            "diagram_limits_css_px": {"width": 480, "height": 650},
+            "diagram_detail_tiles": 0,
         })
         (stage / "build.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n",
                                          encoding="utf-8")

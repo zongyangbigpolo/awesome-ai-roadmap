@@ -9,16 +9,22 @@ description: Build contamination-resistant application evaluation datasets and a
 In traditional software engineering, test-driven development means writing tests before the implementation. The corresponding practice for LLM applications is **eval-driven development (EDD)**: before merging any change to a prompt, routing policy, or model, evaluate it on a fixed dataset to produce comparable scores. “It seems better” is not enough.
 
 ```mermaid
-flowchart LR
-    A["Propose a change<br/>(prompt / model / routing)"] --> B["Evaluate on the golden dataset"]
-    B --> C{"Meets score requirements<br/>with no critical regressions?"}
-    C -->|Yes| D["Merge and begin a staged rollout"]
-    C -->|No| E["Revise the change and iterate"]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Propose a<br/>change"] --> B["Evaluate on the<br/>golden dataset"]
+    B --> C["Meets score<br/>requirements"]
+    C -->|Yes| D["Merge and begin<br/>a staged<br/>rollout"]
+    C -->|No| E["Revise the<br/>change and<br/>iterate"]
     E --> A
 
     style C fill:#fff3cd
     style D fill:#e6f4ea
 ```
+
+Details of the illustrated steps and components:
+
+- Propose a change (prompt / model / routing)
+- Meets score requirements with no critical regressions?
 
 This process and the release pipeline in [Chapter 10](../05-release-pipeline/10-llm-cicd-canary-ab.md) describe two sides of the same work: EDD explains how to validate a change; the release pipeline explains how to deploy it safely once it passes validation.
 
@@ -128,13 +134,5 @@ The same kind of problem is likely to recur. Each incident review should produce
 
 ## References
 
-A tool’s lifecycle is not the lifecycle of an evaluation method. OpenAI’s announcement of 2026-06-03 states that its hosted Evals platform will become read-only on 2026-10-31, with the Evals dashboard and API scheduled to shut down on 2026-11-30. Teams using that platform should check their migration plans; this does not imply that the open-source `openai/evals` project or self-hosted evaluation methods also stop being valid.
-
-- [OpenAI Evals](https://github.com/openai/evals)
-- [OpenAI: Evaluation best practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices)
-- [OpenAI: 2026-06-03 Evals platform deprecation](https://developers.openai.com/api/docs/deprecations#2026-06-03-evals-platform)
-- [Anthropic: Demystifying evals for AI agents](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)
-- [SciPy: Binomial proportion confidence intervals](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats._result_classes.BinomTestResult.proportion_ci.html)
-- [Google: Rules of Machine Learning - Rule #4: Keep the first model simple and get the infrastructure right](https://developers.google.com/machine-learning/guides/rules-of-ml)
-- [Braintrust: What is an eval?](https://www.braintrust.dev/docs/guides/evals)
-- [LangSmith: Evaluation concepts](https://docs.langchain.com/langsmith/evaluation-concepts)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-engineering-07) for this chapter’s sources, reading suggestions, and source notes.

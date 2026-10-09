@@ -9,14 +9,24 @@ description: Distinguish internal risk classifications from AI Act obligations, 
 The preceding nine chapters cover specific technical defenses. Keeping those controls effective over time requires organizational arrangements: who approves the release of a high-risk agent, who is accountable for model behavior, which process applies when an incident occurs, and how regulatory requirements become internal checklists. This is the role of the **Govern** function in the NIST AI RMF: establish those responsibilities, processes, and checks.
 
 ```mermaid
-flowchart TB
-    G[Governance] --> G1[Risk classification<br/>10.2]
-    G --> G2[Auditing and traceability<br/>10.3]
-    G --> G3[Transparency documentation<br/>10.4]
-    G --> G4[Content provenance<br/>10.5]
-    G --> G5[Incident response and disclosure<br/>10.6]
-    G --> G6[Vendor and third-party risk<br/>10.7]
+%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    G["Governance"] --> G1["Risk classification"]
+    G --> G2["Auditing and<br/>traceability"]
+    G --> G3["Transparency<br/>documentation"]
+    G --> G4["Content provenance"]
+    G --> G5["Incident response and<br/>disclosure"]
+    G --> G6["Vendor and third-party<br/>risk"]
 ```
+
+Details of the illustrated steps and components:
+
+- Risk classification 10.2
+- Auditing and traceability 10.3
+- Transparency documentation 10.4
+- Content provenance 10.5
+- Incident response and disclosure 10.6
+- Vendor and third-party risk 10.7
 
 ## 10.2 Risk Classification
 
@@ -76,14 +86,21 @@ Transparency documents are not static artifacts to publish once and forget. Mode
 As generative AI becomes widespread, questions such as “Was this content AI-generated?” and “Has this image been altered?” become distinct matters of trust. Content provenance addresses this problem space.
 
 ```mermaid
-flowchart LR
-    C[Content creation/editing] --> M[Attach verifiable provenance metadata]
-    M --> D[Distribution]
-    D --> V[Downstream verifier checks metadata signatures]
-    V --> T{Is integrity preserved?}
-    T -->|Yes| TRUST[Display signature-verified provenance claims<br/>Not proof of factual truth]
-    T -->|No| WARN[Mark as unverifiable]
+%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["Content<br/>creation/editing"] --> M["Attach<br/>provenance"]
+    M --> D["Distribution"]
+    D --> V["Verify<br/>signatures"]
+    V --> T["Integrity intact?"]
+    T -->|Yes| TRUST["Show verified<br/>claims"]
+    T -->|No| WARN["Mark as<br/>unverifiable"]
 ```
+
+Details of the illustrated steps and components:
+
+- Attach verifiable provenance metadata
+- Downstream verifier checks metadata signatures
+- Display signature-verified provenance claims Not proof of factual truth
 
 - **Digitally signed provenance standards, such as C2PA:** bind claims about origin and editing to an asset, and validate signatures, asset binding, and the trust chain. Signing is not encryption and does not ensure metadata confidentiality. A valid signature also does not establish the truth of the claimed facts or the completeness of the editing history.
 - **Visible and invisible watermarks:** visible watermarks are easily cropped out. Invisible watermarks aim to embed detectable marks without noticeably changing the content, but both remain susceptible to removal or forgery by particular attack methods. Treat them as a layer of defense in depth, not the sole assurance.
@@ -146,14 +163,5 @@ Without a common assessment process, different teams may repeatedly onboard the 
 
 ## References
 
-Regulatory review date: 2026-09-15. Regulation 2026/1744 was published in the Official Journal of the European Union on 2026-07-24 and, under Article 4, entered into force on the third day after publication, 2026-07-27. Article 1, point (40), amends Article 113 of the AI Act; point (39) concerns transitional arrangements for existing systems. The discussion above cites an amendment already in force, not a proposal or political agreement. The description of C2PA's capabilities uses version 2.2 below and does not claim that it is the latest version.
-
-- [NIST AI RMF: Govern Function](https://www.nist.gov/itl/ai-risk-management-framework)
-- [EU AI Act: original text of Regulation (EU) 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng)
-- [Regulation (EU) 2026/1744: Article 1, points (39) and (40), and Article 4](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744)
-- [GDPR: Articles 33 and 34, breach notification conditions and deadlines](https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng)
-- [European Commission: AI Act policy overview](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai)
-- [C2PA 2.2: Explainer, verification capabilities and non-goals](https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html)
-- [Model Cards for Model Reporting](https://arxiv.org/abs/1810.03993)
-- [System Cards: A New Resource for Understanding How AI Systems Work](https://openai.com/index/system-card/)
-- [OWASP LLM Applications Cybersecurity and Governance Checklist](https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-safety-10) for this chapter’s sources, reading suggestions, and source notes.

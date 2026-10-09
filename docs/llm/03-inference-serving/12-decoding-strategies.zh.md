@@ -63,16 +63,15 @@ $$
 t=1 时，条件中没有已生成 token。使用对数避免长序列概率连乘下溢；加入长度惩罚或约束后，搜索的就不再是原始序列概率。
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    S["开始：一条前缀"] --> E["展开活动 beam 的下一 token 候选"]
-    E --> EOS{"候选是否结束？"}
-    EOS -->|EOS| F["进入已完成候选集合"]
-    EOS -->|未结束| B["按累计分数保留 B 条活动前缀"]
-    B --> STOP{"达到停止条件？"}
+    E["展开活动 beam"] --> B["分离 EOS；裁剪活动前缀"]
+    B --> STOP{"停止？"}
     STOP -->|否| E
-    STOP -->|是| R["按指定评分返回完成序列"]
-    F --> R
+    STOP -->|是| R["对完成序列排序"]
 ```
+
+从一条前缀开始，每轮展开活动 beam 的下一 token 候选。将 EOS 候选移入已完成集合；未结束的候选按累计分数保留 B 条前缀。未达到停止条件就继续展开，终止后按指定评分规则返回完成序列。某个候选遇到 EOS，并不等于所有 beam 立即停止。
 
 图中省略了实现对完成集合的裁剪。EOS 候选不应继续像活动前缀那样扩展；`early_stopping`、最大长度和完成序列的评分方式都会影响最终结果。
 
@@ -173,10 +172,5 @@ $$
 
 ## 参考资料
 
-- [The Curious Case of Neural Text Degeneration](https://arxiv.org/abs/1904.09751)
-- [If Beam Search Is the Answer, What Was the Question?](https://arxiv.org/abs/2010.02650)
-- [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/html/2211.17192v2)
-- [Self-Consistency Improves Chain of Thought Reasoning in Language Models](https://arxiv.org/abs/2203.11171)
-- [PagedAttention：包含 beam search 的缓存共享设计](https://arxiv.org/abs/2309.06180)
-- [Qwen3-30B-A3B 官方模型卡](https://huggingface.co/Qwen/Qwen3-30B-A3B)
-- [vLLM：Batch Invariance](https://docs.vllm.ai/en/stable/features/batch_invariance/)
+<!-- centralized-bibliography -->
+本章的参考资料、阅读建议与来源说明见[集中参考资料章节](../../book/references.zh.md#reading-llm-12)。

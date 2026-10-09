@@ -19,17 +19,14 @@ A model acquires its parametric knowledge through training; that knowledge does 
 Parametric knowledge neither updates automatically nor necessarily covers private material. Both gaps increase the risk of unsupported answers, but they do not explain every hallucination.
 
 ```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
 flowchart TB
-    ROOT[Relying only on<br/>parametric knowledge] --> P1[Knowledge may be outdated]
-    ROOT --> P2[Private knowledge may be missing]
-    P1 --> P3[Risk of unsupported answers]
-    P2 --> P3
-    OTHER[Misreading, reasoning errors,<br/>and generation errors] --> P3
-
-    P1 --> D1[Training data has a cutoff date]
-    P2 --> D2[Internal company data<br/>was never in the training set]
-    P3 --> D3[Fluent answers are generated<br/>even without evidence]
+    ROOT[Parametric knowledge alone] --> GAP[Missing or outdated evidence]
+    GAP --> P3[Unsupported-answer risk]
+    OTHER[Reasoning or reading errors] --> P3
 ```
+
+Training data has a cutoff date, and internal company data may never have entered the training set. A model can still generate fluent answers without evidence. Missing or outdated knowledge is not the only cause: misreading, reasoning errors, and generation errors also contribute.
 
 ### 1.2.1 Outdated Knowledge
 
@@ -60,7 +57,8 @@ RAG, or Retrieval-Augmented Generation, works as follows:
 Common engineering implementations leave the generation model unchanged, primarily asking it to read and organize the supplied material. But “no training” is not part of RAG's definition: the original RAG paper jointly fine-tuned the retriever and generator, and retrieval or generation components can also be trained separately.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[User question] --> R[Retrieve relevant material]
     KB[(External knowledge base)] --> R
     R --> P[Combine material and question<br/>into a prompt]
@@ -82,24 +80,31 @@ Authorization decisions must not be left to the model. Sensitive knowledge alrea
 
 A typical workflow has two stages: indexing and querying. Indexing maintains the index as documents change, through either batch processing or continuous ingestion. Querying handles each question and may reuse valid caches. “Offline” primarily means outside the critical path of the current user request, not that the work can only run periodically.
 
-```mermaid
-flowchart TB
-    subgraph OFF[Offline stage: runs when documents change]
-        D[Original documents] --> PARSE[Parse and clean]
-        PARSE --> CHUNK[Chunk]
-        CHUNK --> EMB[Embed]
-        EMB --> IDX[(Write to index)]
-    end
+**Offline stage: runs when documents change**
 
-    subgraph ON[Online stage: runs for each question]
-        Q[User query] --> RW[Rewrite query]
-        RW --> QEMB[Embed query]
-        QEMB --> SEARCH[Multi-path retrieval<br/>and first-stage ranking]
-        IDX --> SEARCH
-        SEARCH --> RERANK[Rerank]
-        RERANK --> PROMPT[Assemble prompt]
-        PROMPT --> GEN[Generate and cite sources]
-    end
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[Original documents] --> PARSE[Parse and clean]
+    PARSE --> CHUNK[Chunk]
+    CHUNK --> EMB[Embed]
+    EMB --> IDX[(Write to index)]
+
+```
+
+**Online stage: runs for each question**
+
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[User query] --> RW[Rewrite query]
+    RW --> QEMB[Embed query]
+    QEMB --> SEARCH[Multi-path retrieval<br/>and first-stage ranking]
+    IDX[(Offline document index)] --> SEARCH
+    SEARCH --> RERANK[Rerank]
+    RERANK --> PROMPT[Assemble prompt]
+    PROMPT --> GEN[Generate and cite sources]
+
 ```
 
 ### 1.4.1 Offline Stage
@@ -134,7 +139,8 @@ Cross-encoder reranking can capture finer interactions, but scoring every query�
 Scanning the entire corpus with this pairwise reranking approach would require scoring a million query–document pairs for a million candidates. Batching is possible, but the approach is usually uneconomical within interactive latency and cost budgets.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ALL[(Millions of documents)] -->|Index retrieval| C[Top-100 candidates]
     C -->|Batch reranking| F[Top-5 results]
 ```
@@ -179,8 +185,5 @@ Full-corpus statistics should generally be handled by a database or a computatio
 
 ## References
 
-- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
-- [Dense Passage Retrieval for Open-Domain Question Answering](https://arxiv.org/abs/2004.04906)
-- [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997)
-- [Searching for Best Practices in Retrieval-Augmented Generation](https://arxiv.org/abs/2407.01219)
-- [Anthropic: Introducing Contextual Retrieval](https://www.anthropic.com/engineering/contextual-retrieval)
+<!-- centralized-bibliography -->
+See the [central bibliography](../../book/references.md#reading-rag-01) for this chapter’s sources, reading suggestions, and source notes.

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：MHA 的局限与 MQA、GQA、Flash Attention","description":"分开计算训练、prefill 和 decode 的注意力开销，比较 MQA、GQA、MLA 的缓存结构与 FlashAttention 的 IO 优化。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/03-attention-variants/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：MHA 的局限与 MQA、GQA、Flash Attention","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/03-attention-variants/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：MHA 的局限与 MQA、GQA、Flash Attention","description":"分开计算训练、prefill 和 decode 的注意力开销，比较 MQA、GQA、MLA 的缓存结构与 FlashAttention 的 IO 优化。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/03-attention-variants/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：MHA 的局限与 MQA、GQA、Flash Attention","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/03-attention-variants/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第三章：MHA 的局限与 MQA、GQA、Flash Attention","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/03-attention-variants/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9201,13 +9226,13 @@
 <h2 id="35-flashattention">3.5 FlashAttention 改的是实现<a class="headerlink" href="#35-flashattention" title="Permanent link">&para;</a></h2>
 <p>朴素注意力先把 <code>S = QKᵀ</code> 写到 GPU 显存，再读取计算 <code>P = softmax(S)</code>，最后计算 <code>PV</code>。中间矩阵的读写会很昂贵。</p>
 <p>FlashAttention 对 Q/K/V 分块，在片上存储中计算局部分数，使用 <strong>online softmax</strong> 合并不同块的统计量，避免在显存中物化完整 <code>N × N</code> 矩阵。</p>
-<pre class="mermaid"><code>flowchart TB
-    A["载入一块 Q 和一块 K/V"] --&gt; B["计算局部 logits"]
-    B --&gt; C["更新行最大值、归一化和、加权值和"]
-    C --&gt; D{"还有 K/V 块?"}
-    D --&gt;|有| A
-    D --&gt;|无| E["归一化得到输出"]
-    E --&gt; F["反向时用保存的统计量重算局部概率"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Q 块 + K/V 块"] --&gt; B["局部 logits"]
+    B --&gt; C["更新行统计量"]
+    C --&gt;|下一块 K/V| A
+    C --&gt;|所有块处理完毕| E["归一化输出"]</code></pre>
+<p>对每块 Q，遍历所有 K/V 块，累计更新行最大值、归一化和与加权值和。反向传播时，根据保存的统计量重算局部概率，而不是存储完整的注意力矩阵。</p>
 <p>为什么不能把每块 softmax 独立归一化后直接相加？因为分母应该覆盖整行。以旧块最大值 <code>m</code>、指数和 <code>l</code>，新块对应 <code>m_b, l_b</code> 为例：</p>
 <div class="arithmatex">\[
 m'=\max(m,m_b),\qquad
@@ -9291,20 +9316,8 @@ l'=e^{m-m'}l+e^{m_b-m'}l_b
 </table>
 <p>面试时应把「改连接」「改缓存表示」「改算子实现」区分开，才知道质量损失可能来自哪里、哪些优化能够叠加。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1911.02150">Fast Transformer Decoding: One Write-Head is All You Need（MQA）</a></li>
-<li><a href="https://arxiv.org/abs/2305.13245">GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</a></li>
-<li><a href="https://arxiv.org/abs/2307.09288">Llama 2</a></li>
-<li><a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a></li>
-<li><a href="https://github.com/deepseek-ai/DeepSeek-V2">DeepSeek-V2 论文与官方实现</a></li>
-<li><a href="https://arxiv.org/abs/2205.14135">FlashAttention</a></li>
-<li><a href="https://github.com/Dao-AILab/flash-attention/blob/1f7ce2f7cb503473559f3d44d575ae05b1ed8557/README.md">FlashAttention 官方仓库与版本要求（2026-07-06 README 快照）</a></li>
-<li><a href="https://arxiv.org/abs/1805.02867">Online normalizer calculation for softmax</a></li>
-<li><a href="https://arxiv.org/abs/2310.06825">Mistral 7B</a></li>
-<li><a href="https://arxiv.org/abs/2006.04768">Linformer</a></li>
-<li><a href="https://arxiv.org/abs/2009.14794">Rethinking Attention with Performers</a></li>
-<li><a href="https://arxiv.org/abs/2312.00752">Mamba: Linear-Time Sequence Modeling with Selective State Spaces</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-03">集中参考资料章节</a>。</p>
 
 
 
@@ -9327,7 +9340,7 @@ l'=e^{m-m'}l+e^{m_b-m'}l_b
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

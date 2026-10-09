@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：LangChain 与 LangGraph 的层次关系","description":"区分 LangChain 高层 Agent 与 LangGraph 图编排的依赖和控制粒度，解释状态合并、持久化及渐进组合的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：LangChain 与 LangGraph 的层次关系","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：LangChain 与 LangGraph 的层次关系","description":"区分 LangChain 高层 Agent 与 LangGraph 图编排的依赖和控制粒度，解释状态合并、持久化及渐进组合的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：LangChain 与 LangGraph 的层次关系","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第九章：LangChain 与 LangGraph 的层次关系","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9628,12 +9653,17 @@
 </table>
 <p><strong>LangGraph 不要求使用高层 <code>langchain</code> 包或它的模型包装器</strong>，可以直接接其他模型 SDK 或普通 Python 函数。但 Python <code>langgraph</code> 包依赖 <code>langchain-core</code> 等基础库；「可独立使用」不等于依赖树完全没有 LangChain 生态组件。</p>
 <h3 id="911">9.1.1 关键的层次关系<a class="headerlink" href="#911" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    A["LangChain 高层 Agent API&lt;br/&gt;create_agent"] --&gt; B["编译后的 LangGraph"]
-    B --&gt; C["检查点、流式事件、中断与执行运行时"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LangChain 高层&lt;br/&gt;Agent API"] --&gt; B["编译后的&lt;br/&gt;LangGraph"]
+    B --&gt; C["检查点、流式事件&lt;br/&gt;、中断与执行运行&lt;br/&gt;时"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>LangChain 高层 Agent API create_agent</li>
+</ul>
 <p><strong><code>create_agent</code> 会构建一个基于 LangGraph 的图运行时</strong>：Agent 在模型节点和工具节点之间循环，直到模型给出最终答案或命中停止条件。</p>
 <blockquote>
 <p><strong>这也解释了为什么两者看起来能力重叠，却不能互相替代</strong>：</p>
@@ -9732,18 +9762,25 @@
 </blockquote>
 <h3 id="933">9.3.3 真正拉开差异的是「业务拓扑成为一等公民」<a class="headerlink" href="#933" title="Permanent link">&para;</a></h3>
 <p><strong>比如这样一条流程</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    A["权限校验"] --&gt; B1["研究节点 1"] &amp; B2["研究节点 2"] &amp; B3["研究节点 3"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["权限校验"] --&gt; B1["研究 1"] &amp; B2["研究 2"] &amp; B3["研究 3"]
     B1 &amp; B2 &amp; B3 --&gt; C["汇总"]
-    C --&gt; D{"金额高?"}
+    C --&gt; D["金额高?"]
     D --&gt;|是| E["转人工"]
     D --&gt;|否| F["继续"]
-    F --&gt; G{"失败?"}
+    F --&gt; G["失败?"]
     G --&gt;|是| H["补偿节点"]
-    G --&gt;|否| I["等待次日任务继续"]
+    G --&gt;|否| I["等待次日继续"]
 
     style C fill:#e8f0fe
     style H fill:#fff3cd</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>研究节点 1</li>
+<li>研究节点 2</li>
+<li>研究节点 3</li>
+</ul>
 <p><strong>这时开发者需要明确看到每个节点、状态字段和路由条件</strong>，图编排的价值才真正体现出来。</p>
 <blockquote>
 <p><strong>更准确的边界</strong>：LangChain 能表达分支和循环，但它的高层 Agent API 主要围绕<strong>通用模型与工具循环</strong>组织；<strong>LangGraph 则允许开发者直接拥有整个工作流的拓扑控制权。</strong></p>
@@ -9947,15 +9984,27 @@
 <p>这里要分清两个问题：是否使用托管平台，是<strong>部署选择</strong>；是否使用 LangChain 高层 Agent API，是<strong>开发抽象选择</strong>。</p>
 </blockquote>
 <h2 id="910-langgraph">9.10 什么时候下沉 LangGraph<a class="headerlink" href="#910-langgraph" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"需求能自然表达成&lt;br/&gt;『给模型一组工具，让它循环调用直到完成』吗?"}
-    Q1 --&gt;|能| A["从 create_agent 开始&lt;br/&gt;客服问答、数据库查询助手、内部知识助手"]
-    A --&gt; A2["提示词动态化、模型切换、工具筛选&lt;br/&gt;摘要、重试、护栏、敏感工具审批&lt;br/&gt;先用 middleware 解决"]
-    Q1 --&gt;|主角已不是一个 Agent loop&lt;br/&gt;而是一条业务流程| B["考虑 LangGraph"]
-    B --&gt; B2["典型信号：&lt;br/&gt;确定性规则与模型决策交替出现&lt;br/&gt;多条路径并行再汇合&lt;br/&gt;跨小时/跨天暂停恢复&lt;br/&gt;多个 Agent 协作&lt;br/&gt;必须精确控制失败补偿和人工节点"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["需求能自然表达成"]
+    Q1 --&gt;|能| A["从 create_agent&lt;br/&gt;开始"]
+    A --&gt; A2["扩展中间件"]
+    Q1 --&gt;|"业务工作流"| B["考虑 LangGraph"]
+    B --&gt; B2["典型信号："]
 
     style A fill:#e6f4ea
     style B fill:#fff3cd</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>主角已不是一个 Agent loop 而是一条业务流程</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>需求能自然表达成 『给模型一组工具，让它循环调用直到完成』吗?</li>
+<li>从 create_agent 开始 客服问答、数据库查询助手、内部知识助手</li>
+<li>提示词动态化、模型切换、工具筛选 摘要、重试、护栏、敏感工具审批 先用 middleware 解决</li>
+<li>典型信号： 确定性规则与模型决策交替出现 多条路径并行再汇合 跨小时/跨天暂停恢复 多个 Agent 协作 必须精确控制失败补偿和人工节点</li>
+</ul>
 <h3 id="9101">9.10.1 更常见的做法是渐进式组合<a class="headerlink" href="#9101" title="Permanent link">&para;</a></h3>
 <p><strong>先用 LangChain 做出单个可用 Agent，等业务拓扑变复杂时，再把这个 Agent 作为 LangGraph 的节点或子图。</strong></p>
 <blockquote>
@@ -10004,19 +10053,8 @@
 </ol>
 <p>LangChain 负责高层 Agent 入口和标准模型/工具循环，LangGraph 负责更细粒度的状态与流程控制。可以先构建一个 Agent，再按需要组合进业务图；这是一条迁移路径，不是对所有项目架构的统计结论。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/streaming">LangChain: Streaming</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/use-graph-api">LangGraph: Graph API</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph 持久化文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Human-in-the-loop</a></li>
-<li><a href="https://docs.langchain.com/langsmith/observability">LangSmith 官方文档</a></li>
-<li><a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/pyproject.toml">LangGraph Python 包依赖声明</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE">LangGraph 并行状态更新错误</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-09">集中参考资料章节</a>。</p>
 
 
 
@@ -10039,7 +10077,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

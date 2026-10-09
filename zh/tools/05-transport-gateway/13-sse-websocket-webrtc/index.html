@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：SSE、WebSocket 与 WebRTC","description":"区分 SSE 事件流与 EventSource、WebSocket 消息通道和 WebRTC 媒体/数据栈，解释取消、重连、ICE 与工程选型。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/13-sse-websocket-webrtc/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：SSE、WebSocket 与 WebRTC","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/13-sse-websocket-webrtc/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：SSE、WebSocket 与 WebRTC","description":"区分 SSE 事件流与 EventSource、WebSocket 消息通道和 WebRTC 媒体/数据栈，解释取消、重连、ICE 与工程选型。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/13-sse-websocket-webrtc/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：SSE、WebSocket 与 WebRTC","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/13-sse-websocket-webrtc/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十三章：SSE、WebSocket 与 WebRTC","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/13-sse-websocket-webrtc/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9687,18 +9712,24 @@
 <p>经典 RFC 6455 WebSocket 建立在 TCP 上，以消息和帧组织全双工通信；<code>wss</code> 再使用 TLS。</p>
 <p>HTTP/1.1 路径使用 Upgrade 请求和 <code>101 Switching Protocols</code>；HTTP/2 的 RFC 8441 与 HTTP/3 的 RFC 9220 使用扩展 CONNECT，不能把 101 升级描述成所有 WebSocket 连接的必经步骤。</p>
 <p>在 HTTP/1.1 路径中，升级后的 TCP 连接承载 WebSocket 帧；在 HTTP/2/3 路径中，则由一个扩展 CONNECT 流承载，其他 HTTP 流可以继续存在。两种路径都提供<strong>双方可独立发送消息的全双工信道</strong>。</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph SSE_M["SSE"]
-        C1[客户端] --&gt;|"HTTP 请求&lt;br/&gt;GET 或 POST 依 API"| S1[服务端]
-        S1 --&gt;|"该请求的 SSE 响应流"| C1
-    end
-
-    subgraph WS_M["WebSocket"]
-        C2[客户端] &lt;--&gt;|"同一条连接&lt;br/&gt;双方随时发"| S2[服务端]
-    end
-
-    style SSE_M fill:#fef7e0
-    style WS_M fill:#e8f0fe</code></pre>
+<p><strong>SSE</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["客户端"] --&gt;|"HTTP 请求"| S1["服务端"]
+        S1 --&gt;|"SSE 响应"| C1</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>HTTP 请求 GET 或 POST 依 API</li>
+<li>该请求的 SSE 响应流</li>
+</ul>
+<p><strong>WebSocket</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["客户端"] &lt;--&gt;|"双向通信"| S2["服务端"]</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>同一条连接 双方随时发</li>
+</ul>
 <p>SSE 的响应方向是单向，但客户端可在读取期间并行发送其他 HTTP 请求；它不是必须等服务端说完才响应的半双工“对讲机”。</p>
 <h3 id="1332">13.3.2 用「打断」场景感受差别<a class="headerlink" href="#1332" title="Permanent link">&para;</a></h3>
 <p>用户想在模型说话中途打断：</p>
@@ -9745,7 +9776,7 @@
 <p>WebSocket 常承载双向命令、房间和广播，因此应用级关联通常更多；SSE 只做服务端单向推送时实现往往更简单。但 SSE 同样不能让任意实例直接写入另一实例持有的 TCP 连接。</p>
 <p>Redis Pub/Sub 只是可选实现之一，也可使用专用网关、broker 或平台提供的 WebSocket/SSE 服务。选型应按连接数、广播模式、顺序、重连与延迟要求压测。</p>
 <h3 id="1352">13.5.2 代理和防火墙穿透<a class="headerlink" href="#1352" title="Permanent link">&para;</a></h3>
-<p>部分旧代理或企业网关配置会<strong>阻止或移除 WebSocket Upgrade 请求</strong>，是否支持取决于部署版本与策略。例如，<a href="https://www.squid-cache.org/Versions/v5/cfgman/http_upgrade_request_protocols.html">Squid v5 支持受配置控制的 Upgrade</a>，但默认会移除 Upgrade 头。默认策略限制不等于产品没有实现该协议能力。</p>
+<p>部分旧代理或企业网关配置会<strong>阻止或移除 WebSocket Upgrade 请求</strong>，是否支持取决于部署版本与策略。例如，Squid v5 支持受配置控制的 Upgrade<sup><a href="../../../book/references/#ref-331">【331】</a></sup>，但默认会移除 Upgrade 头。默认策略限制不等于产品没有实现该协议能力。</p>
 <p>SSE 通常不会遇到 Upgrade 被拒这一类问题——它始终是普通 HTTP 请求，大多数代理都能透传，但仍受访问策略、缓冲和空闲超时限制。</p>
 <p>这是一项部署取舍，不能未经一手设计记录就断言它是 MCP 选择传输的唯一原因。</p>
 <h3 id="1353-">13.5.3 没有内置的请求-响应配对<a class="headerlink" href="#1353-" title="Permanent link">&para;</a></h3>
@@ -9760,38 +9791,51 @@
 <p>WebRTC 优先利用 UDP 承载实时媒体，并组合拥塞控制、抖动缓冲、编解码、丢包恢复与加密；受限网络也可经 TURN 的 TCP/TLS 路径中继。</p>
 <p>UDP 自身不保证交付，但 WebRTC 媒体链路可结合 NACK（否定确认）请求重传、FEC（前向纠错）恢复数据，以及 PLC（丢包隐藏）估计缺失音频。它们分别是重传、冗余恢复和信号补偿，不是同一种可靠性保证。DataChannel 使用 SCTP/DTLS，可以可靠有序，也可配置部分可靠或无序；所以“WebRTC 完全不可靠”是错误的。</p>
 <h3 id="1362-tcp">13.6.2 TCP 重传何时会拖慢实时语音<a class="headerlink" href="#1362-tcp" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph TCP_W["TCP · WebSocket"]
-        T1["第 5 个音频帧丢了"] --&gt; T2["TCP 强制等重传"]
-        T2 --&gt; T3["第 6、7、8… 帧&lt;br/&gt;全部堵在缓冲区"]
-        T3 --&gt; T4["队头阻塞&lt;br/&gt;可能超过播放时限"]
-    end
-
-    subgraph UDP_W["UDP · WebRTC"]
-        U1["第 5 个音频帧丢了"] --&gt; U2["按播放时限评估恢复"]
-        U2 --&gt; U3["及时重传 / FEC&lt;br/&gt;或解码器 PLC"]
-        U3 --&gt; U4["控制延迟&lt;br/&gt;音质取决于丢包模式与编解码器"]
-    end
-
-    style TCP_W fill:#fce8e6
-    style UDP_W fill:#e6f4ea</code></pre>
+<p><strong>TCP · WebSocket</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        T1["第 5 个音频帧丢&lt;br/&gt;了"] --&gt; T2["TCP 强制等重传"]
+        T2 --&gt; T3["第 6、7、8… 帧"]
+        T3 --&gt; T4["队头阻塞"]</code></pre>
+<p><strong>UDP · WebRTC</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        U1["第 5 个音频帧丢&lt;br/&gt;了"] --&gt; U2["评估恢复时限"]
+        U2 --&gt; U3["及时重传 / FEC"]
+        U3 --&gt; U4["控制延迟"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>第 6、7、8… 帧 全部堵在缓冲区</li>
+<li>队头阻塞 可能超过播放时限</li>
+<li>按播放时限评估恢复</li>
+<li>及时重传 / FEC 或解码器 PLC</li>
+<li>控制延迟 音质取决于丢包模式与编解码器</li>
+</ul>
 <p>若音频位于同一 TCP 字节流，丢失字节的重传会阻塞该流后续数据交付；影响取决于 RTT、丢包、缓冲和播放预算，不是一次丢包就必然卡死。</p>
 <p>PLC 通常由编解码器/解码器在缺失音频时估计信号，不是统一的“前后帧插值算法”。连续丢包或拥塞严重时仍会有明显失真，不能承诺人耳无感。</p>
 <p>这里的权衡是：<strong>在播放截止时间内尽量恢复，来不及的部分再丢弃或补偿</strong>，而不是无条件等待完整数据。它不能保证网络恶化时仍有稳定低延迟或轻微失真。</p>
 <p>实时语音在延迟与音质之间取舍；离线转录、文件上传等音频任务仍更重视完整可靠交付。</p>
 <h3 id="1363-webrtc">13.6.3 WebRTC 是一套协议全家桶<a class="headerlink" href="#1363-webrtc" title="Permanent link">&para;</a></h3>
 <p>媒体与数据通道是不同路径，DTLS 用于协商 SRTP 密钥，不是把每个 SRTP 包再包一层 DTLS：</p>
-<pre class="mermaid"><code>flowchart TB
-    ICE["ICE / STUN / TURN&lt;br/&gt;连接建立与 NAT 穿透"]
-    SRTP["SRTP / SRTCP&lt;br/&gt;媒体与控制包保护"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    ICE["ICE / STUN /&lt;br/&gt;TURN"]
+    SRTP["SRTP / SRTCP"]
     DTLS["DTLS 握手"]
-    DATA["DataChannel&lt;br/&gt;SCTP over DTLS"]
-    PATH["ICE 选定的网络路径&lt;br/&gt;通常 UDP，必要时 TURN 中继"]
+    DATA["DataChannel"]
+    PATH["ICE 选定的网络路&lt;br/&gt;径"]
     ICE --&gt; PATH
     DTLS -.导出密钥.-&gt; SRTP
     SRTP --&gt; PATH
     DATA --&gt; PATH
     DTLS --&gt; PATH</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>ICE / STUN / TURN 连接建立与 NAT 穿透</li>
+<li>SRTP / SRTCP 媒体与控制包保护</li>
+<li>DataChannel SCTP over DTLS</li>
+<li>ICE 选定的网络路径 通常 UDP，必要时 TURN 中继</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9839,15 +9883,19 @@
 <p><strong>两者各司其职，不是替代关系</strong>。这里最容易混淆的，就是把它们当成二选一。</p>
 <h3 id="1365-ice">13.6.5 ICE 候选收集与连通性检查<a class="headerlink" href="#1365-ice" title="Permanent link">&para;</a></h3>
 <p>ICE 收集 host、server-reflexive、relay 等候选，构造候选对并进行有节奏的连通性检查与 nomination。它不是严格“本地失败 → STUN 失败 → TURN”的三阶段串行降级：</p>
-<pre class="mermaid"><code>flowchart TB
-    P1["Host 候选&lt;br/&gt;本地接口地址"] --&gt; CHECK["候选对优先级&lt;br/&gt;STUN 连通性检查与选定"]
-    P2["Server-reflexive 候选&lt;br/&gt;STUN 发现映射地址"] --&gt; CHECK
-    P3["Relay 候选&lt;br/&gt;TURN 分配中继地址"] --&gt; CHECK
-    CHECK --&gt; SELECT["选定可用路径&lt;br/&gt;失败时可 ICE restart"]
-
-    style P1 fill:#e6f4ea
-    style P2 fill:#fef7e0
-    style P3 fill:#fce8e6</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    CAND["收集 ICE 候选"] --&gt; CHECK["排序并检查候选对"]
+    CHECK --&gt; SELECT["提名可用路径"]</code></pre>
+<p>候选收集包括本地接口的 host 地址、通过 STUN 发现的 server-reflexive 地址，以及 TURN 分配的 relay 地址。ICE 按候选对优先级执行 STUN 连通性检查，并提名可用的候选对。路径失败时可能需要 ICE restart，不能假定原路径始终可用。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>Host 候选 本地接口地址</li>
+<li>候选对优先级 STUN 连通性检查与选定</li>
+<li>Server-reflexive 候选 STUN 发现映射地址</li>
+<li>Relay 候选 TURN 分配中继地址</li>
+<li>选定可用路径 失败时可 ICE restart</li>
+</ul>
 <p>NAT 映射/过滤行为、UDP 阻断、防火墙与候选可达性都可能导致直连失败；不能仅凭“企业网络”或“运营商 NAT”推断特定行为。某些部署还会为隐私或网络策略主动使用 relay。</p>
 <p>TURN 中继增加带宽与部署成本，但仍保留 WebRTC 的媒体、加密与拥塞控制语义，并没有变成 WebSocket。使用 TCP/TLS 到 TURN 的路径可能重新引入队头阻塞，需在目标网络实测。</p>
 <h3 id="1366">13.6.6 内置的音频处理能力<a class="headerlink" href="#1366" title="Permanent link">&para;</a></h3>
@@ -9970,14 +10018,20 @@
 </table>
 <p>表中的可靠交付只指连接正常工作期间的传输语义，断线后的补发、去重和业务恢复仍由应用负责。三者的端到端延迟都要测网络、缓冲与处理开销；WebRTC 还要计入编解码和可能的中继成本。</p>
 <p>选型原则：</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"需要实时交互式&lt;br/&gt;音视频吗?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["需要实时交互式"]
     Q1 --&gt;|是| RTC["WebRTC"]
-    Q1 --&gt;|否| Q2{"需要持续双向消息&lt;br/&gt;而非少量 HTTP 控制吗?"}
+    Q1 --&gt;|否| Q2["需要持续双向消息&lt;br/&gt;？"]
     Q2 --&gt;|否| SSE["SSE"]
     Q2 --&gt;|是| WS["WebSocket"]
 
     style SSE fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>需要实时交互式 音视频吗?</li>
+<li>需要持续双向消息 而非少量 HTTP 控制吗?</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -10050,23 +10104,8 @@
 <li><strong>协议选型要区分规范与实现</strong>：MCP 标准 transport 是 stdio/Streamable HTTP；A2A 核心 binding 是 JSON-RPC/HTTP-REST/gRPC，WebSocket/WebRTC 要另行协商或设计。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">MDN: Using Server-Sent Events</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">MDN: The WebSocket API</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">MDN: WebRTC API</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc6455">RFC 6455: The WebSocket Protocol</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8445">RFC 8445: Interactive Connectivity Establishment (ICE)</a></li>
-<li><a href="https://webrtc.org/">WebRTC 官方站点</a></li>
-<li><a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">WHATWG HTML：Server-sent events</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8835">RFC 8835：WebRTC 传输</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8834">RFC 8834：WebRTC 媒体与丢包恢复</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8831">RFC 8831：WebRTC Data Channels</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8441">RFC 8441：WebSocket over HTTP/2</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc9220">RFC 9220：WebSocket over HTTP/3</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/voice-webrtc?api=realtime">OpenAI: WebRTC 接入（Realtime API 部分）</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">MCP 规范：Transports</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md">A2A v1.0.1 发布规范</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-13">集中参考资料章节</a>。</p>
 
 
 
@@ -10089,7 +10128,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

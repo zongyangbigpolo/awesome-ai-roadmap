@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十五章：Agent 后训练：从失败轨迹到可靠策略","description":"以部分完成便收尾的 Agent 为例，解释首错归因、冻结决策前缀、SFT 与偏好对构造、多轮训练环境、信用分配和独立验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/07-post-training/25-agent-post-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十五章：Agent 后训练：从失败轨迹到可靠策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/07-post-training/25-agent-post-training/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十五章：Agent 后训练：从失败轨迹到可靠策略","description":"以部分完成便收尾的 Agent 为例，解释首错归因、冻结决策前缀、SFT 与偏好对构造、多轮训练环境、信用分配和独立验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/07-post-training/25-agent-post-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十五章：Agent 后训练：从失败轨迹到可靠策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/07-post-training/25-agent-post-training/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十五章：Agent 后训练：从失败轨迹到可靠策略","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/07-post-training/25-agent-post-training/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9355,7 +9380,7 @@
 <p>不同编辑格式的匹配和版本问题，见<a href="../../06-coding-agents/24-code-search-edit-verification/">第二十四章：代码搜索、编辑与验证</a>。</p>
 <h2 id="253">25.3 冻结的是决策前的完整条件<a class="headerlink" href="#253" title="Permanent link">&para;</a></h2>
 <p>小周截下错误答复之前的轨迹。所谓<strong>决策前缀</strong>，不是一段“你还没做完，请继续”的新提示，而是当时模型实际看到的全部有效消息与工具定义，以及这些消息对应的环境状态。</p>
-<p>这种把失败切成决策边界的做法，可对照李博杰书中<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter7.md#L434-L535">首错归因与前缀回归</a>的讨论。</p>
+<p>这种把失败切成决策边界的做法，可对照李博杰书中首错归因与前缀回归<sup><a href="../../../book/references/#ref-563">【563】</a></sup>的讨论。</p>
 <table>
 <thead>
 <tr>
@@ -9398,18 +9423,15 @@
 <p>禁止动作包括：未补第三项便声称全部完成、篡改验收断言、伪造检查结果、越权读取业务数据。若环境确实阻塞，应允许报告缺项并交接；但本例工具可用、要求清楚，“需要用户重新确认是否要空表头”不是合理澄清。</p>
 <p>这样定义的是<strong>行为边界</strong>：可以走不同的正确路径，但最终交付声明必须由当前版本的证据支持。前缀回归通过，只说明这个边界上的行为改善，不等于整项任务完成。</p>
 <h2 id="254">25.4 决定修哪里，再选择训练信号<a class="headerlink" href="#254" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    F["失败轨迹与反馈"] --&gt; A["首错归因与前缀重放"]
-    A --&gt; B{"信息、工具与权限是否正确"}
-    B --&gt;|否| H["修工具或 Harness"]
-    B --&gt;|是| P["比较提示、约束与模型策略"]
-    P --&gt; C{"是否值得更新参数"}
-    C --&gt;|否| R["运行时修复与回归"]
-    C --&gt;|是| D["授权数据与训练环境"]
-    D --&gt; T["示范、偏好或交互优化"]
-    H --&gt; E["前缀回归与独立端到端验收"]
-    R --&gt; E
-    T --&gt; E</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["首错归因"] --&gt; B["检查输入与权限"]
+    B --&gt;|不正确| H["修复工具或 Harness"]
+    B --&gt;|正确| P["比较策略选项"]
+    H --&gt; E["独立验收"]
+    P --&gt; E</code></pre>
+<p>根据失败轨迹与反馈进行首错归因和前缀重放。先检查信息、工具与权限，不要直接归咎于模型；如果这些条件正确，再比较提示、约束与模型策略，判断是否值得更新参数。</p>
+<p>不值得更新参数时，先做运行时修复与回归；值得更新时，则准备授权数据与训练环境，再采用示范、偏好或交互优化。工具或 Harness 修复、运行时修复与训练都汇入前缀回归及独立端到端验收；图中“比较策略选项”后的箭头包含这次判断与选定的干预。</p>
 <p>小周先让检查工具返回覆盖清单，并在运行时设置完成门禁。若一个清晰提示就能稳定避免误报、额外成本可接受，没必要先动权重。硬权限和验收门禁也不应在训练之后删除。</p>
 <p>当同类错误在多个任务族持续出现，已有足够可信的纠正数据，且提示方案仍有明显失败或成本问题，才比较参数更新。模型还必须有可训练权重或明确支持该训练方式的托管接口；拥有一个聊天 API 并不意味着能对它运行任意 DPO 或 PPO。</p>
 <table>
@@ -9502,20 +9524,19 @@
 <p>教师可以生成候选，但“我会验证”不等于已经调用工具。无依据的完成承诺应与调用事件、检查结果交叉核对；存在歧义的标签交人工复核，不把教师评价当客观执行记录。</p>
 <p>扩充数据时改变缺失条件、任务来源和工具组合，而不只是换文件名。也要覆盖已完成应收尾、信息不足应澄清、越权应拒绝的状态，否则模型可能学到“不结束总比结束安全”。</p>
 <h3 id="dpo">小数据 DPO 的反例说明了什么<a class="headerlink" href="#dpo" title="Permanent link">&para;</a></h3>
-<p>李博杰配套的<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter8/premature-completion-dpo/README.md">“过早结束”教学实验</a>，在固定提交中使用合成的小规模偏好数据。README 报告固定候选比较有所改善，但自由生成出现过度谨慎，已完成任务的正常收尾明显退化。</p>
+<p>李博杰配套的“过早结束”教学实验<sup><a href="../../../book/references/#ref-566">【566】</a></sup>，在固定提交中使用合成的小规模偏好数据。README 报告固定候选比较有所改善，但自由生成出现过度谨慎，已完成任务的正常收尾明显退化。</p>
 <p>这不能表述为“DPO 已提升 Agent 总体可靠性”。候选打分只测指定两个回答的相对倾向，自由生成还受到措辞、长度与整个输出空间的影响；二者都不能替代实际执行。这里值得借鉴的是<strong>未完成边界集和正常收尾保留集必须分开</strong>，而不是复用实验数字作为收益承诺。</p>
 <h2 id="256">25.6 多轮训练：把环境真正接进循环<a class="headerlink" href="#256" title="Permanent link">&para;</a></h2>
 <p>上述单步样本直接针对收尾选择，不能据此判断后续修复能力。若助手知道要继续，却读错文件、重复修补或永远验证，就需要观察它在自己的动作之后会走到哪些新状态。</p>
-<pre class="mermaid"><code>flowchart TD
-    Q["训练任务与初始快照"] --&gt; Z["Reset 隔离环境"]
-    Z --&gt; S["固定采样版本生成动作"]
-    S --&gt; X["权限检查与工具执行"]
-    X --&gt; O["环境观察与事件记录"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Z["重置环境"] --&gt; S["采样动作"]
+    S --&gt; X["检查与执行"]
+    X --&gt; O["观察与记录"]
     O --&gt; S
-    O --&gt; V["终止或预算耗尽时验证"]
-    V --&gt; U["奖励、掩码与策略更新"]
-    U --&gt; N["发布下一采样快照"]
-    N --&gt; Z</code></pre>
+    O --&gt;|本轮结束| U["验证与更新"]
+    U --&gt; Z</code></pre>
+<p>从训练任务与初始快照开始，重置隔离环境。用固定采样版本生成动作，工具执行前检查权限，并记录环境观察与事件。重复采样，直到终止或预算耗尽，再依次验证、计算奖励与掩码、更新策略、发布下一采样快照，之后重新重置环境。</p>
 <p>图中的回路不是一边读结果一边随意改权重。一次采样应能追溯到确定策略版本，更新后再按训练方案同步采样器；独立验收不参与这个奖励循环。</p>
 <table>
 <thead>
@@ -9631,12 +9652,8 @@
 <p>两条路可以配合：反思提供待复核的失败解释，回归确认边界，训练学习跨任务行为。不能让模型写一条“下次注意完成所有任务”，便自动把它存为事实、加入训练并宣布能力改善。</p>
 <p>回到小周的处理，她最终需要交出的不是一条下降的训练损失，而是一组能追溯的证据：原来在哪里错、为什么归给模型、同一状态允许做什么、新策略能否执行到正确结果，以及原来正确的行为有没有被破坏。</p>
 <h2 id="_7">参考资料<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<ul>
-<li>李博杰，<code>ai-agent-book</code> 第七章：<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter7.md#L434-L535">失败归因、精确复制排查与轨迹前缀回归</a>。</li>
-<li>李博杰，第八章：<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter8.md#L564-L706">多轮信用分配、奖励与在轨蒸馏</a>，<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter8.md#L731-L792">从问题案例到后训练</a>。</li>
-<li>李博杰，配套实验：<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter8/premature-completion-dpo/README.md">过早结束的 DPO 修复 README</a>，重点参照数据、评估指标口径与可信根说明。</li>
-</ul>
-<p>资料查阅于 2026-09-14，固定提交为 <code>985a49d35b9f50937f1f757cf25867672991ded7</code>。DPO 结果仅转述 README，未独立复现训练；其中候选比较与自由生成的差异不能外推为总体任务完成率提升。RLVP 等方法线索不代表本章完成了相应训练实验。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-25">集中参考资料章节</a>。</p>
 
 
 
@@ -9659,7 +9676,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

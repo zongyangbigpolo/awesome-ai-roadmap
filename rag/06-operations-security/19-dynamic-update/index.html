@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing","description":"Design incremental RAG updates and consistent releases around derived-data dependencies, including idempotent events, version snapshots, deletion and reclamation, permission changes, and cache invalidation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/19-dynamic-update/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/19-dynamic-update/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing","description":"Design incremental RAG updates and consistent releases around derived-data dependencies, including idempotent events, version snapshots, deletion and reclamation, permission changes, and cache invalidation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/19-dynamic-update/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/19-dynamic-update/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 19: Dynamic Knowledge Base Updates and Incremental Indexing","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/19-dynamic-update/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9464,18 +9489,13 @@
 <p>RAG updates differ from ordinary database updates in one important respect: <strong>changing even a single character in a document can shift chunk boundaries throughout the remaining text, changing the contents of subsequent chunks.</strong></p>
 <p>This means you cannot blindly update just one existing chunk, not that incremental updates are impossible. Stable section boundaries and content hashes let you reuse unchanged passages; Late Chunking, document-wide contextual descriptions, or graph summaries may broaden the dependencies. Identify the affected artifacts first, then choose between a local update, a document-level rebuild, and a migration of the entire knowledge base.</p>
 <h2 id="192-the-complete-update-pipeline"><span id="192" class="legacy-heading-anchor" aria-hidden="true"></span>19.2 The Complete Update Pipeline<a class="headerlink" href="#192-the-complete-update-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S[Source data changes] --&gt; D[1. Detect changes]
-    D --&gt; C[2. Classify changes]
-    C --&gt;|Addition| ADD[Parse, chunk,&lt;br/&gt;embed, and write]
-    C --&gt;|Modification| MOD[Build new versions&lt;br/&gt;of chunks and indexes]
-    C --&gt;|Deletion or revocation| DEL[Block access first,&lt;br/&gt;then update affected artifacts]
-    ADD --&gt; V[3. Validate consistency&lt;br/&gt;and permissions]
-    MOD --&gt; V
-    DEL --&gt; V
-    V --&gt; A[4. Publish a consistent&lt;br/&gt;version manifest]
-    A --&gt; G[5. Roll out gradually]
-    G --&gt; M[6. Monitor quality]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[Detect and classify changes] --&gt; C[Apply change-specific handling]
+    C --&gt; V[Validate consistency and access]
+    V --&gt; A[Publish version manifest]
+    A --&gt; G[Gradual rollout; monitor]</code></pre>
+<p>For additions, parse, chunk, embed, and write. For modifications, build new versions of chunks and indexes. For deletions or permission revocations, <strong>block access first</strong>, then update affected artifacts. All paths require consistency and permission validation before publishing a consistent version manifest; roll out gradually and monitor quality.</p>
 <h2 id="193-step-1-change-detection"><span id="193" class="legacy-heading-anchor" aria-hidden="true"></span>19.3 Step 1: Change Detection<a class="headerlink" href="#193-step-1-change-detection" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9505,13 +9525,13 @@
 <p>This is the central constraint of the release process. Inserting a paragraph at the beginning of a document can shift all subsequent chunk boundaries, so patching the serving index one record at a time is not a safe default. Yet deleting before inserting creates a gap in read availability: if the write fails or the index is not ready, users can see neither the old version nor the new one.</p>
 <p>One robust approach is <strong>copy-on-write</strong> with immutable versions: build and validate the affected artifacts, then switch the active version. Transactional incremental updates to stable chunks can also meet the requirement. The essential point is that a request must not read a partially updated state; not every database needs to copy the entire collection.</p>
 <p>A database alias usually points to a collection or index; it does not automatically provide a version transaction for each document. For document-level releases, a transactional table or manifest can maintain the active version. When a release spans vector search, BM25, and source-document storage, publish their combined versions as one snapshot and bind queries to that snapshot. Switching a vector database alias alone does not guarantee an atomic change across the other systems.</p>
-<pre class="mermaid"><code>flowchart TB
-    A[doc_id: v17 active] --&gt; B[Build an isolated v18&lt;br/&gt;Parse, chunk, embed, and index]
-    B --&gt; C[Validate content, ACLs,&lt;br/&gt;retrieval, and index readiness]
-    C --&gt;|Pass| D[Atomically update the&lt;br/&gt;active-version mapping&lt;br/&gt;v17 → v18]
-    C --&gt;|Fail| E[Discard v18;&lt;br/&gt;continue serving v17]
-    D --&gt; F[Observe; retain&lt;br/&gt;rollback capability]
-    F --&gt; G[Reclaim v17]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B[Build isolated v18] --&gt; C{Validation passes?}
+    C --&gt;|Yes| D[Activate v18 atomically]
+    C --&gt;|No| E[Discard v18; keep v17]
+    D --&gt; F[Observe before reclaiming v17]</code></pre>
+<p>Start with <code>doc_id: v17 active</code>. Building v18 includes parsing, chunking, embedding, and indexing; validation covers content, ACLs, retrieval, and index readiness. On success, atomically change the active-version mapping from v17 to v18. Retain rollback capability while observing v18, and only then reclaim v17. Failed validation leaves v17 serving.</p>
 <p>This avoids both obsolete chunks left behind by boundary shifts and the read gap between deletion and insertion. Each request is bound to one release snapshot, which may contain the respective versions of many documents; it must not inadvertently mix partially updated content. A historical comparison can explicitly select and label two versions. Current restrictions imposed by deletion and permission revocation apply independently of the snapshot, and rollback must not restore prohibited access.</p>
 <h3 id="1941-designing-ids-versions-and-aliases"><span id="1941-id-alias" class="legacy-heading-anchor" aria-hidden="true"></span>19.4.1 Designing IDs, Versions, and Aliases<a class="headerlink" href="#1941-designing-ids-versions-and-aliases" title="Permanent link">&para;</a></h3>
 <p><code>doc_id</code> identifies the document; <code>version_id</code> identifies an immutable build artifact; the active-version mapping points to validated artifacts. Collection-level releases can use database aliases, while document-level releases are usually represented by a transactional table or manifest. Bulk deletion is one capability for reclaiming old versions, not a substitute for a consistent release protocol.</p>
@@ -9608,7 +9628,8 @@
 <p><strong>This is item 2 in the “Sudden Drop in Recall” troubleshooting checklist in Chapter 9, Section 9.6.4.</strong></p>
 <h2 id="197-step-5-gradual-rollout-and-rollback"><span id="197" class="legacy-heading-anchor" aria-hidden="true"></span>19.7 Step 5: Gradual Rollout and Rollback<a class="headerlink" href="#197-step-5-gradual-rollout-and-rollback" title="Permanent link">&para;</a></h2>
 <p>Large updates—changing the embedding model or chunking strategy, or importing a new corpus—<strong>must be rolled out gradually</strong>.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OLD[(Old index)] --&gt; R[Traffic routing]
     NEW[(New index)] --&gt; R
     R --&gt; U[Users]
@@ -9689,14 +9710,8 @@
 <li><strong>Permission isolation must span the whole pipeline</strong>: both separate indexes and shared-index filtering require trusted authorization. Rollback must not bypass revocation, cache invalidation, or restrictions on derived data.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2105.09613">FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search</a></li>
-<li><a href="https://github.com/pgvector/pgvector">Official pgvector README: updates, deletion, and VACUUM</a></li>
-<li><a href="https://arxiv.org/abs/1603.09320">Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs</a></li>
-<li><a href="https://arxiv.org/abs/2403.04871">ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data</a></li>
-<li><a href="https://arxiv.org/abs/2410.05779">LightRAG: Simple and Fast Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-19">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9719,7 +9734,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Chunking Strategies and Granularity","description":"Compares fixed-length, semantic, recursive, structure-aware, and parent-child chunking strategies, explaining how chunk size and overlap affect retrieval quality.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/04-chunking-strategy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Chunking Strategies and Granularity","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/04-chunking-strategy/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Chunking Strategies and Granularity","description":"Compares fixed-length, semantic, recursive, structure-aware, and parent-child chunking strategies, explaining how chunk size and overlap affect retrieval quality.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/04-chunking-strategy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Chunking Strategies and Granularity","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/04-chunking-strategy/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: Chunking Strategies and Granularity","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/04-chunking-strategy/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9369,15 +9394,11 @@
 <p><strong>The purpose of chunking is not merely to make text fit, but to let each vector represent a sufficiently focused unit of meaning.</strong></p>
 </blockquote>
 <h2 id="42-the-fundamental-granularity-tradeoff"><span id="42" class="legacy-heading-anchor" aria-hidden="true"></span>4.2 The Fundamental Granularity Tradeoff<a class="headerlink" href="#42-the-fundamental-granularity-tradeoff" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    G[Chunk granularity] --&gt; S[Too small]
-    G --&gt; L[Too large]
-
-    S --&gt; S1[Focused meaning&lt;br/&gt;Precise retrieval]
-    S --&gt; S2[Missing context&lt;br/&gt;Unclear references;&lt;br/&gt;conclusions without premises]
-
-    L --&gt; L1[Complete context]
-    L --&gt; L2[Diluted meaning&lt;br/&gt;Irrelevant content;&lt;br/&gt;imprecise retrieval]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    G[Chunk size] --&gt; S[Small: focused retrieval]
+    G --&gt; L[Large: fuller context]</code></pre>
+<p>Small chunks focus meaning and can improve retrieval precision, but may lose context: references become unclear and conclusions lose their premises. Large chunks preserve more complete context, but irrelevant content can dilute meaning and make retrieval less precise.</p>
 <p>This tradeoff <strong>cannot be eliminated entirely, only mitigated</strong>. The methods in Chapter 5 all address it.</p>
 <h3 id="421-what-happens-when-chunks-are-too-small"><span id="421" class="legacy-heading-anchor" aria-hidden="true"></span>4.2.1 What Happens When Chunks Are Too Small?<a class="headerlink" href="#421-what-happens-when-chunks-are-too-small" title="Permanent link">&para;</a></h3>
 <p>A chunk of 100 Chinese characters might contain wording like this:</p>
@@ -9407,7 +9428,8 @@
 </ol>
 <p>Here, semantic chunking mainly means methods that use embedding similarity to identify semantic breakpoints. <strong>LLM-based proposition chunking</strong>—rewriting paragraphs as sets of self-contained statements—is a different approach. It has shown clear benefits for entity-heavy question answering, but at a much higher cost; Chapter 5 examines it in detail.</p>
 <h2 id="44-common-chunking-strategies"><span id="44" class="legacy-heading-anchor" aria-hidden="true"></span>4.4 Common Chunking Strategies<a class="headerlink" href="#44-common-chunking-strategies" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     C[Chunking strategies] --&gt; F[Fixed size + overlap]
     C --&gt; R[Recursive separators]
     C --&gt; ST[Structure-aware&lt;br/&gt;Heading hierarchy]
@@ -9561,13 +9583,8 @@
 <li><strong>Measure performance on an evaluation set</strong>, checking both retrieval metrics and end-to-end metrics.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.06648">Dense X Retrieval: What Retrieval Granularity Should We Use?</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B Model Card</a></li>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-04">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9590,7 +9607,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

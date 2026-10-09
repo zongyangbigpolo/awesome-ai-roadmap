@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: Agent Memory and Context Compression","description":"Compare window trimming, summarization, structured extraction, and externalization, including compression distortion, recovery limits, token budgets, caching, and evaluation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/03-memory-context/10-agent-memory-compression/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: Agent Memory and Context Compression","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/03-memory-context/10-agent-memory-compression/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: Agent Memory and Context Compression","description":"Compare window trimming, summarization, structured extraction, and externalization, including compression distortion, recovery limits, token budgets, caching, and evaluation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/03-memory-context/10-agent-memory-compression/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: Agent Memory and Context Compression","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/03-memory-context/10-agent-memory-compression/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 10: Agent Memory and Context Compression","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/03-memory-context/10-agent-memory-compression/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -10504,13 +10529,14 @@ L(C)\le B
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    H[Long Interaction History] --&gt; W[Sliding Window&lt;br/&gt;Trim by Time]
-    H --&gt; S[Summarization&lt;br/&gt;Semantic Compression]
-    H --&gt; I[Importance Filtering&lt;br/&gt;Select by Value]
-    H --&gt; E[Structured Extraction&lt;br/&gt;Change Representation]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    H["Long&lt;br/&gt;Interaction&lt;br/&gt;History"] --&gt; W["Sliding&lt;br/&gt;Window&lt;br/&gt;Trim by Time"]
+    H --&gt; S["Summarization&lt;br/&gt;Semantic&lt;br/&gt;Compression"]
+    H --&gt; I["Importance&lt;br/&gt;Filtering&lt;br/&gt;Select by&lt;br/&gt;Value"]
+    H --&gt; E["Structured&lt;br/&gt;Extraction&lt;br/&gt;Change&lt;br/&gt;Representation"]
 
-    W --&gt; C[Compact Context]
+    W --&gt; C["Compact&lt;br/&gt;Context"]
     S --&gt; C
     I --&gt; C
     E --&gt; C</code></pre>
@@ -10518,16 +10544,17 @@ L(C)\le B
 <p>Externalization moves content out of the active context without necessarily reducing total storage. Removing something from the window is not the same as deleting it from a memory store. Application-level summaries, server-side compaction, and KV-cache quantization or eviction change text representations, service-managed context, and inference state, respectively. They should not all be treated as the same kind of “memory compression.”</p>
 <h2 id="103-sliding-window-trimming-by-time"><span id="103-sliding-window" class="legacy-heading-anchor" aria-hidden="true"></span>10.3 Sliding Window: Trimming by Time<a class="headerlink" href="#103-sliding-window-trimming-by-time" title="Permanent link">&para;</a></h2>
 <p>A sliding window keeps only the most recent turns or tokens in the active context and removes earlier content. A separate retention policy determines whether the persisted originals are deleted.</p>
-<pre class="mermaid"><code>flowchart LR
-    M1[Message 1] --&gt; M2[Message 2]
-    M2 --&gt; M3[Message 3]
-    M3 --&gt; M4[Message 4]
-    M4 --&gt; M5[Message 5]
-    M5 --&gt; M6[Message 6]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    M1["Message 1"] --&gt; M2["Message 2"]
+    M2 --&gt; M3["Message 3"]
+    M3 --&gt; M4["Message 4"]
+    M4 --&gt; M5["Message 5"]
+    M5 --&gt; M6["Message 6"]
 
-    M1 -.Discard.-&gt; X[Evicted]
+    M1 -.Discard.-&gt; X["Evicted"]
     M2 -.Discard.-&gt; X
-    M3 --&gt; K[Current Window]
+    M3 --&gt; K["Current Window"]
     M4 --&gt; K
     M5 --&gt; K
     M6 --&gt; K</code></pre>
@@ -10572,10 +10599,11 @@ L(C)\le B
 <li>Constraints on high-risk operations.</li>
 </ul>
 <p>Pin trusted content that is still valid, not historical text forever. If the user changes the goal or permission is revoked, update or remove the corresponding item. Authorization must always be enforced by the runtime, not merely by a sentence in the context. If the required items alone exceed the budget, split the task or stop the request rather than silently truncating them.</p>
-<pre class="mermaid"><code>flowchart TB
-    PIN[Pinned Context] --&gt; CTX[Current Context]
-    RECENT[Recent Window] --&gt; CTX
-    RET[Retrieved Memory] --&gt; CTX</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PIN["Pinned Context"] --&gt; CTX["Current Context"]
+    RECENT["Recent Window"] --&gt; CTX
+    RET["Retrieved Memory"] --&gt; CTX</code></pre>
 <h3 id="1033-do-not-break-tool-interactions"><span id="1033-tool" class="legacy-heading-anchor" aria-hidden="true"></span>10.3.3 Do Not Break Tool Interactions<a class="headerlink" href="#1033-do-not-break-tool-interactions" title="Permanent link">&para;</a></h3>
 <p>A tool call and its corresponding tool result should be treated as one logical unit. Keeping the call without its result, or the result without its call, can break the context.</p>
 <p>It may also directly violate an API's message-format requirements. For parallel calls, check each call ID against its result. Do not fabricate successful results for unfinished calls. Some APIs also require particular continuation or reasoning items to be retained; follow their protocols. When trimming is necessary, remove completed interactions as a whole and preserve a summary or reference rather than leaving an orphaned tool result.</p>
@@ -10596,11 +10624,12 @@ L(C)\le B
 <p>It is a truncation strategy, not a comprehension strategy.</p>
 <h2 id="104-summarization-replacing-history-with-a-summary"><span id="104-summarization" class="legacy-heading-anchor" aria-hidden="true"></span>10.4 Summarization: Replacing History with a Summary<a class="headerlink" href="#104-summarization-replacing-history-with-a-summary" title="Permanent link">&para;</a></h2>
 <p>Before deleting earlier history, summarization extracts important information into a shorter representation.</p>
-<pre class="mermaid"><code>flowchart LR
-    H[Old Messages] --&gt; S[Summarizer]
-    S --&gt; SUM[Compact Summary]
-    SUM --&gt; CTX[Current Context]
-    R[Recent Messages] --&gt; CTX</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Old Messages"] --&gt; S["Summarizer"]
+    S --&gt; SUM["Compact Summary"]
+    SUM --&gt; CTX["Current Context"]
+    R["Recent Messages"] --&gt; CTX</code></pre>
 <h3 id="1041-rolling-summary">10.4.1 Rolling Summary<a class="headerlink" href="#1041-rolling-summary" title="Permanent link">&para;</a></h3>
 <p>Maintain a continuously updated summary:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>new_summary = summarize(old_summary + newly_evicted_messages)
@@ -10620,11 +10649,12 @@ L(C)\le B
 <p>For example, “The test timed out; payment outcome unknown; do not retry” might become “Payment failed; retry is allowed.” This loses uncertainty and reverses the operational constraint. Further summarization will not automatically recover either. The system must return to the original event or authoritative business state to check.</p>
 <h3 id="1042-hierarchical-summary">10.4.2 Hierarchical Summary<a class="headerlink" href="#1042-hierarchical-summary" title="Permanent link">&para;</a></h3>
 <p>First generate local summaries, then combine them into stage or task summaries:</p>
-<pre class="mermaid"><code>flowchart TB
-    M1[Messages 1-10] --&gt; S1[Stage Summary A]
-    M2[Messages 11-20] --&gt; S2[Stage Summary B]
-    M3[Messages 21-30] --&gt; S3[Stage Summary C]
-    S1 --&gt; T[Task Summary]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M1["Messages&lt;br/&gt;1-10"] --&gt; S1["Stage&lt;br/&gt;Summary A"]
+    M2["Messages&lt;br/&gt;11-20"] --&gt; S2["Stage&lt;br/&gt;Summary B"]
+    M3["Messages&lt;br/&gt;21-30"] --&gt; S3["Stage&lt;br/&gt;Summary C"]
+    S1 --&gt; T["Task Summary"]
     S2 --&gt; T
     S3 --&gt; T</code></pre>
 <p>Compared with repeatedly rewriting one summary, this makes it easier to:</p>
@@ -10667,11 +10697,12 @@ L(C)\le B
 </ul>
 <h3 id="1046-summary-drift">10.4.6 Summary Drift<a class="headerlink" href="#1046-summary-drift" title="Permanent link">&para;</a></h3>
 <p>Repeated summarization can lead to:</p>
-<pre class="mermaid"><code>flowchart LR
-    RAW[Raw History] --&gt; S1[Summary 1]
-    S1 --&gt; S2[Summary 2]
-    S2 --&gt; S3[Summary 3]
-    S3 --&gt; D[Meaning Drift]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw History"] --&gt; S1["Summary 1"]
+    S1 --&gt; S2["Summary 2"]
+    S2 --&gt; S3["Summary 3"]
+    S3 --&gt; D["Meaning Drift"]</code></pre>
 <p>Mitigations:</p>
 <ul>
 <li>Preserve the original history or artifacts;</li>
@@ -10686,10 +10717,11 @@ L(C)\le B
 <h2 id="105-importance-filtering-selecting-by-value"><span id="105-importance-filtering" class="legacy-heading-anchor" aria-hidden="true"></span>10.5 Importance Filtering: Selecting by Value<a class="headerlink" href="#105-importance-filtering-selecting-by-value" title="Permanent link">&para;</a></h2>
 <p>Chronological order does not determine information value. A safety constraint in the user's first turn may matter more than the last ten routine messages.</p>
 <p>Importance filtering selects what to retain based on the current task.</p>
-<pre class="mermaid"><code>flowchart LR
-    H[History Items] --&gt; SCORE[Importance Scoring]
-    SCORE --&gt; HIGH[High Value&lt;br/&gt;Retain]
-    SCORE --&gt; LOW[Low Value&lt;br/&gt;Remove or Externalize]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["History Items"] --&gt; SCORE["Importance Scoring"]
+    SCORE --&gt; HIGH["High Value&lt;br/&gt;Retain"]
+    SCORE --&gt; LOW["Low Value&lt;br/&gt;Remove or Externalize"]</code></pre>
 <h3 id="1051-importance-signals"><span id="1051" class="legacy-heading-anchor" aria-hidden="true"></span>10.5.1 Importance Signals<a class="headerlink" href="#1051-importance-signals" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Relevance to the current goal;</li>
@@ -10745,14 +10777,15 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>Original material that still has a legitimate purpose can therefore be externalized under a retention policy for later retrieval. Sensitive or unauthorized content must not be retained indefinitely merely because it “might be useful later.”</p>
 <h2 id="106-structured-extraction-changing-the-representation"><span id="106-structured-extraction" class="legacy-heading-anchor" aria-hidden="true"></span>10.6 Structured Extraction: Changing the Representation<a class="headerlink" href="#106-structured-extraction-changing-the-representation" title="Permanent link">&para;</a></h2>
 <p>Natural-language conversations are often verbose, repetitive, and difficult to update precisely. Structured extraction converts history into a compact state representation.</p>
-<pre class="mermaid"><code>flowchart LR
-    CHAT[Conversation] --&gt; EX[Extractor + Evidence Validation]
-    EX --&gt; FACTS[Facts]
-    EX --&gt; STATE[Task State]
-    EX --&gt; TODO[Todo]
-    EX --&gt; DEC[Decisions]
-    EX --&gt; ENT[Entities]
-    EX --&gt; ART[Artifact References]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    CHAT["Conversation"] --&gt; EX["Extractor +&lt;br/&gt;Evidence&lt;br/&gt;Validation"]
+    EX --&gt; FACTS["Facts"]
+    EX --&gt; STATE["Task State"]
+    EX --&gt; TODO["Todo"]
+    EX --&gt; DEC["Decisions"]
+    EX --&gt; ENT["Entities"]
+    EX --&gt; ART["Artifact&lt;br/&gt;References"]</code></pre>
 <h3 id="1061-example"><span id="1061" class="legacy-heading-anchor" aria-hidden="true"></span>10.6.1 Example<a class="headerlink" href="#1061-example" title="Permanent link">&para;</a></h3>
 <p>Original conversation: the user says, “Do not create a PR; commit subsequent chapters directly to main.” The agent replies, “Understood; I will commit directly to main from now on.”</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>用户：不要创建 PR，直接把后续章节提交到 main。
@@ -10828,16 +10861,39 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>Schema validity proves only that fields have the right shape, not that their contents are true. Runtime state should be updated by the executor and confirmed tool results. A model may propose a patch, but it must not extract <code>completed</code> merely from “I am about to do this.” Ambiguous statements should retain <code>unknown</code>, their scope, and the original wording rather than being forced into definite facts.</p>
 <h2 id="107-combining-the-four-methods"><span id="107" class="legacy-heading-anchor" aria-hidden="true"></span>10.7 Combining the Four Methods<a class="headerlink" href="#107-combining-the-four-methods" title="Permanent link">&para;</a></h2>
 <p>In practice, these methods are often arranged in a pipeline:</p>
+<p>Protect constraints and extract state before splitting history.</p>
 <pre class="mermaid"><code>flowchart TB
-    H[Full History] --&gt; PIN[Pin Hard Constraints]
-    PIN --&gt; EXT[Externalize Large Artifacts]
-    EXT --&gt; STR[Structured Extraction]
-    STR --&gt; SPLIT[Separate Recent Interactions from Older History]
-    SPLIT --&gt; IMP[Importance Filtering for Older History]
-    IMP --&gt; SUM[Summarize Older History]
-    SPLIT --&gt; WIN[Keep Recent Sliding Window]
-    SUM --&gt; PACK[Context Packing]
-    WIN --&gt; PACK[Context Packing]
+    H[Full History]
+    PIN[Pin Hard Constraints]
+    EXT[Externalize Large Artifacts]
+    STR[Structured Extraction]
+    SPLIT[Separate Recent Interactions from Older History]
+    H --&gt; PIN
+    PIN --&gt; EXT
+    EXT --&gt; STR
+    STR --&gt; SPLIT</code></pre>
+<p>Older and recent interactions take different paths into the same packer.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SPLIT["Separate Recent&lt;br/&gt;Interactions from Older&lt;br/&gt;History"]
+    IMP["Importance Filtering for&lt;br/&gt;Older History"]
+    SUM["Summarize Older History"]
+    WIN["Keep Recent Sliding&lt;br/&gt;Window"]
+    PACK["Context Packing"]
+    SPLIT --&gt; IMP
+    IMP --&gt; SUM
+    SPLIT --&gt; WIN
+    SUM --&gt; PACK
+    WIN --&gt; PACK</code></pre>
+<p>Protected information also reaches that packer directly.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PIN["Pin Hard Constraints"]
+    EXT["Externalize Large&lt;br/&gt;Artifacts"]
+    STR["Structured&lt;br/&gt;Extraction"]
+    PACK["Context Packing"]
+    PIN --&gt; EXT
+    EXT --&gt; STR
     PIN --&gt;|Valid Constraints| PACK
     STR --&gt;|Validated State| PACK
     EXT --&gt;|Artifact References| PACK</code></pre>
@@ -10875,11 +10931,12 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <li>Merge identical facts about the same entity;</li>
 <li>Collapse repeated sources into a reference list.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    I[Context Items] --&gt; H[Exact Hash]
-    H --&gt; S[Semantic Similarity]
-    S --&gt; E[Entity / Fact Merge]
-    E --&gt; O[Deduplicated Items]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Context Items"] --&gt; H["Exact Hash"]
+    H --&gt; S["Semantic Similarity"]
+    S --&gt; E["Entity / Fact Merge"]
+    E --&gt; O["Deduplicated Items"]</code></pre>
 <p>Avoid incorrectly removing:</p>
 <ul>
 <li>The same conclusion from different trustworthy sources;</li>
@@ -10914,13 +10971,14 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>This requires references that resolve, identify a version, and have not expired, plus a read tool available to the agent. A URI and hash do not contain the source text. Recovery fails if an object has been deleted, access revoked, a link expired, or retrieval failed. Segment reads should return position, range, and truncation status, with authorization enforced by the tool. Leaking a sensitive conclusion through a summary is still a leak; protecting only the original object is not enough.</p>
 <h2 id="1010-additional-method-hierarchical-memory"><span id="1010-hierarchical-memory" class="legacy-heading-anchor" aria-hidden="true"></span>10.10 Additional Method: Hierarchical Memory<a class="headerlink" href="#1010-additional-method-hierarchical-memory" title="Permanent link">&para;</a></h2>
 <p>Hierarchical memory retains multiple levels of detail:</p>
-<pre class="mermaid"><code>flowchart TB
-    TASK[Task Summary] --&gt; S1[Stage Summary A]
-    TASK --&gt; S2[Stage Summary B]
-    S1 --&gt; E1[Raw Events]
-    S1 --&gt; E2[Artifacts]
-    S2 --&gt; E3[Raw Events]
-    S2 --&gt; E4[Artifacts]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Task Summary"] --&gt; S1["Stage&lt;br/&gt;Summary A"]
+    TASK --&gt; S2["Stage&lt;br/&gt;Summary B"]
+    S1 --&gt; E1["Raw Events"]
+    S1 --&gt; E2["Artifacts"]
+    S2 --&gt; E3["Raw Events"]
+    S2 --&gt; E4["Artifacts"]</code></pre>
 <p>The agent first reads the task summary and expands a stage summary or raw event only when it needs details.</p>
 <p>This is progressive disclosure. It may reduce irrelevant context, but it introduces additional retrieval rounds and a risk of omissions. If the overview leaves out a critical detail, the agent may never expand the correct branch. Preserve a path for directly retrieving the original material, and measure end-to-end latency.</p>
 <h2 id="1011-additional-method-deltas-and-state-compaction"><span id="1011-delta-state-compaction" class="legacy-heading-anchor" aria-hidden="true"></span>10.11 Additional Method: Deltas and State Compaction<a class="headerlink" href="#1011-additional-method-deltas-and-state-compaction" title="Permanent link">&para;</a></h2>
@@ -10938,11 +10996,12 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <li>Periodically create snapshots;</li>
 <li>Recover current state from a snapshot plus deltas.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    SNAP[Snapshot] --&gt; D1[Delta 1]
-    D1 --&gt; D2[Delta 2]
-    D2 --&gt; D3[Delta N]
-    D3 --&gt; NEW[New Snapshot]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    SNAP["Snapshot"] --&gt; D1["Delta 1"]
+    D1 --&gt; D2["Delta 2"]
+    D2 --&gt; D3["Delta N"]
+    D3 --&gt; NEW["New Snapshot"]</code></pre>
 <p>This mainly reduces state storage and transfer; it is not equivalent to natural-language summarization.</p>
 <p>Recovery requires a defined event order, stable event IDs, state versions, and idempotent application rules. A snapshot must also agree with the log position through which events have been incorporated. Timestamps alone cannot establish the order of every concurrent event. Event replay must not re-execute side effects such as payments or emails. External effects that have already occurred need separate execution records and reconciliation.</p>
 <h2 id="1012-when-to-trigger-compression"><span id="1012" class="legacy-heading-anchor" aria-hidden="true"></span>10.12 When to Trigger Compression<a class="headerlink" href="#1012-when-to-trigger-compression" title="Permanent link">&para;</a></h2>
@@ -11013,16 +11072,17 @@ B_{instruction}
 <p>Prompt caching reuses prefix computation across requests. It does not directly cache embeddings or vector indexes. For its relationship to context enrichment during RAG ingestion, see <a href="../../../rag/02-ingestion-indexing/05-semantic-truncation/">RAG: What to Do When Semantic Context Is Cut Off</a>.</p>
 </blockquote>
 <p>Prompt caching saves intermediate computation for repeated prompt prefixes so later requests can reuse it.</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant A as Application
     participant C as Prompt Cache
     participant M as Model
 
-    A-&gt;&gt;M: Stable Prefix + New Suffix
-    M-&gt;&gt;C: Cache stable-prefix computation
-    A-&gt;&gt;M: Same Prefix + Another Suffix
+    A-&gt;&gt;M: Stable Prefix + New&lt;br/&gt;Suffix
+    M-&gt;&gt;C: Cache stable-prefix&lt;br/&gt;computation
+    A-&gt;&gt;M: Same Prefix + Another&lt;br/&gt;Suffix
     C--&gt;&gt;M: Reuse prefix computation
-    M--&gt;&gt;A: A hit can reduce repeated prefill work</code></pre>
+    M--&gt;&gt;A: A hit can reduce&lt;br/&gt;repeated prefill work</code></pre>
 <p>Good caching candidates include:</p>
 <ul>
 <li>Long system prompts;</li>
@@ -11084,11 +11144,12 @@ B_{instruction}
 </blockquote>
 <p>Even with a cache hit, the model still “sees” the same content. The server may simply reuse computation to reduce cost or latency.</p>
 <h2 id="1016-combining-prompt-caching-and-compression"><span id="1016-prompt-caching" class="legacy-heading-anchor" aria-hidden="true"></span>10.16 Combining Prompt Caching and Compression<a class="headerlink" href="#1016-combining-prompt-caching-and-compression" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    RAW[Raw Information] --&gt; COMP[Memory Compression]
-    COMP --&gt; KEEP[Selected Context]
-    KEEP --&gt; CACHE[Prompt Caching]
-    CACHE --&gt; MODEL[Model]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw Information"] --&gt; COMP["Memory Compression"]
+    COMP --&gt; KEEP["Selected Context"]
+    KEEP --&gt; CACHE["Prompt Caching"]
+    CACHE --&gt; MODEL["Model"]</code></pre>
 <p>In practice, start with two steps:</p>
 <ol>
 <li>Decide which information actually needs to enter the context;</li>
@@ -11114,7 +11175,7 @@ B_{instruction}
 <li>The model provider defines the actual pricing and caching rules.</li>
 </ul>
 <p>Prompt designs usually place stable content first and dynamic content later to improve cache reuse.</p>
-<p>The <a href="https://developers.openai.com/api/docs/guides/prompt-caching">official OpenAI documentation</a> explains that the actual rendered prefix must match. Changes to the model, tool schemas, ordering, or relevant settings can change the reusable portion. Minimum cacheable lengths, breakpoint mechanisms, write charges, and retention periods vary by model and service version. Numbers for one model must not be generalized into universal rules.</p>
+<p>The official OpenAI documentation<sup><a href="../../../book/references/#ref-80">【80】</a></sup> explains that the actual rendered prefix must match. Changes to the model, tool schemas, ordering, or relevant settings can change the reusable portion. Minimum cacheable lengths, breakpoint mechanisms, write charges, and retention periods vary by model and service version. Numbers for one model must not be generalized into universal rules.</p>
 <p>Frequent rewrites of an early summary can invalidate the cache for later content, and compression calls themselves cost money. Compare total bills and time to first token, measuring cold-cache, warm-cache, and post-compression requests separately. Do not keep sending revoked permissions or expired sensitive data merely to preserve cache hits.</p>
 <h2 id="1018-kv-cache-and-prompt-caching"><span id="1018-kv-cache-prompt-caching" class="legacy-heading-anchor" aria-hidden="true"></span>10.18 KV Cache and Prompt Caching<a class="headerlink" href="#1018-kv-cache-and-prompt-caching" title="Permanent link">&para;</a></h2>
 <p>A KV cache is the underlying mechanism that caches attention key/value state during Transformer inference.</p>
@@ -11144,7 +11205,7 @@ B_{instruction}
 <p>Both are computational optimizations, not semantic memory compression.</p>
 <p>KV-cache quantization, eviction, and offloading are another set of inference-system techniques. They may affect accuracy, GPU memory use, and latency, but are not equivalent to producing an auditable summary. An application using only a hosted API should not assume that it can manipulate these underlying states.</p>
 <h3 id="10181-server-side-compaction-is-not-a-prompt-cache-either"><span id="10181-compaction-prompt-cache" class="legacy-heading-anchor" aria-hidden="true"></span>10.18.1 Server-Side Compaction Is Not a Prompt Cache Either<a class="headerlink" href="#10181-server-side-compaction-is-not-a-prompt-cache-either" title="Permanent link">&para;</a></h3>
-<p><a href="https://developers.openai.com/api/docs/guides/compaction">Compaction in OpenAI Responses</a> produces an opaque, encrypted compaction item for subsequent requests. This service capability reduces later context rather than merely reusing prefix computation. Nor should its internal representation be assumed to be a readable natural-language summary.</p>
+<p>Compaction in OpenAI Responses<sup><a href="../../../book/references/#ref-495">【495】</a></sup> produces an opaque, encrypted compaction item for subsequent requests. This service capability reduces later context rather than merely reusing prefix computation. Nor should its internal representation be assumed to be a readable natural-language summary.</p>
 <p>Distinguish two API paths:</p>
 <ul>
 <li><strong>Explicit calls to <code>/responses/compact</code></strong>: The submitted window must still fit within the chosen model's window. The response is a complete new compacted window. It may retain other messages in addition to the compaction item. Use the entire returned window as the basis for later requests, rather than extracting only the encrypted item and discarding the rest.</li>
@@ -11224,7 +11285,7 @@ CR=1-\frac{L_{after}}{L_{before}}
 <li>Lost artifacts.</li>
 </ul>
 <p>The number of test steps should come from the distribution of business-task traces, not a universal reliability threshold. Record the cumulative number of compression passes and check whether older information disappears over successive rounds. Total cost should include summary generation, index writes, extra retrieval, and recovery calls.</p>
-<p>For public datasets, consider <a href="https://github.com/snap-research/locomo">LoCoMo</a> for event summarization and question answering, <a href="https://github.com/xiaowu0162/LongMemEval">LongMemEval</a> for knowledge updates and abstention, and <a href="https://github.com/xiaowu0162/LongMemEval-V2">LongMemEval-V2</a> for retrieving experience from trajectories. They do not directly validate your own checkpoints, ACLs, or side-effect recovery. Pin dataset versions and group statistics by conversation or trajectory rather than treating related questions as independent user samples.</p>
+<p>For public datasets, consider LoCoMo<sup><a href="../../../book/references/#ref-481">【481】</a></sup> for event summarization and question answering, LongMemEval<sup><a href="../../../book/references/#ref-480">【480】</a></sup> for knowledge updates and abstention, and LongMemEval-V2<sup><a href="../../../book/references/#ref-482">【482】</a></sup> for retrieving experience from trajectories. They do not directly validate your own checkpoints, ACLs, or side-effect recovery. Pin dataset versions and group statistics by conversation or trajectory rather than treating related questions as independent user samples.</p>
 <h2 id="1021-common-antipatterns"><span id="1021" class="legacy-heading-anchor" aria-hidden="true"></span>10.21 Common Antipatterns<a class="headerlink" href="#1021-common-antipatterns" title="Permanent link">&para;</a></h2>
 <h3 id="10211-keeping-only-the-last-n-turns"><span id="10211-n" class="legacy-heading-anchor" aria-hidden="true"></span>10.21.1 Keeping Only the Last N Turns<a class="headerlink" href="#10211-keeping-only-the-last-n-turns" title="Permanent link">&para;</a></h3>
 <p>This may remove the initial goal and safety constraints.</p>
@@ -11254,32 +11315,13 @@ CR=1-\frac{L_{after}}{L_{before}}
 <p>Also write important decisions to external files or structured state—the externalization described in Section 10.9—and retain their sources, versions, and scope. External storage does not mean the model can automatically read the information. A stable loading entry point and read-back validation are still required. When decisions change, invalidate old records as well rather than allowing an old file to remain an active constraint indefinitely.</p>
 <h2 id="1022-a-recommended-production-compression-pipeline"><span id="1022" class="legacy-heading-anchor" aria-hidden="true"></span>10.22 A Recommended Production Compression Pipeline<a class="headerlink" href="#1022-a-recommended-production-compression-pipeline" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    INPUT[Messages + Tool Results + State] --&gt; CLASS[Classify]
-
-    CLASS --&gt; PIN[Currently Valid Pinned Constraints]
-    CLASS --&gt; STATE[Structured State Checked Against Execution Evidence]
-    CLASS --&gt; LARGE[Large Artifacts]
-    CLASS --&gt; HISTORY[Historical Messages]
-
-    LARGE --&gt; EXT[Externalize + Reference]
-    HISTORY --&gt; SPLIT[Group by Complete Interactions and Stages]
-    SPLIT --&gt; RECENT[Recent Complete Interactions]
-    SPLIT --&gt; DEDUP[Deduplicate Older History]
-    DEDUP --&gt; IMP[Importance Filter]
-    IMP --&gt; SUM[Hierarchical Summary]
-
-    PIN --&gt; PACK[Context Packer]
-    STATE --&gt; PACK
-    EXT --&gt; PACK
-    SUM --&gt; PACK
-    RECENT --&gt; PACK
-    RET[Long-term Memory with Permissions and Versions Rechecked] --&gt; PACK
-
+    CLASS[Classify inputs] --&gt; PACK[Context Packer]
     PACK --&gt; CACHE[Prompt Cache Stable Prefix]
     CACHE --&gt; MODEL[Model]
-
     MODEL --&gt; OBS[New Observation]
-    OBS --&gt; INPUT</code></pre>
+    OBS --&gt; CLASS</code></pre>
+<p>Inputs are messages, tool results, and state. Classification separates currently valid pinned constraints, structured state checked against execution evidence, large artifacts, and historical messages. Constraints and validated state go directly to the packer; large artifacts are externalized and replaced by references.</p>
+<p>Group history by complete interactions and stages. Recent complete interactions go directly to the packer; older history is deduplicated, filtered by importance, and hierarchically summarized first. Long-term memory also enters the packer, but only after permission and version rechecks. The packed context uses a stable prefix for prompt caching before reaching the model; new observations re-enter input classification.</p>
 <p>Choose combinations from the following according to the task. Short tasks do not necessarily need summaries or hierarchical storage:</p>
 <ol>
 <li>Retain currently valid system instructions, safety rules, goals, and success criteria, updating them as permissions and goals change;</li>
@@ -11364,20 +11406,8 @@ CR=1-\frac{L_{after}}{L_{before}}
 <p>They complement each other, but prompt caching does not free context-window capacity or replace summarization, filtering, and structured extraction.</p>
 <p>After compression, check the goal, unresolved state, key evidence, and readability of references at least once. If these cannot be recovered, return to original records or explicitly report insufficient information rather than treating a fluent summary as a complete history.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.08560">MemGPT: Towards LLMs as Operating Systems</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://research.trychroma.com/context-rot">Chroma Research: Context Rot</a></li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic Prompt Caching</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI Prompt Caching</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/compaction">OpenAI Compaction</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/add-memory">LangGraph Memory</a></li>
-<li><a href="https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD">LoCoMo official release notes, snapshot 9228632</a> (ACL 2024 release; this snapshot's <code>data/locomo10.zip</code> contains ten per-conversation JSON files)</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md">LongMemEval official documentation, snapshot 9e0b455</a> (distinguishes the original release from the September 2025 cleaned release)</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md">LongMemEval-V2 official documentation, snapshot 2cc8c54</a></li>
-</ul>
-<p>Source review recorded in the original manuscript: 2026-09-15. The OpenAI caching and compaction references are rolling Responses API documentation and do not promise identical pricing, thresholds, or history-passing rules across models or versions. The server-side APIs were not tested in that review. The Anthropic caching entry remains supplementary reading; it was not used to add conclusions about specific parameters.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-10">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -11400,7 +11430,7 @@ CR=1-\frac{L_{after}}{L_{before}}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:36 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

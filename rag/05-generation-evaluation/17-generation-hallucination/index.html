@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: Generation, Grounding, and Hallucination Mitigation","description":"Distinguish faithfulness to evidence from factuality, and examine abstention, claim–citation alignment, conflict handling, and post-generation validation in RAG.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/17-generation-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: Generation, Grounding, and Hallucination Mitigation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/17-generation-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: Generation, Grounding, and Hallucination Mitigation","description":"Distinguish faithfulness to evidence from factuality, and examine abstention, claim–citation alignment, conflict handling, and post-generation validation in RAG.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/17-generation-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: Generation, Grounding, and Hallucination Mitigation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/17-generation-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 17: Generation, Grounding, and Hallucination Mitigation","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/17-generation-hallucination/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9411,20 +9436,12 @@
 </blockquote>
 <p>Missing retrieval results, outdated or conflicting evidence, context truncation and processing errors, generation beyond the evidence, and incorrect reuse of caches or tool results can all produce false output. Retrieval quality is an important and common upstream factor: when material is missing or wrong, generation-layer techniques cannot make the answer factual. But <strong>even with sufficient retrieval, the model can still misread, overgeneralize, or cite incorrectly.</strong> Data governance, retrieval, grounding, citation validation, abstention, and post-hoc evaluation must therefore work together.</p>
 <h2 id="172-main-sources-of-hallucination"><span id="172" class="legacy-heading-anchor" aria-hidden="true"></span>17.2 Main Sources of Hallucination<a class="headerlink" href="#172-main-sources-of-hallucination" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    H[False output in RAG] --&gt; H1[Unavailable or&lt;br/&gt;unreliable evidence]
-    H --&gt; H2[Distorted reasoning&lt;br/&gt;from evidence to answer]
-    H --&gt; H3[System processing&lt;br/&gt;and reuse failures]
-
-    H1 --&gt; C1[Missing, outdated, or incorrect&lt;br/&gt;knowledge-base content]
-    H1 --&gt; C2[Evidence exists&lt;br/&gt;but was not retrieved]
-    H1 --&gt; C3[Retrieved evidence is truncated&lt;br/&gt;or filtered by permissions]
-
-    H2 --&gt; C4[Inventing details&lt;br/&gt;absent from the material]
-    H2 --&gt; C5[Misreading, misattribution,&lt;br/&gt;or overgeneralization]
-    H2 --&gt; C6[Parametric knowledge&lt;br/&gt;overrides the material]
-    H2 --&gt; C7[Conflicting material&lt;br/&gt;is resolved without justification]
-    H3 --&gt; C8[Cache, version, or&lt;br/&gt;citation-validation failures]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    E[Evidence failures] --&gt; H[False RAG output]
+    R[Reasoning failures] --&gt; H
+    S[System failures] --&gt; H</code></pre>
+<p>Evidence may be unavailable or unreliable because the knowledge base is missing, outdated, or wrong; existing evidence was not retrieved; or retrieved evidence was truncated or filtered by permissions. Reasoning failures include inventing absent details, misreading, misattribution, overgeneralization, overriding material with parametric knowledge, and resolving conflicts without justification. System processing and reuse can fail through caches, version handling, or citation validation.</p>
 <p>Different causes call for different controls, but those controls can be combined. Optimizing only one stage usually leaves other failure modes unaddressed.</p>
 <table>
 <thead>
@@ -9455,17 +9472,18 @@
 <p>The prompt can state that authorized business material valid at the time of the query takes precedence over general parametric knowledge. This is a behavioral constraint, not a reliability guarantee. Instructions inside the material remain untrusted data. Conflicts between sources or versions must be reported explicitly or resolved according to predefined rules.</p>
 <h2 id="173-first-line-of-defense-abstention"><span id="173" class="legacy-heading-anchor" aria-hidden="true"></span>17.3 First Line of Defense: Abstention<a class="headerlink" href="#173-first-line-of-defense-abstention" title="Permanent link">&para;</a></h2>
 <p>This is one of the cheapest—and most frequently omitted—control points.</p>
-<pre class="mermaid"><code>flowchart TB
-    R[Retrieval results] --&gt; C1{Any results?}
-    C1 --&gt;|No| REJ[Abstain]
-    C1 --&gt;|Yes| C2{Sufficient confidence&lt;br/&gt;after calibration?}
-    C2 --&gt;|No| REJ[Abstain, clarify,&lt;br/&gt;or degrade gracefully]
-    C2 --&gt;|Yes| GEN[Proceed to generation]
-    GEN --&gt; C3{Does the model report&lt;br/&gt;insufficient evidence?}
-    C3 --&gt;|Yes| REJ2[Explain inability to answer&lt;br/&gt;and suggest next steps]
-    C3 --&gt;|No| C4{Do key claims and citations&lt;br/&gt;pass release checks?}
-    C4 --&gt;|Yes| OUT[Return answer and citations]
-    C4 --&gt;|No| REJ2</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    R[Retrieval results] --&gt; C{Evidence gate passes?}
+    C --&gt;|No| REJ[Abstain or recover]
+    C --&gt;|Yes| GEN[Generate candidate]</code></pre>
+<p>No results means abstention. If results exist but calibrated confidence is insufficient, abstain, clarify, or degrade gracefully. Only sufficient calibrated confidence permits generation. The generated candidate then faces a separate release gate:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GEN[Generated candidate] --&gt; C[Check evidence and citations]
+    C --&gt;|Pass| OUT[Answer with citations]
+    C --&gt;|Fail| REJ[Explain inability; suggest steps]</code></pre>
+<p>If the model reports insufficient evidence, do not release an answer. Otherwise check key claims and citations; failed release checks likewise require explaining the inability to answer and suggesting next steps.</p>
 <p>The goal is to keep insufficient evidence out of the normal generation path and prevent unvalidated key claims from being released. Unauthorized material is not “missing evidence” that may be supplied to the model. Internally, distinguish retrieval failures, the absence of authorized evidence, and ordinary no-match results. Externally, responses must also avoid disclosing whether restricted material exists.</p>
 <p>When retrieval returns nothing, or confidence is insufficient after calibration on a business evaluation set, directly return “No sufficiently supported information was found,” ask for clarification, or use controlled graceful degradation. <strong>Do not enter the normal generation stage</strong>; see <a href="../../03-retrieval/13-hybrid-retrieval-rerank/">Chapter 13, Section 13.4.3</a>.</p>
 <p>Calibrate this decision against business costs. A more conservative abstention policy may reduce false acceptance but increase abstention. A more permissive policy increases coverage but also the risk of unsupported answers.</p>
@@ -9633,14 +9651,8 @@
 <li>For evaluating citation completeness, freshness, and robustness, see <a href="../18-rag-evaluation/">RAG Evaluation</a>.</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2410.07176">Astute RAG: Overcoming Imperfect Retrieval Augmentation and Knowledge Conflicts for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2310.01558">Making Retrieval-Augmented Language Models Robust to Irrelevant Context</a></li>
-<li><a href="https://arxiv.org/abs/2309.15217">RAGAS: Automated Evaluation of Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2305.14627">ALCE: Enabling Large Language Models to Generate Text with Citations</a></li>
-<li><a href="https://arxiv.org/abs/2401.15884">Corrective Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-17">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9663,7 +9675,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

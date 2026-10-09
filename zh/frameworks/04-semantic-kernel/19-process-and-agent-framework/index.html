@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十九章：Semantic Kernel 的 Process Framework 与 Agent Framework","description":"区分 SK Process、SK Agent Orchestration 与独立 Microsoft Agent Framework，说明发布状态、API 迁移和持久化边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/04-semantic-kernel/19-process-and-agent-framework/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十九章：Semantic Kernel 的 Process Framework 与 Agent Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/04-semantic-kernel/19-process-and-agent-framework/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十九章：Semantic Kernel 的 Process Framework 与 Agent Framework","description":"区分 SK Process、SK Agent Orchestration 与独立 Microsoft Agent Framework，说明发布状态、API 迁移和持久化边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/04-semantic-kernel/19-process-and-agent-framework/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十九章：Semantic Kernel 的 Process Framework 与 Agent Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/04-semantic-kernel/19-process-and-agent-framework/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十九章：Semantic Kernel 的 Process Framework 与 Agent Framework","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/04-semantic-kernel/19-process-and-agent-framework/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9157,13 +9182,22 @@
 <li><strong>SK Agent Framework / Agent Orchestration</strong>：SK 包内的 Agent 抽象及协作层。Agent 不只用于多智能体；Agent Orchestration 概览仍标为 experimental，不能把这个标记扩展成「所有 SK API 都实验性」；</li>
 <li><strong>Microsoft Agent Framework（MAF）</strong>：独立后继 SDK，融合 SK 与 AutoGen 的经验。官方仓库已说明 1.0 为生产可用发布；核心发布状态不等于每个 provider、Workflows 扩展或语言 SDK 都同样稳定，应逐包核对。当前概览明确 Go SDK 仍为 public preview。</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    C["流程复杂度来源"] --&gt; B1["业务流程本身分阶段、有状态转移"]
-    C --&gt; B2["需要多个专精 Agent 协作"]
-    B1 --&gt; PF["SK Process&lt;br/&gt;实验性 Step / Event"]
-    B2 --&gt; AF["SK Agent Orchestration&lt;br/&gt;实验性协作层"]
-    PF -.迁移需核对能力.-&gt; MAF["独立 Microsoft Agent Framework&lt;br/&gt;Agents / Workflows / Session"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["流程复杂度来源"] --&gt; B1["业务阶段与状态"]
+    C --&gt; B2["多个专业智能体协&lt;br/&gt;作"]
+    B1 --&gt; PF["SK Process"]
+    B2 --&gt; AF["SK Agent&lt;br/&gt;Orchestration"]
+    PF -.迁移需核对能力.-&gt; MAF["独立 Microsoft&lt;br/&gt;Agent Framework"]
     AF -.迁移指南.-&gt; MAF</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>业务流程本身分阶段、有状态转移</li>
+<li>需要多个专精 Agent 协作</li>
+<li>SK Process 实验性 Step / Event</li>
+<li>SK Agent Orchestration 实验性协作层</li>
+<li>独立 Microsoft Agent Framework Agents / Workflows / Session</li>
+</ul>
 <h2 id="192-process-framework">19.2 Process Framework：业务流程的显式状态机<a class="headerlink" href="#192-process-framework" title="Permanent link">&para;</a></h2>
 <p>Process Framework 把一个业务流程建模为<strong>步骤（Step）+ 事件（Event）</strong>：每个 Step 是一个独立的处理单元（可以包含 AI 调用，也可以是纯业务代码），Step 之间通过发出和监听事件连接：</p>
 <div class="language-csharp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">ProcessBuilder</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">"SupportTicketProcess"</span><span class="p">);</span>
@@ -9287,18 +9321,8 @@
 </ol>
 <p>维护旧项目时理解 SK 抽象仍有价值；做新选型时，应把 MAF 和实际业务约束放进同一份评估，而不是停留在旧产品分类。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework">Semantic Kernel: Process Framework</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/">Semantic Kernel: Agent Framework 概述</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/">Semantic Kernel: Agent Orchestration</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/group-chat">Semantic Kernel: Group Chat 完整运行时示例</a></li>
-<li><a href="https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md">Semantic Kernel 官方仓库的 MAF 1.0 说明（固定提交）</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework 概览</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/">SK → MAF 迁移指南</a></li>
-<li><a href="https://devblogs.microsoft.com/agent-framework/semantic-kernel-and-microsoft-agent-framework/">微软：Semantic Kernel 与 MAF 支持过渡公告</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-</ul>
-<p>版本说明：MAF 1.0、Go public preview、SK Process/Orchestration 实验性标记和过渡公告于 2026-09-15 复核。过渡公告保留了发布当时「MAF 仍在 Preview」的描述，不能用它覆盖后续 1.0 发布声明，也不能据此推算 SK 的精确 EOL。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-frameworks-19">集中参考资料章节</a>。</p>
 
 
 
@@ -9321,7 +9345,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: MCP Transports","description":"Compares stdio and Streamable HTTP, explaining metadata, SSE, cancellation, retries, and legacy transport compatibility in MCP 2026-07-28.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/12-mcp-transport/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: MCP Transports","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/12-mcp-transport/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: MCP Transports","description":"Compares stdio and Streamable HTTP, explaining metadata, SSE, cancellation, retries, and legacy transport compatibility in MCP 2026-07-28.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/12-mcp-transport/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: MCP Transports","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/12-mcp-transport/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 12: MCP Transports","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/12-mcp-transport/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9431,15 +9456,18 @@
 <h1 id="chapter-12-mcp-transports"><span id="mcp" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 12: MCP Transports<a class="headerlink" href="#chapter-12-mcp-transports" title="Permanent link">&para;</a></h1>
 <h2 id="121-message-format-and-transport-are-decoupled"><span id="121" class="legacy-heading-anchor" aria-hidden="true"></span>12.1 Message format and transport are decoupled<a class="headerlink" href="#121-message-format-and-transport-are-decoupled" title="Permanent link">&para;</a></h2>
 <p>First, separate the message format from the transport:</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph MSG["Message layer · unchanged"]
-        J["JSON-RPC 2.0&lt;br/&gt;method / params / id / result / error"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph MSG["Messages"]
+        direction TB
+        J["JSON-RPC 2.0"]
     end
 
-    subgraph TRANS["Transport layer · replaceable"]
-        T1["stdio&lt;br/&gt;Local subprocess pipes"]
-        T2["Streamable HTTP&lt;br/&gt;Single remote endpoint"]
-        T3["Custom transport&lt;br/&gt;Agreed extension implementation"]
+    subgraph TRANS["Transports"]
+        direction TB
+        T1["stdio"]
+        T2["Streamable HTTP"]
+        T3["Custom&lt;br/&gt;transport"]
     end
 
     J --&gt; T1
@@ -9448,6 +9476,14 @@
 
     style MSG fill:#e6f4ea
     style TRANS fill:#e8f0fe</code></pre>
+<p>The JSON-RPC 2.0 message layer stays unchanged; the transport layer is replaceable.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>JSON-RPC 2.0 method / params / id / result / error</li>
+<li>stdio Local subprocess pipes</li>
+<li>Streamable HTTP Single remote endpoint</li>
+<li>Custom transport Agreed extension implementation</li>
+</ul>
 <p>Transports reuse JSON-RPC method semantics, but their bindings differ in request metadata, cancellation, recovery, and authentication. Switching transports requires more than verifying that “JSON arrives.”</p>
 <p>MCP's current standard transports are stdio and Streamable HTTP. <strong>WebSocket is not a standard transport</strong>, though the specification permits pluggable custom transports. A Client and Server can choose WebSocket if they explicitly agree and correctly carry UTF-8 JSON-RPC. Do not call it a standard MCP transport or assume all Clients support it.</p>
 <h2 id="122-message-format-json-rpc-20"><span id="122-json-rpc-20" class="legacy-heading-anchor" aria-hidden="true"></span>12.2 Message format: JSON-RPC 2.0<a class="headerlink" href="#122-message-format-json-rpc-20" title="Permanent link">&para;</a></h2>
@@ -9491,18 +9527,53 @@
 <h2 id="123-transport-1-stdio"><span id="123-stdio" class="legacy-heading-anchor" aria-hidden="true"></span>12.3 Transport 1: stdio<a class="headerlink" href="#123-transport-1-stdio" title="Permanent link">&para;</a></h2>
 <h3 id="1231-how-it-works"><span id="1231" class="legacy-heading-anchor" aria-hidden="true"></span>12.3.1 How it works<a class="headerlink" href="#1231-how-it-works" title="Permanent link">&para;</a></h3>
 <p>The Client <strong>launches the Server as a subprocess</strong>, writes requests to the process's standard input (<code>stdin</code>), and reads responses from its standard output (<code>stdout</code>).</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant C as MCP Client inside the Host
-    participant OS as Operating-system pipes
-    participant S as MCP Server&lt;br/&gt;(subprocess)
-
-    C-&gt;&gt;S: Launch subprocess with the configured command
-    C-&gt;&gt;OS: Write stdin: {"jsonrpc":"2.0","id":1,...}
-    OS-&gt;&gt;S: Read from stdin
-    S-&gt;&gt;S: Execute tool
-    S-&gt;&gt;OS: Write stdout: {"jsonrpc":"2.0","id":1,"result":...}
-    OS-&gt;&gt;C: Read from stdout
-    Note over C,S: Client manages shutdown, waiting, and subprocess cleanup</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Launch subprocess"]
+    S1["Write stdin"]
+    S2["Server executes"]
+    S3["Read stdout"]
+    S4["Clean up process"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP Client inside the Host → MCP Server (subprocess)</td>
+<td>Launch subprocess with the configured command</td>
+</tr>
+<tr>
+<td>MCP Client inside the Host → Operating-system pipes</td>
+<td _jsonrpc_:_2.0_id_:1_...="&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,...">Write stdin:</td>
+</tr>
+<tr>
+<td>Operating-system pipes → MCP Server (subprocess)</td>
+<td>Read from stdin</td>
+</tr>
+<tr>
+<td>MCP Server (subprocess) → MCP Server (subprocess)</td>
+<td>Execute tool</td>
+</tr>
+<tr>
+<td>MCP Server (subprocess) → Operating-system pipes</td>
+<td _jsonrpc_:_2.0_id_:1_result_:...="&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;result&quot;:...">Write stdout:</td>
+</tr>
+<tr>
+<td>Operating-system pipes → MCP Client inside the Host</td>
+<td>Read from stdout</td>
+</tr>
+<tr>
+<td>Note: MCP Client inside the Host, MCP Server (subprocess)</td>
+<td>Client manages shutdown, waiting, and subprocess cleanup</td>
+</tr>
+</tbody>
+</table>
 <p>A pipe can be understood as <strong>a first-in, first-out buffer that the operating system allocates in memory for two processes</strong>. The Client writes one line of JSON; the Server reads it from the other end, processes it, and writes back through another pipe.</p>
 <p>This communication <strong>does not traverse a network interface or the TCP/IP stack</strong>. The data travels through RAM.</p>
 <h3 id="1232-three-advantages-of-stdio"><span id="1232-stdio" class="legacy-heading-anchor" aria-hidden="true"></span>12.3.2 Three advantages of stdio<a class="headerlink" href="#1232-three-advantages-of-stdio" title="Permanent link">&para;</a></h3>
@@ -9556,16 +9627,27 @@
 <h3 id="1241-core-design-one-endpoint"><span id="1241" class="legacy-heading-anchor" aria-hidden="true"></span>12.4.1 Core design: one endpoint<a class="headerlink" href="#1241-core-design-one-endpoint" title="Permanent link">&para;</a></h3>
 <p>For remote access, the Server runs as an independent HTTP service. The currently recommended transport is <strong>Streamable HTTP</strong>.</p>
 <p>Its central design uses <strong>one HTTP endpoint, typically <code>/mcp</code>, for requests and responses</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    C[Client] --&gt;|"POST /mcp&lt;br/&gt;JSON-RPC request"| S[Server]
-    S --&gt; D{"Does this operation&lt;br/&gt;need streaming?"}
-    D --&gt;|No| R1["Return an ordinary JSON response&lt;br/&gt;Content-Type: application/json"]
-    D --&gt;|Yes| R2["Return an SSE stream&lt;br/&gt;Content-Type: text/event-stream"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["Client"] --&gt;|"POST /mcp"| S["Server"]
+    S --&gt; D["Does this&lt;br/&gt;operation"]
+    D --&gt;|No| R1["Return an&lt;br/&gt;ordinary JSON&lt;br/&gt;response"]
+    D --&gt;|Yes| R2["Return an SSE&lt;br/&gt;stream"]
     R1 --&gt; C
     R2 --&gt; C
 
     style R1 fill:#e6f4ea
     style R2 fill:#fef7e0</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>POST /mcp JSON-RPC request</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Does this operation need streaming?</li>
+<li>Return an ordinary JSON response Content-Type: application/json</li>
+<li>Return an SSE stream Content-Type: text/event-stream</li>
+</ul>
 <p><strong>Choosing per operation is the point.</strong> Simple synchronous operations return JSON directly; operations that need streaming return SSE. A long-lived connection is not mandatory.</p>
 <h3 id="1242-benefits-and-costs"><span id="1242" class="legacy-heading-anchor" aria-hidden="true"></span>12.4.2 Benefits and costs<a class="headerlink" href="#1242-benefits-and-costs" title="Permanent link">&para;</a></h3>
 <table>
@@ -9592,7 +9674,7 @@
 </table>
 <p>A typical example is a team sharing one database MCP Server deployed on a server, with centralized permissions and auditing.</p>
 <h3 id="1243-required-http-headers-and-response-boundaries-in-the-current-version"><span id="1243-http" class="legacy-heading-anchor" aria-hidden="true"></span>12.4.3 Required HTTP headers and response boundaries in the current version<a class="headerlink" href="#1243-required-http-headers-and-response-boundaries-in-the-current-version" title="Permanent link">&para;</a></h3>
-<p>Under <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http">2026-07-28 Streamable HTTP</a>:</p>
+<p>Under 2026-07-28 Streamable HTTP<sup><a href="../../../book/references/#ref-315">【315】</a></sup>:</p>
 <ul>
 <li>Send each JSON-RPC request in a separate POST. The Client declares <code>Accept: application/json, text/event-stream</code> and must handle both response types; the request body uses <code>Content-Type: application/json</code>. The transport also defines notification POST mechanics, but this core revision uses no HTTP Client notifications. Do not send a JSON-RPC response to answer MRTR.</li>
 <li>Requests carry <code>MCP-Protocol-Version</code> and <code>Mcp-Method</code>. <code>tools/call</code>, <code>prompts/get</code>, and <code>resources/read</code> also require <code>Mcp-Name</code>. Version, method, and name must agree with the body; checking only one copy is insufficient.</li>
@@ -9604,18 +9686,29 @@
 <h2 id="125-why-the-early-two-endpoint-sse-design-was-deprecated"><span id="125-sse" class="legacy-heading-anchor" aria-hidden="true"></span>12.5 Why the early two-endpoint SSE design was deprecated<a class="headerlink" href="#125-why-the-early-two-endpoint-sse-design-was-deprecated" title="Permanent link">&para;</a></h2>
 <p>Some early tutorials still describe “HTTP + SSE.” This was the remote transport in the original MCP specification, 2024-11-05. It was <strong>deprecated in 2025-03-26</strong>: retained for backward compatibility, but not for new projects.</p>
 <h3 id="1251-the-problem-was-the-two-channels"><span id="1251" class="legacy-heading-anchor" aria-hidden="true"></span>12.5.1 The problem was the two channels<a class="headerlink" href="#1251-the-problem-was-the-two-channels" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph OLD["Old design · two HTTP + SSE endpoints"]
-        C1[Client] --&gt;|"POST /messages&lt;br/&gt;Send requests"| S1[Server]
-        S1 --&gt;|"GET /sse long-lived connection&lt;br/&gt;Push responses"| C1
-    end
-
-    subgraph NEW["New design · one Streamable HTTP endpoint"]
-        C2[Client] &lt;--&gt;|"POST /mcp&lt;br/&gt;Request and response on one channel"| S2[Server]
-    end
-
-    style OLD fill:#fce8e6
-    style NEW fill:#e6f4ea</code></pre>
+<p><strong>Old: two endpoints</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Client"] --&gt;|"POST /messages"| S1["Server"]
+        S1 --&gt;|"GET /sse"| C1</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>POST /messages Send requests</li>
+<li>GET /sse long-lived connection Push responses</li>
+</ul>
+<p><strong>New: one endpoint</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] &lt;--&gt;|"POST /mcp"| S2["Server"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>POST /mcp Request and response on one channel</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Old design · two HTTP + SSE endpoints</li>
+<li>New design · one Streamable HTTP endpoint</li>
+</ul>
 <p>Splitting one exchange across two channels complicates <strong>state management</strong>.</p>
 <p>Suppose the network fails just after the Client POSTs a message. <strong>Was the message processed? Will the SSE stream deliver its result?</strong> The Client has no simple answer, and debugging requires tracing a longer path.</p>
 <p>The two channels require correlated routing. Combining endpoints reduces that coordination, but does not solve the unknown-outcome problem when a connection drops after submission, nor automatically provide exactly-once execution.</p>
@@ -9624,7 +9717,7 @@
 <p>Streaming still uses SSE (<code>Content-Type: text/event-stream</code>); the two endpoints became one. The architecture changed, not the underlying technology.</p>
 <h2 id="126-standard-and-custom-transports"><span id="126" class="legacy-heading-anchor" aria-hidden="true"></span>12.6 Standard and custom transports<a class="headerlink" href="#126-standard-and-custom-transports" title="Permanent link">&para;</a></h2>
 <p>The <strong>HTTP binding</strong> in 2026-07-28 uses POST, with JSON or request-scoped SSE responses. Do not extend HTTP rules to stdio. Standard request-header mirroring is required, not an optional optimization. Server→Client input requirements come back as MRTR results, no longer as independent reverse JSON-RPC requests.</p>
-<p>For legacy interoperability, identify the protocol era using the <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">version compatibility page</a>. A recognized <code>UnsupportedProtocolVersionError</code> calls for choosing a mutually supported modern version, not immediately downgrading. Legacy initialization fallback must be explicitly supported by a dual-era implementation. Authorization failure must not trigger an unauthenticated retry.</p>
+<p>For legacy interoperability, identify the protocol era using the version compatibility page<sup><a href="../../../book/references/#ref-280">【280】</a></sup>. A recognized <code>UnsupportedProtocolVersionError</code> calls for choosing a mutually supported modern version, not immediately downgrading. Legacy initialization fallback must be explicitly supported by a dual-era implementation. Authorization failure must not trigger an unauthenticated retry.</p>
 <p>A custom transport should meet MCP's message-encoding and security requirements and define connection setup, message framing, authentication, shutdown, and error handling. WebSocket can be such a <strong>nonstandard extension</strong>, but does not automatically gain stdio/Streamable HTTP interoperability. For remote HTTP services, also validate <code>Origin</code>, enforce authentication, and avoid exposing local services to untrusted networks.</p>
 <h2 id="127-common-mistakes"><span id="127" class="legacy-heading-anchor" aria-hidden="true"></span>12.7 Common mistakes<a class="headerlink" href="#127-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="1271-calling-websocket-a-standard-mcp-transport"><span id="1271-websocket-mcp-transport" class="legacy-heading-anchor" aria-hidden="true"></span>12.7.1 Calling WebSocket a standard MCP transport<a class="headerlink" href="#1271-calling-websocket-a-standard-mcp-transport" title="Permanent link">&para;</a></h3>
@@ -9651,16 +9744,8 @@
 <li><strong>Custom transports are permitted beyond the standard ones.</strong> WebSocket, for example, requires explicit support at both ends and must not be presented as a universal standard.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">MCP specification 2026-07-28: Transports</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http">MCP 2026-07-28 Streamable HTTP</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio">MCP 2026-07-28 stdio</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">MCP 2026-07-28 version compatibility</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports">MCP specification 2025-03-26: the introduction of Streamable HTTP</a></li>
-<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 specification</a></li>
-<li><a href="https://github.com/modelcontextprotocol/servers">Official MCP Server collection</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">MDN: Server-Sent Events</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-12">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9683,7 +9768,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

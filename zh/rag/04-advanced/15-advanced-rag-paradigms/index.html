@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：高级 RAG 范式","description":"解释 Self-RAG、Corrective RAG、RAPTOR 和 Agentic RAG 的控制机制，区分论文方法与工程简化，评估训练、索引及多轮成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/15-advanced-rag-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：高级 RAG 范式","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/15-advanced-rag-paradigms/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：高级 RAG 范式","description":"解释 Self-RAG、Corrective RAG、RAPTOR 和 Agentic RAG 的控制机制，区分论文方法与工程简化，评估训练、索引及多轮成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/15-advanced-rag-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：高级 RAG 范式","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/15-advanced-rag-paradigms/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十五章：高级 RAG 范式","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/15-advanced-rag-paradigms/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9245,7 +9270,8 @@
 <h1 id="rag">第十五章：高级 RAG 范式<a class="headerlink" href="#rag" title="Permanent link">&para;</a></h1>
 <h2 id="151-rag">15.1 三代 RAG 的演进逻辑<a class="headerlink" href="#151-rag" title="Permanent link">&para;</a></h2>
 <p>Naive、Advanced、Modular 是综述中的组织方式，不是严格的版本标准或必经代际。理解时应看控制流、训练要求和适用问题，而不是只列名字。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     N[Naive RAG&lt;br/&gt;检索一次 直接生成] --&gt; A[Advanced RAG&lt;br/&gt;检索前后加优化环节]
     A --&gt; M[Modular RAG&lt;br/&gt;组件化 可编排 可循环]</code></pre>
 <table>
@@ -9310,14 +9336,16 @@
 <p><strong>Corrective RAG（一种方法）和 CRAG Benchmark（一个评测基准）是完全不同的两个东西，不要混淆。</strong></p>
 </blockquote>
 <p>Corrective RAG 的做法是用一个轻量的评估器给检索结果打分，再按分数分三档处理：</p>
-<pre class="mermaid"><code>flowchart TB
-    R[检索结果] --&gt; E[轻量评估器打分]
-    E --&gt;|正确| C[精炼: 去掉无关部分 保留核心]
-    E --&gt;|错误| W[丢弃 改用外部搜索]
-    E --&gt;|模糊| A[两者结合]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    R[检索结果] --&gt; E[轻量评估器]
+    E --&gt;|正确| C[精炼]
+    E --&gt;|错误| W[外部搜索]
+    E --&gt;|模糊| A[结合两者]
     C --&gt; G[生成]
     W --&gt; G
     A --&gt; G</code></pre>
+<p>评为“正确”时，精炼会去掉无关部分，保留核心证据；评为“错误”时，丢弃原结果，改用外部搜索；评为“模糊”时，结合精炼与外部搜索。各分支随后向生成阶段提供证据。</p>
 <p><strong>它的价值在于承认了一个现实：检索是会失败的，系统需要有失败后的补救路径。</strong> 这比「检索到什么就用什么」进了一大步。</p>
 <p>工程上可以借用“质量判断 + 补救”的控制流，但不能声称提示词或 Rerank 阈值复现了原论文、或保证获得大部分收益。拒答规则需校准；私有知识检索失败时，外部网页通常无法补全，还可能带来泄密和来源风险，必须受数据与工具授权约束。</p>
 <h2 id="154-raptor">15.4 RAPTOR：把知识组织成树<a class="headerlink" href="#154-raptor" title="Permanent link">&para;</a></h2>
@@ -9329,14 +9357,16 @@
 <li>把摘要也向量化，<strong>再聚类、再摘要</strong>，递归向上，形成一棵树；</li>
 <li>原论文比较了 tree traversal 与 collapsed tree 两种检索方式，后者把多层节点放在一起检索；不能把“每次遍历所有层”视为唯一实现。</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    ROOT[顶层摘要&lt;br/&gt;全局视角] --&gt; M1[中层摘要 1]
-    ROOT --&gt; M2[中层摘要 2]
-    M1 --&gt; L1[原始 chunk]
-    M1 --&gt; L2[原始 chunk]
-    M2 --&gt; L3[原始 chunk]
-    M2 --&gt; L4[原始 chunk]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    ROOT[全局摘要] --&gt; M1[摘要 1]
+    ROOT --&gt; M2[摘要 2]
+    M1 --&gt; L1[块 1]
+    M1 --&gt; L2[块 2]
+    M2 --&gt; L3[块 3]
+    M2 --&gt; L4[块 4]
     M2 -.-&gt; L2</code></pre>
+<p>顶层摘要从全局视角概括两个中层摘要，叶节点是原始块。额外的虚线表示块 2 同时属于两个摘要，成员关系不必互斥。</p>
 <p>图中虚线表示一个片段也可能参与另一个簇的摘要。原论文采用软聚类，节点可属于多个簇；“树”是分层组织的直观称呼，不能据此假定每个片段只有唯一父节点。去重和来源回链需处理这种重叠。</p>
 <p><strong>效果</strong>：在需要多段落综合的长文档问答任务上，公开评测显示有显著提升。</p>
 <p><strong>代价与适用边界</strong>：</p>
@@ -9387,7 +9417,8 @@
 <blockquote>
 <p><strong>从「固定流程中的一个步骤」，变成「Agent 可以自主决定何时调用、调用几次、怎么用结果的一个工具」。</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[用户问题] --&gt; AG[Agent 推理]
     AG --&gt; D{需要更多信息?}
     D --&gt;|是| T[调用检索工具]
@@ -9438,13 +9469,12 @@
 <h2 id="157">15.7 什么时候该上高级范式<a class="headerlink" href="#157" title="Permanent link">&para;</a></h2>
 <p>多数情况下，不需要一开始就引入这些高级范式。</p>
 <p>第十四章已经说过——<strong>先把基础五层做对，通常比盲目叠加高级范式更有效</strong>。高级范式应该在满足以下条件时才考虑：</p>
-<pre class="mermaid"><code>flowchart TB
-    S{基础五层&lt;br/&gt;都做扎实了吗?} --&gt;|没有| BASE[回去做基础&lt;br/&gt;第十四章]
-    S --&gt;|做了| E{有评测集能&lt;br/&gt;量化收益吗?}
-    E --&gt;|没有| EVAL[先建评测集]
-    E --&gt;|有| N{失败案例属于&lt;br/&gt;基础方案的结构性缺陷吗?}
-    N --&gt;|不是| TUNE[继续调基础参数]
-    N --&gt;|是| ADV[评估对应的高级范式]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S[验证基础] --&gt; E[建立可量化收益]
+    E --&gt; N[诊断结构性限制]
+    N --&gt; ADV[评估对应高级范式]</code></pre>
+<p>这些是门槛，不是要求一律采用高级设计。基础五层中有任何一层薄弱，就回到第十四章；没有能量化收益的评测集，就先构造评测集；失败并未暴露基础方案的结构性限制，就继续调整基础方案。通过这些检查后，才评估相应的高级范式。</p>
 <p><strong>「结构性缺陷」的判断标准</strong>：这个问题<strong>不是调参能解决的</strong>。例如：</p>
 <ul>
 <li>多跳证据在单轮候选中覆盖不足 → 比较查询分解、多轮检索与图扩展；</li>
@@ -9478,15 +9508,8 @@
 <li><strong>区分论文机制、具体实现和业务验证</strong>，不要以方法名字或年份替代采用依据。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.11511">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</a></li>
-<li><a href="https://arxiv.org/abs/2401.15884">Corrective Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2401.18059">RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-<li><a href="https://arxiv.org/abs/2501.09136">Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG</a></li>
-<li><a href="https://arxiv.org/abs/2305.06983">Active Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-15">集中参考资料章节</a>。</p>
 
 
 
@@ -9509,7 +9532,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

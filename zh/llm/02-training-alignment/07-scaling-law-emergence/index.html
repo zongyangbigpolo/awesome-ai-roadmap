@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Scaling Law 与涌现能力","description":"从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Scaling Law 与涌现能力","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Scaling Law 与涌现能力","description":"从 Kaplan 与 Chinchilla 的经验拟合解释参数、数据和计算预算的配比，分析训练与推理成本、涌现指标争议及外推边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Scaling Law 与涌现能力","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第七章：Scaling Law 与涌现能力","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/07-scaling-law-emergence/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9534,7 +9559,8 @@ D_{\mathrm{opt}} \propto C^{\frac{\alpha}{\alpha+\beta}}
 <p>在固定预算问题里，应该重新选择更小的 <code>N</code> 与更大的 <code>D</code>；在固定模型问题里，才是在问继续训练的边际收益。两种问题不能混在一起。</p>
 <h2 id="73-20n">7.3 为什么小模型可以训练远超 20N 的数据<a class="headerlink" href="#73-20n" title="Permanent link">&para;</a></h2>
 <h3 id="731">7.3.1 训练最优与全生命周期成本不同<a class="headerlink" href="#731" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["训练预算固定&lt;br/&gt;选择 N 与 D&lt;br/&gt;最小化验证损失"]
     B["服务需求固定&lt;br/&gt;权衡训练与推理成本&lt;br/&gt;满足质量和延迟"]
     A -.-&gt;|目标函数不同| B</code></pre>
@@ -9593,7 +9619,8 @@ P_{\mathrm{exact}} = p^k
 \]</div>
 <p>即使 <code>p</code> 平滑增长，整串全对概率也可能长期接近零，再在有限采样中看似突然可见。这不是严格的数学不连续，却容易在图表中表现为“能力突然出现”。</p>
 <p>Schaeffer 等人的 Mirage 论文通过数学模型和实验说明，<strong>非线性或不连续指标可以产生表观涌现</strong>。对固定模型输出，改用 token 级编辑距离、概率等更细粒度指标，有时会呈现更平滑的趋势。</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OUT["同一批模型输出"] --&gt; EXACT["整题全对计分&lt;br/&gt;可能呈现陡变"]
     OUT --&gt; FINE["细粒度距离或概率指标&lt;br/&gt;可能显示渐进改善"]
     EXACT --&gt; CHECK["同时报告多种指标&lt;br/&gt;增加规模点与样本量"]
@@ -9652,16 +9679,8 @@ P_{\mathrm{exact}} = p^k
 <h2 id="79">7.9 本章总结<a class="headerlink" href="#79" title="Permanent link">&para;</a></h2>
 <p>Scaling law 是预算规划工具，Chinchilla 是特定条件下的训练预算分配研究。延长小模型训练可以服务于部署成本目标，未推翻其结论。涌现争议提醒我们：<strong>可用性门槛、评估曲线和内部能力机制是三件不同的事</strong>。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a></li>
-<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla：§3、表 2 与计算最优推导</a></li>
-<li><a href="https://arxiv.org/abs/2206.07682">Emergent Abilities of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2304.15004">Are Emergent Abilities of Large Language Models a Mirage?</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models</a></li>
-<li><a href="https://arxiv.org/html/2505.09388v1">Qwen3 Technical Report，初版</a></li>
-<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath：数据构建与 GRPO</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1，初版</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-07">集中参考资料章节</a>。</p>
 
 
 
@@ -9684,7 +9703,7 @@ P_{\mathrm{exact}} = p^k
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

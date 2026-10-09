@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：LangChain 的短期记忆与长期记忆","description":"按线程状态与跨线程 Store 设计记忆，区分上下文裁剪、状态删除、历史检查点清理和长期记忆权限治理。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/06-memory/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：LangChain 的短期记忆与长期记忆","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/06-memory/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：LangChain 的短期记忆与长期记忆","description":"按线程状态与跨线程 Store 设计记忆，区分上下文裁剪、状态删除、历史检查点清理和长期记忆权限治理。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/06-memory/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：LangChain 的短期记忆与长期记忆","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/06-memory/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：LangChain 的短期记忆与长期记忆","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/06-memory/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9512,12 +9537,18 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    A["当前线程运行到了哪里"] --&gt; B["State + Checkpointer"]
-    C["未来其他线程仍可能用到的&lt;br/&gt;用户偏好与事实"] --&gt; D["Store"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["当前线程进度"] --&gt; B["State +&lt;br/&gt;Checkpointer"]
+    C["未来其他线程仍可&lt;br/&gt;能用到的"] --&gt; D["Store"]
 
     style B fill:#e8f0fe
     style D fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>当前线程运行到了哪里</li>
+<li>未来其他线程仍可能用到的 用户偏好与事实</li>
+</ul>
 <h2 id="62">6.2 短期记忆如何实现<a class="headerlink" href="#62" title="Permanent link">&para;</a></h2>
 <p><code>create_agent</code> 底层运行在 LangGraph 上。<strong>Agent State 默认包含 <code>messages</code></strong>，也可以扩展订单号、当前步骤、工具调用次数等业务字段。</p>
 <h3 id="621-state">6.2.1 只有 State 还不够<a class="headerlink" href="#621-state" title="Permanent link">&para;</a></h3>
@@ -9712,14 +9743,22 @@
 <p><strong>无论实时还是后台写入，都应保存来源、时间和置信度</strong>，并支持更新、纠错和删除。</p>
 <p>订单金额、账户余额和库存等实时事实仍应查询权威业务系统，不能用长期记忆代替真实数据库。</p>
 <h2 id="67">6.7 生产环境要注意什么<a class="headerlink" href="#67" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    P1["① 数据能否可靠保存&lt;br/&gt;内存实现随进程退出而丢失&lt;br/&gt;线上要数据库型 Checkpointer 和 Store&lt;br/&gt;表结构与迁移纳入部署流程"]
-    P2["② 这是谁的记忆&lt;br/&gt;thread_id / tenant_id / user_id 必须来自可信身份体系&lt;br/&gt;不信任模型生成的身份&lt;br/&gt;不允许客户端随意指定别人的 namespace"]
-    P3["③ 记忆会过时、冲突、被纠正&lt;br/&gt;去重、更新、过期淘汰&lt;br/&gt;支持用户查看/更正/导出/删除&lt;br/&gt;敏感信息默认不记，需保存的加密并限权&lt;br/&gt;日志与 Trace 不能成为另一个泄漏口"]
-    P4["④ 记忆是否真的改善结果&lt;br/&gt;不能只看写入了多少条"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    P1["① 数据能否可靠&lt;br/&gt;保存"]
+    P2["② 这是谁的记忆"]
+    P3["③ 维护记忆"]
+    P4["④ 评估实际收益"]
     P1 --&gt; P2 --&gt; P3 --&gt; P4
 
     style P2 fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 数据能否可靠保存 内存实现随进程退出而丢失 线上要数据库型 Checkpointer 和 Store 表结构与迁移纳入部署流程</li>
+<li>② 这是谁的记忆 thread_id / tenant_id / user_id 必须来自可信身份体系 不信任模型生成的身份 不允许客户端随意指定别人的 namespace</li>
+<li>③ 记忆会过时、冲突、被纠正 去重、更新、过期淘汰 支持用户查看/更正/导出/删除 敏感信息默认不记，需保存的加密并限权 日志与 Trace 不能成为另一个泄漏口</li>
+<li>④ 记忆是否真的改善结果 不能只看写入了多少条</li>
+</ul>
 <h3 id="671">6.7.1 评测必须沿整条链路走<a class="headerlink" href="#671" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9810,14 +9849,8 @@
 </ol>
 <p>LangChain 的记忆按作用域分成两套机制：线程内用 State 和持久化 Checkpointer 保存执行进度，线程外用 Store 积累经过筛选的信息。namespace 负责定位，服务端授权负责防止串户；裁剪、摘要和保留策略则分别控制模型上下文与存储增长。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/long-term-memory">LangChain: Long-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph 持久化文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/stores">LangGraph Store 文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 迁移指南</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9840,7 +9873,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

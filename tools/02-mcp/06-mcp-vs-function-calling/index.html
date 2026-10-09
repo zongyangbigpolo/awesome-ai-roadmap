@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: MCP and Function Calling—Differences and Tradeoffs","description":"Compares MCP and function calling by interface boundary, deployment, tool discovery, permissions, and reuse costs, with guidance on choosing and combining them.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/06-mcp-vs-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: MCP and Function Calling—Differences and Tradeoffs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/06-mcp-vs-function-calling/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: MCP and Function Calling—Differences and Tradeoffs","description":"Compares MCP and function calling by interface boundary, deployment, tool discovery, permissions, and reuse costs, with guidance on choosing and combining them.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/06-mcp-vs-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: MCP and Function Calling—Differences and Tradeoffs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/06-mcp-vs-function-calling/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: MCP and Function Calling—Differences and Tradeoffs","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/06-mcp-vs-function-calling/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9374,37 +9399,93 @@
 <h2 id="62-the-real-integration-pain-around-function-calling"><span id="62-function-calling" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 The real integration pain around function calling<a class="headerlink" href="#62-the-real-integration-pain-around-function-calling" title="Permanent link">&para;</a></h2>
 <p>Copying one schema looks cheap. The calculation changes at team scale.</p>
 <p>If <strong>5 applications</strong> independently integrate <strong>8 tools</strong>, there are <strong>40 integration combinations</strong>. Shared SDKs or internal services can reduce duplicated code; MCP is one way to standardize these integrations.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph PAIN["Maintenance risks without shared adapters"]
-        P1["Upstream API field changes"] --&gt; R1["Each application adapts separately"]
-        P2["Migration to another model API"] --&gt; R2["Check schemas and result-message formats"]
-        P3["A new application needs access"] --&gt; R3["Reimplement discovery and authorization"]
-    end
+<p><strong>Separate adapters</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        P1["Upstream API&lt;br/&gt;field changes"] --&gt; R1["Each application&lt;br/&gt;adapts&lt;br/&gt;separately"]
+        P2["Migration to&lt;br/&gt;another model&lt;br/&gt;API"] --&gt; R2["Check API&lt;br/&gt;contracts"]
+        P3["A new&lt;br/&gt;application&lt;br/&gt;needs access"] --&gt; R3["Rebuild&lt;br/&gt;integration"]
 
     style R1 fill:#fce8e6
     style R2 fill:#fce8e6
     style R3 fill:#fce8e6</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Maintenance risks without shared adapters</li>
+<li>Check schemas and result-message formats</li>
+<li>Reimplement discovery and authorization</li>
+</ul>
 <p>The core risk is maintaining the same tool integration in multiple applications because no shared adapter exists. Function calling itself does not manage tools or interoperability across applications. MCP can fill that role, but so can an existing shared SDK or internal service.</p>
 <h2 id="63-a-common-integration-the-host-routes-mcp-tools-through-function-calling"><span id="63-host-function-calling-mcp-tool" class="legacy-heading-anchor" aria-hidden="true"></span>6.3 A common integration: the Host routes MCP Tools through function calling<a class="headerlink" href="#63-a-common-integration-the-host-routes-mcp-tools-through-function-calling" title="Permanent link">&para;</a></h2>
 <p>A common project architecture uses function calling in the Host to route MCP Tools.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant M as Model
-    participant H as Host application containing an MCP Client
-    participant S as MCP Server
-
-    Note over H,S: Startup
-    H-&gt;&gt;S: tools/list
-    S--&gt;&gt;H: Tool definitions in MCP format
-    Note over H: Convert to the model's native&lt;br/&gt;function-calling schema
-
-    Note over M,H: Runtime
-    H-&gt;&gt;M: messages + tools in ordinary FC format
-    M--&gt;&gt;H: tool_calls in ordinary FC output
-    Note over M: This bridge does not require&lt;br/&gt;understanding MCP transport
-    H-&gt;&gt;S: tools/call routed to the appropriate Server
-    S--&gt;&gt;H: Execution result
-    H-&gt;&gt;M: Supply the tool result in the model API format
-    M--&gt;&gt;H: Final answer</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Discover MCP tools"]
+    S1["Translate schemas"]
+    S2["Model proposes call"]
+    S3["Host routes to MCP"]
+    S4["Return tool result"]
+    S5["Model answers"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Note: Host application containing an MCP Client, MCP Server</td>
+<td>Startup</td>
+</tr>
+<tr>
+<td>Host application containing an MCP Client → MCP Server</td>
+<td>tools/list</td>
+</tr>
+<tr>
+<td>MCP Server → Host application containing an MCP Client (return)</td>
+<td>Tool definitions in MCP format</td>
+</tr>
+<tr>
+<td>Note: Host application containing an MCP Client</td>
+<td>Convert to the model's native; function-calling schema</td>
+</tr>
+<tr>
+<td>Note: Model, Host application containing an MCP Client</td>
+<td>Runtime</td>
+</tr>
+<tr>
+<td>Host application containing an MCP Client → Model</td>
+<td>messages + tools in ordinary FC format</td>
+</tr>
+<tr>
+<td>Model → Host application containing an MCP Client (return)</td>
+<td>tool_calls in ordinary FC output</td>
+</tr>
+<tr>
+<td>Note: Model</td>
+<td>This bridge does not require; understanding MCP transport</td>
+</tr>
+<tr>
+<td>Host application containing an MCP Client → MCP Server</td>
+<td>tools/call routed to the appropriate Server</td>
+</tr>
+<tr>
+<td>MCP Server → Host application containing an MCP Client (return)</td>
+<td>Execution result</td>
+</tr>
+<tr>
+<td>Host application containing an MCP Client → Model</td>
+<td>Supply the tool result in the model API format</td>
+</tr>
+<tr>
+<td>Model → Host application containing an MCP Client (return)</td>
+<td>Final answer</td>
+</tr>
+</tbody>
+</table>
 <p>From the model's perspective, this is ordinary function calling. Capability discovery, schema conversion, call routing, and result delivery happen in the Host. The bridge is common, but not required by the MCP specification.</p>
 <p>Following this integration path gives two conclusions:</p>
 <ol>
@@ -9451,20 +9532,30 @@
 <p>These dimensions matter more than tool code size. A function of a few dozen lines need not become a separate service; one valuable tool reused by multiple Hosts may justify standardization.</p>
 <p><strong>An agent needs several independent tool sources.</strong> MCP can integrate code execution, filesystems, databases, and external APIs as modules. “We are building an agent” is not itself a selection criterion. Keep existing interfaces if they already meet reuse and governance needs.</p>
 <h3 id="643-a-decision-flow"><span id="643" class="legacy-heading-anchor" aria-hidden="true"></span>6.4.3 A decision flow<a class="headerlink" href="#643-a-decision-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    START{Integrate a tool} --&gt; Q1{Is there an existing&lt;br/&gt;community MCP Server?}
-    Q1 --&gt;|Yes| USE_MCP["Review maintenance, permissions,&lt;br/&gt;and version compatibility before reuse"]
-    Q1 --&gt;|No| Q2{Must it be reused across&lt;br/&gt;projects or teams?}
-    Q2 --&gt;|Yes| BUILD_MCP["Implement an MCP Server"]
-    Q2 --&gt;|No| Q3{Can an existing local function&lt;br/&gt;or API meet the need?}
-    Q3 --&gt;|Yes| USE_FC["Implement or keep a local function / API&lt;br/&gt;Optionally drive it with function calling"]
-    Q3 --&gt;|No| Q4{Do you still need standard discovery&lt;br/&gt;and interoperability across Hosts?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    START["Integrate a tool"] --&gt; Q1["Existing MCP&lt;br/&gt;server?"]
+    Q1 --&gt;|Yes| USE_MCP["Review before&lt;br/&gt;reuse"]
+    Q1 --&gt;|No| Q2["Cross-team&lt;br/&gt;reuse?"]
+    Q2 --&gt;|Yes| BUILD_MCP["Implement an MCP&lt;br/&gt;Server"]
+    Q2 --&gt;|No| Q3["Local API&lt;br/&gt;sufficient?"]
+    Q3 --&gt;|Yes| USE_FC["Local function /&lt;br/&gt;API"]
+    Q3 --&gt;|No| Q4["Need&lt;br/&gt;interoperability?"]
     Q4 --&gt;|Yes| BUILD_MCP
     Q4 --&gt;|No| USE_FC
 
     style USE_MCP fill:#e6f4ea
     style BUILD_MCP fill:#e6f4ea
     style USE_FC fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Is there an existing community MCP Server?</li>
+<li>Review maintenance, permissions, and version compatibility before reuse</li>
+<li>Must it be reused across projects or teams?</li>
+<li>Can an existing local function or API meet the need?</li>
+<li>Implement or keep a local function / API Optionally drive it with function calling</li>
+<li>Do you still need standard discovery and interoperability across Hosts?</li>
+</ul>
 <h3 id="644-combining-them-is-normal"><span id="644" class="legacy-heading-anchor" aria-hidden="true"></span>6.4.4 Combining them is normal<a class="headerlink" href="#644-combining-them-is-normal" title="Permanent link">&para;</a></h3>
 <p>Real projects commonly <strong>combine</strong> the approaches rather than choose just one:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Shared capabilities via MCP: reuse community filesystem, GitHub, and database tools</span>
@@ -9489,7 +9580,7 @@
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>This is illustrative configuration. Replace the entry point with an installed, reviewed, version-pinned program. Whether the Host needs a restart depends on the product. The directory argument configures the filesystem Server implementation; it is <strong>not the Roots protocol itself</strong>. Roots are context hints, not an enforced sandbox, and are deprecated in 2026-07-28. Filesystem access still needs Server-side path validation and OS isolation.</p>
-<p>The old <code>@modelcontextprotocol/server-github</code> is archived; see <a href="https://github.com/github/github-mcp-server">github/github-mcp-server</a> for GitHub's official implementation. Inject tokens through a credential manager or controlled environment; do not commit them to a configuration repository.</p>
+<p>The old <code>@modelcontextprotocol/server-github</code> is archived; see github/github-mcp-server<sup><a href="../../../book/references/#ref-284">【284】</a></sup> for GitHub's official implementation. Inject tokens through a credential manager or controlled environment; do not commit them to a configuration repository.</p>
 <h3 id="652-write-a-server"><span id="652-server" class="legacy-heading-anchor" aria-hidden="true"></span>6.5.2 Write a Server<a class="headerlink" href="#652-write-a-server" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
@@ -9573,15 +9664,8 @@
 <li><strong>Combining approaches is valid.</strong> One Host can route MCP Tools, existing APIs, and local functions.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol documentation</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/develop/build-server">MCP Server development quickstart</a></li>
-<li><a href="https://github.com/modelcontextprotocol/servers">MCP Servers official examples</a></li>
-<li><a href="https://github.com/modelcontextprotocol/servers-archived">Archived MCP examples</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/client/roots">MCP Roots: deprecation and the absence of a security boundary</a></li>
-<li><a href="https://platform.openai.com/docs/guides/function-calling">OpenAI: Function calling guide</a></li>
-<li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9604,7 +9688,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

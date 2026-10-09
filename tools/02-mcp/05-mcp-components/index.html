@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: The Three Layers of MCP","description":"Breaks MCP into roles, capabilities, and transports, explaining per-request metadata, MRTR input, and deprecated features in version 2026-07-28.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/05-mcp-components/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: The Three Layers of MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/05-mcp-components/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: The Three Layers of MCP","description":"Breaks MCP into roles, capabilities, and transports, explaining per-request metadata, MRTR input, and deprecated features in version 2026-07-28.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/05-mcp-components/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: The Three Layers of MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/05-mcp-components/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 5: The Three Layers of MCP","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/05-mcp-components/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9366,20 +9391,32 @@
 <h2 id="51-use-three-layers-to-organize-the-concepts"><span id="51" class="legacy-heading-anchor" aria-hidden="true"></span>5.1 Use three layers to organize the concepts<a class="headerlink" href="#51-use-three-layers-to-organize-the-concepts" title="Permanent link">&para;</a></h2>
 <p>For a newcomer, MCP's vocabulary can be overwhelming: Host, Client, Server, Tools, Resources, Prompts, JSON-RPC, stdio, Streamable HTTP, sampling, elicitation, roots…</p>
 <p>This chapter organizes those concepts into three perspectives: roles, capabilities, and transports. These are teaching categories, not three separate processes or a mandatory dependency hierarchy.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph L1["Layer 1 · Roles: who communicates with whom"]
-        A["Host ── Client ── Server"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph L1["1 · Roles"]
+        direction TB
+        A["Host ── Client&lt;br/&gt;── Server"]
     end
 
-    subgraph L2["Layer 2 · Capabilities: what a Server can provide"]
-        B["Tools / Resources / Prompts&lt;br/&gt;+ Client input capabilities"]
+    subgraph L2["2 · Capabilities"]
+        direction TB
+        B["Tools /&lt;br/&gt;Resources /&lt;br/&gt;Prompts"]
     end
 
-    subgraph L3["Layer 3 · Transports: how messages travel"]
-        C["JSON-RPC 2.0 message format&lt;br/&gt;+ stdio / Streamable HTTP transports"]
+    subgraph L3["3 · Transports"]
+        direction TB
+        C["JSON-RPC 2.0&lt;br/&gt;message format"]
     end
 
     L1 --&gt; L2 --&gt; L3</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Layer 1 · Roles: who communicates with whom</li>
+<li>Layer 2 · Capabilities: what a Server can provide</li>
+<li>Tools / Resources / Prompts + Client input capabilities</li>
+<li>Layer 3 · Transports: how messages travel</li>
+<li>JSON-RPC 2.0 message format + stdio / Streamable HTTP transports</li>
+</ul>
 <p>Decoupling means that a transport can change without changing core capability semantics, and capabilities can expand without rewriting the role model.</p>
 <h2 id="52-layer-1-roles"><span id="52" class="legacy-heading-anchor" aria-hidden="true"></span>5.2 Layer 1: roles<a class="headerlink" href="#52-layer-1-roles" title="Permanent link">&para;</a></h2>
 <h3 id="521-what-each-role-does"><span id="521" class="legacy-heading-anchor" aria-hidden="true"></span>5.2.1 What each role does<a class="headerlink" href="#521-what-each-role-does" title="Permanent link">&para;</a></h3>
@@ -9412,21 +9449,22 @@
 <p>The Host chooses providers, the Client encapsulates protocol interactions, and the Server supplies capabilities. The Server must care about authenticated identity and tenancy, but does not need to know which model or orchestration framework the caller uses internally.</p>
 <h3 id="522-one-to-one-connections-help-isolation-but-do-not-guarantee-security"><span id="522" class="legacy-heading-anchor" aria-hidden="true"></span>5.2.2 One-to-one connections help isolation but do not guarantee security<a class="headerlink" href="#522-one-to-one-connections-help-isolation-but-do-not-guarantee-security" title="Permanent link">&para;</a></h3>
 <p>A Host often creates a separate Client/connection for each Server to manage lifecycle, authentication, and failures independently. The specification does not thereby isolate the Server's filesystem, network, or process permissions.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph GOOD["Separate Clients / connections"]
-        H1[Host] --&gt; C1[Client 1] --&gt; S1[Financial data Server]
-        H1 --&gt; C2[Client 2] --&gt; S2[Third-party tool Server]
-        NOTE1["Manage versions, authentication,&lt;br/&gt;failures, and lifecycles separately"]
-    end
-
-    subgraph BOUNDARY["Actual security boundaries"]
-        P["Host policies"] --&gt; R["Process / container permissions"]
-        P --&gt; N["Network egress and data filtering"]
-        P --&gt; A["User authorization and auditing"]
-    end
-
-    style GOOD fill:#e6f4ea
-    style BOUNDARY fill:#fff3cd</code></pre>
+<p><strong>Separate Clients / connections</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        H1["Host"] --&gt; C1["Client 1"] --&gt; S1["Financial data&lt;br/&gt;Server"]
+        H1 --&gt; C2["Client 2"] --&gt; S2["Third-party tool&lt;br/&gt;Server"]</code></pre>
+<p><strong>Actual security boundaries</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        P["Host policies"] --&gt; R["Process permissions"]
+        P --&gt; N["Network controls"]
+        P --&gt; A["User authorization"]</code></pre>
+<p>These boundaries include process and container permissions, network egress and data filtering, and user authorization with auditing. Separate connections make versions, authentication, failures, and lifecycles easier to manage independently; they do not establish those security boundaries by themselves.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Manage versions, authentication, failures, and lifecycles separately</li>
+</ul>
 <p>For third-party Servers, the Host should also apply least privilege, process/container isolation, network egress controls, and argument filtering. These runtime policies are what restrict what a Server can read and execute.</p>
 <h3 id="523-host-and-server-enforce-authorization-separately"><span id="523-host-server" class="legacy-heading-anchor" aria-hidden="true"></span>5.2.3 Host and Server enforce authorization separately<a class="headerlink" href="#523-host-and-server-enforce-authorization-separately" title="Permanent link">&para;</a></h3>
 <p>People often conflate Host and Client. The Client handles communication and forwarding; the Host retains authorization and policy decisions.</p>
@@ -9481,13 +9519,13 @@
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>{"method": "prompts/get"}         // Expand a template
 </span></code></pre></div>
 <p>These are method names, not complete requests. <code>*/list</code> operations may be paginated. Cacheable results in 2026-07-28 carry <code>ttlMs</code> and <code>cacheScope</code>; Clients can subscribe to list changes through <code>subscriptions/listen</code>. Caches must be isolated by authorization context: one tenant's tool list cannot be reused for another tenant.</p>
-<p>The <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Tools specification</a> distinguishes requirements of different strengths:</p>
+<p>The Tools specification<sup><a href="../../../book/references/#ref-285">【285】</a></sup> distinguishes requirements of different strengths:</p>
 <ul>
 <li>The tool set <strong>MUST NOT</strong> vary with connection state or the side effects of other requests on that connection. It <strong>MAY</strong> change over time or according to the authorization supplied with the current request.</li>
 <li>If the set has not changed, the Server <strong>SHOULD</strong> return tools in deterministic order to support list caching and model-prefix caching. Alphabetical order is not required.</li>
 <li>The <code>tools.listChanged</code> capability still exists. A Server declaring it <strong>SHOULD</strong> send <code>notifications/tools/list_changed</code> to Clients that requested <code>notifications.toolsListChanged: true</code> through <code>subscriptions/listen</code>, not broadcast to every connection.</li>
 </ul>
-<p>The <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/subscriptions">subscription specification</a> requires <code>notifications/subscriptions/acknowledged</code> first. Its filter describes the subset the Server actually accepted. The Client should check it rather than equate submitting a subscription with success. Notifications on the stream carry <code>_meta.io.modelcontextprotocol/subscriptionId</code> for correlation. Change notifications do not contain the complete new list: call <code>tools/list</code> again and review new or changed definitions.</p>
+<p>The subscription specification<sup><a href="../../../book/references/#ref-289">【289】</a></sup> requires <code>notifications/subscriptions/acknowledged</code> first. Its filter describes the subset the Server actually accepted. The Client should check it rather than equate submitting a subscription with success. Notifications on the stream carry <code>_meta.io.modelcontextprotocol/subscriptionId</code> for correlation. Change notifications do not contain the complete new list: call <code>tools/list</code> again and review new or changed definitions.</p>
 <h3 id="532-an-easily-missed-fourth-category-the-server-needs-client-input"><span id="532-server-client" class="legacy-heading-anchor" aria-hidden="true"></span>5.3.2 An easily missed fourth category: the Server needs Client input<a class="headerlink" href="#532-an-easily-missed-fourth-category-the-server-needs-client-input" title="Permanent link">&para;</a></h3>
 <p>The three capabilities above are what the Server <strong>provides</strong> to the Client. During execution, however, a Server may need model inference or additional information from the user. In 2026-07-28, the Server no longer initiates a reverse JSON-RPC request. Instead, it returns <code>InputRequiredResult</code> in the current response; the Client handles it and resends the original request with the input.</p>
 <table>
@@ -9516,31 +9554,70 @@
 </tr>
 </tbody>
 </table>
-<p>These statuses follow the <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">2026-07-28 changelog</a>: Sampling, Roots, and Logging are deprecated, not removed. A Host supporting Sampling for compatibility must still constrain models, budgets, visible context, and returned data.</p>
+<p>These statuses follow the 2026-07-28 changelog<sup><a href="../../../book/references/#ref-277">【277】</a></sup>: Sampling, Roots, and Logging are deprecated, not removed. A Host supporting Sampling for compatibility must still constrain models, budgets, visible context, and returned data.</p>
 <h3 id="533-the-inputrequiredresult-round-trip-pattern"><span id="533-inputrequiredresult" class="legacy-heading-anchor" aria-hidden="true"></span>5.3.3 The InputRequiredResult round-trip pattern<a class="headerlink" href="#533-the-inputrequiredresult-round-trip-pattern" title="Permanent link">&para;</a></h3>
 <p>This pattern is called <strong>MRTR: Multi Round-Trip Requests</strong>. The direction remains Client request → Server response. When Client input is needed, the Server returns the input requirements and ends that response. The Client then supplies the input in a new request; the Server need not keep the original call stack suspended:</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant C as Client
-    participant S as Server
-
-    rect rgb(230, 244, 234)
-    Note over C,S: Server needs additional user information
-    C-&gt;&gt;S: tools/call
-    S--&gt;&gt;C: InputRequiredResult(elicitation/create)
-    C-&gt;&gt;C: Host displays the request and collects user input
-    C-&gt;&gt;S: New request ID, original params + inputResponses + requestState
-    S--&gt;&gt;C: Tool result
-    end</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["tools/call"]
+    S1["Input required"]
+    S2["Host collects input"]
+    S3["Resubmit request"]
+    S4["Tool result"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Note: Client, Server</td>
+<td>Server needs additional user information</td>
+</tr>
+<tr>
+<td>Client → Server</td>
+<td>tools/call</td>
+</tr>
+<tr>
+<td>Server → Client (return)</td>
+<td>InputRequiredResult(elicitation/create)</td>
+</tr>
+<tr>
+<td>Client → Client</td>
+<td>Host displays the request and collects user input</td>
+</tr>
+<tr>
+<td>Client → Server</td>
+<td>New request ID, original params + inputResponses + requestState</td>
+</tr>
+<tr>
+<td>Server → Client (return)</td>
+<td>Tool result</td>
+</tr>
+</tbody>
+</table>
 <p>Not every Server uses these capabilities. The Host should declare permitted Client capabilities on each request and include user interaction, model access, budgets, and data boundaries in its authorization policy.</p>
 <p><code>InputRequiredResult.resultType</code> is <code>input_required</code>. The Client supplies <code>inputResponses</code> matching the keys in <code>inputRequests</code> and echoes <code>requestState</code> unchanged. That state is not trusted authorization: bind it to the caller, arguments, and expiry, and prevent repeated side effects when an input flow is replayed. An ordinary completed result has <code>resultType: complete</code>.</p>
 <h2 id="54-layer-3-transports"><span id="54" class="legacy-heading-anchor" aria-hidden="true"></span>5.4 Layer 3: transports<a class="headerlink" href="#54-layer-3-transports" title="Permanent link">&para;</a></h2>
 <h3 id="541-message-format-and-transport-are-decoupled"><span id="541" class="legacy-heading-anchor" aria-hidden="true"></span>5.4.1 Message format and transport are decoupled<a class="headerlink" href="#541-message-format-and-transport-are-decoupled" title="Permanent link">&para;</a></h3>
 <p>The design separates how a message is represented from how it travels:</p>
-<pre class="mermaid"><code>flowchart TB
-    MSG["JSON-RPC 2.0&lt;br/&gt;Message format: unchanged"]
-    MSG --&gt; T1["stdio&lt;br/&gt;Local subprocess"]
-    MSG --&gt; T2["Streamable HTTP&lt;br/&gt;Remote service"]
-    MSG --&gt; T3["Custom transport&lt;br/&gt;Extensions permitted by the specification"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    MSG["JSON-RPC 2.0"]
+    MSG --&gt; T1["stdio"]
+    MSG --&gt; T2["Streamable HTTP"]
+    MSG --&gt; T3["Custom&lt;br/&gt;transport"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>JSON-RPC 2.0 Message format: unchanged</li>
+<li>stdio Local subprocess</li>
+<li>Streamable HTTP Remote service</li>
+<li>Custom transport Extensions permitted by the specification</li>
+</ul>
 <p>Tool semantics can be reused across transports. Moving to a remote service still changes authentication, deployment, cancellation, isolation, and connection-failure handling; it is not necessarily a configuration-only change. The current HTTP and stdio cancellation mechanisms also differ.</p>
 <h3 id="542-the-two-main-transports"><span id="542" class="legacy-heading-anchor" aria-hidden="true"></span>5.4.2 The two main transports<a class="headerlink" href="#542-the-two-main-transports" title="Permanent link">&para;</a></h3>
 <table>
@@ -9587,34 +9664,106 @@
 <p>One practical detail: in stdio mode, <strong>stdout is reserved for protocol messages</strong>. Any debug <code>print</code> can contaminate the stream and cause parsing failures. Write logs to stderr—this is one of the most common mistakes when writing a first MCP Server.</p>
 <p>For full transport details, including the transition from HTTP + SSE to Streamable HTTP, see <a href="../12-mcp-transport/">Chapter 12</a>.</p>
 <h2 id="55-putting-the-three-layers-together-a-complete-call"><span id="55" class="legacy-heading-anchor" aria-hidden="true"></span>5.5 Putting the three layers together: a complete call<a class="headerlink" href="#55-putting-the-three-layers-together-a-complete-call" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User
-    participant H as Host
-    participant C as Client
-    participant S as Server
-    participant M as LLM
-
-    Note over H,S: Optional discovery phase
-    H-&gt;&gt;C: Create a Client connected to the GitHub Server
-    C-&gt;&gt;S: server/discover
-    S--&gt;&gt;C: Supported versions and capabilities
-    C-&gt;&gt;S: tools/list
-    S--&gt;&gt;C: [create_issue, search_repos, ...]
-    C-&gt;&gt;H: Consolidated tool list
-
-    Note over H,M: Execution phase
-    U-&gt;&gt;H: File a bug issue for me
-    H-&gt;&gt;M: messages + tool schemas filtered by authorization and task
-    M--&gt;&gt;H: tool_calls: create_issue(...)
-    H-&gt;&gt;U: Confirm creation of the issue
-    U-&gt;&gt;H: Approve
-    H-&gt;&gt;C: Forward the call
-    C-&gt;&gt;S: tools/call
-    S--&gt;&gt;C: {"issue_url": "..."}
-    C-&gt;&gt;H: Result
-    H-&gt;&gt;M: Supply the tool result in the model API format
-    M--&gt;&gt;H: Issue created, here is the link...
-    H-&gt;&gt;U: Final answer</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Discover tools"]
+    S1["Filter schemas"]
+    S2["Model proposes call"]
+    S3["User approves"]
+    S4["Host calls server"]
+    S5["Return answer"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Note: Host, Server</td>
+<td>Optional discovery phase</td>
+</tr>
+<tr>
+<td>Host → Client</td>
+<td>Create a Client connected to the GitHub Server</td>
+</tr>
+<tr>
+<td>Client → Server</td>
+<td>server/discover</td>
+</tr>
+<tr>
+<td>Server → Client (return)</td>
+<td>Supported versions and capabilities</td>
+</tr>
+<tr>
+<td>Client → Server</td>
+<td>tools/list</td>
+</tr>
+<tr>
+<td>Server → Client (return)</td>
+<td>[create_issue, search_repos, ...]</td>
+</tr>
+<tr>
+<td>Client → Host</td>
+<td>Consolidated tool list</td>
+</tr>
+<tr>
+<td>Note: Host, LLM</td>
+<td>Execution phase</td>
+</tr>
+<tr>
+<td>User → Host</td>
+<td>File a bug issue for me</td>
+</tr>
+<tr>
+<td>Host → LLM</td>
+<td>messages + tool schemas filtered by authorization and task</td>
+</tr>
+<tr>
+<td>LLM → Host (return)</td>
+<td>tool_calls: create_issue(...)</td>
+</tr>
+<tr>
+<td>Host → User</td>
+<td>Confirm creation of the issue</td>
+</tr>
+<tr>
+<td>User → Host</td>
+<td>Approve</td>
+</tr>
+<tr>
+<td>Host → Client</td>
+<td>Forward the call</td>
+</tr>
+<tr>
+<td>Client → Server</td>
+<td>tools/call</td>
+</tr>
+<tr>
+<td>Server → Client (return)</td>
+<td>{"issue_url": "..."}</td>
+</tr>
+<tr>
+<td>Client → Host</td>
+<td>Result</td>
+</tr>
+<tr>
+<td>Host → LLM</td>
+<td>Supply the tool result in the model API format</td>
+</tr>
+<tr>
+<td>LLM → Host (return)</td>
+<td>Issue created, here is the link...</td>
+</tr>
+<tr>
+<td>Host → User</td>
+<td>Final answer</td>
+</tr>
+</tbody>
+</table>
 <p>Three points matter in this complete call:</p>
 <ol>
 <li><strong>If the Host uses model function calling</strong>, it can convert MCP Tools to the model's schema. Rules, structured output, or human actions can also invoke MCP; MCP does not mandate a model interface.</li>
@@ -9646,15 +9795,8 @@
 <li><strong>With stdio, stdout is exclusively for protocol messages.</strong> Logs must use stderr.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture">MCP architecture</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP specification 2026-07-28</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">MCP Server capabilities: Tools</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr">MCP Multi Round-Trip Requests</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/deprecated">MCP deprecated features</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">MCP transport specification</a></li>
-<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 specification</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-05">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9677,7 +9819,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

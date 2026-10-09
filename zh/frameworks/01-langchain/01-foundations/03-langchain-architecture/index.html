@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：LangChain v1 的底层架构","description":"沿消息、工具调用和状态流理解 LangChain v1 的协议、provider、中间件与 LangGraph 运行时职责。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/03-langchain-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：LangChain v1 的底层架构","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/03-langchain-architecture/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：LangChain v1 的底层架构","description":"沿消息、工具调用和状态流理解 LangChain v1 的协议、provider、中间件与 LangGraph 运行时职责。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/03-langchain-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：LangChain v1 的底层架构","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/03-langchain-architecture/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第三章：LangChain v1 的底层架构","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/03-langchain-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9463,17 +9488,26 @@
 </tbody>
 </table>
 <p><strong>可观测性贯穿各层</strong>，通过运行事件和 Trace 记录模型调用、工具调用、耗时和异常。</p>
-<pre class="mermaid"><code>flowchart TB
-    A["核心协议层&lt;br/&gt;Message / Runnable / Model / Tool"]
-    B["集成适配层&lt;br/&gt;各 Provider 独立包"]
-    C["Agent 开发层&lt;br/&gt;create_agent / Middleware / 结构化输出"]
-    D["编排运行层&lt;br/&gt;LangGraph Runtime"]
-    O["可观测性&lt;br/&gt;运行事件与 Trace"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["核心协议层"]
+    B["集成适配层"]
+    C["Agent 开发层"]
+    D["编排运行层"]
+    O["可观测性"]
     A --- B --- C --- D
     O -.贯穿.- A
     O -.贯穿.- D
 
     style O fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>核心协议层 Message / Runnable / Model / Tool</li>
+<li>集成适配层 各 Provider 独立包</li>
+<li>Agent 开发层 create_agent / Middleware / 结构化输出</li>
+<li>编排运行层 LangGraph Runtime</li>
+<li>可观测性 运行事件与 Trace</li>
+</ul>
 <p>这张图描述的是职责边界，不是严格的单向调用顺序。例如模型和编译后的 Agent 都遵循 Runnable 调用方式，但它们承担的架构角色不同。</p>
 <h2 id="33">3.3 协议如何统一数据与执行<a class="headerlink" href="#33" title="Permanent link">&para;</a></h2>
 <p>比起记类名，更重要的是看一条数据如何从用户走到模型，再进入业务系统。</p>
@@ -9518,16 +9552,21 @@
 </blockquote>
 <h2 id="34-agent-loop">3.4 Agent loop 如何运行<a class="headerlink" href="#34-agent-loop" title="Permanent link">&para;</a></h2>
 <p>Agent 与普通单次调用的区别，在于模型和工具之间可能反复多轮执行。</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     H["HumanMessage"] --&gt; M["Model"]
     M --&gt; A["AIMessage"]
-    A --&gt; D{"包含 tool_calls?"}
+    A --&gt; D["包含 tool_calls?"]
     D --&gt;|否| F["最终回答"]
     D --&gt;|是| T["Tool Runtime"]
-    T --&gt; TM["ToolMessage&lt;br/&gt;带 tool_call_id"]
+    T --&gt; TM["ToolMessage"]
     TM --&gt; M
 
     style F fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>ToolMessage 带 tool_call_id</li>
+</ul>
 <h3 id="341-tool_call_id">3.4.1 <code>tool_call_id</code> 为什么重要<a class="headerlink" href="#341-tool_call_id" title="Permanent link">&para;</a></h3>
 <p><strong>模型一轮可能请求多个工具</strong>，工具结果必须通过<strong>调用 ID 与原请求对应</strong>，模型才能知道每条结果属于哪次调用。</p>
 <h3 id="342-create_agent">3.4.2 <code>create_agent</code> 返回的是什么<a class="headerlink" href="#342-create_agent" title="Permanent link">&para;</a></h3>
@@ -9568,15 +9607,23 @@
 <h2 id="36-middleware">3.6 Middleware 做什么<a class="headerlink" href="#36-middleware" title="Permanent link">&para;</a></h2>
 <p>真实应用通常需要处理<strong>动态提示词、模型切换、工具筛选、重试、对话摘要、敏感信息和人工审批</strong>。</p>
 <p><strong>如果把这些逻辑全部塞进 Prompt 或 Tool，代码会很快纠缠在一起。</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    R["请求"] --&gt; M1["进入模型前&lt;br/&gt;按用户身份生成系统提示词&lt;br/&gt;历史过长先做摘要"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    R["请求"] --&gt; M1["进入模型前"]
     M1 --&gt; LLM["模型"]
-    LLM --&gt; M2["决定调工具后&lt;br/&gt;检查权限&lt;br/&gt;敏感动作暂停等审批"]
-    M2 --&gt; T["执行工具&lt;br/&gt;临时网络故障做有上限的重试"]
-    T --&gt; M3["结果返回后&lt;br/&gt;补格式或安全校验"]
+    LLM --&gt; M2["决定调工具后"]
+    M2 --&gt; T["执行工具"]
+    T --&gt; M3["结果返回后"]
     M3 --&gt; O["输出"]
 
     style M2 fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>进入模型前 按用户身份生成系统提示词 历史过长先做摘要</li>
+<li>决定调工具后 检查权限 敏感动作暂停等审批</li>
+<li>执行工具 临时网络故障做有上限的重试</li>
+<li>结果返回后 补格式或安全校验</li>
+</ul>
 <blockquote>
 <p><strong>Middleware 并不是另一套运行时。</strong> 它运行在 <code>create_agent</code> 编译出的 LangGraph 内部，对执行行为进行<strong>组合式扩展</strong>。</p>
 </blockquote>
@@ -9670,16 +9717,8 @@
 </ol>
 <p>可以顺着一次请求理解 LangChain v1：协议层统一了传什么和怎么执行，Agent 层组装出模型与工具的循环，LangGraph 让这个循环拥有状态、检查点和恢复能力，Middleware 则在关键位置提供扩展点。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/messages">LangChain: Messages 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/tools">LangChain: Tools 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 迁移指南</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/checkpointers">LangGraph Checkpointers：super-step 与 pending writes</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-03">集中参考资料章节</a>。</p>
 
 
 
@@ -9702,7 +9741,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

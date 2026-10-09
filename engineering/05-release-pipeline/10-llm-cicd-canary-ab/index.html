@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests","description":"Add offline evaluation to existing CI, isolate shadow-traffic side effects, and design staged rollouts and A/B tests with explicit measurement definitions and rollback scope.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/10-llm-cicd-canary-ab/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/10-llm-cicd-canary-ab/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests","description":"Add offline evaluation to existing CI, isolate shadow-traffic side effects, and design staged rollouts and A/B tests with explicit measurement definitions and rollback scope.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/10-llm-cicd-canary-ab/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/10-llm-cicd-canary-ab/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/10-llm-cicd-canary-ab/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9200,22 +9225,32 @@
 <h1 id="chapter-10-llm-cicd-staged-rollouts-canary-releases-and-ab-tests"><span id="llm-cicd-canaryab" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 10: LLM CI/CD, Staged Rollouts, Canary Releases, and A/B Tests<a class="headerlink" href="#chapter-10-llm-cicd-staged-rollouts-canary-releases-and-ab-tests" title="Permanent link">&para;</a></h1>
 <h2 id="101-what-does-an-llm-cicd-pipeline-look-like"><span id="101-llm-cicd" class="legacy-heading-anchor" aria-hidden="true"></span>10.1 What does an LLM CI/CD pipeline look like?<a class="headerlink" href="#101-what-does-an-llm-cicd-pipeline-look-like" title="Permanent link">&para;</a></h2>
 <p>LLM CI/CD <strong>adds</strong> an <a href="../../04-evaluation-observability/07-offline-eval-eval-driven-development/">offline evaluation gate</a> to unit, integration, authorization, and contract tests; it does not replace them. A quality regression may not raise an exception, so a release must also be assessed through business-quality signals, not merely whether the process is alive.</p>
-<pre class="mermaid"><code>flowchart LR
-    A["Submit a prompt / model / routing change"] --&gt; B["Automated offline evaluation&lt;br/&gt;(golden dataset + slice gates)"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Submit change"] --&gt; B["Automated&lt;br/&gt;offline&lt;br/&gt;evaluation"]
     B --&gt;|Fail| A
-    B --&gt;|Pass| C["Choose according to risk:&lt;br/&gt;isolated shadow test or controlled pilot"]
-    C --&gt; D["Small-traffic rollout: 5%-10%"]
-    D --&gt; E{"Do production metrics meet requirements?"}
-    E --&gt;|Yes| F{"Observation at full traffic complete?"}
-    E --&gt;|No| G["Automatic rollback"]
-    F --&gt;|No| NEXT["Advance to the next stage&lt;br/&gt;25% → 50% → 100%"]
+    B --&gt;|Pass| C["Risk-based pilot"]
+    C --&gt; D["Small-traffic&lt;br/&gt;rollout: 5%-10%"]
+    D --&gt; E["Metrics pass?"]
+    E --&gt;|Yes| F["Full-traffic&lt;br/&gt;checks done?"]
+    E --&gt;|No| G["Automatic&lt;br/&gt;rollback"]
+    F --&gt;|No| NEXT["Advance to the&lt;br/&gt;next stage"]
     NEXT --&gt; E
-    F --&gt;|Yes| H["Complete the full rollout"]
+    F --&gt;|Yes| H["Complete the&lt;br/&gt;full rollout"]
     G --&gt; A
 
     style B fill:#fff3cd
     style E fill:#fff3cd
     style G fill:#fce8e6</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Submit a prompt / model / routing change</li>
+<li>Automated offline evaluation (golden dataset + slice gates)</li>
+<li>Choose according to risk: isolated shadow test or controlled pilot</li>
+<li>Do production metrics meet requirements?</li>
+<li>Observation at full traffic complete?</li>
+<li>Advance to the next stage 25% → 50% → 100%</li>
+</ul>
 <h2 id="102-shadow-testing-expose-the-new-version-to-traffic-without-serving-its-answers"><span id="102-shadow" class="legacy-heading-anchor" aria-hidden="true"></span>10.2 Shadow testing: expose the new version to traffic without serving its answers<a class="headerlink" href="#102-shadow-testing-expose-the-new-version-to-traffic-without-serving-its-answers" title="Permanent link">&para;</a></h2>
 <p>Before switching live traffic, a new version—a new prompt or model—can receive a copy of production traffic and <strong>produce results without returning them to users</strong>, solely for offline comparison:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -9327,14 +9362,8 @@
 <li><strong>Rollback should be fast and automated.</strong> Restore a complete versioned snapshot from the registry, not just one component.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://martinfowler.com/bliki/CanaryRelease.html">Martin Fowler: CanaryRelease</a></li>
-<li><a href="https://sre.google/workbook/canarying-releases/">Google SRE Workbook: Canarying Releases</a></li>
-<li><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">SciPy: ttest_ind, independent samples, and Welch’s test assumptions</a></li>
-<li><a href="https://martinfowler.com/articles/cd4ml.html">Martin Fowler: Continuous Delivery for Machine Learning</a></li>
-<li><a href="https://spinnaker.io/docs/guides/user/canary/">Spinnaker: Canary Analysis</a></li>
-<li><a href="https://www.optimizely.com/optimization-glossary/statistical-significance/">Optimizely: Statistical significance in A/B testing</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-10">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9357,7 +9386,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

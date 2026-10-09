@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Skills and MCP","description":"Compare the MCP communication protocol with the Agent Skills file format, distinguish discovery from context loading, and examine dependencies, scripts, and authorization boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/09-skill-vs-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Skills and MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/09-skill-vs-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Skills and MCP","description":"Compare the MCP communication protocol with the Agent Skills file format, distinguish discovery from context loading, and examine dependencies, scripts, and authorization boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/09-skill-vs-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Skills and MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/09-skill-vs-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: Skills and MCP","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/09-skill-vs-mcp/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9297,22 +9322,22 @@
 </table>
 <h2 id="92-their-roles-in-a-concrete-task"><span id="92" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 Their roles in a concrete task<a class="headerlink" href="#92-their-roles-in-a-concrete-task" title="Permanent link">&para;</a></h2>
 <p>The task is: <strong>review this PR</strong>.</p>
-<pre class="mermaid"><code>flowchart TB
-    TASK["User: Review this PR"] --&gt; AGENT[Agent]
-
-    AGENT --&gt;|"Discover and load automatically"| SKILL["code-review Skill&lt;br/&gt;What to read first, four review dimensions,&lt;br/&gt;and the output format"]
-
-    SKILL --&gt; H["Host follows the instructions&lt;br/&gt;and checks authorization and results"]
-    H --&gt;|"Step 1: Get the diff"| M1["GitHub MCP Server&lt;br/&gt;get_pull_request_diff"]
-    H --&gt;|"Step 2: Run a static scan"| SC["Script bundled with the Skill&lt;br/&gt;scripts/check_security.py"]
-    H --&gt;|"Step 3: Look up past defects"| M2["Internal knowledge-base MCP Server&lt;br/&gt;search_past_incidents"]
-    H --&gt;|"Step 4: Use the output template"| TPL["Template bundled with the Skill&lt;br/&gt;assets/report_template.md"]
-
-    TPL --&gt; OUT[Structured review report]
-
-    style SKILL fill:#e6f4ea
-    style M1 fill:#e8f0fe
-    style M2 fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    SKILL["Load review Skill"] --&gt; DIFF["Get PR diff"]
+    DIFF --&gt; SCAN["Run static scan"]
+    SCAN --&gt; HISTORY["Check past defects"]
+    HISTORY --&gt; REPORT["Write review report"]</code></pre>
+<p>For “Review this PR,” the agent discovers and loads the <code>code-review</code> Skill. Its instructions specify what to read first, four review dimensions, and the output format; the host enforces authorization and checks results. Step 1 calls <code>get_pull_request_diff</code> on the GitHub MCP Server. Step 2 runs the bundled <code>scripts/check_security.py</code>. Step 3 calls <code>search_past_incidents</code> on the internal knowledge-base MCP Server. Step 4 uses <code>assets/report_template.md</code> to produce the structured report. The Skill supplies the procedure; MCP servers, a local script, and a template supply different parts of its implementation.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>code-review Skill What to read first, four review dimensions, and the output format</li>
+<li>Host follows the instructions and checks authorization and results</li>
+<li>GitHub MCP Server get_pull_request_diff</li>
+<li>Script bundled with the Skill scripts/check_security.py</li>
+<li>Internal knowledge-base MCP Server search_past_incidents</li>
+<li>Template bundled with the Skill assets/report_template.md</li>
+</ul>
 <p>Consider each mechanism separately:</p>
 <ul>
 <li><strong>Without MCP</strong>, the agent can still read the diff through the GitHub API, a CLI, or an embedded tool. What is missing is integration through a common protocol, not all external capabilities.</li>
@@ -9369,32 +9394,47 @@
 <h3 id="932-an-often-overlooked-difference-loading"><span id="932" class="legacy-heading-anchor" aria-hidden="true"></span>9.3.2 An often-overlooked difference: loading<a class="headerlink" href="#932-an-often-overlooked-difference-loading" title="Permanent link">&para;</a></h3>
 <p>The result of MCP's <code>tools/list</code> is not the model's context. A host can fetch pages, cache results according to authorization, and then retrieve a small set of relevant definitions or defer loading them. Injecting every tool is a policy chosen by some implementations, not a protocol requirement.</p>
 <p>Skills recommend progressive disclosure, but their metadata grows with the number installed. A verbose Skill can still consume substantial context once loaded.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph MCP_L["MCP loading"]
-        M1[Known servers] --&gt; M2[tools/list pagination and caching]
-        M2 --&gt; M3["Host filters by authorization and task&lt;br/&gt;before injecting tool definitions"]
-    end
-
-    subgraph SKILL_L["Skill loading"]
-        S1[Scan Skill directories] --&gt; S2["Read only name + description"]
-        S2 --&gt; S3{Does the task match?}
-        S3 --&gt;|Yes| S4[Load the body]
-        S3 --&gt;|No| S5[Keep only discovery metadata]
-    end
-
-    style M3 fill:#fce8e6
+<p><strong>MCP loading</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["Known servers"] --&gt; M2["tools/list pagination&lt;br/&gt;and caching"]
+        M2 --&gt; M3["Host filters tools"]
+    style M3 fill:#fce8e6</code></pre>
+<p><strong>Skill loading</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["Scan Skill directories"] --&gt; S2["Read only name +&lt;br/&gt;description"]
+        S2 --&gt; S3["Does the task match?"]
+        S3 --&gt;|Yes| S4["Load the body"]
+        S3 --&gt;|No| S5["Keep only discovery&lt;br/&gt;metadata"]
     style S5 fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Host filters by authorization and task before injecting tool definitions</li>
+</ul>
 <p>Both have discovery costs and runtime context-injection costs. Tool search can defer exposure of complete schemas, while Skills still need a discoverable catalog. Compare actual model input, not just the number of servers or directories.</p>
 <p>For both tools and Skills, test routing recall, false activations, context budgets, and authorization. See <a href="../../01-function-calling/03-tool-schema-design/">dynamic tool selection</a> for related methods.</p>
 <h2 id="94-when-to-use-each"><span id="94" class="legacy-heading-anchor" aria-hidden="true"></span>9.4 When to use each<a class="headerlink" href="#94-when-to-use-each" title="Permanent link">&para;</a></h2>
 <p>Start with the kind of addition you need:</p>
-<pre class="mermaid"><code>flowchart TB
-    Q{"What do you want&lt;br/&gt;to add to the agent?"}
-    Q --&gt;|"Access to external systems&lt;br/&gt;(databases, APIs, files)"| MCP["One option: implement or connect an MCP server"]
-    Q --&gt;|"A method for a class of tasks&lt;br/&gt;(steps, standards, formats)"| SKILL["Write a Skill"]
-    Q --&gt;|"Both"| BOTH["Host orchestrates MCP tools&lt;br/&gt;following Skill instructions"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    Q["What is needed?"]
+    Q --&gt;|"System access"| MCP["Consider MCP"]
+    Q --&gt;|"Procedure"| SKILL["Write a Skill"]
+    Q --&gt;|"Both"| BOTH["Combine both"]
 
     style BOTH fill:#e6f4ea</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Access to external systems (databases, APIs, files)</li>
+<li>A method for a class of tasks (steps, standards, formats)</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>What do you want to add to the agent?</li>
+<li>One option: implement or connect an MCP server</li>
+<li>Host orchestrates MCP tools following Skill instructions</li>
+</ul>
 <p>Some concrete examples:</p>
 <table>
 <thead>
@@ -9429,21 +9469,16 @@
 <p>The central question is whether you are delivering a common remote capability interface or a loadable package of procedural knowledge. Network access and authentication do not create a clean dividing line: Skill scripts can access APIs through controlled tools, and MCP can return static documents and prompt templates.</p>
 <h2 id="95-how-they-work-together"><span id="95" class="legacy-heading-anchor" aria-hidden="true"></span>9.5 How they work together<a class="headerlink" href="#95-how-they-work-together" title="Permanent link">&para;</a></h2>
 <p>A typical combination uses <strong>layers</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph LAYER1["Procedure layer · Skill"]
-        SK["Defines steps, standards, and output formats&lt;br/&gt;Specifies the order of work"]
-    end
-
-    subgraph LAYER2["Capability layer · MCP"]
-        T1[Database Server]
-        T2[GitHub Server]
-        T3[Filesystem Server]
-    end
-
-    SK --&gt; H["Host orchestration and authorization checks"]
-    H --&gt; T1
-    H --&gt; T2
-    H --&gt; T3</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    SK["Skill procedure"] --&gt; H["Host authorization"]
+    H --&gt; MCP["MCP capabilities"]</code></pre>
+<p>The Skill defines steps, standards, output formats, and their order. The host orchestrates and authorizes calls to the capability layer, represented here by database, GitHub, and filesystem MCP Servers. A procedure never grants permissions by itself.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Defines steps, standards, and output formats Specifies the order of work</li>
+<li>Host orchestration and authorization checks</li>
+</ul>
 <p>It is natural to reference MCP tools directly in <code>SKILL.md</code>. This Chinese instruction example first requests the PR diff, requires module-by-module review with coverage tracking if it exceeds the context budget, and forbids silently skipping configuration, dependencies, or other directories. It then asks for production incidents involving those files during the past six months:</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## 第一步：获取数据</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>使用 GitHub MCP 的 <span class="sb">`get_pull_request_diff`</span> 拿到本次变更内容。
@@ -9487,14 +9522,8 @@
 <li><strong>Authorization and business invariants must be enforced server-side</strong>, not left solely to natural-language procedures.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/news/skills">Anthropic: Introducing Agent Skills</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills specification</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol official documentation</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">MCP 2026-07-28 tool discovery and schemas</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping Agents for the Real World with Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective Context Engineering for AI Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9517,7 +9546,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

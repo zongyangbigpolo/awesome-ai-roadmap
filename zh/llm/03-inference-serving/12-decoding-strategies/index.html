@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：解码策略","description":"区分贪心、束搜索与采样的优化目标，说明长度偏置、约束解码、推测解码的分布保持条件及多路径推理的成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/12-decoding-strategies/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：解码策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/12-decoding-strategies/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：解码策略","description":"区分贪心、束搜索与采样的优化目标，说明长度偏置、约束解码、推测解码的分布保持条件及多路径推理的成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/12-decoding-strategies/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：解码策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/12-decoding-strategies/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十二章：解码策略","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/12-decoding-strategies/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9301,15 +9326,13 @@
 s(y_{1:n})=\sum_{t=1}^{n}\log p(y_t\mid x,y_1,\ldots,y_{t-1})
 \]</div>
 <p>t=1 时，条件中没有已生成 token。使用对数避免长序列概率连乘下溢；加入长度惩罚或约束后，搜索的就不再是原始序列概率。</p>
-<pre class="mermaid"><code>flowchart TB
-    S["开始：一条前缀"] --&gt; E["展开活动 beam 的下一 token 候选"]
-    E --&gt; EOS{"候选是否结束？"}
-    EOS --&gt;|EOS| F["进入已完成候选集合"]
-    EOS --&gt;|未结束| B["按累计分数保留 B 条活动前缀"]
-    B --&gt; STOP{"达到停止条件？"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["展开活动 beam"] --&gt; B["分离 EOS；裁剪活动前缀"]
+    B --&gt; STOP{"停止？"}
     STOP --&gt;|否| E
-    STOP --&gt;|是| R["按指定评分返回完成序列"]
-    F --&gt; R</code></pre>
+    STOP --&gt;|是| R["对完成序列排序"]</code></pre>
+<p>从一条前缀开始，每轮展开活动 beam 的下一 token 候选。将 EOS 候选移入已完成集合；未结束的候选按累计分数保留 B 条前缀。未达到停止条件就继续展开，终止后按指定评分规则返回完成序列。某个候选遇到 EOS，并不等于所有 beam 立即停止。</p>
 <p>图中省略了实现对完成集合的裁剪。EOS 候选不应继续像活动前缀那样扩展；<code>early_stopping</code>、最大长度和完成序列的评分方式都会影响最终结果。</p>
 <h3 id="1231">12.3.1 更大的束宽为何未必更好<a class="headerlink" href="#1231" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9443,15 +9466,8 @@ r(x)=\frac{\max(0,p(x)-q(x))}{\sum_y\max(0,p(y)-q(y))}
 <h2 id="129">12.9 本章总结<a class="headerlink" href="#129" title="Permanent link">&para;</a></h2>
 <p>选择规则、序列评分、输出约束和执行加速是不同层次。贪心做局部选择，束搜索近似搜索，采样探索候选；推测解码在条件满足时保持目标分布，Self-Consistency 则改变最终答案的聚合方式。评价应落到正确率、格式通过率、延迟与成本，而不是固定的温度或束宽口诀。</p>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1904.09751">The Curious Case of Neural Text Degeneration</a></li>
-<li><a href="https://arxiv.org/abs/2010.02650">If Beam Search Is the Answer, What Was the Question?</a></li>
-<li><a href="https://arxiv.org/html/2211.17192v2">Fast Inference from Transformers via Speculative Decoding</a></li>
-<li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2309.06180">PagedAttention：包含 beam search 的缓存共享设计</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-30B-A3B">Qwen3-30B-A3B 官方模型卡</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/batch_invariance/">vLLM：Batch Invariance</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-12">集中参考资料章节</a>。</p>
 
 
 
@@ -9474,7 +9490,7 @@ r(x)=\frac{\max(0,p(x)-q(x))}{\sum_y\max(0,p(y)-q(y))}
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

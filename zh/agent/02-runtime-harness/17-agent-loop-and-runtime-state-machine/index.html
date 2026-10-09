@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：Agent Loop 与运行时状态机","description":"将 Agent 循环拆成可恢复状态机，解释停止与成功的区别、审批恢复、流式调用、Handoff 和根任务预算。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：Agent Loop 与运行时状态机","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：Agent Loop 与运行时状态机","description":"将 Agent 循环拆成可恢复状态机，解释停止与成功的区别、审批恢复、流式调用、Handoff 和根任务预算。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：Agent Loop 与运行时状态机","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十七章：Agent Loop 与运行时状态机","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9155,26 +9180,16 @@
 </table>
 <p>这是教学用的最小集合，不是所有框架统一的字段规范。生产系统还可能保存结构化计划、验收状态、身份、审批和操作幂等键；运行时应校验依赖、不变量与完成条件，而非只搬运消息和计数。</p>
 <h2 id="173-turn">17.3 一次 Turn 内部的状态转移<a class="headerlink" href="#173-turn" title="Permanent link">&para;</a></h2>
-<p>Claude Agent SDK 把每一轮的内部结构描述为四步循环："Receive prompt → Evaluate and respond → Execute tools → Repeat"，其中第 2、3 步反复进行，直到模型给出不带工具调用的最终输出（<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK: How the agent loop works</a>）。OpenAI Agents SDK 的 <code>Runner</code> 用同样的结构描述内部循环：调用模型 → 若输出是最终结果则退出；若请求 handoff 则切换当前 agent 并重新进入循环；若请求工具调用则执行并把结果并回，再次调用模型（<a href="https://openai.github.io/openai-agents-python/running_agents/">OpenAI Agents SDK: Running agents</a>）。抽象成状态机：</p>
-<pre class="mermaid"><code>stateDiagram-v2
-    [*] --&gt; Init
-    Init --&gt; ModelCall: 装配上下文（18 章）
-    ModelCall --&gt; Deciding: 收到模型输出
-    Deciding --&gt; FinalOutput: 符合输出契约且无待执行调用
-    Deciding --&gt; ToolExecution: 请求工具调用
-    Deciding --&gt; HandoffSwitch: 请求切换 Agent
-    ToolExecution --&gt; PermissionCheck: 每个 Tool Call（20 章）
-    PermissionCheck --&gt; ToolRunning: 通过
-    PermissionCheck --&gt; Blocked: 拒绝
-    PermissionCheck --&gt; Interrupted: 需人工
-    ToolRunning --&gt; CollectResults: 记录调用结果
-    CollectResults --&gt; ModelCall: 本轮调用均已处理
-    HandoffSwitch --&gt; ModelCall: 更新当前 Agent/Input
-    Blocked --&gt; CollectResults: 回写拒绝结果（或按策略终止）
-    Interrupted --&gt; PermissionCheck: 审批返回，重新校验绑定操作
-    Interrupted --&gt; Stopped: 拒绝/过期且不再继续
-    Stopped --&gt; [*]
-    FinalOutput --&gt; [*]</code></pre>
+<p>Claude Agent SDK 把每一轮的内部结构描述为四步循环："Receive prompt → Evaluate and respond → Execute tools → Repeat"，其中第 2、3 步反复进行，直到模型给出不带工具调用的最终输出（Claude Agent SDK: How the agent loop works<sup><a href="../../../book/references/#ref-545">【545】</a></sup>）。OpenAI Agents SDK 的 <code>Runner</code> 用同样的结构描述内部循环：调用模型 → 若输出是最终结果则退出；若请求 handoff 则切换当前 agent 并重新进入循环；若请求工具调用则执行并把结果并回，再次调用模型（OpenAI Agents SDK: Running agents<sup><a href="../../../book/references/#ref-546">【546】</a></sup>）。抽象成状态机：</p>
+<pre class="mermaid"><code>flowchart TB
+    M[ModelCall] --&gt; D[Deciding]
+    D --&gt;|请求工具| P[PermissionCheck]
+    P --&gt;|通过| T[ToolRunning]
+    T --&gt; C[CollectResults]
+    C --&gt;|本轮调用均已处理| M</code></pre>
+<p>运行从 <code>Init</code> 开始，装配上下文（第 18 章）后进入 <code>ModelCall</code>，收到模型输出后进入 <code>Deciding</code>。若符合输出契约且没有待执行调用，则进入 <code>FinalOutput</code> 并结束。请求切换 Agent 时，则进入 <code>HandoffSwitch</code>，更新当前 Agent 与输入后返回 <code>ModelCall</code>。</p>
+<p>工具请求先进入 <code>ToolExecution</code>，其中<strong>每个</strong>调用都要经过 <code>PermissionCheck</code>（第 20 章）。获准调用执行后，将结果记录到 <code>CollectResults</code>。被拒绝的调用进入 <code>Blocked</code>，除非策略要求终止，否则也将拒绝结果写入同一结果集合；只有本轮所有调用都处理完，才返回模型。</p>
+<p>需要人工输入时，权限检查暂停于 <code>Interrupted</code>。审批通过后须返回 <code>PermissionCheck</code>，重新校验绑定的操作，不能直接进入 <code>ToolRunning</code>。如果审批被拒绝或已过期，且不再继续，则进入 <code>Stopped</code> 并结束。</p>
 <p>图中工具分支按一批调用抽象：每个调用分别通过权限判定并记录结果，不能一个工具先返回就丢下其他待完成调用。普通工具请求和 Handoff 也可能出现在同一份模型输出中；是先处理工具、先交接还是拒绝混合输出，要由具体运行时约定，不能从图中的分支顺序推断。无工具调用也不必然是合法最终输出，空响应、截断或格式错误仍需单独处理。</p>
 <h2 id="174-loop">17.4 Loop 的终止条件与保护性上限<a class="headerlink" href="#174-loop" title="Permanent link">&para;</a></h2>
 <p>状态机必须有明确、可枚举的退出路径，否则"Agent 卡住不停"和"Agent 明明该停却继续跑"都会成为线上事故。至少需要四类终止条件：</p>
@@ -9197,7 +9212,7 @@
 <p>第十三章讨论的多 Agent 协作，从状态机角度看有两种形态：</p>
 <ul>
 <li><strong>Handoff（切换）</strong>：由另一个 Agent 配置接管后续决策。OpenAI Agents SDK 在同一个 Runner 循环中更新 current agent 和输入，并不必然结束旧进程或新建状态机（对应 17.3 图中 <code>HandoffSwitch</code>）。</li>
-<li><strong>Subagent（嵌套）</strong>：当前状态机在自己的一步之内，启动一个全新的、独立的子状态机（有自己的 <code>turn_index</code>、<code>budget</code>、<code>messages</code>），等子状态机跑完拿到结果后，把结果作为一次"工具调用结果"塞回父状态机继续跑。Claude Agent SDK 把这种模式称为 Subagents："Spawn specialized agents for focused subtasks"（<a href="https://code.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK: Overview</a> 能力表）。</li>
+<li><strong>Subagent（嵌套）</strong>：当前状态机在自己的一步之内，启动一个全新的、独立的子状态机（有自己的 <code>turn_index</code>、<code>budget</code>、<code>messages</code>），等子状态机跑完拿到结果后，把结果作为一次"工具调用结果"塞回父状态机继续跑。Claude Agent SDK 把这种模式称为 Subagents："Spawn specialized agents for focused subtasks"（Claude Agent SDK: Overview<sup><a href="../../../book/references/#ref-541">【541】</a></sup> 能力表）。</li>
 </ul>
 <p>关键区别是调用关系：Subagent 通常向调用者返回结果，由调用者继续决策；Handoff 则把后续对话交给接手者。二者都应计入同一根任务的总预算，再按 Agent 分摊成本；切换角色不能重置总步数、费用或权限边界。</p>
 <h2 id="177">17.7 三种实现的状态机对比<a class="headerlink" href="#177" title="Permanent link">&para;</a></h2>
@@ -9227,7 +9242,7 @@
 <td>嵌套/切换</td>
 <td>Subagents（嵌套）</td>
 <td>Handoffs（切换 current agent）</td>
-<td>子图（Subgraphs），见 <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph: Subgraphs</a></td>
+<td>子图（Subgraphs），见 LangGraph: Subgraphs<sup><a href="../../../book/references/#ref-547">【547】</a></sup></td>
 </tr>
 <tr>
 <td>状态可见性</td>
@@ -9249,13 +9264,8 @@
 <h2 id="179">17.9 本章总结<a class="headerlink" href="#179" title="Permanent link">&para;</a></h2>
 <p>状态机需要区分模型回合结束、业务成功、暂停、失败和取消。审批恢复应继续绑定的具体操作，而不是让模型重新猜；流式参数完整后才能执行。Subagent 返回结果，Handoff 转交后续决策，但二者都不能绕过根任务预算、授权和审计。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK: How the agent loop works</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/running_agents/">OpenAI Agents SDK: Running agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph: Subgraphs</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-17">集中参考资料章节</a>。</p>
 
 
 
@@ -9278,7 +9288,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner","description":"Explains Semantic Kernel's invocation pipeline, Plugins, automatic function calling, and Filters, with lifecycle caveats and the Microsoft Agent Framework migration context.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/18-kernel-plugin-planner/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/18-kernel-plugin-planner/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner","description":"Explains Semantic Kernel's invocation pipeline, Plugins, automatic function calling, and Filters, with lifecycle caveats and the Microsoft Agent Framework migration context.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/18-kernel-plugin-planner/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/18-kernel-plugin-planner/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 18: Semantic Kernel's Core Abstractions: Kernel, Plugin, and Planner","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/18-kernel-plugin-planner/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9178,10 +9203,22 @@
 <h2 id="184-how-planners-relate-to-automatic-function-calling"><span id="184-planner" class="legacy-heading-anchor" aria-hidden="true"></span>18.4 How Planners relate to automatic function calling<a class="headerlink" href="#184-how-planners-relate-to-automatic-function-calling" title="Permanent link">&para;</a></h2>
 <p>Early versions used Planners such as Stepwise. Current official Planning documentation presents the <strong>automatic function-calling loop</strong> as the primary path: supply available tools to the model, execute its requests, add the results to the history, and continue until completion or a limit is reached. When maintaining an older Planner, consult the deprecation and migration guidance for its specific package; do not treat historical classes as the default API for a new project.</p>
 <p>For example, in C#, <code>FunctionChoiceBehavior.Auto()</code> works with a chat service and Kernel to enable automatic invocation. Giving the model responsibility for selection does not move transactions, permissions, or reliable recovery "into the model." Those remain under application control.</p>
-<pre class="mermaid"><code>flowchart TB
-    G["Business objective"] --&gt; D{"Can a standard tool loop express&lt;br/&gt;the required business controls?"}
-    D --&gt;|"Yes: open-ended but bounded tool selection"| M["Use Function Calling to select Plugins&lt;br/&gt;Application executes and enforces budgets"]
-    D --&gt;|"No: approval order or recovery boundaries need separate control"| PF["Explicit workflow&lt;br/&gt;Check experimental SK packages or MAF Workflows"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    G["Business&lt;br/&gt;objective"] --&gt; D["Standard loop fits?"]
+    D --&gt;|"Yes"| M["Select Plugins"]
+    D --&gt;|"No"| PF["Explicit&lt;br/&gt;workflow"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Yes: open-ended but bounded tool selection</li>
+<li>No: approval order or recovery boundaries need separate control</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Can a standard tool loop express the required business controls?</li>
+<li>Use Function Calling to select Plugins Application executes and enforces budgets</li>
+<li>Explicit workflow Check experimental SK packages or MAF Workflows</li>
+</ul>
 <p>This resembles the decision discussed in <a href="../../01-langchain/04-langgraph/09-langchain-vs-langgraph/">LangChain Ecosystem, Chapter 9</a>, but the trigger is not simply the number of steps. Even one money transfer needs explicit permissions and approval; multiple rounds of read-only search may still fit a budget-limited function-calling loop.</p>
 <h2 id="185-filters-intercepting-calls-does-not-automatically-deliver-compliance"><span id="185-filter" class="legacy-heading-anchor" aria-hidden="true"></span>18.5 Filters: intercepting calls does not automatically deliver compliance<a class="headerlink" href="#185-filters-intercepting-calls-does-not-automatically-deliver-compliance" title="Permanent link">&para;</a></h2>
 <p>SK provides three kinds of Filter: function invocation, prompt rendering, and automatic function invocation. They can support authorization, auditing, result replacement, or early termination. The following Python fragment registers one; the application supplies <code>kernel</code> and the audit function:</p>
@@ -9217,15 +9254,8 @@
 </ol>
 <p>When maintaining an SK project, follow a single call: where Kernel obtains the model service, how the Plugin registers its functions, when automatic invocation executes a tool, and where each Filter takes effect. Connecting existing code does not mean authorization, auditing, and reliable recovery are complete; each boundary still needs to be designed.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/overview/">Semantic Kernel official documentation: Introduction</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/kernel">Semantic Kernel: Kernel concepts</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/">Semantic Kernel: Plugin concepts</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/planning">Semantic Kernel: Planning concepts</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/enterprise-readiness/filters">Semantic Kernel: Filter concepts</a></li>
-<li><a href="https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md">Semantic Kernel official repository and successor-framework announcement, pinned commit</a></li>
-</ul>
-<p>Version note: The MAF successor relationship and 1.0 release statement were checked on 2026-09-15. This statement does not cover every language or experimental extension; Chapter 19 explains the boundaries.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-18">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9248,7 +9278,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

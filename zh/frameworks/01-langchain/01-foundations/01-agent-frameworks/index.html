@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：主流 AI Agent 开发框架概览","description":"按模型接入、数据链路、状态恢复和生产约束比较 Agent 框架，说明高层 Agent 与底层编排的组合边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/01-agent-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：主流 AI Agent 开发框架概览","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/01-agent-frameworks/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：主流 AI Agent 开发框架概览","description":"按模型接入、数据链路、状态恢复和生产约束比较 Agent 框架，说明高层 Agent 与底层编排的组合边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/01-agent-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：主流 AI Agent 开发框架概览","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/01-agent-frameworks/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：主流 AI Agent 开发框架概览","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/01-agent-frameworks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9497,16 +9522,21 @@
 </table>
 <p>LangGraph 主要处理循环、条件分支、并行执行、持久化、暂停恢复和人工介入。</p>
 <h3 id="131">1.3.1 一个具体例子<a class="headerlink" href="#131" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     A["读取单据"] --&gt; B["合规检查"]
-    B --&gt; C{"金额超过限制?"}
-    C --&gt;|是| D["暂停&lt;br/&gt;等待主管审批"]
-    D --&gt; E{"审批通过?"}
+    B --&gt; C["金额超过限制?"]
+    C --&gt;|是| D["暂停"]
+    D --&gt; E["审批通过?"]
     E --&gt;|是| F["调用付款工具"]
     E --&gt;|否| G["驳回"]
     C --&gt;|否| F
 
     style D fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>暂停 等待主管审批</li>
+</ul>
 <p>这类流程通常更适合用图结构表达，而不是继续塞进单一 Agent 循环。</p>
 <h3 id="132">1.3.2 更准确的关系<a class="headerlink" href="#132" title="Permanent link">&para;</a></h3>
 <p><strong>LangChain 的 Agent 高层接口现在运行在 LangGraph 之上。</strong></p>
@@ -9515,19 +9545,27 @@
 <h2 id="14-llamaindex">1.4 LlamaIndex 强在哪里<a class="headerlink" href="#14-llamaindex" title="Permanent link">&para;</a></h2>
 <p>如果把 LlamaIndex 当成「另一个 LangChain」，很容易忽略它在私有数据链路上的侧重。<strong>LlamaIndex 更强调在私有数据之上构建 AI 应用</strong>：数据连接、文档解析、切分、索引、检索、重排、Query Engine、结构化数据访问，也可以把 RAG Pipeline 封装成 Agent 使用的工具。</p>
 <h3 id="141">1.4.1 企业知识库场景的难点不只在工具调用<a class="headerlink" href="#141" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    subgraph IN["资料进入系统时"]
-        I1["PDF 表格要正确解析"]
-        I2["多种数据源要统一接入"]
-        I3["文档要切分并建立索引"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart LR
+    subgraph IN["资料入库"]
+        direction LR
+        I1["PDF 表格要正确解&lt;br/&gt;析"]
+        I2["连接数据源"]
+        I3["文档要切分并建立&lt;br/&gt;索引"]
     end
-    subgraph Q["用户开始提问后"]
-        Q1["过滤和重排召回结果"]
-        Q2["确保不同用户只看到&lt;br/&gt;自己有权访问的数据"]
+    subgraph Q["用户查询"]
+        direction LR
+        Q1["过滤和重排召回结&lt;br/&gt;果"]
+        Q2["执行数据授权"]
     end
     IN --&gt; Q
 
     style IN fill:#e8f0fe</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>多种数据源要统一接入</li>
+<li>确保不同用户只看到 自己有权访问的数据</li>
+</ul>
 <p>企业知识库的问题会沿整条数据链路出现，不是多注册一个搜索工具就能解决。</p>
 <p>这些需求使 LlamaIndex 成为企业知识库、文档 Agent、研究助手和复杂 RAG 系统的常见候选。不过，元数据过滤只是接入权限规则的手段，框架不会替应用识别登录身份或自动完成租户授权。</p>
 <h3 id="142-rag">1.4.2 它也不只用于 RAG<a class="headerlink" href="#142-rag" title="Permanent link">&para;</a></h3>
@@ -9535,14 +9573,21 @@
 <p><strong>从选型角度看</strong>：LangChain 的入口更偏<strong>通用 Agent 组装</strong>，LlamaIndex 的优势更集中在<strong>数据密集型应用</strong>。</p>
 <h2 id="15">1.5 三个框架怎么配合<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
 <p><strong>它们不一定三选一。</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["LlamaIndex&lt;br/&gt;处理文档、建索引&lt;br/&gt;提供检索结果"] --&gt; B["包装成 Tool"]
-    B --&gt; C["LangChain Agent&lt;br/&gt;决定何时调用"]
-    C --&gt; D["LangGraph&lt;br/&gt;负责查询改写、答案校验&lt;br/&gt;人工审核、失败恢复&lt;br/&gt;这些步骤如何衔接"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LlamaIndex"] --&gt; B["包装成 Tool"]
+    B --&gt; C["LangChain Agent"]
+    C --&gt; D["LangGraph"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
     style D fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>LlamaIndex 处理文档、建索引 提供检索结果</li>
+<li>LangChain Agent 决定何时调用</li>
+<li>LangGraph 负责查询改写、答案校验 人工审核、失败恢复 这些步骤如何衔接</li>
+</ul>
 <p><strong>这是一种可选分工，不是互不重叠的能力划分。</strong> LlamaIndex 也有工作流，LangChain 也有检索组件；同时引入三者时，应避免两套记忆、重试和追踪机制重复管理同一次请求。</p>
 <blockquote>
 <p><strong>但是否需要同时引入三者，取决于项目复杂度。</strong> 只是简单工具调用，不必为了技术栈完整而引入 LlamaIndex；只是普通知识库问答，也不一定需要复杂的 LangGraph 工作流。</p>
@@ -9580,13 +9625,14 @@
 </tbody>
 </table>
 <h2 id="17">1.7 选型顺序：从外到内收窄<a class="headerlink" href="#17" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"① 这个任务&lt;br/&gt;真的需要 Agent 吗?"}
-    Q1 --&gt;|步骤固定、规则明确| N["用普通函数或工作流&lt;br/&gt;更便宜、更稳定&lt;br/&gt;本来能写成 if/else 的流程&lt;br/&gt;交给模型只会增加不确定性"]
-    Q1 --&gt;|需要| Q2{"② 项目真正困难的&lt;br/&gt;是哪一层?"}
-    Q2 --&gt;|模型和工具接入最费力| A["LangChain 更自然"]
-    Q2 --&gt;|私有数据、文档解析、检索质量| B["LlamaIndex 更贴近问题"]
-    Q2 --&gt;|复杂分支、循环、状态恢复| C["LangGraph 发挥优势"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q1["① 需要 Agent？"]
+    Q1 --&gt;|"固定规则"| N["用普通函数或工作流"]
+    Q1 --&gt;|需要| Q2["② 主要难点？"]
+    Q2 --&gt;|"集成"| A["LangChain"]
+    Q2 --&gt;|"私有数据"| B["LlamaIndex"]
+    Q2 --&gt;|"执行控制"| C["LangGraph"]
     A --&gt; Q3
     B --&gt; Q3
     C --&gt; Q3
@@ -9594,6 +9640,20 @@
 
     style N fill:#fdecea
     style Q3 fill:#fff3cd</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>步骤固定、规则明确</li>
+<li>模型和工具接入最费力</li>
+<li>私有数据、文档解析、检索质量</li>
+<li>复杂分支、循环、状态恢复</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 这个任务 真的需要 Agent 吗?</li>
+<li>用普通函数或工作流 更便宜、更稳定 本来能写成 if/else 的流程 交给模型只会增加不确定性</li>
+<li>② 项目真正困难的 是哪一层?</li>
+<li>LlamaIndex 更贴近问题</li>
+</ul>
 <h3 id="171-demo">1.7.1 第三步：Demo 能跑和系统能上线是两回事<a class="headerlink" href="#171-demo" title="Permanent link">&para;</a></h3>
 <p>流程越长，越需要补齐这些生产约束：</p>
 <ul>
@@ -9678,15 +9738,8 @@
 </ol>
 <p>选框架时，更关键的是先判断项目最难的是模型接入、数据链路还是流程控制，再据此决定从哪个框架切入。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-<li><a href="https://docs.llamaindex.ai/">LlamaIndex 官方文档</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a></li>
-<li><a href="https://docs.crewai.com/">CrewAI 官方文档</a></li>
-<li><a href="https://github.com/microsoft/autogen">AutoGen 仓库</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-01">集中参考资料章节</a>。</p>
 
 
 
@@ -9709,7 +9762,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十章：权限、沙箱与隔离","description":"区分工具审批、执行授权和沙箱隔离，核对 Claude Agent SDK 权限顺序，并解释网络出口、凭据与多租户边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/20-permissions-sandbox-isolation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十章：权限、沙箱与隔离","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/20-permissions-sandbox-isolation/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十章：权限、沙箱与隔离","description":"区分工具审批、执行授权和沙箱隔离，核对 Claude Agent SDK 权限顺序，并解释网络出口、凭据与多租户边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/20-permissions-sandbox-isolation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十章：权限、沙箱与隔离","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/20-permissions-sandbox-isolation/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十章：权限、沙箱与隔离","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/20-permissions-sandbox-isolation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9129,24 +9154,21 @@
 <h2 id="201">20.1 人已经批准了，为什么还要隔离执行？<a class="headerlink" href="#201" title="Permanent link">&para;</a></h2>
 <p>批准一次命令，只表示同意该操作，不代表命令里的程序没有缺陷，更不代表它可以访问整台机器。权限判定限制“允许做什么”，沙箱限制“执行时能接触什么”。第十五章从提示注入的威胁出发，本章继续看运行时如何落实这两种边界，即使错误不是由攻击者引起，也不能省略它们。</p>
 <h2 id="202">20.2 权限模型：从布尔开关到分级规则引擎<a class="headerlink" href="#202" title="Permanent link">&para;</a></h2>
-<p>最简单的权限模型是一个全局布尔开关（"允许执行命令"/"不允许"），但生产级 harness 需要更细粒度的分级：按工具类型（读 vs 写）、按具体命令模式（<code>Bash(rm *)</code> 这类带参数模式匹配的规则）、按目标路径是否属于"关键路径"。Claude Agent SDK 的权限系统是这类分级规则引擎的典型实现，它把每一次工具请求的判定过程明确为一条<strong>有序</strong>的判定链（<a href="https://code.claude.com/docs/en/agent-sdk/permissions">Claude Agent SDK: Configure permissions</a>）：</p>
+<p>最简单的权限模型是一个全局布尔开关（"允许执行命令"/"不允许"），但生产级 harness 需要更细粒度的分级：按工具类型（读 vs 写）、按具体命令模式（<code>Bash(rm *)</code> 这类带参数模式匹配的规则）、按目标路径是否属于"关键路径"。Claude Agent SDK 的权限系统是这类分级规则引擎的典型实现，它把每一次工具请求的判定过程明确为一条<strong>有序</strong>的判定链（Claude Agent SDK: Configure permissions<sup><a href="../../../book/references/#ref-550">【550】</a></sup>）：</p>
 <pre class="mermaid"><code>flowchart TB
-    REQ["工具调用请求"] --&gt; HOOK["1. Hooks&lt;br/&gt;可直接拒绝，允许不能跳过后续 deny/ask 规则"]
-    HOOK --&gt;|拒绝| BLOCK["拒绝执行"]
+    HOOK["1. Hooks"]
     HOOK --&gt;|继续| DENY["2. Deny 规则"]
-    DENY --&gt;|命中| BLOCK["拒绝执行"]
     DENY --&gt;|不命中| ASK["3. Ask 规则"]
-    ASK --&gt;|命中| PROMPT{"允许询问?"}
-    PROMPT --&gt;|是| CALLBACK["转交人工确认回调"]
-    PROMPT --&gt;|dontAsk| BLOCK
-    ASK --&gt;|不命中| MODE["4. 权限模式&lt;br/&gt;（bypass / acceptEdits / plan / 其他）"]
-    MODE --&gt;|模式内批准| ALLOW["执行"]
-    MODE --&gt;|plan 下的文件编辑或 shell 写入| CALLBACK
-    MODE --&gt;|未覆盖| ALLOWRULE["5. Allow 规则"]
-    ALLOWRULE --&gt;|命中| ALLOW
-    ALLOWRULE --&gt;|不命中| PROMPT
-    CALLBACK --&gt;|批准| ALLOW
-    CALLBACK --&gt;|拒绝/超时| BLOCK</code></pre>
+    ASK --&gt;|不命中| MODE["4. 权限模式"]
+    MODE --&gt;|未覆盖| ALLOWRULE["5. Allow 规则"]</code></pre>
+<p>图中展示工具调用请求的规则优先级，不是一条无条件批准路径：</p>
+<ul>
+<li>Hooks 可以立即拒绝；Hook 的允许结果不能跳过后续 deny/ask 规则。</li>
+<li>Deny 规则命中即拒绝执行。Ask 规则命中时，先判断是否允许询问；允许则调用人工确认回调，<code>dontAsk</code> 则直接拒绝。</li>
+<li>Ask 规则未命中时，检查权限模式（<code>bypass</code>、<code>acceptEdits</code>、<code>plan</code> 或其他模式）。模式内批准即可执行；plan 模式下的文件编辑或 shell 写入转人工确认回调。</li>
+<li>模式未覆盖时，再检查 Allow 规则；命中即可执行，未命中则返回“是否允许询问”的判断。</li>
+<li>人工回调只有批准时才允许执行；拒绝或超时都阻止执行。</li>
+</ul>
 <p>这张图是 Claude Agent SDK 的简化路径，不是所有 Harness 的权限标准。命中 deny 是拒绝，不是转人工；<code>dontAsk</code> 中需要确认的调用会被拒绝。<code>plan</code> 下文件编辑和 shell 写入不能靠 allow 规则自动批准。关键路径删除、<code>auto</code> 模式及禁用权限提示的配置另有分支，应按具体版本核对；官方的关键路径例外不是所有危险操作的通用保障。</p>
 <p>还要区分 <strong>allow 列表与能力白名单</strong>：该 SDK 的 <code>allowed_tools</code> 表示预批准，未列出的工具未必被禁用；搭配 <code>bypassPermissions</code> 时其他工具仍可能自动执行。已在前面获准的调用通常不经过 <code>canUseTool</code>，所有调用都必须执行的检查应放在受支持的前置 Hook 或更低层执行边界，不能只放审批回调。</p>
 <h2 id="203">20.3 审批规则的三种粒度<a class="headerlink" href="#203" title="Permanent link">&para;</a></h2>
@@ -9206,7 +9228,7 @@
 <li>审计日志需要能够按会话、按租户切分，这是第 23 章可观测性能够落地问题排查和成本核算的前提。</li>
 </ul>
 <h2 id="208-github-copilot-coding-agent">20.8 案例：GitHub Copilot Coding Agent 的沙箱与防火墙<a class="headerlink" href="#208-github-copilot-coding-agent" title="Permanent link">&para;</a></h2>
-<p>GitHub Copilot Coding Agent 把每次任务运行放在"由 GitHub Actions 提供的一次性开发环境"里执行：Copilot 在这个环境里探索代码、修改文件、跑测试和 lint（<a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a>）。这个设计体现了本章的多个原则：</p>
+<p>GitHub Copilot Coding Agent 把每次任务运行放在"由 GitHub Actions 提供的一次性开发环境"里执行：Copilot 在这个环境里探索代码、修改文件、跑测试和 lint（GitHub Docs: Configure the development environment for Copilot cloud agent<sup><a href="../../../book/references/#ref-542">【542】</a></sup>）。这个设计体现了本章的多个原则：</p>
 <ul>
 <li><strong>一次性环境</strong>减少运行实例残留，但外部数据库、缓存、构建产物和凭据并不会随进程销毁自动消失；是否跨租户隔离仍须查看 Runner、存储和访问控制配置；</li>
 <li><strong><code>copilot-setup-steps.yml</code> 只能定制固定的一组字段</strong>（<code>steps</code>、<code>permissions</code>、<code>runs-on</code>、<code>services</code>、<code>snapshot</code>、<code>timeout-minutes</code> 等），其余运行时行为不可被仓库配置覆盖——这是 16.2.6 节 "Control Plane" 与 Harness 分工的具体例子：仓库开发者能配置"环境里预装什么"，但不能改写"循环本身怎么调度"；</li>
@@ -9224,15 +9246,8 @@
 <h2 id="2010">20.10 本章总结<a class="headerlink" href="#2010" title="Permanent link">&para;</a></h2>
 <p>审批、授权、隔离分别回答“是否获得确认”“是否有权执行”“执行时能接触什么”。SDK 的规则顺序与扩展字段需要按版本核实，不能当成 MCP 标准。沙箱、网络出口、凭据代理和租户隔离互相补充；任何一项都不能由“用了容器”或“一次性环境”代替。</p>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/permissions">Claude Agent SDK: Configure permissions</a></li>
-<li><a href="https://gvisor.dev/docs/">gVisor 文档</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall">GitHub Docs: Customizing or disabling the firewall</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: The lethal trifecta for AI agents</a></li>
-</ul>
-<p>SDK 权限顺序与 GitHub 环境、防火墙范围按 2026-09-15 的官方文档核对；<code>anthropic/requiresUserInteraction</code> 的 v2.1.199 前提保留。未在本轮运行 SDK 权限实验或配置云端环境。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-20">集中参考资料章节</a>。</p>
 
 
 
@@ -9255,7 +9270,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

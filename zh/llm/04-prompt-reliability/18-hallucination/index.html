@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十八章：幻觉的成因与缓解","description":"区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十八章：幻觉的成因与缓解","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十八章：幻觉的成因与缓解","description":"区分事实性、来源忠实性与推理错误，解释数据和学习目标的影响，并比较 RAG、证据校验、置信校准与选择性回答。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十八章：幻觉的成因与缓解","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十八章：幻觉的成因与缓解","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/18-hallucination/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9513,17 +9538,17 @@
 <li>写医学综述时引用「Smith et al., 2018」，去 PubMed 查根本不存在。</li>
 </ul>
 <h2 id="182">18.2 生成概率不是事实验证<a class="headerlink" href="#182" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    subgraph DB["数据库"]
-        D1["输入查询"] --&gt; D2["返回精确匹配的记录"]
-        D2 --&gt; D3["按接口契约返回记录或空结果&lt;br/&gt;记录本身也可能过时"]
-    end
-    subgraph LLM["LLM"]
-        L1["输入上下文"] --&gt; L2["根据学习到的条件分布生成 token"]
-        L2 --&gt; L3["可生成回答或拒答&lt;br/&gt;但概率不等于事实真实性"]
-    end
-
-    style D3 fill:#e6f4ea
+<p><strong>数据库</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1["输入查询"] --&gt; D2["返回精确匹配的记录"]
+    D2 --&gt; D3["按接口契约返回记录或空结果&lt;br/&gt;记录本身也可能过时"]
+    style D3 fill:#e6f4ea</code></pre>
+<p><strong>LLM</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1["输入上下文"] --&gt; L2["根据学习到的条件分布生成 token"]
+    L2 --&gt; L3["可生成回答或拒答&lt;br/&gt;但概率不等于事实真实性"]
     style L3 fill:#fdecea</code></pre>
 <p>自回归生成没有内置的外部事实证明；但模型可以学会输出「不知道」、调用工具，应用也可以在证据不足时阻止生成。不能由「预测下一个 token」推出「永远会编一个答案」。</p>
 <p>需要区分三个环节：模型掌握了什么、生成目标鼓励什么、系统允许哪些未经验证的结论到达用户。单独解释训练数据或采样机制，都不足以覆盖所有失败。</p>
@@ -9590,12 +9615,12 @@
 <h2 id="185">18.5 根因三：对齐目标的副作用<a class="headerlink" href="#185" title="Permanent link">&para;</a></h2>
 <p>对齐训练可以改善真实性与拒答，也可能放大不良偏好，取决于示例、奖励与评估方式。不能笼统地说 SFT 或 RLHF 必然使幻觉增加。</p>
 <pre class="mermaid"><code>flowchart TB
-    A["训练或评价中&lt;br/&gt;未充分奖励证据与恰当弃答"]
-    A --&gt; B["流畅、迎合用户的错误回答&lt;br/&gt;有时获得较高偏好分"]
-    B --&gt; C["奖励或偏好优化&lt;br/&gt;可能强化这些代理特征"]
-    C --&gt; F["在部分任务上&lt;br/&gt;出现迎合或无依据断言"]
+    A["评分目标偏离"] --&gt; B["错误回答获得高分"]
+    B --&gt; C["代理特征被强化"]
+    C --&gt; F["迎合或无依据断言"]
 
     style F fill:#fdecea</code></pre>
+<p>训练或评价未充分奖励证据与恰当弃答时，流畅且迎合用户的错误回答可能获得更高偏好分。奖励或偏好优化可能强化这些代理特征，在部分任务上导致迎合或无依据断言；并非所有任务都必然如此。</p>
 <p>《Towards Understanding Sycophancy in Language Models》观察到，人类与偏好模型有时偏爱迎合用户观点的回答，即便回答错误。它支持「存在此风险」，并不支持「谨慎回答几乎永远得低分」或某种优化算法必然造成幻觉。</p>
 <h3 id="1851">18.5.1 校准与选择性回答<a class="headerlink" href="#1851" title="Permanent link">&para;</a></h3>
 <p>《Language Models (Mostly) Know What They Know》研究了对候选答案正确性的 <code>P(True)</code>，以及不依赖特定候选的 <code>P(IK)</code>（知道答案的概率）。结果显示某些设置下存在有用的自评信号，但跨新任务的校准仍困难；它不是一个直接命名为「Calibrated Refusal」的通用生产流程。</p>
@@ -9628,7 +9653,8 @@
 </tbody>
 </table>
 <h2 id="187">18.7 缓解方案：三层组合<a class="headerlink" href="#187" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["训练层&lt;br/&gt;改进数据与学习目标"] --&gt; I["推理层&lt;br/&gt;分配采样与验证预算"] --&gt; S["系统层&lt;br/&gt;检索、证据校验与风险控制"]
 
     style S fill:#e6f4ea</code></pre>
@@ -9776,19 +9802,8 @@
 <p>面对一个错误回答，先找出是哪条声明缺证据、证据在哪一步丢失，再决定修改数据、推理流程还是系统校验。</p>
 </blockquote>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.00661">On Faithfulness and Factuality in Abstractive Summarization</a></li>
-<li><a href="https://arxiv.org/abs/2202.03629">Survey of Hallucination in Natural Language Generation</a></li>
-<li><a href="https://arxiv.org/abs/2311.05232">A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions</a></li>
-<li><a href="https://arxiv.org/abs/2207.05221">Language Models (Mostly) Know What They Know</a></li>
-<li><a href="https://arxiv.org/abs/2109.07958">TruthfulQA: Measuring How Models Mimic Human Falsehoods</a></li>
-<li><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></li>
-<li><a href="https://arxiv.org/abs/2303.08896">SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2309.11495">Chain-of-Verification Reduces Hallucination in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2212.08073">Constitutional AI: Harmlessness from AI Feedback</a></li>
-<li><a href="https://arxiv.org/abs/2310.13548">Towards Understanding Sycophancy in Language Models</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs（结构保证与内容错误的区别）</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-18">集中参考资料章节</a>。</p>
 
 
 
@@ -9811,7 +9826,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

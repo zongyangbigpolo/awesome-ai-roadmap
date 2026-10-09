@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Chain 的设计理念与 LCEL","description":"理解 Runnable 与 LCEL 的组合、并行和流式语义，以及重试范围、并发预算和旧式 Chain 迁移的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/02-chain-and-lcel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Chain 的设计理念与 LCEL","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Chain 的设计理念与 LCEL","description":"理解 Runnable 与 LCEL 的组合、并行和流式语义，以及重试范围、并发预算和旧式 Chain 迁移的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/02-chain-and-lcel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Chain 的设计理念与 LCEL","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二章：Chain 的设计理念与 LCEL","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9590,7 +9615,8 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>用户输入 → Prompt 模板 → Chat Model → 输出解析器 → 字符串答案
 </span></code></pre></div>
 <p><strong>但真实应用还可能出现并行分支和条件分支</strong>：</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     Q["用户问题"] --&gt; R["知识库检索"]
     Q --&gt; P["原样保留"]
     R --&gt; M["汇合到 Prompt"]
@@ -9757,14 +9783,23 @@
 <p>重试范围也会改变成本和语义：给整条链加 <code>with_retry</code> 可能重复已成功的检索或外部写入；只想重试模型调用时，应把重试附着在模型这个 Runnable。失败分支是否允许降级，需要业务明确规定，不能用空字符串伪装成成功。</p>
 <h2 id="26">2.6 为什么统一协议能不断扩展<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <p>统一协议的价值不只在「方便串起来」，还在于它让流程可以逐步扩展：</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① 可组合&lt;br/&gt;每个步骤只处理自己的输入输出&lt;br/&gt;小链可以继续组成大链&lt;br/&gt;换掉某个模型/解析器/检索器&lt;br/&gt;不必推翻整条业务流程"]
-    A --&gt; B["② 执行方式统一&lt;br/&gt;单次、异步、批量、流式收拢到统一接口&lt;br/&gt;组合后的流程才有机会继承这些能力"]
-    B --&gt; C["③ 声明式数据流&lt;br/&gt;主要表达『数据先去哪，再去哪』&lt;br/&gt;不用把线程调度、回调传递、中间结果搬运&lt;br/&gt;混在业务逻辑里"]
-    C --&gt; D["④ 横切能力可复用&lt;br/&gt;重试、回退、标签、元数据、追踪&lt;br/&gt;可以附着在某个 Runnable，也可作用于整条链"]
-    D --&gt; E["生产排查时看到的不再只是最终报错&lt;br/&gt;而是这次运行究竟经过了哪些子步骤"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["① 可组合"]
+    A --&gt; B["② 执行方式统一"]
+    B --&gt; C["③ 声明式数据流"]
+    C --&gt; D["④ 复用通用控制"]
+    D --&gt; E["检查执行过程"]
 
     style E fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 可组合 每个步骤只处理自己的输入输出 小链可以继续组成大链 换掉某个模型/解析器/检索器 不必推翻整条业务流程</li>
+<li>② 执行方式统一 单次、异步、批量、流式收拢到统一接口 组合后的流程才有机会继承这些能力</li>
+<li>③ 声明式数据流 主要表达『数据先去哪，再去哪』 不用把线程调度、回调传递、中间结果搬运 混在业务逻辑里</li>
+<li>④ 横切能力可复用 重试、回退、标签、元数据、追踪 可以附着在某个 Runnable，也可作用于整条链</li>
+<li>生产排查时看到的不再只是最终报错 而是这次运行究竟经过了哪些子步骤</li>
+</ul>
 <p>这里的限制也要一并看到：接口统一只代表调用方式一致，<strong>最终效果仍取决于内部组件是否真正支持对应模式</strong>。</p>
 <h2 id="27-chain">2.7 旧式 Chain 为什么被弃用<a class="headerlink" href="#27-chain" title="Permanent link">&para;</a></h2>
 <p>这是版本迁移里最常见的混淆点。</p>
@@ -9785,18 +9820,32 @@
 <p><strong>正确的态度</strong>：看到老代码里的 <code>LLMChain</code> 要能读懂它过去解决了什么问题；写新代码时优先用 Runnable 与 LCEL。</p>
 <h2 id="28">2.8 三种编排方式怎么选<a class="headerlink" href="#28" title="Permanent link">&para;</a></h2>
 <p>Chain 适合固定数据流，不适合把所有流程都塞进一条超长 LCEL。</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"主要是固定数据流&lt;br/&gt;还是模型动态选择动作?"}
-    Q1 --&gt;|固定数据流| Q2{"需要跨调用恢复&lt;br/&gt;或长时间等待?"}
-    Q2 --&gt;|否| C["Chain（Runnable + LCEL）&lt;br/&gt;检索、分类、摘要等短流程"]
-    Q2 --&gt;|是| G["LangGraph 显式编排&lt;br/&gt;设计状态与恢复边界"]
-    Q1 --&gt;|模型动态选择| Q3{"标准 Agent 循环&lt;br/&gt;与中间件能否表达?"}
-    Q3 --&gt;|能| A["create_agent&lt;br/&gt;可配置检查点与工具审批"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q1["固定还是动态？"]
+    Q1 --&gt;|固定数据流| Q2["需要持久化执行？"]
+    Q2 --&gt;|否| C["LCEL 链"]
+    Q2 --&gt;|是| G["LangGraph"]
+    Q1 --&gt;|"动态动作"| Q3["标准循环能满足？"]
+    Q3 --&gt;|能| A["create_agent"]
     Q3 --&gt;|不能| G
 
     style C fill:#e6f4ea
     style A fill:#e8f0fe
     style G fill:#fff3cd</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>模型动态选择</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>主要是固定数据流 还是模型动态选择动作?</li>
+<li>需要跨调用恢复 或长时间等待?</li>
+<li>Chain（Runnable + LCEL） 检索、分类、摘要等短流程</li>
+<li>LangGraph 显式编排 设计状态与恢复边界</li>
+<li>标准 Agent 循环 与中间件能否表达?</li>
+<li>create_agent 可配置检查点与工具审批</li>
+</ul>
 <p>固定、短小的数据流通常先用 Chain；运行时要由模型决定下一步时，考虑 Agent。图中「步骤已知」也不是排除 LangGraph 的条件：确定性的长流程同样可能需要持久化、人工等待和恢复边界，此时可直接选择 LangGraph。</p>
 <p>LangGraph 不是为了取代每一条简单 Chain，而是处理 Chain 难以清楚表达的长时、有状态工作流。</p>
 <h2 id="29">2.9 常见错误<a class="headerlink" href="#29" title="Permanent link">&para;</a></h2>
@@ -9833,14 +9882,8 @@
 </ol>
 <p>Runnable 是统一调用协议，Chain 是用这些组件组成的数据流，LCEL 则是声明组合关系的一种方式。分清这三个概念，才能判断重试、流式和追踪应该加在哪一步。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain 官方文档</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/base/RunnableSequence">RunnableSequence：LCEL 组合、批处理与流式语义</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/base/Runnable">Runnable API</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/">langchain-core Runnables API 参考</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 迁移指南</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-02">集中参考资料章节</a>。</p>
 
 
 
@@ -9863,7 +9906,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

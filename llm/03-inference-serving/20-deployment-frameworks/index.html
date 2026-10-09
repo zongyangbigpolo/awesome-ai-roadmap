@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Choosing a Serving Framework","description":"Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Choosing a Serving Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Choosing a Serving Framework","description":"Compare inference runtimes through KV management, continuous batching, and prefix reuse, clarify TGI maintenance status and llama.cpp/TensorRT-LLM capabilities, and design SLO-based load tests.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Choosing a Serving Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 20: Choosing a Serving Framework","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/20-deployment-frameworks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9560,14 +9585,14 @@
 <h3 id="2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory"><span id="2021-pagedattention" class="legacy-heading-anchor" aria-hidden="true"></span>20.2.1 PagedAttention takes inspiration from operating-system virtual memory<a class="headerlink" href="#2021-pagedattention-takes-inspiration-from-operating-system-virtual-memory" title="Permanent link">&para;</a></h3>
 <p><strong>How does an operating system manage memory?</strong> Rather than preallocating a large contiguous physical region for every process, which would create substantial fragmentation, it divides physical memory into fixed-size pages. Processes use logical addresses mapped to physical pages through page tables.</p>
 <p><strong>PagedAttention applies that idea to KV caching</strong>:</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph L["A request's logical KV sequence"]
-        A1["Block 0"] --&gt; A2["Block 1"] --&gt; A3["Block 2"]
-    end
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L["Logical KV sequence&lt;br/&gt;Blocks 0 → 1 → 2"]
     L --&gt; BT["Block Table&lt;br/&gt;Logical → physical mapping"]
-    BT --&gt; P["Physical GPU memory pool&lt;br/&gt;Fixed-size blocks&lt;br/&gt;Noncontiguous placement&lt;br/&gt;Reference-based reclamation"]
+    BT --&gt; P["Physical GPU block pool"]
 
     style BT fill:#e8f0fe</code></pre>
+<p>For one request, logical blocks 0, 1, and 2 form an ordered KV sequence. The block table maps each logical block to a physical GPU memory block. Physical blocks have a fixed size, may occupy noncontiguous locations, and are reclaimed according to their references; logical order does not imply adjacent physical storage.</p>
 <p>With a block size of 16 tokens, a 200-token request needs <code>ceil(200/16)=13</code> blocks, providing capacity for 208 tokens with 8 unused positions in the last block. This avoids reserving a contiguous 4096-token region for the request. Actual block sizes depend on the backend and configuration.</p>
 <p>When a request finishes, blocks with zero references can return to the pool or remain available for prefix caching until eviction. Reclamation does not necessarily return memory to CUDA immediately, so unchanged <code>nvidia-smi</code> usage is not by itself evidence of a leak.</p>
 <blockquote>
@@ -9596,13 +9621,15 @@
 </ul>
 <p>vLLM offers not only PagedAttention but also <strong>Automatic Prefix Caching (APC)</strong> to reuse KV blocks for identical token prefixes. Enablement, hits, and benefits depend on version, configuration, and cache pressure. Cross-request prefix reuse is not exclusive to SGLang.</p>
 <h3 id="2032-radixattention-organizing-the-kv-cache-with-a-radix-tree"><span id="2032-radixattention-kv-cache" class="legacy-heading-anchor" aria-hidden="true"></span>20.3.2 RadixAttention: organizing the KV cache with a radix tree<a class="headerlink" href="#2032-radixattention-organizing-the-kv-cache-with-a-radix-tree" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ROOT["Root: empty"] --&gt; SP["Shared system prompt&lt;br/&gt;1000 tokens — stored once"]
-    SP --&gt; U1["User A's question"]
-    SP --&gt; U2["User B's question"]
-    SP --&gt; U3["User C's question"]
+    SP --&gt; U1["Question A"]
+    SP --&gt; U2["Question B"]
+    SP --&gt; U3["Question C"]
 
     style SP fill:#e6f4ea</code></pre>
+<p>Questions A, B, and C belong to different users. Their branches share the one stored 1000-token system prompt, not each other's question suffixes.</p>
 <p><strong>Requests reuse the same token-prefix path and branch at the first differing token</strong>. A radix-tree edge can compactly represent a sequence of tokens; a separate tree level per token is unnecessary.</p>
 <blockquote>
 <p>A prefix tree can retain one copy of the shared portion. Actual savings depend on prefix overlap, eviction policy, and concurrency.</p>
@@ -9877,24 +9904,8 @@
 <li><strong>Three less obvious pitfalls</strong>: long contexts still incur fragmentation and scheduling overhead, KV quantization support varies, and MoE deployment is usually more complex than dense deployment.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention (vLLM)</a></li>
-<li><a href="https://arxiv.org/abs/2312.07104">SGLang: Efficient Execution of Structured Language Model Programs (RadixAttention)</a></li>
-<li><a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models (continuous batching)</a></li>
-<li><a href="https://docs.vllm.ai/">vLLM documentation</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/automatic_prefix_caching/">vLLM: Automatic Prefix Caching</a></li>
-<li><a href="https://github.com/sgl-project/sglang">SGLang repository</a></li>
-<li><a href="https://github.com/huggingface/text-generation-inference">Text Generation Inference repository</a></li>
-<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/index">TGI official documentation: maintenance-mode notice, checked in the source manuscript on 2026-09-15</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp repository</a></li>
-<li><a href="https://github.com/NVIDIA/TensorRT-LLM">TensorRT-LLM repository</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md">llama.cpp: HTTP server capabilities and parameters</a></li>
-<li><a href="https://nvidia.github.io/TensorRT-LLM/quick-start-guide.html">TensorRT-LLM: Quick Start</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/configuration/optimization/">vLLM: Chunked Prefill and configuration tuning</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/disagg_prefill/">vLLM: Disaggregated Prefilling</a></li>
-<li><a href="https://huggingface.co/docs/text-generation-inference/main/en/architecture">TGI: components and HTTP/gRPC boundaries</a></li>
-<li><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/llm-api/index.md">TensorRT-LLM: LLM API and PyTorch backend</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-20">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9917,7 +9928,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

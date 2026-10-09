@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage","description":"Distinguish the goals of prompt injection, jailbreaks, and system prompt leakage, and understand the practical limits of role structure, long-context attacks, and detection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage","description":"Distinguish the goals of prompt injection, jailbreaks, and system prompt leakage, and understand the practical limits of role structure, long-context attacks, and detection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: Prompt Injection, Jailbreaks, and System Prompt Leakage","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9290,11 +9315,16 @@
 </tbody>
 </table>
 <p>These attacks can be combined, but they are not synonyms. Role fields and message structure do exist; they simply cannot guarantee that a model always interprets content according to its trust level. Jailbreaks also involve failures of safety alignment to generalize, while system prompt leakage is one possible outcome. To determine whether an actual authorization violation occurred, examine whether tool services and data egress controls enforce authorization independently. A model saying “I have ignored the rules” is not, by itself, evidence of success.</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT["The model may mishandle instruction priority&lt;br/&gt;or safety constraints"] --&gt; PI[Prompt Injection]
-    ROOT --&gt; JB[Jailbreak]
-    PI --&gt; SPL[System prompt leakage]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    ROOT["Instruction /&lt;br/&gt;safety failure"] --&gt; PI["Prompt&lt;br/&gt;Injection"]
+    ROOT --&gt; JB["Jailbreak"]
+    PI --&gt; SPL["System prompt&lt;br/&gt;leakage"]
     JB --&gt; SPL</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>The model may mishandle instruction priority or safety constraints</li>
+</ul>
 <h2 id="22-revisiting-prompt-injection-and-extending-the-taxonomy"><span id="22-prompt-injection" class="legacy-heading-anchor" aria-hidden="true"></span>2.2 Revisiting Prompt Injection and Extending the Taxonomy<a class="headerlink" href="#22-revisiting-prompt-injection-and-extending-the-taxonomy" title="Permanent link">&para;</a></h2>
 <p>For the definitions of direct injection, where the attacker is the current user, and indirect injection, where the payload is hidden in third-party content, along with the lethal trifecta and architectural defenses, see <a href="../../../agent/05-production/15-agent-security/">Agent Security, Sections 15.4–15.10</a> and <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG Security, Section 20.3.2</a>. This section adds two areas not developed there and often missed in production: <strong>payload encoding</strong> and <strong>amplification across multiple turns or agents</strong>.</p>
 <h3 id="221-payload-encoding-and-obfuscation"><span id="221" class="legacy-heading-anchor" aria-hidden="true"></span>2.2.1 Payload Encoding and Obfuscation<a class="headerlink" href="#221-payload-encoding-and-obfuscation" title="Permanent link">&para;</a></h3>
@@ -9346,12 +9376,21 @@
 <p>Multi-turn detection should consider relevant history, but topic drift is only a weak signal: legitimate users change their goals too. Actual permission state and approvals must be stored outside the model and checked again before every action. When agents exchange summaries, preserve source and trust labels. An upstream agent's summary must not promote an external document into a trusted instruction.</p>
 <h2 id="23-categories-of-jailbreak-techniques"><span id="23-jailbreak" class="legacy-heading-anchor" aria-hidden="true"></span>2.3 Categories of Jailbreak Techniques<a class="headerlink" href="#23-categories-of-jailbreak-techniques" title="Permanent link">&para;</a></h2>
 <p>Unlike prompt injection that redirects the model to another task, a jailbreak aims to circumvent the model's own safety alignment. It usually requires no third-party payload: the attacker initiates the interaction directly.</p>
-<pre class="mermaid"><code>flowchart TB
-    J[Jailbreak techniques] --&gt; J1[Role-play&lt;br/&gt;DAN / fictional personas]
-    J --&gt; J2[Contextual framing&lt;br/&gt;Academic research / fiction / debug mode]
-    J --&gt; J3[Gradual multi-turn escalation&lt;br/&gt;Crescendo]
-    J --&gt; J4[Adversarial suffixes&lt;br/&gt;Hard-to-read suffixes found by automated search]
-    J --&gt; J5[Many-shot techniques&lt;br/&gt;Many in-context examples encourage imitation]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    J["Jailbreak&lt;br/&gt;techniques"] --&gt; J1["Role-play"]
+    J --&gt; J2["Contextual&lt;br/&gt;framing"]
+    J --&gt; J3["Gradual&lt;br/&gt;multi-turn&lt;br/&gt;escalation"]
+    J --&gt; J4["Adversarial&lt;br/&gt;suffixes"]
+    J --&gt; J5["Many-shot&lt;br/&gt;techniques"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Role-play DAN / fictional personas</li>
+<li>Contextual framing Academic research / fiction / debug mode</li>
+<li>Gradual multi-turn escalation Crescendo</li>
+<li>Adversarial suffixes Hard-to-read suffixes found by automated search</li>
+<li>Many-shot techniques Many in-context examples encourage imitation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9463,14 +9502,8 @@
 <li>Detection and red teaming must cover multi-turn conversations and a continually updated collection of attack examples, rather than a one-time static test.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025 Prompt Injection</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/">OWASP LLM07:2025 System Prompt Leakage</a></li>
-<li><a href="https://www.anthropic.com/research/many-shot-jailbreaking">Many-shot Jailbreaking (Anthropic)</a></li>
-<li><a href="https://arxiv.org/abs/2307.15043">Universal and Transferable Adversarial Attacks on Aligned Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2311.16119">Ignore This Title and HackAPrompt: Exposing Systemic Vulnerabilities of LLMs</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0051">MITRE ATLAS: Prompt Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9493,7 +9526,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

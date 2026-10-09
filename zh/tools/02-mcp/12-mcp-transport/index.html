@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：MCP 的传输层","description":"对比 stdio 与 Streamable HTTP，按 MCP 2026-07-28 说明元数据、SSE、取消、重试及旧传输兼容。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/12-mcp-transport/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：MCP 的传输层","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/12-mcp-transport/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：MCP 的传输层","description":"对比 stdio 与 Streamable HTTP，按 MCP 2026-07-28 说明元数据、SSE、取消、重试及旧传输兼容。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/12-mcp-transport/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：MCP 的传输层","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/12-mcp-transport/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十二章：MCP 的传输层","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/02-mcp/12-mcp-transport/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9431,15 +9456,18 @@
 <h1 id="mcp">第十二章：MCP 的传输层<a class="headerlink" href="#mcp" title="Permanent link">&para;</a></h1>
 <h2 id="121">12.1 传输方式与消息格式是解耦的<a class="headerlink" href="#121" title="Permanent link">&para;</a></h2>
 <p>先把消息格式和传输方式分开看：</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph MSG["消息层 · 不变"]
-        J["JSON-RPC 2.0&lt;br/&gt;method / params / id / result / error"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart LR
+    subgraph MSG["消息层"]
+        direction TB
+        J["JSON-RPC 2.0"]
     end
 
-    subgraph TRANS["传输层 · 可替换"]
-        T1["stdio&lt;br/&gt;本地子进程管道"]
-        T2["Streamable HTTP&lt;br/&gt;远程单端点"]
-        T3["Custom transport&lt;br/&gt;协商的扩展实现"]
+    subgraph TRANS["传输层"]
+        direction TB
+        T1["stdio"]
+        T2["Streamable HTTP"]
+        T3["Custom transport"]
     end
 
     J --&gt; T1
@@ -9448,6 +9476,14 @@
 
     style MSG fill:#e6f4ea
     style TRANS fill:#e8f0fe</code></pre>
+<p>JSON-RPC 2.0 消息层保持不变，传输层可以替换。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>JSON-RPC 2.0 method / params / id / result / error</li>
+<li>stdio 本地子进程管道</li>
+<li>Streamable HTTP 远程单端点</li>
+<li>Custom transport 协商的扩展实现</li>
+</ul>
 <p>传输复用 JSON-RPC 方法语义，但请求元数据、取消、故障恢复和认证有绑定差异。切换传输不能只验证“能收到 JSON”。</p>
 <p>当前 MCP 标准传输是 stdio 与 Streamable HTTP。<strong>WebSocket 不是标准传输</strong>，但规范允许 Client 与 Server 以可插拔方式实现自定义传输；双方明确协商并正确承载 UTF-8 JSON-RPC 时，可以选择 WebSocket。不能把它误称为标准 MCP transport 或假定所有客户端兼容。</p>
 <h2 id="122-json-rpc-20">12.2 消息格式：JSON-RPC 2.0<a class="headerlink" href="#122-json-rpc-20" title="Permanent link">&para;</a></h2>
@@ -9491,18 +9527,53 @@
 <h2 id="123-stdio">12.3 传输方式一：stdio<a class="headerlink" href="#123-stdio" title="Permanent link">&para;</a></h2>
 <h3 id="1231">12.3.1 工作原理<a class="headerlink" href="#1231" title="Permanent link">&para;</a></h3>
 <p>Client 启动时把 Server <strong>当作子进程拉起来</strong>，通过进程的标准输入（stdin）发请求、从标准输出（stdout）读响应。</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant C as Host 内的 MCP Client
-    participant OS as 操作系统管道
-    participant S as MCP Server&lt;br/&gt;(子进程)
-
-    C-&gt;&gt;S: 以配置的命令启动子进程
-    C-&gt;&gt;OS: 写入 stdin: {"jsonrpc":"2.0","id":1,...}
-    OS-&gt;&gt;S: 从 stdin 读出
-    S-&gt;&gt;S: 执行工具
-    S-&gt;&gt;OS: 写入 stdout: {"jsonrpc":"2.0","id":1,"result":...}
-    OS-&gt;&gt;C: 从 stdout 读出
-    Note over C,S: Client 应管理关闭、等待与子进程清理</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["启动子进程"]
+    S1["写入 stdin"]
+    S2["Server 执行"]
+    S3["读取 stdout"]
+    S4["清理子进程"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4</code></pre>
+<p>完整消息顺序（含阶段说明）：</p>
+<table>
+<thead>
+<tr>
+<th>交互双方</th>
+<th>消息或动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host 内的 MCP Client → MCP Server (子进程)</td>
+<td>以配置的命令启动子进程</td>
+</tr>
+<tr>
+<td>Host 内的 MCP Client → 操作系统管道</td>
+<td _jsonrpc_:_2.0_id_:1_...="&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,...">写入 stdin:</td>
+</tr>
+<tr>
+<td>操作系统管道 → MCP Server (子进程)</td>
+<td>从 stdin 读出</td>
+</tr>
+<tr>
+<td>MCP Server (子进程) → MCP Server (子进程)</td>
+<td>执行工具</td>
+</tr>
+<tr>
+<td>MCP Server (子进程) → 操作系统管道</td>
+<td _jsonrpc_:_2.0_id_:1_result_:...="&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;result&quot;:...">写入 stdout:</td>
+</tr>
+<tr>
+<td>操作系统管道 → Host 内的 MCP Client</td>
+<td>从 stdout 读出</td>
+</tr>
+<tr>
+<td>说明：Host 内的 MCP Client, MCP Server (子进程)</td>
+<td>Client 应管理关闭、等待与子进程清理</td>
+</tr>
+</tbody>
+</table>
 <p>这里的「管道」可以理解成<strong>操作系统在内存里给两个进程分配的一段先进先出缓冲区</strong>。Client 往里塞一行 JSON，Server 从另一头读出来处理，处理完往另一条管道塞回去。</p>
 <p>整个过程<strong>不经过网卡、不经过 TCP/IP 协议栈</strong>，数据在 RAM 里走了一趟就到了。</p>
 <h3 id="1232-stdio">12.3.2 stdio 的三个优点<a class="headerlink" href="#1232-stdio" title="Permanent link">&para;</a></h3>
@@ -9555,16 +9626,27 @@
 <h3 id="1241">12.4.1 核心设计：单端点<a class="headerlink" href="#1241" title="Permanent link">&para;</a></h3>
 <p>远程场景下 Server 作为独立 HTTP 服务运行。当前推荐的传输方式是 <strong>Streamable HTTP</strong>。</p>
 <p>核心设计是<strong>用单个 HTTP 端点（通常是 <code>/mcp</code>）同时处理请求和响应</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    C[Client] --&gt;|"POST /mcp&lt;br/&gt;JSON-RPC 请求"| S[Server]
-    S --&gt; D{"这个操作&lt;br/&gt;需要流式吗?"}
-    D --&gt;|否| R1["返回普通 JSON 响应&lt;br/&gt;Content-Type: application/json"]
-    D --&gt;|是| R2["返回 SSE 流&lt;br/&gt;Content-Type: text/event-stream"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["Client"] --&gt;|"POST /mcp"| S["Server"]
+    S --&gt; D["这个操作"]
+    D --&gt;|否| R1["返回普通 JSON 响&lt;br/&gt;应"]
+    D --&gt;|是| R2["返回 SSE 流"]
     R1 --&gt; C
     R2 --&gt; C
 
     style R1 fill:#e6f4ea
     style R2 fill:#fef7e0</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>POST /mcp JSON-RPC 请求</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>这个操作 需要流式吗?</li>
+<li>返回普通 JSON 响应 Content-Type: application/json</li>
+<li>返回 SSE 流 Content-Type: text/event-stream</li>
+</ul>
 <p><strong>「按需选择」是关键</strong>：简单同步操作直接返回 JSON，需要流式输出时才返回 SSE 流。不强制建立长连接。</p>
 <h3 id="1242">12.4.2 优缺点<a class="headerlink" href="#1242" title="Permanent link">&para;</a></h3>
 <table>
@@ -9591,7 +9673,7 @@
 </table>
 <p>典型场景：团队共用一个部署在服务器上的数据库 MCP Server，所有人连同一个服务，权限和审计集中管理。</p>
 <h3 id="1243-http">12.4.3 当前版 HTTP 的必需头与响应边界<a class="headerlink" href="#1243-http" title="Permanent link">&para;</a></h3>
-<p>以 <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http">2026-07-28 Streamable HTTP</a>为准：</p>
+<p>以 2026-07-28 Streamable HTTP<sup><a href="../../../book/references/#ref-315">【315】</a></sup>为准：</p>
 <ul>
 <li>每条 JSON-RPC 请求通过独立 POST 发送，客户端声明 <code>Accept: application/json, text/event-stream</code>，两种响应都必须处理；请求体使用 <code>Content-Type: application/json</code>。传输还定义通知 POST，但本版核心不使用 HTTP 客户端通知，不能发送 JSON-RPC response 来回答 MRTR。</li>
 <li>请求带 <code>MCP-Protocol-Version</code> 和 <code>Mcp-Method</code>；<code>tools/call</code>、<code>prompts/get</code>、<code>resources/read</code> 还必须带 <code>Mcp-Name</code>。版本、方法和名称须与消息体一致，不能只检查其中一份。</li>
@@ -9603,18 +9685,29 @@
 <h2 id="125-sse">12.5 为什么早期的 SSE 双端点方案被弃用<a class="headerlink" href="#125-sse" title="Permanent link">&para;</a></h2>
 <p>一些早期教程还在讲「HTTP + SSE」传输方式。这是 MCP 最初版本（2024-11-05 规范）的远程方案，<strong>在 2025-03-26 规范里被标记为 deprecated</strong>——保留向后兼容，但新项目不应再用。</p>
 <h3 id="1251">12.5.1 问题出在两条通道<a class="headerlink" href="#1251" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph OLD["旧方案 · HTTP + SSE 双端点"]
-        C1[Client] --&gt;|"POST /messages&lt;br/&gt;发请求"| S1[Server]
-        S1 --&gt;|"GET /sse 长连接&lt;br/&gt;推响应"| C1
-    end
-
-    subgraph NEW["新方案 · Streamable HTTP 单端点"]
-        C2[Client] &lt;--&gt;|"POST /mcp&lt;br/&gt;请求与响应同一条"| S2[Server]
-    end
-
-    style OLD fill:#fce8e6
-    style NEW fill:#e6f4ea</code></pre>
+<p><strong>旧设计：两个端点</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Client"] --&gt;|"POST /messages"| S1["Server"]
+        S1 --&gt;|"GET /sse"| C1</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>POST /messages 发请求</li>
+<li>GET /sse 长连接 推响应</li>
+</ul>
+<p><strong>新设计：一个端点</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] &lt;--&gt;|"POST /mcp"| S2["Server"]</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>POST /mcp 请求与响应同一条</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>旧方案 · HTTP + SSE 双端点</li>
+<li>新方案 · Streamable HTTP 单端点</li>
+</ul>
 <p>同一个对话被拆成了两条通道，具体问题是<strong>状态管理复杂</strong>：</p>
 <p>Client POST 了一条消息后网络突然断了——<strong>那条消息到底被处理了没？SSE 流会不会推回结果？</strong> Client 没有简单办法判断，排查链路很长。</p>
 <p>两条通道需要关联路由；合并端点减少了这类协调，但并未解决“请求提交后连接断开”的结果未知问题，也不自动提供 exactly-once。</p>
@@ -9623,7 +9716,7 @@
 <p>流式推送的部分底层依然是 SSE（<code>Content-Type: text/event-stream</code>），只是把端点从两个合并成了一个。变的是架构，不是底层技术。</p>
 <h2 id="126">12.6 标准传输与自定义传输<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <p>2026-07-28 的 <strong>HTTP 绑定</strong>使用 POST，响应为 JSON 或请求专属 SSE；不要把 HTTP 规则推广到 stdio。标准请求头镜像是必需项，不是任选优化。Server→Client 输入需求用 MRTR 结果返回，不再以独立反向 JSON-RPC 请求发送。</p>
-<p>兼容旧服务时按<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">版本兼容页</a>识别协议时代。识别到 <code>UnsupportedProtocolVersionError</code> 应选共同支持的现代版本，而不是直接降级；旧版初始化回退需由 dual-era 实现明确支持。鉴权失败不应触发无授权重试。</p>
+<p>兼容旧服务时按版本兼容页<sup><a href="../../../book/references/#ref-280">【280】</a></sup>识别协议时代。识别到 <code>UnsupportedProtocolVersionError</code> 应选共同支持的现代版本，而不是直接降级；旧版初始化回退需由 dual-era 实现明确支持。鉴权失败不应触发无授权重试。</p>
 <p>自定义 transport 应满足 MCP 的消息编码和安全要求，并明确规定连接建立、消息边界、认证、关闭与错误处理。WebSocket 可以成为这样的<strong>非标准扩展</strong>，但不会自动获得 stdio/Streamable HTTP 的互操作性。对远程 HTTP 服务，还应校验 <code>Origin</code>、实施认证并避免将本地服务暴露到不受信任网络。</p>
 <h2 id="127">12.7 常见错误<a class="headerlink" href="#127" title="Permanent link">&para;</a></h2>
 <h3 id="1271-websocket-mcp-transport">12.7.1 把 WebSocket 说成标准 MCP transport<a class="headerlink" href="#1271-websocket-mcp-transport" title="Permanent link">&para;</a></h3>
@@ -9650,16 +9743,8 @@
 <li><strong>标准 transport 之外可使用 custom transport</strong>；例如 WebSocket 需由双方显式支持，不能冒充通用标准。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">MCP 规范 2026-07-28：Transports</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http">MCP 2026-07-28 Streamable HTTP</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio">MCP 2026-07-28 stdio</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">MCP 2026-07-28 版本兼容</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports">MCP 规范 2025-03-26（Streamable HTTP 引入版本）</a></li>
-<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 规范</a></li>
-<li><a href="https://github.com/modelcontextprotocol/servers">MCP 官方 Server 集合</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">MDN: Server-Sent Events</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-12">集中参考资料章节</a>。</p>
 
 
 
@@ -9682,7 +9767,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

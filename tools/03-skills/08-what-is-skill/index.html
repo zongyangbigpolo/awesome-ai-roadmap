@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: What Is a Skill?","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9339,16 +9364,25 @@
 <p>Suppose you have 20 Skills, each averaging 2000 tokens of instructions and reference material. Loading them all takes <strong>40,000 tokens before anything else</strong>.</p>
 <p>On a model with a 200K context window, Skills alone consume one fifth of the capacity. System instructions, conversation history, and user files must share the rest. Worse, most of those 20 Skills are irrelevant to the current task: <strong>loading them serves no purpose</strong>.</p>
 <h3 id="832-three-levels-of-loading"><span id="832" class="legacy-heading-anchor" aria-hidden="true"></span>8.3.2 Three levels of loading<a class="headerlink" href="#832-three-levels-of-loading" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    L1["Level 1 · Discovery&lt;br/&gt;Read each Skill's name + description"]
-    L1 --&gt; Q{"Does the current task&lt;br/&gt;match a Skill?"}
-    Q --&gt;|No| SKIP["Do not load the body&lt;br/&gt;Discovery metadata still has a cost"]
-    Q --&gt;|Yes| L2["Level 2 · On a match&lt;br/&gt;Load the Skill's SKILL.md body"]
-    L2 --&gt; L3["Level 3 · During execution&lt;br/&gt;Read a template or script file&lt;br/&gt;only when the instructions require it"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    L1["Level 1 ·&lt;br/&gt;Discovery"]
+    L1 --&gt; Q["Does the&lt;br/&gt;current task"]
+    Q --&gt;|No| SKIP["Do not load the&lt;br/&gt;body"]
+    Q --&gt;|Yes| L2["Level 2 · On a&lt;br/&gt;match"]
+    L2 --&gt; L3["Level 3 ·&lt;br/&gt;During&lt;br/&gt;execution"]
 
     style L1 fill:#e8f0fe
     style L2 fill:#e6f4ea
     style L3 fill:#fef7e0</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Level 1 · Discovery Read each Skill's name + description</li>
+<li>Does the current task match a Skill?</li>
+<li>Do not load the body Discovery metadata still has a cost</li>
+<li>Level 2 · On a match Load the Skill's SKILL.md body</li>
+<li>Level 3 · During execution Read a template or script file only when the instructions require it</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9398,15 +9432,27 @@
 <p>As with <a href="../../01-function-calling/03-tool-schema-design/">tool description design</a>, describe capabilities and boundaries clearly, then evaluate selection quality on a task set. Neither kind of description is the sole source of information or an enforcement rule.</p>
 <h2 id="84-skills-and-related-concepts"><span id="84-skill" class="legacy-heading-anchor" aria-hidden="true"></span>8.4 Skills and related concepts<a class="headerlink" href="#84-skills-and-related-concepts" title="Permanent link">&para;</a></h2>
 <p>These concepts are often confused. An analogy with work in a company helps separate them:</p>
-<pre class="mermaid"><code>flowchart TB
-    TOOL["Tool / MCP&lt;br/&gt;Callable external capabilities&lt;br/&gt;Authorization checked at execution"]
-    SKILL["Skill&lt;br/&gt;Operating manual and SOP&lt;br/&gt;Teaches the agent how to use its tools"]
-    PROMPT["Prompt&lt;br/&gt;Model instructions&lt;br/&gt;May be ad hoc or versioned"]
-    SLASH["Slash Command&lt;br/&gt;Predefined shortcut instructions&lt;br/&gt;Requires manual activation"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    TOOL["Tool / MCP"]
+    SKILL["Skill"]
+    PROMPT["Prompt"]
+    SLASH["Slash Command"]
 
-    SKILL --&gt;|Host can call tools following the procedure| TOOL
+    SKILL --&gt;|"Host calls tools"| TOOL
     PROMPT -.Captured and reused as.-&gt; SKILL
     SLASH -.Can be an entry point for loading.-&gt; SKILL</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Host can call tools following the procedure</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Tool / MCP Callable external capabilities Authorization checked at execution</li>
+<li>Skill Operating manual and SOP Teaches the agent how to use its tools</li>
+<li>Prompt Model instructions May be ad hoc or versioned</li>
+<li>Slash Command Predefined shortcut instructions Requires manual activation</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9460,7 +9506,7 @@
 <p>Anthropic introduced Agent Skills in October 2025, initially through three entry points: Claude Code, the Claude API, and claude.ai.</p>
 <p>Two months later, Anthropic published the specification as an <strong>open standard</strong>, allowing any agent platform to implement it.</p>
 <p>The file format does not require a separate network service. Using a Skill still requires a host to discover, load, and execute it; scripts also need the appropriate interpreter, dependencies, and permissions. This is an open content format, not a remote-call protocol.</p>
-<p>Multiple clients have adopted the format; see the <a href="https://agentskills.io/clients">official client list</a>. When moving between platforms, check activation behavior, tool names, file paths, permission fields, and execution environments. The ability to read Markdown does not guarantee identical behavior.</p>
+<p>Multiple clients have adopted the format; see the official client list<sup><a href="../../../book/references/#ref-308">【308】</a></sup>. When moving between platforms, check activation behavior, tool names, file paths, permission fields, and execution environments. The ability to read Markdown does not guarantee identical behavior.</p>
 <h2 id="87-common-mistakes"><span id="87" class="legacy-heading-anchor" aria-hidden="true"></span>8.7 Common mistakes<a class="headerlink" href="#87-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="871-calling-a-skill-an-advanced-prompt-template"><span id="871-skill-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>8.7.1 Calling a Skill an “advanced prompt template”<a class="headerlink" href="#871-calling-a-skill-an-advanced-prompt-template" title="Permanent link">&para;</a></h3>
 <p>A minimal Skill can consist solely of <code>SKILL.md</code>, and its body can be a set of writing guidelines. What distinguishes it from an ordinary prompt is the convention for a directory entry point, discovery metadata, and on-demand loading. Scripts, reference documents, and templates can accompany it, but are not required.</p>
@@ -9486,16 +9532,8 @@
 <li><strong>An open format supports reuse</strong>, but scripts, permissions, and host extensions affect compatibility.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>The source manuscript retains commit <code>69ef37e9424c0a7ea9dd2293b559e43ec8176379</code> as its historical format baseline and records a 2026-09-15 review of required fields, experimental fields, and loading recommendations on the official format page. The official page has no separate semantic version number. This translation retains that pin; the pinned specification and current format page were checked again on 2026-09-20.</li>
-<li><a href="https://www.anthropic.com/news/skills">Anthropic: Introducing Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping Agents for the Real World with Agent Skills</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills specification</a></li>
-<li><a href="https://github.com/agentskills/agentskills/tree/69ef37e9424c0a7ea9dd2293b559e43ec8176379">Agent Skills pinned commit used for the format review</a></li>
-<li><a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview">Claude Docs: Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective Context Engineering for AI Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9518,7 +9556,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

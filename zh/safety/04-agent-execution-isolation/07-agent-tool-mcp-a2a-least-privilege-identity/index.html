@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Agent、Tool、MCP、A2A 最小权限与身份治理","description":"区分 Agent 工作负载与用户委托身份，用受验证的令牌、动作绑定审批和逐跳授权限制权限放大。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Agent、Tool、MCP、A2A 最小权限与身份治理","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Agent、Tool、MCP、A2A 最小权限与身份治理","description":"区分 Agent 工作负载与用户委托身份，用受验证的令牌、动作绑定审批和逐跳授权限制权限放大。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Agent、Tool、MCP、A2A 最小权限与身份治理","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第七章：Agent、Tool、MCP、A2A 最小权限与身份治理","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9197,18 +9222,28 @@
 <h1 id="agenttoolmcpa2a">第七章：Agent、Tool、MCP、A2A 最小权限与身份治理<a class="headerlink" href="#agenttoolmcpa2a" title="Permanent link">&para;</a></h1>
 <h2 id="71">7.1 本章的定位：从单个协议到组织级身份治理<a class="headerlink" href="#71" title="Permanent link">&para;</a></h2>
 <p><a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全</a> 讨论认证、令牌受众和协议边界。本章关注跨系统的三个问题：谁能代表谁行动、权限如何在委托链上收紧、工具接入和撤权由谁负责。即使每个接口单独符合其协议，也不能证明整条委托链没有越权。</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph L1["协议层（见 Tool Protocol 安全）"]
-        OAUTH[OAuth 2.1 / PKCE / audience]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph L1["协议层"]
+        direction TB
+        OAUTH["OAuth 2.1 / PKCE&lt;br/&gt;/ audience"]
     end
-    subgraph L2["身份联邦层（本章 7.2-7.3）"]
-        WI[工作负载身份] --&gt; DC[委托链]
+    subgraph L2["身份联邦层"]
+        direction TB
+        WI["工作负载身份"] --&gt; DC["委托链"]
     end
-    subgraph L3["治理层（本章 7.4-7.5）"]
-        REG[工具注册中心] --&gt; POL[策略即代码]
-        POL --&gt; AUDIT[舰队级审计]
+    subgraph L3["治理层"]
+        direction TB
+        REG["工具注册中心"] --&gt; POL["策略即代码"]
+        POL --&gt; AUDIT["舰队级审计"]
     end
     L1 --&gt; L2 --&gt; L3</code></pre>
+<p>协议层见《工具协议安全》；身份联邦在本章 7.2–7.3 节展开，治理层在 7.4–7.5 节展开。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>协议层（见 Tool Protocol 安全）</li>
+<li>身份联邦层（本章 7.2-7.3）</li>
+</ul>
 <p>MCP 与 A2A 不共享一套完全相同的授权规范。本章引用的 MCP 2026-07-28 授权规范针对 HTTP 传输，引用 OAuth 2.1 草案；STDIO 的凭据处理不同。A2A 的具体认证方案需核对其规范和服务配置，不能把 MCP 的每条要求直接套过去。</p>
 <h2 id="72-agent">7.2 Agent 的身份模型：谁在代表谁<a class="headerlink" href="#72-agent" title="Permanent link">&para;</a></h2>
 <p>传统系统早已有用户、服务、设备与委托身份，Agent 不天然创造一种新的密码学身份。工程上应区分谁运行 Agent（工作负载）、谁发起任务（用户或自动任务主体）、谁授权动作，以及执行中的 Agent/任务 ID。后两者常是审计属性，不应直接替代可验证的主体凭据。</p>
@@ -9243,10 +9278,16 @@
 <p>在多云、多服务的现实环境中，让每个 Agent/工具持有静态的长期凭据是不可扩展也不安全的做法。更好的做法是使用<strong>工作负载身份联邦</strong>：Agent 运行时环境（如容器、函数计算实例）本身具备可验证的身份，通过短期令牌交换的方式获得访问下游资源所需的临时凭据，而不是在配置里硬编码密钥。这与 <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全 15.2</a> 中"短生命周期 access token"的原则是一致的，只是把它从单次协议调用扩展到了整个部署环境的凭据管理策略。</p>
 <h2 id="73-confused-deputy-mcp">7.3 Confused Deputy：通用模式而非 MCP 专属问题<a class="headerlink" href="#73-confused-deputy-mcp" title="Permanent link">&para;</a></h2>
 <p>Confused Deputy（迷惑的代理人）问题最早出现在传统操作系统安全领域：一个拥有较高权限的程序被诱导代表低权限的调用方执行了后者本不该有权限做的操作。在 Agent 系统里，这个模式反复出现在不同层面，token passthrough（详见 <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全 15.2.1</a>）只是其中一种具体表现。</p>
-<pre class="mermaid"><code>flowchart LR
-    U[低权限调用方] --&gt;|请求| D[高权限 Agent/代理]
-    D --&gt;|使用自己的高权限凭据执行| R[资源]
-    R --&gt;|资源无法区分&lt;br/&gt;是谁的真实意图| X[越权发生]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["低权限调用方"] --&gt;|请求| D["高权限 Agent/代&lt;br/&gt;理"]
+    D --&gt;|"自身高权限凭据"| R["资源"]
+    R --&gt;|"缺少调用方上下文"| X["越权发生"]</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>使用自己的高权限凭据执行</li>
+<li>资源无法区分 是谁的真实意图</li>
+</ul>
 <p>其他常见变体：</p>
 <ul>
 <li><strong>多 Agent 委托链中的权限放大</strong>：Agent A 以自己的高权限身份调用 Agent B 完成一个子任务，但没有把"这个子任务的实际发起者是低权限用户"这一信息传递下去，B 就按 A 的权限而非用户的权限执行；</li>
@@ -9292,14 +9333,25 @@
 <p>多 Agent 系统的协作模式、路由和混淆代理问题的架构设计见 <a href="../../../agent/05-production/15-agent-security/">Agent 安全 15.12</a> 和<a href="../../../agent/04-multi-agent/13-multi-agent-coordination/">多 Agent 协作与路由</a>；这里直接从身份和权限治理看这件事，两边要结合着读。</p>
 <h2 id="75">7.5 舰队级的工具权限治理<a class="headerlink" href="#75" title="Permanent link">&para;</a></h2>
 <p>当组织内 Agent 和工具数量达到一定规模，逐个人工审批已经不可持续，需要系统化的治理机制：</p>
-<pre class="mermaid"><code>flowchart TB
-    REG[统一工具/MCP Server 注册中心] --&gt; META[记录：发布者/版本/请求权限/数据分类]
-    META --&gt; POLICY[策略即代码&lt;br/&gt;按角色/环境/数据敏感度定义可用工具集]
-    POLICY --&gt; DEPLOY[Agent 部署时按策略自动生成 allowlist]
-    DEPLOY --&gt; AUDIT[集中审计：谁在何时以何身份调用了什么]
-    AUDIT --&gt; REVIEW[定期复核：权限是否仍然必要]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    REG["统一工具/MCP&lt;br/&gt;Server 注册中心"] --&gt; META["记录工具元数据"]
+    META --&gt; POLICY["策略即代码"]
+    POLICY --&gt; DEPLOY["按白名单部署"]
+    DEPLOY --&gt; AUDIT["审计调用"]
+    AUDIT --&gt; REVIEW["定期复核权限"]</code></pre>
+<p>图中各项的完整含义：</p>
 <ul>
-<li><strong>统一注册中心</strong>：所有可被 Agent 使用的工具/MCP Server 在接入前必须登记发布者、版本、请求的权限范围和涉及的数据分类，禁止"团队私下拉一个工具就接进 Agent"；</li>
+<li>记录：发布者/版本/请求权限/数据分类</li>
+<li>策略即代码 按角色/环境/数据敏感度定义可用工具集</li>
+<li>Agent 部署时按策略自动生成 allowlist</li>
+<li>集中审计：谁在何时以何身份调用了什么</li>
+<li>
+<p>定期复核：权限是否仍然必要</p>
+</li>
+<li>
+<p><strong>统一注册中心</strong>：所有可被 Agent 使用的工具/MCP Server 在接入前必须登记发布者、版本、请求的权限范围和涉及的数据分类，禁止"团队私下拉一个工具就接进 Agent"；</p>
+</li>
 <li><strong>策略即代码</strong>：工具的可用范围（哪些 Agent、哪些环境、哪些数据敏感度下可以使用）用可版本化、可评审的策略描述，而不是散落在各个 Agent 的配置文件里；</li>
 <li><strong>权限随环境自动收紧</strong>：生产环境默认使用比测试环境更严格的策略集，与 <a href="../../../agent/05-production/15-agent-security/">Agent 安全 15.9.2</a>"权限随上下文收紧"的原则一致，只是把它上升到组织级的默认策略；</li>
 <li><strong>集中审计与定期复核</strong>：审计日志需要能跨 Agent、跨工具关联同一次任务的完整链路（呼应 <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全 15.4</a> 的审计要求），并且需要有固定节奏的权限复核机制，撤回不再需要的授权——这是很多组织"权限只增不减"问题的根本解法。</li>
@@ -9332,15 +9384,8 @@
 <li>组织规模化后需要工具注册中心、策略即代码、集中审计和定期权限复核这套舰队级治理机制，而不能依赖逐个人工审批。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://cap-lore.com/CapTheory/ConfusedDeputy.html">Confused Deputy Problem (Norm Hardy, 1988)</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization">MCP 2026-07-28 Authorization: Confused Deputy Considerations</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8693.html">RFC 8693: OAuth 2.0 Token Exchange，尤其 1.1、4.1 节</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc7662.html">RFC 7662: OAuth 2.0 Token Introspection</a></li>
-<li><a href="https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/">OWASP Agentic AI Threats and Mitigations: Identity and Authorization</a></li>
-<li><a href="https://csrc.nist.gov/pubs/sp/800/207/final">NIST SP 800-207: Zero Trust Architecture</a></li>
-<li><a href="https://spiffe.io/">SPIFFE/SPIRE: Workload Identity Framework</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-07">集中参考资料章节</a>。</p>
 
 
 
@@ -9363,7 +9408,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

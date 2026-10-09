@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: Multimodal Representations and Fusion Architectures","description":"Compare visual feature concatenation, cross-attention, and discrete multimodal generation, including training boundaries, context costs, and the limits of contrastive representations.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/01-foundations/01-multimodal-fusion-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: Multimodal Representations and Fusion Architectures","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/01-foundations/01-multimodal-fusion-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: Multimodal Representations and Fusion Architectures","description":"Compare visual feature concatenation, cross-attention, and discrete multimodal generation, including training boundaries, context costs, and the limits of contrastive representations.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/01-foundations/01-multimodal-fusion-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: Multimodal Representations and Fusion Architectures","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/01-foundations/01-multimodal-fusion-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: Multimodal Representations and Fusion Architectures","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/01-foundations/01-multimodal-fusion-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9152,19 +9177,24 @@
 </blockquote>
 <h2 id="11-where-does-fusion-happen-in-the-pipeline"><span id="11" class="legacy-heading-anchor" aria-hidden="true"></span>1.1 Where does fusion happen in the pipeline?<a class="headerlink" href="#11-where-does-fusion-happen-in-the-pipeline" title="Permanent link">&para;</a></h2>
 <p>“Fusion” is the point at which representations from different modalities begin participating in a shared computation. Three questions must be considered separately: <strong>are the representations continuous or discrete, which layers allow them to interact, and which parameters are trained?</strong> Visual features concatenated at the input can participate in self-attention at every subsequent layer; architectures cannot be ranked by assuming that earlier integration is always stronger. The literature does not use Early/Late Fusion consistently, so the comparison below follows the actual computation paths. Traditional late fusion often means combining decisions after each modality makes an independent prediction; this should not be confused with projector-based concatenation.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Late["Continuous feature projection&lt;br/&gt;and concatenation"]
-        L1[Frozen or fine-tuned&lt;br/&gt;vision encoder] --&gt; L2[Projector] --&gt; L3[Language model backbone]
-    end
-    subgraph Cross["Cross-Attention Fusion"]
-        C1[Vision encoder] --&gt; C2[Resampler] --&gt; C3["Language model&lt;br/&gt;cross-attention layers"]
-    end
-    subgraph Early["Early Fusion /&lt;br/&gt;Unified Tokenization"]
-        E1[Image discretization] --&gt; E4[Unified token sequence]
-        E2["Audio discretization&lt;br/&gt;Optional extension,&lt;br/&gt;not the Chameleon configuration"] --&gt; E4
-        E3[Text tokens] --&gt; E4
-        E4 --&gt; E5[Joint modeling with&lt;br/&gt;a single Transformer]
-    end</code></pre>
+<p><strong>Continuous feature projection and concatenation</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1[Frozen or fine-tuned&lt;br/&gt;vision encoder] --&gt; L2[Projector] --&gt; L3[Language model backbone]
+</code></pre>
+<p><strong>Cross-Attention Fusion</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1[Vision encoder] --&gt; C2[Resampler] --&gt; C3["Language model&lt;br/&gt;cross-attention layers"]
+</code></pre>
+<p><strong>Early Fusion / Unified Tokenization</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E1[Image tokens] --&gt; E4[Unified sequence]
+    E3[Text tokens] --&gt; E4
+    E4 --&gt; E5[Single Transformer]
+</code></pre>
+<p>Images are discretized before joining text tokens in the unified sequence. Discretized audio can be an optional extension to this pattern, but is not part of the Chameleon configuration shown by the image-and-text paths. A single Transformer jointly models the sequence.</p>
 <p>These are not mutually exclusive historical stages. They are three sets of engineering tradeoffs in use alongside one another:</p>
 <table>
 <thead>
@@ -9299,20 +9329,8 @@ z_q=e_k,\quad k=\arg\min_j\lVert z_e-e_j\rVert_2
 <li>Shared embedding spaces such as CLIP, SigLIP, and ImageBind address alignment and retrieval, a different dimension from the generative architectures above.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2103.00020">CLIP: Learning Transferable Visual Models From Natural Language Supervision</a></li>
-<li><a href="https://arxiv.org/abs/2303.15343">Sigmoid Loss for Language Image Pre-Training (SigLIP)</a></li>
-<li><a href="https://arxiv.org/abs/2305.05665">ImageBind: One Embedding Space To Bind Them All</a></li>
-<li><a href="https://arxiv.org/abs/2204.14198">Flamingo: a Visual Language Model for Few-Shot Learning</a></li>
-<li><a href="https://arxiv.org/abs/2107.14795">Perceiver IO: A General Architecture for Structured Inputs &amp; Outputs</a></li>
-<li><a href="https://arxiv.org/abs/2304.08485">LLaVA: Visual Instruction Tuning</a></li>
-<li><a href="https://arxiv.org/abs/2308.12966">Qwen-VL: Position-aware vision–language adapter</a></li>
-<li><a href="https://arxiv.org/abs/2405.09818">Chameleon: Mixed-Modal Early-Fusion Foundation Models</a></li>
-<li><a href="https://arxiv.org/abs/1711.00937">Neural Discrete Representation Learning (VQ-VAE)</a></li>
-<li><a href="https://arxiv.org/abs/2012.09841">Taming Transformers for High-Resolution Image Synthesis (VQGAN)</a></li>
-<li><a href="https://openai.com/index/gpt-4o-system-card/">OpenAI GPT-4o System Card</a></li>
-<li><a href="https://arxiv.org/abs/2410.21276">GPT-4o System Card (original report)</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-multimodal-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9335,7 +9353,7 @@ z_q=e_k,\quad k=\arg\min_j\lVert z_e-e_j\rVert_2
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

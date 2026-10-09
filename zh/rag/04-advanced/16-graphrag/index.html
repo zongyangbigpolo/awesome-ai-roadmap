@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：GraphRAG 与图检索","description":"介绍图关系与社区摘要检索，区分 Microsoft GraphRAG 的索引和查询模式，分析逐边证据、增量更新与成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/16-graphrag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：GraphRAG 与图检索","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/16-graphrag/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：GraphRAG 与图检索","description":"介绍图关系与社区摘要检索，区分 Microsoft GraphRAG 的索引和查询模式，分析逐边证据、增量更新与成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/16-graphrag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：GraphRAG 与图检索","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/16-graphrag/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十六章：GraphRAG 与图检索","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/04-advanced/16-graphrag/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9349,16 +9374,16 @@
 <li>回答 C。</li>
 </ol>
 <p><strong>单次向量检索的困难</strong>：它通常把 Query 编码为一个向量，返回最相似的片段；若没有片段同时提到 A、B、C，单次召回未必能给出完整关系链。这个限制不等于向量方法“做不到”多跳：查询分解、多轮检索、实体扩展、后期交互或 Agent 都可以组合多个证据，只是需要额外的控制逻辑与验证。</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph 向量检索
-        Q1[整个问题一个向量] --&gt; M1[找最相似的片段]
-        M1 --&gt; F1[单轮候选可能&lt;br/&gt;覆盖不全关系链]
-    end
-    subgraph 图检索
-        Q2[识别实体 A] --&gt; N1[节点 A]
-        N1 --&gt;|供应关系| N2[节点 B]
-        N2 --&gt;|竞争关系| N3[节点 C]
-    end</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[整个问题一个向量] --&gt; M1[最相似的片段]
+    M1 --&gt; F1[关系链可能不完整]</code></pre>
+<p>图检索将关系路径显式表示出来：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[识别实体 A] --&gt; N1[节点 A]
+    N1 --&gt;|供应关系| N2[节点 B]
+    N2 --&gt;|竞争关系| N3[节点 C]</code></pre>
 <blockquote>
 <p><strong>标准的单轮向量召回不显式表示图拓扑，也不会自行沿关系边遍历。</strong> 对关系链问题，它更适合作为找到证据入口的一环，而非完整推理器。</p>
 </blockquote>
@@ -9368,13 +9393,13 @@
 <h2 id="162-graphrag">16.2 GraphRAG 的思路<a class="headerlink" href="#162-graphrag" title="Permanent link">&para;</a></h2>
 <p>GraphRAG 泛指利用图结构辅助检索生成的路线。本章构图与社区摘要流程主要对应微软 <strong>Standard GraphRAG</strong>，不能代表所有图 RAG 都必须调用 LLM 抽取。</p>
 <h3 id="1621">16.2.1 构建阶段<a class="headerlink" href="#1621" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    D[文档] --&gt; C[切分]
-    C --&gt; E[LLM 抽取实体与关系]
-    E --&gt; G[构建知识图谱]
-    G --&gt; COM[社区检测&lt;br/&gt;把强关联节点聚成社区]
-    COM --&gt; SUM[为每个社区生成摘要]
-    SUM --&gt; IDX[(图 + 社区摘要索引)]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[文档切分] --&gt; E[抽取实体与关系]
+    E --&gt; G[构建图谱]
+    G --&gt; COM[社区检测]
+    COM --&gt; SUM[生成摘要并索引]</code></pre>
+<p>LLM 从块中抽取实体与关系。社区检测将强关联节点聚成社区；为每个社区生成摘要，随后构建图与社区摘要索引。</p>
 <p>关键在于<strong>社区摘要</strong>这一步：把图划分成若干个紧密关联的子图（社区），为每个社区生成一段摘要。<strong>这些摘要就是回答全局性问题的素材。</strong></p>
 <h3 id="1622">16.2.2 检索阶段<a class="headerlink" href="#1622" title="Permanent link">&para;</a></h3>
 <table>
@@ -9472,14 +9497,15 @@
 </table>
 <p>这些方案构图、检索和更新策略不同，不能只用“谁支持增量”区分；微软当前官方实现也有更新方法。</p>
 <h2 id="165">16.5 什么时候值得用<a class="headerlink" href="#165" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S{问题类型} --&gt;|具体事实查找| NO[先以基础 RAG 为基线&lt;br/&gt;再做对照评测]
-    S --&gt;|需要多跳关系推理| M{关系是否&lt;br/&gt;本身就重要?}
-    S --&gt;|需要全局主题综合| G{语料规模与&lt;br/&gt;预算允许吗?}
-    M --&gt;|是| YES1[考虑图检索]
-    M --&gt;|否| ALT[先试 Agentic RAG&lt;br/&gt;多轮检索也能做多跳]
-    G --&gt;|是| YES2[考虑 GraphRAG]
-    G --&gt;|否| ALT2[比较分组摘要或 RAPTOR&lt;br/&gt;实测构建与查询成本]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S[问题类型] --&gt; P[选择基线]
+    P --&gt; E[比较质量与成本]</code></pre>
+<ul>
+<li><strong>具体事实查找：</strong> 从基础 RAG 开始，再做对照评测。</li>
+<li><strong>多跳推理：</strong> 关系本身重要时，考虑图检索；否则先试 Agentic RAG，多轮检索也可以处理多跳问题。</li>
+<li><strong>全局主题综合：</strong> 语料规模和预算允许时考虑 GraphRAG；否则比较分组摘要或 RAPTOR，测量构建与查询成本。</li>
+</ul>
 <p><strong>值得用的信号</strong>：</p>
 <ul>
 <li>领域<strong>本身就是关系密集的</strong>：组织架构、供应链、知识产权、金融关联、代码依赖；</li>
@@ -9535,19 +9561,8 @@
 <li><strong>务实的中间方案</strong>：元数据实体标签、显式引用关系、结构化部分单独建表。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2404.16130">From Local to Global: A Graph RAG Approach to Query-Focused Summarization</a></li>
-<li><a href="https://microsoft.github.io/graphrag/">Microsoft GraphRAG 官方文档</a></li>
-<li><a href="https://microsoft.github.io/graphrag/index/methods/">Microsoft GraphRAG：索引方法</a></li>
-<li><a href="https://microsoft.github.io/graphrag/cli/">Microsoft GraphRAG：CLI（含更新方法）</a></li>
-<li><a href="https://microsoft.github.io/graphrag/query/overview/">Microsoft GraphRAG：查询模式</a></li>
-<li><a href="https://microsoft.github.io/graphrag/query/local_search/">Microsoft GraphRAG：Local Search</a></li>
-<li><a href="https://arxiv.org/abs/2410.05779">LightRAG: Simple and Fast Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2405.14831">HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2502.14902">PathRAG: Pruning Graph-based Retrieval Augmented Generation with Relational Paths</a></li>
-<li><a href="https://arxiv.org/abs/2501.09136">Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG</a></li>
-</ul>
-<p>微软在线文档查阅于 2026-09-15；CLI 选项与库实现会变化，复现时以锁定版本及其配置为准。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-16">集中参考资料章节</a>。</p>
 
 
 
@@ -9570,7 +9585,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Tool Registration and Tool Contracts","description":"Distinguish model-visible tool schemas from trusted runtime injection, and understand argument validation, asynchronous execution, state updates, retries, and idempotency.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/05-tool-registration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Tool Registration and Tool Contracts","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/05-tool-registration/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Tool Registration and Tool Contracts","description":"Distinguish model-visible tool schemas from trusted runtime injection, and understand argument validation, asynchronous execution, state updates, retries, and idempotency.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/05-tool-registration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Tool Registration and Tool Contracts","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/05-tool-registration/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 5: Tool Registration and Tool Contracts","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/05-tool-registration/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9498,30 +9523,52 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
-    M["Model generates a call request&lt;br/&gt;Tool name + arguments"] --&gt; R["Runtime executes the function"]
-    R --&gt; T["Result returned as a ToolMessage"]
-    T --&gt; M2["Model decides whether to call&lt;br/&gt;another tool or answer"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    M["Model generates&lt;br/&gt;a call request"] --&gt; R["Runtime&lt;br/&gt;executes the&lt;br/&gt;function"]
+    R --&gt; T["Result returned&lt;br/&gt;as a&lt;br/&gt;ToolMessage"]
+    T --&gt; M2["Model decides&lt;br/&gt;whether to call"]
 
     style M fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Model generates a call request Tool name + arguments</li>
+<li>Model decides whether to call another tool or answer</li>
+</ul>
 <blockquote>
 <p><strong>A tool's description and schema are not ordinary comments. They are the calling contract between the model and business code.</strong></p>
 <p>A vague description can cause the model to <strong>select the wrong tool</strong>. Missing argument constraints can lead it to generate <strong>inputs that cannot be executed</strong>.</p>
 </blockquote>
 <h2 id="52-how-do-you-choose-among-four-definition-methods"><span id="52" class="legacy-heading-anchor" aria-hidden="true"></span>5.2 How Do You Choose Among Four Definition Methods?<a class="headerlink" href="#52-how-do-you-choose-among-four-definition-methods" title="Permanent link">&para;</a></h2>
 <p>You do not need to start by subclassing the lowest-level class. First ask: <strong>is this tool still just an ordinary function?</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"Do the function name, type hints,&lt;br/&gt;and docstring explain its purpose?"}
-    Q1 --&gt;|Yes| A["Pass it directly to tools&lt;br/&gt;(ordinary function)"]
-    Q1 --&gt;|No: rename the tool,&lt;br/&gt;describe arguments,&lt;br/&gt;constrain enums and ranges| Q2{"Can you modify the original function?&lt;br/&gt;Do you need to assemble sync and&lt;br/&gt;async implementations at runtime?"}
-    Q2 --&gt;|Can modify it;&lt;br/&gt;only the contract needs work| B["@tool&lt;br/&gt;The natural choice&lt;br/&gt;for most business tools"]
-    Q2 --&gt;|Cannot modify the function&lt;br/&gt;or need dynamic assembly| C["StructuredTool.from_function"]
-    C --&gt; Q3{"Must the tool retain clients,&lt;br/&gt;manage resources, or customize&lt;br/&gt;the full execution process?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q1["Contract clear?"]
+    Q1 --&gt;|Yes| A["Plain function"]
+    Q1 --&gt;|"No"| Q2["Can modify function?"]
+    Q2 --&gt;|"Contract only"| B["@tool"]
+    Q2 --&gt;|"Dynamic / external"| C["StructuredTool.from_function"]
+    C --&gt; Q3["Stateful component?"]
     B --&gt; Q3
-    Q3 --&gt;|Yes: it is now a component| D["Subclass BaseTool"]
+    Q3 --&gt;|"Yes"| D["Subclass BaseTool"]
 
     style B fill:#e6f4ea
     style D fill:#fff3cd</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>No: rename the tool, describe arguments, constrain enums and ranges</li>
+<li>Can modify it; only the contract needs work</li>
+<li>Cannot modify the function or need dynamic assembly</li>
+<li>Yes: it is now a component</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Do the function name, type hints, and docstring explain its purpose?</li>
+<li>Pass it directly to tools (ordinary function)</li>
+<li>Can you modify the original function? Do you need to assemble sync and async implementations at runtime?</li>
+<li>@tool The natural choice for most business tools</li>
+<li>Must the tool retain clients, manage resources, or customize the full execution process?</li>
+</ul>
 <p>These four methods form a progression in implementation complexity: first make the function's purpose clear, then enrich its tool contract, then handle dynamic assembly, and only then manage a component's lifecycle.</p>
 <h3 id="521-one-exception"><span id="521" class="legacy-heading-anchor" aria-hidden="true"></span>5.2.1 One Exception<a class="headerlink" href="#521-one-exception" title="Permanent link">&para;</a></h3>
 <p>Model providers' <strong>server-side tools, such as web search and code interpreters</strong>, sometimes use provider-defined configuration dictionaries.</p>
@@ -9733,13 +9780,20 @@
 </blockquote>
 <h2 id="58-what-should-you-check-after-registration"><span id="58" class="legacy-heading-anchor" aria-hidden="true"></span>5.8 What Should You Check After Registration?<a class="headerlink" href="#58-what-should-you-check-after-registration" title="Permanent link">&para;</a></h2>
 <p><strong>A function that an agent can call is not necessarily a tool that is safe to deploy.</strong> Follow an actual call from start to finish:</p>
-<pre class="mermaid"><code>flowchart TB
-    P1["① Before the model calls the tool&lt;br/&gt;Could its name or description be confused&lt;br/&gt;with another tool?&lt;br/&gt;Does the schema constrain enums, ranges,&lt;br/&gt;and required fields?"]
-    P2["② During execution&lt;br/&gt;Identity and permissions come from trusted&lt;br/&gt;runtime data, not model arguments&lt;br/&gt;Remote calls have timeouts, retry limits,&lt;br/&gt;and concurrency limits&lt;br/&gt;Changes to external state need&lt;br/&gt;idempotency, approval, and auditing"]
-    P3["③ After the call&lt;br/&gt;Logs and traces must support diagnosis&lt;br/&gt;without recording secrets, complete credentials,&lt;br/&gt;or unnecessary sensitive data"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    P1["① Before the&lt;br/&gt;model calls the&lt;br/&gt;tool"]
+    P2["② During&lt;br/&gt;execution"]
+    P3["③ After the&lt;br/&gt;call"]
     P1 --&gt; P2 --&gt; P3
 
     style P2 fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Before the model calls the tool Could its name or description be confused with another tool? Does the schema constrain enums, ranges, and required fields?</li>
+<li>② During execution Identity and permissions come from trusted runtime data, not model arguments Remote calls have timeouts, retry limits, and concurrency limits Changes to external state need idempotency, approval, and auditing</li>
+<li>③ After the call Logs and traces must support diagnosis without recording secrets, complete credentials, or unnecessary sensitive data</li>
+</ul>
 <h3 id="581-more-tools-are-not-always-better"><span id="581" class="legacy-heading-anchor" aria-hidden="true"></span>5.8.1 More Tools Are Not Always Better<a class="headerlink" href="#581-more-tools-are-not-always-better" title="Permanent link">&para;</a></h3>
 <p>Exposing many similar tools at once increases the likelihood of selection errors and argument confusion. A better approach is to <strong>dynamically narrow the tool set based on user permissions and the current task</strong>. Middleware can implement this; see <a href="../04-build-agent/">Chapter 4</a>.</p>
 <p>Tool schemas also consume input tokens. When reducing the tool set, measure both whether the target tool remains among the candidates and whether the model selects correctly within that set. Otherwise, token savings may come at the cost of making the task impossible. Two calls with identical arguments are not necessarily duplicate business actions: <code>tool_call_id</code> correlates model messages, while an idempotency key for a payment or message should identify the business request. Do not rely solely on a model-generated call ID.</p>
@@ -9780,13 +9834,8 @@
 </ol>
 <p>When registering tools, the essential distinction is between the model-visible contract and the server-side execution boundary. The former determines whether the model can choose correctly; the latter determines whether the system is safe.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/tools">LangChain: Tools Concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents Concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/tools/">langchain-core Tools API Reference</a></li>
-<li><a href="https://docs.pydantic.dev/latest/">Pydantic Documentation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-05">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9809,7 +9858,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

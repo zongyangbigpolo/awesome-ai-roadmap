@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：Prompt / 模型 / 数据版本管理","description":"用可追溯的发布清单关联 Prompt、模型快照、检索和策略版本，区分快照锁定、行为复现与安全回滚。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/05-release-pipeline/09-prompt-model-data-versioning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：Prompt / 模型 / 数据版本管理","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/05-release-pipeline/09-prompt-model-data-versioning/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：Prompt / 模型 / 数据版本管理","description":"用可追溯的发布清单关联 Prompt、模型快照、检索和策略版本，区分快照锁定、行为复现与安全回滚。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/05-release-pipeline/09-prompt-model-data-versioning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：Prompt / 模型 / 数据版本管理","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/05-release-pipeline/09-prompt-model-data-versioning/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第九章：Prompt / 模型 / 数据版本管理","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/05-release-pipeline/09-prompt-model-data-versioning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9200,11 +9225,18 @@
 <h1 id="prompt">第九章：Prompt / 模型 / 数据版本管理<a class="headerlink" href="#prompt" title="Permanent link">&para;</a></h1>
 <h2 id="91-prompt">9.1 为什么 Prompt 也需要像代码一样版本化<a class="headerlink" href="#91-prompt" title="Permanent link">&para;</a></h2>
 <p>Prompt 决定了系统行为,但很多团队把它当成字符串常量随手改,改完直接生效,没有版本号,没有变更记录,出问题时无法确定"上一个还工作的版本是哪个"。<strong>Prompt、模型选择、检索数据这三者任何一个变化,都可能改变系统输出</strong>,理应像应用代码一样接受版本管理的约束。</p>
-<pre class="mermaid"><code>flowchart LR
-    P["Prompt 变更"] --&gt; V["三者任一变化都应触发版本升级"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["Prompt 变更"] --&gt; V["每类变更都须版&lt;br/&gt;本化"]
     M["模型/路由变更"] --&gt; V
     D["数据/知识库变更"] --&gt; V
-    V --&gt; R["新版本号 + 变更记录 + 可回滚"]</code></pre>
+    V --&gt; R["发布记录"]</code></pre>
+<p>提示词、模型或路由、数据或知识库发生任何变更，都需要新版本。发布记录应包含版本号、变更说明和回滚支持。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>三者任一变化都应触发版本升级</li>
+<li>新版本号 + 变更记录 + 可回滚</li>
+</ul>
 <h2 id="92-prompt">9.2 Prompt 版本管理<a class="headerlink" href="#92-prompt" title="Permanent link">&para;</a></h2>
 <h3 id="921">9.2.1 版本号不是可选项<a class="headerlink" href="#921" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">PROMPT_REGISTRY</span> <span class="o">=</span> <span class="p">{</span>
@@ -9308,13 +9340,8 @@
 <li><strong>三者版本信息应汇总到统一注册表</strong>,支撑排查和发布决策。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/models/gpt-4o">OpenAI: GPT-4o snapshots</a></li>
-<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI: Deprecations</a></li>
-<li><a href="https://dvc.org/doc">DVC: Data Version Control</a></li>
-<li><a href="https://mlflow.org/docs/latest/model-registry.html">MLflow: Model Registry</a></li>
-<li><a href="https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning">Google Cloud: MLOps continuous delivery and automation pipelines</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-engineering-09">集中参考资料章节</a>。</p>
 
 
 
@@ -9337,7 +9364,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

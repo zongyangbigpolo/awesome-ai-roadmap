@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：CoT 思维链","description":"解释 CoT 中间步骤如何参与生成、Self-Consistency 如何聚合答案，以及推理文本的忠实性、验证方法和计算成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：CoT 思维链","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：CoT 思维链","description":"解释 CoT 中间步骤如何参与生成、Self-Consistency 如何聚合答案，以及推理文本的忠实性、验证方法和计算成本边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：CoT 思维链","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十七章：CoT 思维链","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/17-cot/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9575,33 +9600,23 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 <p>对已经接受推理训练的模型，应先使用清晰的任务与约束，再测试推理预算。OpenAI 的推理模型指导明确指出，要求「think step by step」可能不必要甚至干扰表现，不能把早期提示技巧当作所有模型的默认设置。</p>
 <h2 id="174-cot">17.4 CoT 为什么有效<a class="headerlink" href="#174-cot" title="Permanent link">&para;</a></h2>
 <p>中间步骤提供显式工作空间，让模型能在额外的顺序计算中复用已学的分解方式。收益来自任务与这些计算方式相匹配；外部复核可以利用步骤，但不是 CoT 自动附带的能力。下图分开列出这几种作用：</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① 可检查的中间结果&lt;br/&gt;便于外部工具或人工复核&lt;br/&gt;不代表模型会自动纠错"]
-    B["② 草稿纸作用&lt;br/&gt;复杂中间状态不用全部憋在隐状态里&lt;br/&gt;显式输出减轻推理负担"]
-    C["③ 利用已学的分解模式&lt;br/&gt;受训练数据、模型能力&lt;br/&gt;与任务匹配程度影响"]
-    A --&gt; R["可能改善任务正确率&lt;br/&gt;需要对照评测"]
-    B --&gt; R
-    C --&gt; R
-
-    style R fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["显式中间步骤"] --&gt; R["可能提高正确率"]
+    R --&gt; E["对照评测"]</code></pre>
+<p>可能起作用的机制有三种：中间结果便于外部工具或人工检查，但不代表模型会自动纠错；草稿纸将复杂状态显式写出，不必全部保留在隐状态中；已学会的分解模式可以复用。最后一种机制取决于训练数据、模型能力与任务匹配程度。这些只是可能的收益，不保证正确率一定提升。</p>
 <h2 id="175-self-consistency">17.5 Self-Consistency：对多条路径聚合答案<a class="headerlink" href="#175-self-consistency" title="Permanent link">&para;</a></h2>
 <p><strong>做法</strong>：对同一个问题用随机采样生成多条推导，将最终答案归一化，再选出现频次最高的答案。需要足够的路径多样性，但不等于温度越高越好；严格说是取众数，获胜答案不一定超过半数。</p>
 <h3 id="1751">17.5.1 直觉<a class="headerlink" href="#1751" title="Permanent link">&para;</a></h3>
 <p>如果正确答案能由多条路径得到，而错误比较分散，聚合可能改善结果。但同一模型的样本共享知识与偏差，完全可能一致地误解题意，反复得到同一个错误答案。一致性是信号，不是真实性的证明。</p>
-<pre class="mermaid"><code>flowchart LR
-    Q["问题"] --&gt; P1["推理路径 1 → 答案 A"]
-    Q --&gt; P2["推理路径 2 → 答案 A"]
-    Q --&gt; P3["推理路径 3 → 答案 B"]
-    Q --&gt; P4["推理路径 4 → 答案 A"]
-    Q --&gt; P5["推理路径 5 → 答案 C"]
-    P1 --&gt; V["归一化后取众数"]
-    P2 --&gt; V
-    P3 --&gt; V
-    P4 --&gt; V
-    P5 --&gt; V
-    V --&gt; O["输出 A（3 票）"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["问题"] --&gt; P["采样五条推理路径"]
+    P --&gt; V["归一化答案；取众数"]
+    V --&gt; O["A 获胜：3 票"]
 
     style O fill:#e6f4ea</code></pre>
+<p>这些路径是不同采样结果，而非依次执行的步骤。路径 1、2、4 得到 A，路径 3 得到 B，路径 5 得到 C；归一化后的答案依次为 A、A、B、A、C。</p>
 <h3 id="1752">17.5.2 收益与代价<a class="headerlink" href="#1752" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9727,21 +9742,8 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 <p>CoT 的价值，不是凭空增加知识，而是把中间推导摊出来，让后续步骤能利用前文，也让人有机会检查每一步。</p>
 </blockquote>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.11916">Large Language Models are Zero-Shot Reasoners（Let's think step by step）</a></li>
-<li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.10625">Least-to-Most Prompting Enables Complex Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2212.10001">Towards Understanding Chain-of-Thought Prompting: An Empirical Study of What Matters</a></li>
-<li><a href="https://arxiv.org/abs/2307.13702">Measuring Faithfulness in Chain-of-Thought Reasoning</a></li>
-<li><a href="https://arxiv.org/abs/2501.19393">s1: Simple test-time scaling</a></li>
-<li><a href="https://arxiv.org/abs/2412.21187">Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning models</a></li>
-<li><a href="https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/thinking_config_enabled_param.py">Anthropic Python SDK: 手动 thinking 配置</a></li>
-<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html">Amazon Bedrock: Extended thinking</a>（包含 Bedrock 上的手动预算规则、interleaved thinking 例外及模型差异，不代表所有 Claude 入口行为相同）</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-17">集中参考资料章节</a>。</p>
 
 
 
@@ -9764,7 +9766,7 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

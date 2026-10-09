@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems","description":"How FDE turns a customer's initial request into a production delivery, through product collaboration, field reports, and an order-exception assistant covering evaluation, permissions, pilots, and costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/"},"datePublished":"2026-09-01","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems","description":"How FDE turns a customer's initial request into a production delivery, through product collaboration, field reports, and an order-exception assistant covering evaluation, permissions, pilots, and costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/"},"datePublished":"2026-09-01","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: Forward Deployed Engineering: From Business Problems to Reusable Production Systems","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/01-foundations/01-forward-deployed-engineering/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9737,13 +9762,23 @@
 </ul>
 <p>AI companies such as OpenAI also employ FDEs, but their organizational placement and responsibilities differ. When reading a job description, check in particular whether the role writes production code, how much responsibility continues after launch, and how field requirements enter product development.</p>
 <p>After completing a project, an FDE must answer another question: when a similar customer comes along, what can be reused directly, and what must be rebuilt?</p>
-<pre class="mermaid"><code>flowchart LR
-    D["Discover&lt;br/&gt;Find the real problem"] --&gt; M["Model&lt;br/&gt;Define tasks and constraints"]
-    M --&gt; P["Prove&lt;br/&gt;Evaluate the value"]
-    P --&gt; I["Integrate&lt;br/&gt;Connect data and systems"]
-    I --&gt; O["Operate&lt;br/&gt;Run in production"]
-    O --&gt; G["Generalize&lt;br/&gt;Extract reusable capabilities"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    D["Discover"] --&gt; M["Model"]
+    M --&gt; P["Prove"]
+    P --&gt; I["Integrate"]
+    I --&gt; O["Operate"]
+    O --&gt; G["Generalize"]
     G -.New baseline.-&gt; D</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Discover Find the real problem</li>
+<li>Model Define tasks and constraints</li>
+<li>Prove Evaluate the value</li>
+<li>Integrate Connect data and systems</li>
+<li>Operate Run in production</li>
+<li>Generalize Extract reusable capabilities</li>
+</ul>
 <p>The defining feature of FDE is not proximity to customers, but the combination of three responsibilities:</p>
 <ol>
 <li><strong>Responsibility for outcomes:</strong> success means a business or task result, not a completed proposal.</li>
@@ -9882,20 +9917,21 @@
 <p>Here, evals refer to an engineering method, not a particular vendor product. Test inputs, graders, and result formats should be exportable so that retiring a platform does not also erase the basis for acceptance.</p>
 <h2 id="15-choosing-between-agents-rag-and-harnesses"><span id="15-agentrag-harness" class="legacy-heading-anchor" aria-hidden="true"></span>1.5 Choosing Between Agents, RAG, and Harnesses<a class="headerlink" href="#15-choosing-between-agents-rag-and-harnesses" title="Permanent link">&para;</a></h2>
 <p>The FDE's goal is not to use the most AI components, but to choose <strong>the smallest system that meets the acceptance criteria</strong>.</p>
-<pre class="mermaid"><code>flowchart TD
-    START["Define the task and evals"] --&gt; KNOW{"Need private or&lt;br/&gt;changing knowledge?"}
-    KNOW --&gt;|No| CALL["Single model call&lt;br/&gt;+ structured output"]
-    KNOW --&gt;|Yes| RAG["RAG / query tools"]
-    CALL --&gt; PATH{"Are the steps fixed?"}
-    RAG --&gt; PATH
-    PATH --&gt;|Yes| FLOW["Deterministic workflow"]
-    PATH --&gt;|No| ACTION{"Must it choose actions&lt;br/&gt;autonomously?"}
-    ACTION --&gt;|No| FLOW
-    ACTION --&gt;|Yes| AGENT["Agent"]
-    FLOW --&gt; DURABLE
-    AGENT --&gt; DURABLE{"Long-running, side-effecting,&lt;br/&gt;or awaiting human approval?"}
-    DURABLE --&gt;|No| LOOP["Lightweight runtime&lt;br/&gt;Workflow or agent loop"]
-    DURABLE --&gt;|Yes| HARNESS["Durable harness&lt;br/&gt;Checkpoints / permissions / HITL"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TD
+    TASK["Define task and evals"] --&gt; DATA["Choose knowledge access"]
+    DATA --&gt; CONTROL["Choose control flow"]
+    CONTROL --&gt; RUNTIME["Choose runtime"]</code></pre>
+<p>Make these decisions separately. Private or changing knowledge calls for RAG or query tools; otherwise start with a single model call and structured output. Fixed steps belong in a deterministic workflow. Even when the steps vary, use an agent only if it must choose actions autonomously. For either a workflow or an agent, long-running work, side effects, or human-approval waits call for a durable harness with checkpoints, permissions, and HITL; otherwise a lightweight runtime may suffice.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Need private or changing knowledge?</li>
+<li>Single model call + structured output</li>
+<li>Must it choose actions autonomously?</li>
+<li>Long-running, side-effecting, or awaiting human approval?</li>
+<li>Lightweight runtime Workflow or agent loop</li>
+<li>Durable harness Checkpoints / permissions / HITL</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9934,7 +9970,7 @@
 </table>
 <p>Start with a rules-based, single-call, or workflow baseline. Then demonstrate that the agent's additional quality gain justifies its latency, cost, and risk. Query live business APIs for inventory, balances, and order status rather than chunking them into static documents and waiting for index updates. RAG finds evidence; an agent chooses steps dynamically. They are not mutually exclusive.</p>
 <p>The durability decision in the diagram also applies to fixed workflows. Approval that spans days or business writes may require state storage, idempotency, and recovery. Conversely, short requests still need authentication and authorization, timeouts, and auditing. A harness is not synonymous with an agent framework; see <a href="../../../agent/02-runtime-harness/16-harness-definition-and-boundaries/">Agent Harness, Chapter 16</a> for its runtime responsibilities.</p>
-<p>Do not treat the tool lists in early blog posts as present-day procurement advice. Anthropic's <a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a> notes that the tooling landscape has changed and points to its <a href="https://www.anthropic.com/engineering/managed-agents">Managed Agents engineering article</a>. The latter separates session records, the harness, and the execution sandbox. That separation of failures and credentials is useful to study; whether to adopt a managed service still depends on the customer's networking, data retention, cost, and migration requirements.</p>
+<p>Do not treat the tool lists in early blog posts as present-day procurement advice. Anthropic's Building Effective Agents<sup><a href="../../../book/references/#ref-275">【275】</a></sup> notes that the tooling landscape has changed and points to its Managed Agents engineering article<sup><a href="../../../book/references/#ref-791">【791】</a></sup>. The latter separates session records, the harness, and the execution sandbox. That separation of failures and credentials is useful to study; whether to adopt a managed service still depends on the customer's networking, data retention, cost, and migration requirements.</p>
 <h2 id="16-integrating-customer-data-permissions-and-existing-systems"><span id="16" class="legacy-heading-anchor" aria-hidden="true"></span>1.6 Integrating Customer Data, Permissions, and Existing Systems<a class="headerlink" href="#16-integrating-customer-data-permissions-and-existing-systems" title="Permanent link">&para;</a></h2>
 <p>Customer integration often stalls before the model is involved: the same field means different things to two departments, a service account can read the entire database while the user cannot, a legacy API sometimes returns nothing, and no one knows whom to contact when it fails. Each issue needs a concrete answer.</p>
 <h3 id="161-govern-data-before-sending-it-to-the-model"><span id="161" class="legacy-heading-anchor" aria-hidden="true"></span>1.6.1 Govern Data Before Sending It to the Model<a class="headerlink" href="#161-govern-data-before-sending-it-to-the-model" title="Permanent link">&para;</a></h3>
@@ -9947,17 +9983,20 @@
 <li>Whether retrieved results retain the original object's access controls.</li>
 </ul>
 <p>"We have an API key, so integration is done" is a common mistake. Identity needs to remain traceable from the user through the agent and tool to the target resource, with authorization checked again where data is accessed and actions execute. See <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security</a> for MCP/A2A protocol risks, and <a href="../../../safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/">AI Safety, Chapter 7</a> for identity governance across systems.</p>
-<p>"API data is not used for training" also does not mean "no data is retained." OpenAI's <a href="https://developers.openai.com/api/docs/guides/your-data">data controls documentation</a> distinguishes abuse-monitoring logs from application state. Default abuse-monitoring logs are generally retained for up to 30 days, with exceptions listed in the documentation. Zero Data Retention (ZDR) requires approval and has endpoint, capability, and other eligibility restrictions. <code>store=false</code> is not a universal switch covering files, vector stores, third-party tools, and logs. In an interview, explain which data flows must be checked individually rather than promising that using an enterprise API makes a system automatically compliant.</p>
+<p>"API data is not used for training" also does not mean "no data is retained." OpenAI's data controls documentation<sup><a href="../../../book/references/#ref-170">【170】</a></sup> distinguishes abuse-monitoring logs from application state. Default abuse-monitoring logs are generally retained for up to 30 days, with exceptions listed in the documentation. Zero Data Retention (ZDR) requires approval and has endpoint, capability, and other eligibility restrictions. <code>store=false</code> is not a universal switch covering files, vector stores, third-party tools, and logs. In an interview, explain which data flows must be checked individually rather than promising that using an enterprise API makes a system automatically compliant.</p>
 <p>Successful retrieval does not automatically carry permissions through every downstream step. Apply tenant and resource filters before retrieval, and confirm valid authorization before placing results in context. Drafts, caches, and exports also need recipient controls. How an index, cache, and saved drafts are invalidated when a source document is deleted or access is revoked is a more concrete question than whether a vector database supports metadata filters.</p>
 <h3 id="162-isolate-customer-differences-with-adapters"><span id="162" class="legacy-heading-anchor" aria-hidden="true"></span>1.6.2 Isolate Customer Differences with Adapters<a class="headerlink" href="#162-isolate-customer-differences-with-adapters" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    CORE["Shared domain capabilities&lt;br/&gt;Tasks / evals / policies"] --&gt; PORT["Stable ports&lt;br/&gt;Retrieval / actions / identity"]
-    PORT --&gt; A1["Customer A adapter"]
-    PORT --&gt; A2["Customer B adapter"]
-    PORT --&gt; A3["Customer C adapter"]
-    A1 --&gt; S1["CRM / ERP / document store"]
-    A2 --&gt; S2["Private APIs / data warehouse"]
-    A3 --&gt; S3["Legacy / on-premises"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    CORE["Shared domain capabilities"] --&gt; PORT["Stable ports"]
+    PORT --&gt; ADAPTER["Customer-specific adapter"]
+    ADAPTER --&gt; SYSTEM["Customer systems"]</code></pre>
+<p>Shared tasks, evaluations, and policies use stable retrieval, action, and identity ports. Each customer's adapter implements those ports: customer A connects CRM, ERP, and document stores; B connects private APIs and a data warehouse; C connects legacy or on-premises systems. These are alternative customer integrations, not three sequential processing stages.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Shared domain capabilities Tasks / evals / policies</li>
+<li>Stable ports Retrieval / actions / identity</li>
+</ul>
 <p>The core process calls only agreed interfaces. Put customer-specific field mappings, authentication methods, and legacy-API handling in separate adapters instead of adding another set of conditionals to the main process for every new customer.</p>
 <h2 id="17-delivering-from-poc-to-production"><span id="17-poc" class="legacy-heading-anchor" aria-hidden="true"></span>1.7 Delivering from PoC to Production<a class="headerlink" href="#17-delivering-from-poc-to-production" title="Permanent link">&para;</a></h2>
 <p>A PoC demonstrates that something works on selected examples. A production system must demonstrate that it remains operable under access restrictions, scale, failures, and continuous change.</p>
@@ -10009,18 +10048,18 @@
 <p>See <a href="../../../engineering/">AI Engineering</a> for production practices. FDE should not become a permanent substitute for operations staff. One sign of a completed delivery is that the customer and platform team can operate the system independently using documentation, automation, and observability.</p>
 <h2 id="18-turning-production-problems-into-the-next-improvement"><span id="18" class="legacy-heading-anchor" aria-hidden="true"></span>1.8 Turning Production Problems into the Next Improvement<a class="headerlink" href="#18-turning-production-problems-into-the-next-improvement" title="Permanent link">&para;</a></h2>
 <p>"It is not useful" is not enough feedback. Find the specific ticket and the step that failed before deciding whether to change retrieval, an API, a prompt, or the business process.</p>
-<pre class="mermaid"><code>flowchart LR
-    EVENT["Production event / user correction"] --&gt; TRIAGE["Redact, diagnose,&lt;br/&gt;and classify risk"]
-    TRIAGE --&gt; EVAL["Add eval and regression cases"]
-    TRIAGE --&gt; PATTERN["Group patterns across customers"]
-    PATTERN --&gt; DECIDE{"What should be reused?"}
-    DECIDE --&gt;|Configuration| TEMPLATE["Templates / playbooks"]
-    DECIDE --&gt;|Capability| PLATFORM["Platform components / APIs"]
-    DECIDE --&gt;|Model| DATA["Training or optimization data"]
-    EVAL --&gt; RELEASE["Validate and release gradually"]
-    TEMPLATE --&gt; RELEASE
-    PLATFORM --&gt; RELEASE
-    DATA --&gt; RELEASE</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    EVENT["Production&lt;br/&gt;feedback"] --&gt; TRIAGE["Sanitize and&lt;br/&gt;diagnose"]
+    TRIAGE --&gt; EVAL["Add regression&lt;br/&gt;cases"]
+    TRIAGE --&gt; REUSE["Choose reusable&lt;br/&gt;change"]
+    EVAL --&gt; RELEASE["Validate and&lt;br/&gt;release"]
+    REUSE --&gt; RELEASE</code></pre>
+<p>Triage redacts production events or user corrections, identifies their causes, and classifies risk. One branch adds evaluation and regression cases. The other groups patterns across customers, then chooses the reuse level: configuration becomes templates or playbooks, shared capability becomes platform components or APIs, and model improvement becomes training or optimization data. Both branches converge on validation and a gradual release.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Redact, diagnose, and classify risk</li>
+</ul>
 <p>Each feedback item should include at least:</p>
 <ul>
 <li>The scenario, input distribution, and customer environment.</li>
@@ -10084,35 +10123,35 @@
 <h2 id="110-what-teams-do-in-the-field"><span id="110" class="legacy-heading-anchor" aria-hidden="true"></span>1.10 What Teams Do in the Field<a class="headerlink" href="#110-what-teams-do-in-the-field" title="Permanent link">&para;</a></h2>
 <p>The value of the public accounts below is not the models they chose, but the problems engineers encountered at customer sites and how they changed their approach.</p>
 <h3 id="1101-palantir-permission-to-read-is-not-permission-to-send"><span id="1101-palantir" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.1 Palantir: Permission to Read Is Not Permission to Send<a class="headerlink" href="#1101-palantir-permission-to-read-is-not-permission-to-send" title="Permanent link">&para;</a></h3>
-<p>Palantir's <a href="https://www.palantir.com/docs/foundry/chatbot-studio/overview/">AIP Chatbot Studio</a> connects the Ontology, documents, and tools to conversations, supporting both queries and participation in business operations. Integration does not mark the end of permission checks.</p>
-<p>Its <a href="https://www.palantir.com/docs/foundry/security/overview/">security documentation</a> distinguishes different control mechanisms: discretionary row- and column-level read controls do not automatically extend to downstream outputs and exports. In a support scenario, being able to view an internal policy does not mean the assistant may send the whole passage to a customer.</p>
+<p>Palantir's AIP Chatbot Studio<sup><a href="../../../book/references/#ref-786">【786】</a></sup> connects the Ontology, documents, and tools to conversations, supporting both queries and participation in business operations. Integration does not mark the end of permission checks.</p>
+<p>Its security documentation<sup><a href="../../../book/references/#ref-787">【787】</a></sup> distinguishes different control mechanisms: discretionary row- and column-level read controls do not automatically extend to downstream outputs and exports. In a support scenario, being able to view an internal policy does not mean the assistant may send the whole passage to a customer.</p>
 <p>Follow the data through the system: who can query it, which fields the model can see, where drafts are stored, and who will ultimately receive them. A filter at the retrieval entry point does not cover later transfers.</p>
 <h3 id="1102-descript-and-bolt-define-what-correct-means-first"><span id="1102-descript-bolt" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.2 Descript and Bolt: Define What "Correct" Means First<a class="headerlink" href="#1102-descript-and-bolt-define-what-correct-means-first" title="Permanent link">&para;</a></h3>
-<p>Anthropic's <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">article on agent evals</a> describes Descript's approach. For a video-editing assistant, "Is it good?" is too vague. The team separates three questions: did it damage the existing content, did it do what the user requested, and how well did it do it? Humans scored outputs initially; model grading was introduced gradually and calibrated through periodic human checks.</p>
+<p>Anthropic's article on agent evals<sup><a href="../../../book/references/#ref-526">【526】</a></sup> describes Descript's approach. For a video-editing assistant, "Is it good?" is too vague. The team separates three questions: did it damage the existing content, did it do what the user requested, and how well did it do it? Humans scored outputs initially; model grading was introduced gradually and calibrated through periodic human checks.</p>
 <p>Bolt, discussed in the same article, combines static analysis, browser interaction, and model grading to inspect generated applications. Whether a program runs, a button responds, and a page meets the requirements are naturally suited to different assessment methods.</p>
 <p>This also explains why two kinds of tests should remain separate. One seeks tasks the system cannot yet perform; the other protects capabilities it already has. Failure is expected in the first group. Regression in the second calls for investigation. Combining them into one score obscures the distinction.</p>
 <h3 id="1103-microsoft-do-not-hand-an-expert-a-wall-of-text"><span id="1103-microsoft" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.3 Microsoft: Do Not Hand an Expert a Wall of Text<a class="headerlink" href="#1103-microsoft-do-not-hand-an-expert-a-wall-of-text" title="Permanent link">&para;</a></h3>
-<p>In <a href="https://devblogs.microsoft.com/all-things-azure/only-believe-what-you-can-validate/">Only Believe What You Can Validate</a>, a Microsoft engineer recounts a field experience. A customer chose a relatively isolated COBOL module, and an agent produced more than 2,500 English words of analysis in five minutes. Asked whether it was correct, the business experts could offer only "looks fine at first glance."</p>
+<p>In Only Believe What You Can Validate<sup><a href="../../../book/references/#ref-793">【793】</a></sup>, a Microsoft engineer recounts a field experience. A customer chose a relatively isolated COBOL module, and an agent produced more than 2,500 English words of analysis in five minutes. Asked whether it was correct, the business experts could offer only "looks fine at first glance."</p>
 <p>The problem was not unwillingness to help. The document looked complete, but distinguishing correctly extracted rules from misinterpretations and omissions required extensive checking against the code. Generation took five minutes; validation required much longer.</p>
 <p>The author recommends changing the question: list the extracted business rules individually and ask experts to confirm or correct each one. The result is a concrete correction list rather than a vague expression of approval.</p>
 <p>The order assistant can be evaluated the same way. Instead of asking whether an email sounds professional, ask the representative to confirm whether the outstanding quantity is correct, whether purchasing arrival and customer receipt have been confused, and whether a sentence promises an unconfirmed delivery date.</p>
 <h3 id="1104-openai-what-should-remain-after-the-project"><span id="1104-openai" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.4 OpenAI: What Should Remain After the Project?<a class="headerlink" href="#1104-openai-what-should-remain-after-the-project" title="Permanent link">&para;</a></h3>
-<p><a href="https://deploy.co/">OpenAI Deployment Company</a> describes its approach as <strong>build → prove → generalize</strong>: build around the customer's workflow, establish that the system works, and bring reusable parts back into SDKs, evaluation tools, or products.</p>
+<p>OpenAI Deployment Company<sup><a href="../../../book/references/#ref-788">【788】</a></sup> describes its approach as <strong>build → prove → generalize</strong>: build around the customer's workflow, establish that the system works, and bring reusable parts back into SDKs, evaluation tools, or products.</p>
 <p>Treat the final step as a handoff review. Can the next customer reuse the connector built for this project? Do newly discovered errors have regression tests? Has a product team taken ownership of any feature that needs long-term maintenance? These decisions determine whether field knowledge remains in the company rather than only in one engineer's head.</p>
 <h3 id="1105-baseten-do-not-let-customer-projects-become-unmaintained-branches"><span id="1105-baseten" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.5 Baseten: Do Not Let Customer Projects Become Unmaintained Branches<a class="headerlink" href="#1105-baseten-do-not-let-customer-projects-become-unmaintained-branches" title="Permanent link">&para;</a></h3>
-<p>In a <a href="https://www.baseten.co/blog/forward-deployed-engineering/">team retrospective</a>, Baseten's FDE lead describes considering whether to place FDE in the go-to-market organization when the team was formed. They ultimately kept it in engineering. That added coordination work, but allowed FDEs to keep working deeply in core code and made it easier to bring customer needs into the product.</p>
+<p>In a team retrospective<sup><a href="../../../book/references/#ref-794">【794】</a></sup>, Baseten's FDE lead describes considering whether to place FDE in the go-to-market organization when the team was formed. They ultimately kept it in engineering. That added coordination work, but allowed FDEs to keep working deeply in core code and made it easier to bring customer needs into the product.</p>
 <p>They also changed their hiring approach. Initially, they emphasized ML expertise; later, they found that strong software engineers willing to solve problems across the stack could learn the model-related knowledge quickly.</p>
 <p>The article sets a goal that 70% of what FDE builds should return to the main product. The 70% is a target, not a measured result already achieved. The more useful lesson is the organizational arrangement behind it: after solving a customer's problem, FDEs still have time and responsibility to prepare the code for reuse rather than immediately being sent to the next project.</p>
 <h3 id="1106-aws-and-inrix-find-out-who-is-waiting-for-whom"><span id="1106-aws-inrix" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.6 AWS and INRIX: Find Out Who Is Waiting for Whom<a class="headerlink" href="#1106-aws-and-inrix-find-out-who-is-waiting-for-whom" title="Permanent link">&para;</a></h3>
-<p>The <a href="https://aws.amazon.com/blogs/machine-learning/how-inrix-accelerates-transportation-planning-with-amazon-bedrock/">AWS and INRIX transportation-planning case</a> begins with the original collaboration process. Transportation engineering, urban planning, landscape design, CAD, public works, and other roles exchange feedback repeatedly. The team then uses RAG to support recommendations and image generation to visualize proposed changes.</p>
+<p>The AWS and INRIX transportation-planning case<sup><a href="../../../book/references/#ref-795">【795】</a></sup> begins with the original collaboration process. Transportation engineering, urban planning, landscape design, CAD, public works, and other roles exchange feedback repeatedly. The team then uses RAG to support recommendations and image generation to visualize proposed changes.</p>
 <p>Text recommendations and concept images serve different purposes: the former helps find supporting evidence, while the latter makes discussion more concrete. Neither replaces road-engineering calculations or formal design approval. The article suggests a possible reduction from weeks to days; this is an expected benefit, not a measured delivery outcome.</p>
 <p>For FDE, the lesson is to locate waiting and rework before deciding which part a model should help with. Faster generation does not necessarily make the whole project faster.</p>
 <h3 id="1107-field-experience-on-x-follow-users-through-a-task-before-automating-it"><span id="1107-x" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.7 Field Experience on X: Follow Users Through a Task Before Automating It<a class="headerlink" href="#1107-field-experience-on-x-follow-users-through-a-task-before-automating-it" title="Permanent link">&para;</a></h3>
-<p>A <a href="https://x.com/vasuman/article/2057177266984226892">long-form X article by @vasuman</a>, a practitioner at Varick Agents, divides the work into Audit, Evals, and Deployment. Its most useful advice is concrete: sit beside the frontline team and watch how tasks are completed; choose work that occurs frequently enough and genuinely takes time; integrate existing data systems rather than undertaking another major migration for AI.</p>
+<p>A long-form X article by @vasuman<sup><a href="../../../book/references/#ref-796">【796】</a></sup>, a practitioner at Varick Agents, divides the work into Audit, Evals, and Deployment. Its most useful advice is concrete: sit beside the frontline team and watch how tasks are completed; choose work that occurs frequently enough and genuinely takes time; integrate existing data systems rather than undertaking another major migration for AI.</p>
 <p>Start deployment with limited responsibilities too. For example, first let the system investigate issues and draft tickets. Only after that works should it be considered for permission to modify code or submit pull requests. Do not expand its authority before the earlier step is reliable.</p>
 <p>Not everything in the article should be applied unchanged. A mixture of email, PDFs, and images does not necessarily require an agent; parsing the inputs and following a fixed workflow may suffice. Evaluations should focus on outcomes and important actions, not require the model to reproduce a person's thought process. Whether an API call can be retried depends on the risk of duplicate writes, not a blanket rule to retry every failure.</p>
 <h3 id="1108-hamel-inspect-failures-before-adding-components"><span id="1108-hamel" class="legacy-heading-anchor" aria-hidden="true"></span>1.10.8 Hamel: Inspect Failures Before Adding Components<a class="headerlink" href="#1108-hamel-inspect-failures-before-adding-components" title="Permanent link">&para;</a></h3>
-<p>In <a href="https://hamel.dev/blog/posts/field-guide/">A Field Guide to Rapidly Improving AI Products</a>, Hamel Husain describes how NurtureBoss put conversations from its leasing assistant into a simple viewer and recorded problems one by one. This gradually exposed recurring errors involving appointment dates, human handoff, and rescheduling.</p>
+<p>In A Field Guide to Rapidly Improving AI Products<sup><a href="../../../book/references/#ref-797">【797】</a></sup>, Hamel Husain describes how NurtureBoss put conversations from its leasing assistant into a simple viewer and recorded problems one by one. This gradually exposed recurring errors involving appointment dates, human handoff, and rescheduling.</p>
 <p>The practice is simple but easy to skip. A team watching only an aggregate score may keep debating which model to switch to. Looking at the failed conversation, user context, and tool results together reveals which step actually went wrong.</p>
 <p>The order assistant below follows the same approach: show support staff the order facts, cited policies, and draft together so they can point out the exact sentence that cannot be sent. Such feedback is easier to turn into the next change than an abstract "intelligence score."</p>
 <h2 id="111-project-case-an-order-exception-assistant-for-customer-support"><span id="111" class="legacy-heading-anchor" aria-hidden="true"></span>1.11 Project Case: An Order-Exception Assistant for Customer Support<a class="headerlink" href="#111-project-case-an-order-exception-assistant-for-customer-support" title="Permanent link">&para;</a></h2>
@@ -10242,18 +10281,22 @@
 <h3 id="1115-when-the-steps-are-fixed-use-a-regular-workflow"><span id="1115" class="legacy-heading-anchor" aria-hidden="true"></span>1.11.5 When the Steps Are Fixed, Use a Regular Workflow<a class="headerlink" href="#1115-when-the-steps-are-fixed-use-a-regular-workflow" title="Permanent link">&para;</a></h3>
 <p>By now, the process is clear: confirm identity and the order, query business data, find policy, draft a reply, and ask support to review it. Ask for clarification if the order cannot be identified; report temporary unavailability if an API fails. There is no need for the model to plan a route at runtime.</p>
 <p>The team chooses a fixed workflow. Code performs order queries and quantity checks, RAG retrieves policies, and the model generates one reply. If validation fails, the task returns to support.</p>
-<pre class="mermaid"><code>flowchart TD
-    UI["Support opens a ticket"] --&gt; AUTH["Check customer ownership&lt;br/&gt;and permissions"]
-    AUTH --&gt; LIVE["Query ERP&lt;br/&gt;Orders, shipments, inventory"]
-    AUTH --&gt; DOC["Retrieve currently applicable policy"]
-    LIVE --&gt; GATE["Check quantities&lt;br/&gt;and required information"]
-    DOC --&gt; GATE
-    GATE --&gt;|Complete| DRAFT["Generate and validate draft"]
-    GATE --&gt;|Missing or conflicting| HUMAN["Clarify or return to support"]
-    DRAFT --&gt;|Pass| REVIEW["Support reviews draft"]
-    DRAFT --&gt;|Fail| HUMAN
-    REVIEW --&gt; SAVE["Recheck permissions and versions&lt;br/&gt;Prevent duplicate writes"]
-    SAVE --&gt; CRM["CRM confirms save&lt;br/&gt;Support sends the email"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TD
+    AUTH["Authorize ticket"] --&gt; EVIDENCE["Join ERP and policy"]
+    EVIDENCE --&gt; DRAFT["Validate evidence and draft"]
+    DRAFT --&gt;|Pass| REVIEW["Support reviews"]
+    DRAFT --&gt;|Fail| HUMAN["Clarify or hand back"]
+    REVIEW --&gt; SAVE["Recheck and save"]</code></pre>
+<p>After support opens the ticket, check customer ownership and permissions. ERP queries for orders, shipments, and inventory can run alongside retrieval of the currently applicable policy; join both before checking quantities and required information. Missing or conflicting evidence goes to clarification or support, not generation. With complete evidence, generate and validate the draft; a failed draft follows the same handback path. Support reviews a passing draft. Before writing, recheck permissions and data versions and prevent duplicate writes. The CRM must confirm the save before support sends the email.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Check customer ownership and permissions</li>
+<li>Query ERP Orders, shipments, inventory</li>
+<li>Check quantities and required information</li>
+<li>Recheck permissions and versions Prevent duplicate writes</li>
+<li>CRM confirms save Support sends the email</li>
+</ul>
 <p>The model does not save the draft. After Xiao Chen clicks the button, a backend service writes to CRM and records the status as awaiting review, saved, failed, or confirmation pending. Each save carries an idempotency key tied to the ticket, draft-content hash, and evidence versions so that repeated clicks cannot create multiple drafts. The same key with different content must be rejected.</p>
 <p>If the write request times out, first look up the receipt associated with that key. If CRM lacks reliable deduplication and status lookup, show "Save status awaiting confirmation" and ask support to check. Do not automatically write again.</p>
 <p>This release has no task requiring multiple agents to investigate independently, nor does it need a knowledge graph first. Fine-tuning inventory and policies into a model is even less appropriate. More complex scheduling and recovery can be considered later if tasks involve investigating several warehouses or waiting across days for replies.</p>
@@ -10397,31 +10440,8 @@
 <p>The order assistant did not become an automated procurement platform. It kept the ticket interface support staff already knew, brought scattered information together, helped write the first draft, and left uncertain delivery dates as explicit follow-up items.</p>
 <p>The engineer's time went into more than model calls: clarifying what "arrival" meant, asking support which sentence could not be sent, handling legacy-system timeouts, and establishing how much time fewer system lookups actually saved. Together, these activities produced something the customer could keep using.</p>
 <h2 id="114-references"><span id="114" class="legacy-heading-anchor" aria-hidden="true"></span>1.14 References<a class="headerlink" href="#114-references" title="Permanent link">&para;</a></h2>
-<p>The original source collection was compiled on 2026-09-08. At that time, three Palantir Medium/engineering-blog links returned 403; they remain further reading, and the chapter does not rely on their project details. The OpenAI Gov job link is only a role entry point.</p>
-<p>The Evals retirement schedule, API data controls, and the specific Microsoft, Baseten, and AWS/INRIX case descriptions were rechecked on 2026-09-15. OpenAI's notice still listed existing evals becoming read-only on 2026-10-31 and the dashboard and API scheduled to shut down on 2026-11-30. Evaluation methods in older guides should be distinguished from instructions for the hosted platform; this does not invalidate open-source evaluation methods.</p>
-<ul>
-<li><a href="https://medium.com/palantir/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87">Palantir: Dev versus Delta—Demystifying Engineering Roles at Palantir</a></li>
-<li><a href="https://medium.com/palantir/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1">Palantir: A Day in the Life of a Forward Deployed Software Engineer</a></li>
-<li><a href="https://www.palantir.com/docs/foundry/chatbot-studio/overview/">Palantir: AIP Chatbot Studio Overview</a></li>
-<li><a href="https://www.palantir.com/docs/foundry/security/overview/">Palantir: Security and Governance</a></li>
-<li><a href="https://deploy.co/">OpenAI Deployment Company: Build, Prove, Generalize</a></li>
-<li><a href="https://jobs.ashbyhq.com/openai/db5a708d-1d7a-4aa3-8dd3-0d0423b6b69f">OpenAI: Forward Deployed Engineer, Gov</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">OpenAI: Evaluation Best Practices—Distinguish Methods from the Hosted Platform</a></li>
-<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI: Deprecations, Including the Evals Platform Schedule</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/production-best-practices">OpenAI: Production Best Practices</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: Data Controls</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective AI Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic: How We Built Claude Managed Agents</a></li>
-<li><a href="https://blog.palantir.com/securing-software-at-the-speed-of-ai-0b1d7ddd2bf0">Palantir: Securing Software at the Speed of AI—Official Engineering Case, 2026</a></li>
-<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: Demystifying Evals for AI Agents—Official Engineering Article</a></li>
-<li><a href="https://devblogs.microsoft.com/all-things-azure/only-believe-what-you-can-validate/">Microsoft: Only Believe What You Can Validate—Customer Field Engineering Account, 2026</a></li>
-<li><a href="https://www.baseten.co/blog/forward-deployed-engineering/">Baseten: Forward Deployed Engineering on the Frontier of AI—Official Team Practices, 2025</a></li>
-<li><a href="https://aws.amazon.com/blogs/machine-learning/how-inrix-accelerates-transportation-planning-with-amazon-bedrock/">AWS and INRIX: Transportation-Planning PoC—Coauthored by Customer and Vendor, 2025</a></li>
-<li><a href="https://x.com/vasuman/article/2057177266984226892">@vasuman: Forward Deployed Engineering 101—Practitioner's Long-Form Article on X</a></li>
-<li><a href="https://hamel.dev/blog/posts/field-guide/">Hamel Husain: A Field Guide to Rapidly Improving AI Products</a></li>
-<li><a href="https://www.varickagents.com/careers">Varick Agents: Careers</a></li>
-<li><a href="https://x.com/run_maotui/status/2100157320944881776">run_maotui: Working with AI in Product Management</a> (reference for Section 1.2.1: verifying research, choosing requirements, handing off PRDs, and maintaining project decisions; accessed 2026-09-17)</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-fde-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 <p>Back to the <a href="../">FDE module index</a>.</p>
 
 
@@ -10445,7 +10465,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：模型量化","description":"比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：模型量化","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-09-20","dateModified":"2026-09-29"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：模型量化","description":"比较 PTQ、QAT、GPTQ、AWQ 等大模型量化方法，以及整数、FP8 与块缩放 FP4 格式，解释精度、显存、吞吐、硬件支持和校准数据之间的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：模型量化","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十五章：模型量化","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/15-quantization/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9988,7 +10013,8 @@ q=\mathrm{clip}\left(\mathrm{round}\left(\frac{x}{s}\right)+z,q_{\min},q_{\max}\
 </table>
 <h3 id="1531">15.3.1 不存在固定的位宽断崖<a class="headerlink" href="#1531" title="Permanent link">&para;</a></h3>
 <p>位宽降低通常使误差控制更难，但不存在统一的「INT4 到 INT3 必然陡降、INT2 不能用」。模型大小、group size、量化算法、校准数据和任务都会改变曲线；GPTQ 原论文及作者实现就包含 2/3/4-bit 实验。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["高精度基线"] --&gt; B["选择格式与分组"]
     B --&gt; C["量化并验证质量"]
     C --&gt; D["测容量、吞吐与延迟"]
@@ -10036,18 +10062,19 @@ q=\mathrm{clip}\left(\mathrm{round}\left(\frac{x}{s}\right)+z,q_{\min},q_{\max}\
 \]</div>
 <p>其中量化后的权重必须受目标量化网格约束，否则直接取原权重即可使误差为零。X 是当前线性层的校准输入。该二次目标的 Hessian 与 <code>XXᵀ</code> 有关，不是对完整语言模型训练损失计算精确 Hessian。量化一列后，用二阶信息修正<strong>同一层剩余未量化的权重</strong>，通常配合阻尼和分块更新以提高稳定性与效率。</p>
 <h3 id="1541">15.4.1 流程<a class="headerlink" href="#1541" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    S1["① 准备代表性校准输入"]
-    S1 --&gt; S2["② 收集当前层输入&lt;br/&gt;构造带阻尼的二阶信息"]
-    S2 --&gt; S3["③ 按指定列顺序量化&lt;br/&gt;不是默认先量化最不重要权重"]
-    S3 --&gt; S4["④ 补偿同层未量化权重"]
-    S4 --&gt; MORE{"当前层还有未量化列？"}
-    MORE --&gt;|有| S3
-    MORE --&gt;|无| NEXT{"还有待量化层？"}
-    NEXT --&gt;|有| S2
-    NEXT --&gt;|无| DONE["导出量化权重"]
-
-    style S4 fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1["校准输入"] --&gt; S2["收集当前层统计量"]
+    S2 --&gt; S3["量化当前层"]
+    S3 --&gt;|下一层| S2
+    S3 --&gt;|所有层完成| DONE["导出权重"]</code></pre>
+<p>使用有代表性的校准输入。对每一层，收集其输入并构造带阻尼的二阶信息。下面的内循环按照指定顺序量化各列，而不是默认先量化最不重要的权重。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["量化下一列"] --&gt; C["补偿剩余权重"]
+    C --&gt;|还有未量化列| Q
+    C --&gt;|所有列完成| D["当前层完成"]</code></pre>
+<p>补偿只更新<strong>同一层</strong>尚未量化的权重。完成这一层的列循环后，才收集下一层的输入。</p>
 <h3 id="1542">15.4.2 优缺点<a class="headerlink" href="#1542" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -10236,29 +10263,8 @@ WX=(WS)(S^{-1}X)
 <li><strong>四个陷阱</strong>：异常值、KV 精度与后端限制、校准/任务分布差异、与其他优化的兼容性。</li>
 </ol>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers</a></li>
-<li><a href="https://arxiv.org/abs/2306.00978">AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs（NF4）</a></li>
-<li><a href="https://arxiv.org/abs/2208.07339">LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale</a></li>
-<li><a href="https://arxiv.org/abs/2211.10438">SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2208.11580">Optimal Brain Compression: A Framework for Accurate Post-Training Quantization and Pruning</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp / GGUF</a></li>
-<li><a href="https://github.com/casper-hansen/AutoAWQ">AutoAWQ</a></li>
-<li><a href="https://github.com/IST-DASLab/gptq">GPTQ 作者实现：列顺序、act-order 与分组</a></li>
-<li><a href="https://arxiv.org/html/2306.00978v5">AWQ 原论文：逐通道缩放与搜索</a></li>
-<li><a href="https://docs.pytorch.org/ao/main/workflows/qat.html">PyTorch AO：Quantization-Aware Training</a></li>
-<li><a href="https://arxiv.org/abs/2209.05433v1">FP8 Formats for Deep Learning，v1，第 2–3 节与表 1</a></li>
-<li><a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP Microscaling Formats (MX) Specification v1.0</a></li>
-<li><a href="https://github.com/microsoft/microxcaling/blob/7bc41952de394f5cc5e782baf132e7c7542eb4e4/mx/mx_ops.py">微软 MX 库：最大指数缩放与 scale 边界，固定版本</a></li>
-<li><a href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">NVIDIA：Introducing NVFP4 for Efficient and Accurate Low-Precision Inference</a></li>
-<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/docs/examples/fp8_primer.ipynb">NVIDIA Transformer Engine：FP8 入门与 MXFP8/NVFP4，固定版本 notebook</a></li>
-<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/transformer_engine/common/recipe/__init__.py">NVIDIA Transformer Engine：缩放配方、历史最大值与 margin，固定版本源码</a></li>
-<li><a href="https://arxiv.org/abs/2508.10925v1">gpt-oss-120b 与 gpt-oss-20b 模型卡，v1，第 2.1 节与表 1：MXFP4 MoE 权重与 checkpoint 大小</a></li>
-<li><a href="https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html">AMD ROCm 博客：CDNA3 与 CDNA4 上的 FP8 FNUZ 与 OCP 变体</a></li>
-<li><a href="https://onnx.ai/onnx/technical/float8.html">ONNX：FP8 正规数／次正规数解码与特殊值编码</a></li>
-<li><a href="https://github.com/vllm-project/vllm/blob/01efc7ef781391e744ed08c3292817a773d654e6/vllm/model_executor/layers/quantization/utils/w8a8_utils.py#L437-L458">vLLM v0.10.2：E4M3FN 到 E4M3FNUZ 的规范化，固定版本实现</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-15">集中参考资料章节</a>。</p>
 
 
 
@@ -10281,7 +10287,7 @@ WX=(WS)(S^{-1}X)
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月29日 12:32:01 CST">2026-09-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

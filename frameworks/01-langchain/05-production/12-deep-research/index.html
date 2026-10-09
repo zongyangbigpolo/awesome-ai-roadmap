@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: How Deep Research Works","description":"Examine evidence chains, sequential and parallel planning, stopping budgets, and Deep Agents backend boundaries without confusing citation quality with report length.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/12-deep-research/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: How Deep Research Works","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/12-deep-research/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: How Deep Research Works","description":"Examine evidence chains, sequential and parallel planning, stopping budgets, and Deep Agents backend boundaries without confusing citation quality with report length.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/12-deep-research/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: How Deep Research Works","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/12-deep-research/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 12: How Deep Research Works","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/12-deep-research/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9562,16 +9587,27 @@
 </blockquote>
 <p>Here, <code>task</code> refers to a synchronous subagent: the parent call waits for it to finish, so delegation does not always mean background execution. The official async subagents feature supports long-running tasks, mid-task instructions, and cancellation. It depends on a server implementing the Agent Protocol, either LangSmith Deployment or a self-hosted compatible service. Wrapping a synchronous subtask in a thread does not amount to durable background scheduling. An optional task list does not guarantee that the model will produce an effective research plan, either.</p>
 <h2 id="122-the-core-workflow"><span id="122" class="legacy-heading-anchor" aria-hidden="true"></span>12.2 The core workflow<a class="headerlink" href="#122-the-core-workflow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S1["① Clarify the question and scope"] --&gt; S2["② Create a research brief"]
-    S2 --&gt; S3["③ Supervisor divides the research into subtopics"]
-    S3 --&gt; S4["④ Researchers retrieve and verify in parallel"]
-    S4 --&gt; S5["⑤ Compress evidence and check research gaps"]
-    S5 --&gt;|Gaps or conflicts found| S3
-    S5 --&gt;|Sufficient coverage| S6["⑥ Write a unified final report"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S1["① Clarify the&lt;br/&gt;question and&lt;br/&gt;scope"] --&gt; S2["② Create a&lt;br/&gt;research brief"]
+    S2 --&gt; S3["③ Divide&lt;br/&gt;subtopics"]
+    S3 --&gt; S4["④ Parallel&lt;br/&gt;research"]
+    S4 --&gt; S5["⑤ Check&lt;br/&gt;evidence"]
+    S5 --&gt;|"Gaps / conflicts"| S3
+    S5 --&gt;|Sufficient coverage| S6["⑥ Write a&lt;br/&gt;unified final&lt;br/&gt;report"]
 
     style S2 fill:#e8f0fe
     style S6 fill:#e6f4ea</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Gaps or conflicts found</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>③ Supervisor divides the research into subtopics</li>
+<li>④ Researchers retrieve and verify in parallel</li>
+<li>⑤ Compress evidence and check research gaps</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9629,13 +9665,20 @@
 <h2 id="124-how-do-you-ensure-research-quality"><span id="124" class="legacy-heading-anchor" aria-hidden="true"></span>12.4 How do you ensure research quality?<a class="headerlink" href="#124-how-do-you-ensure-research-quality" title="Permanent link">&para;</a></h2>
 <p><strong>A long research report with many links is not necessarily a good one.</strong></p>
 <p>To assess quality, work backward through the chain of “source → evidence → conclusion”:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① Is the source trustworthy?&lt;br/&gt;Official docs, papers, regulatory documents, and primary sources are closer to the original facts&lt;br/&gt;Several reposts may all come from one article&lt;br/&gt;Many links do not establish independent corroboration"]
-    A --&gt; B["② Does the source actually support this conclusion?&lt;br/&gt;Separate facts, inferences, and uncertainty&lt;br/&gt;When sources conflict, check publication dates, measurement definitions, and original sources&lt;br/&gt;Do not simply choose the answer that best fits expectations"]
-    B --&gt; C["③ If the conclusion remains uncertain, revisit the research process&lt;br/&gt;Did search terms omit important qualifiers?&lt;br/&gt;Do subtopics overlap?&lt;br/&gt;Did the stopping rule end research too early?&lt;br/&gt;After tool failures, were valid alternative sources used?"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["① Is the source&lt;br/&gt;trustworthy?"]
+    A --&gt; B["② Check support"]
+    B --&gt; C["③ Revisit&lt;br/&gt;research"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Is the source trustworthy? Official docs, papers, regulatory documents, and primary sources are closer to the original facts Several reposts may all come from one article Many links do not establish independent corroboration</li>
+<li>② Does the source actually support this conclusion? Separate facts, inferences, and uncertainty When sources conflict, check publication dates, measurement definitions, and original sources Do not simply choose the answer that best fits expectations</li>
+<li>③ If the conclusion remains uncertain, revisit the research process Did search terms omit important qualifiers? Do subtopics overlap? Did the stopping rule end research too early? After tool failures, were valid alternative sources used?</li>
+</ul>
 <h3 id="1241-evaluate-both-the-answer-and-the-trace"><span id="1241" class="legacy-heading-anchor" aria-hidden="true"></span>12.4.1 Evaluate both the answer and the trace<a class="headerlink" href="#1241-evaluate-both-the-answer-and-the-trace" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9772,17 +9815,30 @@
 <p><strong>A recommended combination</strong>: put temporary intermediate artifacts in a thread-scoped State backend; put reviewed material that must persist across sessions in a Store backend with tenant namespaces; execute code in a disposable sandbox. When combining these, use a Composite backend to route by path rather than placing all data and permissions in one writable local directory.</p>
 <h2 id="126-which-scenarios-are-a-good-fit"><span id="126" class="legacy-heading-anchor" aria-hidden="true"></span>12.6 Which scenarios are a good fit?<a class="headerlink" href="#126-which-scenarios-are-a-good-fit" title="Permanent link">&para;</a></h2>
 <p>First decide whether dynamic, multi-round evidence gathering is necessary, then whether parallel researchers are worthwhile. The ability to split a task into independent subtopics determines the parallelization strategy; it is not a prerequisite for Deep Research:</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"Is the question open-ended enough&lt;br/&gt;to need repeated searches and changes of direction?"}
-    Q1 --&gt;|One authoritative retrieval can answer it| N1["Do not use it&lt;br/&gt;A complex research workflow only adds cost"]
-    Q1 --&gt;|Yes| Q2{"Can it be split into relatively independent subtopics?"}
-    Q2 --&gt;|No| N2["Use sequential research&lt;br/&gt;Do not force parallelism"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["Open-ended research?"]
+    Q1 --&gt;|"One lookup"| N1["Do not use it"]
+    Q1 --&gt;|Yes| Q2["Independent&lt;br/&gt;subtopics?"]
+    Q2 --&gt;|No| N2["Use sequential&lt;br/&gt;research"]
     N2 --&gt; Q3
-    Q2 --&gt;|Yes| Q3{"Does the report's value justify&lt;br/&gt;multiple rounds of model and search costs?"}
+    Q2 --&gt;|Yes| Q3["Worth the cost?"]
     Q3 --&gt;|No| N3["Do not use it"]
-    Q3 --&gt;|Yes| Y["A good fit for Deep Research"]
+    Q3 --&gt;|Yes| Y["A good fit for&lt;br/&gt;Deep Research"]
 
     style Y fill:#e6f4ea</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>One authoritative retrieval can answer it</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Is the question open-ended enough to need repeated searches and changes of direction?</li>
+<li>Do not use it A complex research workflow only adds cost</li>
+<li>Can it be split into relatively independent subtopics?</li>
+<li>Use sequential research Do not force parallelism</li>
+<li>Does the report's value justify multiple rounds of model and search costs?</li>
+</ul>
 <p><strong>Typical scenarios</strong> include competitive analysis, research into technical directions, literature reviews, vendor due diligence, policy-impact studies, and analysis that combines internal company material with public information.</p>
 <p><strong>Poor fits</strong>:</p>
 <table>
@@ -9854,19 +9910,8 @@
 <p>Think of it as turning a research task with no fixed path into a stateful workflow: the supervisor plans and fills gaps, researchers gather evidence in parallel with isolated contexts, and a final writing step unifies the report. Production readiness also depends on controlling breadth, depth, budget, source trustworthiness, and prompt-injection risk together.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://blog.langchain.com/open-deep-research/">LangChain official blog: Open Deep Research</a></li>
-<li><a href="https://github.com/langchain-ai/open_deep_research">Official open_deep_research repository</a></li>
-<li><a href="https://docs.langchain.com/oss/python/deepagents/overview">Deep Agents overview</a></li>
-<li><a href="https://docs.langchain.com/oss/python/deepagents/backends">Deep Agents Backends</a></li>
-<li><a href="https://docs.langchain.com/oss/python/deepagents/sandboxes">Deep Agents Sandboxes</a></li>
-<li><a href="https://docs.langchain.com/oss/python/deepagents/subagents">Deep Agents synchronous subagents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/deepagents/async-subagents">Deep Agents async subagents</a></li>
-<li><a href="https://github.com/langchain-ai/deepagents">Official deepagents repository</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">Official LangGraph documentation</a></li>
-<li><a href="https://docs.langchain.com/langsmith/evaluation">LangSmith Evaluation documentation</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-12">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9889,7 +9934,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

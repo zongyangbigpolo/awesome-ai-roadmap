@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：Agent 记忆与上下文压缩","description":"比较窗口裁剪、摘要、结构化抽取与外部化，说明压缩失真、恢复边界、Token 预算和缓存的区别及评测方法。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/10-agent-memory-compression/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：Agent 记忆与上下文压缩","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/10-agent-memory-compression/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：Agent 记忆与上下文压缩","description":"比较窗口裁剪、摘要、结构化抽取与外部化，说明压缩失真、恢复边界、Token 预算和缓存的区别及评测方法。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/10-agent-memory-compression/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：Agent 记忆与上下文压缩","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/10-agent-memory-compression/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十章：Agent 记忆与上下文压缩","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/10-agent-memory-compression/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -10504,13 +10529,14 @@ L(C)\le B
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    H[Long Interaction History] --&gt; W[Sliding Window&lt;br/&gt;按时间截断]
-    H --&gt; S[Summarization&lt;br/&gt;语义压缩]
-    H --&gt; I[Importance Filtering&lt;br/&gt;按价值选择]
-    H --&gt; E[Structured Extraction&lt;br/&gt;改变表示]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    H["Long&lt;br/&gt;Interaction&lt;br/&gt;History"] --&gt; W["Sliding&lt;br/&gt;Window&lt;br/&gt;按时间截断"]
+    H --&gt; S["Summarization&lt;br/&gt;语义压缩"]
+    H --&gt; I["Importance&lt;br/&gt;Filtering&lt;br/&gt;按价值选择"]
+    H --&gt; E["Structured&lt;br/&gt;Extraction&lt;br/&gt;改变表示"]
 
-    W --&gt; C[Compact Context]
+    W --&gt; C["Compact&lt;br/&gt;Context"]
     S --&gt; C
     I --&gt; C
     E --&gt; C</code></pre>
@@ -10518,16 +10544,17 @@ L(C)\le B
 <p>外部化是把内容搬出活跃 Context，不一定减少总存储；从窗口移除也不等于从记忆库删除。应用层摘要、服务端 compaction、KV Cache 量化/淘汰分别改变文本表示、服务托管上下文或推理状态，不应统称为同一种“记忆压缩”。</p>
 <h2 id="103-sliding-window">10.3 Sliding Window：按时间截断<a class="headerlink" href="#103-sliding-window" title="Permanent link">&para;</a></h2>
 <p>Sliding Window 只在活跃 Context 保留最近若干轮或若干 Token，移除更早内容；是否删除持久化原记录由另一套保留策略决定。</p>
-<pre class="mermaid"><code>flowchart LR
-    M1[Message 1] --&gt; M2[Message 2]
-    M2 --&gt; M3[Message 3]
-    M3 --&gt; M4[Message 4]
-    M4 --&gt; M5[Message 5]
-    M5 --&gt; M6[Message 6]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    M1["Message 1"] --&gt; M2["Message 2"]
+    M2 --&gt; M3["Message 3"]
+    M3 --&gt; M4["Message 4"]
+    M4 --&gt; M5["Message 5"]
+    M5 --&gt; M6["Message 6"]
 
-    M1 -.丢弃.-&gt; X[Evicted]
+    M1 -.丢弃.-&gt; X["Evicted"]
     M2 -.丢弃.-&gt; X
-    M3 --&gt; K[Current Window]
+    M3 --&gt; K["Current Window"]
     M4 --&gt; K
     M5 --&gt; K
     M6 --&gt; K</code></pre>
@@ -10572,10 +10599,11 @@ L(C)\le B
 <li>高风险操作约束。</li>
 </ul>
 <p>Pin 的是当前仍有效的受信内容，不是永久固定历史文本。用户改了目标或权限已撤销，应更新或撤销相应项；权限判断始终由运行时执行，不能只依靠上下文中的一句规则。若必需项本身超过预算，应拆分任务或停止请求，而不是静默截断。</p>
-<pre class="mermaid"><code>flowchart TB
-    PIN[Pinned Context] --&gt; CTX[Current Context]
-    RECENT[Recent Window] --&gt; CTX
-    RET[Retrieved Memory] --&gt; CTX</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PIN["Pinned Context"] --&gt; CTX["Current Context"]
+    RECENT["Recent Window"] --&gt; CTX
+    RET["Retrieved Memory"] --&gt; CTX</code></pre>
 <h3 id="1033-tool">10.3.3 不要切断 Tool 交互<a class="headerlink" href="#1033-tool" title="Permanent link">&para;</a></h3>
 <p>Tool Call 和对应 Tool Result 应视为一个逻辑单元。只保留调用、不保留结果，或只保留结果、不保留调用，都可能破坏上下文。</p>
 <p>还可能直接违反 API 的消息格式要求。并行调用要核对各个 call ID 与结果；未完成调用不能伪造为成功结果。某些 API 还要求保留特定 continuation/reasoning item，应遵循其协议。需要裁剪时，可整体移除已完成交互并保存摘要/引用，而不是留下悬空的 tool result。</p>
@@ -10596,11 +10624,12 @@ L(C)\le B
 <p>它是截断策略，不是理解策略。</p>
 <h2 id="104-summarization">10.4 Summarization：用摘要替换历史<a class="headerlink" href="#104-summarization" title="Permanent link">&para;</a></h2>
 <p>Summarization 在删除早期历史前，先提取重要信息形成更短表示。</p>
-<pre class="mermaid"><code>flowchart LR
-    H[Old Messages] --&gt; S[Summarizer]
-    S --&gt; SUM[Compact Summary]
-    SUM --&gt; CTX[Current Context]
-    R[Recent Messages] --&gt; CTX</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Old Messages"] --&gt; S["Summarizer"]
+    S --&gt; SUM["Compact Summary"]
+    SUM --&gt; CTX["Current Context"]
+    R["Recent Messages"] --&gt; CTX</code></pre>
 <h3 id="1041-rolling-summary">10.4.1 Rolling Summary<a class="headerlink" href="#1041-rolling-summary" title="Permanent link">&para;</a></h3>
 <p>维护一个持续更新的摘要：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>new_summary = summarize(old_summary + newly_evicted_messages)
@@ -10620,11 +10649,12 @@ L(C)\le B
 <p>例如原文是“测试超时，支付结果未知，不要重试”，摘要变成“支付失败，可以重试”，既丢了不确定性，也反转了操作约束。后续再摘要不会自动恢复这些信息，必须回到原始事件或权威业务状态核对。</p>
 <h3 id="1042-hierarchical-summary">10.4.2 Hierarchical Summary<a class="headerlink" href="#1042-hierarchical-summary" title="Permanent link">&para;</a></h3>
 <p>先生成局部摘要，再合并成阶段或任务摘要：</p>
-<pre class="mermaid"><code>flowchart TB
-    M1[Messages 1-10] --&gt; S1[Stage Summary A]
-    M2[Messages 11-20] --&gt; S2[Stage Summary B]
-    M3[Messages 21-30] --&gt; S3[Stage Summary C]
-    S1 --&gt; T[Task Summary]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M1["Messages&lt;br/&gt;1-10"] --&gt; S1["Stage&lt;br/&gt;Summary A"]
+    M2["Messages&lt;br/&gt;11-20"] --&gt; S2["Stage&lt;br/&gt;Summary B"]
+    M3["Messages&lt;br/&gt;21-30"] --&gt; S3["Stage&lt;br/&gt;Summary C"]
+    S1 --&gt; T["Task Summary"]
     S2 --&gt; T
     S3 --&gt; T</code></pre>
 <p>它比不断重写同一个摘要更容易：</p>
@@ -10667,11 +10697,12 @@ L(C)\le B
 </ul>
 <h3 id="1046-summary-drift">10.4.6 Summary Drift<a class="headerlink" href="#1046-summary-drift" title="Permanent link">&para;</a></h3>
 <p>多轮摘要可能发生：</p>
-<pre class="mermaid"><code>flowchart LR
-    RAW[Raw History] --&gt; S1[Summary 1]
-    S1 --&gt; S2[Summary 2]
-    S2 --&gt; S3[Summary 3]
-    S3 --&gt; D[Meaning Drift]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw History"] --&gt; S1["Summary 1"]
+    S1 --&gt; S2["Summary 2"]
+    S2 --&gt; S3["Summary 3"]
+    S3 --&gt; D["Meaning Drift"]</code></pre>
 <p>缓解方式：</p>
 <ul>
 <li>保存原始历史或 Artifact；</li>
@@ -10686,10 +10717,11 @@ L(C)\le B
 <h2 id="105-importance-filtering">10.5 Importance Filtering：按价值选择<a class="headerlink" href="#105-importance-filtering" title="Permanent link">&para;</a></h2>
 <p>时间顺序不代表信息价值。用户第一轮给出的安全约束，可能比最近十轮普通消息更重要。</p>
 <p>Importance Filtering 根据当前任务选择应保留的内容。</p>
-<pre class="mermaid"><code>flowchart LR
-    H[History Items] --&gt; SCORE[Importance Scoring]
-    SCORE --&gt; HIGH[High Value&lt;br/&gt;保留]
-    SCORE --&gt; LOW[Low Value&lt;br/&gt;删除或外部化]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["History Items"] --&gt; SCORE["Importance Scoring"]
+    SCORE --&gt; HIGH["High Value&lt;br/&gt;保留"]
+    SCORE --&gt; LOW["Low Value&lt;br/&gt;删除或外部化"]</code></pre>
 <h3 id="1051">10.5.1 重要性信号<a class="headerlink" href="#1051" title="Permanent link">&para;</a></h3>
 <ul>
 <li>与当前目标的相关性；</li>
@@ -10745,14 +10777,15 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>因此，仍有合法用途的原文可按保留政策外部化，支持后续取回；敏感或未授权内容不能借“以后可能有用”永久保存。</p>
 <h2 id="106-structured-extraction">10.6 Structured Extraction：改变信息表示<a class="headerlink" href="#106-structured-extraction" title="Permanent link">&para;</a></h2>
 <p>自然语言对话通常冗长、重复且难以精确更新。Structured Extraction 将历史转换为高密度状态。</p>
-<pre class="mermaid"><code>flowchart LR
-    CHAT[Conversation] --&gt; EX[Extractor + Evidence Validation]
-    EX --&gt; FACTS[Facts]
-    EX --&gt; STATE[Task State]
-    EX --&gt; TODO[Todo]
-    EX --&gt; DEC[Decisions]
-    EX --&gt; ENT[Entities]
-    EX --&gt; ART[Artifact References]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    CHAT["Conversation"] --&gt; EX["Extractor +&lt;br/&gt;Evidence&lt;br/&gt;Validation"]
+    EX --&gt; FACTS["Facts"]
+    EX --&gt; STATE["Task State"]
+    EX --&gt; TODO["Todo"]
+    EX --&gt; DEC["Decisions"]
+    EX --&gt; ENT["Entities"]
+    EX --&gt; ART["Artifact&lt;br/&gt;References"]</code></pre>
 <h3 id="1061">10.6.1 示例<a class="headerlink" href="#1061" title="Permanent link">&para;</a></h3>
 <p>原始对话：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>用户：不要创建 PR，直接把后续章节提交到 main。
@@ -10826,16 +10859,39 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>Schema 合法只证明字段形状正确，不证明内容真实。运行状态应由执行器及工具确认结果更新；模型可提出补丁，但不能仅从“我准备执行”抽取出 <code>completed</code>。含糊的声明应保留 <code>unknown</code>、适用范围和原话，不能强行填成确定事实。</p>
 <h2 id="107">10.7 四种方法如何组合<a class="headerlink" href="#107" title="Permanent link">&para;</a></h2>
 <p>工程上通常把这几种方法串起来用：</p>
+<p>分离历史前，先保护约束并提取状态。</p>
 <pre class="mermaid"><code>flowchart TB
-    H[Full History] --&gt; PIN[Pin Hard Constraints]
-    PIN --&gt; EXT[Externalize Large Artifacts]
-    EXT --&gt; STR[Structured Extraction]
-    STR --&gt; SPLIT[划分近期交互与较早历史]
-    SPLIT --&gt; IMP[较早历史 Importance Filtering]
-    IMP --&gt; SUM[Summarize Older History]
-    SPLIT --&gt; WIN[Keep Recent Sliding Window]
-    SUM --&gt; PACK[Context Packing]
-    WIN --&gt; PACK[Context Packing]
+    H[Full History]
+    PIN[Pin Hard Constraints]
+    EXT[Externalize Large Artifacts]
+    STR[Structured Extraction]
+    SPLIT[划分近期交互与较早历史]
+    H --&gt; PIN
+    PIN --&gt; EXT
+    EXT --&gt; STR
+    STR --&gt; SPLIT</code></pre>
+<p>较早与近期交互沿不同路径汇入同一装配器。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SPLIT["划分近期交互与较早历史"]
+    IMP["较早历史 Importance&lt;br/&gt;Filtering"]
+    SUM["Summarize Older History"]
+    WIN["Keep Recent Sliding&lt;br/&gt;Window"]
+    PACK["Context Packing"]
+    SPLIT --&gt; IMP
+    IMP --&gt; SUM
+    SPLIT --&gt; WIN
+    SUM --&gt; PACK
+    WIN --&gt; PACK</code></pre>
+<p>受保护的信息也直接进入该装配器。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PIN["Pin Hard Constraints"]
+    EXT["Externalize Large&lt;br/&gt;Artifacts"]
+    STR["Structured Extraction"]
+    PACK["Context Packing"]
+    PIN --&gt; EXT
+    EXT --&gt; STR
     PIN --&gt;|有效约束| PACK
     STR --&gt;|核对后的状态| PACK
     EXT --&gt;|Artifact 引用| PACK</code></pre>
@@ -10873,11 +10929,12 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <li>合并同一实体的相同事实；</li>
 <li>将重复来源折叠为引用列表。</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    I[Context Items] --&gt; H[Exact Hash]
-    H --&gt; S[Semantic Similarity]
-    S --&gt; E[Entity / Fact Merge]
-    E --&gt; O[Deduplicated Items]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    I["Context Items"] --&gt; H["Exact Hash"]
+    H --&gt; S["Semantic Similarity"]
+    S --&gt; E["Entity / Fact Merge"]
+    E --&gt; O["Deduplicated Items"]</code></pre>
 <p>去重时应避免误删：</p>
 <ul>
 <li>来自不同可信来源的相同结论；</li>
@@ -10911,13 +10968,14 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <p>前提是引用可解析、有版本、未过期，且 Agent 有可用的读取工具。URI 和哈希不包含原文；对象已删、权限撤销、链接过期或检索失败时，恢复就不成立。按片段读取应返回位置、范围及是否截断，并在工具端鉴权；摘要泄露敏感结论也属于泄露，不能只保护原始对象。</p>
 <h2 id="1010-hierarchical-memory">10.10 额外方法：Hierarchical Memory<a class="headerlink" href="#1010-hierarchical-memory" title="Permanent link">&para;</a></h2>
 <p>分层记忆同时保留不同粒度：</p>
-<pre class="mermaid"><code>flowchart TB
-    TASK[Task Summary] --&gt; S1[Stage Summary A]
-    TASK --&gt; S2[Stage Summary B]
-    S1 --&gt; E1[Raw Events]
-    S1 --&gt; E2[Artifacts]
-    S2 --&gt; E3[Raw Events]
-    S2 --&gt; E4[Artifacts]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Task Summary"] --&gt; S1["Stage&lt;br/&gt;Summary A"]
+    TASK --&gt; S2["Stage&lt;br/&gt;Summary B"]
+    S1 --&gt; E1["Raw Events"]
+    S1 --&gt; E2["Artifacts"]
+    S2 --&gt; E3["Raw Events"]
+    S2 --&gt; E4["Artifacts"]</code></pre>
 <p>Agent 先读取 Task Summary；只有需要细节时，才展开 Stage Summary 或 Raw Event。</p>
 <p>这是一种 Progressive Disclosure，可能减少无关上下文，但会增加检索轮次和遗漏风险。概要若没提到关键细节，Agent 可能不会展开正确分支，因此要保留直接检索原文的路径，并测量端到端延迟。</p>
 <h2 id="1011-delta-state-compaction">10.11 额外方法：Delta 与 State Compaction<a class="headerlink" href="#1011-delta-state-compaction" title="Permanent link">&para;</a></h2>
@@ -10935,11 +10993,12 @@ U_i=\alpha R_i+\beta I_i+\gamma D_i+\delta T_i+\epsilon N_i-\zeta C_i
 <li>周期性生成 Snapshot；</li>
 <li>从 Snapshot + Delta 恢复当前状态。</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    SNAP[Snapshot] --&gt; D1[Delta 1]
-    D1 --&gt; D2[Delta 2]
-    D2 --&gt; D3[Delta N]
-    D3 --&gt; NEW[New Snapshot]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    SNAP["Snapshot"] --&gt; D1["Delta 1"]
+    D1 --&gt; D2["Delta 2"]
+    D2 --&gt; D3["Delta N"]
+    D3 --&gt; NEW["New Snapshot"]</code></pre>
 <p>这种方法主要减少状态存储和传输，不等同于自然语言摘要。</p>
 <p>恢复要有确定的事件顺序、稳定事件 ID、状态版本和幂等应用规则，且 Snapshot 与已纳入的日志位点一致。不能只凭时间戳推断所有并发事件的先后。事件回放也不应重新执行付款、发信等副作用；已发生的外部效果需要独立的执行记录与核对。</p>
 <h2 id="1012">10.12 压缩触发时机<a class="headerlink" href="#1012" title="Permanent link">&para;</a></h2>
@@ -11010,16 +11069,17 @@ B_{instruction}
 <p>Prompt Caching 处理的是跨请求的前缀计算复用，不直接缓存 Embedding 或向量索引；与 RAG 入库时上下文增强的关系，见<a href="../../../rag/02-ingestion-indexing/05-semantic-truncation/">RAG：语义被切断怎么办</a>。</p>
 </blockquote>
 <p>Prompt Caching 缓存重复 Prompt 前缀的中间计算结果，使后续请求可以复用。</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant A as Application
     participant C as Prompt Cache
     participant M as Model
 
-    A-&gt;&gt;M: Stable Prefix + New Suffix
+    A-&gt;&gt;M: Stable Prefix + New&lt;br/&gt;Suffix
     M-&gt;&gt;C: 缓存稳定前缀计算
-    A-&gt;&gt;M: Same Prefix + Another Suffix
+    A-&gt;&gt;M: Same Prefix + Another&lt;br/&gt;Suffix
     C--&gt;&gt;M: 复用前缀计算
-    M--&gt;&gt;A: 命中时可减少重复 Prefill 开销</code></pre>
+    M--&gt;&gt;A: 命中时可减少重复 Prefill&lt;br/&gt;开销</code></pre>
 <p>适合缓存：</p>
 <ul>
 <li>长 System Prompt；</li>
@@ -11081,11 +11141,12 @@ B_{instruction}
 </blockquote>
 <p>即使缓存命中，模型仍然“看到”相同内容，只是服务端可能复用计算，从而降低成本或延迟。</p>
 <h2 id="1016-prompt-caching">10.16 Prompt Caching 与压缩如何配合<a class="headerlink" href="#1016-prompt-caching" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    RAW[Raw Information] --&gt; COMP[Memory Compression]
-    COMP --&gt; KEEP[Selected Context]
-    KEEP --&gt; CACHE[Prompt Caching]
-    CACHE --&gt; MODEL[Model]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RAW["Raw Information"] --&gt; COMP["Memory Compression"]
+    COMP --&gt; KEEP["Selected Context"]
+    KEEP --&gt; CACHE["Prompt Caching"]
+    CACHE --&gt; MODEL["Model"]</code></pre>
 <p>实践里通常先做两步：</p>
 <ol>
 <li>先决定哪些信息真正需要进入 Context；</li>
@@ -11111,7 +11172,7 @@ B_{instruction}
 <li>具体费用和缓存规则由模型服务商决定。</li>
 </ul>
 <p>Prompt 设计时通常将稳定内容放在前面，动态内容放在后面，以提高缓存复用。</p>
-<p><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI 官方文档</a>说明，需匹配实际渲染的前缀；模型、工具 Schema、顺序及相关设置变化都可能改变可复用部分。缓存最低长度、断点方式、写入费用和保留时间依模型与服务版本而异，不能把某个型号的数字推广为统一规则。</p>
+<p>OpenAI 官方文档<sup><a href="../../../book/references/#ref-80">【80】</a></sup>说明，需匹配实际渲染的前缀；模型、工具 Schema、顺序及相关设置变化都可能改变可复用部分。缓存最低长度、断点方式、写入费用和保留时间依模型与服务版本而异，不能把某个型号的数字推广为统一规则。</p>
 <p>频繁改写前面的摘要可能使后续缓存失效，压缩调用自身也有成本。对照总账单和首 Token 延迟，分别测量冷缓存、热缓存及压缩后的请求；不要为了缓存命中继续发送失效权限或过期敏感数据。</p>
 <h2 id="1018-kv-cache-prompt-caching">10.18 KV Cache 与 Prompt Caching<a class="headerlink" href="#1018-kv-cache-prompt-caching" title="Permanent link">&para;</a></h2>
 <p>KV Cache 是 Transformer 推理中缓存 Attention Key/Value 状态的底层机制。</p>
@@ -11141,7 +11202,7 @@ B_{instruction}
 <p>两者都属于计算优化，不属于语义记忆压缩。</p>
 <p>但 KV Cache 的量化、淘汰、卸载又是另一组推理系统技术，它们可能改变精度、显存与延迟，并不等价于生成可审计摘要。应用若只使用托管 API，不应假定能操作这些底层状态。</p>
 <h3 id="10181-compaction-prompt-cache">10.18.1 服务端 Compaction 也不等于 Prompt Cache<a class="headerlink" href="#10181-compaction-prompt-cache" title="Permanent link">&para;</a></h3>
-<p><a href="https://developers.openai.com/api/docs/guides/compaction">OpenAI Responses 的 Compaction</a>会产生不透明的加密 compaction item，供后续请求继续使用。这是缩减后续 Context 的服务能力，不是仅复用前缀计算，也不能假定其内部就是可读的自然语言摘要。</p>
+<p>OpenAI Responses 的 Compaction<sup><a href="../../../book/references/#ref-495">【495】</a></sup>会产生不透明的加密 compaction item，供后续请求继续使用。这是缩减后续 Context 的服务能力，不是仅复用前缀计算，也不能假定其内部就是可读的自然语言摘要。</p>
 <p>要区分两条接口路径：</p>
 <ul>
 <li><strong>显式调用 <code>/responses/compact</code></strong>：提交的窗口必须仍能装入所用模型。返回值是新的完整压缩窗口，除了 compaction item，还可能保留其他消息；应整体作为后续请求的基础，不能只取出加密 item 就丢弃其余输出。</li>
@@ -11221,7 +11282,7 @@ CR=1-\frac{L_{after}}{L_{before}}
 <li>Artifact 丢失。</li>
 </ul>
 <p>测试步数来自业务轨迹分布，不是可靠性的统一门槛。要记录累计压缩次数，检查远期信息是否逐轮丢失；总成本应包含摘要生成、写入索引、额外检索和恢复调用。</p>
-<p>公开数据可以参考 <a href="https://github.com/snap-research/locomo">LoCoMo</a> 的事件摘要与问答、<a href="https://github.com/xiaowu0162/LongMemEval">LongMemEval</a> 的知识更新与弃答，以及 <a href="https://github.com/xiaowu0162/LongMemEval-V2">LongMemEval-V2</a> 的轨迹经验检索。它们不直接验证你自己的 checkpoint、ACL 或副作用恢复；固定数据版本，按会话/轨迹分组统计，避免把相关问题当作独立用户样本。</p>
+<p>公开数据可以参考 LoCoMo<sup><a href="../../../book/references/#ref-481">【481】</a></sup> 的事件摘要与问答、LongMemEval<sup><a href="../../../book/references/#ref-480">【480】</a></sup> 的知识更新与弃答，以及 LongMemEval-V2<sup><a href="../../../book/references/#ref-482">【482】</a></sup> 的轨迹经验检索。它们不直接验证你自己的 checkpoint、ACL 或副作用恢复；固定数据版本，按会话/轨迹分组统计，避免把相关问题当作独立用户样本。</p>
 <h2 id="1021">10.21 常见反模式<a class="headerlink" href="#1021" title="Permanent link">&para;</a></h2>
 <h3 id="10211-n">10.21.1 只保留最近 N 轮<a class="headerlink" href="#10211-n" title="Permanent link">&para;</a></h3>
 <p>可能删除最初目标和安全约束。</p>
@@ -11251,32 +11312,13 @@ CR=1-\frac{L_{after}}{L_{before}}
 <p>可将重要决策同时写入外部文件或结构化状态（即 10.9 节的 Externalization），并保存来源、版本和适用范围。外部保存不代表模型自动能读到它，还需有稳定加载入口和读回校验；决策变化时同步失效旧记录，不能让旧文件一直充当有效约束。</p>
 <h2 id="1022">10.22 推荐的生产级压缩管道<a class="headerlink" href="#1022" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    INPUT[Messages + Tool Results + State] --&gt; CLASS[Classify]
-
-    CLASS --&gt; PIN[当前有效的 Pinned Constraints]
-    CLASS --&gt; STATE[经执行证据核对的 Structured State]
-    CLASS --&gt; LARGE[Large Artifacts]
-    CLASS --&gt; HISTORY[Historical Messages]
-
-    LARGE --&gt; EXT[Externalize + Reference]
-    HISTORY --&gt; SPLIT[按完整交互与阶段分组]
-    SPLIT --&gt; RECENT[近期完整交互]
-    SPLIT --&gt; DEDUP[较早历史去重]
-    DEDUP --&gt; IMP[Importance Filter]
-    IMP --&gt; SUM[Hierarchical Summary]
-
-    PIN --&gt; PACK[Context Packer]
-    STATE --&gt; PACK
-    EXT --&gt; PACK
-    SUM --&gt; PACK
-    RECENT --&gt; PACK
-    RET[经权限与版本复核的 Long-term Memory] --&gt; PACK
-
-    PACK --&gt; CACHE[Prompt Cache Stable Prefix]
-    CACHE --&gt; MODEL[Model]
-
-    MODEL --&gt; OBS[New Observation]
-    OBS --&gt; INPUT</code></pre>
+    CLASS[输入分类] --&gt; PACK[上下文装配器]
+    PACK --&gt; CACHE[提示词缓存稳定前缀]
+    CACHE --&gt; MODEL[模型]
+    MODEL --&gt; OBS[新观察结果]
+    OBS --&gt; CLASS</code></pre>
+<p>输入包含消息、工具结果与状态。分类时区分当前有效的固定约束、经执行证据核对的结构化状态、大型产物与历史消息。约束与已验证状态直接进入装配器，大型产物先外置并替换为引用。</p>
+<p>历史按完整交互与阶段分组。近期完整交互直接进入装配器；较早历史先去重、按重要性筛选，再生成分层摘要。长期记忆同样可以进入装配器，但必须先复核权限与版本。装配后的上下文通过稳定前缀使用提示词缓存，再交给模型；新观察结果重新进入输入分类。</p>
 <p>可按任务需要选择以下组合；短任务不一定需要摘要和分层存储：</p>
 <ol>
 <li>保留当前有效的系统、安全、目标和成功标准，并随权限和目标变化更新；</li>
@@ -11361,20 +11403,8 @@ CR=1-\frac{L_{after}}{L_{before}}
 <p>两者互补，但 Prompt Caching 不会释放 Context Window，也不能替代摘要、过滤和结构化抽取。</p>
 <p>压缩后至少核对一次目标、未决状态、关键证据和引用可读性。若这些无法恢复，应回到原始记录或明确报告信息不足，而不是把流畅的摘要当作完整历史。</p>
 <h2 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.08560">MemGPT: Towards LLMs as Operating Systems</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://research.trychroma.com/context-rot">Chroma Research: Context Rot</a></li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic Prompt Caching</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI Prompt Caching</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/compaction">OpenAI Compaction</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/add-memory">LangGraph Memory</a></li>
-<li><a href="https://github.com/snap-research/locomo/blob/92286325a40764bee61f77824ddb95233b11c4d6/README.MD">LoCoMo 官方发布说明快照 9228632</a>（ACL 2024 发布集；固定版本的 <code>data/locomo10.zip</code> 内含十份按对话划分的 JSON 文件）</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md">LongMemEval 官方说明快照 9e0b455</a>（区分原始版与 2025 年 9 月清洗版）</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md">LongMemEval-V2 官方说明快照 2cc8c54</a></li>
-</ul>
-<p>资料核对：2026-09-15。OpenAI 缓存与 Compaction 引用的是 Responses API 滚动文档，不承诺跨模型或跨版本相同的价格、阈值与历史传递规则；本次未实测服务端接口。Anthropic 缓存条目保留为补充阅读，未据此新增具体参数结论。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-10">集中参考资料章节</a>。</p>
 
 
 
@@ -11397,7 +11427,7 @@ CR=1-\frac{L_{after}}{L_{before}}
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

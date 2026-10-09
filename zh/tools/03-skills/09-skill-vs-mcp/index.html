@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：Skill 与 MCP 的区别","description":"比较 MCP 通信协议与 Agent Skills 文件格式，纠正全量加载和必然依赖误区，并讨论脚本及权限边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/09-skill-vs-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：Skill 与 MCP 的区别","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/09-skill-vs-mcp/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：Skill 与 MCP 的区别","description":"比较 MCP 通信协议与 Agent Skills 文件格式，纠正全量加载和必然依赖误区，并讨论脚本及权限边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/09-skill-vs-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：Skill 与 MCP 的区别","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/09-skill-vs-mcp/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第九章：Skill 与 MCP 的区别","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/09-skill-vs-mcp/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9297,22 +9322,22 @@
 </table>
 <h2 id="92">9.2 从一个具体任务看两者的分工<a class="headerlink" href="#92" title="Permanent link">&para;</a></h2>
 <p>任务：<strong>审查这个 PR</strong>。</p>
-<pre class="mermaid"><code>flowchart TB
-    TASK["用户：帮我审查这个 PR"] --&gt; AGENT[Agent]
-
-    AGENT --&gt;|"自动发现并加载"| SKILL["code-review Skill&lt;br/&gt;知道：先看什么、按哪四个维度查、&lt;br/&gt;用什么格式输出"]
-
-    SKILL --&gt; H["Host 按指令编排&lt;br/&gt;校验权限与执行结果"]
-    H --&gt;|"流程第一步：拿到 diff"| M1["GitHub MCP Server&lt;br/&gt;get_pull_request_diff"]
-    H --&gt;|"流程第二步：跑静态扫描"| SC["Skill 自带脚本&lt;br/&gt;scripts/check_security.py"]
-    H --&gt;|"流程第三步：查历史缺陷"| M2["内部知识库 MCP Server&lt;br/&gt;search_past_incidents"]
-    H --&gt;|"流程第四步：按模板输出"| TPL["Skill 自带模板&lt;br/&gt;assets/report_template.md"]
-
-    TPL --&gt; OUT[结构化审查报告]
-
-    style SKILL fill:#e6f4ea
-    style M1 fill:#e8f0fe
-    style M2 fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    SKILL["加载审查 Skill"] --&gt; DIFF["获取 PR 差异"]
+    DIFF --&gt; SCAN["运行静态扫描"]
+    SCAN --&gt; HISTORY["查询历史缺陷"]
+    HISTORY --&gt; REPORT["撰写审查报告"]</code></pre>
+<p>面对“帮我审查这个 PR”，Agent 自动发现并加载 <code>code-review</code> Skill。指令规定先读什么、四个审查维度及输出格式，Host 负责授权检查和结果校验。第一步调用 GitHub MCP Server 的 <code>get_pull_request_diff</code>；第二步运行随 Skill 提供的 <code>scripts/check_security.py</code>；第三步调用内部知识库 MCP Server 的 <code>search_past_incidents</code>；第四步按 <code>assets/report_template.md</code> 生成结构化报告。Skill 提供流程，MCP Server、本地脚本和模板分别实现流程中的不同部分。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>code-review Skill 知道：先看什么、按哪四个维度查、 用什么格式输出</li>
+<li>Host 按指令编排 校验权限与执行结果</li>
+<li>GitHub MCP Server get_pull_request_diff</li>
+<li>Skill 自带脚本 scripts/check_security.py</li>
+<li>内部知识库 MCP Server search_past_incidents</li>
+<li>Skill 自带模板 assets/report_template.md</li>
+</ul>
 <p>拆开看：</p>
 <ul>
 <li><strong>没有 MCP</strong>：仍可用 GitHub API、CLI 或内嵌工具读取 diff；缺的是统一协议接入，不是全部外部能力；</li>
@@ -9369,32 +9394,47 @@
 <h3 id="932">9.3.2 另一个经常被忽略的差异：加载方式<a class="headerlink" href="#932" title="Permanent link">&para;</a></h3>
 <p>MCP 的 <code>tools/list</code> 结果不等于模型上下文。Host 可分页拉取、按权限缓存，再检索少量相关定义或延迟加载；全量注入只是某些实现的策略。</p>
 <p>Skill 推荐渐进加载，但元数据也随安装数量增长。一个冗长的 Skill 加载后仍可能占据大量上下文。</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph MCP_L["MCP 的加载"]
-        M1[已知 Server] --&gt; M2[tools/list 分页与缓存]
-        M2 --&gt; M3["Host 按权限与任务筛选&lt;br/&gt;再注入工具定义"]
-    end
-
-    subgraph SKILL_L["Skill 的加载"]
-        S1[扫描 Skill 目录] --&gt; S2["只读 name + description"]
-        S2 --&gt; S3{任务匹配?}
-        S3 --&gt;|是| S4[加载正文]
-        S3 --&gt;|否| S5[仅保留发现元数据]
-    end
-
-    style M3 fill:#fce8e6
+<p><strong>MCP 的加载</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["已知 Server"] --&gt; M2["tools/list 分页与缓存"]
+        M2 --&gt; M3["Host 筛选工具"]
+    style M3 fill:#fce8e6</code></pre>
+<p><strong>Skill 的加载</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["扫描 Skill 目录"] --&gt; S2["只读 name +&lt;br/&gt;description"]
+        S2 --&gt; S3["任务匹配?"]
+        S3 --&gt;|是| S4["加载正文"]
+        S3 --&gt;|否| S5["仅保留发现元数据"]
     style S5 fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>Host 按权限与任务筛选 再注入工具定义</li>
+</ul>
 <p>两者都涉及发现成本和运行时注入成本。工具搜索可以延迟暴露完整 Schema，Skill 也要维护可发现目录；比较时应统计实际模型输入，而不是只比较 Server 和文件夹数量。</p>
 <p>工具与 Skill 都要测试路由召回、误触发、上下文预算和权限。相关方法见<a href="../../01-function-calling/03-tool-schema-design/">动态工具筛选</a>。</p>
 <h2 id="94">9.4 什么时候用哪个<a class="headerlink" href="#94" title="Permanent link">&para;</a></h2>
 <p>可以按这个标准判断：</p>
-<pre class="mermaid"><code>flowchart TB
-    Q{"你要给 Agent 加的&lt;br/&gt;是什么?"}
-    Q --&gt;|"访问外部系统的能力&lt;br/&gt;（数据库、API、文件）"| MCP["可选：实现 / 接入 MCP Server"]
-    Q --&gt;|"完成某类任务的方法&lt;br/&gt;（步骤、标准、格式）"| SKILL["写一个 Skill"]
-    Q --&gt;|"两者都要"| BOTH["Host 按 Skill 指令&lt;br/&gt;编排 MCP 工具"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    Q["需要哪种能力？"]
+    Q --&gt;|"系统访问"| MCP["考虑 MCP"]
+    Q --&gt;|"操作流程"| SKILL["写一个 Skill"]
+    Q --&gt;|"两者都要"| BOTH["结合两者"]
 
     style BOTH fill:#e6f4ea</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>访问外部系统的能力 （数据库、API、文件）</li>
+<li>完成某类任务的方法 （步骤、标准、格式）</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>你要给 Agent 加的 是什么?</li>
+<li>可选：实现 / 接入 MCP Server</li>
+<li>Host 按 Skill 指令 编排 MCP 工具</li>
+</ul>
 <p>具体一点：</p>
 <table>
 <thead>
@@ -9429,21 +9469,16 @@
 <p>判断重点是要交付统一的远程能力接口，还是可加载的流程知识包。联网与认证不是二分标准：Skill 脚本也可通过受控工具访问 API，MCP 也能返回静态文档和提示模板。</p>
 <h2 id="95">9.5 两者怎么配合<a class="headerlink" href="#95" title="Permanent link">&para;</a></h2>
 <p>典型的组合形态是<strong>分层</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph LAYER1["流程层 · Skill"]
-        SK["定义步骤、标准、输出格式&lt;br/&gt;决定「先做什么后做什么」"]
-    end
-
-    subgraph LAYER2["能力层 · MCP"]
-        T1[数据库 Server]
-        T2[GitHub Server]
-        T3[文件系统 Server]
-    end
-
-    SK --&gt; H["Host 编排与权限检查"]
-    H --&gt; T1
-    H --&gt; T2
-    H --&gt; T3</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    SK["Skill 操作流程"] --&gt; H["Host 授权检查"]
+    H --&gt; MCP["MCP 能力"]</code></pre>
+<p>Skill 定义步骤、标准、输出格式和执行顺序。Host 编排调用并检查授权，能力层可以是数据库、GitHub 或文件系统 MCP Server。流程说明本身不会授予权限。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>定义步骤、标准、输出格式 决定「先做什么后做什么」</li>
+<li>Host 编排与权限检查</li>
+</ul>
 <p>在 <code>SKILL.md</code> 里直接引用 MCP 工具是很自然的写法：</p>
 <div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## 第一步：获取数据</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>使用 GitHub MCP 的 <span class="sb">`get_pull_request_diff`</span> 拿到本次变更内容。
@@ -9487,14 +9522,8 @@
 <li><strong>强制权限与业务不变量在服务端</strong>，不要只写进自然语言流程。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/news/skills">Anthropic: Introducing Agent Skills</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills 规范</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol 官方文档</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">MCP 2026-07-28 工具发现与 Schema</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping Agents for the Real World with Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective Context Engineering for AI Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-09">集中参考资料章节</a>。</p>
 
 
 
@@ -9517,7 +9546,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

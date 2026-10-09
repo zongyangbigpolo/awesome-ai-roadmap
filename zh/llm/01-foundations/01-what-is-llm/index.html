@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：大语言模型与传统 NLP 的本质区别","description":"区分传统 NLP、BERT 与生成式语言模型的训练目标和任务接口，解释上下文学习、规模收益及其评测边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/01-what-is-llm/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：大语言模型与传统 NLP 的本质区别","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/01-what-is-llm/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：大语言模型与传统 NLP 的本质区别","description":"区分传统 NLP、BERT 与生成式语言模型的训练目标和任务接口，解释上下文学习、规模收益及其评测边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/01-what-is-llm/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：大语言模型与传统 NLP 的本质区别","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/01-what-is-llm/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：大语言模型与传统 NLP 的本质区别","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/01-foundations/01-what-is-llm/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9069,17 +9094,20 @@
 <h2 id="11-llm-nlp">1.1 LLM 与传统 NLP 的区别，究竟在比较什么？<a class="headerlink" href="#11-llm-nlp" title="Permanent link">&para;</a></h2>
 <p>LLM 没有公认的参数量分界线，广义上也不只指 Decoder-only。本主题主要讨论以 GPT、Llama 等为代表的<strong>生成式、自回归语言模型</strong>；不能据此把所有语言模型都归入同一种架构。</p>
 <p>传统 NLP 既有规则与统计流水线，也有端到端神经网络、预训练表示和生成模型。更准确的变化是：<strong>从较多任务专用接口，转向用同一个预训练模型和文本接口复用多种能力</strong>，而不是「以前只能分类，现在才能生成」。</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph PIPE["一种传统客服流水线"]
-        A["文本"] --&gt; B["分词与实体识别"]
-        B --&gt; C["意图分类"]
-        C --&gt; D["检索或业务规则"]
-    end
-    subgraph GEN["生成式应用"]
-        E["指令 + 输入 + 可选证据"] --&gt; F["语言模型"]
-        F --&gt; G["文本或结构化输出"]
-        G --&gt; H["校验与业务执行"]
-    end</code></pre>
+<p><strong>一种传统客服流水线</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["文本"] --&gt; B["分词与实体识别"]
+    B --&gt; C["意图分类"]
+    C --&gt; D["检索或业务规则"]
+</code></pre>
+<p><strong>生成式应用</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["指令 + 输入 + 可选证据"] --&gt; F["语言模型"]
+    F --&gt; G["文本或结构化输出"]
+    G --&gt; H["校验与业务执行"]
+</code></pre>
 <p>流水线可能累积误差，但不是前一步错了后面必然全错；联合训练、字级模型和纠错规则都可以缓解。生成式系统减少了一部分任务头与标注工作，却新增了输出不确定性、成本、权限和事实校验问题。</p>
 <h2 id="12-bert">1.2 BERT 带来了什么，没带来什么<a class="headerlink" href="#12-bert" title="Permanent link">&para;</a></h2>
 <p>BERT（2018）的关键是双向 Transformer 表示与大规模自监督预训练，不是首次提出「预训练 + 微调」。</p>
@@ -9189,7 +9217,8 @@
 <p>词与 token 不能直接相除得到准确增长倍数，闭源模型未披露的参数量、数据量也不能由外界传闻补齐。</p>
 <p>Scaling Law 拟合的是特定实验条件下损失随参数、数据、算力变化的经验关系，<strong>不是某项能力必然出现的定理</strong>。Chinchilla 的 70B 参数、1.4T token 是固定训练预算研究中的代表配置，不能把约 20 token/参数当成任意模型的最佳配方；考虑长期推理成本时，训练更多 token 的较小模型可能更合算。</p>
 <p>「涌现」通常描述：在所观测的规模范围内，小模型表现接近随机，较大模型在某些指标上明显提升。要区分真实能力变化与指标效应：</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["每个子步骤的成功概率逐渐提高"] --&gt; B["整题全对才计分"]
     B --&gt; C["观测到较陡的准确率曲线"]
     A --&gt; D["部分得分或连续指标"]
@@ -9233,16 +9262,8 @@
 <h2 id="17">1.7 本章要记住的边界<a class="headerlink" href="#17" title="Permanent link">&para;</a></h2>
 <p>LLM 的主要工程变化是预训练能力通过通用接口复用，不是传统方法失效，也不是规模自动带来可靠推理。回答时把<strong>架构、训练目标、后训练、提示接口和业务评测</strong>分开，才能解释同一个模型为什么能尝试很多任务，却未必适合某个具体生产需求。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
-<li><a href="https://arxiv.org/abs/2005.14165">Language Models are Few-Shot Learners（GPT-3）</a></li>
-<li><a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Language Models are Unsupervised Multitask Learners（GPT-2）</a></li>
-<li><a href="https://arxiv.org/abs/2206.07682">Emergent Abilities of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2304.15004">Are Emergent Abilities of Large Language Models a Mirage?</a></li>
-<li><a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2203.15556">Training Compute-Optimal Large Language Models（Chinchilla）</a></li>
-<li><a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-01">集中参考资料章节</a>。</p>
 
 
 
@@ -9265,7 +9286,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

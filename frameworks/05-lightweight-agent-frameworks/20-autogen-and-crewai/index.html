@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI","description":"Examines AutoGen's maintenance status and Core/AgentChat layers alongside CrewAI's Crew/Flow boundaries, including termination, collaboration costs, and reliable execution.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/20-autogen-and-crewai/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/20-autogen-and-crewai/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI","description":"Examines AutoGen's maintenance status and Core/AgentChat layers alongside CrewAI's Crew/Flow boundaries, including termination, collaboration costs, and reliable execution.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/20-autogen-and-crewai/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/20-autogen-and-crewai/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 20: Multi-Agent Abstractions in AutoGen and CrewAI","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/20-autogen-and-crewai/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9157,16 +9182,26 @@
 <li><strong>AutoGen</strong>: Starts with the underlying runtime, modeling communication between agents as an <strong>Actor model with asynchronous message passing</strong>, targeting event-driven, distributable, scalable multi-agent systems.</li>
 <li><strong>CrewAI</strong>: Describes collaboration through roles, tasks, and Crews, while also providing Flows to manage process state, routing, and multiple Crews. Definitions can use Python or YAML; it is not merely a lightweight wrapper around role prompts.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    subgraph AG["AutoGen's approach"]
-        A1["Actor-model runtime"] --&gt; A2["Asynchronous messaging between agents"]
-        A2 --&gt; A3["AgentChat: high-level abstractions for conversations"]
-    end
-    subgraph CR["CrewAI's approach"]
-        C1["Agent: role + goal + backstory"]
-        C1 --&gt; C2["Crew: sequential / hierarchical collaboration"]
-        C1 --&gt; C3["Flow: event-driven deterministic control flow"]
-    end</code></pre>
+<p><strong>AutoGen's approach</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        A1["Actor-model&lt;br/&gt;runtime"] --&gt; A2["Async messages"]
+        A2 --&gt; A3["AgentChat"]
+</code></pre>
+<p><strong>CrewAI's approach</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Agent: role +&lt;br/&gt;goal +&lt;br/&gt;backstory"]
+        C1 --&gt; C2["Crew"]
+        C1 --&gt; C3["Flow"]
+</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Asynchronous messaging between agents</li>
+<li>AgentChat: high-level abstractions for conversations</li>
+<li>Crew: sequential / hierarchical collaboration</li>
+<li>Flow: event-driven deterministic control flow</li>
+</ul>
 <h2 id="202-autogen-a-layered-runtimecore-and-agentchat"><span id="202-autogencore-agentchat" class="legacy-heading-anchor" aria-hidden="true"></span>20.2 AutoGen: a layered runtime—Core and AgentChat<a class="headerlink" href="#202-autogen-a-layered-runtimecore-and-agentchat" title="Permanent link">&para;</a></h2>
 <p>The APIs discussed here are the redesigned AutoGen Core/AgentChat APIs, not the early 0.2 <code>ConversableAgent</code> / <code>GroupChat</code> interfaces. The main layers are:</p>
 <ul>
@@ -9281,19 +9316,8 @@
 </ol>
 <p>AutoGen uses the Actor model to address distributed collaboration, while CrewAI uses a teamwork metaphor to make multi-role processes easier to assemble. Their layered designs—Core / AgentChat and Crew / Flow—both assign collaboration flexibility and deterministic control to different abstraction layers.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://microsoft.github.io/autogen/stable/">AutoGen official documentation</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/user-guide/core-user-guide/index.html">AutoGen: Core user guide</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/index.html">AutoGen: AgentChat user guide</a></li>
-<li><a href="https://github.com/microsoft/autogen/blob/027ecf0a379bcc1d09956d46d12d44a3ad9cee14/README.md">AutoGen official repository: Maintenance Mode, pinned commit</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-autogen/">AutoGen → MAF migration guide</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html">AutoGen: Saving and loading Agent/Team state</a></li>
-<li><a href="https://docs.crewai.com/">CrewAI official documentation</a></li>
-<li><a href="https://docs.crewai.com/en/concepts/flows">CrewAI: Flow concepts</a></li>
-<li><a href="https://docs.crewai.com/en/concepts/crews">CrewAI: Crew concepts</a></li>
-<li><a href="https://docs.crewai.com/en/concepts/processes">CrewAI: Sequential and hierarchical Processes</a></li>
-</ul>
-<p>Version note: AutoGen's maintenance mode and successor recommendation were checked against the pinned commit above on 2026-09-15. The code in this chapter retains the Core/AgentChat generation of APIs rather than rewriting it into MAF APIs.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-20">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9316,7 +9340,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

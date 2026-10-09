@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: Prompt Engineering","description":"Organize prompt instructions, context, examples, and output constraints, and learn how to debug prompts without mistaking model limitations for prompting problems.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/16-prompt-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: Prompt Engineering","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/16-prompt-engineering/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: Prompt Engineering","description":"Organize prompt instructions, context, examples, and output constraints, and learn how to debug prompts without mistaking model limitations for prompting problems.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/16-prompt-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: Prompt Engineering","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/16-prompt-engineering/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 16: Prompt Engineering","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/16-prompt-engineering/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9584,14 +9609,11 @@
 <p>The following five elements are a checklist, not a mandatory template. A simple classification task may need only a task description, label definitions, and an input.</p>
 <h2 id="162-how-do-you-turn-a-vague-request-into-a-task-that-can-be-executed-and-evaluated"><span id="162" class="legacy-heading-anchor" aria-hidden="true"></span>16.2 How do you turn a vague request into a task that can be executed and evaluated?<a class="headerlink" href="#162-how-do-you-turn-a-vague-request-into-a-task-that-can-be-executed-and-evaluated" title="Permanent link">&para;</a></h2>
 <p>Review the responsibilities, task, background, format, and examples, and add only the information that is genuinely missing. These five elements are not stock phrases. For each addition, explain which ambiguity or acceptance problem it resolves.</p>
-<pre class="mermaid"><code>flowchart LR
-    Q["Choose checks for the task"] --&gt; R["Role&lt;br/&gt;Responsibilities and perspective"]
-    Q --&gt; T["Task&lt;br/&gt;Goal and boundaries"]
-    Q --&gt; C["Context&lt;br/&gt;Relevant background and evidence"]
-    Q --&gt; F["Format&lt;br/&gt;Output contract"]
-    Q --&gt; E["Examples&lt;br/&gt;Representative examples when needed"]
-
-    style E fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Task requirements"] --&gt; C["Select prompt checks"]
+    C --&gt; P["Prompt under test"]</code></pre>
+<p>Select the relevant checks rather than treating them as sequential steps: <strong>role</strong> defines responsibilities and perspective; <strong>task</strong> sets goals and boundaries; <strong>context</strong> supplies background and evidence; <strong>format</strong> defines the output contract; <strong>examples</strong> provide representative cases when needed.</p>
 <h3 id="1621-role-defining-responsibilities"><span id="1621-role" class="legacy-heading-anchor" aria-hidden="true"></span>16.2.1 Role: defining responsibilities<a class="headerlink" href="#1621-role-defining-responsibilities" title="Permanent link">&para;</a></h3>
 <p>A role can suggest a perspective and writing style, but saying “ten years of experience” does not give a model real credentials or extra knowledge. Prefer actionable responsibilities and decision criteria.</p>
 <p>The prompt inputs below remain in their original Chinese, with English explanations. Their length limits count Chinese characters, not English words.</p>
@@ -9740,17 +9762,13 @@
 <p>Applications still need restricted tool permissions, parameter validation, isolated secrets, and independent approval for high-impact operations such as transfers or deletions. Delimiters improve readability; they neither make low-trust text trustworthy nor replace authorization checks.</p>
 <h2 id="165-iteration-prompts-are-an-engineering-problem"><span id="165-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>16.5 Iteration: prompts are an engineering problem<a class="headerlink" href="#165-iteration-prompts-are-an-engineering-problem" title="Permanent link">&para;</a></h2>
 <p><strong>Prompt engineering is a cycle of forming hypotheses, testing, and improving—not a one-time writing exercise.</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["Separate development&lt;br/&gt;and held-out test sets&lt;br/&gt;Cover normal, edge,&lt;br/&gt;and adversarial inputs"] --&gt; B["Propose a testable change"]
-    B --&gt; C["Compare on the development set&lt;br/&gt;Quality, cost, and metrics&lt;br/&gt;by task group"]
-    C --&gt; D{"Acceptance targets met?"}
-    D --&gt;|Overall improvement| E["Keep the change"]
-    D --&gt;|Mixed results| F["Analyze task groups&lt;br/&gt;and failure causes&lt;br/&gt;Then decide whether to branch"]
-    E --&gt; B
-    F --&gt; B
-    E --&gt;|After freezing the candidate| H["Run milestone acceptance&lt;br/&gt;on the held-out set&lt;br/&gt;Do not reuse it repeatedly&lt;br/&gt;for tuning"]
-
-    style B fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["Testable change"] --&gt; C["Development-set comparison"]
+    C --&gt; D["Accept or diagnose"]
+    D --&gt;|Iterate| B
+    D --&gt;|Freeze candidate| H["Held-out acceptance"]</code></pre>
+<p>Keep development and held-out sets separate, covering normal, edge, and adversarial inputs. Compare quality, cost, and task-group metrics on development data. Keep overall improvements; for mixed results, examine task groups and failure causes before deciding whether to branch. Both decisions can lead to another proposed change. Only after freezing a candidate run milestone acceptance on the held-out set; do not repeatedly reuse it for tuning.</p>
 <p>Fix the model snapshot, decoding parameters, input data, and scoring criteria. Changing one factor at a time helps attribution but is not a rigid rule. Ablation or factorial experiments can distinguish the contributions of multiple changes. Repeatedly using the held-out test set to revise a prompt will indirectly overfit that set too.</p>
 <p>Record task accuracy, format pass rate, unsupported assertions, refusal rate, cost, and tail latency separately. A small development set can help diagnose problems, but it cannot establish that rare, high-risk errors have disappeared.</p>
 <h2 id="166-advanced-topic-prompt-compression"><span id="166-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>16.6 Advanced topic: prompt compression<a class="headerlink" href="#166-advanced-topic-prompt-compression" title="Permanent link">&para;</a></h2>
@@ -9829,17 +9847,8 @@
 <p>Writing a prompt is not about elaborate wording. Make the responsibilities, context, format, and examples clear, then use a test set to determine whether those constraints reliably produce the intended result.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.14165">Language Models are Few-Shot Learners (GPT-3, few-shot learning)</a></li>
-<li><a href="https://arxiv.org/abs/2102.09690">Calibrate Before Use: Improving Few-Shot Performance of Language Models (example and ordering biases)</a></li>
-<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.11916">Large Language Models are Zero-Shot Reasoners (Let's think step by step)</a></li>
-<li><a href="https://arxiv.org/abs/2310.05736">LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2310.06839">LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression</a></li>
-<li><a href="https://arxiv.org/abs/2104.08691">The Power of Scale for Parameter-Efficient Prompt Tuning (soft prompts)</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices (including the scope of delimiters and CoT prompts)</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-16">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9862,7 +9871,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

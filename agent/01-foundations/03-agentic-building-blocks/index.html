@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md","description":"Distinguishes tools, the Agent Skills open format, agent control loops, workflows, and repository instructions, explaining how they combine and where their permission boundaries lie.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/03-agentic-building-blocks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/03-agentic-building-blocks/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md","description":"Distinguishes tools, the Agent Skills open format, agent control loops, workflows, and repository instructions, explaining how they combine and where their permission boundaries lie.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/03-agentic-building-blocks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/03-agentic-building-blocks/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: Tools, Skills, Agents, Workflows, and AGENTS.md","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/03-agentic-building-blocks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9657,19 +9682,37 @@
 <blockquote>
 <p><strong>MCP does not replace tools. It is a standard protocol for connecting AI applications to Tools, Resources, and Prompts.</strong></p>
 </blockquote>
+<p>The workflow chooses its computational components.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["User goal"]
+    W["Workflow / control&lt;br/&gt;structure"]
+    A["Agent / dynamic&lt;br/&gt;decision-maker"]
+    L["LLM node"]
+    T1["Tool node"]
+    U --&gt; W
+    W --&gt; A
+    W --&gt; L
+    W --&gt; T1</code></pre>
+<p>The agent uses methods and tools under repository instructions.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Agent / dynamic&lt;br/&gt;decision-maker"]
+    S["Skill / methods and&lt;br/&gt;knowledge"]
+    T2["Tools / executable&lt;br/&gt;capabilities"]
+    I["AGENTS.md&lt;br/&gt;Repository conventions&lt;br/&gt;and instructions"]
+    A --&gt; S
+    A --&gt; T2
+    I -.Guides.-&gt; A</code></pre>
+<p>MCP connects the agent to external systems.</p>
 <pre class="mermaid"><code>flowchart TB
-    U[User goal] --&gt; W[Workflow / control structure]
-    W --&gt; A[Agent / dynamic decision-maker]
-    W --&gt; L[LLM node]
-    W --&gt; T1[Tool node]
-
-    A --&gt; S[Skill / methods and knowledge]
-    A --&gt; T2[Tools / executable capabilities]
-    A --&gt; M[MCP Client]
-    M --&gt; MS[MCP Server]
-    MS --&gt; EXT[External systems]
-
-    I[AGENTS.md&lt;br/&gt;Repository conventions and instructions] -.Guides.-&gt; A</code></pre>
+    A[Agent / dynamic decision-maker]
+    M[MCP Client]
+    MS[MCP Server]
+    EXT[External systems]
+    A --&gt; M
+    M --&gt; MS
+    MS --&gt; EXT</code></pre>
 <p>Solid lines represent orchestration or invocation; the dotted line represents instructions. <code>AGENTS.md</code> can ask developers or coding agents to modify a workflow, but the file itself is not a runtime permission gate. Rules that must be enforced still belong in code, tool permissions, or deployment configuration.</p>
 <h2 id="32-the-core-distinctions"><span id="32" class="legacy-heading-anchor" aria-hidden="true"></span>3.2 The Core Distinctions<a class="headerlink" href="#32-the-core-distinctions" title="Permanent link">&para;</a></h2>
 <table>
@@ -9769,12 +9812,13 @@
 <li>Side-effect information and a risk level;</li>
 <li>Errors and audit information.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    TD[Tool Definition&lt;br/&gt;Name, description, schema] --&gt; TC[Tool Call]
-    TC --&gt; V[Argument and permission validation]
-    V --&gt; EX[Executor]
-    EX --&gt; SYS[External system]
-    SYS --&gt; RES[Structured result or error]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TD["Tool Definition&lt;br/&gt;Name, description,&lt;br/&gt;schema"] --&gt; TC["Tool Call"]
+    TC --&gt; V["Argument and permission&lt;br/&gt;validation"]
+    V --&gt; EX["Executor"]
+    EX --&gt; SYS["External system"]
+    SYS --&gt; RES["Structured result or&lt;br/&gt;error"]</code></pre>
 <h3 id="333-tool-schemas"><span id="333-tool-schema" class="legacy-heading-anchor" aria-hidden="true"></span>3.3.3 Tool Schemas<a class="headerlink" href="#333-tool-schemas" title="Permanent link">&para;</a></h3>
 <p>An ordinary function signature primarily serves compilers and programmers. A tool schema must also help the model understand when and how to use the tool.</p>
 <p>The following uses the OpenAI Chat Completions function tool format introduced in Chapter 2. The Responses API does not use this nested <code>function</code> structure, and MCP tools have their own definition format.</p>
@@ -9820,13 +9864,14 @@
 </span></code></pre></div>
 <p>The sample query is Chinese for “advances in agent technology in 2026.”</p>
 <p>The actual invocation proceeds as follows:</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant M as Model
     participant R as Runtime
     participant T as Tool
 
     M--&gt;&gt;R: Generate Tool Call
-    R-&gt;&gt;R: Validate schema, permissions, and budget
+    R-&gt;&gt;R: Validate schema,&lt;br/&gt;permissions, and budget
     R-&gt;&gt;T: Execute call
     T--&gt;&gt;R: Return Result or Error
     R--&gt;&gt;M: Provide Observation</code></pre>
@@ -9841,13 +9886,14 @@
 <li><strong>Resources</strong>: readable data and context;</li>
 <li><strong>Prompts</strong>: reusable prompt templates.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    H[Host] --&gt; C1[MCP Client]
-    H --&gt; C2[MCP Client]
-    C1 &lt;--&gt; S1[MCP Server A]
-    C2 &lt;--&gt; S2[MCP Server B]
-    S1 --&gt; DB[Database]
-    S2 --&gt; API[External API]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host"] --&gt; C1["MCP Client"]
+    H --&gt; C2["MCP Client"]
+    C1 &lt;--&gt; S1["MCP Server A"]
+    C2 &lt;--&gt; S2["MCP Server B"]
+    S1 --&gt; DB["Database"]
+    S2 --&gt; API["External API"]</code></pre>
 <p>MCP reduces duplicated integration work by standardizing connections, capability descriptions, and message exchange.</p>
 <p>But “MCP support lets you immediately call every tool” is inaccurate:</p>
 <ul>
@@ -9946,13 +9992,14 @@
 <li>Load the complete <code>SKILL.md</code> after the agent determines that it matches the task;</li>
 <li>Read scripts, references, and resources only when needed.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    META[Metadata&lt;br/&gt;Always visible] --&gt; MATCH{Matches the task?}
-    MATCH --&gt;|No| SKIP[Do not load]
-    MATCH --&gt;|Yes| BODY[Load SKILL.md]
-    BODY --&gt; NEED{More material needed?}
-    NEED --&gt;|Yes| RES[Load scripts / references / assets on demand]
-    NEED --&gt;|No| RUN[Execute the skill]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    META["Metadata&lt;br/&gt;Always visible"] --&gt; MATCH["Matches the task?"]
+    MATCH --&gt;|No| SKIP["Do not load"]
+    MATCH --&gt;|Yes| BODY["Load SKILL.md"]
+    BODY --&gt; NEED["More material needed?"]
+    NEED --&gt;|Yes| RES["Load scripts /&lt;br/&gt;references / assets on&lt;br/&gt;demand"]
+    NEED --&gt;|No| RUN["Execute the skill"]</code></pre>
 <p>This avoids loading all domain knowledge into context at once.</p>
 <h3 id="354-skills-versus-tools"><span id="354-skill-tool" class="legacy-heading-anchor" aria-hidden="true"></span>3.5.4 Skills Versus Tools<a class="headerlink" href="#354-skills-versus-tools" title="Permanent link">&para;</a></h3>
 <table>
@@ -10084,11 +10131,12 @@
 <blockquote>
 <p><strong>Observe → Decide/Plan → Act → Observe</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    O[Observe] --&gt; D[Decide / Plan]
-    D --&gt; A[Act]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observe"] --&gt; D["Decide / Plan"]
+    D --&gt; A["Act"]
     A --&gt; O
-    D --&gt; F[Finish]</code></pre>
+    D --&gt; F["Finish"]</code></pre>
 <p>Some material describes ReAct as Thought → Action → Observation, but production systems do not need to expose complete hidden reasoning to users. What the control loop needs to preserve is structured plans, tool calls, returned evidence, and state changes, while giving users concise reasons for decisions. This distinguishes what the model intended from what the executor actually did.</p>
 <h3 id="372-who-decides-the-next-step"><span id="372" class="legacy-heading-anchor" aria-hidden="true"></span>3.7.2 Who Decides the Next Step?<a class="headerlink" href="#372-who-decides-the-next-step" title="Permanent link">&para;</a></h3>
 <p>In an agent, the next step is primarily generated dynamically by the model's policy:</p>
@@ -10152,13 +10200,14 @@ a_t \sim \pi_{\theta}(a \mid s_t, g, c_t)
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    LOOP[Agent Loop] --&gt; DONE{Goal achieved?}
-    DONE --&gt;|Yes| SUCCESS[Finish successfully]
-    DONE --&gt;|No| LIMIT{Limit triggered?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    LOOP["Agent Loop"] --&gt; DONE["Goal&lt;br/&gt;achieved?"]
+    DONE --&gt;|Yes| SUCCESS["Finish&lt;br/&gt;successfully"]
+    DONE --&gt;|No| LIMIT["Limit&lt;br/&gt;triggered?"]
     LIMIT --&gt;|No| LOOP
-    LIMIT --&gt;|Approval needed| HUMAN[Pause and request human action]
-    LIMIT --&gt;|Budget or safety limit| PARTIAL[Stop and report incomplete status]</code></pre>
+    LIMIT --&gt;|Approval&lt;br/&gt;needed| HUMAN["Pause and&lt;br/&gt;request&lt;br/&gt;human action"]
+    LIMIT --&gt;|Budget or&lt;br/&gt;safety limit| PARTIAL["Stop and&lt;br/&gt;report&lt;br/&gt;incomplete&lt;br/&gt;status"]</code></pre>
 <p>If execution stops because of a budget, timeout, or step limit, the system must not present partial results as success. It should explicitly report:</p>
 <ul>
 <li>What has been completed;</li>
@@ -10261,19 +10310,15 @@ n_{t+1}=f(s_t, r_t)
 <blockquote>
 <p><strong>Use a workflow to fix the main process, permissions, and acceptance boundaries. Embed agents where flexible judgment is genuinely needed.</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    IN[User request] --&gt; V[Deterministic validation]
-    V --&gt; R[Deterministic routing]
-    R --&gt;|Standard question| KB[Knowledge retrieval tool]
-    R --&gt;|Complex question| AG[Agent research node]
-    KB --&gt; GEN[LLM generation]
-    AG --&gt; GEN
-    GEN --&gt; EVAL[Quality and safety evaluation]
-    EVAL --&gt;|Pass| OUT[Return result]
-    EVAL --&gt;|Fail| FIX[Bounded refinement]
-    FIX --&gt; LIMIT{Budget remains and progress continues?}
-    LIMIT --&gt;|Yes| EVAL
-    LIMIT --&gt;|No| STOP[Report incomplete status or hand off to a human]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    IN["User request"] --&gt; V["Validate and route"]
+    V --&gt; GEN["LLM generation"]
+    GEN --&gt; EVAL["Quality and safety&lt;br/&gt;evaluation"]
+    EVAL --&gt;|Pass| OUT["Return result"]
+    EVAL --&gt;|Fail| FIX["Bounded refinement"]
+    FIX --&gt;|Budget and progress| EVAL</code></pre>
+<p>Validation and routing are deterministic. Standard questions use a knowledge retrieval tool; complex questions use an agent research node. Both supply the LLM generation step. After failed evaluation, refinement returns to evaluation only while budget remains <strong>and</strong> progress continues; otherwise report incomplete status or hand off to a human.</p>
 <p>This architecture offers:</p>
 <ul>
 <li>Control over the main process;</li>
@@ -10290,11 +10335,12 @@ n_{t+1}=f(s_t, r_t)
 <h2 id="312-anthropics-five-workflow-patterns"><span id="312-anthropic-workflow" class="legacy-heading-anchor" aria-hidden="true"></span>3.12 Anthropic's Five Workflow Patterns<a class="headerlink" href="#312-anthropics-five-workflow-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="3121-prompt-chaining">3.12.1 Prompt Chaining<a class="headerlink" href="#3121-prompt-chaining" title="Permanent link">&para;</a></h3>
 <p>Prompt chaining divides a task into fixed steps, with each step's output becoming the next step's input:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Generate outline] --&gt; G{Quality check}
-    G --&gt;|Pass| B[Write the body]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Generate outline"] --&gt; G["Quality check"]
+    G --&gt;|Pass| B["Write the body"]
     G --&gt;|Fail| A
-    B --&gt; C[Edit and format]</code></pre>
+    B --&gt; C["Edit and format"]</code></pre>
 <p>Suitable when:</p>
 <ul>
 <li>The task separates cleanly into steps;</li>
@@ -10309,11 +10355,12 @@ n_{t+1}=f(s_t, r_t)
 <p>The diagram's retry after a failed check must be bounded by attempt, time, and cost limits. If repeated generation still fails the checks, report what is missing or hand off to a human instead of returning to the first step indefinitely.</p>
 <h3 id="3122-routing">3.12.2 Routing<a class="headerlink" href="#3122-routing" title="Permanent link">&para;</a></h3>
 <p>Routing classifies an input and sends it to a specialized branch:</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[User question] --&gt; C{Classify and route}
-    C --&gt;|Refund| R[Refund process]
-    C --&gt;|Technical support| T[Technical support process]
-    C --&gt;|General inquiry| G[Knowledge Q&amp;A process]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["User&lt;br/&gt;question"] --&gt; C["Classify and&lt;br/&gt;route"]
+    C --&gt;|Refund| R["Refund&lt;br/&gt;process"]
+    C --&gt;|Technical&lt;br/&gt;support| T["Technical&lt;br/&gt;support&lt;br/&gt;process"]
+    C --&gt;|General&lt;br/&gt;inquiry| G["Knowledge&lt;br/&gt;Q&amp;A process"]</code></pre>
 <p>The routing decision can use:</p>
 <ul>
 <li>Rules;</li>
@@ -10324,11 +10371,12 @@ n_{t+1}=f(s_t, r_t)
 <p>It suits tasks with reasonably clear category boundaries and different handling strategies for different categories.</p>
 <h3 id="3123-parallelization">3.12.3 Parallelization<a class="headerlink" href="#3123-parallelization" title="Permanent link">&para;</a></h3>
 <p>Parallelization runs independent subtasks concurrently:</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[Analysis task] --&gt; A[Market perspective]
-    Q --&gt; B[Technical perspective]
-    Q --&gt; C[Risk perspective]
-    A --&gt; S[Aggregate]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    Q["Analysis&lt;br/&gt;task"] --&gt; A["Market&lt;br/&gt;perspective"]
+    Q --&gt; B["Technical&lt;br/&gt;perspective"]
+    Q --&gt; C["Risk&lt;br/&gt;perspective"]
+    A --&gt; S["Aggregate"]
     B --&gt; S
     C --&gt; S</code></pre>
 <p>Two common forms are:</p>
@@ -10345,15 +10393,16 @@ n_{t+1}=f(s_t, r_t)
 <p>Parallel tasks still require concurrency limits, timeouts, cancellation, and aggregation policies.</p>
 <h3 id="3124-orchestrator-workers">3.12.4 Orchestrator-Workers<a class="headerlink" href="#3124-orchestrator-workers" title="Permanent link">&para;</a></h3>
 <p>An orchestrator dynamically decomposes a task and assigns work to multiple workers:</p>
-<pre class="mermaid"><code>flowchart TB
-    TASK[Complex task] --&gt; O[Orchestrator]
-    O --&gt; W1[Worker 1]
-    O --&gt; W2[Worker 2]
-    O --&gt; W3[Worker N]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    TASK["Complex task"] --&gt; O["Orchestrator"]
+    O --&gt; W1["Worker 1"]
+    O --&gt; W2["Worker 2"]
+    O --&gt; W3["Worker N"]
     W1 --&gt; O
     W2 --&gt; O
     W3 --&gt; O
-    O --&gt; SYN[Synthesize results]</code></pre>
+    O --&gt; SYN["Synthesize&lt;br/&gt;results"]</code></pre>
 <p>It differs from ordinary parallelization in that:</p>
 <ul>
 <li>Parallelization usually uses subtasks predefined by the developer;</li>
@@ -10363,11 +10412,12 @@ n_{t+1}=f(s_t, r_t)
 <p>It suits coding, research, and multi-document analysis where the number of subtasks cannot be known in advance.</p>
 <h3 id="3125-evaluator-optimizer">3.12.5 Evaluator-Optimizer<a class="headerlink" href="#3125-evaluator-optimizer" title="Permanent link">&para;</a></h3>
 <p>Evaluator-optimizer uses a generator and an evaluator for iterative improvement:</p>
-<pre class="mermaid"><code>flowchart LR
-    G[Generator] --&gt; E[Evaluator]
-    E --&gt; D{Meets the criteria?}
-    D --&gt;|Yes| OUT[Final result]
-    D --&gt;|No| FB[Feedback]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generator"] --&gt; E["Evaluator"]
+    E --&gt; D["Meets the criteria?"]
+    D --&gt;|Yes| OUT["Final result"]
+    D --&gt;|No| FB["Feedback"]
     FB --&gt; G</code></pre>
 <p>Suitable when:</p>
 <ul>
@@ -10423,18 +10473,12 @@ n_{t+1}=f(s_t, r_t)
 </tbody>
 </table>
 <p>The following decision sequence can help:</p>
-<pre class="mermaid"><code>flowchart TB
-    S[New requirement] --&gt; C{Can one call solve it?}
-    C --&gt;|Yes| SIMPLE[Ordinary code, tool, or single LLM call]
-    C --&gt;|No| P{Can the path be predefined?}
-    P --&gt;|Yes| W[Workflow]
-    P --&gt;|Partly| AW[Agentic Workflow]
-    P --&gt;|No| A[Agent]
-    W --&gt; SK{Is there a reusable method?}
-    AW --&gt; SK
-    A --&gt; SK
-    SK --&gt;|Yes| K[Package it as a skill]
-    SK --&gt;|No| END[Implement directly]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    P["Can the path be&lt;br/&gt;predefined?"] --&gt;|Yes| W["Workflow"]
+    P --&gt;|Partly| AW["Agentic Workflow"]
+    P --&gt;|No| A["Agent"]</code></pre>
+<p>For a new requirement, first ask whether ordinary code, a tool, or one LLM call can solve it. Only if that is insufficient does the diagram's path-selection question apply. After choosing a workflow, agentic workflow, or agent, package any reusable method as a skill; without a reusable method, implement directly.</p>
 <h2 id="314-a-customer-support-example"><span id="314" class="legacy-heading-anchor" aria-hidden="true"></span>3.14 A Customer Support Example<a class="headerlink" href="#314-a-customer-support-example" title="Permanent link">&para;</a></h2>
 <p>The following fictional order-support system brings these components together; it is not a project from the author's work history. It needs to:</p>
 <ol>
@@ -10478,27 +10522,13 @@ n_{t+1}=f(s_t, r_t)
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    Q[Customer question] --&gt; WF[Customer support workflow]
-    WF --&gt; ROUTE{Question classification}
-
-    ROUTE --&gt;|Knowledge inquiry| SEARCH[Knowledge base tool]
-    ROUTE --&gt;|Order query| ORDER[Order tool]
-    ROUTE --&gt;|Complex issue| AGENT[Customer support agent]
-
-    AGENT --&gt; SKILL[Customer support skill]
-    AGENT --&gt; SEARCH
-    AGENT --&gt; ORDER
-
-    ROUTE --&gt;|Refund| CHECK[Refund eligibility workflow]
-    CHECK --&gt; APPROVE{Human confirmation}
-    APPROVE --&gt;|Approved| REFUND[Refund tool]
-    APPROVE --&gt;|Rejected| REJECT[Explain the reason]
-
-    SEARCH --&gt; ANSWER[Generate response]
-    ORDER --&gt; ANSWER
-    AGENT --&gt; ANSWER
-    REFUND --&gt; ANSWER</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CHECK["Refund eligibility"] --&gt; APPROVE["Human confirmation"]
+    APPROVE --&gt;|Approved| REFUND["Refund tool"]
+    APPROVE --&gt;|Rejected| REJECT["Explain the reason"]
+    REFUND --&gt; ANSWER["Generate response"]</code></pre>
+<p>The customer question enters a support workflow that classifies it. Knowledge inquiries go to the knowledge base tool; order queries go to the order tool. Complex issues go to a support agent, which uses the support skill and can call both tools. Those three paths feed response generation. The diagram isolates the refund path: classification first selects the refund eligibility workflow, and only human approval permits the refund tool to run.</p>
 <p>This system is neither a pure workflow nor an agent in control of everything. It confines dynamic judgment to suitable areas and keeps high-risk actions such as refunds within deterministic processes and human approval.</p>
 <h2 id="315-chapter-summary"><span id="315" class="legacy-heading-anchor" aria-hidden="true"></span>3.15 Chapter Summary<a class="headerlink" href="#315-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Five distinctions provide a practical starting point:</p>
@@ -10511,15 +10541,8 @@ n_{t+1}=f(s_t, r_t)
 </ol>
 <p>MCP, meanwhile, standardizes how AI applications connect to external systems. Production systems usually do not choose exclusively between agents and workflows. They use workflows to control the main process, introduce agents where needed, and support execution with tools, skills, runtime controls, and guardrails.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills Specification</a></li>
-<li><a href="https://agents.md/">AGENTS.md</a></li>
-<li><a href="https://developers.openai.com/codex/guides/agents-md">OpenAI Codex: Custom instructions with AGENTS.md</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function calling</a></li>
-</ul>
-<p>The Agent Skills format and host instruction-discovery behavior were checked against official pages accessed on 2026-09-15. That access date is not a format version number.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10542,7 +10565,7 @@ n_{t+1}=f(s_t, r_t)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：Agent 设计范式","description":"比较 ReAct、Plan-and-Execute、Router、Evaluator-Optimizer 等 Agent 设计范式，以及不同任务约束下的选型方法。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/04-agent-design-patterns/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：Agent 设计范式","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/04-agent-design-patterns/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：Agent 设计范式","description":"比较 ReAct、Plan-and-Execute、Router、Evaluator-Optimizer 等 Agent 设计范式，以及不同任务约束下的选型方法。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/04-agent-design-patterns/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：Agent 设计范式","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/04-agent-design-patterns/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第四章：Agent 设计范式","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-reasoning-planning/04-agent-design-patterns/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9763,27 +9788,29 @@
 <li><strong>Reflection / Reflexion</strong>：通过评估和反馈修订结果；其中 Reflexion 是带情景记忆的具体研究方法。</li>
 </ol>
 <p>这三类范式经常混用，实际系统里更常见的是分层组合：</p>
-<pre class="mermaid"><code>flowchart TB
-    G[用户目标] --&gt; WF[Workflow / 安全边界]
-    WF --&gt; P[Planner / 全局计划]
-    P --&gt; E[Executor]
-    E --&gt; R[局部 ReAct 循环]
-    R --&gt; V[Verifier / Evaluator]
-    V --&gt;|通过| DONE[完成]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["用户目标"] --&gt; WF["Workflow / 安全边界"]
+    WF --&gt; P["Planner / 全局计划"]
+    P --&gt; E["Executor"]
+    E --&gt; R["局部 ReAct 循环"]
+    R --&gt; V["Verifier / Evaluator"]
+    V --&gt;|通过| DONE["完成"]
     V --&gt;|局部失败| R
     V --&gt;|计划失效| P
-    V --&gt;|需要人工判断| H[Human-in-the-loop]</code></pre>
+    V --&gt;|需要人工判断| H["Human-in-the-loop"]</code></pre>
 <h2 id="42-react">4.2 ReAct：推理与行动交替<a class="headerlink" href="#42-react" title="Permanent link">&para;</a></h2>
 <p>ReAct（Reasoning and Acting）将推理与外部行动结合起来。经典表达是：</p>
 <blockquote>
 <p><strong>Thought → Action → Observation → Thought</strong></p>
 </blockquote>
-<p>这是 <a href="https://arxiv.org/abs/2210.03629">ReAct 原论文</a>的示意，不要求每次行动前都输出一段 Thought：原文在决策任务中允许稀疏出现推理步骤，也用这些步骤生成、跟踪和更新计划。其主要实验通过上下文示例运行，不在每次工具调用后更新模型权重；论文另有微调实验，不能与提示式 ReAct 混为一谈。</p>
-<pre class="mermaid"><code>flowchart LR
-    T[Thought / Decide] --&gt; A[Action]
-    A --&gt; O[Observation]
+<p>这是 ReAct 原论文<sup><a href="../../../book/references/#ref-268">【268】</a></sup>的示意，不要求每次行动前都输出一段 Thought：原文在决策任务中允许稀疏出现推理步骤，也用这些步骤生成、跟踪和更新计划。其主要实验通过上下文示例运行，不在每次工具调用后更新模型权重；论文另有微调实验，不能与提示式 ReAct 混为一谈。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Thought / Decide"] --&gt; A["Action"]
+    A --&gt; O["Observation"]
     O --&gt; T
-    T --&gt; F[Final Answer]</code></pre>
+    T --&gt; F["Final Answer"]</code></pre>
 <h3 id="421-react">4.2.1 一轮 ReAct 如何运行<a class="headerlink" href="#421-react" title="Permanent link">&para;</a></h3>
 <h4 id="thought">Thought<a class="headerlink" href="#thought" title="Permanent link">&para;</a></h4>
 <p>模型分析当前目标、状态和观察结果，并决定下一步策略。</p>
@@ -9853,13 +9880,14 @@ s_{t+1}=Update(s_t,a_t,o_{t+1})
 <li>周期性全局目标复核；</li>
 <li>关键步骤的外部验证。</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    O[Observation] --&gt; D[Decide]
-    D --&gt; C{动作是否无进展或越权?}
-    C --&gt;|是| RP[重新规划或停止]
-    C --&gt;|否| A[Action]
-    A --&gt; U[更新结构化状态]
-    U --&gt; G{仍符合全局目标?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --&gt; D["Decide"]
+    D --&gt; C["动作是否无进展或越权?"]
+    C --&gt;|是| RP["重新规划或停止"]
+    C --&gt;|否| A["Action"]
+    A --&gt; U["更新结构化状态"]
+    U --&gt; G["仍符合全局目标?"]
     G --&gt;|是| O
     G --&gt;|否| RP</code></pre>
 <h2 id="43-plan-and-execute">4.3 Plan-and-Execute：规划与执行解耦<a class="headerlink" href="#43-plan-and-execute" title="Permanent link">&para;</a></h2>
@@ -9870,19 +9898,45 @@ s_{t+1}=Update(s_t,a_t,o_{t+1})
 <li><strong>Replanner</strong>：根据结果更新剩余计划或结束任务。</li>
 </ol>
 <p>Planner、Executor 和 Replanner 可以使用不同模型，也可以由同一个模型在不同上下文中承担。</p>
+<p>生成并执行计划。</p>
 <pre class="mermaid"><code>flowchart TB
-    G[目标] --&gt; P[Planner]
-    P --&gt; PLAN[计划 / DAG]
-    PLAN --&gt; E[Executor]
-    E --&gt; O[执行结果]
-    O --&gt; V{计划仍然有效?}
-    V --&gt;|是| N{还有步骤?}
-    N --&gt;|是| E
-    N --&gt;|否| ACCEPT{整体验收通过?}
-    ACCEPT --&gt;|是| DONE[完成]
-    ACCEPT --&gt;|否| RP
-    V --&gt;|否| RP[Replanner]
+    G[目标]
+    P[Planner]
+    PLAN[计划 / DAG]
+    E[Executor]
+    O[执行结果]
+    G --&gt; P
+    P --&gt; PLAN
+    PLAN --&gt; E
+    E --&gt; O</code></pre>
+<p>检查执行是否使计划失效。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PLAN["计划 / DAG"]
+    E["Executor"]
+    O["执行结果"]
+    V["计划仍然有效?"]
+    RP["Replanner"]
+    PLAN --&gt; E
+    E --&gt; O
+    O --&gt; V
+    V --&gt;|否| RP
     RP --&gt; PLAN</code></pre>
+<p>区分剩余步骤与整体验收。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    V["计划仍然有效?"]
+    N["还有步骤?"]
+    E["Executor"]
+    ACCEPT["整体验收通过?"]
+    DONE["完成"]
+    RP["Replanner"]
+    V --&gt;|是| N
+    N --&gt;|是| E
+    N --&gt;|否| ACCEPT
+    ACCEPT --&gt;|是| DONE
+    ACCEPT --&gt;|否| RP
+    V --&gt;|否| RP</code></pre>
 <h3 id="431">4.3.1 计划不应只是自然语言列表<a class="headerlink" href="#431" title="Permanent link">&para;</a></h3>
 <p>一个可靠的计划步骤最好包含：</p>
 <ul>
@@ -9966,11 +10020,12 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <p>以上是教学伪代码，不是通用工具协议。Worker 必须把 <code>#E1</code>、<code>#E2</code> 替换为实际输出，检查引用与依赖，而不是把变量名原样送给搜索工具。它减少了规划模型的往返，但无法预知所有条件分支；依赖返回内容才能决定是否添加新步骤时，仍需重规划或退回交互式执行。</p>
 <h3 id="442-dag-planning">4.4.2 DAG Planning<a class="headerlink" href="#442-dag-planning" title="Permanent link">&para;</a></h3>
 <p>当计划包含明确依赖时，可以将其表示为有向无环图：</p>
-<pre class="mermaid"><code>flowchart LR
-    A[调研竞品 A] --&gt; D[对比分析]
-    B[调研竞品 B] --&gt; D
-    C[收集行业趋势] --&gt; E[趋势影响分析]
-    D --&gt; F[生成报告]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["调研竞品 A"] --&gt; D["对比分析"]
+    B["调研竞品 B"] --&gt; D
+    C["收集行业趋势"] --&gt; E["趋势影响分析"]
+    D --&gt; F["生成报告"]
     E --&gt; F</code></pre>
 <p>数据依赖已满足、没有共享写冲突且资源允许的步骤可以并行执行。DAG 只表达一版计划内的无环依赖；重试和重规划循环应由外层状态机管理。</p>
 <h3 id="443-llmcompiler">4.4.3 LLMCompiler<a class="headerlink" href="#443-llmcompiler" title="Permanent link">&para;</a></h3>
@@ -9980,15 +10035,16 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <li>Task Fetching Unit：依赖满足后立即调度任务；</li>
 <li>Executor：实际执行已就绪的工具任务。</li>
 </ul>
-<p>这是 <a href="https://arxiv.org/abs/2312.04511">LLMCompiler 论文</a>列出的三个组件；带重规划的实现还可以加入 Joiner，汇总结果并决定结束或继续。不要把 Joiner 当作执行工具的 Executor。</p>
+<p>这是 LLMCompiler 论文<sup><a href="../../../book/references/#ref-454">【454】</a></sup>列出的三个组件；带重规划的实现还可以加入 Joiner，汇总结果并决定结束或继续。不要把 Joiner 当作执行工具的 Executor。</p>
 <p>这类设计关注的不只是规划质量，也关注执行并行度、模型调用次数和总体延迟。</p>
 <h2 id="45-reflection">4.5 Reflection：通过反馈改进结果<a class="headerlink" href="#45-reflection" title="Permanent link">&para;</a></h2>
 <p>Reflection 在生成或执行之后加入评估环节：</p>
-<pre class="mermaid"><code>flowchart LR
-    G[Generate / Execute] --&gt; E[Evaluate]
-    E --&gt; D{达到标准?}
-    D --&gt;|是| DONE[完成]
-    D --&gt;|否| FB[生成反馈]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --&gt; E["Evaluate"]
+    E --&gt; D["达到标准?"]
+    D --&gt;|是| DONE["完成"]
+    D --&gt;|否| FB["生成反馈"]
     FB --&gt; G</code></pre>
 <p>评估可以发生在：</p>
 <ul>
@@ -10037,14 +10093,15 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <li><strong>Episodic Memory</strong>：在后续尝试中提供这些经验。</li>
 </ul>
 <p>这里不是要求调用四个独立模型：记忆是存储，Evaluator 也可以使用环境奖励、规则或测试。模块如何实现取决于任务能提供什么反馈。</p>
-<pre class="mermaid"><code>flowchart TB
-    A[Actor] --&gt; ENV[环境 / 工具]
-    ENV --&gt; TRAJ[执行轨迹与结果]
-    TRAJ --&gt; E[Evaluator]
-    E --&gt; PASS{成功?}
-    PASS --&gt;|是| DONE[结束]
-    PASS --&gt;|否| SR[Self-Reflection]
-    SR --&gt; MEM[情景记忆]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Actor"] --&gt; ENV["环境 / 工具"]
+    ENV --&gt; TRAJ["执行轨迹与结果"]
+    TRAJ --&gt; E["Evaluator"]
+    E --&gt; PASS["成功?"]
+    PASS --&gt;|是| DONE["结束"]
+    PASS --&gt;|否| SR["Self-Reflection"]
+    SR --&gt; MEM["情景记忆"]
     MEM --&gt; A</code></pre>
 <h3 id="461">4.6.1 “错题本”类比<a class="headerlink" href="#461" title="Permanent link">&para;</a></h3>
 <p>普通重试可能只是再次生成；Reflexion 会先总结：</p>
@@ -10078,22 +10135,12 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <h2 id="47">4.7 三种范式如何组合<a class="headerlink" href="#47" title="Permanent link">&para;</a></h2>
 <p>实际系统里常见的分层组合如下：</p>
 <pre class="mermaid"><code>flowchart TB
-    G[目标] --&gt; P[Plan-and-Execute&lt;br/&gt;生成全局里程碑]
-    P --&gt; S1[步骤 1]
-    P --&gt; S2[步骤 2]
-    P --&gt; S3[步骤 N]
-
-    S1 --&gt; R1[ReAct&lt;br/&gt;局部探索与工具调用]
-    S2 --&gt; R2[ReAct&lt;br/&gt;局部探索与工具调用]
-    S3 --&gt; R3[ReAct&lt;br/&gt;局部探索与工具调用]
-
-    R1 --&gt; V[Reflection / Verifier]
-    R2 --&gt; V
-    R3 --&gt; V
-
+    P[Plan-and-Execute] --&gt; R[各步骤的 ReAct]
+    R --&gt; V[反思与验证]
     V --&gt;|局部失败| RETRY[局部重试]
     V --&gt;|计划失效| P
     V --&gt;|通过| DONE[完成]</code></pre>
+<p>目标进入 Plan-and-Execute，生成全局里程碑以及第 1 至 N 个步骤。每一步都有自己的 ReAct 循环，负责局部探索与工具调用，所有步骤循环汇入同一反思与验证阶段。图中一个 ReAct 方框表示各步骤重复采用的循环，不意味着共享同一个上下文，也不表示这些步骤必须串行执行。</p>
 <p>职责划分为：</p>
 <ul>
 <li><strong>Plan-and-Execute</strong>：保持全局方向；</li>
@@ -10105,14 +10152,15 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <h2 id="48-agentic-workflow">4.8 Agentic Workflow：生产环境里的常见做法<a class="headerlink" href="#48-agentic-workflow" title="Permanent link">&para;</a></h2>
 <p>Agentic Workflow 用确定性流程包围概率性决策：</p>
 <p>按 Anthropic《Building Effective Agents》的术语，Router、固定并行分支和 Evaluator-Optimizer 都可以是 Workflow：分别负责分流、聚合独立工作、按反馈迭代。循环或多次 LLM 调用本身不构成自主 Agent；关键在于后续路径是预先编码，还是由模型在运行时动态选择。</p>
-<pre class="mermaid"><code>flowchart LR
-    IN[输入] --&gt; V[校验]
-    V --&gt; ROUTE[固定路由]
-    ROUTE --&gt; AG[受限 Agent 节点]
-    AG --&gt; CHECK[确定性验证]
-    CHECK --&gt;|通过| OUT[输出]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["输入"] --&gt; V["校验"]
+    V --&gt; ROUTE["固定路由"]
+    ROUTE --&gt; AG["受限 Agent 节点"]
+    AG --&gt; CHECK["确定性验证"]
+    CHECK --&gt;|通过| OUT["输出"]
     CHECK --&gt;|可修复| AG
-    CHECK --&gt;|高风险| HUMAN[人工审核]</code></pre>
+    CHECK --&gt;|高风险| HUMAN["人工审核"]</code></pre>
 <p>以客服系统为例：</p>
 <ul>
 <li>意图识别、权限检查和输出审核由 Workflow 控制；</li>
@@ -10166,18 +10214,20 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 </tbody>
 </table>
 <p>还可以从两个基础维度判断：</p>
-<pre class="mermaid"><code>quadrantChart
-    title Task complexity and quality requirements
-    x-axis Low complexity --&gt; High complexity
-    y-axis Low quality requirement --&gt; High quality requirement
-    quadrant-1 Plan-and-Execute plus Reflection
-    quadrant-2 ReAct plus Reflection
-    quadrant-3 Simple workflow
-    quadrant-4 Plan-and-Execute
+<pre class="mermaid"><code>%%{init: {"quadrantChart": {"chartWidth": 440, "chartHeight": 440, "quadrantTextTopPadding": 100}}}%%
+quadrantChart
+    title 复杂度与质量要求
+    x-axis "低复杂度" --&gt; "高复杂度"
+    y-axis "较低质量要求" --&gt; "较高质量要求"
+    quadrant-1 "规划与执行加反思"
+    quadrant-2 "ReAct 加反思"
+    quadrant-3 "简单工作流"
+    quadrant-4 "规划与执行"
     ReAct: [0.30, 0.40]
-    Plan-and-Execute: [0.78, 0.48]
-    Reflection: [0.40, 0.82]
-    Hybrid Agent: [0.82, 0.85]</code></pre>
+    "规划": [0.78, 0.48]
+    "反思": [0.40, 0.82]
+    "混合": [0.82, 0.85]</code></pre>
+<p>图中“规划”指 Plan-and-Execute，“反思”指 Reflection，“混合”指混合型 Agent。</p>
 <p>二维图只是帮助理解。实际选择还需考虑风险、延迟、成本、可验证性和环境变化速度。</p>
 <h2 id="410">4.10 停止、预算与无进展检测<a class="headerlink" href="#410" title="Permanent link">&para;</a></h2>
 <p>所有范式都必须具有停止条件：</p>
@@ -10257,15 +10307,8 @@ B=(N_{max},T_{max},C_{max},R_{max})
 </ol>
 <p>组合时应明确每个控制环修改什么状态、由谁验收，以及何时停止。短任务不必配置全部角色；增加 Planner 或 Critic 后，仍要检验其收益是否超过往返延迟、状态管理和误判成本。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2303.11366">Reflexion: Language Agents with Verbal Reinforcement Learning</a></li>
-<li><a href="https://arxiv.org/html/2303.11366v4">Reflexion 原文实验设置与表 1–2</a></li>
-<li><a href="https://arxiv.org/abs/2305.18323">ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2312.04511">An LLM Compiler for Parallel Function Calling</a></li>
-<li><a href="https://www.langchain.com/blog/planning-agents">LangChain: Planning Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-04">集中参考资料章节</a>。</p>
 
 
 
@@ -10288,7 +10331,7 @@ B=(N_{max},T_{max},C_{max},R_{max})
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

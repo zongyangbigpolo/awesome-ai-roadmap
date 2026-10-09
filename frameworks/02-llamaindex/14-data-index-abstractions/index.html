@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: LlamaIndex Data and Index Abstractions","description":"Explains LlamaIndex Documents, Nodes, ingestion caching, and index storage boundaries, including incremental updates, access filters, and vector-store migration costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/14-data-index-abstractions/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: LlamaIndex Data and Index Abstractions","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/14-data-index-abstractions/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: LlamaIndex Data and Index Abstractions","description":"Explains LlamaIndex Documents, Nodes, ingestion caching, and index storage boundaries, including incremental updates, access filters, and vector-store migration costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/14-data-index-abstractions/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: LlamaIndex Data and Index Abstractions","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/14-data-index-abstractions/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 14: LlamaIndex Data and Index Abstractions","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/14-data-index-abstractions/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9172,14 +9197,24 @@
 <p>Private data is usually neither part of a model's learned knowledge nor organized into retrievable context with traceable sources. Tables in PDFs, database records, and support-ticket bodies first need to be parsed, located within their sources, and organized for retrieval. Giving the model a file path is not enough.</p>
 <p>This data-processing pipeline is a common starting point for LlamaIndex. The <a href="../../01-langchain/">LangChain ecosystem</a>, by comparison, places more emphasis on unified Model / Message / Tool interfaces and on how models call tools.</p>
 <p>The two have substantial overlap and can also complement each other. This comparison concerns the emphasis of their commonly used abstractions, not product boundaries such as "LlamaIndex can only do RAG" or "LangChain is poor at data processing."</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph LC["A common starting point for LangChain"]
-        L1["Many models and tools&lt;br/&gt;How can we unify interfaces and coordinate calls reliably?"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph LC["LangChain"]
+        direction TB
+        L1["Many models and&lt;br/&gt;tools"]
     end
-    subgraph LI["A common starting point for LlamaIndex"]
-        I1["Scattered private data in different formats&lt;br/&gt;How can we turn it into high-quality context?"]
+    subgraph LI["LlamaIndex"]
+        direction TB
+        I1["Scattered&lt;br/&gt;private data"]
     end
     L1 -.Complementary.-&gt; I1</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>A common starting point for LangChain</li>
+<li>Many models and tools How can we unify interfaces and coordinate calls reliably?</li>
+<li>A common starting point for LlamaIndex</li>
+<li>Scattered private data in different formats How can we turn it into high-quality context?</li>
+</ul>
 <h2 id="142-data-ingestion-document-node-and-ingestionpipeline"><span id="142-documentnode-ingestionpipeline" class="legacy-heading-anchor" aria-hidden="true"></span>14.2 Data ingestion: <code>Document</code>, <code>Node</code>, and <code>IngestionPipeline</code><a class="headerlink" href="#142-data-ingestion-document-node-and-ingestionpipeline" title="Permanent link">&para;</a></h2>
 <p>LlamaIndex conceptually distinguishes "source data" from "retrievable units," but these are not mutually incompatible type systems:</p>
 <ul>
@@ -9241,15 +9276,28 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    N["Set of Nodes"] --&gt; V["VectorStoreIndex&lt;br/&gt;Semantic retrieval"]
-    N --&gt; S["SummaryIndex&lt;br/&gt;Full traversal by default"]
-    N --&gt; T["TreeIndex&lt;br/&gt;Hierarchical summaries"]
-    N --&gt; P["PropertyGraphIndex&lt;br/&gt;Entity-relationship graph"]
-    V --&gt; Q["Unified Query Engine interface"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    N["Nodes"] --&gt; V["VectorStoreIndex"]
+    N --&gt; S["SummaryIndex"]
+    N --&gt; T["TreeIndex"]
+    N --&gt; P["PropertyGraphIndex"]
+    V --&gt; Q["Queries"]
     S --&gt; Q
     T --&gt; Q
     P --&gt; Q</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Set of Nodes</li>
+<li>Unified Query Engine interface</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>VectorStoreIndex Semantic retrieval</li>
+<li>SummaryIndex Full traversal by default</li>
+<li>TreeIndex Hierarchical summaries</li>
+<li>PropertyGraphIndex Entity-relationship graph</li>
+</ul>
 <p>Index types embody different retrieval assumptions; they are not just interchangeable database backends. Giving a question such as "summarize the entire document" to a <code>VectorStoreIndex</code> usually retrieves only a small number of semantically similar passages, not enough for a summary covering the whole document. This is one of the common mistakes in Section 14.5.</p>
 <h2 id="144-decoupling-storage-from-indexes-storagecontext-and-vector-store-independence"><span id="144-storagecontext" class="legacy-heading-anchor" aria-hidden="true"></span>14.4 Decoupling storage from indexes: <code>StorageContext</code> and vector-store independence<a class="headerlink" href="#144-decoupling-storage-from-indexes-storagecontext-and-vector-store-independence" title="Permanent link">&para;</a></h2>
 <p>LlamaIndex uses <code>StorageContext</code> to organize storage dependencies. The following three components are common in text-vector applications; additional fields support graph stores, property graph stores, named vector stores, and more:</p>
@@ -9270,7 +9318,7 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">storage_context</span> <span class="o">=</span> <span class="n">StorageContext</span><span class="o">.</span><span class="n">from_defaults</span><span class="p">(</span><span class="n">vector_store</span><span class="o">=</span><span class="n">vector_store</span><span class="p">)</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">index</span> <span class="o">=</span> <span class="n">VectorStoreIndex</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">storage_context</span><span class="o">=</span><span class="n">storage_context</span><span class="p">)</span>
 </span></code></pre></div>
-<p>This fragment assembles storage components. The PostgreSQL integration package and pgvector extension must already be installed. The application supplies <code>sync_database_url</code> and <code>async_database_url</code> for the same database, using compatible synchronous and asynchronous drivers, such as <code>postgresql+psycopg2</code> and <code>postgresql+asyncpg</code>. Both URLs are passed explicitly: <a href="https://github.com/run-llama/llama_index/blob/f475afd8a9bbda84f252567e045d89d07b5701b3/llama-index-integrations/vector_stores/llama-index-vector-stores-postgres/llama_index/vector_stores/postgres/base.py#L413-L478"><code>from_params()</code> does not discover an existing application connection</a>. Keep credentials in application configuration rather than in the example. <code>embed_dim</code> must match the actual embedding output; 1536 is only an example value.</p>
+<p>This fragment assembles storage components. The PostgreSQL integration package and pgvector extension must already be installed. The application supplies <code>sync_database_url</code> and <code>async_database_url</code> for the same database, using compatible synchronous and asynchronous drivers, such as <code>postgresql+psycopg2</code> and <code>postgresql+asyncpg</code>. Both URLs are passed explicitly: <code>from_params()</code> does not discover an existing application connection<sup><a href="../../../book/references/#ref-629">【629】</a></sup>. Keep credentials in application configuration rather than in the example. <code>embed_dim</code> must match the actual embedding output; 1536 is only an example value.</p>
 <p>Switching backends can often preserve the higher-level interface, but you still need to migrate node IDs, text, metadata, and vectors, then verify filtering, hybrid retrieval, deletion semantics, and score scales. Nor is <code>persist()</code> an atomic backup across multiple remote stores: recovery requires consistent versions of the docstore, index structures, and vector collection.</p>
 <h2 id="145-common-mistakes"><span id="145" class="legacy-heading-anchor" aria-hidden="true"></span>14.5 Common mistakes<a class="headerlink" href="#145-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="1451-treating-summaryindex-as-a-replacement-for-vectorstoreindex"><span id="1451-summaryindex-vectorstoreindex" class="legacy-heading-anchor" aria-hidden="true"></span>14.5.1 Treating <code>SummaryIndex</code> as a replacement for <code>VectorStoreIndex</code><a class="headerlink" href="#1451-treating-summaryindex-as-a-replacement-for-vectorstoreindex" title="Permanent link">&para;</a></h3>
@@ -9301,14 +9349,8 @@
 </ol>
 <p>Think of LlamaIndex as a set of abstractions organized around data ingestion and retrieval: <code>Document</code>, <code>Node</code>, <code>Index</code>, and <code>StorageContext</code> handle source data, retrievable units, retrieval organization, and storage decoupling respectively. Together, they form a data-processing pipeline with replaceable components.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.llamaindex.ai/python/framework/">LlamaIndex official documentation</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/loading/ingestion_pipeline/">LlamaIndex: Loading Data (Ingestion Pipeline)</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/indexing/">LlamaIndex: Indexing concepts</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/indexing/index_guide/">LlamaIndex: Default and optional retrieval modes for each index</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/indexing/lpg_index_guide/">LlamaIndex: Property Graph Index</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/storing/">LlamaIndex: Storage concepts</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-14">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9331,7 +9373,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

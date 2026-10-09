@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：生成、Grounding 与幻觉规避","description":"区分证据忠实度与事实正确性，说明 RAG 的拒答、主张与引用对齐、冲突处理以及生成后校验。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/05-generation-evaluation/17-generation-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：生成、Grounding 与幻觉规避","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/05-generation-evaluation/17-generation-hallucination/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十七章：生成、Grounding 与幻觉规避","description":"区分证据忠实度与事实正确性，说明 RAG 的拒答、主张与引用对齐、冲突处理以及生成后校验。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/05-generation-evaluation/17-generation-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十七章：生成、Grounding 与幻觉规避","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/05-generation-evaluation/17-generation-hallucination/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十七章：生成、Grounding 与幻觉规避","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/05-generation-evaluation/17-generation-hallucination/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9411,20 +9436,12 @@
 </blockquote>
 <p>检索缺失、过期或冲突证据、上下文截断与处理错误、模型超出证据生成，以及缓存或工具返回的错误复用，都可能造成不实输出。检索质量是重要且常见的上游因素：材料缺失或错误时，生成层技巧无法把答案变成事实；但<strong>检索充分时模型仍可能误读、过度概括或错误引用。</strong> 因此要把数据治理、检索、grounding、引用校验、拒答和事后评估联合起来。</p>
 <h2 id="172">17.2 幻觉的主要来源<a class="headerlink" href="#172" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    H[RAG 中的不实输出] --&gt; H1[证据不可用或不可靠]
-    H --&gt; H2[证据到答案的推理失真]
-    H --&gt; H3[系统处理与复用失效]
-
-    H1 --&gt; C1[知识库缺失、过期或错误]
-    H1 --&gt; C2[有但未召回]
-    H1 --&gt; C3[召回后被截断或权限过滤]
-
-    H2 --&gt; C4[脑补材料没有的细节]
-    H2 --&gt; C5[误读、错误归因或过度概括]
-    H2 --&gt; C6[参数化知识覆盖材料]
-    H2 --&gt; C7[冲突材料被擅自消解]
-    H3 --&gt; C8[缓存、版本或引用校验失效]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E[证据问题] --&gt; H[RAG 不实输出]
+    R[推理问题] --&gt; H
+    S[系统问题] --&gt; H</code></pre>
+<p>证据不可用或不可靠，可能因为知识库缺失、过期或错误，有证据却未召回，或召回后被截断、被权限过滤。推理问题包括编造材料中没有的细节、误读、错误归因、过度概括、用参数化知识覆盖材料，以及无依据地消解冲突。系统处理与复用则可能在缓存、版本处理或引用校验环节失效。</p>
 <p>这些来源对应的治理手段不同，但可以组合使用；只优化单一环节，通常会遗漏其他失效模式。</p>
 <table>
 <thead>
@@ -9455,17 +9472,18 @@
 <p>可在 Prompt 中声明经授权、符合查询时刻的业务材料优先于参数常识，但这只是行为约束，不是可靠性保证。材料中的指令仍是不可信数据；来源或版本互相矛盾时，要显式报告冲突或按已定义规则裁决。</p>
 <h2 id="173">17.3 第一道防线：拒答<a class="headerlink" href="#173" title="Permanent link">&para;</a></h2>
 <p>这是成本最低、也最常被漏掉的控制点之一。</p>
-<pre class="mermaid"><code>flowchart TB
-    R[检索结果] --&gt; C1{有结果吗?}
-    C1 --&gt;|无| REJ[拒答]
-    C1 --&gt;|有| C2{校准后置信度足够?}
-    C2 --&gt;|否| REJ[拒答、澄清或降级]
-    C2 --&gt;|是| GEN[进入生成]
-    GEN --&gt; C3{模型说材料不足?}
-    C3 --&gt;|是| REJ2[输出无法回答 + 建议]
-    C3 --&gt;|否| C4{关键主张与引用&lt;br/&gt;通过发布校验?}
-    C4 --&gt;|是| OUT[输出答案 + 引用]
-    C4 --&gt;|否| REJ2</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    R[检索结果] --&gt; C{通过证据检查？}
+    C --&gt;|否| REJ[拒答或补救]
+    C --&gt;|是| GEN[生成候选答案]</code></pre>
+<p>没有检索结果就拒答。有结果但校准后置信度不足时，拒答、澄清或降级。只有校准后置信度足够才允许生成。生成候选答案后，还需要单独的发布检查：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GEN[候选答案] --&gt; C[检查证据与引用]
+    C --&gt;|通过| OUT[答案与引用]
+    C --&gt;|失败| REJ[解释无法回答；给出建议]</code></pre>
+<p>如果模型表示证据不足，就不发布答案；否则继续检查关键主张与引用。发布校验失败时，同样应解释无法回答的原因，并建议下一步。</p>
 <p>目标是在证据不足时不进入常规生成链路，并阻止未经校验的关键结论发布。无权材料不是可补给模型的“遗漏证据”；检索故障、无授权依据与正常无命中要在内部区分，外部响应还需避免泄漏受限材料是否存在。</p>
 <p>如果检索结果为空，或经业务评测集校准的置信度不足，就直接返回「未找到足够依据的信息」、请求澄清或走受控降级，<strong>不进入常规生成环节</strong>（<a href="../../03-retrieval/13-hybrid-retrieval-rerank/">第十三章 13.4.3</a>）。</p>
 <p>这里需要按业务代价校准：拒答规则更保守时，错误接受可能下降，但拒答会增加；规则更宽松时，覆盖率提高，但无依据回答风险上升。</p>
@@ -9633,14 +9651,8 @@
 <li>引用完整性、时效性和鲁棒性如何评测，见<a href="../18-rag-evaluation/">RAG 评估</a>。</li>
 </ul>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2410.07176">Astute RAG: Overcoming Imperfect Retrieval Augmentation and Knowledge Conflicts for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2310.01558">Making Retrieval-Augmented Language Models Robust to Irrelevant Context</a></li>
-<li><a href="https://arxiv.org/abs/2309.15217">RAGAS: Automated Evaluation of Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2305.14627">ALCE：Enabling Large Language Models to Generate Text with Citations</a></li>
-<li><a href="https://arxiv.org/abs/2401.15884">Corrective Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-17">集中参考资料章节</a>。</p>
 
 
 
@@ -9663,7 +9675,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

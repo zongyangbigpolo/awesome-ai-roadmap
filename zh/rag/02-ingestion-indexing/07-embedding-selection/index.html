@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Embedding 模型选型与评估","description":"用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Embedding 模型选型与评估","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：Embedding 模型选型与评估","description":"用业务证据标签与 BM25 对照评估 Embedding 模型，分析榜单边界、MRL 降维、部署约束和微调后的索引迁移。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：Embedding 模型选型与评估","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第七章：Embedding 模型选型与评估","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/07-embedding-selection/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9431,16 +9456,11 @@
 <p>榜单适合缩小候选范围，不适合直接替代选型。原因下一节展开。</p>
 <h2 id="72">7.2 为什么不能只看榜单<a class="headerlink" href="#72" title="Permanent link">&para;</a></h2>
 <p>MTEB 是当前最常用的文本嵌入评测基准，覆盖分类、聚类、检索、重排等多类任务。它很有价值，但<strong>有四个常见局限</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    M[只看 MTEB 排名] --&gt; P1[榜单过拟合]
-    M --&gt; P2[检索分数不预测端到端质量]
-    M --&gt; P3[语言与文体偏置]
-    M --&gt; P4[长度分布偏置]
-
-    P1 --&gt; D1[模型针对公开集调优&lt;br/&gt;分数虚高]
-    P2 --&gt; D2[召回好 不等于 答案好]
-    P3 --&gt; D3[所选子榜的语言与领域&lt;br/&gt;未必匹配业务]
-    P4 --&gt; D4[检查子任务长度分布&lt;br/&gt;而非只看总分]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    M[MTEB 排名] --&gt; S[仅用于候选筛选]
+    S --&gt; E[在业务数据上评测]</code></pre>
+<p>排名有四个局限：针对公开集调优可能使分数虚高；召回好不保证端到端答案好；子榜的语言、领域和文体未必匹配业务；长度分布也可能不同。应检查子任务的长度分布，而不只看总分。</p>
 <h3 id="721">7.2.1 榜单过拟合<a class="headerlink" href="#721" title="Permanent link">&para;</a></h3>
 <p>MTEB 的数据集是公开的。模型开发者可以针对这些数据集反复调优，导致榜单分数<strong>高估了在未见过的数据上的真实表现</strong>。这是所有公开榜单的通病，不是 MTEB 独有。</p>
 <h3 id="722">7.2.2 检索分数不等于端到端质量<a class="headerlink" href="#722" title="Permanent link">&para;</a></h3>
@@ -9452,13 +9472,12 @@
 <h3 id="724">7.2.4 长度与形态偏置<a class="headerlink" href="#724" title="Permanent link">&para;</a></h3>
 <p>要检查实际使用的子榜和数据集。MMTEB 已包含长文档与代码检索等任务，不能笼统说整个榜单都只测短文本；若所选任务的长度分布与业务不同，总分就不足以判断长文档或整段错误日志的检索能力。</p>
 <h2 id="73">7.3 正确的选型流程<a class="headerlink" href="#73" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S1[1. 用榜单圈定候选&lt;br/&gt;3-5 个模型] --&gt; S2[2. 构造业务评测集]
-    S2 --&gt; S3[3. 同一套切分和参数下&lt;br/&gt;分别建库]
-    S3 --&gt; S4[4. 测检索指标&lt;br/&gt;Hit@K MRR NDCG]
-    S4 --&gt; S5[5. 测端到端答案质量]
-    S5 --&gt; S6[6. 评估成本 延迟 部署约束]
-    S6 --&gt; S7[7. 决策]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1[筛选 3–5 个模型] --&gt; S2[构造可比评测]
+    S2 --&gt; S3[评测检索与答案]
+    S3 --&gt; S4[评估成本并决策]</code></pre>
+<p>构造业务评测集，在相同切分与参数下为每个模型分别建库。先测 Hit@K、MRR 和 NDCG，再测端到端答案质量。决策前还要评估成本、延迟和部署约束。</p>
 <p><strong>榜单的正确用法是「筛选候选池」，而不是「给出答案」。</strong></p>
 <h3 id="731">7.3.1 评测集怎么构造<a class="headerlink" href="#731" title="Permanent link">&para;</a></h3>
 <p>这是整个流程里最花时间但最有价值的一步。</p>
@@ -9604,16 +9623,8 @@
 <li><strong>微调应由失败样例驱动</strong>，文档表示变化带来重嵌入、双索引迁移和回归成本。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.07316">MTEB: Massive Text Embedding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2502.13595">MMTEB: Massive Multilingual Text Embedding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2205.13147">Matryoshka Representation Learning</a></li>
-<li><a href="https://openai.com/index/new-embedding-models-and-api-updates/">OpenAI：New embedding models and API updates（2024-01-25）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/embeddings">OpenAI：Embedding API 与 dimensions 参数</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B 模型卡</a></li>
-<li><a href="https://arxiv.org/abs/2402.03216">M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-07">集中参考资料章节</a>。</p>
 
 
 
@@ -9636,7 +9647,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

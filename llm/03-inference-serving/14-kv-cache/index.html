@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: KV Cache and Prompt Caching","description":"Derive causal attention's KV reuse conditions, prefill and decode complexity, and GQA cache capacity, then examine cross-request prefix matching, billing, and eviction.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: KV Cache and Prompt Caching","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: KV Cache and Prompt Caching","description":"Derive causal attention's KV reuse conditions, prefill and decode complexity, and GQA cache capacity, then examine cross-request prefix matching, billing, and eviction.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: KV Cache and Prompt Caching","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 14: KV Cache and Prompt Caching","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/14-kv-cache/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9470,15 +9495,12 @@ M_{\mathrm{KV}}=2LBND_{\mathrm{head}}H_{\mathrm{KV}}s
 <p>MLA may cache compressed latent states and position-related components, while sliding-window layers retain only in-window state. The conventional KV formula above does not directly apply to them. See <a href="../../01-foundations/03-attention-variants/">Chapter 3</a>.</p>
 <h2 id="145-cross-request-sharing-requires-a-complete-computation-prefix"><span id="145" class="legacy-heading-anchor" aria-hidden="true"></span>14.5 Cross-request sharing requires a complete computation prefix<a class="headerlink" href="#145-cross-request-sharing-requires-a-complete-computation-prefix" title="Permanent link">&para;</a></h2>
 <p>Suppose many requests start with the same long system prompt. Retain the state produced by the first prefill; later requests can continue directly after their longest matching prefix.</p>
-<pre class="mermaid"><code>flowchart TB
-    R1["First request"] --&gt; C1["Compute and retain&lt;br/&gt;a cacheable prefix"]
-    C1 --&gt; POOL[("KV block pool and prefix index")]
-    R2["Later request"] --&gt; M{"Longest reusable&lt;br/&gt;prefix available?"}
-    POOL --&gt; M
-    M --&gt;|Yes| HIT["Reference existing blocks&lt;br/&gt;Compute the unmatched suffix"]
-    M --&gt;|No| MISS["Run prefill&lt;br/&gt;Cache according to policy"]
-    HIT --&gt; D["Generate a new answer"]
-    MISS --&gt; D</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    R["Request"] --&gt; M["Look up reusable prefix"]
+    M --&gt; P["Prefill unmatched tokens"]
+    P --&gt; D["Generate a new answer"]</code></pre>
+<p>The first request computes a cacheable prefix and retains it in the KV block pool and prefix index. Later requests look up the <strong>longest reusable prefix</strong>: on a hit, reference its existing blocks and compute only the unmatched suffix; on a miss, run full prefill and cache according to policy. Both paths generate a new answer rather than reusing a previous answer.</p>
 <p>Common hit conditions include:</p>
 <ul>
 <li>Identical token prefixes and compatible model, adapter, position, and mask semantics.</li>
@@ -9586,17 +9608,8 @@ C_{\mathrm{plain}}=C(1+h)
 <h2 id="1411-chapter-summary"><span id="1411" class="legacy-heading-anchor" aria-hidden="true"></span>14.11 Chapter summary<a class="headerlink" href="#1411-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>KV caching relies on unchanged causal-prefix state. It avoids historical recomputation but costs capacity and bandwidth. Prompt caching extends state reuse across requests, with benefits constrained by matching granularity, cache lifetime, traffic, and billing. Capacity estimates must count KV heads; serving evaluations must separate prefill, decode, and queuing.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2309.06180">PagedAttention paper</a></li>
-<li><a href="https://arxiv.org/abs/1911.02150">MQA paper</a></li>
-<li><a href="https://arxiv.org/abs/2305.13245">GQA paper</a></li>
-<li><a href="https://github.com/anthropics/anthropic-cookbook/blob/main/misc/prompt_caching.ipynb">Anthropic official prompt caching cookbook</a></li>
-<li><a href="https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/cache_control_ephemeral_param.py">Anthropic official SDK: cache TTL type</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI: Prompt Caching</a></li>
-<li><a href="https://arxiv.org/html/2402.02750v2">KIVI paper</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/design/prefix_caching/">vLLM: Automatic Prefix Caching design</a></li>
-</ul>
-<p>Interface review scope in the source manuscript: official documentation and SDK as of 2026-09-08, with the OpenAI caching guide checked again on 2026-09-15. The example did not make a billable request and does not report a real cache hit.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-14">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9619,7 +9632,7 @@ C_{\mathrm{plain}}=C(1+h)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

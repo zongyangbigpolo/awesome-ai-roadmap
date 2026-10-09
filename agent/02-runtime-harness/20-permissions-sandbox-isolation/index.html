@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Permissions, Sandboxing, and Isolation","description":"Distinguishes tool approval, execution authorization, and sandbox isolation; checks Claude Agent SDK permission order; and explains network egress, credentials, and tenant boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/20-permissions-sandbox-isolation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Permissions, Sandboxing, and Isolation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/20-permissions-sandbox-isolation/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: Permissions, Sandboxing, and Isolation","description":"Distinguishes tool approval, execution authorization, and sandbox isolation; checks Claude Agent SDK permission order; and explains network egress, credentials, and tenant boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/20-permissions-sandbox-isolation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: Permissions, Sandboxing, and Isolation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/20-permissions-sandbox-isolation/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 20: Permissions, Sandboxing, and Isolation","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/20-permissions-sandbox-isolation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9129,24 +9154,21 @@
 <h2 id="201-if-a-person-has-approved-the-operation-why-isolate-its-execution"><span id="201" class="legacy-heading-anchor" aria-hidden="true"></span>20.1 If a person has approved the operation, why isolate its execution?<a class="headerlink" href="#201-if-a-person-has-approved-the-operation-why-isolate-its-execution" title="Permanent link">&para;</a></h2>
 <p>Approving a command means consenting to that operation. It does not mean the program being run has no defects, nor that it may access the entire machine. Permission checks limit <strong>what may be done</strong>; a sandbox limits <strong>what execution can reach</strong>. Chapter 15 starts from the threat of prompt injection. This chapter examines how the runtime enforces these two boundaries, both of which remain necessary even when an error is not caused by an attacker.</p>
 <h2 id="202-permission-models-from-a-boolean-switch-to-a-layered-rule-engine"><span id="202" class="legacy-heading-anchor" aria-hidden="true"></span>20.2 Permission models: from a Boolean switch to a layered rule engine<a class="headerlink" href="#202-permission-models-from-a-boolean-switch-to-a-layered-rule-engine" title="Permanent link">&para;</a></h2>
-<p>The simplest permission model is a global Boolean switch: allow command execution or disallow it. A production harness needs finer-grained rules based on tool type (read versus write), command patterns (argument-matching rules such as <code>Bash(rm *)</code>), and whether the target is a critical path. The Claude Agent SDK is a representative implementation of this layered approach. It defines an <strong>ordered</strong> decision chain for every tool request (<a href="https://code.claude.com/docs/en/agent-sdk/permissions">Claude Agent SDK: Configure permissions</a>):</p>
+<p>The simplest permission model is a global Boolean switch: allow command execution or disallow it. A production harness needs finer-grained rules based on tool type (read versus write), command patterns (argument-matching rules such as <code>Bash(rm *)</code>), and whether the target is a critical path. The Claude Agent SDK is a representative implementation of this layered approach. It defines an <strong>ordered</strong> decision chain for every tool request (Claude Agent SDK: Configure permissions<sup><a href="../../../book/references/#ref-550">【550】</a></sup>):</p>
 <pre class="mermaid"><code>flowchart TB
-    REQ["Tool-call request"] --&gt; HOOK["1. Hooks&lt;br/&gt;Can deny outright; allow cannot skip later deny/ask rules"]
-    HOOK --&gt;|Deny| BLOCK["Block execution"]
+    HOOK["1. Hooks"]
     HOOK --&gt;|Continue| DENY["2. Deny rules"]
-    DENY --&gt;|Match| BLOCK["Block execution"]
     DENY --&gt;|No match| ASK["3. Ask rules"]
-    ASK --&gt;|Match| PROMPT{"Prompting permitted?"}
-    PROMPT --&gt;|Yes| CALLBACK["Delegate to human-confirmation callback"]
-    PROMPT --&gt;|dontAsk| BLOCK
-    ASK --&gt;|No match| MODE["4. Permission mode&lt;br/&gt;(bypass / acceptEdits / plan / other)"]
-    MODE --&gt;|Approved by mode| ALLOW["Execute"]
-    MODE --&gt;|File edit or shell write in plan mode| CALLBACK
-    MODE --&gt;|Not covered| ALLOWRULE["5. Allow rules"]
-    ALLOWRULE --&gt;|Match| ALLOW
-    ALLOWRULE --&gt;|No match| PROMPT
-    CALLBACK --&gt;|Approve| ALLOW
-    CALLBACK --&gt;|Reject/timeout| BLOCK</code></pre>
+    ASK --&gt;|No match| MODE["4. Permission mode"]
+    MODE --&gt;|Not covered| ALLOWRULE["5. Allow rules"]</code></pre>
+<p>This is the precedence path for a tool-call request, not an unconditional approval path:</p>
+<ul>
+<li>Hooks can deny immediately. A hook's allow result cannot skip later deny/ask rules.</li>
+<li>A matching deny rule blocks execution. A matching ask rule checks whether prompting is permitted: if so, invoke the human-confirmation callback; <code>dontAsk</code> blocks instead.</li>
+<li>If no ask rule matches, evaluate the permission mode (<code>bypass</code>, <code>acceptEdits</code>, <code>plan</code>, or another mode). Mode approval permits execution. File edits or shell writes in plan mode go to the confirmation callback.</li>
+<li>If the mode does not cover the action, a matching allow rule permits execution. Without a match, return to the prompting-permitted check.</li>
+<li>The callback permits execution only on approval; rejection or timeout blocks it.</li>
+</ul>
 <p>This diagram simplifies the Claude Agent SDK's path; it is not a permission standard for all harnesses. Matching a deny rule means rejection, not referral to a person. In <code>dontAsk</code>, calls that require confirmation are denied. In <code>plan</code>, file edits and shell writes cannot be automatically approved through allow rules. Critical-path deletion, <code>auto</code> mode, and configurations that disable permission prompts have additional branches that must be checked against the specific version. The documented critical-path exceptions are not universal protection for every dangerous operation.</p>
 <p>Also distinguish an <strong>allow list from a capability whitelist</strong>. In this SDK, <code>allowed_tools</code> means preapproval; tools not listed are not necessarily disabled. With <code>bypassPermissions</code>, other tools may still execute automatically. Calls approved earlier in the chain normally do not reach <code>canUseTool</code>. Checks that must run on every call belong in a supported pre-execution hook or a lower-level execution boundary, not solely in an approval callback.</p>
 <h2 id="203-three-granularities-of-approval-rules"><span id="203" class="legacy-heading-anchor" aria-hidden="true"></span>20.3 Three granularities of approval rules<a class="headerlink" href="#203-three-granularities-of-approval-rules" title="Permanent link">&para;</a></h2>
@@ -9206,7 +9228,7 @@
 <li>Audit logs can be separated by session and tenant. This is a prerequisite for using Chapter 23's observability data in troubleshooting and cost accounting.</li>
 </ul>
 <h2 id="208-case-study-github-copilot-coding-agents-sandbox-and-firewall"><span id="208-github-copilot-coding-agent" class="legacy-heading-anchor" aria-hidden="true"></span>20.8 Case study: GitHub Copilot Coding Agent's sandbox and firewall<a class="headerlink" href="#208-case-study-github-copilot-coding-agents-sandbox-and-firewall" title="Permanent link">&para;</a></h2>
-<p>GitHub Copilot Coding Agent runs each task in an “ephemeral development environment, powered by GitHub Actions,” where it explores code, modifies files, and runs tests and linters (<a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a>). This design illustrates several principles from this chapter:</p>
+<p>GitHub Copilot Coding Agent runs each task in an “ephemeral development environment, powered by GitHub Actions,” where it explores code, modifies files, and runs tests and linters (GitHub Docs: Configure the development environment for Copilot cloud agent<sup><a href="../../../book/references/#ref-542">【542】</a></sup>). This design illustrates several principles from this chapter:</p>
 <ul>
 <li><strong>An ephemeral environment</strong> reduces residue in a running instance, but external databases, caches, build artifacts, and credentials do not automatically disappear when the process is destroyed. Tenant isolation still depends on runner, storage, and access-control configuration.</li>
 <li><strong><code>copilot-setup-steps.yml</code> supports only a fixed set of configurable fields</strong>, including <code>steps</code>, <code>permissions</code>, <code>runs-on</code>, <code>services</code>, <code>snapshot</code>, and <code>timeout-minutes</code>. Repository configuration cannot override the remaining runtime behavior. This is a concrete example of the control-plane/harness division in Section 16.2.6: repository developers can configure what is preinstalled, but cannot rewrite how the loop is scheduled.</li>
@@ -9224,15 +9246,8 @@
 <h2 id="2010-chapter-summary"><span id="2010" class="legacy-heading-anchor" aria-hidden="true"></span>20.10 Chapter summary<a class="headerlink" href="#2010-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Approval, authorization, and isolation answer different questions: “Has someone confirmed this?”, “Is execution permitted?”, and “What can execution access?” Verify SDK rule order and extension fields against their versions instead of treating them as MCP standards. Sandboxing, network egress controls, credential brokering, and tenant isolation complement one another. None is replaced merely by using a container or an ephemeral environment.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/permissions">Claude Agent SDK: Configure permissions</a></li>
-<li><a href="https://gvisor.dev/docs/">gVisor documentation</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-the-firewall">GitHub Docs: Customizing or disabling the firewall</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: The lethal trifecta for AI agents</a></li>
-</ul>
-<p>The source review checked SDK permission order and GitHub environment/firewall coverage against official documentation on 2026-09-15. The v2.1.199 requirement for <code>anthropic/requiresUserInteraction</code> is retained. No SDK permission experiments or cloud-environment configuration were performed in that review.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-20">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9255,7 +9270,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

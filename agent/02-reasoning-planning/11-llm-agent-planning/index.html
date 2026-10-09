@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Giving LLMs and Agents the Ability to Plan","description":"Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Giving LLMs and Agents the Ability to Plan","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Giving LLMs and Agents the Ability to Plan","description":"Distinguish training models to plan from system-level planning, and examine action semantics, plan validation, search, rolling replanning, and when to use external solvers.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Giving LLMs and Agents the Ability to Plan","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 11: Giving LLMs and Agents the Ability to Plan","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/11-llm-agent-planning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -10706,14 +10731,15 @@
 <li>Risks and fallback options;</li>
 <li>Completion conditions.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    R[Reasoning] --&gt; Q[Answer why, what, and what follows]
-    P[Planning] --&gt; A[Answer what to do next to reach the goal]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Reasoning"] --&gt; Q["Answer why, what,&lt;br/&gt;and what follows"]
+    P["Planning"] --&gt; A["Answer what to do&lt;br/&gt;next to reach the&lt;br/&gt;goal"]
 
-    Q --&gt; COT[CoT / ToT / GoT]
-    A --&gt; PLAN[Plan / DAG / Policy]
-    PLAN --&gt; EXEC[Execution]
-    EXEC --&gt; OBS[Observation]
+    Q --&gt; COT["CoT / ToT / GoT"]
+    A --&gt; PLAN["Plan / DAG /&lt;br/&gt;Policy"]
+    PLAN --&gt; EXEC["Execution"]
+    EXEC --&gt; OBS["Observation"]
     OBS --&gt; PLAN</code></pre>
 <p>Reasoning methods can help generate plans, but do not constitute a reliable planning system on their own.</p>
 <h2 id="112-reasoning-versus-planning"><span id="112-reasoning-planning" class="legacy-heading-anchor" aria-hidden="true"></span>11.2 Reasoning versus Planning<a class="headerlink" href="#112-reasoning-versus-planning" title="Permanent link">&para;</a></h2>
@@ -10828,20 +10854,45 @@
 <li>A replanner;</li>
 <li>Budgets and guardrails.</li>
 </ul>
+<p>Validate the structured plan before scheduling.</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Goal + Constraints] --&gt; P[LLM Planner]
-    P --&gt; S[Structured Plan]
-    S --&gt; V[Plan Validator]
+    G[Goal + Constraints]
+    P[LLM Planner]
+    S[Structured Plan]
+    V[Plan Validator]
+    SCH[Scheduler]
+    G --&gt; P
+    P --&gt; S
+    S --&gt; V
     V --&gt;|Fail| P
-    V --&gt;|Pass| SCH[Scheduler]
-    SCH --&gt; E[Executor]
-    E --&gt; O[Observation]
-    O --&gt; CHECK{Acceptance and plan status}
+    V --&gt;|Pass| SCH</code></pre>
+<p>Execute and inspect the result.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    SCH["Scheduler"]
+    E["Executor"]
+    O["Observation"]
+    CHECK["Acceptance and plan&lt;br/&gt;status"]
+    SCH --&gt; E
+    E --&gt; O
+    O --&gt; CHECK
+    CHECK --&gt;|Step passes and tasks&lt;br/&gt;remain| SCH</code></pre>
+<p>Continue or replan from the acceptance check.</p>
+<pre class="mermaid"><code>flowchart TB
+    CHECK{Acceptance and plan status}
+    SCH[Scheduler]
+    RP[Replanner]
+    S[Structured Plan]
     CHECK --&gt;|Step passes and tasks remain| SCH
-    CHECK --&gt;|Plan invalidated| RP[Replanner]
-    CHECK --&gt;|Goal complete| DONE[Finish]
-    CHECK --&gt;|Budget exhausted or approval needed| STOP[Stop or hand off to a human]
+    CHECK --&gt;|Plan invalidated| RP
     RP --&gt; S</code></pre>
+<p>Finish or stop when continuation is inappropriate.</p>
+<pre class="mermaid"><code>flowchart TB
+    CHECK{Acceptance and plan status}
+    DONE[Finish]
+    STOP[Stop or hand off to a human]
+    CHECK --&gt;|Goal complete| DONE
+    CHECK --&gt;|Budget exhausted or approval needed| STOP</code></pre>
 <p>A strong model can still produce an unexecutable plan without a runtime and verification. A less capable model paired with a well-designed schema, tools, and verifier may be more reliable.</p>
 <h2 id="115-the-basic-elements-of-a-planning-problem"><span id="115" class="legacy-heading-anchor" aria-hidden="true"></span>11.5 The Basic Elements of a Planning Problem<a class="headerlink" href="#115-the-basic-elements-of-a-planning-problem" title="Permanent link">&para;</a></h2>
 <p>A planning problem can be represented by:</p>
@@ -10888,11 +10939,12 @@
 <p><a href="../05-agent-reasoning-methods/">Chapter 5</a> explains CoT's mechanism, suitable tasks, and interpretability limitations in detail. Here, the focus is why it cannot replace a stateful, verifiable planner.</p>
 </blockquote>
 <p>CoT (chain of thought) leads a model toward a conclusion through a chain of intermediate reasoning:</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[Question] --&gt; S1[Step 1]
-    S1 --&gt; S2[Step 2]
-    S2 --&gt; S3[Step N]
-    S3 --&gt; A[Answer or initial plan]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Question"] --&gt; S1["Step 1"]
+    S1 --&gt; S2["Step 2"]
+    S2 --&gt; S3["Step N"]
+    S3 --&gt; A["Answer or initial plan"]</code></pre>
 <p>It can help the model:</p>
 <ul>
 <li>Extract constraints;</li>
@@ -10914,12 +10966,13 @@
 <p>CoT text may include “reconsidering” or preliminary checks, but that does not mean a controller has actually saved branches, rolled back the environment, or run a verifier. A planning system should output verifiable steps, dependencies, success criteria, tools, and risks without requiring disclosure of hidden reasoning. See <a href="../05-agent-reasoning-methods/">Chapter 5</a> for costs and <a href="../../05-production/14-agent-evaluation/">Chapter 14</a> for principles of recording auditable traces.</p>
 <h2 id="117-task-decomposition-from-a-goal-to-subtasks"><span id="117-task-decomposition" class="legacy-heading-anchor" aria-hidden="true"></span>11.7 Task Decomposition: From a Goal to Subtasks<a class="headerlink" href="#117-task-decomposition-from-a-goal-to-subtasks" title="Permanent link">&para;</a></h2>
 <p>The first step in planning is usually to break a goal into executable tasks.</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Complex goal] --&gt; M1[Milestone 1]
-    G --&gt; M2[Milestone 2]
-    G --&gt; M3[Milestone 3]
-    M1 --&gt; T11[Subtask 1.1]
-    M1 --&gt; T12[Subtask 1.2]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Complex goal"] --&gt; M1["Milestone 1"]
+    G --&gt; M2["Milestone 2"]
+    G --&gt; M3["Milestone 3"]
+    M1 --&gt; T11["Subtask 1.1"]
+    M1 --&gt; T12["Subtask 1.2"]</code></pre>
 <p>A well-defined subtask should have:</p>
 <ul>
 <li>A clear goal;</li>
@@ -10953,18 +11006,34 @@
 <li>Selects a subset to continue;</li>
 <li>Backtracks when necessary.</li>
 </ol>
+<p>Initial candidates.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    S0["Initial State"]
+    A["Candidate A"]
+    B["Candidate B"]
+    C["Candidate C"]
+    S0 --&gt; A
+    S0 --&gt; B
+    S0 --&gt; C</code></pre>
+<p>Expand A and evaluate its successors.</p>
 <pre class="mermaid"><code>flowchart TB
-    S0[Initial State] --&gt; A[Candidate A]
-    S0 --&gt; B[Candidate B]
-    S0 --&gt; C[Candidate C]
-
-    A --&gt; A1[Expand A1]
-    A --&gt; A2[Expand A2]
-    B --&gt; B1[Expand B1]
-    B --&gt; B2[Expand B2]
-
-    A1 --&gt; E[Evaluate / Select]
-    A2 --&gt; E
+    A[Candidate A]
+    A1[Expand A1]
+    A2[Expand A2]
+    E[Evaluate / Select]
+    A --&gt; A1
+    A --&gt; A2
+    A1 --&gt; E
+    A2 --&gt; E</code></pre>
+<p>Expand B into the same evaluation stage.</p>
+<pre class="mermaid"><code>flowchart TB
+    B[Candidate B]
+    B1[Expand B1]
+    B2[Expand B2]
+    E[Evaluate / Select]
+    B --&gt; B1
+    B --&gt; B2
     B1 --&gt; E
     B2 --&gt; E</code></pre>
 <p>ToT provides a framework for exploring, selecting, and backtracking through candidate paths:</p>
@@ -11014,14 +11083,15 @@ N_{expand}=O(kbd)
 <li>Undergo iterative revision;</li>
 <li>Establish dependencies.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    A[Analysis A] --&gt; M[Merge]
-    B[Analysis B] --&gt; M
-    C[Evidence C] --&gt; M
-    M --&gt; R[Refine]
-    R --&gt; V[Verify]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Analysis A"] --&gt; M["Merge"]
+    B["Analysis B"] --&gt; M
+    C["Evidence C"] --&gt; M
+    M --&gt; R["Refine"]
+    R --&gt; V["Verify"]
     V --&gt;|Revision needed| R
-    V --&gt;|Pass| O[Output]</code></pre>
+    V --&gt;|Pass| O["Output"]</code></pre>
 <p>It addresses limitations of tree structures:</p>
 <ul>
 <li>Different branches have difficulty sharing intermediate results;</li>
@@ -11045,13 +11115,14 @@ N_{expand}=O(kbd)
 <p>They do not rely solely on free-form thought text. A textual partial solution can also be checked by a program, and a structured task can still be semantically wrong. The distinction lies in what the nodes mean and how they are verified—not in a claim that “text is unreliable, whereas graphs are inherently reliable.”</p>
 <h2 id="1112-representing-execution-plans-with-task-graphs"><span id="1112-task-graph" class="legacy-heading-anchor" aria-hidden="true"></span>11.12 Representing Execution Plans with Task Graphs<a class="headerlink" href="#1112-representing-execution-plans-with-task-graphs" title="Permanent link">&para;</a></h2>
 <p>For production systems, it is more useful to define graph nodes as executable tasks:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Collect Product Data] --&gt; D[Compare Products]
-    B[Collect Pricing Data] --&gt; D
-    C[Collect Market Data] --&gt; E[Analyze Market]
-    D --&gt; F[Generate Report]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Collect&lt;br/&gt;Product Data"] --&gt; D["Compare&lt;br/&gt;Products"]
+    B["Collect&lt;br/&gt;Pricing Data"] --&gt; D
+    C["Collect&lt;br/&gt;Market Data"] --&gt; E["Analyze&lt;br/&gt;Market"]
+    D --&gt; F["Generate&lt;br/&gt;Report"]
     E --&gt; F
-    F --&gt; V[Verify Sources]</code></pre>
+    F --&gt; V["Verify&lt;br/&gt;Sources"]</code></pre>
 <p>Each node should include:</p>
 <ul>
 <li>Inputs;</li>
@@ -11065,16 +11136,17 @@ N_{expand}=O(kbd)
 <p>A scheduler, verifier, and runtime can use this graph directly.</p>
 <h2 id="1113-planner-executor-replanner">11.13 Planner-Executor-Replanner<a class="headerlink" href="#1113-planner-executor-replanner" title="Permanent link">&para;</a></h2>
 <p>One possible system architecture is:</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; P[Planner]
-    P --&gt; PLAN[Structured Plan]
-    PLAN --&gt; E[Executor]
-    E --&gt; O[Observation]
-    O --&gt; V{Is the plan still valid?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --&gt; P["Planner"]
+    P --&gt; PLAN["Structured Plan"]
+    PLAN --&gt; E["Executor"]
+    E --&gt; O["Observation"]
+    O --&gt; V["Is the plan still valid?"]
     V --&gt;|Yes| E
-    V --&gt;|No| RP[Replanner]
+    V --&gt;|No| RP["Replanner"]
     RP --&gt; PLAN
-    V --&gt;|Goal complete| DONE[Finish]</code></pre>
+    V --&gt;|Goal complete| DONE["Finish"]</code></pre>
 <h3 id="11131-planner">11.13.1 Planner<a class="headerlink" href="#11131-planner" title="Permanent link">&para;</a></h3>
 <p>Its responsibilities are to:</p>
 <ul>
@@ -11139,19 +11211,20 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <p>“Retain” means preserving the historical record, not reusing old results forever. When inputs, authorization, or goals change, mark affected artifacts as invalid. Old and new plans need version identifiers, and the system must handle cancellation of running tasks and late results so that old execution results cannot overwrite the new plan's state.</p>
 <h2 id="1115-hierarchical-planning">11.15 Hierarchical Planning<a class="headerlink" href="#1115-hierarchical-planning" title="Permanent link">&para;</a></h2>
 <p>Hierarchical planning establishes high-level milestones first, then expands the current phase as needed:</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Global Goal] --&gt; M1[Research]
-    G --&gt; M2[Implementation]
-    G --&gt; M3[Validation]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Global Goal"] --&gt; M1["Research"]
+    G --&gt; M2["Implementation"]
+    G --&gt; M3["Validation"]
 
-    M1 --&gt; T11[Search Sources]
-    M1 --&gt; T12[Extract Facts]
+    M1 --&gt; T11["Search&lt;br/&gt;Sources"]
+    M1 --&gt; T12["Extract&lt;br/&gt;Facts"]
 
-    M2 --&gt; T21[Design]
-    M2 --&gt; T22[Code]
+    M2 --&gt; T21["Design"]
+    M2 --&gt; T22["Code"]
 
-    M3 --&gt; T31[Test]
-    M3 --&gt; T32[Review]</code></pre>
+    M3 --&gt; T31["Test"]
+    M3 --&gt; T32["Review"]</code></pre>
 <p>Advantages:</p>
 <ul>
 <li>Preserves the overall direction;</li>
@@ -11162,11 +11235,12 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 </ul>
 <h2 id="1116-rolling-horizon-planning">11.16 Rolling Horizon Planning<a class="headerlink" href="#1116-rolling-horizon-planning" title="Permanent link">&para;</a></h2>
 <p>Rolling horizon planning plans only the near-term steps in detail:</p>
-<pre class="mermaid"><code>flowchart LR
-    S[Current State] --&gt; P[Plan Next Horizon]
-    P --&gt; E[Execute Next Step]
-    E --&gt; O[Observe]
-    O --&gt; U[Update State]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current State"] --&gt; P["Plan Next Horizon"]
+    P --&gt; E["Execute Next Step"]
+    E --&gt; O["Observe"]
+    O --&gt; U["Update State"]
     U --&gt; P</code></pre>
 <p>It is suitable when:</p>
 <ul>
@@ -11213,13 +11287,14 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <li>Whether the strategy needs to change;</li>
 <li>Which lessons can inform later planning.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    P[Plan] --&gt; C[Critic]
-    C --&gt; V{Plan Valid?}
-    V --&gt;|No| R[Revise]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Plan"] --&gt; C["Critic"]
+    C --&gt; V["Plan Valid?"]
+    V --&gt;|No| R["Revise"]
     R --&gt; P
-    V --&gt;|Yes| E[Execute]
-    E --&gt; F[Feedback]
+    V --&gt;|Yes| E["Execute"]
+    E --&gt; F["Feedback"]
     F --&gt; C</code></pre>
 <p>Reflection should prioritize actual tool feedback, rules, tests, and human review, rather than relying only on the same model to evaluate itself.</p>
 <h2 id="1119-verifier-guided-planning">11.19 Verifier-guided Planning<a class="headerlink" href="#1119-verifier-guided-planning" title="Permanent link">&para;</a></h2>
@@ -11260,13 +11335,14 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <li>Maximum steps;</li>
 <li>Concurrency limits.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    PLAN[Candidate Plan] --&gt; S[Schema]
-    S --&gt; D[Dependencies]
-    D --&gt; C[Capabilities]
-    C --&gt; R[Risk]
-    R --&gt; B[Budget]
-    B --&gt; EXEC[Executable Plan]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    PLAN["Candidate Plan"] --&gt; S["Schema"]
+    S --&gt; D["Dependencies"]
+    D --&gt; C["Capabilities"]
+    C --&gt; R["Risk"]
+    R --&gt; B["Budget"]
+    B --&gt; EXEC["Executable Plan"]</code></pre>
 <h2 id="1120-using-external-planners"><span id="1120" class="legacy-heading-anchor" aria-hidden="true"></span>11.20 Using External Planners<a class="headerlink" href="#1120-using-external-planners" title="Permanent link">&para;</a></h2>
 <p>Not all planning should be delegated to an LLM.</p>
 <h3 id="11201-deterministic-workflow">11.20.1 Deterministic Workflow<a class="headerlink" href="#11201-deterministic-workflow" title="Permanent link">&para;</a></h3>
@@ -11296,23 +11372,24 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <li>Constraint satisfaction;</li>
 <li>Providing a proof of optimality or infeasibility when the algorithm, objective function, and budget support it.</li>
 </ul>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant U as User
     participant M as LLM
     participant S as Solver
     participant R as Runtime
 
     U-&gt;&gt;M: Natural-language goal
-    M--&gt;&gt;R: Structured goal and constraints
+    M--&gt;&gt;R: Structured goal and&lt;br/&gt;constraints
     R-&gt;&gt;S: Solve
     S--&gt;&gt;R: Feasible plan
-    R-&gt;&gt;M: Plan and constraint results
-    M--&gt;&gt;U: Explanation or plan for execution</code></pre>
+    R-&gt;&gt;M: Plan and constraint&lt;br/&gt;results
+    M--&gt;&gt;U: Explanation or plan for&lt;br/&gt;execution</code></pre>
 <blockquote>
 <p><strong>For these problems, language models are better used for modeling and explanation, while deterministic algorithms handle search or solving.</strong></p>
 </blockquote>
-<p>Check separately whether “the solver solved the model correctly” and whether “the model correctly represents the user's requirements.” If a budget is omitted, units are mistranslated, or action effects are wrong, a solver may still return a formally valid plan that is unusable in practice. For example, in <a href="https://developers.google.com/optimization/cp/cp_solver">OR-Tools CP-SAT</a>, <code>FEASIBLE</code> is not the same as <code>OPTIMAL</code>, and <code>UNKNOWN</code> after a timeout does not mean infeasibility has been proved.</p>
-<p><a href="https://arxiv.org/abs/2402.01817">LLM-Modulo</a> proposes a more tightly coupled loop of candidate generation and external verification. The LLM does more than convert formats: it can also propose plans or augment the model, while verifiers return specific constraint violations to guide revision. The paper's strong claims about LLM planning abilities reflect its research position, not a permanent conclusion about every subsequent model. The transferable mechanism is the feedback between generation and independent checking.</p>
+<p>Check separately whether “the solver solved the model correctly” and whether “the model correctly represents the user's requirements.” If a budget is omitted, units are mistranslated, or action effects are wrong, a solver may still return a formally valid plan that is unusable in practice. For example, in OR-Tools CP-SAT<sup><a href="../../../book/references/#ref-499">【499】</a></sup>, <code>FEASIBLE</code> is not the same as <code>OPTIMAL</code>, and <code>UNKNOWN</code> after a timeout does not mean infeasibility has been proved.</p>
+<p>LLM-Modulo<sup><a href="../../../book/references/#ref-497">【497】</a></sup> proposes a more tightly coupled loop of candidate generation and external verification. The LLM does more than convert formats: it can also propose plans or augment the model, while verifiers return specific constraint violations to guide revision. The paper's strong claims about LLM planning abilities reflect its research position, not a permanent conclusion about every subsequent model. The transferable mechanism is the feedback between generation and independent checking.</p>
 <h2 id="1121-ways-to-represent-a-plan"><span id="1121" class="legacy-heading-anchor" aria-hidden="true"></span>11.21 Ways to Represent a Plan<a class="headerlink" href="#1121-ways-to-represent-a-plan" title="Permanent link">&para;</a></h2>
 <h3 id="11211-natural-language-list">11.21.1 Natural Language List<a class="headerlink" href="#11211-natural-language-list" title="Permanent link">&para;</a></h3>
 <p>Simple and intuitive, but difficult to validate and schedule.</p>
@@ -11385,12 +11462,13 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <li>Unresolved issues;</li>
 <li>The budget.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    PLAN[Plan] --&gt; STATE[Planning State]
-    OBS[Observations] --&gt; STATE
-    FAIL[Failures] --&gt; STATE
-    BUDGET[Budget] --&gt; STATE
-    STATE --&gt; RP[Replanner]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    PLAN["Plan"] --&gt; STATE["Planning&lt;br/&gt;State"]
+    OBS["Observations"] --&gt; STATE
+    FAIL["Failures"] --&gt; STATE
+    BUDGET["Budget"] --&gt; STATE
+    STATE --&gt; RP["Replanner"]</code></pre>
 <p>If a plan lives only in a single prompt, it is difficult to track versions, restore runtime state, or restart safely during execution. A more robust approach is to store it in a structured state store with checkpoint support.</p>
 <h2 id="1124-world-model">11.24 World Model<a class="headerlink" href="#1124-world-model" title="Permanent link">&para;</a></h2>
 <p>Planning requires estimating how actions will change the environment. This predictive model is called a world model.</p>
@@ -11410,7 +11488,7 @@ P_{t+1}=R(P_t,o_{t+1},s_t,g)
 <li>Actual read-only queries.</li>
 </ul>
 <p>World-model errors accumulate with prediction depth, especially in unfamiliar states or after shifts in the distribution of tools encountered. An API schema describes parameter structure, not a complete environment-transition model. Simulators, read-only queries, and feedback from real execution also have different coverage limits.</p>
-<p><a href="https://arxiv.org/abs/2204.01691">SayCan</a> provides a concrete example. A language model estimates how well a skill fits the goal, while a skill value function estimates whether it can succeed in the current environment; these estimates are combined to select a skill. This depends on an existing skill library and corresponding feasibility estimates. A language model's ability to describe an action does not imply that a robot can perform it.</p>
+<p>SayCan<sup><a href="../../../book/references/#ref-498">【498】</a></sup> provides a concrete example. A language model estimates how well a skill fits the goal, while a skill value function estimates whether it can succeed in the current environment; these estimates are combined to select a skill. This depends on an existing skill library and corresponding feasibility estimates. A language model's ability to describe an action does not imply that a robot can perform it.</p>
 <h2 id="1125-uncertainty-in-planning"><span id="1125" class="legacy-heading-anchor" aria-hidden="true"></span>11.25 Uncertainty in Planning<a class="headerlink" href="#1125-uncertainty-in-planning" title="Permanent link">&para;</a></h2>
 <p>A plan should distinguish:</p>
 <ul>
@@ -11491,14 +11569,28 @@ B=(N,D,K,T_{max},C_{max})
 </ul>
 <h2 id="1128-adaptive-planning">11.28 Adaptive Planning<a class="headerlink" href="#1128-adaptive-planning" title="Permanent link">&para;</a></h2>
 <p>An adaptive planner chooses planning effort based on task difficulty and risk:</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; A[Assess Complexity / Risk]
-    A --&gt;|Simple| C[CoT / Checklist]
-    A --&gt;|Known path| W[Workflow]
-    A --&gt;|Complex but decomposable| P[Plan-and-Execute]
-    A --&gt;|Many candidates| T[ToT / Search]
-    A --&gt;|Strict constraints| S[External Solver]
-    A --&gt;|Dynamic environment| R[Rolling Replanning]</code></pre>
+<p>Simple, known, and decomposable tasks.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["Goal"]
+    A["Assess&lt;br/&gt;Complexity /&lt;br/&gt;Risk"]
+    C["CoT /&lt;br/&gt;Checklist"]
+    W["Workflow"]
+    P["Plan-and-Execute"]
+    G --&gt; A
+    A --&gt;|Simple| C
+    A --&gt;|Known path| W
+    A --&gt;|Complex but&lt;br/&gt;decomposable| P</code></pre>
+<p>Search, strict constraints, and changing environments.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Assess&lt;br/&gt;Complexity /&lt;br/&gt;Risk"]
+    T["ToT / Search"]
+    S["External Solver"]
+    R["Rolling&lt;br/&gt;Replanning"]
+    A --&gt;|Many candidates| T
+    A --&gt;|Strict&lt;br/&gt;constraints| S
+    A --&gt;|Dynamic&lt;br/&gt;environment| R</code></pre>
 <p>Applying expensive search indiscriminately to every task is usually not worthwhile.</p>
 <h2 id="1129-adapting-and-training-planning-capabilities"><span id="1129" class="legacy-heading-anchor" aria-hidden="true"></span>11.29 Adapting and Training Planning Capabilities<a class="headerlink" href="#1129-adapting-and-training-planning-capabilities" title="Permanent link">&para;</a></h2>
 <h3 id="11291-in-context-examples">11.29.1 In-context Examples<a class="headerlink" href="#11291-in-context-examples" title="Permanent link">&para;</a></h3>
@@ -11601,38 +11693,14 @@ B=(N,D,K,T_{max},C_{max})
 <p>Decomposition, search, and replanning continue indefinitely.</p>
 <h2 id="1132-a-recommended-production-architecture"><span id="1132" class="legacy-heading-anchor" aria-hidden="true"></span>11.32 A Recommended Production Architecture<a class="headerlink" href="#1132-a-recommended-production-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    INPUT[User Goal] --&gt; NORMALIZE[Goal / Constraint Parser]
-    NORMALIZE --&gt; ROUTER[Planning Strategy Router]
-
-    ROUTER --&gt;|Fixed process| WF[Workflow]
-    ROUTER --&gt;|Dynamic task| PLANNER[LLM Planner]
-    ROUTER --&gt;|Strict constraints| SOLVER[External Solver]
-
-    PLANNER --&gt; PLAN[Structured Plan / DAG]
-    SOLVER --&gt; PLAN
-    WF --&gt; PLAN
-
-    PLAN --&gt; VALIDATE[Schema + Dependency + Risk Validation]
-    VALIDATE --&gt;|Fail| PLANNER
-    VALIDATE --&gt;|Pass| SCHED[Scheduler]
-
-    SCHED --&gt; GATE{Permissions and approval valid before execution?}
-    GATE --&gt;|Yes| EXEC[Executor / ReAct]
-    GATE --&gt;|No| HUMAN[Human Approval / Denial]
-    HUMAN --&gt;|Revalidate after approval| GATE
+    SCHED[Scheduler] --&gt; GATE[Permission gate]
+    GATE --&gt;|Valid approval| EXEC[Executor / ReAct]
     EXEC --&gt; OBS[Observation + Artifact]
     OBS --&gt; VERIFY[Verifier]
-
     VERIFY --&gt;|Step passes| SCHED
-    VERIFY --&gt;|Retry local failure| GATE
-    VERIFY --&gt;|Plan invalidated| REPLAN[Replanner]
-    REPLAN --&gt; PLAN
-    VERIFY --&gt;|Human judgment needed| HUMAN
-    VERIFY --&gt;|Goal complete| DONE[Final Result]
-
-    PLAN --&gt; STATE[Planning State Store]
-    OBS --&gt; STATE
-    STATE --&gt; REPLAN</code></pre>
+    VERIFY --&gt;|Retry local failure| GATE</code></pre>
+<p>To reach the scheduler, parse the user goal and constraints, then route fixed processes to a workflow, dynamic tasks to an LLM planner, and strict constraints to an external solver. Each produces a structured plan/DAG. Schema, dependency, and risk validation must pass before scheduling; failure returns to the LLM planner.</p>
+<p>The permission gate checks permissions and approval before execution. Missing authorization goes to human approval or denial; approval returns to the gate for revalidation, not directly to execution. The verifier sends invalid plans to a replanner, human-judgment cases to human review, and completed goals to the final result. Plans and observations enter the planning state store, which supplies the replanner; replanning produces a new structured plan that must be validated again.</p>
 <p>The scheduler dispatches only tasks whose dependencies have passed acceptance checks. The verifier distinguishes a passing step from a completed goal. Validation failures, retries, and replanning share a hard budget. Unrecoverable failures, denied approval, and exhausted budgets must all have stopping paths; the system must not follow the diagram's cycles indefinitely.</p>
 <h2 id="1133-implementation-steps"><span id="1133" class="legacy-heading-anchor" aria-hidden="true"></span>11.33 Implementation Steps<a class="headerlink" href="#1133-implementation-steps" title="Permanent link">&para;</a></h2>
 <h3 id="11331-define-the-goal-and-success-criteria"><span id="11331" class="legacy-heading-anchor" aria-hidden="true"></span>11.33.1 Define the Goal and Success Criteria<a class="headerlink" href="#11331-define-the-goal-and-success-criteria" title="Permanent link">&para;</a></h3>
@@ -11723,18 +11791,8 @@ B=(N,D,K,T_{max},C_{max})
 <p><strong>In an engineering implementation, planning should take the form of a budget-constrained action structure that can be executed, verified, and updated.</strong></p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2308.09687">Graph of Thoughts: Solving Elaborate Problems with Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.04091">Plan-and-Solve Prompting</a></li>
-<li><a href="https://arxiv.org/abs/2312.04511">LLMCompiler: An LLM Compiler for Parallel Function Calling</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://arxiv.org/abs/2402.01817">LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks</a></li>
-<li><a href="https://arxiv.org/abs/2204.01691">Do As I Can, Not As I Say: Grounding Language in Robotic Affordances</a></li>
-<li><a href="https://developers.google.com/optimization/cp/cp_solver">OR-Tools: CP-SAT Solver</a></li>
-<li><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-11">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -11757,7 +11815,7 @@ B=(N,D,K,T_{max},C_{max})
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

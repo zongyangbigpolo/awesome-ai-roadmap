@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Model Quantization","description":"Compare LLM quantization methods including PTQ, QAT, GPTQ, and AWQ, and integer, FP8, and block-scaled FP4 formats, explaining tradeoffs among quality, GPU memory, throughput, hardware support, and calibration data.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Model Quantization","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-08-31","dateModified":"2026-09-29"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Model Quantization","description":"Compare LLM quantization methods including PTQ, QAT, GPTQ, and AWQ, and integer, FP8, and block-scaled FP4 formats, explaining tradeoffs among quality, GPU memory, throughput, hardware support, and calibration data.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Model Quantization","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 15: Model Quantization","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/15-quantization/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9988,7 +10013,8 @@ q=\mathrm{clip}\left(\mathrm{round}\left(\frac{x}{s}\right)+z,q_{\min},q_{\max}\
 </table>
 <h3 id="1531-there-is-no-universal-bit-width-cliff"><span id="1531" class="legacy-heading-anchor" aria-hidden="true"></span>15.3.1 There is no universal bit-width cliff<a class="headerlink" href="#1531-there-is-no-universal-bit-width-cliff" title="Permanent link">&para;</a></h3>
 <p>Lower bit widths generally make error control harder, but there is no universal rule that INT4 to INT3 must cause a sharp collapse or that INT2 is unusable. Model size, group size, algorithm, calibration data, and task all change the curve. The original GPTQ paper and its authors' implementation include 2/3/4-bit experiments.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["High-precision&lt;br/&gt;baseline"] --&gt; B["Choose format&lt;br/&gt;and grouping"]
     B --&gt; C["Quantize and&lt;br/&gt;validate quality"]
     C --&gt; D["Measure capacity,&lt;br/&gt;throughput, and latency"]
@@ -10036,18 +10062,19 @@ q=\mathrm{clip}\left(\mathrm{round}\left(\frac{x}{s}\right)+z,q_{\min},q_{\max}\
 \]</div>
 <p>The quantized weights must be constrained to the target quantization grid; otherwise, retaining the original weights trivially gives zero error. X is the calibration input to the current linear layer. This quadratic objective's Hessian relates to <code>XXᵀ</code>; it is not the exact Hessian of the full language model training loss. After quantizing a column, second-order information corrects <strong>the remaining unquantized weights in the same layer</strong>, usually with damping and blockwise updates for stability and efficiency.</p>
 <h3 id="1541-procedure"><span id="1541" class="legacy-heading-anchor" aria-hidden="true"></span>15.4.1 Procedure<a class="headerlink" href="#1541-procedure" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    S1["① Prepare representative&lt;br/&gt;calibration inputs"]
-    S1 --&gt; S2["② Collect the current layer's inputs&lt;br/&gt;Build damped second-order information"]
-    S2 --&gt; S3["③ Quantize in the specified column order&lt;br/&gt;Not least-important weights first&lt;br/&gt;by default"]
-    S3 --&gt; S4["④ Compensate unquantized weights&lt;br/&gt;in the same layer"]
-    S4 --&gt; MORE{"Unquantized columns&lt;br/&gt;remain in this layer?"}
-    MORE --&gt;|Yes| S3
-    MORE --&gt;|No| NEXT{"More layers to quantize?"}
-    NEXT --&gt;|Yes| S2
-    NEXT --&gt;|No| DONE["Export quantized weights"]
-
-    style S4 fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1["Calibration inputs"] --&gt; S2["Collect layer statistics"]
+    S2 --&gt; S3["Quantize this layer"]
+    S3 --&gt;|Next layer| S2
+    S3 --&gt;|All layers done| DONE["Export weights"]</code></pre>
+<p>Use representative calibration inputs. For each layer, collect its inputs and build damped second-order information. The inner loop below quantizes columns in the specified order—not, by default, from least-important weights first.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Quantize next column"] --&gt; C["Compensate remaining weights"]
+    C --&gt;|Columns remain| Q
+    C --&gt;|No columns remain| D["Layer complete"]</code></pre>
+<p>Compensation updates the still-unquantized weights in the <strong>same layer</strong>. Finish its column loop before collecting inputs for the next layer.</p>
 <h3 id="1542-strengths-and-limitations"><span id="1542" class="legacy-heading-anchor" aria-hidden="true"></span>15.4.2 Strengths and limitations<a class="headerlink" href="#1542-strengths-and-limitations" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -10236,29 +10263,8 @@ WX=(WS)(S^{-1}X)
 <li><strong>Four pitfalls</strong>: outliers, KV precision and backend limitations, calibration/task distribution differences, and compatibility with other optimizations.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers</a></li>
-<li><a href="https://arxiv.org/abs/2306.00978">AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA: Efficient Finetuning of Quantized LLMs (NF4)</a></li>
-<li><a href="https://arxiv.org/abs/2208.07339">LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale</a></li>
-<li><a href="https://arxiv.org/abs/2211.10438">SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2208.11580">Optimal Brain Compression: A Framework for Accurate Post-Training Quantization and Pruning</a></li>
-<li><a href="https://github.com/ggml-org/llama.cpp">llama.cpp / GGUF</a></li>
-<li><a href="https://github.com/casper-hansen/AutoAWQ">AutoAWQ</a></li>
-<li><a href="https://github.com/IST-DASLab/gptq">GPTQ authors' implementation: column order, act-order, and grouping</a></li>
-<li><a href="https://arxiv.org/html/2306.00978v5">AWQ paper: per-channel scaling and search</a></li>
-<li><a href="https://docs.pytorch.org/ao/main/workflows/qat.html">PyTorch AO: Quantization-Aware Training</a></li>
-<li><a href="https://arxiv.org/abs/2209.05433v1">FP8 Formats for Deep Learning, v1, §§2–3 and Table 1</a></li>
-<li><a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">OCP Microscaling Formats (MX) Specification v1.0</a></li>
-<li><a href="https://github.com/microsoft/microxcaling/blob/7bc41952de394f5cc5e782baf132e7c7542eb4e4/mx/mx_ops.py">Microsoft MX library: max-exponent scaling and scale limits, pinned revision</a></li>
-<li><a href="https://developer.nvidia.com/blog/introducing-nvfp4-for-efficient-and-accurate-low-precision-inference/">NVIDIA: Introducing NVFP4 for Efficient and Accurate Low-Precision Inference</a></li>
-<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/docs/examples/fp8_primer.ipynb">NVIDIA Transformer Engine: FP8 primer and MXFP8/NVFP4, pinned notebook</a></li>
-<li><a href="https://github.com/NVIDIA/TransformerEngine/blob/63b14c2d8326d84a471481217cac4f0296d6c07e/transformer_engine/common/recipe/__init__.py">NVIDIA Transformer Engine: scaling recipes, history, and margin, pinned source</a></li>
-<li><a href="https://arxiv.org/abs/2508.10925v1">gpt-oss-120b &amp; gpt-oss-20b model card, v1, §2.1 and Table 1: MXFP4 MoE weights and checkpoint sizes</a></li>
-<li><a href="https://rocm.blogs.amd.com/software-tools-optimization/matrix-cores-cdna/README.html">AMD ROCm blog: FP8 FNUZ and OCP variants on CDNA3 and CDNA4</a></li>
-<li><a href="https://onnx.ai/onnx/technical/float8.html">ONNX: FP8 normal/subnormal decoding and special-value encodings</a></li>
-<li><a href="https://github.com/vllm-project/vllm/blob/01efc7ef781391e744ed08c3292817a773d654e6/vllm/model_executor/layers/quantization/utils/w8a8_utils.py#L437-L458">vLLM v0.10.2: E4M3FN-to-E4M3FNUZ normalization, pinned implementation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-15">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10281,7 +10287,7 @@ WX=(WS)(S^{-1}X)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 29, 2026 12:32:01 CST">2026-09-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

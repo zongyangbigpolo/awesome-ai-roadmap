@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十四章：Agent 评估与 Benchmark","description":"说明如何评估 Agent 的任务成功率、轨迹质量、工具使用、成本和安全性，并比较离线 Benchmark 与线上评测。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/05-production/14-agent-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十四章：Agent 评估与 Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/05-production/14-agent-evaluation/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十四章：Agent 评估与 Benchmark","description":"说明如何评估 Agent 的任务成功率、轨迹质量、工具使用、成本和安全性，并比较离线 Benchmark 与线上评测。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/05-production/14-agent-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十四章：Agent 评估与 Benchmark","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/05-production/14-agent-evaluation/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十四章：Agent 评估与 Benchmark","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/05-production/14-agent-evaluation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9764,14 +9789,15 @@
 <p><strong>第二，结果不只是文本。</strong> Agent 可能改了数据库、提交了代码、发了邮件。正确性必须在<strong>环境状态</strong>上验证，而不是在输出文本上验证。</p>
 <p><strong>第三，行为不确定。</strong> 同一个任务跑两次可能走不同路径、得到不同结果。单次运行可以发现失败，但无法估计同一任务的重复可靠性；重复试验与任务覆盖是两个不同维度。</p>
 <p><strong>第四，失败有多种形态。</strong> 任务失败、工具调用格式错误、无限循环、超预算、越权操作，这些是不同的失败，不能合并成一个「错误率」。</p>
-<pre class="mermaid"><code>flowchart TB
-    LLM[单轮文本评估] --&gt; L1[输入: Prompt]
-    LLM --&gt; L2[输出: 文本]
-    LLM --&gt; L3[比较: 与参考答案]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    LLM["单轮文本评估"] --&gt; L1["输入: Prompt"]
+    LLM --&gt; L2["输出: 文本"]
+    LLM --&gt; L3["比较: 与参考答案"]
 
-    AG[Agent 评估] --&gt; A1[输入: 目标 + 环境]
-    AG --&gt; A2[输出: 轨迹 + 环境状态变化]
-    AG --&gt; A3[比较: 状态断言 + 多次采样]</code></pre>
+    AG["Agent 评估"] --&gt; A1["输入: 目标 + 环境"]
+    AG --&gt; A2["输出: 轨迹 + 环境状态变&lt;br/&gt;化"]
+    AG --&gt; A3["比较: 状态断言 + 多次采&lt;br/&gt;样"]</code></pre>
 <h2 id="142">14.2 评估的四个层次<a class="headerlink" href="#142" title="Permanent link">&para;</a></h2>
 <p>一个完整的 Agent 评估体系应该覆盖四层，从下到上分别是：</p>
 <pre class="mermaid"><code>flowchart BT
@@ -9817,19 +9843,15 @@
 <p>工程里很容易只盯 L3 端到端成功率。这样做的问题是：成功时说不清为什么成功，失败时也难定位卡在哪一步。L1 和 L2 的价值就在于<strong>归因</strong>，能把一个「任务失败」继续拆到「第 3 步检索没召回」或「第 5 步工具参数填错」。</p>
 <h2 id="143-agent-benchmark">14.3 主流 Agent Benchmark 全景<a class="headerlink" href="#143-agent-benchmark" title="Permanent link">&para;</a></h2>
 <p>理解学术基准的价值不在于刷分，而在于它们各自<strong>定义了一类能力</strong>，可以借鉴其评测设计思路来构造自己的业务评测集。</p>
-<pre class="mermaid"><code>flowchart TB
-    B[Agent Benchmark] --&gt; CODE[代码工程]
-    B --&gt; WEB[网页与检索]
-    B --&gt; GUI[操作系统与 GUI]
-    B --&gt; TOOL[工具与对话]
-    B --&gt; GEN[通用助手]
-
-    CODE --&gt; SWE[SWE-bench / SWE-Lancer / Terminal-Bench]
-    WEB --&gt; WA[WebArena / BrowseComp]
-    GUI --&gt; OS[OSWorld]
-    TOOL --&gt; TAU[tau-bench / tau2-bench]
-    GEN --&gt; GA[GAIA / AgentBench]
-    B -.补充知识评测.-&gt; HLE[HLE：非 Agent 专用]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    B["Agent Benchmark"] --&gt; CODE["代码工程"]
+    B --&gt; WEB["网页与检索"]
+    B --&gt; GUI["操作系统与 GUI"]
+    B --&gt; TOOL["工具与对话"]
+    B --&gt; GEN["通用助手"]
+</code></pre>
+<p>各类别的示例包括：代码工程的 SWE-bench、SWE-Lancer 与 Terminal-Bench；网页与检索的 WebArena、BrowseComp；操作系统与 GUI 的 OSWorld；工具与对话的 tau-bench、tau2-bench；通用助手的 GAIA、AgentBench。HLE 可以补充知识评测，但<strong>不是 Agent 专用基准</strong>。</p>
 <h3 id="1431">14.3.1 代码工程类<a class="headerlink" href="#1431" title="Permanent link">&para;</a></h3>
 <p><strong>SWE-bench</strong> 从真实 GitHub 仓库抽取 Issue 与修复，要求在指定基线仓库中提交补丁。评测使用测试补丁和既有测试，检查应从失败转成功的测试（FAIL_TO_PASS）及应保持通过的测试（PASS_TO_PASS），不是只运行 Agent 修改后恰好已有的测试。</p>
 <p>它的设计有两个关键点值得借鉴：</p>
@@ -9837,11 +9859,11 @@
 <li><strong>用可执行测试而非文本相似度做判定</strong>，减少主观评分，但测试仍可能遗漏需求、脆弱或被投机满足；</li>
 <li><strong>提供完整仓库而非孤立文件</strong>，迫使 Agent 具备检索与导航能力。</li>
 </ol>
-<p>由于原始数据集中存在部分描述不充分或测试不可靠的样例，后续出现了人工筛选过的 <strong>SWE-bench Verified</strong> 子集（500 题）。OpenAI 指出该基准存在测试设计缺陷和训练数据污染问题，已停止报告其分数，并建议改报 SWE-bench Pro，见 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">Why SWE-bench Verified no longer measures frontier coding capabilities</a>。<strong>引用分数时必须说明是哪个子集</strong>，Full、Lite、Verified 的分数不可直接比较；引用 Verified 成绩时应注意这些局限。</p>
+<p>由于原始数据集中存在部分描述不充分或测试不可靠的样例，后续出现了人工筛选过的 <strong>SWE-bench Verified</strong> 子集（500 题）。OpenAI 指出该基准存在测试设计缺陷和训练数据污染问题，已停止报告其分数，并建议改报 SWE-bench Pro，见 Why SWE-bench Verified no longer measures frontier coding capabilities<sup><a href="../../../book/references/#ref-155">【155】</a></sup>。<strong>引用分数时必须说明是哪个子集</strong>，Full、Lite、Verified 的分数不可直接比较；引用 Verified 成绩时应注意这些局限。</p>
 <p><strong>SWE-Lancer</strong> 使用真实自由职业市场的软件任务，包含独立贡献者任务与管理者选择方案任务。按任务历史报酬聚合的金额是该基准下的价值代理，不是 Agent 实际收入，也不能直接推算生产 ROI。</p>
 <p><strong>Terminal-Bench</strong> 关注纯终端环境中的任务完成能力，覆盖编译、调试、系统配置等场景。</p>
 <h3 id="1432">14.3.2 网页与检索类<a class="headerlink" href="#1432" title="Permanent link">&para;</a></h3>
-<p><strong>WebArena</strong> 构建了可复现的自托管网站环境（电商、论坛、代码托管等）。<a href="https://github.com/web-arena-x/webarena/blob/73d9de71c25af3f5037c722ede9cabe25a8c77c2/evaluation_harness/evaluators.py">官方评估器</a> 按任务检查答案、URL 或页面内容；信息查询任务可以采用答案精确匹配、必要词句检查或模型裁判的模糊匹配。最终答案本身可以是需要评分的任务产物，但 Agent 自称“操作完成”不能证明网站状态确实发生了所要求的变化。</p>
+<p><strong>WebArena</strong> 构建了可复现的自托管网站环境（电商、论坛、代码托管等）。官方评估器<sup><a href="../../../book/references/#ref-529">【529】</a></sup> 按任务检查答案、URL 或页面内容；信息查询任务可以采用答案精确匹配、必要词句检查或模型裁判的模糊匹配。最终答案本身可以是需要评分的任务产物，但 Agent 自称“操作完成”不能证明网站状态确实发生了所要求的变化。</p>
 <p><strong>BrowseComp</strong> 走向另一个方向：题目答案简短且易于验证，但需要在网络上进行<strong>深度、多跳的检索</strong>才能找到，专门用来测量「持续搜索并交叉验证」的能力。</p>
 <h3 id="1433-gui">14.3.3 操作系统与 GUI 类<a class="headerlink" href="#1433-gui" title="Permanent link">&para;</a></h3>
 <p><strong>OSWorld</strong> 在真实操作系统中评测多模态 Agent，任务涉及跨应用操作，判定基于最终文件与系统状态。它增加了视觉定位、动作执行和异步界面的困难，但不能跨不同模型与任务集断言一定比所有纯文本基准难。</p>
@@ -9958,12 +9980,13 @@
 \]</div>
 <p>这不是 <span class="arithmatex">\(\mathrm{pass@}k\)</span>。tau-bench 原论文称它为 “pass hat k”。引用 <code>pass^k</code> 时应说明“k 次都成功”的定义，不要只靠口头简称与 <code>pass@k</code> 区分。对于无人值守生产 Agent， <span class="arithmatex">\(\mathrm{pass}^{k}\)</span> 补充衡量重复执行的可靠性。tau-bench 的实验揭示： <span class="arithmatex">\(\mathrm{pass@}1\)</span> 看起来不错时， <span class="arithmatex">\(k\)</span> 增大， <span class="arithmatex">\(\mathrm{pass}^{k}\)</span> 仍可能急剧下降，不能把单次平均成绩当成连续运行承诺。</p>
 <p>两个估计式都约定：组合数中可选元素少于 <code>k</code> 时，分子取零。若跨次共享反思记忆、改变策略或不重置环境，就不再满足上述独立同分布假设；应另行评估这种有状态运行方式，不能直接套用该估计。</p>
-<pre class="mermaid"><code>flowchart LR
-    P1["pass@k&lt;br/&gt;k 次中至少一次成功"] --&gt; U1[衡量能力上界]
-    U1 --&gt; S1[适用: 有人工审核的场景]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P1["pass@k&lt;br/&gt;k 次中至少一次成功"] --&gt; U1["衡量能力上界"]
+    U1 --&gt; S1["适用: 有人工审核的&lt;br/&gt;场景"]
 
-    P2["pass^k&lt;br/&gt;k 次全部成功"] --&gt; U2[衡量行为一致性]
-    U2 --&gt; S2[适用: 无人值守自动化]</code></pre>
+    P2["pass^k&lt;br/&gt;k 次全部成功"] --&gt; U2["衡量行为一致性"]
+    U2 --&gt; S2["适用: 无人值守自动&lt;br/&gt;化"]</code></pre>
 <p>长链路为何脆弱？在“每步独立、正确率相同、任一步失败都不可恢复”的教学假设下， <span class="arithmatex">\(m\)</span> 步成功率为 <span class="arithmatex">\(p^m\)</span>； <span class="arithmatex">\(p = 0.95\)</span>、 <span class="arithmatex">\(m = 20\)</span> 时约为 <span class="arithmatex">\(0.36\)</span>。真实 Agent 存在相关错误、重试和验证，不能直接套用此式，更不能由它推出“降低方差一定比提高能力重要”。此外，即便只有单步任务， <span class="arithmatex">\(p_i^k\)</span> 也会随重复次数衰减。</p>
 <p>报告 pass@k 时还要说明怎样从候选中选出成功结果；若生产没有可靠验收器，离线“至少有一个成功”不代表实际能交付它。比较 pass^k 时应重置环境、固定预算，并区分重复同一任务与连续执行不同任务的可靠性。</p>
 <h3 id="1444">14.4.4 轨迹层指标<a class="headerlink" href="#1444" title="Permanent link">&para;</a></h3>
@@ -10053,14 +10076,15 @@
 <p>即把总成本摊到成功任务上，成功率为零时该比值没有有限定义。教学示例中，90%/0.5 美元方案约为每成功任务 0.56 美元，95%/2 美元方案约为 2.11 美元；前者只在此成本口径上更低，若失败损失或 SLA 不同，不能直接宣布更优。完整成本还要计入失败尝试、工具、计算与人工处理。延迟至少同时报告 P50、P95 和超时率。</p>
 <h2 id="145">14.5 判定方式：如何决定一次运行算不算成功<a class="headerlink" href="#145" title="Permanent link">&para;</a></h2>
 <p>这是构建评测集时最关键的设计决策。</p>
-<pre class="mermaid"><code>flowchart TB
-    J[判定方式] --&gt; E[程序化断言]
-    J --&gt; L[LLM-as-Judge]
-    J --&gt; H[人工评估]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    J["判定方式"] --&gt; E["程序化断言"]
+    J --&gt; L["LLM-as-Judge"]
+    J --&gt; H["人工评估"]
 
-    E --&gt; E1[可重复 依赖断言覆盖]
-    L --&gt; L1[覆盖主观任务 需校准]
-    H --&gt; H1[领域判断 需一致性校准]</code></pre>
+    E --&gt; E1["可重复 依赖断言&lt;br/&gt;覆盖"]
+    L --&gt; L1["覆盖主观任务 需&lt;br/&gt;校准"]
+    H --&gt; H1["领域判断 需一致&lt;br/&gt;性校准"]</code></pre>
 <h3 id="1451">14.5.1 程序化断言（首选）<a class="headerlink" href="#1451" title="Permanent link">&para;</a></h3>
 <p>用代码检查最终状态是否满足条件：</p>
 <ul>
@@ -10111,13 +10135,14 @@
 <h2 id="146">14.6 评测集的构建<a class="headerlink" href="#146" title="Permanent link">&para;</a></h2>
 <h3 id="1461">14.6.1 分层设计<a class="headerlink" href="#1461" title="Permanent link">&para;</a></h3>
 <p>评测集可以分层。下面数量与频率是教学示例，不是行业标准；实际按风险覆盖、统计精度与运行成本调整：</p>
-<pre class="mermaid"><code>flowchart LR
-    S[Smoke 10-20 条] --&gt; R[Regression 100-300 条]
-    R --&gt; F[Full 1000+ 条]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Smoke 10-20 条"] --&gt; R["Regression 100-300 条"]
+    R --&gt; F["Full 1000+ 条"]
 
-    S --&gt; S1[每次提交]
-    R --&gt; R1[每次发布]
-    F --&gt; F1[每周 / 重大变更]</code></pre>
+    S --&gt; S1["每次提交"]
+    R --&gt; R1["每次发布"]
+    F --&gt; F1["每周 / 重大变更"]</code></pre>
 <table>
 <thead>
 <tr>
@@ -10237,15 +10262,16 @@
 <p>OpenTelemetry 的 GenAI 语义约定覆盖模型与 Agent 的 Span 等信息，并与工具调用相关约定配合使用；截至 2026-09-15，GenAI 约定仍标记 <strong>Development</strong>。采用时固定约定与 SDK 版本，验证后端字段映射，并对内容脱敏；不能假定所有平台无需适配即可完整消费。</p>
 <h2 id="148">14.8 评估驱动开发<a class="headerlink" href="#148" title="Permanent link">&para;</a></h2>
 <p>把评估放在开发流程的前面，而不是后面。</p>
-<pre class="mermaid"><code>flowchart LR
-    A[发现问题场景] --&gt; B[写成评测用例]
-    B --&gt; C[确认当前失败]
-    C --&gt; D[修改 Prompt/Tool/流程]
-    D --&gt; E[跑评测集]
-    E --&gt; F{通过且无回归?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["发现问题场景"] --&gt; B["写成评测用例"]
+    B --&gt; C["确认当前失败"]
+    C --&gt; D["修改 Prompt/Tool/流程"]
+    D --&gt; E["跑评测集"]
+    E --&gt; F["通过且无回归?"]
     F --&gt;|否| D
-    F --&gt;|是| G[灰度发布]
-    G --&gt; H[线上监控]
+    F --&gt;|是| G["灰度发布"]
+    G --&gt; H["线上监控"]
     H --&gt; A</code></pre>
 <p>对于修复用例，先确认它能复现目标失败，再比较修复前后；随机失败可能需要多次试验。已经通过的用例仍可保护现有能力和安全不变量，不能因为“初始通过”就拒绝加入回归集。</p>
 <h2 id="149">14.9 常见错误<a class="headerlink" href="#149" title="Permanent link">&para;</a></h2>
@@ -10269,29 +10295,8 @@
 <p>无人值守场景别只看 <span class="arithmatex">\(\mathrm{pass@}k\)</span>，还要看 <span class="arithmatex">\(\mathrm{pass}^{k}\)</span>、单位成功成本、P95 延迟，以及轨迹里的授权、状态转移和恢复是否站得住。评测集也要分层运行：Smoke、Regression、Full 各跑各的频率，线上失败样例持续回流。上线后还要保存经过脱敏、可审计的轨迹和终止原因，并把越权、违规这类安全问题单独计分，不和成功率平均。</p>
 <p>学术基准更适合借鉴评测设计，真正做版本决策还得靠自己的业务评测集。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.06770">SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</a></li>
-<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities</a></li>
-<li><a href="https://arxiv.org/abs/2502.12115">SWE-Lancer: Can Frontier LLMs Earn $1 Million from Real-World Freelance Software Engineering?</a></li>
-<li><a href="https://www.tbench.ai/">Terminal-Bench：官方任务与版本入口</a></li>
-<li><a href="https://arxiv.org/abs/2311.12983">GAIA: a benchmark for General AI Assistants</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://arxiv.org/abs/2506.07982">tau^2-Bench: Evaluating Conversational Agents in a Dual-Control Environment</a></li>
-<li><a href="https://arxiv.org/abs/2404.07972">OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments</a></li>
-<li><a href="https://arxiv.org/abs/2307.13854">WebArena: A Realistic Web Environment for Building Autonomous Agents</a></li>
-<li><a href="https://arxiv.org/abs/2504.12516">BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents</a></li>
-<li><a href="https://arxiv.org/abs/2308.03688">AgentBench: Evaluating LLMs as Agents</a></li>
-<li><a href="https://arxiv.org/abs/2410.07095">MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering</a></li>
-<li><a href="https://arxiv.org/abs/2501.14249">Humanity's Last Exam</a></li>
-<li><a href="https://arxiv.org/abs/2406.13352">AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry: Generative AI Semantic Conventions</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md">OpenTelemetry: GenAI 约定状态说明（Development，固定提交 0c87594）</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: Demystifying evals for AI agents</a></li>
-<li><a href="https://www.swebench.com/SWE-bench/guides/evaluation/">SWE-bench: Evaluation harness</a></li>
-<li><a href="https://github.com/openai/simple-evals/blob/main/browsecomp_eval.py">OpenAI: BrowseComp reference implementation</a></li>
-<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: How we built our multi-agent research system</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-14">集中参考资料章节</a>。</p>
 
 
 
@@ -10314,7 +10319,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

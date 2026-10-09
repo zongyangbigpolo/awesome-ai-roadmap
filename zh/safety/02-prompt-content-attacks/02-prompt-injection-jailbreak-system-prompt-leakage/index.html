@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Prompt Injection、Jailbreak 与系统提示泄漏","description":"区分提示注入、越狱与系统提示泄漏的目标，理解角色结构、长上下文攻击和检测策略的实际边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Prompt Injection、Jailbreak 与系统提示泄漏","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Prompt Injection、Jailbreak 与系统提示泄漏","description":"区分提示注入、越狱与系统提示泄漏的目标，理解角色结构、长上下文攻击和检测策略的实际边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Prompt Injection、Jailbreak 与系统提示泄漏","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二章：Prompt Injection、Jailbreak 与系统提示泄漏","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/02-prompt-injection-jailbreak-system-prompt-leakage/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9290,11 +9315,16 @@
 </tbody>
 </table>
 <p>三者可能组合，但不能当作同义词。角色字段和消息结构确实存在，却不能保证模型始终按信任等级解释内容；越狱还涉及安全对齐的泛化失败，系统提示泄漏则是一种可能结果。是否构成实际越权，要继续看工具服务和数据出口能否独立执行授权，不能只凭模型说出「我已忽略规则」判定成功。</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT["模型可能错误处理指令优先级&lt;br/&gt;或安全约束"] --&gt; PI[Prompt Injection]
-    ROOT --&gt; JB[Jailbreak]
-    PI --&gt; SPL[系统提示泄漏]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    ROOT["指令或安全约束失&lt;br/&gt;效"] --&gt; PI["Prompt Injection"]
+    ROOT --&gt; JB["Jailbreak"]
+    PI --&gt; SPL["系统提示泄漏"]
     JB --&gt; SPL</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>模型可能错误处理指令优先级 或安全约束</li>
+</ul>
 <h2 id="22-prompt-injection">2.2 Prompt Injection 的分类回顾与本章补充<a class="headerlink" href="#22-prompt-injection" title="Permanent link">&para;</a></h2>
 <p>直接注入（攻击者是当前用户本人）与间接注入（攻击载荷藏在第三方内容中）的定义、致命三要素和架构级防御，详见 <a href="../../../agent/05-production/15-agent-security/">Agent 安全 15.4-15.10</a> 与 <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG 安全 20.3.2</a>。这里补两个前面没展开、但在生产里经常漏掉的点：<strong>载荷编码方式</strong>和<strong>多轮/多 Agent 场景下的注入放大</strong>。</p>
 <h3 id="221">2.2.1 载荷编码与混淆<a class="headerlink" href="#221" title="Permanent link">&para;</a></h3>
@@ -9346,12 +9376,21 @@
 <p>多轮检测应考虑相关历史，但「话题漂移」只能是弱信号，正常用户也会改变目标。真正的权限状态和审批必须保存在模型外，并在每次动作前重新检查。多 Agent 传递摘要时保留来源与信任标记，不能因上游生成了摘要就把外部文档升级成可信指令。</p>
 <h2 id="23-jailbreak">2.3 Jailbreak 技术分类<a class="headerlink" href="#23-jailbreak" title="Permanent link">&para;</a></h2>
 <p>Jailbreak 与 Prompt Injection 的区别在于：越狱通常不需要第三方载荷，攻击者本人就是发起者，目标是让模型突破自身的安全对齐（而不是执行「另一个任务」）。</p>
-<pre class="mermaid"><code>flowchart TB
-    J[Jailbreak 技术] --&gt; J1[角色扮演类&lt;br/&gt;DAN / 虚构人格]
-    J --&gt; J2[情境包装类&lt;br/&gt;学术研究/小说创作/调试模式]
-    J --&gt; J3[多轮蚕食类&lt;br/&gt;Crescendo]
-    J --&gt; J4[对抗后缀类&lt;br/&gt;自动化搜索出的低可读性后缀]
-    J --&gt; J5[Many-shot 类&lt;br/&gt;大量示例填满上下文诱导模仿]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    J["Jailbreak 技术"] --&gt; J1["角色扮演类"]
+    J --&gt; J2["情境包装类"]
+    J --&gt; J3["多轮蚕食类"]
+    J --&gt; J4["对抗后缀类"]
+    J --&gt; J5["Many-shot 类"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>角色扮演类 DAN / 虚构人格</li>
+<li>情境包装类 学术研究/小说创作/调试模式</li>
+<li>多轮蚕食类 Crescendo</li>
+<li>对抗后缀类 自动化搜索出的低可读性后缀</li>
+<li>Many-shot 类 大量示例填满上下文诱导模仿</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9463,14 +9502,8 @@
 <li>检测与红队需要覆盖多轮对话和持续更新的攻击样本库，而不是一次性静态测试。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025 Prompt Injection</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/">OWASP LLM07:2025 System Prompt Leakage</a></li>
-<li><a href="https://www.anthropic.com/research/many-shot-jailbreaking">Many-shot Jailbreaking (Anthropic)</a></li>
-<li><a href="https://arxiv.org/abs/2307.15043">Universal and Transferable Adversarial Attacks on Aligned Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2311.16119">Ignore This Title and HackAPrompt: Exposing Systemic Vulnerabilities of LLMs</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0051">MITRE ATLAS: Prompt Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-02">集中参考资料章节</a>。</p>
 
 
 
@@ -9493,7 +9526,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

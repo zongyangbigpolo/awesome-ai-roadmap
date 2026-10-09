@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery","description":"Explains checkpoint recovery boundaries, Temporal retry defaults, nested timeouts, and logical-operation idempotency keys when a tool succeeds but its result is lost.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/21-checkpoint-persistence-recovery/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery","description":"Explains checkpoint recovery boundaries, Temporal retry defaults, nested timeouts, and logical-operation idempotency keys when a tool succeeds but its result is lost.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/21-checkpoint-persistence-recovery/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 21: Checkpoints, Persistence, Retries, Timeouts, Idempotency, and Recovery","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9128,7 +9153,7 @@
 <tr>
 <td>Within-thread persistence: checkpoint</td>
 <td>One session or task</td>
-<td>LangGraph checkpointers “persist a thread's graph state” for “short-term, thread-scoped memory, including conversation continuity, human-in-the-loop workflows, time travel, and fault tolerance” (<a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a>)</td>
+<td>LangGraph checkpointers “persist a thread's graph state” for “short-term, thread-scoped memory, including conversation continuity, human-in-the-loop workflows, time travel, and fault tolerance” (LangGraph: Persistence<sup><a href="../../../book/references/#ref-483">【483】</a></sup>)</td>
 <td>Supports the recovery capabilities discussed here</td>
 </tr>
 <tr>
@@ -9146,7 +9171,7 @@
 <li><strong>Candidates for automatic retry:</strong> rate limits and transient infrastructure failures, provided the operation is safe to resend and respects <code>Retry-After</code>, backoff, attempt limits, and a total time limit. A network timeout does not prove that execution never occurred. For side-effecting calls, query the operation's status first or use its already-persisted idempotency key.</li>
 <li><strong>Do not blindly repeat the same request:</strong> invalid arguments need correction; unknown side-effect outcomes require a status query or a retry under the business idempotency contract; genuinely infeasible tasks need an explanation of missing prerequisites or a handoff. A model saying “I cannot do this” is not an infrastructure error classification either. Check permissions, information, and available tools.</li>
 </ul>
-<p><a href="https://docs.temporal.io/encyclopedia/retry-policies">Temporal's default behavior</a> is to <strong>retry Activities automatically, but not Workflow Executions</strong>. Applications need to configure retry limits, non-retryable errors, and timeouts; an absent configuration does not mean retries are disabled. Workflow Task retries are yet another layer. Custom tool clients often use exponential backoff with jitter. The <span class="arithmatex">\(n\)</span>th wait can be written as:</p>
+<p>Temporal's default behavior<sup><a href="../../../book/references/#ref-555">【555】</a></sup> is to <strong>retry Activities automatically, but not Workflow Executions</strong>. Applications need to configure retry limits, non-retryable errors, and timeouts; an absent configuration does not mean retries are disabled. Workflow Task retries are yet another layer. Custom tool clients often use exponential backoff with jitter. The <span class="arithmatex">\(n\)</span>th wait can be written as:</p>
 <div class="arithmatex">\[
 t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\right)
 \]</div>
@@ -9160,7 +9185,7 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
     S --&gt; T --&gt; C</code></pre>
 <p>A child call must inherit the parent's remaining deadline. Its effective duration is bounded by the smaller of its own limit and the remaining parent budget. Merely configuring three static timeouts in increasing order is not enough. On timeout, record the state explicitly and attempt to cancel remote work. Cancellation is a cooperative request, not a guarantee that remote side effects have been undone.</p>
 <h2 id="216-idempotency-making-retries-safe"><span id="216" class="legacy-heading-anchor" aria-hidden="true"></span>21.6 Idempotency: making retries safe<a class="headerlink" href="#216-idempotency-making-retries-safe" title="Permanent link">&para;</a></h2>
-<p>Idempotency means replaying the same logical operation does not add extra effects. A common approach is to <strong>persist the operation key and an argument digest before execution</strong>. The server atomically records the key's status and result, returns the same result for duplicate requests, and rejects changed arguments. The design must also address concurrent duplicates, record lifetimes, in-progress states, and atomicity between the business write and the deduplication record. <a href="https://docs.stripe.com/api/idempotent_requests">Stripe's idempotent-request documentation</a> describes one specific API contract, not a guarantee shared by all tools.</p>
+<p>Idempotency means replaying the same logical operation does not add extra effects. A common approach is to <strong>persist the operation key and an argument digest before execution</strong>. The server atomically records the key's status and result, returns the same result for duplicate requests, and rejects changed arguments. The design must also address concurrent duplicates, record lifetimes, in-progress states, and atomicity between the business write and the deduplication record. Stripe's idempotent-request documentation<sup><a href="../../../book/references/#ref-556">【556】</a></sup> describes one specific API contract, not a guarantee shared by all tools.</p>
 <p><strong>A model tool-call ID, a JSON-RPC request ID, and a business idempotency key are different identifiers.</strong> Replanning may generate a new model call ID, and MCP multi-round-trip requests may require new JSON-RPC IDs. Use a separate, stable logical-operation key and map multiple attempts to it. If a service supports neither idempotency nor status queries, an unknown outcome may require human reconciliation or compensation. A checkpoint does not justify claiming exactly-once side effects.</p>
 <h2 id="217-can-recovery-execute-previously-visited-code-again"><span id="217" class="legacy-heading-anchor" aria-hidden="true"></span>21.7 Can recovery execute previously visited code again?<a class="headerlink" href="#217-can-recovery-execute-previously-visited-code-again" title="Permanent link">&para;</a></h2>
 <p>Yes. Recovery preserves confirmed state and business effects, not a guarantee that each line runs only once. LangGraph re-enters an interrupted node on resumption; Temporal may replay Workflow code to reconstruct decisions from historical results. Replaying control code and re-executing external operations are different things. Two distinctions are particularly important:</p>
@@ -9179,14 +9204,8 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
 <h2 id="219-chapter-summary"><span id="219" class="legacy-heading-anchor" aria-hidden="true"></span>21.9 Chapter summary<a class="headerlink" href="#219-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>A checkpoint saves execution state, not the outside world, and does not guarantee that side effects occur only once. Recovery requires stable logical-operation keys, explicit unknown-outcome states, and deadline-bounded retries. Session checkpoints and cross-session memory have different semantics, even when they share an underlying database.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Interrupts</a>: recovery re-enters the node, so code before the interruption runs again.</li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance">LangGraph: Fault tolerance</a></li>
-<li><a href="https://docs.temporal.io/encyclopedia/retry-policies">Temporal: Retry Policies</a></li>
-<li><a href="https://docs.stripe.com/api/idempotent_requests">Stripe: Idempotent requests</a></li>
-<li><a href="../../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages/">LangGraph Chapter 10: Core Advantages of LangGraph</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-21">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9209,7 +9228,7 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

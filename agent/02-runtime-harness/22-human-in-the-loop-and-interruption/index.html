@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Human-in-the-Loop Approval and Interruptible Execution","description":"Explains how human approval pauses and resumes execution, binds operation arguments, identities, and versions, and handles expiry, duplicate notifications, and environmental changes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/22-human-in-the-loop-and-interruption/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Human-in-the-Loop Approval and Interruptible Execution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/22-human-in-the-loop-and-interruption/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Human-in-the-Loop Approval and Interruptible Execution","description":"Explains how human approval pauses and resumes execution, binds operation arguments, identities, and versions, and handles expiry, duplicate notifications, and environmental changes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/22-human-in-the-loop-and-interruption/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Human-in-the-Loop Approval and Interruptible Execution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/22-human-in-the-loop-and-interruption/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Human-in-the-Loop Approval and Interruptible Execution","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/22-human-in-the-loop-and-interruption/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9129,7 +9154,7 @@
 <h2 id="221-how-does-waiting-for-approval-differ-from-execution-failure"><span id="221" class="legacy-heading-anchor" aria-hidden="true"></span>22.1 How does waiting for approval differ from execution failure?<a class="headerlink" href="#221-how-does-waiting-for-approval-differ-from-execution-failure" title="Permanent link">&para;</a></h2>
 <p>Waiting for approval is an expected control state; execution failure means a step did not complete as agreed. An approval wait must display the proposed operation and await a decision. A retry mechanism must not treat it as an exception and repeatedly execute it. A short pause can remain in-process. A long wait, or one that must survive process changes, needs persistent, recoverable state as in Chapter 21. The ask rules and approval callbacks in Chapter 20 are entry points, but a callback does not automatically provide a durable approval workflow.</p>
 <h2 id="222-why-involve-a-human"><span id="222" class="legacy-heading-anchor" aria-hidden="true"></span>22.2 Why involve a human?<a class="headerlink" href="#222-why-involve-a-human" title="Permanent link">&para;</a></h2>
-<p><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">MCP 2026-07-28 Tools</a> recommends enabling people to deny tool calls and providing tool visibility, invocation indicators, and confirmation prompts. It uses <strong>SHOULD</strong> and explicitly does not mandate a particular interaction model. This is neither a protocol requirement to show a prompt for every call nor a credential that authorizes tool use. The harness must choose automatic execution, per-operation confirmation, or outright denial according to impact and preauthorized scope. Both complete automation and confirmation at every step have costs.</p>
+<p>MCP 2026-07-28 Tools<sup><a href="../../../book/references/#ref-285">【285】</a></sup> recommends enabling people to deny tool calls and providing tool visibility, invocation indicators, and confirmation prompts. It uses <strong>SHOULD</strong> and explicitly does not mandate a particular interaction model. This is neither a protocol requirement to show a prompt for every call nor a credential that authorizes tool use. The harness must choose automatic execution, per-operation confirmation, or outright denial according to impact and preauthorized scope. Both complete automation and confirmation at every step have costs.</p>
 <h2 id="223-designing-interruption-points-where-to-pause"><span id="223" class="legacy-heading-anchor" aria-hidden="true"></span>22.3 Designing interruption points: where to pause<a class="headerlink" href="#223-designing-interruption-points-where-to-pause" title="Permanent link">&para;</a></h2>
 <p>Not every node is a useful interruption point. Production systems commonly place human checkpoints at the following boundaries:</p>
 <ul>
@@ -9166,14 +9191,8 @@
 <h2 id="2210-chapter-summary"><span id="2210" class="legacy-heading-anchor" aria-hidden="true"></span>22.10 Chapter summary<a class="headerlink" href="#2210-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Human-in-the-loop handling is a recoverable control point, not a simple Boolean switch. Callbacks work for short pauses; long waits should persist state and release resources. On recovery, verify the operation bound to the approval, its permissions, and its object versions. Environmental changes can require replanning, but a new operation cannot inherit an old approval. Risk-based decisions and explicit arguments matter more than frequent prompts.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Model Context Protocol: Tools</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/permissions">Claude Agent SDK: Configure permissions</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Human-in-the-loop</a></li>
-<li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html">AWS Prescriptive Guidance: Transactional outbox pattern</a>: the dual-write problem between state persistence and notification delivery, and idempotent handling of duplicate messages.</li>
-<li><a href="../../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages/">LangGraph Chapter 10: Core Advantages of LangGraph</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-22">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9196,7 +9215,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：模型供应链与序列化风险","description":"审查模型及依赖的来源与加载链路，解释 PyTorch weights_only、safetensors、签名和物料清单各自能保证什么。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：模型供应链与序列化风险","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：模型供应链与序列化风险","description":"审查模型及依赖的来源与加载链路，解释 PyTorch weights_only、safetensors、签名和物料清单各自能保证什么。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：模型供应链与序列化风险","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第五章：模型供应链与序列化风险","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9167,18 +9192,27 @@
 <h1 id="_1">第五章：模型供应链与序列化风险<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <h2 id="51">5.1 模型也是一种依赖<a class="headerlink" href="#51" title="Permanent link">&para;</a></h2>
 <p>现代 AI 应用很少从零训练模型，而是从模型仓库（Hugging Face、云厂商模型市场等）下载预训练权重、适配器（LoRA）、Tokenizer 和评测脚本，再叠加自己的微调和 Prompt 工程。这意味着<strong>模型和它的配套文件应该被当作软件依赖来管理</strong>，需要与开源库依赖同等级别的供应链治理——但现实中很多团队只对代码依赖做扫描，对模型文件毫无审查。OWASP 将其列为 LLM03（Supply Chain Vulnerabilities）。</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
     subgraph SC["模型供应链"]
-        S1[预训练权重来源] --&gt; S2[微调/LoRA 适配器]
-        S2 --&gt; S3[Tokenizer/配置文件]
-        S3 --&gt; S4[推理框架/依赖库]
+        direction TB
+        S1["预训练权重来源"] --&gt; S2["微调/LoRA 适配器"]
+        S2 --&gt; S3["Tokenizer/配置文&lt;br/&gt;件"]
+        S3 --&gt; S4["推理框架/依赖库"]
     end
-    SC --&gt; R1[来源篡改&lt;br/&gt;5.2]
-    SC --&gt; R2[反序列化 RCE&lt;br/&gt;5.3]
-    SC --&gt; R3[依赖投毒&lt;br/&gt;5.4]
-    R1 --&gt; D[防御：签名/出处/ML-BOM&lt;br/&gt;5.5]
+    SC --&gt; R1["来源篡改"]
+    SC --&gt; R2["反序列化 RCE"]
+    SC --&gt; R3["依赖投毒"]
+    R1 --&gt; D["供应链防护"]
     R2 --&gt; D
     R3 --&gt; D</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>来源篡改 5.2</li>
+<li>反序列化 RCE 5.3</li>
+<li>依赖投毒 5.4</li>
+<li>防御：签名/出处/ML-BOM 5.5</li>
+</ul>
 <h2 id="52">5.2 来源篡改：模型仓库不是可信根<a class="headerlink" href="#52" title="Permanent link">&para;</a></h2>
 <p>任何人都可以在公开模型仓库上传文件，仓库平台的「下载量」「点赞数」不构成安全审查。已被公开报告的风险包括：</p>
 <ul>
@@ -9190,13 +9224,36 @@
 <h2 id="53-pickle">5.3 反序列化风险：Pickle 与安全格式的选择<a class="headerlink" href="#53-pickle" title="Permanent link">&para;</a></h2>
 <p>PyTorch 检查点常含 Pickle 元数据，而<strong>通用 Pickle 反序列化可以执行代码</strong>。但不能把任意 <code>.pt</code>/<code>.bin</code> 文件或所有 <code>torch.load()</code> 调用都描述为同一种执行路径：扩展名不决定内容与加载器，限制模式也影响可执行能力。</p>
 <p>PyTorch 2.6 起，未传入 <code>pickle_module</code> 时，<code>torch.load</code> 默认采用 <code>weights_only=True</code>，限制可构造类型并禁止动态导入。它是攻击面缩减措施，不是完整沙箱；拒绝服务、解析器缺陷和不安全 allowlist 仍需防范。不能为消除报错就无审查地切换 <code>weights_only=False</code>。</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant A as 攻击者
-    participant F as 恶意 .pt/.bin 文件
-    participant V as 受害者环境
-    A-&gt;&gt;F: 构造带 __reduce__ 的对象并 pickle
-    V-&gt;&gt;F: 不受限的 Pickle 加载&lt;br/&gt;例如 weights_only=False
-    F--&gt;&gt;V: 反序列化时执行任意代码</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["构造 pickle 对象"]
+    S1["分发模型文件"]
+    S2["不受限地加载"]
+    S3["执行任意代码"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3</code></pre>
+<p>完整消息顺序（含阶段说明）：</p>
+<table>
+<thead>
+<tr>
+<th>交互双方</th>
+<th>消息或动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击者 → 恶意 .pt/.bin 文件</td>
+<td>构造带 <strong>reduce</strong> 的对象并 pickle</td>
+</tr>
+<tr>
+<td>受害者环境 → 恶意 .pt/.bin 文件</td>
+<td>不受限的 Pickle 加载；例如 weights_only=False</td>
+</tr>
+<tr>
+<td>恶意 .pt/.bin 文件 → 受害者环境（返回）</td>
+<td>反序列化时执行任意代码</td>
+</tr>
+</tbody>
+</table>
 <p><strong>防御要点</strong>：</p>
 <ul>
 <li><strong>优先使用不可执行代码的序列化格式</strong>，例如 <code>safetensors</code>——它只存储张量数据，不支持任意 Python 对象反序列化，从格式层面消除了这一类风险；</li>
@@ -9292,15 +9349,8 @@
 <li>模型签名、ML-BOM、模型卡和可复现构建是让供应链可验证、可审计的核心手段，为第十章的治理与审计提供基础物料。</li>
 </ol>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm032025-supply-chain/">OWASP LLM03:2025 Supply Chain</a></li>
-<li><a href="https://huggingface.co/docs/hub/security-pickle">Hugging Face: Pickle Scanning and Safetensors</a></li>
-<li><a href="https://docs.pytorch.org/docs/2.6/notes/serialization.html#torch-load-with-weights-only-true">PyTorch 2.6: Serialization semantics and weights_only</a></li>
-<li><a href="https://blog.trailofbits.com/2024/06/11/exploiting-ml-models-with-pickle-file-attacks-part-1/">Sleepy Pickle: Exploiting Machine Learning Pickle Files</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0010">MITRE ATLAS: ML Supply Chain Compromise</a></li>
-<li><a href="https://cyclonedx.org/capabilities/mlbom/">CycloneDX: Machine Learning Bill of Materials (ML-BOM)</a></li>
-<li><a href="https://www.sigstore.dev/">Sigstore: Software Signing for Everyone</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-05">集中参考资料章节</a>。</p>
 
 
 
@@ -9323,7 +9373,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

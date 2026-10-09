@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Document Parsing and Preprocessing","description":"Explains parsing paths for PDF layouts, tables, and scanned documents, compares rules, layout models, and VLMs, and covers source links, authorization metadata, and pre-ingestion quality checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/03-document-parsing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Document Parsing and Preprocessing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/03-document-parsing/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Document Parsing and Preprocessing","description":"Explains parsing paths for PDF layouts, tables, and scanned documents, compares rules, layout models, and VLMs, and covers source links, authorization metadata, and pre-ingestion quality checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/03-document-parsing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Document Parsing and Preprocessing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/03-document-parsing/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: Document Parsing and Preprocessing","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/03-document-parsing/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9377,16 +9402,11 @@
 </blockquote>
 <p>When investigating retrieval problems, therefore, first inspect what was actually ingested rather than immediately switching models.</p>
 <h2 id="32-four-common-parsing-problems"><span id="32" class="legacy-heading-anchor" aria-hidden="true"></span>3.2 Four Common Parsing Problems<a class="headerlink" href="#32-four-common-parsing-problems" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    DOC[Raw document] --&gt; P1[Layout problems]
-    DOC --&gt; P2[Table problems]
-    DOC --&gt; P3[Non-text content]
-    DOC --&gt; P4[Noise and lost structure]
-
-    P1 --&gt; A1[Columns merged line by line&lt;br/&gt;Reading order scrambled]
-    P2 --&gt; A2[Merged cells collapse&lt;br/&gt;Row-column relationships lost]
-    P3 --&gt; A3[Scans, charts, and formulas&lt;br/&gt;No directly extractable text]
-    P4 --&gt; A4[Repeated headers and footers&lt;br/&gt;Heading hierarchy lost]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    DOC[Raw document] --&gt; P[Parsing failure modes]
+    P --&gt; A[Lost meaning or structure]</code></pre>
+<p>Check four failure modes: columns can merge line by line and scramble reading order; merged table cells can collapse and lose row–column relationships; scans, charts, and formulas may lack directly extractable text; repeated headers and footers can add noise while heading hierarchy is lost.</p>
 <h3 id="321-layout-and-reading-order"><span id="321" class="legacy-heading-anchor" aria-hidden="true"></span>3.2.1 Layout and Reading Order<a class="headerlink" href="#321-layout-and-reading-order" title="Permanent link">&para;</a></h3>
 <p>A PDF page primarily describes drawing operations and layout. Some tagged PDFs include a logical structure, but you cannot assume that an arbitrary file provides correct paragraphs or reading order.</p>
 <p>A simple text extraction tool can therefore easily concatenate the left and right columns of a two-column paper along each visual line, producing completely scrambled sentences.</p>
@@ -9421,17 +9441,13 @@
 </tbody>
 </table>
 <p><strong>In practice, use a tiered pipeline rather than sending everything through the most expensive approach</strong>:</p>
-<pre class="mermaid"><code>flowchart LR
-    IN[Document] --&gt; T1[Rule-based parsing]
-    T1 --&gt; CK{Quality check}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    T[Parse at current tier] --&gt; CK{Quality check}
     CK --&gt;|Pass| OK[Ingest]
-    CK --&gt;|Fail| T2[Layout model]
-    T2 --&gt; CK2{Quality check}
-    CK2 --&gt;|Pass| OK
-    CK2 --&gt;|Fail| T3[Multimodal model]
-    T3 --&gt; CK3{Review passed?}
-    CK3 --&gt;|Yes| OK
-    CK3 --&gt;|No| HOLD[Quarantine or&lt;br/&gt;manual processing]</code></pre>
+    CK --&gt;|Fail| NEXT[Escalate or quarantine]
+    NEXT --&gt;|Next tier exists| T</code></pre>
+<p>Start with rule-based parsing, escalate failed documents to a layout model, and then to a multimodal model if the next quality check still fails. Each tier must pass its own check before ingestion. If multimodal review also fails, quarantine the document or send it for manual processing rather than looping indefinitely.</p>
 <p>Most straightforward documents can then take the cheapest path, while only difficult cases move to a more expensive option.</p>
 <h3 id="331-additional-risks-of-parsing-with-large-models"><span id="331" class="legacy-heading-anchor" aria-hidden="true"></span>3.3.1 Additional Risks of Parsing with Large Models<a class="headerlink" href="#331-additional-risks-of-parsing-with-large-models" title="Permanent link">&para;</a></h3>
 <p>A VLM can transcribe documents, but its generative nature introduces a risk: it may fill in content that does not exist in the source.</p>
@@ -9557,13 +9573,8 @@
 <li><strong>Pre-ingestion quality checks are essential</strong>, including both automated metrics and manual sampling.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2407.01449">ColPali: Efficient Document Retrieval with Vision Language Models</a></li>
-<li><a href="https://qdrant.tech/documentation/manage-data/payload/">Qdrant: Payload Updates and Indexing</a></li>
-<li><a href="https://arxiv.org/abs/2412.15262">Advanced ingestion process powered by LLM parsing for RAG system</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9586,7 +9597,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

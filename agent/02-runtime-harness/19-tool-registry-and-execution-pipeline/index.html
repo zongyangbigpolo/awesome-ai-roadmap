@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines","description":"Explains tool registration, version pinning, argument and permission checks, scheduling, result pairing, and error handling, including MCP dynamic tool sets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/19-tool-registry-and-execution-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/19-tool-registry-and-execution-pipeline/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines","description":"Explains tool registration, version pinning, argument and permission checks, scheduling, result pairing, and error handling, including MCP dynamic tool sets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/19-tool-registry-and-execution-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/19-tool-registry-and-execution-pipeline/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 19: Tool Registries, Call Contracts, and Execution Pipelines","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/19-tool-registry-and-execution-pipeline/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9115,7 +9140,7 @@
 <ul>
 <li><strong>Combining multiple sources:</strong> built-in tools, MCP server tools, and host-plugin tools all enter the registry. A skill may reference tools or include scripts, but <code>SKILL.md</code> is not itself a tool-registration protocol; the host still needs an executor adapter.</li>
 <li><strong>Naming conflicts and deduplication:</strong> multiple MCP servers may provide tools with the same name, such as two different <code>search</code> tools. The registry needs namespace prefixes or explicit routing rules to disambiguate them. Prefixes should bind to service identities in host configuration. MCP's <code>serverInfo.name</code> is not guaranteed to be unique across servers, so a server's self-reported name is not sufficient.</li>
-<li><strong>Dynamic changes:</strong> in MCP 2026-07-28, <code>listChanged</code> declares notification support, and the client must also open <code>subscriptions/listen</code> with <code>toolsListChanged: true</code> to receive tool-list change notifications. Lists may vary over time and by the authorization presented on a request, but must not vary by connection or as a side effect of other requests on that connection (<a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Tools</a>). Caches must distinguish authorization scopes. Re-list tools after a notification, and never reuse a private tool list across tenants.</li>
+<li><strong>Dynamic changes:</strong> in MCP 2026-07-28, <code>listChanged</code> declares notification support, and the client must also open <code>subscriptions/listen</code> with <code>toolsListChanged: true</code> to receive tool-list change notifications. Lists may vary over time and by the authorization presented on a request, but must not vary by connection or as a side effect of other requests on that connection (Tools<sup><a href="../../../book/references/#ref-285">【285】</a></sup>). Caches must distinguish authorization scopes. Re-list tools after a notification, and never reuse a private tool list across tenants.</li>
 </ul>
 <p>The specification uses <strong>SHOULD</strong> for deterministic ordering. This helps caching but is not the only mechanism for detecting changes. The registry should also pin tool sources, schema/description versions, and executor mappings. Recheck trust after a list update; an approved call must not silently be rebound to a new tool.</p>
 <p>This discussion follows version 2026-07-28, officially marked <strong>Current</strong>: ready for use and still open to backward-compatible changes. It is neither Draft nor a frozen Final version. Tool-list caches must also honor this version's <code>ttlMs</code> and <code>cacheScope</code>; tool names alone do not determine cache validity.</p>
@@ -9123,11 +9148,12 @@
 <p>Within the harness, a tool invocation must associate at least a call ID, tool name, validated arguments, and execution status. When the invocation finishes, write back its content and status under the corresponding ID. On timeout, record “outcome unknown” rather than inventing success. The central requirement is <strong>bidirectional traceability through the call ID</strong>: a result identifies its request, and a request identifies its processing progress. Model interfaces that require complete call/result pairing will reject a sequence with missing results. The harness must complete, reject, or explicitly terminate these calls before continuing under the interface's rules, not silently discard them.</p>
 <h2 id="194-five-stages-in-the-execution-pipeline"><span id="194" class="legacy-heading-anchor" aria-hidden="true"></span>19.4 Five stages in the execution pipeline<a class="headerlink" href="#194-five-stages-in-the-execution-pipeline" title="Permanent link">&para;</a></h2>
 <p>A tool call passes through five explicit stages between the model's request and the result's return to context:</p>
-<pre class="mermaid"><code>flowchart LR
-    A["1. Parse&lt;br/&gt;Extract from model output:&lt;br/&gt;call ID + arguments"] --&gt; B["2. Validate&lt;br/&gt;Check arguments against schema"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["1. Parse&lt;br/&gt;Extract from model&lt;br/&gt;output:&lt;br/&gt;call ID + arguments"] --&gt; B["2. Validate&lt;br/&gt;Check arguments against&lt;br/&gt;schema"]
     B --&gt; C["3. Permission check&lt;br/&gt;See Chapter 20"]
-    C --&gt; D["4. Schedule and execute&lt;br/&gt;Concurrency / sequencing / timeout"]
-    D --&gt; E["5. Write back result&lt;br/&gt;Serialize + bind to call ID"]</code></pre>
+    C --&gt; D["4. Schedule and execute&lt;br/&gt;Concurrency / sequencing&lt;br/&gt;/ timeout"]
+    D --&gt; E["5. Write back result&lt;br/&gt;Serialize + bind to call&lt;br/&gt;ID"]</code></pre>
 <ul>
 <li><strong>Parse:</strong> for streaming responses, wait until all JSON argument chunks have been assembled, as discussed in Section 17.5. Parsing too early produces invalid JSON.</li>
 <li><strong>Validate:</strong> check argument types, required fields, and value ranges against the tool's declared <code>inputSchema</code>. A call that fails validation should not reach execution. Instead, construct an “invalid arguments” result and return it to the model so it can correct the arguments and try again.</li>
@@ -9142,15 +9168,15 @@
 <li><strong>Interdependent tools with side effects</strong>, such as successive edits to the same file, require sequential execution. Alternatively, the harness can detect target-resource conflicts and fall back to serialization.</li>
 <li><strong>Each tool call needs its own timeout budget</strong>, nested within the larger budget for the turn and ultimately the session. Section 21.5 develops this hierarchical timeout design. A timeout should produce an explicit timeout error result, not leave the call suspended indefinitely and block the entire state machine.</li>
 </ul>
-<p>Tool-level guardrails in the OpenAI Agents SDK can insert business checks before and after execution of a configured <code>FunctionTool</code> (<a href="https://openai.github.io/openai-agents-python/guardrails/">Guardrails</a>). This is not a global switch that automatically covers every tool: hosted tools, handoffs, and built-in execution tools may not use the same pipeline, so verify coverage. An output check runs after execution. It can prevent further propagation of a result, but cannot undo side effects that have already occurred.</p>
+<p>Tool-level guardrails in the OpenAI Agents SDK can insert business checks before and after execution of a configured <code>FunctionTool</code> (Guardrails<sup><a href="../../../book/references/#ref-549">【549】</a></sup>). This is not a global switch that automatically covers every tool: hosted tools, handoffs, and built-in execution tools may not use the same pipeline, so verify coverage. An output check runs after execution. It can prevent further propagation of a result, but cannot undo side effects that have already occurred.</p>
 <h2 id="196-result-writeback-and-first-class-errors"><span id="196" class="legacy-heading-anchor" aria-hidden="true"></span>19.6 Result writeback and first-class errors<a class="headerlink" href="#196-result-writeback-and-first-class-errors" title="Permanent link">&para;</a></h2>
 <p>Recoverable tool business errors should be returned as structured results with call IDs. The runtime decides when permission violations, exhausted budgets, or corrupted state require stopping. Distinguish “not executed,” “execution failed,” and “outcome unknown”; a timeout in particular does not prove that the remote system produced no side effects. Retain error codes, retryability, and redacted summaries rather than sending credentials or complete internal stack traces to the model. MCP protocol errors and tool-level business errors marked with <code>isError</code> are also different categories.</p>
 <h2 id="197-dynamic-tool-sets-three-ways-to-reduce-fixed-overhead"><span id="197" class="legacy-heading-anchor" aria-hidden="true"></span>19.7 Dynamic tool sets: three ways to reduce fixed overhead<a class="headerlink" href="#197-dynamic-tool-sets-three-ways-to-reduce-fixed-overhead" title="Permanent link">&para;</a></h2>
 <p>Section 18.5 distinguishes the context occupancy, transmission, and billing costs of tool definitions. Three engineering mechanisms reduce the amount of unnecessary definition and result data sent to the model:</p>
 <ul>
 <li><strong>Progressive disclosure:</strong> Section 3.5.3 discusses progressive disclosure for skills. The corresponding tool-level technique includes only the task-relevant subset in the current request. Other tools remain registered but unassembled until they are needed.</li>
-<li><strong>Code execution with MCP:</strong> let the model generate code that calls tools instead of placing every tool's complete schema in context. The model initially needs to know about a code execution environment and an API index; it can read the detailed parameters on demand when preparing execution (<a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Anthropic: Code execution with MCP</a>). <a href="https://blog.cloudflare.com/code-mode/">Cloudflare's Code Mode</a> is another implementation of this idea.</li>
-<li><strong>Retrieval-based tool selection:</strong> when a system has hundreds or thousands of tools, use retrieval rather than full enumeration to decide which tools to expose this turn. <a href="https://arxiv.org/abs/2505.03275">RAG-MCP</a> describes this approach to prompt bloat caused by excessive tool definitions.</li>
+<li><strong>Code execution with MCP:</strong> let the model generate code that calls tools instead of placing every tool's complete schema in context. The model initially needs to know about a code execution environment and an API index; it can read the detailed parameters on demand when preparing execution (Anthropic: Code execution with MCP<sup><a href="../../../book/references/#ref-446">【446】</a></sup>). Cloudflare's Code Mode<sup><a href="../../../book/references/#ref-447">【447】</a></sup> is another implementation of this idea.</li>
+<li><strong>Retrieval-based tool selection:</strong> when a system has hundreds or thousands of tools, use retrieval rather than full enumeration to decide which tools to expose this turn. RAG-MCP<sup><a href="../../../book/references/#ref-448">【448】</a></sup> describes this approach to prompt bloat caused by excessive tool definitions.</li>
 </ul>
 <p>All three turn the decision to include a tool's full definition in the current context from a static choice into a dynamic one. In effect, each is a pluggable component of Chapter 18's assembly pipeline.</p>
 <h2 id="198-common-mistakes"><span id="198" class="legacy-heading-anchor" aria-hidden="true"></span>19.8 Common mistakes<a class="headerlink" href="#198-common-mistakes" title="Permanent link">&para;</a></h2>
@@ -9164,14 +9190,8 @@
 <h2 id="199-chapter-summary"><span id="199" class="legacy-heading-anchor" aria-hidden="true"></span>19.9 Chapter summary<a class="headerlink" href="#199-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>The registry manages tool identity, definition versions, and authorization-based visibility; the execution pipeline manages individual invocations. Check dependencies and resource conflicts before parallel execution, and retain call IDs and execution status when returning results. “Timed out, outcome unknown” must not be disguised as “not executed.” Dynamic disclosure and code execution optimize how context is handled; they must not bypass the same permission, audit, and idempotency controls.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Model Context Protocol: Tools</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/versioning">Model Context Protocol: Versioning</a>: the Current status and revision rules for 2026-07-28; accessed in the source review on 2026-09-15.</li>
-<li><a href="https://openai.github.io/openai-agents-python/guardrails/">OpenAI Agents SDK: Guardrails</a></li>
-<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Anthropic: Code execution with MCP</a></li>
-<li><a href="https://blog.cloudflare.com/code-mode/">Cloudflare: Code Mode — the better way to use MCP</a></li>
-<li><a href="https://arxiv.org/abs/2505.03275">RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-19">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9194,7 +9214,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

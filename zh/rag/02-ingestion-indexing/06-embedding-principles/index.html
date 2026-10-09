@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：Embedding 原理与技术演进","description":"从静态词向量到双塔与后期交互解释检索表示，区分 BERT 骨干、交互架构、距离度量和兼容编码器契约。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/06-embedding-principles/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：Embedding 原理与技术演进","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/06-embedding-principles/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：Embedding 原理与技术演进","description":"从静态词向量到双塔与后期交互解释检索表示，区分 BERT 骨干、交互架构、距离度量和兼容编码器契约。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/06-embedding-principles/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：Embedding 原理与技术演进","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/06-embedding-principles/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：Embedding 原理与技术演进","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/06-embedding-principles/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9373,7 +9398,8 @@
 </blockquote>
 <p>但也要提前说明：<strong>向量检索并非全面优于关键词检索</strong>。精确的产品型号、错误码、人名、专有术语，关键词检索反而更可靠——这是第十一章要展开的内容。</p>
 <h2 id="63">6.3 四类表示方法<a class="headerlink" href="#63" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     G1[静态词向量] --&gt; G2[上下文词向量]
     G2 --&gt; G3[句向量 双塔]
     G3 --&gt; G4[后期交互 多向量]</code></pre>
@@ -9396,21 +9422,23 @@
 <p><strong>第一，原生 BERT 的句向量质量差。</strong> 直接取 <code>[CLS]</code> 位置的向量或对所有 Token 向量做平均，得到的句向量在语义相似度任务上表现很差——因为 BERT 的预训练目标（掩码语言建模）<strong>根本没有优化句子级的相似度</strong>。</p>
 <p><strong>第二，若采用 cross-encoder，就不能像双塔那样离线缓存整段文档表示用于直接打分。</strong></p>
 <p>BERT 可以分别编码文本，也可以把 Query 与文档拼接后微调为 cross-encoder。后者意味着：</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph CE[Cross-Encoder 交互式]
-        Q1[Query] --&gt; CAT[拼接]
-        D1[文档] --&gt; CAT
-        CAT --&gt; M1[模型] --&gt; S1[相似度分数]
-        N1[在线为每个文本对评分&lt;br/&gt;可批处理但计算量大]
-    end
-
-    subgraph BE[Bi-Encoder 双塔]
-        Q2[Query] --&gt; ME1[模型] --&gt; V1[Query 向量]
-        D2[文档] --&gt; ME2[模型] --&gt; V2[文档向量&lt;br/&gt;离线预先算好]
-        V1 --&gt; SIM[向量距离]
-        V2 --&gt; SIM
-        N2[文档向量离线算好&lt;br/&gt;在线只算 Query]
-    end</code></pre>
+<p><strong>Cross-Encoder 交互式</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --&gt; CAT[拼接]
+    D1[文档] --&gt; CAT
+    CAT --&gt; M1[模型] --&gt; S1[相似度分数]
+</code></pre>
+<p>Cross-Encoder 在线为每个 Query–文档对评分，可以批处理，但计算量较大。</p>
+<p><strong>Bi-Encoder 双塔</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --&gt; ME1[模型] --&gt; V1[Query 向量]
+    D2[文档] --&gt; ME2[模型] --&gt; V2[文档向量&lt;br/&gt;离线预先算好]
+    V1 --&gt; SIM[向量距离]
+    V2 --&gt; SIM
+</code></pre>
+<p>双塔模型离线预计算文档向量，在线只需编码 Query。两侧向量在距离计算时相遇，不会进入一个联合的 Query–文档编码器。</p>
 <p><strong>百万级候选需要在线评分百万个文本对。</strong> 批处理减少调用开销，但不能免去这些交互计算，因此通常先用可预计算文档表示的检索器缩小范围。</p>
 <h3 id="633">6.3.3 第三代：专门优化的句向量模型（双塔）<a class="headerlink" href="#633" title="Permanent link">&para;</a></h3>
 <p>代表：Sentence-BERT、SimCSE、BGE、E5、GTE、Qwen3-Embedding。</p>
@@ -9428,12 +9456,11 @@
 <p>代表：ColBERT、ColBERTv2、ColPali。</p>
 <p><strong>核心思想</strong>：在「单向量双塔」和「拼接式 cross-encoder」之间取中间路线。</p>
 <p>文档不再压缩成<strong>一个</strong>向量，而是保留<strong>每个 Token 的向量</strong>。检索时计算 Query 每个 Token 与文档所有 Token 向量的最大相似度，再求和。</p>
-<pre class="mermaid"><code>flowchart TB
-    A[单向量双塔] --&gt;|保留更多细粒度表示| B[后期交互 多向量]
-    B --&gt;|增加在线跨文本交互| C[Cross-Encoder]
-    A -.-&gt;|文档压成 1 个向量| A1[细粒度信息丢失]
-    B -.-&gt;|文档保留 N 个向量| B1[空间由数量、维度&lt;br/&gt;数据类型与压缩共同决定]
-    C -.-&gt;|Query 文档拼接| C1[无法离线预计算]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[单向量双塔] --&gt; B[多向量后期交互]
+    B --&gt; C[Cross-Encoder]</code></pre>
+<p>箭头比较表示与交互方式，不代表执行阶段。单向量双塔将文档压缩为一个向量，会丢失细粒度信息。后期交互为每篇文档保留 N 个向量，存储取决于数量、维度、数据类型和压缩方式。Cross-Encoder 拼接 Query 与文档，增加在线跨文本交互，因此无法离线预计算联合表示。</p>
 <p><strong>优点</strong>：保留 Token 级匹配信息，同时文档表示仍可离线预计算。ColBERT 系论文在所测检索任务上展示了收益，但不能推出任意多向量模型都胜过单向量模型，或必然接近 cross-encoder。</p>
 <p>代价是每文档多向量的存储与匹配；实际倍数取决于 Token 数、维度和压缩。ColBERTv2 论文使用残差压缩，不能把未经压缩的向量数量比直接当作总成本比。</p>
 <p><strong>第四代的一个重要衍生是把它用到视觉上</strong>：直接对文档<strong>页面图像</strong>做多向量嵌入，绕开 OCR 和版面解析（第三章 3.5 节讨论过）。</p>
@@ -9472,7 +9499,7 @@
 <h3 id="652">6.5.2 注意输入长度上限<a class="headerlink" href="#652" title="Permanent link">&para;</a></h3>
 <p>输入上限依模型和服务配置而异，不能统一记为 512 Token；超长可能报错或被 tokenizer 截断。对照模型卡检查最大长度、前缀和特殊 Token，并在入库时监控截断。</p>
 <h3 id="653">6.5.3 注意指令前缀<a class="headerlink" href="#653" title="Permanent link">&para;</a></h3>
-<p>不同 Embedding 模型的 Query 与文档输入约定不同。E5、BGE 等模型可能有特定前缀或指令约定（如 <code>query:</code> / <code>为这个句子生成表示以用于检索相关文章：</code>），文档可能不加或使用另一前缀，应按各自模型卡配置。<a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding 官方模型卡</a>推荐为 Query 提供任务指令，但这不表示缺少指令就会使调用无效。</p>
+<p>不同 Embedding 模型的 Query 与文档输入约定不同。E5、BGE 等模型可能有特定前缀或指令约定（如 <code>query:</code> / <code>为这个句子生成表示以用于检索相关文章：</code>），文档可能不加或使用另一前缀，应按各自模型卡配置。Qwen3-Embedding 官方模型卡<sup><a href="../../../book/references/#ref-362">【362】</a></sup>推荐为 Query 提供任务指令，但这不表示缺少指令就会使调用无效。</p>
 <p><strong>遗漏适用的前缀或指令可能降低效果，但影响取决于模型和任务；应按模型卡配置，并在目标查询集上验证。</strong> 不要把检索效果建议混同于 API 输入有效性要求。</p>
 <h3 id="654">6.5.4 对称与非对称检索是两回事<a class="headerlink" href="#654" title="Permanent link">&para;</a></h3>
 <table>
@@ -9521,16 +9548,8 @@
 <li><strong>硬性约束</strong>：兼容编码器对、实际长度预算、模型指定前缀与度量，并区分对称和非对称任务。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1301.3781">Efficient Estimation of Word Representations in Vector Space</a></li>
-<li><a href="https://nlp.stanford.edu/projects/glove/">Stanford GloVe：全局共现统计与加权最小二乘目标</a></li>
-<li><a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
-<li><a href="https://arxiv.org/abs/1908.10084">Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks</a></li>
-<li><a href="https://arxiv.org/abs/2104.08821">SimCSE: Simple Contrastive Learning of Sentence Embeddings</a></li>
-<li><a href="https://arxiv.org/abs/2004.04906">Dense Passage Retrieval for Open-Domain Question Answering</a></li>
-<li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction</a></li>
-<li><a href="https://arxiv.org/abs/2407.01449">ColPali: Efficient Document Retrieval with Vision Language Models</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9553,7 +9572,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

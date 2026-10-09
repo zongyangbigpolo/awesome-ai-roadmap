@@ -83,7 +83,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：FDE 项目踩坑与交付经验","description":"从四个开源项目整理 FDE 交付中的常见问题：需求改了谁确认、未知问题怎样追、PoC 留下什么、项目记忆如何更新，以及客户如何验收和接手。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/02-field-practice/02-delivery-lessons/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：FDE 项目踩坑与交付经验","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/02-field-practice/02-delivery-lessons/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：FDE 项目踩坑与交付经验","description":"从四个开源项目整理 FDE 交付中的常见问题：需求改了谁确认、未知问题怎样追、PoC 留下什么、项目记忆如何更新，以及客户如何验收和接手。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/02-field-practice/02-delivery-lessons/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：FDE 项目踩坑与交付经验","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/02-field-practice/02-delivery-lessons/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二章：FDE 项目踩坑与交付经验","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/02-field-practice/02-delivery-lessons/"}]}</script>
     
@@ -633,6 +633,8 @@
       
         
       
+        
+      
     
     
     
@@ -760,6 +762,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9055,7 +9080,7 @@
 <p>有些客户项目，代码并没有特别难写，却迟迟交不出去。客户以为买的是自动处理，工程师做的是辅助审核；测试已经通过，业务负责人却说还不能用；原开发者一走，接手的人连为什么禁用某个功能都不知道。</p>
 <p>本章从 FDEOps、FDEstack、OpenFDE 和 Applied AI Field Guide 四个公开项目中，整理值得借鉴的做法。下面沿用<a href="../../01-foundations/01-forward-deployed-engineering/">第一章</a>的订单助手，重点看事情怎么处理，不要求安装这些工具。</p>
 <h2 id="21">2.1 到了现场才发现，原来的需求不能照做<a class="headerlink" href="#21" title="Permanent link">&para;</a></h2>
-<p>Applied AI Field Guide 的<a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/field-evidence.md">发票异常教学案例</a>从一个冲突开始：原来的承诺是自动处理并入账，现场流程和政策却要求指定人员先审批。项目因此改成准备建议和待审内容，把审批、入账留给有权操作的人。</p>
+<p>Applied AI Field Guide 的发票异常教学案例<sup><a href="../../../book/references/#ref-808">【808】</a></sup>从一个冲突开始：原来的承诺是自动处理并入账，现场流程和政策却要求指定人员先审批。项目因此改成准备建议和待审内容，把审批、入账留给有权操作的人。</p>
 <p>值得学的不是“遇到风险就加个人工审核”，而是<strong>发现原需求做不了以后，怎样和客户重新约定</strong>。不能把原来的要求悄悄改掉，也不能以为给项目出钱的人就一定有权放宽业务政策。</p>
 <p>换到订单助手里，运营负责人原本要自动回邮件。工程师观察客服工作后，提出先做草稿。此时客户很可能问：</p>
 <blockquote>
@@ -9094,18 +9119,23 @@
 </tbody>
 </table>
 <p>记录要标明“待确认、同意、拒绝或延期”，而不是开完会就默认客户接受了。改范围后，验收条件、交付计划和费用约定也要一起看。</p>
-<pre class="mermaid"><code>flowchart LR
-    A["保留原来的约定"] --&gt; B["写清现场发现的冲突"]
-    B --&gt; C["说明影响与备选方案"]
-    C --&gt; D{"有权负责人确认新范围?"}
-    D --&gt;|否| E["保留待决事项&lt;br/&gt;不执行新增动作"]
-    D --&gt;|是| F["更新范围、验收与计划"]
-    F --&gt; G["按确认后的范围实施"]</code></pre>
-<p>另一个常见问题是“顺手再做一点”。FDEOps 的 <a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/hold-scope.md">hold-scope</a>建议把新增要求的提出人、影响和处理决定记下来，再讨论放在本期、下一期，还是另开项目。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["保留原来的约定"] --&gt; B["写清现场发现的冲&lt;br/&gt;突"]
+    B --&gt; C["说明影响与备选方&lt;br/&gt;案"]
+    C --&gt; D["有权负责人确认新&lt;br/&gt;范围?"]
+    D --&gt;|否| E["保留待决事项"]
+    D --&gt;|是| F["更新范围、验收与&lt;br/&gt;计划"]
+    F --&gt; G["按确认后的范围实&lt;br/&gt;施"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>保留待决事项 不执行新增动作</li>
+</ul>
+<p>另一个常见问题是“顺手再做一点”。FDEOps 的 hold-scope<sup><a href="../../../book/references/#ref-809">【809】</a></sup>建议把新增要求的提出人、影响和处理决定记下来，再讨论放在本期、下一期，还是另开项目。</p>
 <p>比如客户要求助手顺便预留库存，工程师要说明这已经涉及写入权限、并发占用和失败后的核对。可以讨论怎么做，但不能先答应“顺手加上”，到延期时才解释工作量。</p>
 <h2 id="22">2.2 “等客户确认”不能永远挂在任务栏<a class="headerlink" href="#22" title="Permanent link">&para;</a></h2>
 <p>“ERP 权限还没开”“库存字段需要确认”“业务有空再看”都像是在跟进，实际却看不出谁应该做什么。</p>
-<p>FDEstack 把待确认问题放进 <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/templates/unknowns.md"><code>unknowns.md</code></a>，再由客户上下文、任务分诊和复盘流程反复带出来。值得借鉴的是：<strong>重要问题没有答案时，不让它随着聊天记录沉下去。</strong></p>
+<p>FDEstack 把待确认问题放进 <code>unknowns.md</code><sup><a href="../../../book/references/#ref-810">【810】</a></sup>，再由客户上下文、任务分诊和复盘流程反复带出来。值得借鉴的是：<strong>重要问题没有答案时，不让它随着聊天记录沉下去。</strong></p>
 <p>问题可以写得比“待确认”再具体一点：</p>
 <table>
 <thead>
@@ -9142,7 +9172,7 @@
 <p>客户的话同样要分开记录。负责人说“系统太慢”，这是已知反馈；工程师猜测“他其实担心季度考核”，只是推测。推测可以提醒你下次怎么问，不能直接变成客户档案里的事实。</p>
 <h2 id="23-poc">2.3 PoC 跑通以后，别只留下代码<a class="headerlink" href="#23-poc" title="Permanent link">&para;</a></h2>
 <p>PoC 结束时，最容易留下的是一个能演示的目录。最容易丢掉的，是为了跑通它，工程师到底发现了什么。</p>
-<p>FDEstack 的 <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/poc/SKILL.md"><code>/poc</code></a>要求把技术发现、设计决定和可复用经验分别写回项目记录。它的 <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/integrate/SKILL.md"><code>/integrate</code></a>更进一步，约定不读取 PoC 目录，而是根据这些记录重新实现生产版本。</p>
+<p>FDEstack 的 <code>/poc</code><sup><a href="../../../book/references/#ref-811">【811】</a></sup>要求把技术发现、设计决定和可复用经验分别写回项目记录。它的 <code>/integrate</code><sup><a href="../../../book/references/#ref-812">【812】</a></sup>更进一步，约定不读取 PoC 目录，而是根据这些记录重新实现生产版本。</p>
 <p>不必照搬“所有 PoC 都重写”，但应该把结论留下。订单助手的试验结束后，接手的人至少要能看懂下面几类事情：</p>
 <table>
 <thead>
@@ -9178,7 +9208,7 @@
 <blockquote>
 <p>“为什么现在只能生成草稿？当时是谁决定的？这个限制还有效吗？”</p>
 </blockquote>
-<p>OpenFDE 的<a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md">设计</a>把材料、事实和任务分开保存。访谈和文档是来源，从中提取出的目标、约束、决定等进入项目记忆，任务再取用相关上下文。事实保留出处，变化通过新记录替代旧记录，而不是直接抹去过去。</p>
+<p>OpenFDE 的设计<sup><a href="../../../book/references/#ref-805">【805】</a></sup>把材料、事实和任务分开保存。访谈和文档是来源，从中提取出的目标、约束、决定等进入项目记忆，任务再取用相关上下文。事实保留出处，变化通过新记录替代旧记录，而不是直接抹去过去。</p>
 <p>不用先搭知识图谱，也能采用这个思路。一条有用的项目记录应能回答：</p>
 <table>
 <thead>
@@ -9219,7 +9249,7 @@
 <p>出处能帮助追查，但不能单独证明内容正确。一个销售承诺和一条业务政策都可能有来源，发生冲突时仍要找有权决定的人处理。</p>
 <h2 id="25">2.5 测试过了，谁说这次交付完成了<a class="headerlink" href="#25" title="Permanent link">&para;</a></h2>
 <p>“已经上线”“效果不错”“客户接受了”经常出现在同一份周报里，但它们回答的是不同问题。</p>
-<p>FDEOps 的<a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/close.md">交接流程</a>要求区分承诺、测到的结果和客户接受的结果。这个区别可以直接放进项目沟通里：</p>
+<p>FDEOps 的交接流程<sup><a href="../../../book/references/#ref-813">【813】</a></sup>要求区分承诺、测到的结果和客户接受的结果。这个区别可以直接放进项目沟通里：</p>
 <table>
 <thead>
 <tr>
@@ -9248,10 +9278,10 @@
 </table>
 <p>在订单助手里，工程师可以演示草稿生成正确，但客服还可能花更多时间检查它。即使试点看起来省时，也要说明哪些工单算进来了，生成失败和转人工有没有被排除，以及业务验收人是否接受这个口径。</p>
 <p>如果客户说“先上线试试，收益下个月再看”，就把它记成带条件的试用决定，写明下次看什么、由谁决定继续。不要把它写成“项目价值已验收”。项目负责人同意试用，也不能代替数据、权限或业务政策要求的审批。</p>
-<p>工具中的状态也容易造成误会。OpenFDE 在本章引用版本中已有 <a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/apps/cli/src/commands/eval.ts"><code>eval</code> 命令</a>，会记录评判结果；但<a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/dispatch/tasks.ts">任务状态转换</a>没有把评测通过设为进入 <code>accepted</code> 的硬条件。因此，即使任务显示“已接受”，还得知道是谁确认、依据是什么。</p>
+<p>工具中的状态也容易造成误会。OpenFDE 在本章引用版本中已有 <code>eval</code> 命令<sup><a href="../../../book/references/#ref-814">【814】</a></sup>，会记录评判结果；但任务状态转换<sup><a href="../../../book/references/#ref-815">【815】</a></sup>没有把评测通过设为进入 <code>accepted</code> 的硬条件。因此，即使任务显示“已接受”，还得知道是谁确认、依据是什么。</p>
 <h2 id="26">2.6 交接时，换一个人处理故障<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <p>文档讲得很清楚，原开发者演示也很顺，不代表接手团队真的会用。</p>
-<p>Applied AI Field Guide 的<a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/adoption-and-handoff.md">交接案例</a>把接手方需要完成的事情单独列出来：添加评测样本、发布和回滚、处理异常、支持用户。FDEOps 则强调，交接说明要能帮接到告警的人解决问题，而不只是介绍架构。</p>
+<p>Applied AI Field Guide 的交接案例<sup><a href="../../../book/references/#ref-816">【816】</a></sup>把接手方需要完成的事情单独列出来：添加评测样本、发布和回滚、处理异常、支持用户。FDEOps 则强调，交接说明要能帮接到告警的人解决问题，而不只是介绍架构。</p>
 <p>订单助手交接时，可以在测试环境安排三次操作，由接手同事动手，原工程师只观察：</p>
 <p><strong>第一次，让 ERP 暂时不可用。</strong>接手的人能否看懂告警，找到失败请求，停用受影响的功能，并让客服继续按原流程处理？如果还得打电话问原工程师“这个开关在哪”，就把这一步补进操作说明，再做一次。</p>
 <p><strong>第二次，调整一条政策。</strong>请接手同事更新测试政策、确认检索取到了新版本，再加入一条“不允许承诺交期”的回归样本。这样能看到他是否理解政策、索引、提示词和测试之间的关系，而不只是会重启服务。</p>
@@ -9259,46 +9289,15 @@
 <p>每次演练只记三件事：谁操作、哪里卡住、下一次怎样才能不再依赖原工程师。若接手团队缺少生产账号、权限或支持时间，要由双方明确补齐安排；多写几页文档解决不了这些问题。</p>
 <p>到正式交接时，至少能找到日常维护人、备用联系人、故障升级路径，以及仍由原交付团队承担的事项。客户知道出了事该找谁，接手的人也知道自己需要负责到哪里。</p>
 <h2 id="27">2.7 第二个客户来了，不要复制第一个客户的全部做法<a class="headerlink" href="#27" title="Permanent link">&para;</a></h2>
-<p>FDEstack 的跨客户经验记录，以及 FDEOps 的<a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/encode-pattern.md">模式整理</a>，都希望下一次项目不用从零开始。真正值得带走的是排查方法、接口设计和测试思路，不是客户的原始材料。</p>
+<p>FDEstack 的跨客户经验记录，以及 FDEOps 的模式整理<sup><a href="../../../book/references/#ref-817">【817】</a></sup>，都希望下一次项目不用从零开始。真正值得带走的是排查方法、接口设计和测试思路，不是客户的原始材料。</p>
 <p>比如“库存字段名相同，含义也可能不同”是一条值得复用的提醒；第一家客户的订单、价格和内部政策，则不能直接进入共享经验库。把经验写成“接库存接口前，核对是否扣除了预留数量”，下一家仍然要用自己的数据确认。</p>
 <p>也不要把一次观察变成行业规则。“在客户 A 的当前网关配置下，某种鉴权方式不可用”有明确范围；“这种 ERP 都不支持该鉴权方式”就说过头了。保留环境、来源和待验证条件，复用才不会变成传播旧误会。</p>
 <p>项目记录放在哪里，同样要按客户要求决定。FDEstack 使用私有 Git 仓库，FDEOps 默认使用本地文件，OpenFDE 使用本地数据库，但这些选择都不自动等于“数据不会离开机器”。编程助手读取文件后可能发送给模型服务，电脑也可能启用了云同步。</p>
-<p>OpenFDE 的<a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/extraction/anthropic.ts">Claude 抽取实现</a>会发送待抽取的文本或附件；FDEOps 的<a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md">隐私说明</a>也区分了本地 CLI 和模型服务的数据传输。不能只看见 local-first，就直接导入客户会议纪要。</p>
+<p>OpenFDE 的Claude 抽取实现<sup><a href="../../../book/references/#ref-818">【818】</a></sup>会发送待抽取的文本或附件；FDEOps 的隐私说明<sup><a href="../../../book/references/#ref-819">【819】</a></sup>也区分了本地 CLI 和模型服务的数据传输。不能只看见 local-first，就直接导入客户会议纪要。</p>
 <p>开始时，一份范围约定、一张待确认问题表、一份决策与试验记录，再加验收和交接说明，通常已经能把工作接起来。等资料多到难以查找，再考虑自动提取、图谱和任务工作台，不必为了采用一个工具先填写它的全部模板。</p>
 <h2 id="28">2.8 来源与继续阅读<a class="headerlink" href="#28" title="Permanent link">&para;</a></h2>
-<p>资料整理日期：<strong>2026-09-10</strong>；2026-09-15 另按所引提交复核了 OpenFDE 的评测记录、任务接受条件与 Claude 抽取数据流。本章借鉴工作方法并用订单场景重新组织，不把原项目的全部流程当作通用标准。链接固定到阅读时的提交，方便对照。</p>
-<table>
-<thead>
-<tr>
-<th>项目</th>
-<th>建议先看哪里</th>
-<th>引用版本</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://github.com/davidahmann/applied-ai-field-guide">Applied AI Field Guide</a></td>
-<td><a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/guide/field-guide-in-five-minutes.md">五分钟导读</a>、发票案例中的范围调整和接手演练</td>
-<td><code>6b557eb</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/Dan-Cleary/fdestack">FDEstack</a></td>
-<td><a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/README.md">八个 Skills 的总览</a>，尤其是待确认问题、PoC 结论和生产实现之间的衔接</td>
-<td><code>5524460</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/memovai/openfde">OpenFDE</a></td>
-<td><a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md">架构说明</a>，看来源、事实、任务和上下文怎样连接</td>
-<td><code>e2dec16</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/suboss87/fdeops">FDEOps</a></td>
-<td><a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/README.md">项目总览</a>、需求变更和交接技能</td>
-<td><code>cc96340</code></td>
-</tr>
-</tbody>
-</table>
-<p>需要补技术实现时，可以继续读<a href="../../../engineering/02-request-reliability/04-retry-timeout-idempotency-circuit-breaker/">重试与幂等</a>、<a href="../../../engineering/05-release-pipeline/09-prompt-model-data-versioning/">版本管理</a>和<a href="../../../engineering/06-performance-operations/13-feedback-loop-data-flywheel/">反馈数据处理</a>。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-fde-02">集中参考资料章节</a>。</p>
 <p>返回 <a href="../">现场经验模块</a>。</p>
 
 
@@ -9322,7 +9321,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

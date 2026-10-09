@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: The Core of the Model Context Protocol","description":"Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: The Core of the Model Context Protocol","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: The Core of the Model Context Protocol","description":"Explains the problems MCP solves, its Host–Client–Server architecture, and the boundary between MCP and function calling.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: The Core of the Model Context Protocol","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: The Core of the Model Context Protocol","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/02-mcp/04-what-is-mcp/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9390,38 +9415,37 @@
 <li><strong>A second application needs the same tool.</strong> Cursor's integration differs from that of your original application, so you do the work again.</li>
 <li><strong>The tool provider upgrades its API.</strong> Every consuming application updates its own code.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    subgraph BEFORE["Separate integrations: a simplified model with M×N relationships"]
-        A1[Claude Desktop] --- T1[GitHub]
-        A1 --- T2[Slack]
-        A1 --- T3[Postgres]
-        A2[Cursor] --- T1
-        A2 --- T2
-        A2 --- T3
-        A3[Custom agent] --- T1
-        A3 --- T2
-        A3 --- T3
-    end</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["M applications"] --- PAIRS["M × N integrations"]
+    PAIRS --- TOOLS["N external systems"]</code></pre>
+<p>For example, Claude Desktop, Cursor, and a custom agent may each integrate separately with GitHub, Slack, and Postgres. The nine pairwise relationships illustrate the simplified <code>M × N</code> maintenance model; the lines represent integration relationships rather than execution order.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Separate integrations: a simplified model with M×N relationships</li>
+</ul>
 <p>If every application independently integrates every tool, there are M×N interface combinations. This is a simplified model of duplicated work, not a historical measurement. Shared SDKs, internal APIs, and adapter layers can also reduce duplication.</p>
 <h2 id="43-mcps-central-idea-turn-mn-into-mn"><span id="43-mcp-mn-mn" class="legacy-heading-anchor" aria-hidden="true"></span>4.3 MCP's central idea: turn M×N into M+N<a class="headerlink" href="#43-mcps-central-idea-turn-mn-into-mn" title="Permanent link">&para;</a></h2>
 <p>Think of MCP as a <strong>common interface such as USB</strong>: shared conventions reduce the need for bespoke adapters. USB still has drivers, versions, and differences in device capabilities; MCP has comparable limitations.</p>
 <p>MCP gives AI applications and tool providers a common standard:</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph AFTER["Shared protocol: a simplified model with M Clients + N Servers"]
-        A1[Claude Desktop] --&gt; P((MCP))
-        A2[Cursor] --&gt; P
-        A3[Custom agent] --&gt; P
-        P --&gt; S1[GitHub MCP Server]
-        P --&gt; S2[Slack MCP Server]
-        P --&gt; S3[Postgres MCP Server]
-    end</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    CLIENTS["M Clients"] --&gt; MCP["Shared MCP contract"]
+    MCP --&gt; SERVERS["N Servers"]</code></pre>
+<p>The same three applications can use MCP Clients with GitHub, Slack, and Postgres MCP Servers. The simplified cost model is <code>M Clients + N Servers</code>. The shared contract is not an extra central broker: hosts still create the appropriate Client–Server connections.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Shared protocol: a simplified model with M Clients + N Servers</li>
+</ul>
 <p>Once a provider implements a Server, applications supporting compatible versions, transports, and capabilities can reuse that integration. Authentication, data mapping, permissions, and deployment still need configuration. This is not a promise of “zero-code integration with any client.”</p>
 <p><code>tools/list</code> discovers tools on a <strong>known Server</strong>; it does not find Servers on the internet. Results may be paginated. Tool updates also require cache refreshes, review of descriptions and permissions, and new model-routing tests—not automatic trust in newly added tools.</p>
 <h2 id="44-the-three-roles-host-client-and-server"><span id="44-hostclientserver" class="legacy-heading-anchor" aria-hidden="true"></span>4.4 The three roles: Host, Client, and Server<a class="headerlink" href="#44-the-three-roles-host-client-and-server" title="Permanent link">&para;</a></h2>
 <p>MCP uses a client-host-server architecture. There are three roles, not two—an easy distinction to miss.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph HOST["Host process: Claude Desktop / Cursor / your agent"]
-        H["Host&lt;br/&gt;Coordinator: lifecycle, security policies, user authorization"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph HOST["Host process"]
+        direction TB
+        H["Host"]
         C1["Client 1"]
         C2["Client 2"]
         C3["Client 3"]
@@ -9431,17 +9455,27 @@
     end
 
     subgraph LOCAL["Local"]
-        S1["Server 1&lt;br/&gt;Filesystem"]
-        S2["Server 2&lt;br/&gt;Database"]
+        direction TB
+        S1["Server 1"]
+        S2["Server 2"]
     end
 
     subgraph REMOTE["Remote"]
-        S3["Server 3&lt;br/&gt;External API"]
+        direction TB
+        S3["Server 3"]
     end
 
     C1 --&gt; S1
     C2 --&gt; S2
     C3 --&gt; S3</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Host process: Claude Desktop / Cursor / your agent</li>
+<li>Host Coordinator: lifecycle, security policies, user authorization</li>
+<li>Server 1 Filesystem</li>
+<li>Server 2 Database</li>
+<li>Server 3 External API</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9569,7 +9603,7 @@
 <h3 id="472-per-request-negotiation-and-legacy-compatibility"><span id="472" class="legacy-heading-anchor" aria-hidden="true"></span>4.7.2 Per-request negotiation and legacy compatibility<a class="headerlink" href="#472-per-request-negotiation-and-legacy-compatibility" title="Permanent link">&para;</a></h3>
 <p>In the new specification, requests carry the protocol version and Client capabilities through <code>_meta.io.modelcontextprotocol/*</code>. A Client may first call <code>server/discover</code> to learn the Server's supported versions and capabilities, or send an application request with that metadata directly. For ongoing notifications, the Client explicitly establishes a subscription. When the Server needs model or user input, it returns an <code>InputRequiredResult</code>; the Client supplies the missing input and resubmits the original request.</p>
 <p>Interoperating with legacy Servers requires a <strong>dual-era</strong> implementation that explicitly supports both generations. Only such implementations can follow the compatibility matrix to fall back to <code>initialize</code>, <code>notifications/initialized</code>, and legacy session semantics. A modern-only SDK may have no such path. Do not describe the old handshake as a mandatory step in every MCP interaction.</p>
-<p>In 2026-07-28, all results also require <code>resultType</code>; read and list results carry <code>ttlMs</code> and <code>cacheScope</code>. Sampling, Roots, and Logging are <strong>Deprecated</strong>: retained for compatibility, but not recommended for new implementations. Tasks have moved to the official optional extension <code>io.modelcontextprotocol/tasks</code>. Extensions, draft SEPs, and the core protocol are different release categories; see the <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">changelog</a>.</p>
+<p>In 2026-07-28, all results also require <code>resultType</code>; read and list results carry <code>ttlMs</code> and <code>cacheScope</code>. Sampling, Roots, and Logging are <strong>Deprecated</strong>: retained for compatibility, but not recommended for new implementations. Tasks have moved to the official optional extension <code>io.modelcontextprotocol/tasks</code>. Extensions, draft SEPs, and the core protocol are different release categories; see the changelog<sup><a href="../../../book/references/#ref-277">【277】</a></sup>.</p>
 <h3 id="473-engineering-implications"><span id="473" class="legacy-heading-anchor" aria-hidden="true"></span>4.7.3 Engineering implications<a class="headerlink" href="#473-engineering-implications" title="Permanent link">&para;</a></h3>
 <p><strong>Multiple versions routinely coexist.</strong> For features such as transports, authorization, sampling, or tasks, check the Client, Server, and target protocol revision together. A tutorial is not evidence that a feature is either present or absent.</p>
 <h2 id="48-why-the-mcp-ecosystem-grew-quickly"><span id="48-mcp" class="legacy-heading-anchor" aria-hidden="true"></span>4.8 Why the MCP ecosystem grew quickly<a class="headerlink" href="#48-why-the-mcp-ecosystem-grew-quickly" title="Permanent link">&para;</a></h2>
@@ -9588,7 +9622,7 @@
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">mcp</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></code></pre></div>
 <p>The parameter types generate the input JSON Schema, and the docstring supplies the tool description. The SDK saves some message-construction work, but does not replace business permission checks or deployment configuration.</p>
-<p><strong>Tool integrations can be reused.</strong> Distinguish officially maintained Servers, community implementations, and archived examples. The old <code>@modelcontextprotocol/server-github</code> is archived; GitHub's official implementation is <a href="https://github.com/github/github-mcp-server">github/github-mcp-server</a>. The following Host configuration uses a locally owned Server rather than installing an archived package:</p>
+<p><strong>Tool integrations can be reused.</strong> Distinguish officially maintained Servers, community implementations, and archived examples. The old <code>@modelcontextprotocol/server-github</code> is archived; GitHub's official implementation is github/github-mcp-server<sup><a href="../../../book/references/#ref-284">【284】</a></sup>. The following Host configuration uses a locally owned Server rather than installing an archived package:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"demo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -9624,17 +9658,8 @@
 <li><strong>Check the specification, SDK, and Host separately.</strong> Archived examples are not substitutes for maintained implementations.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Version-status review: the original manuscript rechecked the following pinned-version changes and compatibility notes on 2026-09-15. It uses a fixed protocol baseline; a dynamic page saying “latest” is not evidence of SDK support.</li>
-<li><a href="https://modelcontextprotocol.io/specification/versioning">MCP version status</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">MCP 2026-07-28 changelog</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol documentation</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP specification 2026-07-28</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">MCP version compatibility</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture">MCP architecture</a></li>
-<li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
-<li><a href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 specification</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-04">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9657,7 +9682,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：Query 理解与改写","description":"解释指代消解、多查询扩展、HyDE、Step-back、查询分解和路由的适用条件，关注语义漂移、原查询兜底与证据边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/12-query-rewriting/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：Query 理解与改写","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/12-query-rewriting/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十二章：Query 理解与改写","description":"解释指代消解、多查询扩展、HyDE、Step-back、查询分解和路由的适用条件，关注语义漂移、原查询兜底与证据边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/12-query-rewriting/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十二章：Query 理解与改写","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/12-query-rewriting/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十二章：Query 理解与改写","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/12-query-rewriting/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9308,16 +9333,11 @@
 </tbody>
 </table>
 <p>这四行对应了<strong>四种不同的鸿沟</strong>，而 Query 改写的各种方法，正是分别针对这四种鸿沟：</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Query 与文档之间的鸿沟] --&gt; G1[表述鸿沟&lt;br/&gt;同一意思不同说法]
-    G --&gt; G2[指代鸿沟&lt;br/&gt;多轮对话中的省略]
-    G --&gt; G3[粒度鸿沟&lt;br/&gt;问题太宽泛或太复合]
-    G --&gt; G4[抽象层级鸿沟&lt;br/&gt;问题太具体或太抽象]
-
-    G1 --&gt; M1[直接改写 / 多 Query 扩展 / HyDE]
-    G2 --&gt; M2[指代消解]
-    G3 --&gt; M3[查询分解]
-    G4 --&gt; M4[Step-back 提问]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    G[Query 与文档的鸿沟] --&gt; D[诊断不匹配原因]
+    D --&gt; M[选择改写方法]</code></pre>
+<p>方法要对应具体鸿沟：同一意思的不同表述可用直接改写、多 Query 扩展或 HyDE；多轮对话中省略的上下文需要指代消解；宽泛或复合问题需要查询分解；抽象层级不合适时可用 Step-back 提问。</p>
 <blockquote>
 <p><strong>理解这些方法时，重点是它们分别对应哪种鸿沟，而不是只记方法名。</strong></p>
 </blockquote>
@@ -9347,11 +9367,13 @@
 <p>代价也很明确：一次 LLM 调用、N 倍的检索开销（可并行），以及后续的融合去重。这更适合召回率优先、可以接受额外延迟的场景。</p>
 <h2 id="125-hyde">12.5 HyDE：假设性文档嵌入<a class="headerlink" href="#125-hyde" title="Permanent link">&para;</a></h2>
 <p>HyDE 不直接用 Query 检索，而是<strong>先让 LLM 生成一个“假想的答案文档”，再用这个假想文档去做向量检索</strong>。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query: 年假怎么请] --&gt; LLM[LLM 生成假想答案]
-    LLM --&gt; H["假想文档: 员工申请年休假&lt;br/&gt;需提前 3 个工作日在系统提交&lt;br/&gt;经直属主管审批..."]
+    LLM --&gt; H[假想年假政策]
     H --&gt; EMB[向量化]
     EMB --&gt; SEARCH[检索真实文档]</code></pre>
+<p>针对“年假怎么请”，假想文本可能写成“员工申请年休假需提前 3 个工作日在系统提交，经直属主管审批……”。这是生成的检索辅助材料，不是已核实的公司政策；将它向量化是为了检索真实文档。</p>
 <p>它之所以有效，是因为向量检索本质上在比较两段文本的相似度，而<strong>问题和答案在语义空间里并不天然接近</strong>：问题是疑问句、通常很短；文档是陈述句、通常更长。</p>
 <p>用一个<strong>形式上更像文档的假想答案</strong>去检索，匹配的就变成「文档 vs 文档」而不是「问题 vs 文档」，<strong>在语义空间里的距离往往更近</strong>。</p>
 <p>假想文档只提供检索信号，不能进入证据集合或被引用。HyDE 原论文在无相关性标签的检索设置中，用生成文档搭配无监督编码器；对已针对 Query—文档训练的双塔，收益不一定相同。假想实体、数值或结论虽不必作为事实成立，却可能把检索带偏，所以仍须保留原查询并做对照。</p>
@@ -9495,13 +9517,8 @@
 <li><strong>保留原始 Query 兜底</strong>，组合方法前比较新增命中、丢失命中和实际成本。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2212.10496">Precise Zero-Shot Dense Retrieval without Relevance Labels</a></li>
-<li><a href="https://arxiv.org/abs/2310.06117">Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.14283">Query Rewriting for Retrieval-Augmented Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-12">集中参考资料章节</a>。</p>
 
 
 
@@ -9524,7 +9541,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

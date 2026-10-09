@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Agent Design Patterns","description":"Compare agent design patterns including ReAct, Plan-and-Execute, routing, and evaluator-optimizer loops, and choose among them under different task constraints.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/04-agent-design-patterns/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Agent Design Patterns","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/04-agent-design-patterns/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Agent Design Patterns","description":"Compare agent design patterns including ReAct, Plan-and-Execute, routing, and evaluator-optimizer loops, and choose among them under different task constraints.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/04-agent-design-patterns/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Agent Design Patterns","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/04-agent-design-patterns/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: Agent Design Patterns","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/04-agent-design-patterns/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9763,27 +9788,29 @@
 <li><strong>Reflection / Reflexion</strong>: revise results using evaluation and feedback; Reflexion is a specific research method with episodic memory.</li>
 </ol>
 <p>These patterns are often combined, usually in layers:</p>
-<pre class="mermaid"><code>flowchart TB
-    G[User goal] --&gt; WF[Workflow / Safety boundary]
-    WF --&gt; P[Planner / Global plan]
-    P --&gt; E[Executor]
-    E --&gt; R[Local ReAct loop]
-    R --&gt; V[Verifier / Evaluator]
-    V --&gt;|Pass| DONE[Complete]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["User goal"] --&gt; WF["Workflow / Safety&lt;br/&gt;boundary"]
+    WF --&gt; P["Planner / Global plan"]
+    P --&gt; E["Executor"]
+    E --&gt; R["Local ReAct loop"]
+    R --&gt; V["Verifier / Evaluator"]
+    V --&gt;|Pass| DONE["Complete"]
     V --&gt;|Local failure| R
     V --&gt;|Plan invalidated| P
-    V --&gt;|Human judgment needed| H[Human-in-the-loop]</code></pre>
+    V --&gt;|Human judgment needed| H["Human-in-the-loop"]</code></pre>
 <h2 id="42-react-alternating-reasoning-and-action"><span id="42-react" class="legacy-heading-anchor" aria-hidden="true"></span>4.2 ReAct: alternating reasoning and action<a class="headerlink" href="#42-react-alternating-reasoning-and-action" title="Permanent link">&para;</a></h2>
 <p>ReAct (Reasoning and Acting) combines reasoning with external actions. Its classic formulation is:</p>
 <blockquote>
 <p><strong>Thought → Action → Observation → Thought</strong></p>
 </blockquote>
-<p>This is a schematic view of the <a href="https://arxiv.org/abs/2210.03629">original ReAct paper</a>, not a requirement to emit a Thought before every action. For decision-making tasks, the paper allows sparse reasoning steps, which can also generate, track, and update plans. Its main experiments use in-context examples rather than updating model weights after each tool call. The paper also includes fine-tuning experiments; those should not be confused with prompting-based ReAct.</p>
-<pre class="mermaid"><code>flowchart LR
-    T[Thought / Decide] --&gt; A[Action]
-    A --&gt; O[Observation]
+<p>This is a schematic view of the original ReAct paper<sup><a href="../../../book/references/#ref-268">【268】</a></sup>, not a requirement to emit a Thought before every action. For decision-making tasks, the paper allows sparse reasoning steps, which can also generate, track, and update plans. Its main experiments use in-context examples rather than updating model weights after each tool call. The paper also includes fine-tuning experiments; those should not be confused with prompting-based ReAct.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Thought / Decide"] --&gt; A["Action"]
+    A --&gt; O["Observation"]
     O --&gt; T
-    T --&gt; F[Final Answer]</code></pre>
+    T --&gt; F["Final Answer"]</code></pre>
 <h3 id="421-how-one-react-iteration-works"><span id="421-react" class="legacy-heading-anchor" aria-hidden="true"></span>4.2.1 How one ReAct iteration works<a class="headerlink" href="#421-how-one-react-iteration-works" title="Permanent link">&para;</a></h3>
 <h4 id="thought">Thought<a class="headerlink" href="#thought" title="Permanent link">&para;</a></h4>
 <p>The model analyzes the current goal, state, and observations, then chooses its next strategy.</p>
@@ -9853,13 +9880,14 @@ s_{t+1}=Update(s_t,a_t,o_{t+1})
 <li>Periodic checks against the global goal.</li>
 <li>External verification of critical steps.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    O[Observation] --&gt; D[Decide]
-    D --&gt; C{No progress or unauthorized action?}
-    C --&gt;|Yes| RP[Replan or stop]
-    C --&gt;|No| A[Action]
-    A --&gt; U[Update structured state]
-    U --&gt; G{Still aligned with the global goal?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --&gt; D["Decide"]
+    D --&gt; C["No progress or&lt;br/&gt;unauthorized action?"]
+    C --&gt;|Yes| RP["Replan or stop"]
+    C --&gt;|No| A["Action"]
+    A --&gt; U["Update structured state"]
+    U --&gt; G["Still aligned with the&lt;br/&gt;global goal?"]
     G --&gt;|Yes| O
     G --&gt;|No| RP</code></pre>
 <h2 id="43-plan-and-execute-separating-planning-from-execution"><span id="43-plan-and-execute" class="legacy-heading-anchor" aria-hidden="true"></span>4.3 Plan-and-Execute: separating planning from execution<a class="headerlink" href="#43-plan-and-execute-separating-planning-from-execution" title="Permanent link">&para;</a></h2>
@@ -9870,19 +9898,45 @@ s_{t+1}=Update(s_t,a_t,o_{t+1})
 <li><strong>Replanner</strong>: updates the remaining plan from results or ends the task.</li>
 </ol>
 <p>Different models can fill these roles, or the same model can fill them with different contexts.</p>
+<p>Build and execute the plan.</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; P[Planner]
-    P --&gt; PLAN[Plan / DAG]
-    PLAN --&gt; E[Executor]
-    E --&gt; O[Execution results]
-    O --&gt; V{Is the plan still valid?}
-    V --&gt;|Yes| N{Any steps remaining?}
-    N --&gt;|Yes| E
-    N --&gt;|No| ACCEPT{Overall acceptance passed?}
-    ACCEPT --&gt;|Yes| DONE[Complete]
-    ACCEPT --&gt;|No| RP
-    V --&gt;|No| RP[Replanner]
+    G[Goal]
+    P[Planner]
+    PLAN[Plan / DAG]
+    E[Executor]
+    O[Execution results]
+    G --&gt; P
+    P --&gt; PLAN
+    PLAN --&gt; E
+    E --&gt; O</code></pre>
+<p>Check whether execution has invalidated the plan.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    PLAN["Plan / DAG"]
+    E["Executor"]
+    O["Execution results"]
+    V["Is the plan still valid?"]
+    RP["Replanner"]
+    PLAN --&gt; E
+    E --&gt; O
+    O --&gt; V
+    V --&gt;|No| RP
     RP --&gt; PLAN</code></pre>
+<p>Separate remaining steps from overall acceptance.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    V["Is the plan still valid?"]
+    N["Any steps remaining?"]
+    E["Executor"]
+    ACCEPT["Overall acceptance&lt;br/&gt;passed?"]
+    DONE["Complete"]
+    RP["Replanner"]
+    V --&gt;|Yes| N
+    N --&gt;|Yes| E
+    N --&gt;|No| ACCEPT
+    ACCEPT --&gt;|Yes| DONE
+    ACCEPT --&gt;|No| RP
+    V --&gt;|No| RP</code></pre>
 <h3 id="431-a-plan-should-be-more-than-a-natural-language-list"><span id="431" class="legacy-heading-anchor" aria-hidden="true"></span>4.3.1 A plan should be more than a natural-language list<a class="headerlink" href="#431-a-plan-should-be-more-than-a-natural-language-list" title="Permanent link">&para;</a></h3>
 <p>A reliable plan step should ideally specify:</p>
 <ul>
@@ -9968,11 +10022,12 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <p>This is teaching pseudocode, not a universal tool protocol. The Worker must substitute actual outputs for <code>#E1</code> and <code>#E2</code> and check references and dependencies rather than send variable names literally to the search tool. This reduces planning-model round trips, but cannot anticipate every conditional branch. If returned content determines whether a new step is needed, the system still needs replanning or a fallback to interactive execution.</p>
 <h3 id="442-dag-planning">4.4.2 DAG planning<a class="headerlink" href="#442-dag-planning" title="Permanent link">&para;</a></h3>
 <p>A plan with explicit dependencies can be represented as a directed acyclic graph:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Research competitor A] --&gt; D[Comparative analysis]
-    B[Research competitor B] --&gt; D
-    C[Collect industry trends] --&gt; E[Analyze trend implications]
-    D --&gt; F[Generate report]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Research&lt;br/&gt;competitor A"] --&gt; D["Comparative&lt;br/&gt;analysis"]
+    B["Research&lt;br/&gt;competitor B"] --&gt; D
+    C["Collect&lt;br/&gt;industry&lt;br/&gt;trends"] --&gt; E["Analyze&lt;br/&gt;trend&lt;br/&gt;implications"]
+    D --&gt; F["Generate&lt;br/&gt;report"]
     E --&gt; F</code></pre>
 <p>Steps can run concurrently when their data dependencies are satisfied, they have no shared-write conflicts, and resources permit. A DAG captures acyclic dependencies within one version of a plan; an outer state machine should manage retry and replanning loops.</p>
 <h3 id="443-llmcompiler">4.4.3 LLMCompiler<a class="headerlink" href="#443-llmcompiler" title="Permanent link">&para;</a></h3>
@@ -9982,15 +10037,16 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <li>Task Fetching Unit: schedules tasks as soon as their dependencies are satisfied.</li>
 <li>Executor: actually executes ready tool tasks.</li>
 </ul>
-<p>These are the three components listed in the <a href="https://arxiv.org/abs/2312.04511">LLMCompiler paper</a>. Implementations with replanning may also add a Joiner to aggregate results and decide whether to finish or continue. Do not confuse the Joiner with the tool-executing Executor.</p>
+<p>These are the three components listed in the LLMCompiler paper<sup><a href="../../../book/references/#ref-454">【454】</a></sup>. Implementations with replanning may also add a Joiner to aggregate results and decide whether to finish or continue. Do not confuse the Joiner with the tool-executing Executor.</p>
 <p>Such designs address not just planning quality but also execution parallelism, model-call count, and total latency.</p>
 <h2 id="45-reflection-improving-results-through-feedback"><span id="45-reflection" class="legacy-heading-anchor" aria-hidden="true"></span>4.5 Reflection: improving results through feedback<a class="headerlink" href="#45-reflection-improving-results-through-feedback" title="Permanent link">&para;</a></h2>
 <p>Reflection adds evaluation after generation or execution:</p>
-<pre class="mermaid"><code>flowchart LR
-    G[Generate / Execute] --&gt; E[Evaluate]
-    E --&gt; D{Meets the criteria?}
-    D --&gt;|Yes| DONE[Complete]
-    D --&gt;|No| FB[Generate feedback]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --&gt; E["Evaluate"]
+    E --&gt; D["Meets the criteria?"]
+    D --&gt;|Yes| DONE["Complete"]
+    D --&gt;|No| FB["Generate feedback"]
     FB --&gt; G</code></pre>
 <p>Evaluation can occur:</p>
 <ul>
@@ -10039,14 +10095,15 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <li><strong>Episodic Memory</strong>: supplies those lessons on subsequent attempts.</li>
 </ul>
 <p>This does not require four separate models. Memory is storage, and the Evaluator can use environmental rewards, rules, or tests. The implementation depends on the feedback available for the task.</p>
-<pre class="mermaid"><code>flowchart TB
-    A[Actor] --&gt; ENV[Environment / Tools]
-    ENV --&gt; TRAJ[Execution trajectory and results]
-    TRAJ --&gt; E[Evaluator]
-    E --&gt; PASS{Success?}
-    PASS --&gt;|Yes| DONE[Finish]
-    PASS --&gt;|No| SR[Self-Reflection]
-    SR --&gt; MEM[Episodic memory]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Actor"] --&gt; ENV["Environment / Tools"]
+    ENV --&gt; TRAJ["Execution trajectory and&lt;br/&gt;results"]
+    TRAJ --&gt; E["Evaluator"]
+    E --&gt; PASS["Success?"]
+    PASS --&gt;|Yes| DONE["Finish"]
+    PASS --&gt;|No| SR["Self-Reflection"]
+    SR --&gt; MEM["Episodic memory"]
     MEM --&gt; A</code></pre>
 <h3 id="461-the-mistake-notebook-analogy"><span id="461" class="legacy-heading-anchor" aria-hidden="true"></span>4.6.1 The “mistake notebook” analogy<a class="headerlink" href="#461-the-mistake-notebook-analogy" title="Permanent link">&para;</a></h3>
 <p>An ordinary retry may simply generate again. Reflexion first identifies:</p>
@@ -10080,22 +10137,12 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <h2 id="47-combining-the-three-patterns"><span id="47" class="legacy-heading-anchor" aria-hidden="true"></span>4.7 Combining the three patterns<a class="headerlink" href="#47-combining-the-three-patterns" title="Permanent link">&para;</a></h2>
 <p>A common layered composition is:</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; P[Plan-and-Execute&lt;br/&gt;Generate global milestones]
-    P --&gt; S1[Step 1]
-    P --&gt; S2[Step 2]
-    P --&gt; S3[Step N]
-
-    S1 --&gt; R1[ReAct&lt;br/&gt;Local exploration and tool calls]
-    S2 --&gt; R2[ReAct&lt;br/&gt;Local exploration and tool calls]
-    S3 --&gt; R3[ReAct&lt;br/&gt;Local exploration and tool calls]
-
-    R1 --&gt; V[Reflection / Verifier]
-    R2 --&gt; V
-    R3 --&gt; V
-
+    P[Plan-and-Execute] --&gt; R[ReAct per step]
+    R --&gt; V[Reflection / Verifier]
     V --&gt;|Local failure| RETRY[Local retry]
     V --&gt;|Plan invalidated| P
     V --&gt;|Pass| DONE[Complete]</code></pre>
+<p>The goal enters Plan-and-Execute to generate global milestones and steps 1 through N. Each step has its own ReAct loop for local exploration and tool calls; all step loops feed the same reflection/verifier stage. The single ReAct box denotes repeated step-level loops, not one shared context or a claim that the steps must execute sequentially.</p>
 <p>Responsibilities are divided as follows:</p>
 <ul>
 <li><strong>Plan-and-Execute</strong>: maintain global direction.</li>
@@ -10107,14 +10154,15 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 <h2 id="48-agentic-workflows-a-common-production-approach"><span id="48-agentic-workflow" class="legacy-heading-anchor" aria-hidden="true"></span>4.8 Agentic workflows: a common production approach<a class="headerlink" href="#48-agentic-workflows-a-common-production-approach" title="Permanent link">&para;</a></h2>
 <p>An agentic workflow surrounds probabilistic decisions with deterministic process control.</p>
 <p>In the terminology of Anthropic's December 2024 <em>Building Effective Agents</em>, routing, fixed parallel branches, and evaluator-optimizer loops can all be workflows: they dispatch inputs, aggregate independent work, and iterate on feedback, respectively. A loop or multiple LLM calls alone do not make an autonomous agent. The key distinction is whether code predetermines subsequent paths or a model chooses them dynamically at runtime.</p>
-<pre class="mermaid"><code>flowchart LR
-    IN[Input] --&gt; V[Validation]
-    V --&gt; ROUTE[Fixed routing]
-    ROUTE --&gt; AG[Constrained agent node]
-    AG --&gt; CHECK[Deterministic verification]
-    CHECK --&gt;|Pass| OUT[Output]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["Input"] --&gt; V["Validation"]
+    V --&gt; ROUTE["Fixed routing"]
+    ROUTE --&gt; AG["Constrained agent node"]
+    AG --&gt; CHECK["Deterministic&lt;br/&gt;verification"]
+    CHECK --&gt;|Pass| OUT["Output"]
     CHECK --&gt;|Repairable| AG
-    CHECK --&gt;|High risk| HUMAN[Human review]</code></pre>
+    CHECK --&gt;|High risk| HUMAN["Human review"]</code></pre>
 <p>For example, in customer support:</p>
 <ul>
 <li>A workflow controls intent classification, authorization checks, and output review.</li>
@@ -10168,18 +10216,20 @@ P_{t+1}=R(P_t,o_{t+1},g,s_t)
 </tbody>
 </table>
 <p>Two basic dimensions can also help:</p>
-<pre class="mermaid"><code>quadrantChart
-    title Task complexity and quality requirements
+<pre class="mermaid"><code>%%{init: {"quadrantChart": {"chartWidth": 440, "chartHeight": 440, "quadrantTextTopPadding": 100}}}%%
+quadrantChart
+    title Complexity and quality
     x-axis Low complexity --&gt; High complexity
-    y-axis Low quality requirement --&gt; High quality requirement
-    quadrant-1 Plan-and-Execute plus Reflection
-    quadrant-2 ReAct plus Reflection
+    y-axis Lower quality bar --&gt; Higher quality bar
+    quadrant-1 Plan + Reflect
+    quadrant-2 ReAct + Reflect
     quadrant-3 Simple workflow
-    quadrant-4 Plan-and-Execute
+    quadrant-4 Plan + Execute
     ReAct: [0.30, 0.40]
-    Plan-and-Execute: [0.78, 0.48]
-    Reflection: [0.40, 0.82]
-    Hybrid Agent: [0.82, 0.85]</code></pre>
+    Plan: [0.78, 0.48]
+    Reflect: [0.40, 0.82]
+    Hybrid: [0.82, 0.85]</code></pre>
+<p>Here, “Plan” means Plan-and-Execute, “Reflect” means Reflection, and “Hybrid” means a hybrid agent.</p>
 <p>This two-dimensional chart is only a conceptual aid. A real decision must also consider risk, latency, cost, verifiability, and the rate of environmental change.</p>
 <h2 id="410-stopping-budgets-and-no-progress-detection"><span id="410" class="legacy-heading-anchor" aria-hidden="true"></span>4.10 Stopping, budgets, and no-progress detection<a class="headerlink" href="#410-stopping-budgets-and-no-progress-detection" title="Permanent link">&para;</a></h2>
 <p>Every pattern needs stopping conditions:</p>
@@ -10259,15 +10309,8 @@ B=(N_{max},T_{max},C_{max},R_{max})
 </ol>
 <p>When combining them, specify which state each control loop changes, who accepts its results, and when it stops. Short tasks do not need every role. After adding a planner or critic, check whether its benefit exceeds the costs of round trips, state management, and mistaken judgments.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2303.11366">Reflexion: Language Agents with Verbal Reinforcement Learning</a></li>
-<li><a href="https://arxiv.org/html/2303.11366v4">Reflexion: original experimental setup and Tables 1–2</a></li>
-<li><a href="https://arxiv.org/abs/2305.18323">ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2312.04511">An LLM Compiler for Parallel Function Calling</a></li>
-<li><a href="https://www.langchain.com/blog/planning-agents">LangChain: Planning Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a> — the architectural distinction cited here comes from the December 2024 article; the live page now notes that parts of its tooling discussion have changed.</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-04">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10290,7 +10333,7 @@ B=(N_{max},T_{max},C_{max},R_{max})
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

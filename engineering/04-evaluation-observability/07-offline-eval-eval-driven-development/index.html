@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Offline Evaluation and Eval-Driven Development","description":"Build contamination-resistant application evaluation datasets and assess changes with paired comparisons, confidence intervals, and judge calibration rather than averages or a handful of examples.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Offline Evaluation and Eval-Driven Development","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Offline Evaluation and Eval-Driven Development","description":"Build contamination-resistant application evaluation datasets and assess changes with paired comparisons, confidence intervals, and judge calibration rather than averages or a handful of examples.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Offline Evaluation and Eval-Driven Development","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Offline Evaluation and Eval-Driven Development","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/07-offline-eval-eval-driven-development/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9218,15 +9243,21 @@
 <h1 id="chapter-7-offline-evaluation-and-eval-driven-development"><span id="eval-driven-development" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 7: Offline Evaluation and Eval-Driven Development<a class="headerlink" href="#chapter-7-offline-evaluation-and-eval-driven-development" title="Permanent link">&para;</a></h1>
 <h2 id="71-eval-driven-development-evaluate-changes-before-accepting-them"><span id="71-eval-driven-development" class="legacy-heading-anchor" aria-hidden="true"></span>7.1 Eval-driven development: evaluate changes before accepting them<a class="headerlink" href="#71-eval-driven-development-evaluate-changes-before-accepting-them" title="Permanent link">&para;</a></h2>
 <p>In traditional software engineering, test-driven development means writing tests before the implementation. The corresponding practice for LLM applications is <strong>eval-driven development (EDD)</strong>: before merging any change to a prompt, routing policy, or model, evaluate it on a fixed dataset to produce comparable scores. “It seems better” is not enough.</p>
-<pre class="mermaid"><code>flowchart LR
-    A["Propose a change&lt;br/&gt;(prompt / model / routing)"] --&gt; B["Evaluate on the golden dataset"]
-    B --&gt; C{"Meets score requirements&lt;br/&gt;with no critical regressions?"}
-    C --&gt;|Yes| D["Merge and begin a staged rollout"]
-    C --&gt;|No| E["Revise the change and iterate"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Propose a&lt;br/&gt;change"] --&gt; B["Evaluate on the&lt;br/&gt;golden dataset"]
+    B --&gt; C["Meets score&lt;br/&gt;requirements"]
+    C --&gt;|Yes| D["Merge and begin&lt;br/&gt;a staged&lt;br/&gt;rollout"]
+    C --&gt;|No| E["Revise the&lt;br/&gt;change and&lt;br/&gt;iterate"]
     E --&gt; A
 
     style C fill:#fff3cd
     style D fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Propose a change (prompt / model / routing)</li>
+<li>Meets score requirements with no critical regressions?</li>
+</ul>
 <p>This process and the release pipeline in <a href="../../05-release-pipeline/10-llm-cicd-canary-ab/">Chapter 10</a> describe two sides of the same work: EDD explains how to validate a change; the release pipeline explains how to deploy it safely once it passes validation.</p>
 <h2 id="72-the-golden-dataset-a-core-asset-for-application-evaluation"><span id="72" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 The golden dataset: a core asset for application evaluation<a class="headerlink" href="#72-the-golden-dataset-a-core-asset-for-application-evaluation" title="Permanent link">&para;</a></h2>
 <p><a href="../../../llm/05-evaluation-selection/">LLM · Evaluation and Model Selection</a> discusses the systematic limitations of academic benchmarks such as MMLU and HumanEval, including data contamination and a mismatch with business use cases. For an application, build a small, carefully curated <strong>golden dataset</strong>:</p>
@@ -9354,17 +9385,8 @@
 <li><strong>Agents and RAG have more specialized evaluation methods.</strong> This chapter establishes the common structure.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>A tool’s lifecycle is not the lifecycle of an evaluation method. OpenAI’s announcement of 2026-06-03 states that its hosted Evals platform will become read-only on 2026-10-31, with the Evals dashboard and API scheduled to shut down on 2026-11-30. Teams using that platform should check their migration plans; this does not imply that the open-source <code>openai/evals</code> project or self-hosted evaluation methods also stop being valid.</p>
-<ul>
-<li><a href="https://github.com/openai/evals">OpenAI Evals</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">OpenAI: Evaluation best practices</a></li>
-<li><a href="https://developers.openai.com/api/docs/deprecations#2026-06-03-evals-platform">OpenAI: 2026-06-03 Evals platform deprecation</a></li>
-<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: Demystifying evals for AI agents</a></li>
-<li><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats._result_classes.BinomTestResult.proportion_ci.html">SciPy: Binomial proportion confidence intervals</a></li>
-<li><a href="https://developers.google.com/machine-learning/guides/rules-of-ml">Google: Rules of Machine Learning - Rule #4: Keep the first model simple and get the infrastructure right</a></li>
-<li><a href="https://www.braintrust.dev/docs/guides/evals">Braintrust: What is an eval?</a></li>
-<li><a href="https://docs.langchain.com/langsmith/evaluation-concepts">LangSmith: Evaluation concepts</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9387,7 +9409,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

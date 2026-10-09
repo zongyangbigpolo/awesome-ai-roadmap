@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Real-Time Full-Duplex Voice Interaction","description":"Explain concurrent listening, dual-stream modeling, semantic endpointing, and interruption-state synchronization in cascaded and native voice dialogue, with a breakdown of first-audible-response latency.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/03-speech-audio/06-realtime-duplex-voice/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Real-Time Full-Duplex Voice Interaction","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/03-speech-audio/06-realtime-duplex-voice/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Real-Time Full-Duplex Voice Interaction","description":"Explain concurrent listening, dual-stream modeling, semantic endpointing, and interruption-state synchronization in cascaded and native voice dialogue, with a breakdown of first-audible-response latency.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/03-speech-audio/06-realtime-duplex-voice/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Real-Time Full-Duplex Voice Interaction","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/03-speech-audio/06-realtime-duplex-voice/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Real-Time Full-Duplex Voice Interaction","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/03-speech-audio/06-realtime-duplex-voice/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9172,13 +9197,16 @@
 <p>At the conversation level, half duplex means “you finish speaking, then it speaks.” Full duplex requires processing input while producing speech and responding to interruptions or backchannels. This is a different layer from whether a communication link can send and receive simultaneously. Full duplex can be implemented by a joint dual-stream model or by continuously running streaming ASR, an LLM, TTS, and a controller; it does not require a single native speech model.</p>
 <h2 id="62-cascaded-pipelines-versus-native-speech-to-speech"><span id="62-vs" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 Cascaded pipelines versus native speech-to-speech<a class="headerlink" href="#62-cascaded-pipelines-versus-native-speech-to-speech" title="Permanent link">&para;</a></h2>
 <p>There are two fundamentally different architectural approaches to voice dialogue:</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Cascade["Cascaded pipeline"]
-        A1[ASR] --&gt; A2[LLM text reasoning] --&gt; A3[TTS]
-    end
-    subgraph Native["Native speech-to-speech"]
-        B1[Audio encoding] --&gt; B2["Single model&lt;br/&gt;Joint speech understanding&lt;br/&gt;and generation"] --&gt; B3[Audio decoding]
-    end</code></pre>
+<p><strong>Cascaded pipeline</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1[ASR] --&gt; A2[LLM text reasoning] --&gt; A3[TTS]
+</code></pre>
+<p><strong>Native speech-to-speech</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1[Audio encoding] --&gt; B2["Single model&lt;br/&gt;Joint speech understanding&lt;br/&gt;and generation"] --&gt; B3[Audio decoding]
+</code></pre>
 <ul>
 <li><strong>Cascaded pipeline</strong>: ASR → text LLM → TTS. Components are easy to replace, audit, and connect to text-based tools. Passing only a transcript loses some intonation, emotion, and background information, but timestamps, acoustic labels, or TTS style controls can be passed separately. Streaming components can overlap; all downstream work need not wait for the complete utterance. The tradeoff is that partial-transcript revisions may invalidate responses already generated or played.</li>
 <li><strong>Native speech-to-speech</strong>: joint modeling of speech input and output can reduce information lost by forcing everything through text. However, it still requires audio encoding, multiple generation steps, decoding, and playback buffers. <strong>A complete response is not produced in one forward pass.</strong> The GPT-4o System Card confirms end-to-end multimodal training but does not establish its specific codec, dual-stream structure, or a latency advantage under every deployment condition.</li>
@@ -9286,15 +9314,8 @@
 <p>When reproducing an interruption problem, record input-audio timing, response IDs, playback progress, and the conversation truncation point together. This distinguishes a model failing to recognize the interruption from a client continuing to play old audio.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2410.00037">Moshi: a speech-text foundation model for real-time dialogue</a></li>
-<li><a href="https://arxiv.org/abs/2203.16502">Generative Spoken Dialogue Language Modeling (dGSLM)</a></li>
-<li><a href="https://openai.com/index/gpt-4o-system-card/">OpenAI GPT-4o System Card</a></li>
-<li><a href="https://arxiv.org/abs/2410.21276">GPT-4o System Card (original report)</a></li>
-<li><a href="https://platform.openai.com/docs/guides/realtime">OpenAI Realtime API documentation</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/realtime-conversations/">OpenAI Realtime: Conversation state and interruption handling</a></li>
-<li><a href="https://kyutai.org/moshi">Kyutai Moshi project page</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-multimodal-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9317,7 +9338,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

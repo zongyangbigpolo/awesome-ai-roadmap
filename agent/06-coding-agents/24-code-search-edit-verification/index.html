@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 24: Code Search, Editing, and Verification for Coding Agents","description":"A limit=0 pagination bug connects code location, symbols and call relationships, context gathering, edit conflicts, and layered verification, with failure boundaries for replacement, line-based edits, diffs, and apply models.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/06-coding-agents/24-code-search-edit-verification/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 24: Code Search, Editing, and Verification for Coding Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/06-coding-agents/24-code-search-edit-verification/"},"datePublished":"2026-09-14","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 24: Code Search, Editing, and Verification for Coding Agents","description":"A limit=0 pagination bug connects code location, symbols and call relationships, context gathering, edit conflicts, and layered verification, with failure boundaries for replacement, line-based edits, diffs, and apply models.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/06-coding-agents/24-code-search-edit-verification/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 24: Code Search, Editing, and Verification for Coding Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/06-coding-agents/24-code-search-edit-verification/"},"datePublished":"2026-09-14","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 24: Code Search, Editing, and Verification for Coding Agents","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/06-coding-agents/24-code-search-edit-verification/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9252,17 +9277,16 @@
 </blockquote>
 <p>A developer asks the agent to fix the query API without changing the existing behavior of background exports. The difficult part is not whether the model can write <code>is None</code>. It is whether the agent can establish that it found the function actually executed, changed only the appropriate location, and did not substitute a passing syntax check for business acceptance.</p>
 <p><a href="../../02-runtime-harness/19-tool-registry-and-execution-pipeline/">Chapter 19</a> explains tool scheduling and error reporting; <a href="../../02-runtime-harness/20-permissions-sandbox-isolation/">Chapter 20</a> covers execution boundaries; <a href="../../02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/">Chapter 23</a> compares products and explains cost tracking. This chapter follows the code-specific process in detail:</p>
-<pre class="mermaid"><code>flowchart TD
-    A["Bug report and expected behavior"] --&gt; B["Locate files and the actual call chain"]
-    B --&gt; C["Read implementation, contract, tests, and file version"]
-    C --&gt; D["Generate a candidate edit"]
-    D --&gt; E{"Valid baseline and unambiguous location?"}
-    E --&gt;|No| C
-    E --&gt;|Yes| F["Apply the edit and inspect the diff"]
-    F --&gt; G["Syntax, types, targeted tests, and related regressions"]
-    G --&gt; H{"Acceptance criteria satisfied?"}
-    H --&gt;|No: follow the error| B
-    H --&gt;|Yes| I["Deliver the change and verification scope"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    B["Locate and read"] --&gt; D["Candidate edit"]
+    D --&gt; E["Check baseline&lt;br/&gt;and location"]
+    E --&gt;|Invalid or&lt;br/&gt;ambiguous| B
+    E --&gt;|Valid| F["Apply and&lt;br/&gt;inspect diff"]
+    F --&gt; G["Verify"]
+    G --&gt;|Acceptance fails| B</code></pre>
+<p>Start with the bug report and expected behavior. Locate files and the actual call chain, then read the implementation, contract, tests, and file version before generating an edit. If the baseline is invalid or the location ambiguous, reread the implementation rather than applying the edit.</p>
+<p>Verification covers syntax, types, targeted tests, and related regressions. If acceptance criteria fail, follow the error back to the relevant files and call chain; if they pass, deliver the change together with the scope of verification.</p>
 <p>“Found the code” and “may change this code” are separate judgments. Search produces candidate evidence. Before editing, the agent must still confirm call relationships, the target version, and business constraints.</p>
 <h2 id="242-narrow-the-search-until-it-can-answer-a-concrete-question"><span id="242" class="legacy-heading-anchor" aria-hidden="true"></span>24.2 Narrow the search until it can answer a concrete question<a class="headerlink" href="#242-narrow-the-search-until-it-can-answer-a-concrete-question" title="Permanent link">&para;</a></h2>
 <p>Initially, the agent knows only that the report query's row limit does not work. Searching directly for <code>limit</code> finds connection pools, retry handlers, exporters, and test fixtures. More results do not imply better understanding.</p>
@@ -9307,13 +9331,13 @@
 </tr>
 </tbody>
 </table>
-<p>This classification draws on the <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307">discussion of search and editing</a> in Bojie Li's <em>Understanding AI Agents</em>, but no tool ordering is a universal workflow.</p>
+<p>This classification draws on the discussion of search and editing<sup><a href="../../../book/references/#ref-559">【559】</a></sup> in Bojie Li's <em>Understanding AI Agents</em>, but no tool ordering is a universal workflow.</p>
 <p>If you have an exact error message, search for it first. If you know the class name and have a language service, jump straight to its definition. Glob patterns avoid reading file bodies and are usually useful for narrowing scope, but network filesystems, large directory listings, and existing indexes affect latency. A tool's name alone does not establish that it is always faster.</p>
 <h3 id="from-text-matches-to-call-relationships">From text matches to call relationships<a class="headerlink" href="#from-text-matches-to-call-relationships" title="Permanent link">&para;</a></h3>
 <p>Zhou's API eventually reaches <code>take_rows</code> in <code>src/reports/query.py</code>. A function with the same name also exists in <code>src/reports/export.py</code>, but the export configuration defines <code>0</code> as “unlimited.” Changing every same-named function would introduce another bug.</p>
 <p>The agent must trace the route handler to the <code>take_rows</code> it actually imports, inspect references, and confirm that queries and exports use different implementations. Symbol navigation distinguishes these cases better than text matches. Without a language service, trace imports, call sites, and existing tests manually; do not describe a list of text matches as a complete call graph.</p>
 <p>An AST identifies syntax such as functions and call expressions, but an AST alone generally does not resolve cross-module name bindings. LSP is the communication protocol between a client and a language service. Definition, reference, and call-hierarchy support depends on the server implementation and negotiated capabilities; it does not guarantee resolution of every runtime call.</p>
-<p>See the <a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">LSP 3.17 definition, reference, and call-hierarchy interfaces</a> for how clients request these relationships.</p>
+<p>See the LSP 3.17 definition, reference, and call-hierarchy interfaces<sup><a href="../../../book/references/#ref-561">【561】</a></sup> for how clients request these relationships.</p>
 <p>If the agent does not yet know about <code>take_rows</code>, semantic search for “limit the number of report results” can retrieve candidate functions. Function-based chunks preserve local semantics, but decorators, class state, and callers may remain outside the chunk. After a match, return to the current file and check the commit or file version represented by the index.</p>
 <h3 id="stopping-the-search-requires-a-reason">Stopping the search requires a reason<a class="headerlink" href="#stopping-the-search-requires-a-reason" title="Permanent link">&para;</a></h3>
 <p>Once the agent has confirmed how the entry point parses <code>limit</code>, which implementation runs, the exporter's different convention, and where tests cover these behaviors, it has the minimum evidence needed for the fix. Continuing to browse the entire repository adds noise.</p>
@@ -9396,7 +9420,7 @@
 <p>For line-based editing, calculate all ranges in a batch against the same snapshot, reject overlaps, and apply the ranges consistently. Applying nonoverlapping ranges in reverse order reduces line drift within the batch; it does not fix a stale baseline.</p>
 <p>If rereading shows that the user has already made an equivalent fix, inspect the existing diff and tests rather than apply the change again. If the user's edits conflict with the task requirements, explain the conflict; do not restore the file to a version that happens to be more familiar to the agent.</p>
 <h3 id="a-failed-edit-report-does-not-mean-the-file-is-unchanged">A failed edit report does not mean the file is unchanged<a class="headerlink" href="#a-failed-edit-report-does-not-mean-the-file-is-unchanged" title="Permanent link">&para;</a></h3>
-<p>The companion <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py"><code>EditTool</code></a> in Bojie Li's book demonstrates a nonempty-old-string check, unique matching by default, and post-write checks. It writes the file before reporting syntax problems, with no automatic rollback. When the agent receives “syntax check failed,” it should read back the current file instead of retrying the original patch as though no edit occurred.</p>
+<p>The companion <code>EditTool</code><sup><a href="../../../book/references/#ref-560">【560】</a></sup> in Bojie Li's book demonstrates a nonempty-old-string check, unique matching by default, and post-write checks. It writes the file before reporting syntax problems, with no automatic rollback. When the agent receives “syntax check failed,” it should read back the current file instead of retrying the original patch as though no edit occurred.</p>
 <p>This small implementation does not provide version comparison or concurrent-write protection; host integration must supply them. Checkers should also use the language version and configuration actually supported by the project. A syntax check is not a complete type check or a business test.</p>
 <h2 id="246-after-reviewing-the-diff-ask-what-each-verification-layer-proves"><span id="246-diff" class="legacy-heading-anchor" aria-hidden="true"></span>24.6 After reviewing the diff, ask what each verification layer proves<a class="headerlink" href="#246-after-reviewing-the-diff-ask-what-each-verification-layer-proves" title="Permanent link">&para;</a></h2>
 <p>A successfully applied patch proves only that the executor accepted the edit request. First inspect the workspace diff: does the intended branch now test <code>None</code> explicitly, is the export implementation untouched, did whole-file newline changes occur, and do the added tests still check the original requirement?</p>
@@ -9437,7 +9461,7 @@
 </tr>
 </tbody>
 </table>
-<p>Python's <a href="https://docs.python.org/3/library/ast.html#ast.parse"><code>ast.parse</code></a> produces an AST without performing every compilation or scoping check. <code>py_compile</code> does not execute business assertions either. State the actual checker and its coverage rather than labeling everything “lint passed.”</p>
+<p>Python's <code>ast.parse</code><sup><a href="../../../book/references/#ref-562">【562】</a></sup> produces an AST without performing every compilation or scoping check. <code>py_compile</code> does not execute business assertions either. State the actual checker and its coverage rather than labeling everything “lint passed.”</p>
 <h3 id="first-establish-that-the-test-catches-the-old-bug">First establish that the test catches the old bug<a class="headerlink" href="#first-establish-that-the-test-catches-the-old-bug" title="Permanent link">&para;</a></h3>
 <p>The following original, self-contained computation requires Python 3.10 or later. It demonstrates a minimal function-level reproduction and acceptance criteria. It does not access files, start an HTTP server, or simulate the entire project:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -9485,12 +9509,8 @@
 <p>The handoff to Zhou should make the change explainable: queries now distinguish <code>None</code> from <code>0</code>, while the export contract remains unchanged. State separately what the function examples cover, what API and related regressions cover, and which environments remain unverified. Those facts define the delivery boundary, not the agent's final “done.”</p>
 <p>If the same class of failure recurs, use <a href="../../07-post-training/25-agent-post-training/">Chapter 25</a> to locate the model's first incorrect decision before choosing a tool, prompt, or training-data change. Not every editing failure is a model-capability problem.</p>
 <h2 id="references-and-source-boundaries">References and source boundaries<a class="headerlink" href="#references-and-source-boundaries" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Bojie Li, <em>Understanding AI Agents: Design Principles and Engineering Practice</em>, <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307">relevant Chapter 5 passages</a>: search categories, edit formats, and immediate feedback. Pinned commit <code>985a49d35b9f50937f1f757cf25867672991ded7</code>; consulted 2026-09-14.</li>
-<li><a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py"><code>edit_tool.py</code> at the same commit</a>: matching and post-write checking, especially the write-then-check sequence without automatic rollback.</li>
-<li><a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">Language Server Protocol 3.17</a>: definitions, references, call hierarchies, and position encodings. Consulted 2026-09-14.</li>
-<li><a href="https://docs.python.org/3/library/ast.html#ast.parse">Python <code>ast.parse</code> documentation</a>: the boundary between AST parsing and complete compilation checks. Consulted 2026-09-14.</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-24">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9513,7 +9533,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

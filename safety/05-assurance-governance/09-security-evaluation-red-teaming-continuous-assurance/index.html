@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance","description":"Define scope, success criteria, and attack budgets for authorized red teaming, report ASR alongside utility, and manage residual risk with independent holdouts and continuous regression testing.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/09-security-evaluation-red-teaming-continuous-assurance/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/09-security-evaluation-red-teaming-continuous-assurance/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance","description":"Define scope, success criteria, and attack budgets for authorized red teaming, report ASR alongside utility, and manage residual risk with independent holdouts and continuous regression testing.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/09-security-evaluation-red-teaming-continuous-assurance/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/09-security-evaluation-red-teaming-continuous-assurance/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/09-security-evaluation-red-teaming-continuous-assurance/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9215,11 +9240,17 @@
 <h1 id="chapter-9-security-evaluation-red-teaming-and-continuous-assurance"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 9: Security Evaluation, Red Teaming, and Continuous Assurance<a class="headerlink" href="#chapter-9-security-evaluation-red-teaming-and-continuous-assurance" title="Permanent link">&para;</a></h1>
 <h2 id="91-why-security-evaluation-cannot-be-a-one-time-release-check"><span id="91" class="legacy-heading-anchor" aria-hidden="true"></span>9.1 Why Security Evaluation Cannot Be a One-Time Release Check<a class="headerlink" href="#91-why-security-evaluation-cannot-be-a-one-time-release-check" title="Permanent link">&para;</a></h2>
 <p>Earlier chapters repeatedly noted that some attacks are invisible to standard evaluations and that alignment is a probabilistic mitigation. An AI system's security posture is therefore not a constant that one test can establish. It changes with model versions, prompts, newly connected tools, and newly disclosed jailbreak techniques. <a href="../../../agent/05-production/15-agent-security/">Agent Security, Section 15.13</a> and <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG Security, Section 20.4</a> already explain the application-level principle that attack success rate (ASR) and utility must be reported together. At an organizational level, that principle needs to become a red-teaming methodology, an automated toolchain, and a continuous assurance process.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Pre-release red teaming] --&gt; B[Continuous automated evaluation]
-    B --&gt; C[Production monitoring and incident response]
-    C --&gt; D[Feed findings into the next evaluation set]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Pre-release red&lt;br/&gt;teaming"] --&gt; B["Continuous&lt;br/&gt;automated&lt;br/&gt;evaluation"]
+    B --&gt; C["Monitor and&lt;br/&gt;respond"]
+    C --&gt; D["Add regression&lt;br/&gt;cases"]
     D --&gt; B</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Production monitoring and incident response</li>
+<li>Feed findings into the next evaluation set</li>
+</ul>
 <h2 id="92-red-teaming-methodology"><span id="92" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 Red-Teaming Methodology<a class="headerlink" href="#92-red-teaming-methodology" title="Permanent link">&para;</a></h2>
 <h3 id="921-dividing-the-work-between-human-and-automated-red-teams"><span id="921" class="legacy-heading-anchor" aria-hidden="true"></span>9.2.1 Dividing the Work Between Human and Automated Red Teams<a class="headerlink" href="#921-dividing-the-work-between-human-and-automated-red-teams" title="Permanent link">&para;</a></h3>
 <table>
@@ -9290,18 +9321,25 @@
 </table>
 <p>Pin tool, probe, model, and scorer versions, and record the run configuration. Passing a scan means only that no failure was observed under those inputs, budgets, and criteria; it does not guarantee a minimum level of security. A framework's support for a probe does not establish coverage of every authorization and execution path in an application.</p>
 <h2 id="94-continuous-assurance-integrating-security-evaluation-into-development"><span id="94" class="legacy-heading-anchor" aria-hidden="true"></span>9.4 Continuous Assurance: Integrating Security Evaluation into Development<a class="headerlink" href="#94-continuous-assurance-integrating-security-evaluation-into-development" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    C1[Code/prompt/tool change] --&gt; G1{CI security gate}
-    G1 --&gt;|Pass| C2[Deploy to staging]
-    G1 --&gt;|Fail| BLOCK[Block and report findings]
-    C2 --&gt; G2{Staging regression evaluation}
-    G2 --&gt;|Pass| PROD[Production release]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    C1["Code/prompt/tool&lt;br/&gt;change"] --&gt; G1["CI security gate"]
+    G1 --&gt;|Pass| C2["Deploy to staging"]
+    G1 --&gt;|Fail| BLOCK["Block and report&lt;br/&gt;findings"]
+    C2 --&gt; G2["Staging regression&lt;br/&gt;evaluation"]
+    G2 --&gt;|Pass| PROD["Production release"]
     G2 --&gt;|Fail| BLOCK
-    PROD --&gt; MON[Production monitoring]
-    MON --&gt;|New attack pattern found| NEWCASE[Create a new regression case]
+    PROD --&gt; MON["Production monitoring"]
+    MON --&gt;|"New attack"| NEWCASE["Create a new&lt;br/&gt;regression case"]
     NEWCASE --&gt; G1</code></pre>
+<p>Figure conditions and labels:</p>
 <ul>
-<li><strong>CI security gates:</strong> every change to a system prompt, a tool's authorized scope, or a model version triggers automated security regression tests, not just functional tests.</li>
+<li>
+<p>New attack pattern found</p>
+</li>
+<li>
+<p><strong>CI security gates:</strong> every change to a system prompt, a tool's authorized scope, or a model version triggers automated security regression tests, not just functional tests.</p>
+</li>
 <li><strong>Tiered evaluation sets:</strong> follow the Smoke/Regression/Full approach in the <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG Security Release Checklist</a>. Run a minimal smoke set on every commit, the complete regression set before merging, and a full evaluation covering newly disclosed attack techniques on a regular schedule.</li>
 <li><strong>Feed production monitoring into evaluation:</strong> regularly turn observed anomalous requests and guardrail interception records into new evaluation cases, rather than handling them only when an incident occurs.</li>
 <li><strong>Pay special attention to version changes:</strong> a new model-provider release may invalidate previously effective defenses because alignment behavior changes, or introduce new guardrail false-positive patterns. Every model switch requires a complete security regression run; do not assume a newer version can only be safer.</li>
@@ -9359,14 +9397,8 @@
 <li>Beyond ASR and utility, track MTTD/MTTR, guardrail false positives, breadth of attack-surface coverage, and compliance with remediation SLAs for red-team findings.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF: Measure Function</a></li>
-<li><a href="https://github.com/leondz/garak">garak: LLM Vulnerability Scanner</a></li>
-<li><a href="https://github.com/Azure/PyRIT">PyRIT: Python Risk Identification Tool for generative AI</a></li>
-<li><a href="https://arxiv.org/abs/2402.04249">HarmBench: A Standardized Evaluation Framework for Automated Red Teaming</a></li>
-<li><a href="https://arxiv.org/abs/2202.03286">Red Teaming Language Models with Language Models</a></li>
-<li><a href="https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/">OWASP LLM Applications Cybersecurity and Governance Checklist</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9389,7 +9421,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

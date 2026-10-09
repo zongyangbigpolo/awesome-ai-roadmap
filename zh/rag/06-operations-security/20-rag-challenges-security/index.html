@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十章：RAG 落地难点与安全","description":"讨论 RAG 预处理、检索与评估的工程难点，以及语料投毒、间接注入、越权、资源耗尽和上线治理。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/06-operations-security/20-rag-challenges-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十章：RAG 落地难点与安全","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/06-operations-security/20-rag-challenges-security/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十章：RAG 落地难点与安全","description":"讨论 RAG 预处理、检索与评估的工程难点，以及语料投毒、间接注入、越权、资源耗尽和上线治理。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/06-operations-security/20-rag-challenges-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十章：RAG 落地难点与安全","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/06-operations-security/20-rag-challenges-security/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十章：RAG 落地难点与安全","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/06-operations-security/20-rag-challenges-security/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9377,10 +9402,11 @@
 <h1 id="rag">第二十章：RAG 落地难点与安全<a class="headerlink" href="#rag" title="Permanent link">&para;</a></h1>
 <h2 id="201">20.1 三类主要难点<a class="headerlink" href="#201" title="Permanent link">&para;</a></h2>
 <p>RAG 落地时，反复出现的难点通常集中在三类。</p>
-<pre class="mermaid"><code>flowchart TB
-    H[RAG 落地三难] --&gt; H1[难点一: 文档预处理&lt;br/&gt;脏活累活 决定效果上限]
-    H --&gt; H2[难点二: 检索质量调优&lt;br/&gt;变量多 需系统性方法]
-    H --&gt; H3[难点三: 效果评估&lt;br/&gt;缺乏客观标准 全靠感觉]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    H1[文档预处理] --&gt; H2[检索质量调优]
+    H2 --&gt; H3[客观评估]</code></pre>
+<p>预处理需要大量工作，并限制下游可达到的质量。检索调优变量多，需要系统性方法。评估需要客观标准，否则决策只能依赖直觉。这些是相互关联的难点，不能彼此替代。</p>
 <h3 id="2011">20.1.1 第一难：文档预处理<a class="headerlink" href="#2011" title="Permanent link">&para;</a></h3>
 <p>难点在于工作量大，而且高度依赖具体语料。</p>
 <p>企业文档的格式混乱程度远超预期：扫描件、合并单元格、分栏、嵌套表格、图表、内部缩写。每种都要单独处理，而且<strong>没有一个通用方案能覆盖所有情况</strong>（第三章）。</p>
@@ -9446,16 +9472,11 @@
 <blockquote>
 <p><strong>检索到的内容会进入模型的上下文，而这些内容可能是攻击者控制的。</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
-    A[RAG 的外部内容攻击面] --&gt; A1[语料投毒]
-    A --&gt; A2[间接 Prompt 注入]
-    A --&gt; A3[数据泄漏]
-    A --&gt; A4[资源耗尽]
-
-    A1 --&gt; B1[往知识库注入误导性内容&lt;br/&gt;操纵特定问题的答案]
-    A2 --&gt; B2[文档里藏指令&lt;br/&gt;劫持模型行为]
-    A3 --&gt; B3[越权检索到不该看的内容]
-    A4 --&gt; B4[构造高成本查询]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[外部内容] --&gt; C[内容与指令攻击]
+    A --&gt; R[访问与资源滥用]</code></pre>
+<p>内容攻击包括<strong>语料投毒</strong>，即加入误导材料以操纵特定问题的答案，以及<strong>间接 Prompt 注入</strong>，即在文档中隐藏指令以劫持模型行为。访问与资源滥用包括越权检索导致的<strong>数据泄漏</strong>，以及高成本查询导致的<strong>资源耗尽</strong>。</p>
 <h3 id="2031">20.3.1 语料投毒<a class="headerlink" href="#2031" title="Permanent link">&para;</a></h3>
 <p><strong>攻击方式</strong>：往知识库里注入精心构造的内容，使得针对特定问题的检索会命中这些内容，从而操纵答案。</p>
 <p>PoisonedRAG 在论文所测威胁模型中表明，攻击者有能力把文本加入知识库时，少量针对目标问题构造的文本也可能操纵回答。这个结果依赖攻击者知识、注入位置、检索器和生成模型，不意味着对任意生产库都能稳定成功。</p>
@@ -9623,13 +9644,8 @@
 <li>引用、时效与鲁棒性评测，见<a href="../../05-generation-evaluation/18-rag-evaluation/">RAG 评估</a>。</li>
 </ul>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2402.07867">PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2302.12173">Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</a></li>
-<li><a href="https://arxiv.org/abs/2405.07437">Evaluation of Retrieval-Augmented Generation: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-20">集中参考资料章节</a>。</p>
 
 
 
@@ -9652,7 +9668,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：用 LangChain 构建生产级 Agent 的七步","description":"以订单助手说明 create_agent 的工具、结构化输出、审批恢复、持久化和调用预算如何接入业务边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/04-build-agent/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：用 LangChain 构建生产级 Agent 的七步","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/04-build-agent/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：用 LangChain 构建生产级 Agent 的七步","description":"以订单助手说明 create_agent 的工具、结构化输出、审批恢复、持久化和调用预算如何接入业务边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/04-build-agent/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：用 LangChain 构建生产级 Agent 的七步","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/04-build-agent/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第四章：用 LangChain 构建生产级 Agent 的七步","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/04-build-agent/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9497,8 +9522,9 @@
 <li>流程跑得更久时：<strong>会话中断后能否恢复</strong>？最终结果能否稳定进入业务系统？<strong>线上出错后能不能复现</strong>？</li>
 </ul>
 <p>完整 Agent 关注的不只是一次模型调用，而是一条从任务设计、能力接入、运行控制走到测试监控的工程链路。</p>
-<pre class="mermaid"><code>flowchart TB
-    S1["① 明确任务边界"] --&gt; S2["② 选模型与 Tools"] --&gt; S3["③ 约束行为与输出"] --&gt; S4["④ 组装 Agent"] --&gt; S5["⑤ 补齐状态与安全"] --&gt; S6["⑥ 选择调用方式"] --&gt; S7["⑦ 测试与监控"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S1["① 明确任务边界"] --&gt; S2["② 选模型与&lt;br/&gt;Tools"] --&gt; S3["③ 约束行为与输&lt;br/&gt;出"] --&gt; S4["④ 组装 Agent"] --&gt; S5["⑤ 补齐状态与安&lt;br/&gt;全"] --&gt; S6["⑥ 选择调用方式"] --&gt; S7["⑦ 测试与监控"]
 
     style S1 fill:#e8f0fe
     style S7 fill:#e6f4ea</code></pre>
@@ -9664,12 +9690,13 @@
 </span></code></pre></div>
 <p>这里直接传 Pydantic 类型时，框架会根据模型能力选择 <code>ProviderStrategy</code>（供应商原生结构约束）或 <code>ToolStrategy</code>（用工具调用承载输出）。若同时提供业务工具，必须验证模型支持相应组合；JSON Schema 字典则应显式包进策略。<code>structured_response</code> 是成功完成后的结果，不代表拒答、截断或校验重试耗尽时也一定存在。调用方必须区分成功、等待审批和异常，而不是缺字段就制造一个「已处理」答复。</p>
 <p><strong>底层执行流程</strong>（详见 <a href="../../01-foundations/03-langchain-architecture/">第三章</a>）：</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     U["用户消息"] --&gt; M["模型判断"]
-    M --&gt; D{"有工具调用?"}
+    M --&gt; D["有工具调用?"]
     D --&gt;|否| F["最终结果"]
-    D --&gt;|是| T["LangGraph 运行时执行工具"]
-    T --&gt; TM["ToolMessage 写回消息状态"]
+    D --&gt;|是| T["LangGraph 运行时&lt;br/&gt;执行工具"]
+    T --&gt; TM["ToolMessage 写回&lt;br/&gt;消息状态"]
     TM --&gt; M
 
     style F fill:#e6f4ea</code></pre>
@@ -9762,14 +9789,21 @@
 <p>停止条件应有独立预算：模型调用次数、工具调用次数、总耗时与费用分别计数。<code>recursion_limit</code> 限制的是图的 super-step 数，不等同于模型轮数、Python 递归深度或一个全局 Token 上限；一次模型响应还可能同时请求多个工具。更改该值只能调整最后一道循环保护，不能解决重复选错工具的根因。</p>
 <h2 id="48">4.8 第七步：测试与监控<a class="headerlink" href="#48" title="Permanent link">&para;</a></h2>
 <p><strong>Agent 输出具有概率性，所以测试不能只比较最终文本。</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    L1["第一层：测 Tool&lt;br/&gt;正常输入、非法参数、权限错误、超时、幂等性&lt;br/&gt;Tool 是相对确定的业务代码，应优先做到稳定"]
-    L2["第二层：测 Agent 轨迹&lt;br/&gt;是否选对工具、参数是否正确&lt;br/&gt;是否越权调用、结构化输出是否符合 Schema"]
-    L3["第三层：端到端评测 + 线上监控&lt;br/&gt;典型问题/边界案例/历史故障整理成数据集&lt;br/&gt;对比模型、Prompt、Tool 版本&lt;br/&gt;Trace 观察延迟、Token、失败率、人工转接率"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    L1["第一层：测 Tool"]
+    L2["第二层：测 Agent&lt;br/&gt;轨迹"]
+    L3["3 · 端到端检查"]
     L1 --&gt; L2 --&gt; L3
 
     style L1 fill:#e6f4ea
     style L3 fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>第一层：测 Tool 正常输入、非法参数、权限错误、超时、幂等性 Tool 是相对确定的业务代码，应优先做到稳定</li>
+<li>第二层：测 Agent 轨迹 是否选对工具、参数是否正确 是否越权调用、结构化输出是否符合 Schema</li>
+<li>第三层：端到端评测 + 线上监控 典型问题/边界案例/历史故障整理成数据集 对比模型、Prompt、Tool 版本 Trace 观察延迟、Token、失败率、人工转接率</li>
+</ul>
 <p>如何把 Trace、生产反馈、Dataset、离线实验和发布门禁连成闭环，见 <a href="../../05-production/13-langsmith-production-loop/">LangSmith 生产质量闭环</a>。</p>
 <h3 id="481">4.8.1 上线前检查清单<a class="headerlink" href="#481" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9818,18 +9852,8 @@
 </ol>
 <p>把 <code>create_agent</code> 跑通只是起点；要让 Agent 落到业务里，还得沿着边界、能力、约束、组装、状态、交互和验证七步，把概率性的模型循环收束成可测试、可观测的系统。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/tools">LangChain: Tools 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/structured-output">LangChain: Structured Output</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/long-term-memory">LangChain: Long-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/streaming">LangChain: Streaming</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph 持久化文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/human-in-the-loop">LangChain Human-in-the-loop：审批与恢复</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/graph-api#recursion-limit">LangGraph Graph API：recursion limit</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-04">集中参考资料章节</a>。</p>
 
 
 
@@ -9852,7 +9876,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

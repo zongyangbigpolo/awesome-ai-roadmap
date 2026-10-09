@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: What RAG Is and What Problems It Solves","description":"How RAG uses external evidence to address outdated knowledge, missing private information, and hallucinations, with a breakdown of indexing, retrieval, and generation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/01-foundations/01-what-is-rag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: What RAG Is and What Problems It Solves","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/01-foundations/01-what-is-rag/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: What RAG Is and What Problems It Solves","description":"How RAG uses external evidence to address outdated knowledge, missing private information, and hallucinations, with a breakdown of indexing, retrieval, and generation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/01-foundations/01-what-is-rag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: What RAG Is and What Problems It Solves","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/01-foundations/01-what-is-rag/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: What RAG Is and What Problems It Solves","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/01-foundations/01-what-is-rag/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9208,16 +9233,12 @@
 <h2 id="12-the-underlying-issue-knowledge-is-frozen-in-parameters"><span id="12" class="legacy-heading-anchor" aria-hidden="true"></span>1.2 The Underlying Issue: Knowledge Is Frozen in Parameters<a class="headerlink" href="#12-the-underlying-issue-knowledge-is-frozen-in-parameters" title="Permanent link">&para;</a></h2>
 <p>A model acquires its parametric knowledge through training; that knowledge does not automatically keep up with the world after deployment. Continued training or model editing can change some of it, but individual facts are not as easy to inspect, reliably modify, or revoke as database records. At inference time, the model can also obtain non-parametric knowledge from context or tools.</p>
 <p>Parametric knowledge neither updates automatically nor necessarily covers private material. Both gaps increase the risk of unsupported answers, but they do not explain every hallucination.</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT[Relying only on&lt;br/&gt;parametric knowledge] --&gt; P1[Knowledge may be outdated]
-    ROOT --&gt; P2[Private knowledge may be missing]
-    P1 --&gt; P3[Risk of unsupported answers]
-    P2 --&gt; P3
-    OTHER[Misreading, reasoning errors,&lt;br/&gt;and generation errors] --&gt; P3
-
-    P1 --&gt; D1[Training data has a cutoff date]
-    P2 --&gt; D2[Internal company data&lt;br/&gt;was never in the training set]
-    P3 --&gt; D3[Fluent answers are generated&lt;br/&gt;even without evidence]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    ROOT[Parametric knowledge alone] --&gt; GAP[Missing or outdated evidence]
+    GAP --&gt; P3[Unsupported-answer risk]
+    OTHER[Reasoning or reading errors] --&gt; P3</code></pre>
+<p>Training data has a cutoff date, and internal company data may never have entered the training set. A model can still generate fluent answers without evidence. Missing or outdated knowledge is not the only cause: misreading, reasoning errors, and generation errors also contribute.</p>
 <h3 id="121-outdated-knowledge"><span id="121" class="legacy-heading-anchor" aria-hidden="true"></span>1.2.1 Outdated Knowledge<a class="headerlink" href="#121-outdated-knowledge" title="Permanent link">&para;</a></h3>
 <p>Training data covers a particular period. Parametric knowledge alone cannot reliably answer questions about products, policies, or financial reports released after that cutoff. If the application supplies updated context or tools, however, the model can still use that information.</p>
 <p>Models also often <strong>do not know what they do not know</strong>: they answer confidently using outdated information.</p>
@@ -9236,7 +9257,8 @@
 <p><strong>Keep the model's parametric knowledge, while retrieving external material to support generation—not “moving” existing knowledge out of its parameters.</strong></p>
 </blockquote>
 <p>Common engineering implementations leave the generation model unchanged, primarily asking it to read and organize the supplied material. But “no training” is not part of RAG's definition: the original RAG paper jointly fine-tuned the retriever and generator, and retrieval or generation components can also be trained separately.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[User question] --&gt; R[Retrieve relevant material]
     KB[(External knowledge base)] --&gt; R
     R --&gt; P[Combine material and question&lt;br/&gt;into a prompt]
@@ -9268,23 +9290,25 @@
 <p>Authorization decisions must not be left to the model. Sensitive knowledge already learned by a shared model is difficult to reliably revoke on a per-document basis. RAG can enforce ACLs before material enters the model, but caches, citations, and tools must follow the same rules; see Chapters 19 and 20.</p>
 <h2 id="14-the-full-workflow-offline-and-online-stages"><span id="14" class="legacy-heading-anchor" aria-hidden="true"></span>1.4 The Full Workflow: Offline and Online Stages<a class="headerlink" href="#14-the-full-workflow-offline-and-online-stages" title="Permanent link">&para;</a></h2>
 <p>A typical workflow has two stages: indexing and querying. Indexing maintains the index as documents change, through either batch processing or continuous ingestion. Querying handles each question and may reuse valid caches. “Offline” primarily means outside the critical path of the current user request, not that the work can only run periodically.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph OFF[Offline stage: runs when documents change]
-        D[Original documents] --&gt; PARSE[Parse and clean]
-        PARSE --&gt; CHUNK[Chunk]
-        CHUNK --&gt; EMB[Embed]
-        EMB --&gt; IDX[(Write to index)]
-    end
-
-    subgraph ON[Online stage: runs for each question]
-        Q[User query] --&gt; RW[Rewrite query]
-        RW --&gt; QEMB[Embed query]
-        QEMB --&gt; SEARCH[Multi-path retrieval&lt;br/&gt;and first-stage ranking]
-        IDX --&gt; SEARCH
-        SEARCH --&gt; RERANK[Rerank]
-        RERANK --&gt; PROMPT[Assemble prompt]
-        PROMPT --&gt; GEN[Generate and cite sources]
-    end</code></pre>
+<p><strong>Offline stage: runs when documents change</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[Original documents] --&gt; PARSE[Parse and clean]
+    PARSE --&gt; CHUNK[Chunk]
+    CHUNK --&gt; EMB[Embed]
+    EMB --&gt; IDX[(Write to index)]
+</code></pre>
+<p><strong>Online stage: runs for each question</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[User query] --&gt; RW[Rewrite query]
+    RW --&gt; QEMB[Embed query]
+    QEMB --&gt; SEARCH[Multi-path retrieval&lt;br/&gt;and first-stage ranking]
+    IDX[(Offline document index)] --&gt; SEARCH
+    SEARCH --&gt; RERANK[Rerank]
+    RERANK --&gt; PROMPT[Assemble prompt]
+    PROMPT --&gt; GEN[Generate and cite sources]
+</code></pre>
 <h3 id="141-offline-stage"><span id="141" class="legacy-heading-anchor" aria-hidden="true"></span>1.4.1 Offline Stage<a class="headerlink" href="#141-offline-stage" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9379,7 +9403,8 @@
 <li><strong>Reranking:</strong> Scoring 100 candidates means evaluating 100 query–passage pairs. These can be batched; it does not mean 100 sequential API calls. Computation also depends on candidate length, the model, and batch size.</li>
 </ul>
 <p>Scanning the entire corpus with this pairwise reranking approach would require scoring a million query–document pairs for a million candidates. Batching is possible, but the approach is usually uneconomical within interactive latency and cost budgets.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ALL[(Millions of documents)] --&gt;|Index retrieval| C[Top-100 candidates]
     C --&gt;|Batch reranking| F[Top-5 results]</code></pre>
 <blockquote>
@@ -9438,13 +9463,8 @@
 <li>RAG can reduce but not eliminate hallucinations. Single-round passage retrieval is neither a full-corpus statistics engine nor a complete multi-hop reasoner; add computation and multi-step evidence gathering according to the task.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></li>
-<li><a href="https://arxiv.org/abs/2004.04906">Dense Passage Retrieval for Open-Domain Question Answering</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9467,7 +9487,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

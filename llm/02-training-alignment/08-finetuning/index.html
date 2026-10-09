@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Fine-Tuning Approaches for LLMs","description":"Compare parameter and memory budgets for full fine-tuning, LoRA, and QLoRA; distinguish SFT and DPO objectives; and examine data evaluation, forgetting, deployment, and maintenance tradeoffs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/08-finetuning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Fine-Tuning Approaches for LLMs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/08-finetuning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Fine-Tuning Approaches for LLMs","description":"Compare parameter and memory budgets for full fine-tuning, LoRA, and QLoRA; distinguish SFT and DPO objectives; and examine data evaluation, forgetting, deployment, and maintenance tradeoffs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/08-finetuning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Fine-Tuning Approaches for LLMs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/08-finetuning/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: Fine-Tuning Approaches for LLMs","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/08-finetuning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9315,16 +9340,19 @@
 <h2 id="81-first-ask-whether-fine-tuning-fits-the-error"><span id="81" class="legacy-heading-anchor" aria-hidden="true"></span>8.1 First Ask Whether Fine-Tuning Fits the Error<a class="headerlink" href="#81-first-ask-whether-fine-tuning-fits-the-error" title="Permanent link">&para;</a></h2>
 <p>Fine-tuning should not be the automatic first reaction, nor must it always be the last resort. Establish a baseline, determine whether the problem concerns knowledge access, task behavior, output constraints, or model capacity, and then compare benefits and costs.</p>
 <h3 id="811-attribute-the-errors-first"><span id="811" class="legacy-heading-anchor" aria-hidden="true"></span>8.1.1 Attribute the Errors First<a class="headerlink" href="#811-attribute-the-errors-first" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    NEED["Model performance falls short"] --&gt; Q1{"What is the main error?"}
-    Q1 --&gt;|Invalid format| P1["Prompts and examples&lt;br/&gt;Structured output&lt;br/&gt;or constrained decoding"]
-    Q1 --&gt;|Missing or outdated facts| P2["Retrieval or database tools&lt;br/&gt;Check recall and evidence use"]
-    Q1 --&gt;|Poor behavior on a stable task| P3["Candidate SFT experiments"]
-    Q1 --&gt;|Comparable quality differences&lt;br/&gt;between candidates| P4["Preference data and&lt;br/&gt;methods such as DPO"]
-    P1 --&gt; E["Compare quality, cost, and latency&lt;br/&gt;on the same test set"]
-    P2 --&gt; E
-    P3 --&gt; E
-    P4 --&gt; E</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    NEED["Performance gap"] --&gt; Q1["Diagnose the main error"]
+    Q1 --&gt; P["Choose a targeted intervention"]
+    P --&gt; E["Compare on one test set"]</code></pre>
+<p>The diagnosis determines the intervention, not a mandatory training sequence:</p>
+<ul>
+<li><strong>Invalid format:</strong> try prompts and examples, structured output, or constrained decoding.</li>
+<li><strong>Missing or outdated facts:</strong> use retrieval or database tools, checking recall and evidence use.</li>
+<li><strong>Poor behavior on a stable task:</strong> run candidate SFT experiments.</li>
+<li><strong>Comparable quality differences between candidates:</strong> collect preference data and test methods such as DPO.</li>
+</ul>
+<p>Compare quality, cost, and latency on the same test set.</p>
 <p>These approaches can be combined. RAG might supply the latest contract, while SFT teaches the model to answer from evidence and cite its sources. If retrieval misses the relevant clause, further tuning of the generator usually will not fix the root cause.</p>
 <h3 id="812-when-is-fine-tuning-worth-trying"><span id="812" class="legacy-heading-anchor" aria-hidden="true"></span>8.1.2 When Is Fine-Tuning Worth Trying?<a class="headerlink" href="#812-when-is-fine-tuning-worth-trying" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9572,14 +9600,8 @@ A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
 <h2 id="87-chapter-summary"><span id="87" class="legacy-heading-anchor" aria-hidden="true"></span>8.7 Chapter Summary<a class="headerlink" href="#87-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Use error analysis to choose a training signal, then select a parameterization based on memory and expressive needs. Full fine-tuning, LoRA, and QLoRA differ in more than the number of GPUs: optimizer states, activations, quantization, and deployment constraints all matter. <strong>Reliable choices come from comparable evaluations and artifacts that support rollback, not fixed recommended combinations.</strong></p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2106.09685">LoRA</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers v4.46.3: Model training anatomy</a></li>
-<li><a href="https://huggingface.co/docs/peft/package_reference/lora">PEFT: LoRA configuration and initialization</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO</a></li>
-<li><a href="https://arxiv.org/abs/2305.11206">LIMA</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9602,7 +9624,7 @@ A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

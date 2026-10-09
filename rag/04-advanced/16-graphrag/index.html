@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: GraphRAG and Graph Retrieval","description":"Introduces retrieval through graph relationships and community summaries, distinguishes Microsoft GraphRAG indexing and query modes, and examines per-edge evidence, incremental updates, and cost limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/16-graphrag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: GraphRAG and Graph Retrieval","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/16-graphrag/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: GraphRAG and Graph Retrieval","description":"Introduces retrieval through graph relationships and community summaries, distinguishes Microsoft GraphRAG indexing and query modes, and examines per-edge evidence, incremental updates, and cost limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/16-graphrag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: GraphRAG and Graph Retrieval","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/16-graphrag/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 16: GraphRAG and Graph Retrieval","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/16-graphrag/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9349,16 +9374,16 @@
 <li>Answer C.</li>
 </ol>
 <p><strong>The difficulty for a single vector search</strong>: It usually encodes the query into one vector and returns the most similar passages. If no passage mentions A, B, and C together, one retrieval round may not provide the complete relationship chain. This does not mean that vector-based methods “cannot do” multi-hop reasoning. Query decomposition, multi-round retrieval, entity expansion, late interaction, and agents can all combine multiple pieces of evidence, but require additional control logic and verification.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Vector retrieval
-        Q1[One vector for&lt;br/&gt;the entire question] --&gt; M1[Find the most&lt;br/&gt;similar passages]
-        M1 --&gt; F1[Single-round candidates may&lt;br/&gt;miss parts of the relationship chain]
-    end
-    subgraph Graph retrieval
-        Q2[Identify entity A] --&gt; N1[Node A]
-        N1 --&gt;|Supply relationship| N2[Node B]
-        N2 --&gt;|Competitive relationship| N3[Node C]
-    end</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[One vector for the question] --&gt; M1[Most similar passages]
+    M1 --&gt; F1[Relationship chain may be incomplete]</code></pre>
+<p>Graph retrieval makes the relationship path explicit:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Identify entity A] --&gt; N1[Node A]
+    N1 --&gt;|Supply relationship| N2[Node B]
+    N2 --&gt;|Competitive relationship| N3[Node C]</code></pre>
 <blockquote>
 <p><strong>Standard single-round vector retrieval does not explicitly represent graph topology or traverse relationship edges on its own.</strong> For relationship-chain questions, it is better viewed as a way to find an entry point into the evidence than as a complete reasoning system.</p>
 </blockquote>
@@ -9368,13 +9393,13 @@
 <h2 id="162-the-graphrag-approach"><span id="162-graphrag" class="legacy-heading-anchor" aria-hidden="true"></span>16.2 The GraphRAG Approach<a class="headerlink" href="#162-the-graphrag-approach" title="Permanent link">&para;</a></h2>
 <p>GraphRAG broadly refers to approaches that use graph structures to support retrieval-augmented generation. The graph-construction and community-summary workflow in this chapter primarily describes Microsoft’s <strong>Standard GraphRAG</strong>. It does not imply that every graph-based RAG system must use LLM extraction.</p>
 <h3 id="1621-construction"><span id="1621" class="legacy-heading-anchor" aria-hidden="true"></span>16.2.1 Construction<a class="headerlink" href="#1621-construction" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    D[Documents] --&gt; C[Chunking]
-    C --&gt; E[LLM entity and&lt;br/&gt;relationship extraction]
-    E --&gt; G[Build a knowledge graph]
-    G --&gt; COM[Community detection:&lt;br/&gt;group strongly connected nodes]
-    COM --&gt; SUM[Generate a summary&lt;br/&gt;for each community]
-    SUM --&gt; IDX[(Graph and community&lt;br/&gt;summary index)]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[Chunk documents] --&gt; E[Extract entities and relations]
+    E --&gt; G[Build graph]
+    G --&gt; COM[Detect communities]
+    COM --&gt; SUM[Summarize and index]</code></pre>
+<p>An LLM extracts entities and relationships from chunks. Community detection groups strongly connected graph nodes; generate a summary for each community, then index the graph and community summaries.</p>
 <p>The key step is <strong>community summarization</strong>: divide the graph into closely connected subgraphs, or communities, and generate a summary for each. <strong>These summaries provide the material for answering global questions.</strong></p>
 <h3 id="1622-retrieval"><span id="1622" class="legacy-heading-anchor" aria-hidden="true"></span>16.2.2 Retrieval<a class="headerlink" href="#1622-retrieval" title="Permanent link">&para;</a></h3>
 <table>
@@ -9472,14 +9497,15 @@
 </table>
 <p>These approaches differ in graph construction, retrieval, and update strategies. “Which one supports incremental updates?” is not enough to distinguish them; Microsoft’s current official implementation also provides update methods.</p>
 <h2 id="165-when-is-it-worth-using"><span id="165" class="legacy-heading-anchor" aria-hidden="true"></span>16.5 When Is It Worth Using?<a class="headerlink" href="#165-when-is-it-worth-using" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S{Question type} --&gt;|Specific fact lookup| NO[Start with basic RAG,&lt;br/&gt;then compare experimentally]
-    S --&gt;|Multi-hop relationship reasoning| M{Are the relationships&lt;br/&gt;themselves important?}
-    S --&gt;|Global thematic synthesis| G{Do corpus size and&lt;br/&gt;budget permit it?}
-    M --&gt;|Yes| YES1[Consider graph retrieval]
-    M --&gt;|No| ALT[Try Agentic RAG first:&lt;br/&gt;multiple rounds can handle multiple hops]
-    G --&gt;|Yes| YES2[Consider GraphRAG]
-    G --&gt;|No| ALT2[Compare grouped summaries or RAPTOR;&lt;br/&gt;measure construction and query costs]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S[Question type] --&gt; P[Select a baseline]
+    P --&gt; E[Compare quality and costs]</code></pre>
+<ul>
+<li><strong>Specific fact lookup:</strong> start with basic RAG and compare experimentally.</li>
+<li><strong>Multi-hop reasoning:</strong> if the relationships themselves matter, consider graph retrieval. Otherwise try Agentic RAG first; multiple retrieval rounds can also handle multiple hops.</li>
+<li><strong>Global thematic synthesis:</strong> consider GraphRAG when corpus scale and budget permit. Otherwise compare grouped summaries or RAPTOR, measuring construction and query costs.</li>
+</ul>
 <p><strong>Signals in favor</strong>:</p>
 <ul>
 <li>The domain is <strong>inherently relationship-dense</strong>: organizational structures, supply chains, intellectual property, financial connections, or code dependencies.</li>
@@ -9535,20 +9561,8 @@
 <li><strong>Practical middle ground</strong>: metadata entity tags, explicit references, and separate tables for structured portions.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2404.16130">From Local to Global: A Graph RAG Approach to Query-Focused Summarization</a></li>
-<li><a href="https://microsoft.github.io/graphrag/">Microsoft GraphRAG documentation</a></li>
-<li><a href="https://microsoft.github.io/graphrag/index/methods/">Microsoft GraphRAG: Indexing Methods</a></li>
-<li><a href="https://microsoft.github.io/graphrag/cli/">Microsoft GraphRAG: CLI Reference, including update methods</a></li>
-<li><a href="https://microsoft.github.io/graphrag/query/overview/">Microsoft GraphRAG: Query Modes</a></li>
-<li><a href="https://microsoft.github.io/graphrag/query/local_search/">Microsoft GraphRAG: Local Search</a></li>
-<li><a href="https://arxiv.org/abs/2410.05779">LightRAG: Simple and Fast Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2405.14831">HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2502.14902">PathRAG: Pruning Graph-based Retrieval Augmented Generation with Relational Paths</a></li>
-<li><a href="https://arxiv.org/abs/2501.09136">Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG</a></li>
-</ul>
-<p>The Chinese source records access to Microsoft’s online documentation on 2026-09-15. CLI options and library implementations can change; use a pinned version and its configuration when reproducing behavior.</p>
-<p>For this translation, the linked official documentation was checked for Standard/Fast extraction, English-oriented NLP defaults, update methods, and Local/Global/DRIFT/Basic behavior. Relevant passages in the GraphRAG, LightRAG, HippoRAG, and PathRAG papers were also checked; the Agentic RAG survey was checked at the abstract level only. No indexing runs, update tests, or comparative benchmarks were performed.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-16">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9571,7 +9585,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

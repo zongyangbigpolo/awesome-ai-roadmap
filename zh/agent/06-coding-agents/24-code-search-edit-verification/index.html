@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十四章：Coding Agent 的代码搜索、编辑与验证","description":"用 limit=0 的分页缺陷串起代码定位、符号与调用关系、上下文读取、编辑冲突处理和分层验证，比较文本替换、行号、diff 与 Apply Model 的失败边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/06-coding-agents/24-code-search-edit-verification/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十四章：Coding Agent 的代码搜索、编辑与验证","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/06-coding-agents/24-code-search-edit-verification/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十四章：Coding Agent 的代码搜索、编辑与验证","description":"用 limit=0 的分页缺陷串起代码定位、符号与调用关系、上下文读取、编辑冲突处理和分层验证，比较文本替换、行号、diff 与 Apply Model 的失败边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/06-coding-agents/24-code-search-edit-verification/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十四章：Coding Agent 的代码搜索、编辑与验证","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/06-coding-agents/24-code-search-edit-verification/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十四章：Coding Agent 的代码搜索、编辑与验证","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/06-coding-agents/24-code-search-edit-verification/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9253,16 +9278,14 @@
 <p>开发者把缺陷交给 Agent，要求修复查询接口，又不能改变后台导出任务的既有行为。困难不是模型会不会写 <code>is None</code>，而是它能否证明：找到了真正执行的函数，只改了该改的位置，并且没有用一个绿色的语法检查冒充业务验收。</p>
 <p><a href="../../02-runtime-harness/19-tool-registry-and-execution-pipeline/">第 19 章</a>已经解释工具如何调度与返回错误；<a href="../../02-runtime-harness/20-permissions-sandbox-isolation/">第 20 章</a>解释执行边界；<a href="../../02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/">第 23 章</a>比较产品与记录成本。本章只把代码这条链走透：</p>
 <pre class="mermaid"><code>flowchart TD
-    A["缺陷输入与预期行为"] --&gt; B["定位文件与实际调用链"]
-    B --&gt; C["读取实现、契约、测试和文件版本"]
-    C --&gt; D["生成候选编辑"]
-    D --&gt; E{"基线有效且位置无歧义？"}
-    E --&gt;|否| C
-    E --&gt;|是| F["应用编辑并查看 diff"]
-    F --&gt; G["语法、类型、目标测试与相关回归"]
-    G --&gt; H{"满足成功判据？"}
-    H --&gt;|否，按错误定位| B
-    H --&gt;|是| I["交付改动与验证范围"]</code></pre>
+    B["定位与阅读"] --&gt; D["候选编辑"]
+    D --&gt; E["检查基线与位置"]
+    E --&gt;|无效或有歧义| B
+    E --&gt;|有效| F["应用并检查 diff"]
+    F --&gt; G["验证"]
+    G --&gt;|验收失败| B</code></pre>
+<p>从缺陷报告与预期行为出发，定位文件与实际调用链，再读取实现、契约、测试和文件版本，之后才生成编辑。基线无效或位置有歧义时，应重新阅读实现，而不是直接应用编辑。</p>
+<p>验证覆盖语法、类型、目标测试与相关回归。成功判据不满足时，沿错误重新定位相关文件与调用链；通过后，连同验证范围一起交付改动。</p>
 <p>“找到代码”与“允许改代码”是两次不同判断。搜索返回的是候选证据；真正编辑前还要确认调用关系、目标版本与业务约束。</p>
 <h2 id="242">24.2 先把搜索问题缩小到能够回答<a class="headerlink" href="#242" title="Permanent link">&para;</a></h2>
 <p>Agent 最初只知道“报表查询的条数限制失效”。直接搜索 <code>limit</code> 会命中连接池、重试器、导出器和测试夹具，结果多不代表理解多。</p>
@@ -9307,13 +9330,13 @@
 </tr>
 </tbody>
 </table>
-<p>这里的分类参考李博杰（Bojie Li）《深入理解 AI Agent》的<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307">搜索与编辑讨论</a>，但不把任何工具顺序当作所有任务都应遵守的流程。</p>
+<p>这里的分类参考李博杰（Bojie Li）《深入理解 AI Agent》的搜索与编辑讨论<sup><a href="../../../book/references/#ref-559">【559】</a></sup>，但不把任何工具顺序当作所有任务都应遵守的流程。</p>
 <p>有精确报错就先搜索报错；已知类名且语言服务可用，就直接跳定义。glob 避免读取正文，通常适合缩小范围，但网络文件系统、大量目录项或已有索引会改变耗时，不能仅凭工具名字断定谁一定更快。</p>
 <h3 id="_1">从文本命中走到调用关系<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>小周的接口最后落到 <code>src/reports/query.py</code> 的 <code>take_rows</code>。同名函数也出现在 <code>src/reports/export.py</code>，而导出配置把 <code>0</code> 约定为“不设上限”。修改所有同名函数会制造另一个缺陷。</p>
 <p>Agent 需要从路由处理函数追到实际导入的 <code>take_rows</code>，再查看其引用，确认查询与导出走不同实现。符号导航比字符串命中更适合区分这种情况；如果没有语言服务，就沿导入语句、调用点与已有测试手动追踪，不能把文本搜索的结果列表称为完整调用图。</p>
 <p>AST 能识别函数、调用表达式等语法结构，但单靠 AST 通常不知道跨模块名字最终绑定到谁。LSP 是客户端与语言服务通信的协议；定义、引用、调用层级等能力依赖服务器实现和能力协商，并不保证解析出每一条运行时调用。</p>
-<p>客户端如何请求这些关系，可以对照 <a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">LSP 3.17 的定义、引用与调用层级接口</a>阅读。</p>
+<p>客户端如何请求这些关系，可以对照 LSP 3.17 的定义、引用与调用层级接口<sup><a href="../../../book/references/#ref-561">【561】</a></sup>阅读。</p>
 <p>如果一开始连 <code>take_rows</code> 都不知道，语义搜索可以用“截取报表结果数量”召回候选函数。按函数分块能保留局部语义，但装饰器、类状态和调用方仍可能在块外。命中后必须回到当前文件读取，并核对索引对应的提交或文件版本。</p>
 <h3 id="_2">停止搜索需要理由<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>当 Agent 已确认入口对 <code>limit</code> 的解析、实际调用的实现、导出的不同约定以及覆盖这些行为的测试位置，就有了修复所需的最小证据集。继续逐页翻全库只会增加噪音。</p>
@@ -9396,7 +9419,7 @@
 <p>如果采用行号编辑，同一批多个区间应基于同一快照计算，拒绝重叠区间，再由执行器一致地应用。按倒序处理不重叠区间能减少批内行号漂移，但不能解决基线已经过期的问题。</p>
 <p>重新读取后若发现用户已经做了等价修复，Agent 应检查现有 diff 与测试，而不是重复应用。如果用户改动与任务要求矛盾，就说明冲突所在，不能擅自把用户改动恢复成自己更熟悉的版本。</p>
 <h3 id="_5">编辑报错后，文件可能已经变了<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
-<p>李博杰配套的 <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py"><code>EditTool</code></a>展示了非空旧串检查、默认唯一匹配，以及写后检查。它先写入文件，再报告语法问题，没有自动回滚。因此，Agent 收到“语法检查失败”时，应先读回当前内容，不能按“编辑从未发生”重试原补丁。</p>
+<p>李博杰配套的 <code>EditTool</code><sup><a href="../../../book/references/#ref-560">【560】</a></sup>展示了非空旧串检查、默认唯一匹配，以及写后检查。它先写入文件，再报告语法问题，没有自动回滚。因此，Agent 收到“语法检查失败”时，应先读回当前内容，不能按“编辑从未发生”重试原补丁。</p>
 <p>这个小实现没有覆盖版本比较与并发写入保护，接入宿主时仍需补齐。检查器也应使用项目实际支持的语言版本与配置，不能把一次语法检查当作完整类型检查或业务测试。</p>
 <h2 id="246-diff">24.6 查看 diff 后，再问每一层验证证明了什么<a class="headerlink" href="#246-diff" title="Permanent link">&para;</a></h2>
 <p>补丁应用成功，只证明执行器接受了编辑请求。Agent 应先查看工作区 diff：目标分支是否改成显式判断 <code>None</code>，导出实现是否未动，有没有整文件换行变化，新增测试是否还在验证原来的需求。</p>
@@ -9437,7 +9460,7 @@
 </tr>
 </tbody>
 </table>
-<p>Python 的 <a href="https://docs.python.org/3/library/ast.html#ast.parse"><code>ast.parse</code></a>得到 AST，也不等于完成所有编译与作用域检查；<code>py_compile</code> 更不执行业务断言。验证报告应写实际使用的检查器及覆盖范围，而不是笼统标成“lint 成功”。</p>
+<p>Python 的 <code>ast.parse</code><sup><a href="../../../book/references/#ref-562">【562】</a></sup>得到 AST，也不等于完成所有编译与作用域检查；<code>py_compile</code> 更不执行业务断言。验证报告应写实际使用的检查器及覆盖范围，而不是笼统标成“lint 成功”。</p>
 <h3 id="_6">先证明测试会抓住旧错误<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>下面是可单独运行的原创纯计算示例，需要 Python 3.10 或更新版本。它完整演示函数级最小复现与成功判据，不读写文件、不启动 HTTP 服务，也不模拟整个项目：</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -9485,12 +9508,8 @@
 <p>最终交给小周的应是可解释的差异：查询把 <code>None</code> 与 <code>0</code> 分开，导出约定没变；函数样例覆盖了什么、接口和相关回归覆盖了什么、哪些环境尚未验证，分别说清楚。工程交付的边界由这些证据决定，不由 Agent 最后一条“已完成”决定。</p>
 <p>如果同类错误反复出现，先按<a href="../../07-post-training/25-agent-post-training/">第二十五章</a>定位模型第一次做错决定的位置，再判断该改工具、提示还是训练数据，不要把每次编辑失败都归因于模型能力。</p>
 <h2 id="_7">参考资料与来源边界<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<ul>
-<li>李博杰（Bojie Li），《深入理解 AI Agent：设计原理与工程实践》<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md#L227-L307">第五章相关段落</a>：用于搜索类别、编辑格式与即时反馈的讨论。固定提交 <code>985a49d35b9f50937f1f757cf25867672991ded7</code>，查阅于 2026-09-14。</li>
-<li>同提交 <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/coding-agent/tools/edit_tool.py"><code>edit_tool.py</code></a>：用于匹配与写后检查的讨论，尤其是先写文件、后检查且不自动回滚的执行顺序。</li>
-<li><a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/">Language Server Protocol 3.17</a>：定义、引用、调用层级与位置编码机制。查阅于 2026-09-14。</li>
-<li><a href="https://docs.python.org/3/library/ast.html#ast.parse">Python <code>ast.parse</code> 文档</a>：解析 AST 与完整编译检查的边界。查阅于 2026-09-14。</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-24">集中参考资料章节</a>。</p>
 
 
 
@@ -9513,7 +9532,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

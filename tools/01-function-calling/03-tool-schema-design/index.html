@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Tool Definitions and Schema Engineering","description":"Design tool descriptions, strict JSON schemas, and results; manage discovery and context cost; and establish business validation and regression tests.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/03-tool-schema-design/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Tool Definitions and Schema Engineering","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/03-tool-schema-design/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Tool Definitions and Schema Engineering","description":"Design tool descriptions, strict JSON schemas, and results; manage discovery and context cost; and establish business validation and regression tests.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/03-tool-schema-design/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Tool Definitions and Schema Engineering","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/03-tool-schema-design/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: Tool Definitions and Schema Engineering","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/03-tool-schema-design/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9731,12 +9756,18 @@
 <h3 id="352-reducing-selection-confusion-as-the-tool-library-grows"><span id="352" class="legacy-heading-anchor" aria-hidden="true"></span>3.5.2 Reducing selection confusion as the tool library grows<a class="headerlink" href="#352-reducing-selection-confusion-as-the-tool-library-grows" title="Permanent link">&para;</a></h3>
 <p>Evaluate selection accuracy as well as cost. A new tool can improve success if it fills a missing capability, while similar tools such as <code>search_docs</code>, <code>search_wiki</code>, and <code>search_kb</code> can increase confusion.</p>
 <p>A common solution is <strong>dynamic tool filtering</strong>:</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[User request] --&gt; R["Routing layer&lt;br/&gt;Lightweight classification or vector retrieval"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["User request"] --&gt; R["Routing layer"]
     POOL[("Tool library")] --&gt; R
-    R --&gt; SEL["Filter by task&lt;br/&gt;Choose count through evaluation"]
-    SEL --&gt; M[Model]
-    M --&gt; CALL[tool_calls]</code></pre>
+    R --&gt; SEL["Filter by task"]
+    SEL --&gt; M["Model"]
+    M --&gt; CALL["tool_calls"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Routing layer Lightweight classification or vector retrieval</li>
+<li>Filter by task Choose count through evaluation</li>
+</ul>
 <p>Routing can use rules, retrieval, or a model. First exclude tools the user is not authorized to use, then evaluate missed candidates and added latency. If retrieval omits a necessary tool, the main model cannot call it from the current candidate set.</p>
 <h3 id="353-put-stable-tool-definitions-at-the-front-of-the-prompt"><span id="353-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>3.5.3 Put stable tool definitions at the front of the prompt<a class="headerlink" href="#353-put-stable-tool-definitions-at-the-front-of-the-prompt" title="Permanent link">&para;</a></h3>
 <p>Tool schemas are often a stable part of multi-turn conversations. Placing stable content first can improve cache-hit opportunities with providers or runtimes that support prefix caching. Actual hits, billing, and TTL depend on the service.</p>
@@ -9882,14 +9913,8 @@
 <li><strong>Regression-test tool definitions</strong>, including scenarios where no tool should be called.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Anthropic: Writing Effective Tools for Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function Calling guide</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Schemas supported by Structured Outputs</a></li>
-<li><a href="https://json-schema.org/">JSON Schema specification</a></li>
-<li><a href="https://gorilla.cs.berkeley.edu/leaderboard.html">Berkeley Function Calling Leaderboard</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9912,7 +9937,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

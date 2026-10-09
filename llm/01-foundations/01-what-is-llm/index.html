@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: How Large Language Models Differ from Traditional NLP","description":"Distinguish the training objectives and task interfaces of traditional NLP, BERT, and generative language models, and examine in-context learning, gains from scale, and evaluation limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/01-what-is-llm/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: How Large Language Models Differ from Traditional NLP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/01-what-is-llm/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: How Large Language Models Differ from Traditional NLP","description":"Distinguish the training objectives and task interfaces of traditional NLP, BERT, and generative language models, and examine in-context learning, gains from scale, and evaluation limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/01-what-is-llm/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: How Large Language Models Differ from Traditional NLP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/01-what-is-llm/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: How Large Language Models Differ from Traditional NLP","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/01-what-is-llm/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9070,17 +9095,20 @@
 <p>There is no universally accepted parameter-count threshold for an LLM, and the broader term is not restricted to decoder-only models. This topic focuses on <strong>generative, autoregressive language models</strong>, such as GPT and Llama. That focus does not imply that all language models share one architecture.</p>
 <p>Traditional NLP includes rule-based and statistical pipelines, but also end-to-end neural networks, pretrained representations, and generative models. The more accurate description of the shift is <strong>from predominantly task-specific interfaces toward reusing a single pretrained model and text interface for many capabilities</strong>, not “models used to classify, and only now can they generate.”</p>
 <p>The diagram illustrates one customer-support example.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph PIPE["Traditional support"]
-        A["Text"] --&gt; B["Tokenization and entity recognition"]
-        B --&gt; C["Intent classification"]
-        C --&gt; D["Retrieval or business rules"]
-    end
-    subgraph GEN["Generative application"]
-        E["Instructions + input + optional evidence"] --&gt; F["Language model"]
-        F --&gt; G["Text or structured output"]
-        G --&gt; H["Validation and business execution"]
-    end</code></pre>
+<p><strong>Traditional support</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Text"] --&gt; B["Tokenization and entity recognition"]
+    B --&gt; C["Intent classification"]
+    C --&gt; D["Retrieval or business rules"]
+</code></pre>
+<p><strong>Generative application</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["Instructions + input + optional evidence"] --&gt; F["Language model"]
+    F --&gt; G["Text or structured output"]
+    G --&gt; H["Validation and business execution"]
+</code></pre>
 <p>Errors can accumulate in a pipeline, but one upstream mistake does not necessarily invalidate every downstream step. Joint training, character-level models, and correction rules can mitigate this. Generative systems reduce some task-specific heads and labeling work, but introduce challenges around uncertain outputs, cost, authorization, and fact checking.</p>
 <h2 id="12-what-bert-introducedand-what-it-did-not"><span id="12-bert" class="legacy-heading-anchor" aria-hidden="true"></span>1.2 What BERT introduced—and what it did not<a class="headerlink" href="#12-what-bert-introducedand-what-it-did-not" title="Permanent link">&para;</a></h2>
 <p>BERT's key contribution in 2018 was the combination of bidirectional Transformer representations and large-scale self-supervised pretraining. It did not introduce “pretraining followed by fine-tuning” for the first time.</p>
@@ -9190,7 +9218,8 @@
 <p>Dividing word counts by token counts does not give an accurate growth factor. Nor should rumors fill gaps in undisclosed parameter counts or training-data volumes for closed models.</p>
 <p>Scaling laws fit empirical relationships between loss, parameter count, data, and compute under particular experimental conditions. <strong>They are not theorems guaranteeing that a capability will appear.</strong> Chinchilla's 70B parameters and 1.4T tokens are a representative configuration from a study of fixed training budgets, not evidence that approximately 20 tokens per parameter is optimal for every model. When long-term inference cost matters, a smaller model trained on more tokens may be more economical.</p>
 <p>“Emergence” usually describes an observation within a studied range of scales: smaller models perform near chance, while larger models improve markedly on particular metrics. Actual changes in capability must be distinguished from effects of the scoring rule:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Success probability improves gradually for each substep"] --&gt; B["Credit only for a completely correct answer"]
     B --&gt; C["A steeper observed accuracy curve"]
     A --&gt; D["Partial credit or continuous metrics"]
@@ -9234,16 +9263,8 @@
 <h2 id="17-the-distinctions-to-retain-from-this-chapter"><span id="17" class="legacy-heading-anchor" aria-hidden="true"></span>1.7 The distinctions to retain from this chapter<a class="headerlink" href="#17-the-distinctions-to-retain-from-this-chapter" title="Permanent link">&para;</a></h2>
 <p>The main engineering shift brought by LLMs is the reuse of pretrained capabilities through a general-purpose interface—not the obsolescence of traditional methods or the automatic arrival of reliable reasoning at scale. Keep <strong>architecture, training objectives, post-training, prompting interfaces, and business evaluation</strong> separate. This explains why the same model can attempt many tasks yet still be unsuitable for a particular production requirement.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
-<li><a href="https://arxiv.org/abs/2005.14165">Language Models are Few-Shot Learners (GPT-3)</a></li>
-<li><a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Language Models are Unsupervised Multitask Learners (GPT-2)</a></li>
-<li><a href="https://arxiv.org/abs/2206.07682">Emergent Abilities of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2304.15004">Are Emergent Abilities of Large Language Models a Mirage?</a></li>
-<li><a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2203.15556">Training Compute-Optimal Large Language Models (Chinchilla)</a></li>
-<li><a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9266,7 +9287,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 12:08:32 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

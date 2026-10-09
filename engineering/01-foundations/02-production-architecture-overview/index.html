@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: A Production Architecture for AI Applications","description":"Follow request, evaluation, and feedback paths through an LLM production architecture, distinguishing ingress authentication, the model gateway, tool execution, and logging responsibilities.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/02-production-architecture-overview/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: A Production Architecture for AI Applications","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/02-production-architecture-overview/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: A Production Architecture for AI Applications","description":"Follow request, evaluation, and feedback paths through an LLM production architecture, distinguishing ingress authentication, the model gateway, tool execution, and logging responsibilities.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/02-production-architecture-overview/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: A Production Architecture for AI Applications","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/02-production-architecture-overview/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: A Production Architecture for AI Applications","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/02-production-architecture-overview/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9170,37 +9195,28 @@
 <h1 id="chapter-2-a-production-architecture-for-ai-applications"><span id="ai" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 2: A Production Architecture for AI Applications<a class="headerlink" href="#chapter-2-a-production-architecture-for-ai-applications" title="Permanent link">&para;</a></h1>
 <h2 id="21-from-one-api-call-to-a-production-system"><span id="21-api" class="legacy-heading-anchor" aria-hidden="true"></span>2.1 From “one API call” to “a production system”<a class="headerlink" href="#21-from-one-api-call-to-a-production-system" title="Permanent link">&para;</a></h2>
 <p>An LLM application at the demo stage is often just a call to <code>client.chat.completions.create()</code>. Supporting real traffic requires an entire system around that call: gateways, orchestration, output validation, observability, evaluation, and release management.</p>
-<pre class="mermaid"><code>flowchart TB
-    U["User / upstream service"] --&gt; ENTRY["Ingress API gateway&lt;br/&gt;User authentication · Tenant rate limits"]
-    ENTRY --&gt; ORCH["Orchestration&lt;br/&gt;Agents / RAG / Tool calls"]
-    ORCH --&gt; GW["Model gateway&lt;br/&gt;Provider credentials · Routing · Fallback · Quotas"]
-    GW --&gt; PROVIDER["Model provider&lt;br/&gt;OpenAI / Anthropic / In-house deployment"]
-    PROVIDER --&gt; RESULT["Model response validation&lt;br/&gt;Text or tool arguments"]
-    RESULT --&gt; ORCH
-    ORCH --&gt; TOOL["Tool authorization and execution&lt;br/&gt;Resource permissions · Approval · Idempotency"]
-    TOOL --&gt; ORCH
-    ORCH --&gt; VALIDATE["Final output validation&lt;br/&gt;Contracts · Guardrails"]
-    VALIDATE --&gt;|Pass| RESP["Return to user"]
-    VALIDATE --&gt;|Fail| DEGRADE["Degraded-service path"]
-    DEGRADE --&gt; RESP
-
-    ORCH -.trace/metrics.-&gt; OBS["Observability&lt;br/&gt;Logs · Metrics · Traces"]
-    VALIDATE -.trace/metrics.-&gt; OBS
-    GW -.trace/metrics.-&gt; OBS
-
-    OBS --&gt; EVAL["Offline evaluation&lt;br/&gt;Golden test set"]
-    EVAL --&gt; CICD["Release pipeline&lt;br/&gt;Gradual rollout / Canary / A-B"]
-    CICD --&gt; GW
-    CICD --&gt; ORCH
-
-    RESP -.User feedback.-&gt; FEEDBACK["Feedback collection and reuse"]
-    FEEDBACK --&gt; EVAL
-    FEEDBACK --&gt; DATA["Training / fine-tuning data"]
-
-    style GW fill:#e8f0fe
-    style VALIDATE fill:#fff3cd
-    style OBS fill:#e6f4ea
-    style CICD fill:#fce8e6</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    ENTRY["Authorize request"] --&gt; ORCH["Orchestrate calls"]
+    ORCH --&gt; CHECK["Validate output"]
+    CHECK --&gt; RESP["Return safely"]
+    RESP -.-&gt; IMPROVE["Evaluate and release"]
+    IMPROVE -.-&gt; ORCH</code></pre>
+<p>The request path begins at the ingress API gateway. Within orchestration, model calls go through the model gateway to a provider; their text or tool arguments are validated before returning to the orchestrator. Tool calls follow a separate authorization-and-execution path and also return to the orchestrator. Final output validation either permits the response or selects a degraded-service response.</p>
+<p>The improvement loop is not another synchronous request step. Orchestration, output validation, and the model gateway emit traces and metrics. Observability and user feedback supply the offline evaluation set; suitable feedback may also become training or fine-tuning data. Evaluation gates the release pipeline, which updates the gateway and orchestration through staged releases.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Ingress API gateway User authentication · Tenant rate limits</li>
+<li>Orchestration Agents / RAG / Tool calls</li>
+<li>Model gateway Provider credentials · Routing · Fallback · Quotas</li>
+<li>Model provider OpenAI / Anthropic / In-house deployment</li>
+<li>Model response validation Text or tool arguments</li>
+<li>Tool authorization and execution Resource permissions · Approval · Idempotency</li>
+<li>Final output validation Contracts · Guardrails</li>
+<li>Observability Logs · Metrics · Traces</li>
+<li>Offline evaluation Golden test set</li>
+<li>Release pipeline Gradual rollout / Canary / A-B</li>
+</ul>
 <p>A request first passes ingress authentication, then enters the orchestration layer. Every model call from the orchestrator goes through the model gateway. After receiving a response, the orchestrator decides whether to call another tool or finish the task and validate the final answer. Tools have their own authorization and execution controls. The diagram separates responsibilities: several may live in the same service, but colocating them does not remove the need for their checks.</p>
 <h2 id="22-the-request-path-gateway-orchestration-and-provider"><span id="22" class="legacy-heading-anchor" aria-hidden="true"></span>2.2 The request path: gateway, orchestration, and provider<a class="headerlink" href="#22-the-request-path-gateway-orchestration-and-provider" title="Permanent link">&para;</a></h2>
 <p>The ingress layer verifies user and tenant identities. The <strong>model gateway</strong> manages model-provider credentials, quotas, routing, and fallback. Neither replaces the tool service's authorization checks for specific resources. For gateway components, see <a href="../../../tools/05-transport-gateway/14-llm-gateway/">Tools · LLM Gateways</a>; for routing, see <a href="../../02-request-reliability/03-model-gateway-routing-fallback/">Chapter 3</a>; for timeouts and retries, see <a href="../../02-request-reliability/04-retry-timeout-idempotency-circuit-breaker/">Chapter 4</a>.</p>
@@ -9236,15 +9252,21 @@
 <p>This is why the topic's final module is called “Performance, Cost, and Operations” rather than being placed under one particular box. These are cross-cutting concerns that affect every part of the request path.</p>
 <h2 id="26-a-lean-architecture-for-a-small-team"><span id="26" class="legacy-heading-anchor" aria-hidden="true"></span>2.6 A lean architecture for a small team<a class="headerlink" href="#26-a-lean-architecture-for-a-small-team" title="Permanent link">&para;</a></h2>
 <p>Not every team needs all the modules in the diagram in Section 2.1. A lean but still production-ready starting point is:</p>
-<pre class="mermaid"><code>flowchart LR
-    U[User] --&gt; GW["Lightweight gateway&lt;br/&gt;(Start with an open-source gateway rather than building one)"]
-    GW --&gt; M[Single model provider]
-    M --&gt; V["Basic&lt;br/&gt;JSON Schema validation"]
-    V --&gt; R[Return]
-    V -.Failed examples.-&gt; LOG[Structured logs]
-    LOG -.Regular manual sampling.-&gt; EVAL[Small evaluation set]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["User"] --&gt; GW["Lightweight&lt;br/&gt;gateway"]
+    GW --&gt; M["Single model&lt;br/&gt;provider"]
+    M --&gt; V["Basic"]
+    V --&gt; R["Return"]
+    V -.Failed examples.-&gt; LOG["Structured logs"]
+    LOG -.Regular manual sampling.-&gt; EVAL["Small&lt;br/&gt;evaluation set"]
 
     style GW fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Lightweight gateway (Start with an open-source gateway rather than building one)</li>
+<li>Basic JSON Schema validation</li>
+</ul>
 <p>The gateway can initially be an existing component. Start logs with request correlation IDs, versions, latency, status, and usage; <strong>do not persist raw inputs and outputs by default</strong>. Manually reviewing a few dozen examples can reveal obvious problems, but cannot establish a low failure rate. Even a small system needs authentication, a total timeout, rate limits, spending caps, and a release switch that can disable the feature. When side effects are involved, add tool authorization, approval, and idempotency. Whether multi-model fallback is necessary depends on the risks and recovery objectives; it is not a prerequisite for launching every application.</p>
 <h2 id="27-common-mistakes"><span id="27" class="legacy-heading-anchor" aria-hidden="true"></span>2.7 Common mistakes<a class="headerlink" href="#27-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="271-taking-a-demo-architecture-straight-into-production"><span id="271-demo" class="legacy-heading-anchor" aria-hidden="true"></span>2.7.1 Taking a demo architecture straight into production<a class="headerlink" href="#271-taking-a-demo-architecture-straight-into-production" title="Permanent link">&para;</a></h3>
@@ -9264,13 +9286,8 @@
 <li><strong>Feedback must influence evaluation and release decisions.</strong> Collecting it without using it serves no purpose.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/production-best-practices">OpenAI: Production best practices</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a></li>
-<li><a href="https://sre.google/sre-book/introduction/">Google SRE Book: Chapter 1 - Introduction</a></li>
-<li><a href="https://www.uber.com/blog/michelangelo-machine-learning-platform/">Uber Engineering: Michelangelo Machine Learning Platform</a></li>
-<li><a href="https://martinfowler.com/articles/cd4ml.html">Martin Fowler: Continuous Delivery for Machine Learning</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9293,7 +9310,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

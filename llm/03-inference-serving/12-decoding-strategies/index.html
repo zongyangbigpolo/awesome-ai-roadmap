@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Decoding Strategies","description":"Distinguish the objectives of greedy decoding, beam search, and sampling, including length bias, constrained decoding, distribution-preserving speculation, and the cost of multiple reasoning paths.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/12-decoding-strategies/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Decoding Strategies","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/12-decoding-strategies/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Decoding Strategies","description":"Distinguish the objectives of greedy decoding, beam search, and sampling, including length bias, constrained decoding, distribution-preserving speculation, and the cost of multiple reasoning paths.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/12-decoding-strategies/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Decoding Strategies","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/12-decoding-strategies/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 12: Decoding Strategies","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/03-inference-serving/12-decoding-strategies/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9301,15 +9326,13 @@
 s(y_{1:n})=\sum_{t=1}^{n}\log p(y_t\mid x,y_1,\ldots,y_{t-1})
 \]</div>
 <p>At t=1, the conditioning context contains no generated tokens. Logarithms avoid underflow from multiplying many small probabilities. Once length penalties or constraints are introduced, the search no longer optimizes raw sequence probability.</p>
-<pre class="mermaid"><code>flowchart TB
-    S["Start with one prefix"] --&gt; E["Expand next-token candidates&lt;br/&gt;for active beams"]
-    E --&gt; EOS{"Has the candidate ended?"}
-    EOS --&gt;|EOS| F["Add to completed candidates"]
-    EOS --&gt;|Not ended| B["Keep B active prefixes&lt;br/&gt;by accumulated score"]
-    B --&gt; STOP{"Stopping condition met?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E["Expand active beams"] --&gt; B["Separate EOS; prune active beams"]
+    B --&gt; STOP{"Stop?"}
     STOP --&gt;|No| E
-    STOP --&gt;|Yes| R["Return completed sequences&lt;br/&gt;using the specified score"]
-    F --&gt; R</code></pre>
+    STOP --&gt;|Yes| R["Rank completed sequences"]</code></pre>
+<p>Start with one prefix. Each expansion proposes next-token candidates for the active beams. Move EOS candidates to the completed set; among unfinished candidates retain B prefixes by accumulated score. If the stopping condition is not met, expand again. At termination, return completed sequences under the specified scoring rule; reaching EOS for one candidate does not by itself stop all beams.</p>
 <p>The diagram omits implementation-specific pruning of the completed set. EOS candidates should not continue to expand like active prefixes. <code>early_stopping</code>, maximum length, and the scoring of completed sequences all affect the result.</p>
 <h3 id="1231-why-a-wider-beam-is-not-necessarily-better"><span id="1231" class="legacy-heading-anchor" aria-hidden="true"></span>12.3.1 Why a wider beam is not necessarily better<a class="headerlink" href="#1231-why-a-wider-beam-is-not-necessarily-better" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9443,15 +9466,8 @@ r(x)=\frac{\max(0,p(x)-q(x))}{\sum_y\max(0,p(y)-q(y))}
 <h2 id="129-chapter-summary"><span id="129" class="legacy-heading-anchor" aria-hidden="true"></span>12.9 Chapter summary<a class="headerlink" href="#129-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Selection rules, sequence scoring, output constraints, and execution acceleration operate at different levels. Greedy decoding makes local choices, beam search performs approximate search, and sampling explores candidates. Speculative decoding preserves the target distribution under the required conditions; self-consistency changes how final answers are aggregated. Evaluate accuracy, format pass rate, latency, and cost rather than relying on fixed rules about temperature or beam width.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1904.09751">The Curious Case of Neural Text Degeneration</a></li>
-<li><a href="https://arxiv.org/abs/2010.02650">If Beam Search Is the Answer, What Was the Question?</a></li>
-<li><a href="https://arxiv.org/html/2211.17192v2">Fast Inference from Transformers via Speculative Decoding</a></li>
-<li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2309.06180">PagedAttention: cache sharing, including beam search</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-30B-A3B">Qwen3-30B-A3B official model card</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/batch_invariance/">vLLM: Batch Invariance</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-12">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9474,7 +9490,7 @@ r(x)=\frac{\max(0,p(x)-q(x))}{\sum_y\max(0,p(y)-q(y))}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

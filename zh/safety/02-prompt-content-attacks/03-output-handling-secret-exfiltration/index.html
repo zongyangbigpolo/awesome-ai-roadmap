@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：输出处理与 Secret Exfiltration","description":"按 SQL、Shell、HTML、CSV 和工具参数的消费上下文处理模型输出，区分净化、授权与外带通道控制。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：输出处理与 Secret Exfiltration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第三章：输出处理与 Secret Exfiltration","description":"按 SQL、Shell、HTML、CSV 和工具参数的消费上下文处理模型输出，区分净化、授权与外带通道控制。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第三章：输出处理与 Secret Exfiltration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第三章：输出处理与 Secret Exfiltration","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9215,13 +9240,23 @@
 <h1 id="secret-exfiltration">第三章：输出处理与 Secret Exfiltration<a class="headerlink" href="#secret-exfiltration" title="Permanent link">&para;</a></h1>
 <h2 id="31">3.1 为什么输出侧需要单独的一章<a class="headerlink" href="#31" title="Permanent link">&para;</a></h2>
 <p>前两章关注「不可信内容怎么进入模型」，本章关注<strong>模型的输出本身应被当作不可信内容</strong>。这是 OWASP LLM05（Improper Output Handling）的核心命题：很多团队严格校验输入，却把模型输出直接拼进 SQL、Shell 命令、HTML、Markdown 渲染器或下游 API 调用参数，相当于把模型变成了一个「可被攻击者远程编程的模板引擎」。</p>
-<pre class="mermaid"><code>flowchart LR
-    U[攻击者可控输入&lt;br/&gt;直接或间接] --&gt; M[模型]
-    M --&gt; O[模型输出]
-    O --&gt;|未经处理直接执行/渲染| D1[SQL/Shell/反序列化]
-    O --&gt;|未经处理直接执行/渲染| D2[前端 HTML/Markdown]
-    O --&gt;|作为工具调用参数| D3[下游 API/文件系统]
-    O --&gt;|夹带凭据或内部信息| D4[外部可达的目的地]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    U["攻击者可控输入"] --&gt; O["模型生成输出"]
+    O --&gt; EXEC["不安全的执行"]
+    O --&gt; LEAK["向外部泄露"]</code></pre>
+<p>攻击者可控的直接或间接输入到达模型后，模型输出如果未经适当处理就进入 SQL、Shell、反序列化或前端 HTML/Markdown 渲染，就可能形成执行漏洞；工具调用参数也可能进入下游 API 或文件系统。另一条泄露路径是：含凭据或内部信息的输出到达外部可访问的目的地。需要哪些校验与转义，应由接收系统决定，而不是由模型表现出的自信决定。</p>
+<p>图中条件与标签：</p>
+<ul>
+<li>未经处理直接执行/渲染</li>
+<li>未经处理直接执行/渲染</li>
+<li>作为工具调用参数</li>
+<li>夹带凭据或内部信息</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>攻击者可控输入 直接或间接</li>
+</ul>
 <p>模型输出之所以危险，是因为它同时具备两个特征：<strong>内容可被攻击者间接操纵</strong>（通过 Prompt Injection 或越狱），<strong>又天然被下游系统当作「AI 生成的正常结果」而降低审查力度</strong>。后面就沿着几个最容易出事的消费点往下看：执行、渲染、工具参数，以及单独拎出来看的密钥与敏感数据外泄（secret exfiltration）。</p>
 <h2 id="32">3.2 不安全输出处理的典型路径<a class="headerlink" href="#32" title="Permanent link">&para;</a></h2>
 <h3 id="321">3.2.1 注入类：输出被当作可执行内容<a class="headerlink" href="#321" title="Permanent link">&para;</a></h3>
@@ -9395,13 +9430,8 @@
 <li>输出侧防御是纵深防御的最后一层，不能替代第二章和 <a href="../../../agent/05-production/15-agent-security/">Agent 安全</a> 中的架构级隔离，但同样不可或缺。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/">OWASP LLM05:2025 Improper Output Handling</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">OWASP LLM02:2025 Sensitive Information Disclosure</a></li>
-<li><a href="https://arxiv.org/abs/2410.14923">Imprompter: Tricking LLM Agents into Improper Tool Use</a></li>
-<li><a href="https://arxiv.org/abs/2302.12173">Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</a></li>
-<li><a href="https://owasp.org/www-community/attacks/CSV_Injection">OWASP: CSV Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-03">集中参考资料章节</a>。</p>
 
 
 
@@ -9424,7 +9454,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

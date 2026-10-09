@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：Chunking 策略与粒度选择","description":"比较固定长度、语义、递归、结构化和父子 Chunking 策略，说明块大小、重叠率与召回质量之间的关系。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/04-chunking-strategy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：Chunking 策略与粒度选择","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/04-chunking-strategy/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：Chunking 策略与粒度选择","description":"比较固定长度、语义、递归、结构化和父子 Chunking 策略，说明块大小、重叠率与召回质量之间的关系。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/04-chunking-strategy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：Chunking 策略与粒度选择","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/04-chunking-strategy/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第四章：Chunking 策略与粒度选择","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/04-chunking-strategy/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9369,15 +9394,11 @@
 <p><strong>切分的目的，不只是为了装得下，而是为了让每个向量表达一个足够聚焦的语义单元。</strong></p>
 </blockquote>
 <h2 id="42">4.2 粒度的核心矛盾<a class="headerlink" href="#42" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    G[chunk 粒度] --&gt; S[切得太小]
-    G --&gt; L[切得太大]
-
-    S --&gt; S1[语义聚焦 检索精准]
-    S --&gt; S2[上下文缺失&lt;br/&gt;指代不明 结论没有前提]
-
-    L --&gt; L1[上下文完整]
-    L --&gt; L2[语义被稀释&lt;br/&gt;混入无关内容 检索不准]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    G[chunk 大小] --&gt; S[小：检索更聚焦]
+    G --&gt; L[大：上下文更完整]</code></pre>
+<p>小块的语义更聚焦，可能提高检索精度，但容易丢失上下文：指代不明，结论缺少前提。大块保留更完整的上下文，但无关内容可能稀释语义，使检索不够精确。</p>
 <p>这是一个<strong>无法被完全消除的矛盾</strong>，只能被缓解——第五章的方法都是围绕这组权衡展开的。</p>
 <h3 id="421">4.2.1 切得太小会发生什么<a class="headerlink" href="#421" title="Permanent link">&para;</a></h3>
 <p>一个 100 字的片段可能长这样：</p>
@@ -9407,7 +9428,8 @@
 </ol>
 <p>这里说的语义切分，主要指「用 Embedding 相似度找语义断点」这一类方法。而<strong>基于 LLM 的命题化切分</strong>（把段落改写成一组独立自足的陈述句）是另一回事，它在实体密集的问答任务上有明确收益——但成本高得多（第五章展开）。</p>
 <h2 id="44">4.4 常见切分策略<a class="headerlink" href="#44" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     C[切分策略] --&gt; F[固定大小 + 重叠]
     C --&gt; R[递归分隔符]
     C --&gt; ST[结构化 按标题层级]
@@ -9561,13 +9583,8 @@
 <li><strong>必须用评测集实测</strong>，且检索指标和端到端指标都要看。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.06648">Dense X Retrieval: What Retrieval Granularity Should We Use?</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B 模型卡</a></li>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-04">集中参考资料章节</a>。</p>
 
 
 
@@ -9590,7 +9607,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

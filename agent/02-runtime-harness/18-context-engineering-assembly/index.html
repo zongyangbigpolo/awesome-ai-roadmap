@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Context Engineering and Context Assembly","description":"Explains request-context sources, trust levels, tool-call pairing, cache layout, and budget reservations without allowing compression or retrieval to change authorization semantics.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/18-context-engineering-assembly/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Context Engineering and Context Assembly","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/18-context-engineering-assembly/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Context Engineering and Context Assembly","description":"Explains request-context sources, trust levels, tool-call pairing, cache layout, and budget reservations without allowing compression or retrieval to change authorization semantics.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/18-context-engineering-assembly/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Context Engineering and Context Assembly","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/18-context-engineering-assembly/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 18: Context Engineering and Context Assembly","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/18-context-engineering-assembly/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9148,14 +9173,15 @@
 <p>It must assemble the instructions, tool definitions, history, and new input that apply to this turn into a request that satisfies the model API's contract and fits the budget. Content existing in storage does not mean the model actually sees it this turn. Even an excellent summary can produce an invalid request if it loses tool-call IDs or elevates the authority of its sources. Chapter 2 discusses context-management choices, and Chapter 10 covers compression strategies. This chapter examines the actual assembly step in Chapter 17's state machine.</p>
 <h2 id="182-what-makes-up-a-requests-context"><span id="182" class="legacy-heading-anchor" aria-hidden="true"></span>18.2 What makes up a request's context?<a class="headerlink" href="#182-what-makes-up-a-requests-context" title="Permanent link">&para;</a></h2>
 <p>A request sent to a model typically combines five independently maintained sources:</p>
-<pre class="mermaid"><code>flowchart TB
-    SP["System Prompt&lt;br/&gt;Identity, general rules, and output-format constraints"]
-    INST["Instructions / Memory&lt;br/&gt;Project configuration: AGENTS.md, skills, long-term memory"]
-    TOOLS["Tool Definitions&lt;br/&gt;Schemas for tools available this turn"]
-    HIST["Conversation History&lt;br/&gt;Historical messages in working memory"]
-    USER["Current Turn Input&lt;br/&gt;New user input or tool results this turn"]
-    ASSEMBLE["Assembly pipeline"]
-    REQ["Final request payload"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    SP["System Prompt"]
+    INST["Instructions /&lt;br/&gt;Memory"]
+    TOOLS["Tool Definitions"]
+    HIST["Conversation&lt;br/&gt;History"]
+    USER["Current Turn&lt;br/&gt;Input"]
+    ASSEMBLE["Assembly&lt;br/&gt;pipeline"]
+    REQ["Final request&lt;br/&gt;payload"]
 
     SP --&gt; ASSEMBLE
     INST --&gt; ASSEMBLE
@@ -9163,13 +9189,14 @@
     HIST --&gt; ASSEMBLE
     USER --&gt; ASSEMBLE
     ASSEMBLE --&gt; REQ</code></pre>
+<p>The five inputs remain distinct: the system prompt supplies identity, general rules, and output-format constraints; instructions/memory supply project configuration such as <code>AGENTS.md</code>, skills, and long-term memory; tool definitions supply schemas available this turn; conversation history supplies historical messages from working memory; and current-turn input supplies new user input or tool results. The assembly pipeline combines them into the final request payload.</p>
 <p>These sources have different lifecycles. The system prompt is usually relatively stable; instructions and memory vary by task or project; tool definitions may be dynamically narrowed for the current context (Section 19.7); conversation history grows or is compressed; and the current turn brings new input. The assembly pipeline must preserve message structure and source authority, not flatten everything into one block of text with equal privileges.</p>
 <h2 id="183-why-does-assembly-order-matter"><span id="183" class="legacy-heading-anchor" aria-hidden="true"></span>18.3 Why does assembly order matter?<a class="headerlink" href="#183-why-does-assembly-order-matter" title="Permanent link">&para;</a></h2>
 <p>Assembly order is not a matter of aesthetics. It affects three things at once:</p>
 <ol>
 <li><strong>Prompt-cache hit rate.</strong> With prefix-based caching, placing volatile content first also prevents reuse of stable content that follows it. OpenAI Prompt Caching, for example, requires a matching rendered prefix and is subject to model support, minimum lengths, breakpoints, and retention policies (see References). Prefer stable content first and volatile content later, provided that this does not change message semantics or trust levels. Other caching interfaces do not necessarily accept the same parameters.</li>
 <li><strong>Whether important information is used effectively.</strong> Constraints in the middle of a long history may be overlooked, but the effect depends on the model, task, length, and message roles. “Later is better” is not a guarantee. Test layouts with regression cases for omitted constraints rather than judging them by position alone.</li>
-<li><strong>Stable serialization of tool lists.</strong> MCP 2026-07-28 uses <strong>SHOULD</strong> for deterministic list ordering, which helps tool-list and prompt caching. It is not <strong>MUST</strong>, and it certainly does not guarantee deterministic tool selection by the model (<a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Tools</a>).</li>
+<li><strong>Stable serialization of tool lists.</strong> MCP 2026-07-28 uses <strong>SHOULD</strong> for deterministic list ordering, which helps tool-list and prompt caching. It is not <strong>MUST</strong>, and it certainly does not guarantee deterministic tool selection by the model (Tools<sup><a href="../../../book/references/#ref-285">【285】</a></sup>).</li>
 </ol>
 <p>These are cache-layout principles, not a reason to override trust boundaries. Retrieved documents, long-term memory, skill content, and model-generated summaries must not become system-level instructions merely because they are “stable.” Source and permission labels must be retained independently. APIs differ in their internal serialization order for tool fields and their support for explicit and prefix caching; follow the relevant provider's contract.</p>
 <h2 id="184-if-instructions-have-a-hierarchy-should-they-all-go-in-the-system-prompt"><span id="184-system-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>18.4 If instructions have a hierarchy, should they all go in the system prompt?<a class="headerlink" href="#184-if-instructions-have-a-hierarchy-should-they-all-go-in-the-system-prompt" title="Permanent link">&para;</a></h2>
@@ -9178,7 +9205,7 @@
 <li><strong>Product-level default instructions</strong>, expressing product behavior and rules; genuinely non-bypassable safety boundaries still need enforcement by the executor.</li>
 <li><strong>Organization- or project-level configuration</strong>, including the AGENTS.md files discussed in Section 3.6, typically read once at session startup.</li>
 <li><strong>Skills and commands</strong>, such as the skills in Section 3.5, disclosed progressively on demand. Often only a summary is injected until the skill is explicitly invoked.</li>
-<li><strong>Application-supplied system-prompt configuration</strong>, such as the Claude Agent SDK's presets, <code>append</code>, and custom <code>system_prompt</code> (see <a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts">Modifying system prompts</a>). Configuring a system prompt does not imply support for hot updates at arbitrary times. Project-file content may also be injected into conversation context rather than rewriting the system field.</li>
+<li><strong>Application-supplied system-prompt configuration</strong>, such as the Claude Agent SDK's presets, <code>append</code>, and custom <code>system_prompt</code> (see Modifying system prompts<sup><a href="../../../book/references/#ref-548">【548】</a></sup>). Configuring a system prompt does not imply support for hot updates at arbitrary times. Project-file content may also be injected into conversation context rather than rewriting the system field.</li>
 </ul>
 <p>Loading times differ too: some sources are read at session startup, others on demand. Source authority, loading time, and final message role are three separate decisions; a single string concatenation cannot substitute for them.</p>
 <h2 id="185-the-cost-of-injecting-tool-definitions"><span id="185" class="legacy-heading-anchor" aria-hidden="true"></span>18.5 The cost of injecting tool definitions<a class="headerlink" href="#185-the-cost-of-injecting-tool-definitions" title="Permanent link">&para;</a></h2>
@@ -9221,14 +9248,8 @@
 <h2 id="1811-chapter-summary"><span id="1811" class="legacy-heading-anchor" aria-hidden="true"></span>18.11 Chapter summary<a class="headerlink" href="#1811-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Context assembly must first ensure valid messages, prevent elevation of source authority, and preserve essential constraints. Stable prefixes and on-demand retrieval come afterward. Tool definitions occupying the context window does not mean full-price billing every turn, and cache breakpoints depend on the API. Silent removal of authorization information or pending calls is not an acceptable response to an oversized request.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Model Context Protocol: Tools</a></li>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts">Claude Agent SDK: Modifying system prompts</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI: Prompt caching</a>: prefix matching, model differences, and cache breakpoints; accessed in the source review on 2026-09-15.</li>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic Prompt Caching</a>: retained as the original technical source. Access during the source review redirected to a region-unavailable page, so it was not used to confirm current parameters.</li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-18">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9251,7 +9272,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

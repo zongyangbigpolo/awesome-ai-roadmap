@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Model Supply Chains and Serialization Risks","description":"Review the provenance and loading of models and dependencies, and distinguish the guarantees provided by PyTorch weights_only, safetensors, signatures, and bills of materials.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Model Supply Chains and Serialization Risks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Model Supply Chains and Serialization Risks","description":"Review the provenance and loading of models and dependencies, and distinguish the guarantees provided by PyTorch weights_only, safetensors, signatures, and bills of materials.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Model Supply Chains and Serialization Risks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 5: Model Supply Chains and Serialization Risks","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/05-model-supply-chain-serialization-risks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9167,18 +9192,27 @@
 <h1 id="chapter-5-model-supply-chains-and-serialization-risks"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 5: Model Supply Chains and Serialization Risks<a class="headerlink" href="#chapter-5-model-supply-chains-and-serialization-risks" title="Permanent link">&para;</a></h1>
 <h2 id="51-models-are-dependencies-too"><span id="51" class="legacy-heading-anchor" aria-hidden="true"></span>5.1 Models Are Dependencies Too<a class="headerlink" href="#51-models-are-dependencies-too" title="Permanent link">&para;</a></h2>
 <p>Modern AI applications rarely train models from scratch. They download pretrained weights, adapters such as LoRA, tokenizers, and evaluation scripts from repositories such as Hugging Face or cloud-provider model marketplaces, then add their own fine-tuning and prompt engineering. <strong>Models and their accompanying files should therefore be managed as software dependencies</strong>, with supply chain governance comparable to that applied to open-source libraries. In practice, many teams scan code dependencies while leaving model files entirely unreviewed. OWASP lists this risk as LLM03, Supply Chain Vulnerabilities.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
     subgraph SC["Model supply chain"]
-        S1[Source of pretrained weights] --&gt; S2[Fine-tuning/LoRA adapters]
-        S2 --&gt; S3[Tokenizer/configuration files]
-        S3 --&gt; S4[Inference framework/dependencies]
+        direction TB
+        S1["Source of&lt;br/&gt;pretrained&lt;br/&gt;weights"] --&gt; S2["Fine-tuning/LoRA&lt;br/&gt;adapters"]
+        S2 --&gt; S3["Tokenizer/configuration&lt;br/&gt;files"]
+        S3 --&gt; S4["Inference&lt;br/&gt;framework/dependencies"]
     end
-    SC --&gt; R1[Source tampering&lt;br/&gt;5.2]
-    SC --&gt; R2[Deserialization RCE&lt;br/&gt;5.3]
-    SC --&gt; R3[Dependency poisoning&lt;br/&gt;5.4]
-    R1 --&gt; D[Defenses: signatures/provenance/ML-BOM&lt;br/&gt;5.5]
+    SC --&gt; R1["Tampering"]
+    SC --&gt; R2["RCE"]
+    SC --&gt; R3["Dependencies"]
+    R1 --&gt; D["Supply-chain&lt;br/&gt;defenses"]
     R2 --&gt; D
     R3 --&gt; D</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Source tampering 5.2</li>
+<li>Deserialization RCE 5.3</li>
+<li>Dependency poisoning 5.4</li>
+<li>Defenses: signatures/provenance/ML-BOM 5.5</li>
+</ul>
 <h2 id="52-source-tampering-a-model-repository-is-not-a-root-of-trust"><span id="52" class="legacy-heading-anchor" aria-hidden="true"></span>5.2 Source Tampering: A Model Repository Is Not a Root of Trust<a class="headerlink" href="#52-source-tampering-a-model-repository-is-not-a-root-of-trust" title="Permanent link">&para;</a></h2>
 <p>Anyone can upload files to a public model repository. Download counts and likes are not a security review. Publicly reported risks include:</p>
 <ul>
@@ -9190,13 +9224,36 @@
 <h2 id="53-deserialization-risks-pickle-and-safer-formats"><span id="53-pickle" class="legacy-heading-anchor" aria-hidden="true"></span>5.3 Deserialization Risks: Pickle and Safer Formats<a class="headerlink" href="#53-deserialization-risks-pickle-and-safer-formats" title="Permanent link">&para;</a></h2>
 <p>PyTorch checkpoints often contain pickle metadata, and <strong>general-purpose pickle deserialization can execute code</strong>. However, not every <code>.pt</code> or <code>.bin</code> file, nor every <code>torch.load()</code> call, follows the same execution path. The extension does not determine the content or loader, and restricted loading modes affect what can execute.</p>
 <p>Starting with PyTorch 2.6, <code>torch.load</code> defaults to <code>weights_only=True</code> when <code>pickle_module</code> is not supplied. This restricts the types that can be constructed and prohibits dynamic imports. It reduces the attack surface but is not a complete sandbox: denial of service, parser defects, and unsafe allowlists remain concerns. Do not switch to <code>weights_only=False</code> without review merely to eliminate an error.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant A as Attacker
-    participant F as Malicious .pt/.bin file
-    participant V as Victim environment
-    A-&gt;&gt;F: Construct and pickle an object with __reduce__
-    V-&gt;&gt;F: Unrestricted pickle loading&lt;br/&gt;For example, weights_only=False
-    F--&gt;&gt;V: Arbitrary code executes during deserialization</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Craft pickle object"]
+    S1["Distribute model file"]
+    S2["Unrestricted loading"]
+    S3["Code executes"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attacker → Malicious .pt/.bin file</td>
+<td>Construct and pickle an object with <strong>reduce</strong></td>
+</tr>
+<tr>
+<td>Victim environment → Malicious .pt/.bin file</td>
+<td>Unrestricted pickle loading; For example, weights_only=False</td>
+</tr>
+<tr>
+<td>Malicious .pt/.bin file → Victim environment (return)</td>
+<td>Arbitrary code executes during deserialization</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Key defenses:</strong></p>
 <ul>
 <li><strong>Prefer serialization formats that do not execute code</strong>, such as <code>safetensors</code>. It stores tensor data and does not support deserializing arbitrary Python objects, eliminating this class of risk at the format level.</li>
@@ -9292,15 +9349,8 @@
 <li>Model signatures, ML-BOMs, model cards, and reproducible builds make the supply chain verifiable and auditable, providing the foundational records for the governance and auditing discussed in Chapter 10.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm032025-supply-chain/">OWASP LLM03:2025 Supply Chain</a></li>
-<li><a href="https://huggingface.co/docs/hub/security-pickle">Hugging Face: Pickle Scanning and Safetensors</a></li>
-<li><a href="https://docs.pytorch.org/docs/2.6/notes/serialization.html#torch-load-with-weights-only-true">PyTorch 2.6: Serialization semantics and weights_only</a></li>
-<li><a href="https://blog.trailofbits.com/2024/06/11/exploiting-ml-models-with-pickle-file-attacks-part-1/">Sleepy Pickle: Exploiting Machine Learning Pickle Files</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0010">MITRE ATLAS: ML Supply Chain Compromise</a></li>
-<li><a href="https://cyclonedx.org/capabilities/mlbom/">CycloneDX: Machine Learning Bill of Materials (ML-BOM)</a></li>
-<li><a href="https://www.sigstore.dev/">Sigstore: Software Signing for Everyone</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-05">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9323,7 +9373,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

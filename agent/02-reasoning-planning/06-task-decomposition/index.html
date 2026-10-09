@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Decomposing and Scheduling Complex Tasks","description":"Define task contracts, choose decomposition granularity, schedule DAGs, analyze critical paths, and recover locally while handling replanning, idempotent retries, and concurrent writes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/06-task-decomposition/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Decomposing and Scheduling Complex Tasks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/06-task-decomposition/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Decomposing and Scheduling Complex Tasks","description":"Define task contracts, choose decomposition granularity, schedule DAGs, analyze critical paths, and recover locally while handling replanning, idempotent retries, and concurrent writes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/06-task-decomposition/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Decomposing and Scheduling Complex Tasks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/06-task-decomposition/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Decomposing and Scheduling Complex Tasks","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/06-task-decomposition/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -10599,15 +10624,16 @@
 <blockquote>
 <p><strong>Executable, verifiable, schedulable, and recoverable.</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    G[Complex goal] --&gt; D[Task decomposition]
-    D --&gt; T1[Subtask 1]
-    D --&gt; T2[Subtask 2]
-    D --&gt; TN[Subtask N]
-    T1 --&gt; V[Independent verification]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Complex goal"] --&gt; D["Task decomposition"]
+    D --&gt; T1["Subtask 1"]
+    D --&gt; T2["Subtask 2"]
+    D --&gt; TN["Subtask N"]
+    T1 --&gt; V["Independent verification"]
     T2 --&gt; V
     TN --&gt; V
-    V --&gt; S[Combine results]</code></pre>
+    V --&gt; S["Combine results"]</code></pre>
 <p>This chapter uses a fictional competitor-research task: examine the past six months of product, pricing, and market developments, then deliver a sourced report. Parameters and durations are illustrative, not measured project results: three research branches take 40, 50, and 60 seconds, and merging takes 10 seconds.</p>
 <h2 id="62-why-decompose"><span id="62" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 Why decompose?<a class="headerlink" href="#62-why-decompose" title="Permanent link">&para;</a></h2>
 <h3 id="621-reduce-context-pressure"><span id="621" class="legacy-heading-anchor" aria-hidden="true"></span>6.2.1 Reduce context pressure<a class="headerlink" href="#621-reduce-context-pressure" title="Permanent link">&para;</a></h3>
@@ -10625,10 +10651,11 @@
 <p>With separate steps, each model call has a more focused goal and input, a more constrained output format, and more readily defined success criteria.</p>
 <h3 id="623-support-independent-verification"><span id="623" class="legacy-heading-anchor" aria-hidden="true"></span>6.2.3 Support independent verification<a class="headerlink" href="#623-support-independent-verification" title="Permanent link">&para;</a></h3>
 <p>When a whole task fails, it can be difficult to tell whether search, analysis, or synthesis caused the problem. Decomposition allows each step to have its own acceptance criteria:</p>
-<pre class="mermaid"><code>flowchart LR
-    T[Execute subtask] --&gt; V{Acceptance criteria met?}
-    V --&gt;|Yes| NEXT[Proceed to downstream tasks]
-    V --&gt;|No| R[Local retry or fallback]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Execute subtask"] --&gt; V["Acceptance&lt;br/&gt;criteria met?"]
+    V --&gt;|Yes| NEXT["Proceed to&lt;br/&gt;downstream tasks"]
+    V --&gt;|No| R["Local retry or&lt;br/&gt;fallback"]
     R --&gt; T</code></pre>
 <h3 id="624-support-local-retries-and-recovery"><span id="624" class="legacy-heading-anchor" aria-hidden="true"></span>6.2.4 Support local retries and recovery<a class="headerlink" href="#624-support-local-retries-and-recovery" title="Permanent link">&para;</a></h3>
 <p>If step 8 fails, first determine which completed results remain valid, then retry affected steps instead of always restarting at step 1. If upstream inputs, permissions, or business state have changed, a <code>done</code> marker alone does not justify reusing old results.</p>
@@ -10829,12 +10856,13 @@
 </ul>
 <h2 id="66-static-decomposition"><span id="66" class="legacy-heading-anchor" aria-hidden="true"></span>6.6 Static decomposition<a class="headerlink" href="#66-static-decomposition" title="Permanent link">&para;</a></h2>
 <p>Developers define steps and dependencies in advance. This fits stable processes with clear rules.</p>
-<pre class="mermaid"><code>flowchart LR
-    IN[Customer question] --&gt; C[Classify intent]
-    C --&gt; R[Retrieve from knowledge base]
-    R --&gt; G[Generate answer]
-    G --&gt; S[Safety checks]
-    S --&gt; OUT[Return result]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    IN["Customer question"] --&gt; C["Classify intent"]
+    C --&gt; R["Retrieve from knowledge&lt;br/&gt;base"]
+    R --&gt; G["Generate answer"]
+    G --&gt; S["Safety checks"]
+    S --&gt; OUT["Return result"]</code></pre>
 <h3 id="661-strengths"><span id="661" class="legacy-heading-anchor" aria-hidden="true"></span>6.6.1 Strengths<a class="headerlink" href="#661-strengths" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Predictable behavior.</li>
@@ -10853,16 +10881,34 @@
 <p>Static decomposition is usually implemented with a workflow, DAG, or state machine.</p>
 <h2 id="67-dynamic-decomposition"><span id="67" class="legacy-heading-anchor" aria-hidden="true"></span>6.7 Dynamic decomposition<a class="headerlink" href="#67-dynamic-decomposition" title="Permanent link">&para;</a></h2>
 <p>A planner generates subtasks from the goal and current environment.</p>
-<pre class="mermaid"><code>flowchart TB
-    G[User goal] --&gt; P[LLM Planner]
-    P --&gt; PLAN[Generate task list or DAG]
-    PLAN --&gt; E[Executor]
-    E --&gt; O[Observation]
-    O --&gt; DONE{Overall acceptance passed?}
-    DONE --&gt;|Yes| OUT[Deliver result]
-    DONE --&gt;|No| LIMIT{Budget remains and continuation allowed?}
-    LIMIT --&gt;|No| STOP[Pause or report incompleteness]
-    LIMIT --&gt;|Yes| RP{Replanning needed?}
+<p>Plan, execute, and test overall acceptance.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["User goal"]
+    P["LLM Planner"]
+    PLAN["Generate task list or&lt;br/&gt;DAG"]
+    E["Executor"]
+    O["Observation"]
+    DONE["Overall acceptance&lt;br/&gt;passed?"]
+    OUT["Deliver result"]
+    G --&gt; P
+    P --&gt; PLAN
+    PLAN --&gt; E
+    E --&gt; O
+    O --&gt; DONE
+    DONE --&gt;|Yes| OUT</code></pre>
+<p>After failed acceptance, check limits before continuing.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    DONE["Overall acceptance&lt;br/&gt;passed?"]
+    LIMIT["Budget remains and&lt;br/&gt;continuation allowed?"]
+    STOP["Pause or report&lt;br/&gt;incompleteness"]
+    RP["Replanning needed?"]
+    E["Executor"]
+    P["LLM Planner"]
+    DONE --&gt;|No| LIMIT
+    LIMIT --&gt;|No| STOP
+    LIMIT --&gt;|Yes| RP
     RP --&gt;|No| E
     RP --&gt;|Yes| P</code></pre>
 <p>It is suitable when:</p>
@@ -10896,18 +10942,19 @@
 <li>Execute and verify.</li>
 <li>Expand the next level afterward.</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    G[Strategy report] --&gt; M1[Collect material]
-    G --&gt; M2[Comparative analysis]
-    G --&gt; M3[Generate report]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    G["Strategy&lt;br/&gt;report"] --&gt; M1["Collect&lt;br/&gt;material"]
+    G --&gt; M2["Comparative&lt;br/&gt;analysis"]
+    G --&gt; M3["Generate&lt;br/&gt;report"]
 
-    M1 --&gt; T11[Competitor A]
-    M1 --&gt; T12[Competitor B]
-    M1 --&gt; T13[Industry trends]
+    M1 --&gt; T11["Competitor A"]
+    M1 --&gt; T12["Competitor B"]
+    M1 --&gt; T13["Industry&lt;br/&gt;trends"]
 
-    M2 --&gt; T21[Feature comparison]
-    M2 --&gt; T22[Price comparison]
-    M2 --&gt; T23[Risk analysis]</code></pre>
+    M2 --&gt; T21["Feature&lt;br/&gt;comparison"]
+    M2 --&gt; T22["Price&lt;br/&gt;comparison"]
+    M2 --&gt; T23["Risk&lt;br/&gt;analysis"]</code></pre>
 <p>This borrows the hierarchical idea of Hierarchical Task Networks (HTN):</p>
 <ul>
 <li>High-level tasks describe objectives.</li>
@@ -10933,11 +10980,12 @@
 <li>Update the remaining plan.</li>
 <li>Extend the horizon again.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    S[Current state] --&gt; P[Plan near-term steps]
-    P --&gt; E[Execute next step]
-    E --&gt; O[Obtain feedback]
-    O --&gt; U[Update state]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current state"] --&gt; P["Plan near-term steps"]
+    P --&gt; E["Execute next step"]
+    E --&gt; O["Obtain feedback"]
+    O --&gt; U["Update state"]
     U --&gt; P</code></pre>
 <p>It fits rapidly changing environments where distant-future information is unreliable.</p>
 <p>Compared with a full Plan-and-Execute plan:</p>
@@ -10972,18 +11020,36 @@
 <li>Whether to change executors.</li>
 <li>Whether to increase or decrease parallelism.</li>
 </ul>
+<p>Execution produces the signals used to choose granularity.</p>
 <pre class="mermaid"><code>flowchart TB
-    T[Current task] --&gt; E[Execute or probe]
-    E --&gt; M[Monitoring signals]
-    M --&gt; D{Adjust granularity?}
-    D --&gt;|Too large or uncertain| SPLIT[Decompose further]
-    D --&gt;|Too fine or too much overhead| MERGE[Merge tasks]
-    D --&gt;|Plan still suitable| KEEP[Keep current plan]
-    D --&gt;|Key assumption invalidated| REPLAN[Replan]
+    T[Current task]
+    E[Execute or probe]
+    M[Monitoring signals]
+    D{Adjust granularity?}
+    T --&gt; E
+    E --&gt; M
+    M --&gt; D</code></pre>
+<p>Changes return to the current task with revised granularity or plan.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    D["Adjust&lt;br/&gt;granularity?"]
+    SPLIT["Decompose&lt;br/&gt;further"]
+    MERGE["Merge tasks"]
+    REPLAN["Replan"]
+    T["Current task"]
+    D --&gt;|Too large or&lt;br/&gt;uncertain| SPLIT
+    D --&gt;|Too fine or too&lt;br/&gt;much overhead| MERGE
+    D --&gt;|Key assumption&lt;br/&gt;invalidated| REPLAN
     SPLIT --&gt; T
     MERGE --&gt; T
-    KEEP --&gt; E
     REPLAN --&gt; T</code></pre>
+<p>A suitable plan continues the same execution.</p>
+<pre class="mermaid"><code>flowchart TB
+    D{Adjust granularity?}
+    KEEP[Keep current plan]
+    E[Execute or probe]
+    D --&gt;|Plan still suitable| KEEP
+    KEEP --&gt; E</code></pre>
 <h3 id="6101-adaptation-signals"><span id="6101" class="legacy-heading-anchor" aria-hidden="true"></span>6.10.1 Adaptation signals<a class="headerlink" href="#6101-adaptation-signals" title="Permanent link">&para;</a></h3>
 <h4 id="uncertainty">Uncertainty<a class="headerlink" href="#uncertainty" title="Permanent link">&para;</a></h4>
 <ul>
@@ -11056,13 +11122,14 @@
 <h2 id="611-dependencies-and-task-dags"><span id="611-dag" class="legacy-heading-anchor" aria-hidden="true"></span>6.11 Dependencies and task DAGs<a class="headerlink" href="#611-dependencies-and-task-dags" title="Permanent link">&para;</a></h2>
 <p>After decomposition, analyze dependencies between subtasks.</p>
 <p>Let each node represent a task and each directed edge mean “the later task depends on the earlier one.” Only after checking for cycles do you have a task DAG:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Collect competitor A data] --&gt; D[Product comparison]
-    B[Collect competitor B data] --&gt; D
-    C[Collect industry trends] --&gt; E[Trend analysis]
-    D --&gt; F[Generate report]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Collect&lt;br/&gt;competitor A&lt;br/&gt;data"] --&gt; D["Product&lt;br/&gt;comparison"]
+    B["Collect&lt;br/&gt;competitor B&lt;br/&gt;data"] --&gt; D
+    C["Collect&lt;br/&gt;industry&lt;br/&gt;trends"] --&gt; E["Trend&lt;br/&gt;analysis"]
+    D --&gt; F["Generate&lt;br/&gt;report"]
     E --&gt; F
-    F --&gt; G[Fact and citation checks]</code></pre>
+    F --&gt; G["Fact and&lt;br/&gt;citation&lt;br/&gt;checks"]</code></pre>
 <h3 id="6111-dependency-types"><span id="6111" class="legacy-heading-anchor" aria-hidden="true"></span>6.11.1 Dependency types<a class="headerlink" href="#6111-dependency-types" title="Permanent link">&para;</a></h3>
 <h4 id="data-dependencies">Data dependencies<a class="headerlink" href="#data-dependencies" title="Permanent link">&para;</a></h4>
 <p>A downstream task needs an upstream task's output.</p>
@@ -11087,11 +11154,12 @@
 <p>Leases are not sufficient on their own: an old worker may keep running after its lease expires. Update the claim identifier on every reassignment; at commit time, the result store must atomically validate that identifier and the plan version, rejecting stale executors' results. External writes still need concurrency control and an idempotency contract at the tool boundary. Discarding a late result at the scheduler does not undo its side effects.</p>
 <h2 id="612-parallel-execution"><span id="612" class="legacy-heading-anchor" aria-hidden="true"></span>6.12 Parallel execution<a class="headerlink" href="#612-parallel-execution" title="Permanent link">&para;</a></h2>
 <p>Tasks with satisfied dependencies and sufficient concurrency resources can use fan-out/fan-in: dispatch to several branches, then aggregate their results.</p>
-<pre class="mermaid"><code>flowchart LR
-    P[Planner] --&gt; A[Task A]
-    P --&gt; B[Task B]
-    P --&gt; C[Task C]
-    A --&gt; J[Join / Aggregate]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Planner"] --&gt; A["Task A"]
+    P --&gt; B["Task B"]
+    P --&gt; C["Task C"]
+    A --&gt; J["Join / Aggregate"]
     B --&gt; J
     C --&gt; J</code></pre>
 <h3 id="6121-sequential-execution-time"><span id="6121" class="legacy-heading-anchor" aria-hidden="true"></span>6.12.1 Sequential execution time<a class="headerlink" href="#6121-sequential-execution-time" title="Permanent link">&para;</a></h3>
@@ -11152,10 +11220,11 @@ Saving=1-\frac{70}{160}=0.5625
 <p>The 56.25% saving comes from these particular numbers. It is not a fixed gain available to every task.</p>
 <h2 id="613-the-critical-path"><span id="613" class="legacy-heading-anchor" aria-hidden="true"></span>6.13 The critical path<a class="headerlink" href="#613-the-critical-path" title="Permanent link">&para;</a></h2>
 <p>The longest dependency path in a task DAG, weighted by execution duration, is the <strong>critical path</strong>. Total completion time equals this path's length when resources are sufficient, ready tasks start immediately, and extra overhead is ignored. With concurrency limits, queues, or contention, it is only a lower bound.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Task A&lt;br/&gt;20s] --&gt; C[Task C&lt;br/&gt;40s]
-    B[Task B&lt;br/&gt;50s] --&gt; D[Task D&lt;br/&gt;10s]
-    C --&gt; E[Aggregate&lt;br/&gt;10s]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Task A&lt;br/&gt;20s"] --&gt; C["Task C&lt;br/&gt;40s"]
+    B["Task B&lt;br/&gt;50s"] --&gt; D["Task D&lt;br/&gt;10s"]
+    C --&gt; E["Aggregate&lt;br/&gt;10s"]
     D --&gt; E</code></pre>
 <p>The two main paths are:</p>
 <ul>
@@ -11217,13 +11286,14 @@ Saving=1-\frac{70}{160}=0.5625
 <p>Artifacts should also be bound to input versions, producing tasks, and validation results. Consumers must check freshness and permissions, not just read summaries. Summaries can omit exceptions, and source pages may contain untrusted instructions. Inclusion in an internal artifact must not elevate such content into system instructions.</p>
 <h2 id="616-planner-scheduler-executor-and-verifier"><span id="616-plannerschedulerexecutor-verifier" class="legacy-heading-anchor" aria-hidden="true"></span>6.16 Planner, scheduler, executor, and verifier<a class="headerlink" href="#616-planner-scheduler-executor-and-verifier" title="Permanent link">&para;</a></h2>
 <p>Systems for decomposing complex tasks commonly separate four responsibilities:</p>
-<pre class="mermaid"><code>flowchart LR
-    G[Goal] --&gt; P[Planner]
-    P --&gt; DAG[Task DAG]
-    DAG --&gt; S[Scheduler]
-    S --&gt; E[Executors]
-    E --&gt; V[Verifiers]
-    V --&gt;|Pass| ART[Artifacts]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --&gt; P["Planner"]
+    P --&gt; DAG["Task DAG"]
+    DAG --&gt; S["Scheduler"]
+    S --&gt; E["Executors"]
+    E --&gt; V["Verifiers"]
+    V --&gt;|Pass| ART["Artifacts"]
     V --&gt;|Local failure| S
     V --&gt;|Plan invalidated| P</code></pre>
 <h3 id="planner">Planner<a class="headerlink" href="#planner" title="Permanent link">&para;</a></h3>
@@ -11289,34 +11359,37 @@ Saving=1-\frac{70}{160}=0.5625
 <li>Idempotency keys.</li>
 <li>Human confirmation.</li>
 </ul>
-<p><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS's guidance on idempotent API design</a> emphasizes caller-provided request identifiers that express the same operation, with server-side coordination between deduplication records and committing side effects. A task ID does not by itself guarantee exactly-once effects. Define an idempotency key's lifetime, parameter-consistency rules, and scope. Compensation does not turn back time: a refund is not the same as reversing shipment, and a sent email generally cannot be rolled back.</p>
-<pre class="mermaid"><code>flowchart TB
-    F[Task failure] --&gt; C{Failure type}
-    C --&gt;|Transient error| R[Retry with backoff]
-    C --&gt;|Parameter error| A[Adjust parameters]
-    C --&gt;|Task too large| S[Decompose further]
-    C --&gt;|Plan invalidated| P[Replan]
-    C --&gt;|Irreversible side effect| H[Compensate or involve a person]</code></pre>
+<p>AWS's guidance on idempotent API design<sup><a href="../../../book/references/#ref-466">【466】</a></sup> emphasizes caller-provided request identifiers that express the same operation, with server-side coordination between deduplication records and committing side effects. A task ID does not by itself guarantee exactly-once effects. Define an idempotency key's lifetime, parameter-consistency rules, and scope. Compensation does not turn back time: a refund is not the same as reversing shipment, and a sent email generally cannot be rolled back.</p>
+<p>Repair transient and parameter failures locally.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    F["Task failure"]
+    C["Failure type"]
+    R["Retry with backoff"]
+    A["Adjust parameters"]
+    F --&gt; C
+    C --&gt;|Transient error| R
+    C --&gt;|Parameter error| A</code></pre>
+<p>Structural failures and irreversible effects need different responses.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["Failure type"]
+    S["Decompose&lt;br/&gt;further"]
+    P["Replan"]
+    H["Compensate or&lt;br/&gt;involve a person"]
+    C --&gt;|Task too large| S
+    C --&gt;|Plan invalidated| P
+    C --&gt;|Irreversible&lt;br/&gt;side effect| H</code></pre>
 <h2 id="618-an-adaptive-decomposition-controller"><span id="618" class="legacy-heading-anchor" aria-hidden="true"></span>6.18 An adaptive decomposition controller<a class="headerlink" href="#618-an-adaptive-decomposition-controller" title="Permanent link">&para;</a></h2>
 <p>A practical adaptive decomposition controller might operate as follows:</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; P[Hierarchical Planner]
-    P --&gt; DAG[Task DAG]
-    DAG --&gt; SCH[Scheduler]
+    P[Hierarchical Planner] --&gt; SCH[Scheduler]
     SCH --&gt; EX[Executor Pool]
-    EX --&gt; OBS[Execution Observations]
-    OBS --&gt; VER[Verifier]
-
-    VER --&gt; MET[Progress, quality, cost, and risk metrics]
-    MET --&gt; CTRL{Adaptive Controller}
-
+    EX --&gt; VER[Verifier]
+    VER --&gt; CTRL[Adaptive Controller]
     CTRL --&gt;|Continue unchanged| SCH
-    CTRL --&gt;|Required tasks and overall acceptance pass| DONE[Deliver result]
-    CTRL --&gt;|Decompose further| P
-    CTRL --&gt;|Merge tasks or change dependencies| P
-    CTRL --&gt;|Plan invalidated| P
-    CTRL --&gt;|Budget exhausted or no progress| STOP[Stop and report]
-    CTRL --&gt;|High risk| HUMAN[Human review]</code></pre>
+    CTRL --&gt;|Change plan| P</code></pre>
+<p>The goal enters the hierarchical planner, whose task DAG feeds the scheduler. Execution observations go to the verifier; progress, quality, cost, and risk metrics then inform the controller. Changing the plan includes further decomposition, merging tasks, changing dependencies, or replacing an invalid plan. Deliver only when required tasks <strong>and</strong> overall acceptance pass. Budget exhaustion or lack of progress stops execution with a report; high risk goes to human review.</p>
 <p>Changing granularity or dependencies creates a new DAG version for validation; it does not directly mutate the running graph. The controller should use observable metrics, not just the planner's natural-language judgment:</p>
 <ul>
 <li>Task completion rate.</li>
@@ -11335,11 +11408,12 @@ Saving=1-\frac{70}{160}=0.5625
 <p>Research three competitors' product, pricing, and market developments over the past six months, then produce a sourced comparison report.</p>
 </blockquote>
 <h3 id="6191-high-level-decomposition"><span id="6191" class="legacy-heading-anchor" aria-hidden="true"></span>6.19.1 High-level decomposition<a class="headerlink" href="#6191-high-level-decomposition" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    G[Competitor research report] --&gt; R[Collect material]
-    G --&gt; A[Comparative analysis]
-    G --&gt; W[Write report]
-    G --&gt; V[Verify facts]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    G["Competitor&lt;br/&gt;research report"] --&gt; R["Collect material"]
+    G --&gt; A["Comparative&lt;br/&gt;analysis"]
+    G --&gt; W["Write report"]
+    G --&gt; V["Verify facts"]</code></pre>
 <p>This diagram lists the work, not a parallel schedule. Comparison depends on research, and the report depends on analysis. Sources can be checked during collection, but the conclusions assembled in the final draft still need another check.</p>
 <h3 id="6192-expand-material-collection"><span id="6192" class="legacy-heading-anchor" aria-hidden="true"></span>6.19.2 Expand material collection<a class="headerlink" href="#6192-expand-material-collection" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
@@ -11395,22 +11469,9 @@ Saving=1-\frac{70}{160}=0.5625
 <p>Calculate parallel gains from the DAG, critical path, and actual measurements.</p>
 <h2 id="621-choosing-a-decomposition-strategy"><span id="621_1" class="legacy-heading-anchor" aria-hidden="true"></span>6.21 Choosing a decomposition strategy<a class="headerlink" href="#621-choosing-a-decomposition-strategy" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    G[Complex task] --&gt; K{Are steps known and stable?}
-    K --&gt;|Yes| STATIC[Static workflow]
-    K --&gt;|Partly known| HYBRID[Fixed structure + Dynamic subtasks]
-    K --&gt;|Unknown| DYNAMIC[Dynamic planner]
-
-    DYNAMIC --&gt; H{Is the task long-running?}
-    H --&gt;|Yes| HIER[Hierarchical + Rolling-horizon planning]
-    H --&gt;|No| PLAN[Plan-and-Execute]
-
-    STATIC --&gt; DEP[Build dependency DAG]
-    HYBRID --&gt; DEP
-    HIER --&gt; DEP
-    PLAN --&gt; DEP
-
-    DEP --&gt; PAR[Parallel scheduling]
+    DEP[Build dependency DAG] --&gt; PAR[Parallel scheduling]
     PAR --&gt; ADAPT[Runtime adaptation]</code></pre>
+<p>Choose the planning structure before building the DAG. Known, stable steps favor a static workflow; partially known steps favor a fixed structure with dynamic subtasks. Unknown steps require a dynamic planner: use hierarchical plus rolling-horizon planning for long-running tasks, or Plan-and-Execute otherwise. All four choices converge on the dependency DAG, parallel scheduling, and runtime adaptation shown above.</p>
 <p>A practical design usually converges in this order:</p>
 <ol>
 <li>Prefer deterministic static decomposition.</li>
@@ -11506,15 +11567,8 @@ Saving=1-\frac{70}{160}=0.5625
 <p><strong>Each task should be small enough to execute, verify, and retry independently, yet large enough to produce a meaningful, reusable business result.</strong></p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.langchain.com/blog/planning-agents">LangChain: Planning Agents</a></li>
-<li><a href="https://arxiv.org/abs/2312.04511">LLMCompiler: An LLM Compiler for Parallel Function Calling</a></li>
-<li><a href="https://arxiv.org/abs/2305.18323">ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models</a></li>
-<li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS Builders' Library: Making retries safe with idempotent APIs</a></li>
-<li><a href="https://www.cs.umd.edu/projects/shop/">SHOP planners: the authors' project page and implementations</a></li>
-<li><a href="https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html">Martin Kleppmann: How to do distributed locking</a> — late writes after lease expiration and fencing, from the 2016 article.</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -11537,7 +11591,7 @@ Saving=1-\frac{70}{160}=0.5625
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

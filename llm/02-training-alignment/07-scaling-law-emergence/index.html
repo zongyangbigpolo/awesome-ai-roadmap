@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Scaling Laws and Emergent Abilities","description":"Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Scaling Laws and Emergent Abilities","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Scaling Laws and Emergent Abilities","description":"Use the empirical fits in Kaplan and Chinchilla to explain parameter, data, and compute allocation, then examine serving costs, emergence metrics, and the limits of extrapolation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Scaling Laws and Emergent Abilities","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Scaling Laws and Emergent Abilities","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/07-scaling-law-emergence/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9534,7 +9559,8 @@ D_{\mathrm{opt}} \propto C^{\frac{\alpha}{\alpha+\beta}}
 <p>Under a fixed budget, the question is how to choose a smaller <code>N</code> and a larger <code>D</code>. With a fixed model, the question is the marginal return from continued training. These are different problems.</p>
 <h2 id="73-why-train-small-models-on-far-more-than-20n-tokens"><span id="73-20n" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 Why Train Small Models on Far More Than 20N Tokens?<a class="headerlink" href="#73-why-train-small-models-on-far-more-than-20n-tokens" title="Permanent link">&para;</a></h2>
 <h3 id="731-training-optimality-is-not-lifecycle-cost-optimality"><span id="731" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.1 Training Optimality Is Not Lifecycle Cost Optimality<a class="headerlink" href="#731-training-optimality-is-not-lifecycle-cost-optimality" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Fixed training budget&lt;br/&gt;Choose N and D&lt;br/&gt;Minimize validation loss"]
     B["Fixed serving demand&lt;br/&gt;Balance training&lt;br/&gt;and inference costs&lt;br/&gt;Meet quality and&lt;br/&gt;latency requirements"]
     A -.-&gt;|Different objectives| B</code></pre>
@@ -9593,7 +9619,8 @@ P_{\mathrm{exact}} = p^k
 \]</div>
 <p>Even if <code>p</code> improves smoothly, the probability of getting the entire sequence right can remain near zero for a long time and then appear suddenly in a finite sample. This is not a mathematical discontinuity, but a chart can easily make it look as though an ability has abruptly appeared.</p>
 <p>Schaeffer and colleagues' Mirage paper uses mathematical models and experiments to show that <strong>nonlinear or discontinuous metrics can produce apparent emergence</strong>. For the same model outputs, finer-grained measures such as token-level edit distance or probabilities can sometimes reveal smoother trends.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OUT["The same model outputs"] --&gt; EXACT["All-or-nothing scoring&lt;br/&gt;May show an abrupt change"]
     OUT --&gt; FINE["Fine-grained distance&lt;br/&gt;or probability metrics&lt;br/&gt;May show gradual improvement"]
     EXACT --&gt; CHECK["Report multiple metrics&lt;br/&gt;Add model scales and samples"]
@@ -9652,16 +9679,8 @@ P_{\mathrm{exact}} = p^k
 <h2 id="79-chapter-summary"><span id="79" class="legacy-heading-anchor" aria-hidden="true"></span>7.9 Chapter Summary<a class="headerlink" href="#79-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Scaling laws are tools for budget planning. Chinchilla studies training-budget allocation under particular conditions. Training smaller models longer can serve deployment-cost objectives without contradicting its conclusions. The emergence debate reminds us that <strong>practical usability thresholds, evaluation curves, and internal capability mechanisms are three different things</strong>.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2001.08361">Scaling Laws for Neural Language Models</a></li>
-<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla: §3, Table 2, and the compute-optimal derivation</a></li>
-<li><a href="https://arxiv.org/abs/2206.07682">Emergent Abilities of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2304.15004">Are Emergent Abilities of Large Language Models a Mirage?</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models</a></li>
-<li><a href="https://arxiv.org/html/2505.09388v1">Qwen3 Technical Report, initial version</a></li>
-<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath: data construction and GRPO</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1, initial version</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9684,7 +9703,7 @@ P_{\mathrm{exact}} = p^k
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

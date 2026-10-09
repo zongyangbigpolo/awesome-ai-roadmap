@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: The Three-Stage Training Framework for LLMs","description":"Explain how autoregressive pretraining, supervised fine-tuning, and preference optimization differ in objectives, data, and losses, and where the three-stage framework stops being useful.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/06-llm-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: The Three-Stage Training Framework for LLMs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/06-llm-training/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: The Three-Stage Training Framework for LLMs","description":"Explain how autoregressive pretraining, supervised fine-tuning, and preference optimization differ in objectives, data, and losses, and where the three-stage framework stops being useful.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/06-llm-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: The Three-Stage Training Framework for LLMs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/06-llm-training/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: The Three-Stage Training Framework for LLMs","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/06-llm-training/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9310,7 +9335,8 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     RAW["Random initialization"] --&gt;|Pretraining| BASE["Base model"]
     BASE --&gt;|SFT on demonstrations| SFT["Instruction model"]
     SFT --&gt;|Preference or&lt;br/&gt;reward optimization| CHAT["Post-trained model"]
@@ -9411,7 +9437,8 @@ C \approx 6ND
 <p>Preference optimization adds comparison or reward signals. Human preference is not the same as objective correctness: annotators may prefer a longer, more confident answer that is wrong. Helpfulness, factuality, and safety therefore need distinct evaluation criteria.</p>
 <h3 id="642-the-classic-ppo-rlhf-workflow"><span id="642-ppo-rlhf" class="legacy-heading-anchor" aria-hidden="true"></span>6.4.2 The Classic PPO-RLHF Workflow<a class="headerlink" href="#642-the-classic-ppo-rlhf-workflow" title="Permanent link">&para;</a></h3>
 <p>RLHF predates InstructGPT. <em>Deep Reinforcement Learning from Human Preferences</em> studied learning rewards from human comparisons in 2017. InstructGPT is an important application of that idea to instruction-following language models.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     S1["Compare answers&lt;br/&gt;to the same question"] --&gt; S2["Train a reward model, RM"]
     S2 --&gt; S3["Policy generates answers online&lt;br/&gt;Reward scoring and PPO updates"]
     REF["Frozen reference policy"] -.-&gt;|KL regularization| S3
@@ -9462,17 +9489,8 @@ C \approx 6ND
 <h2 id="67-chapter-summary"><span id="67" class="legacy-heading-anchor" aria-hidden="true"></span>6.7 Chapter Summary<a class="headerlink" href="#67-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>The three-stage framework distinguishes data and optimization signals; it does not put knowledge, format, and values into disjoint boxes. When explaining a training workflow, identify at least <strong>the starting checkpoint, the tokens included in the loss, the feedback source, the parameters being updated, and how gains and regressions are measured</strong>.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/html/2005.14165v4">GPT-3, §2 and few-shot evaluations</a></li>
-<li><a href="https://arxiv.org/html/2307.09288v2">Llama 2, §§2.1 and 3.1.1, and the model card</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models, §§3–4</a></li>
-<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla: the training-compute approximation</a></li>
-<li><a href="https://arxiv.org/abs/2203.02155">InstructGPT</a></li>
-<li><a href="https://arxiv.org/abs/2305.11206">LIMA</a></li>
-<li><a href="https://arxiv.org/abs/1706.03741">Deep Reinforcement Learning from Human Preferences</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO: reward reparameterization and preference loss</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1: the training workflow in the initial 2025 report</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9495,7 +9513,7 @@ C \approx 6ND
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

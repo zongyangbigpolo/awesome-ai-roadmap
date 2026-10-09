@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：大模型的三阶段训练流程","description":"解释自回归预训练、监督微调与偏好优化的目标、数据和损失差异，澄清三阶段流程的适用边界与能力来源。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/06-llm-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：大模型的三阶段训练流程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/06-llm-training/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：大模型的三阶段训练流程","description":"解释自回归预训练、监督微调与偏好优化的目标、数据和损失差异，澄清三阶段流程的适用边界与能力来源。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/06-llm-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：大模型的三阶段训练流程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/06-llm-training/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：大模型的三阶段训练流程","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/06-llm-training/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9310,7 +9335,8 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     RAW["随机初始化"] --&gt;|预训练| BASE["Base 模型"]
     BASE --&gt;|示范数据 SFT| SFT["指令模型"]
     SFT --&gt;|偏好或奖励优化| CHAT["后训练模型"]
@@ -9462,17 +9488,8 @@ C \approx 6ND
 <h2 id="67">6.7 本章总结<a class="headerlink" href="#67" title="Permanent link">&para;</a></h2>
 <p>三阶段框架区分的是数据与优化信号，不是把知识、格式、价值观切成互不相交的盒子。解释训练流程时，至少说清楚：<strong>从哪个 checkpoint 开始、哪些 token 计损失、反馈来自哪里、哪些参数更新、如何验证收益与退化</strong>。</p>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/html/2005.14165v4">GPT-3，§2 与 few-shot 评估</a></li>
-<li><a href="https://arxiv.org/html/2307.09288v2">Llama 2，§2.1、§3.1.1 与模型卡</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models，§3、§4</a></li>
-<li><a href="https://arxiv.org/html/2203.15556v1">Chinchilla：训练计算量近似</a></li>
-<li><a href="https://arxiv.org/abs/2203.02155">InstructGPT</a></li>
-<li><a href="https://arxiv.org/abs/2305.11206">LIMA</a></li>
-<li><a href="https://arxiv.org/abs/1706.03741">Deep Reinforcement Learning from Human Preferences</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO：奖励重参数化与偏好损失</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1，2025 年初版训练流程</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9495,7 +9512,7 @@ C \approx 6ND
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

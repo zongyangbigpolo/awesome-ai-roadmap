@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：实时全双工语音交互","description":"解释级联与原生语音对话的并发监听、双流建模、语义端点及打断状态同步，拆解首个可听响应的延迟预算。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/multimodal/03-speech-audio/06-realtime-duplex-voice/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：实时全双工语音交互","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/multimodal/03-speech-audio/06-realtime-duplex-voice/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：实时全双工语音交互","description":"解释级联与原生语音对话的并发监听、双流建模、语义端点及打断状态同步，拆解首个可听响应的延迟预算。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/multimodal/03-speech-audio/06-realtime-duplex-voice/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：实时全双工语音交互","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/multimodal/03-speech-audio/06-realtime-duplex-voice/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：实时全双工语音交互","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/multimodal/03-speech-audio/06-realtime-duplex-voice/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9172,13 +9197,16 @@
 <p>对话层面的半双工是“你说完，它再说”；全双工则要求输出语音时仍能处理输入，并对打断或附和作出反应。它与通信链路能否同时收发不是同一层概念。全双工既可由联合双流模型实现，也可由持续运行的流式 ASR、LLM、TTS 和控制器实现，不要求一定使用单一原生语音模型。</p>
 <h2 id="62-vs">6.2 级联管线 vs 原生语音到语音<a class="headerlink" href="#62-vs" title="Permanent link">&para;</a></h2>
 <p>实现语音对话有两种根本不同的架构路线：</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Cascade["级联管线"]
-        A1[ASR] --&gt; A2[LLM 文本推理] --&gt; A3[TTS]
-    end
-    subgraph Native["原生语音到语音"]
-        B1[音频编码] --&gt; B2["单一模型&lt;br/&gt;联合建模语音理解与生成"] --&gt; B3[音频解码]
-    end</code></pre>
+<p><strong>级联管线</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1[ASR] --&gt; A2[LLM 文本推理] --&gt; A3[TTS]
+</code></pre>
+<p><strong>原生语音到语音</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1[音频编码] --&gt; B2["单一模型&lt;br/&gt;联合建模语音理解与生成"] --&gt; B3[音频解码]
+</code></pre>
 <ul>
 <li><strong>级联管线</strong>：ASR → 文本 LLM → TTS，组件便于替换、审计和接入文本工具。仅传递转写时会丢失部分语调、情绪和背景信息，但可以额外传递时间戳、声学标签或控制 TTS 风格。流式组件能够流水线重叠，不必等整句识别完再开始所有后续工作；代价是部分转写修订可能让已经生成或播出的回复失效。</li>
 <li><strong>原生语音到语音</strong>：联合建模语音输入输出，可减少强制转成文字造成的信息损失，但仍需音频编码、多个生成步骤、解码与播放缓冲，<strong>不等于一次前向计算完成整轮响应</strong>。GPT-4o 系统卡确认端到端多模态训练，不足以推断其具体 codec、双流结构或任何部署条件下的延迟优势。</li>
@@ -9286,15 +9314,8 @@
 <p>复现打断问题时，应同时记录输入音频时间、响应 ID、播放进度和会话截断位置，才能区分模型没识别打断与客户端还在播放旧音频。</p>
 </blockquote>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2410.00037">Moshi: a speech-text foundation model for real-time dialogue</a></li>
-<li><a href="https://arxiv.org/abs/2203.16502">Generative Spoken Dialogue Language Modeling (dGSLM)</a></li>
-<li><a href="https://openai.com/index/gpt-4o-system-card/">OpenAI GPT-4o System Card</a></li>
-<li><a href="https://arxiv.org/abs/2410.21276">GPT-4o System Card（原始报告）</a></li>
-<li><a href="https://platform.openai.com/docs/guides/realtime">OpenAI Realtime API 官方文档</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/realtime-conversations/">OpenAI Realtime：会话状态与打断处理</a></li>
-<li><a href="https://kyutai.org/moshi">Kyutai Moshi 项目主页</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-multimodal-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9317,7 +9338,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

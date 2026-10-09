@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies","description":"Connects models, tools, approvals, and recovery through traces, distinguishes developing GenAI semantic conventions from stable contracts, and examines cost accounting and coding-agent products.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies","description":"Connects models, tools, approvals, and recovery through traces, distinguishes developing GenAI semantic conventions from stable contracts, and examines cost accounting and coding-agent products.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 23: Tracing, Evaluation, Cost Control, and Coding-Agent Harness Case Studies","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/23-tracing-evaluation-cost-and-coding-agent-case-study/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9196,14 +9221,15 @@
 <p>The same “completed” message might reflect a genuinely successful run, a result barely achieved after repeated retries, or simply an incorrect claim by the model. Saving only the input and answer cannot distinguish tool failures, permission denials, and model decision errors. Chapter 14 defines how to evaluate task acceptance. This chapter explains how the harness records calls, approvals, recovery, and spending so that conclusions can be traced to operations that actually occurred.</p>
 <h2 id="232-trace-structure-spans-sessions-and-turns"><span id="232-trace-spansessionturn" class="legacy-heading-anchor" aria-hidden="true"></span>23.2 Trace structure: spans, sessions, and turns<a class="headerlink" href="#232-trace-structure-spans-sessions-and-turns" title="Permanent link">&para;</a></h2>
 <p>Business records can be organized by session, task, and turn, but these are not fixed levels in OpenTelemetry. A <strong>session</strong> is an application conversation that may contain several tasks. In this module, a <strong>turn</strong> is one model decision and its associated tool handling. A <strong>trace</strong> describes the operations in a run through related <strong>spans</strong>, each with a start and end time. Model calls and tool execution are good candidates for separate spans; instantaneous state transitions can be recorded as span events rather than creating a new span for every change.</p>
-<pre class="mermaid"><code>flowchart TB
-    SESS["Session&lt;br/&gt;May contain several tasks"]
-    RUN["One run of a task&lt;br/&gt;May map to one trace"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    SESS["Session&lt;br/&gt;May contain&lt;br/&gt;several&lt;br/&gt;tasks"]
+    RUN["One run of a&lt;br/&gt;task&lt;br/&gt;May map to&lt;br/&gt;one trace"]
     T1["Turn 1"]
     T2["Turn 2"]
-    S1["Span: model call"]
-    S2["Span: tool execution"]
-    S3["Span: permission check"]
+    S1["Span: model&lt;br/&gt;call"]
+    S2["Span: tool&lt;br/&gt;execution"]
+    S3["Span:&lt;br/&gt;permission&lt;br/&gt;check"]
     SESS --&gt; RUN
     RUN --&gt; T1
     RUN --&gt; T2
@@ -9212,7 +9238,7 @@
     T1 --&gt; S3</code></pre>
 <p>This diagram shows business relationships; it does not require every box to be a span. When a long task resumes after a pause, the resumed run can create a new trace linked through task IDs, operation IDs, and span links. A single span need not remain open for days while waiting for approval.</p>
 <h2 id="233-opentelemetry-genai-semantic-conventions"><span id="233-opentelemetry-genai" class="legacy-heading-anchor" aria-hidden="true"></span>23.3 OpenTelemetry GenAI semantic conventions<a class="headerlink" href="#233-opentelemetry-genai-semantic-conventions" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md">The cited revision of the OpenTelemetry GenAI semantic conventions</a> is still marked <strong>Development</strong>. Its fields must not be described as universally stable. Reuse its model, agent, tool, and MCP attributes where appropriate, but pin both semantic-convention and instrumentation versions and validate the backend mappings. Put custom approval-rule fields in a separate namespace.</p>
+<p>The cited revision of the OpenTelemetry GenAI semantic conventions<sup><a href="../../../book/references/#ref-525">【525】</a></sup> is still marked <strong>Development</strong>. Its fields must not be described as universally stable. Reuse its model, agent, tool, and MCP attributes where appropriate, but pin both semantic-convention and instrumentation versions and validate the backend mappings. Put custom approval-rule fields in a separate namespace.</p>
 <p>Model spans record model versions, tokens, and latency; tool spans record tool identity, execution status, and duration; approval spans link rules and approval records. Minimize content collection by default. Arguments, results, user information, and secrets require redaction and access control. Do not record hidden chain of thought in pursuit of a “complete trace.”</p>
 <h2 id="234-cost-accounting-billing-units-and-attribution"><span id="234" class="legacy-heading-anchor" aria-hidden="true"></span>23.4 Cost accounting: billing units and attribution<a class="headerlink" href="#234-cost-accounting-billing-units-and-attribution" title="Permanent link">&para;</a></h2>
 <p>An agent session's cost combines several dimensions:</p>
@@ -9234,10 +9260,10 @@ C_{session} = \sum_{turn} \left( c_{input} \cdot n_{input} + c_{output} \cdot n_
 <p>Mapping the abstractions in Chapters 16–22 to three real coding-agent harnesses makes their design decisions more concrete.</p>
 <p>This comparison focuses on runtime and product interfaces. For how to locate code, choose an edit format, and verify a change, see <a href="../../06-coding-agents/24-code-search-edit-verification/">Chapter 24: Code Search, Editing, and Verification</a>.</p>
 <h3 id="2371-claude-code-claude-agent-sdk">23.7.1 Claude Code / Claude Agent SDK<a class="headerlink" href="#2371-claude-code-claude-agent-sdk" title="Permanent link">&para;</a></h3>
-<p>The Claude Agent SDK exposes the loop, tools, and context management used by Claude Code (<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Agent loop</a>). Hooks provide points for audit and rule checks; subagents support delegation; sessions support resumption and forking. Permission modes, approval callbacks, and hooks have different coverage, so checks must not all be placed solely in <code>canUseTool</code>. Session recovery also does not automatically make external side effects idempotent.</p>
+<p>The Claude Agent SDK exposes the loop, tools, and context management used by Claude Code (Agent loop<sup><a href="../../../book/references/#ref-545">【545】</a></sup>). Hooks provide points for audit and rule checks; subagents support delegation; sessions support resumption and forking. Permission modes, approval callbacks, and hooks have different coverage, so checks must not all be placed solely in <code>canUseTool</code>. Session recovery also does not automatically make external side effects idempotent.</p>
 <h3 id="2372-openai-codex-cli-agents-sdk">23.7.2 OpenAI Codex CLI / Agents SDK<a class="headerlink" href="#2372-openai-codex-cli-agents-sdk" title="Permanent link">&para;</a></h3>
-<p>The OpenAI Agents SDK uses <code>Runner</code> to coordinate models, tools, and handoffs (<a href="https://openai.github.io/openai-agents-python/running_agents/">Running agents</a>). Input guardrails run <strong>in parallel</strong> with the agent by default. The model may already consume tokens or execute tools before a guardrail trips; only blocking mode ensures the check finishes before the agent starts. Input guardrails apply only to the first agent in the chain, and output guardrails apply to the final output. Checks on individual tool calls require the corresponding tool-level mechanism (<a href="https://openai.github.io/openai-agents-python/guardrails/">Guardrails</a>).</p>
-<p><a href="https://github.com/openai/codex">Codex CLI</a> is a separate coding-agent product and codebase. Their shared vendor does not establish that the Agents SDK is Codex's execution core. They can integrate and share loop-design ideas, but sandboxing, approvals, sessions, and tool behavior need to be verified separately.</p>
+<p>The OpenAI Agents SDK uses <code>Runner</code> to coordinate models, tools, and handoffs (Running agents<sup><a href="../../../book/references/#ref-546">【546】</a></sup>). Input guardrails run <strong>in parallel</strong> with the agent by default. The model may already consume tokens or execute tools before a guardrail trips; only blocking mode ensures the check finishes before the agent starts. Input guardrails apply only to the first agent in the chain, and output guardrails apply to the final output. Checks on individual tool calls require the corresponding tool-level mechanism (Guardrails<sup><a href="../../../book/references/#ref-549">【549】</a></sup>).</p>
+<p>Codex CLI<sup><a href="../../../book/references/#ref-558">【558】</a></sup> is a separate coding-agent product and codebase. Their shared vendor does not establish that the Agents SDK is Codex's execution core. They can integrate and share loop-design ideas, but sandboxing, approvals, sessions, and tool behavior need to be verified separately.</p>
 <h3 id="2373-github-copilot-coding-agent">23.7.3 GitHub Copilot Coding Agent<a class="headerlink" href="#2373-github-copilot-coding-agent" title="Permanent link">&para;</a></h3>
 <p>Official documentation for GitHub Copilot cloud agent, formerly Coding Agent, describes an ephemeral development environment powered by GitHub Actions and user-visible artifacts such as issues, pull requests, commits, and session logs (see Chapter 20). That is enough to discuss deployment and audit interfaces, but not to infer private checkpoint storage or crash-recovery algorithms. An ephemeral environment also does not prove tenant isolation for caches, credentials, or external resources.</p>
 <h3 id="2374-similarities-and-differences"><span id="2374" class="legacy-heading-anchor" aria-hidden="true"></span>23.7.4 Similarities and differences<a class="headerlink" href="#2374-similarities-and-differences" title="Permanent link">&para;</a></h3>
@@ -9253,18 +9279,8 @@ C_{session} = \sum_{turn} \left( c_{input} \cdot n_{input} + c_{output} \cdot n_
 <h2 id="239-chapter-summary"><span id="239" class="legacy-heading-anchor" aria-hidden="true"></span>23.9 Chapter summary<a class="headerlink" href="#239-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Traces should connect runs, tools, approvals, and recovery without collecting content beyond privacy boundaries. GenAI semantic conventions remain under development; manage their versions together with backend mappings. Costs include failures, retries, and every delegation. Enforcing a hard budget requires concurrent reservations, not just retrospective totals. Product comparisons must distinguish public interfaces from inferred implementation details; an SDK, CLI, and cloud service are not necessarily the same execution core.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry: Generative AI Semantic Conventions</a></li>
-<li><a href="https://opentelemetry.io/docs/concepts/signals/traces/">OpenTelemetry: Traces</a>: spans, span events, context propagation, and span links.</li>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK: How the agent loop works</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/running_agents/">OpenAI Agents SDK: Running agents</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/guardrails/">OpenAI Agents SDK: Guardrails</a></li>
-<li><a href="https://github.com/openai/codex">OpenAI Codex repository</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: How we built our multi-agent research system</a></li>
-</ul>
-<p>The GenAI semantic conventions are pinned to commit <code>0c87594975195608dc91b3f702e250a7b240c151</code>, accessed in the source review on 2026-09-15. Product claims are bounded by the official documentation cited here; they do not imply knowledge of unpublished internal implementations.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-23">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9287,7 +9303,7 @@ C_{session} = \sum_{turn} \left( c_{input} \cdot n_{input} + c_{output} \cdot n_
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：Agent 长短期记忆系统的工程实现","description":"说明 Agent 记忆的持久化作用域、写入一致性、混合检索、权限隔离、删除传播与端到端评测。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/08-agent-memory-implementation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：Agent 长短期记忆系统的工程实现","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/08-agent-memory-implementation/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：Agent 长短期记忆系统的工程实现","description":"说明 Agent 记忆的持久化作用域、写入一致性、混合检索、权限隔离、删除传播与端到端评测。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/08-agent-memory-implementation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：Agent 长短期记忆系统的工程实现","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/08-agent-memory-implementation/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第八章：Agent 长短期记忆系统的工程实现","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/03-memory-context/08-agent-memory-implementation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -10927,15 +10952,16 @@
 <li>如何评估记忆是否真正改善任务？</li>
 </ol>
 <p>一个生产级记忆系统不是“对话记录 + 向量数据库”，而是一条完整的数据管道：</p>
-<pre class="mermaid"><code>flowchart LR
-    O[Observation] --&gt; WM[Working Memory]
-    WM --&gt; C[Memory Candidate]
-    C --&gt; P[Write Policy]
-    P --&gt; S[Hybrid Stores]
-    S --&gt; R[Hybrid Retrieval]
-    R --&gt; RR[Rerank]
-    RR --&gt; CB[Context Builder]
-    CB --&gt; M[Model / Agent]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --&gt; WM["Working Memory"]
+    WM --&gt; C["Memory Candidate"]
+    C --&gt; P["Write Policy"]
+    P --&gt; S["Hybrid Stores"]
+    S --&gt; R["Hybrid Retrieval"]
+    R --&gt; RR["Rerank"]
+    RR --&gt; CB["Context Builder"]
+    CB --&gt; M["Model / Agent"]
     M --&gt; O</code></pre>
 <h2 id="82">8.2 先修正三个常见误区<a class="headerlink" href="#82" title="Permanent link">&para;</a></h2>
 <h3 id="821-embedding-vector-db">8.2.1 误区一：长期记忆的核心就是 Embedding + Vector DB<a class="headerlink" href="#821-embedding-vector-db" title="Permanent link">&para;</a></h3>
@@ -11005,31 +11031,17 @@
 <blockquote>
 <p><strong>短期记忆服务当前任务；任务结束后退出活跃上下文，并按策略清理、归档或沉淀。</strong></p>
 </blockquote>
-<p>这里按任务描述生命周期；具体框架还可能按 thread 定义短期记忆，一个 thread 可以跨多次运行。<a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph</a> 用 checkpointer 持久化 thread state，用 Store 保存跨 thread 数据。磁盘上保存了历史，不表示下轮模型会自动看到历史；应用仍需读取、筛选和组装 Context。<code>InMemorySaver</code> / <code>InMemoryStore</code> 的示例也不具备进程重启后的持久性。</p>
+<p>这里按任务描述生命周期；具体框架还可能按 thread 定义短期记忆，一个 thread 可以跨多次运行。LangGraph<sup><a href="../../../book/references/#ref-483">【483】</a></sup> 用 checkpointer 持久化 thread state，用 Store 保存跨 thread 数据。磁盘上保存了历史，不表示下轮模型会自动看到历史；应用仍需读取、筛选和组装 Context。<code>InMemorySaver</code> / <code>InMemoryStore</code> 的示例也不具备进程重启后的持久性。</p>
 <h2 id="83">8.3 长短期记忆如何协作<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>sequenceDiagram
-    participant U as User
-    participant A as Agent Runtime
-    participant W as Working Memory
-    participant L as Long-term Memory
-    participant M as Model
-
-    U-&gt;&gt;A: 提交任务
-    A-&gt;&gt;L: 检索用户、项目和相似经验
-    L--&gt;&gt;A: 返回相关记忆
-    A-&gt;&gt;W: 初始化目标、计划和召回结果
-    A-&gt;&gt;M: 构建当前 Context
-
-    loop 执行任务
-        M--&gt;&gt;A: 决策或 Tool Call
-        A-&gt;&gt;W: 更新状态和 Observation
-        A-&gt;&gt;L: 按需检索特定知识
-        A-&gt;&gt;M: 提供最新 Context
-    end
-
-    A-&gt;&gt;L: 写入经过筛选的事实和经验
-    A-&gt;&gt;W: 归档或清理临时状态
-    A--&gt;&gt;U: 返回结果</code></pre>
+    participant A as 运行时
+    participant M as 模型
+    A-&gt;&gt;M: 当前上下文
+    M--&gt;&gt;A: 决策或工具调用
+    A-&gt;&gt;A: 更新记忆
+    A-&gt;&gt;M: 最新上下文</code></pre>
+<p>用户先向运行时提交任务。运行时从长期记忆中检索用户、项目信息与相似经验，接收相关记忆，用目标、计划与召回结果初始化工作记忆，然后构建模型上下文。</p>
+<p>图中展示执行循环的一轮。“更新记忆”是指先更新工作记忆中的状态与观察结果，再按需从长期记忆中检索特定知识；运行时将最新上下文交给模型，按需重复循环。执行完成后，依次将筛选过的事实与经验写入长期记忆、归档或清理临时工作状态，最后向用户返回结果。</p>
 <p>分工大致如下：</p>
 <table>
 <thead>
@@ -11063,14 +11075,15 @@
 </table>
 <h2 id="84-working-memory">8.4 Working Memory 的组成<a class="headerlink" href="#84-working-memory" title="Permanent link">&para;</a></h2>
 <p>Working Memory 不应只是一个不断增长的 Messages 数组。</p>
-<pre class="mermaid"><code>flowchart TB
-    WM[Working Memory] --&gt; MSG[Recent Messages]
-    WM --&gt; STATE[Structured Task State]
-    WM --&gt; PLAN[Plan / Todo]
-    WM --&gt; OBS[Recent Observations]
-    WM --&gt; SCRATCH[Scratchpad]
-    WM --&gt; REF[Artifact References]
-    WM --&gt; BUDGET[Budget / Retry / Timeout]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    WM["Working Memory"] --&gt; MSG["Recent Messages"]
+    WM --&gt; STATE["Structured Task State"]
+    WM --&gt; PLAN["Plan / Todo"]
+    WM --&gt; OBS["Recent Observations"]
+    WM --&gt; SCRATCH["Scratchpad"]
+    WM --&gt; REF["Artifact References"]
+    WM --&gt; BUDGET["Budget / Retry / Timeout"]</code></pre>
 <h3 id="841-recent-messages">8.4.1 Recent Messages<a class="headerlink" href="#841-recent-messages" title="Permanent link">&para;</a></h3>
 <p>保存最近几轮用户与 Agent 交互，用于保持局部语言连贯性。</p>
 <p>不建议无限追加。可以使用：</p>
@@ -11126,11 +11139,12 @@
 </span></code></pre></div>
 <h2 id="85-working-memory-context">8.5 Working Memory 的 Context 管理<a class="headerlink" href="#85-working-memory-context" title="Permanent link">&para;</a></h2>
 <p>模型 Context 是 Working Memory 的一个视图，而不是它的完整副本。</p>
-<pre class="mermaid"><code>flowchart LR
-    WM[Full Working Memory] --&gt; SELECT[Select]
-    SELECT --&gt; SUM[Summarize]
-    SUM --&gt; PACK[Pack by Priority]
-    PACK --&gt; CTX[Model Context]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    WM["Full Working Memory"] --&gt; SELECT["Select"]
+    SELECT --&gt; SUM["Summarize"]
+    SUM --&gt; PACK["Pack by Priority"]
+    PACK --&gt; CTX["Model Context"]</code></pre>
 <h3 id="851-context">8.5.1 Context 优先级<a class="headerlink" href="#851-context" title="Permanent link">&para;</a></h3>
 <p>通常按以下顺序装入：</p>
 <ol>
@@ -11162,14 +11176,15 @@
 </ul>
 <p>“发出了命令”不等于“命令完成”，退出码为零也不一定满足业务验收。压缩应保留完成状态和验证证据，不能仅凭模型文字将计划步骤改为已完成。</p>
 <h2 id="86-long-term-memory">8.6 Long-term Memory 的存储架构<a class="headerlink" href="#86-long-term-memory" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    W[Memory Writer] --&gt; R{Representation Router}
-    R --&gt; PROFILE[Profile / Relational DB]
-    R --&gt; VECTOR[Vector Store]
-    R --&gt; TEXT[Full-text Index]
-    R --&gt; GRAPH[Knowledge Graph]
-    R --&gt; EVENT[Event Store]
-    R --&gt; OBJECT[Object / Artifact Store]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    W["Memory&lt;br/&gt;Writer"] --&gt; R["Representation&lt;br/&gt;Router"]
+    R --&gt; PROFILE["Profile /&lt;br/&gt;Relational&lt;br/&gt;DB"]
+    R --&gt; VECTOR["Vector Store"]
+    R --&gt; TEXT["Full-text&lt;br/&gt;Index"]
+    R --&gt; GRAPH["Knowledge&lt;br/&gt;Graph"]
+    R --&gt; EVENT["Event Store"]
+    R --&gt; OBJECT["Object /&lt;br/&gt;Artifact&lt;br/&gt;Store"]</code></pre>
 <h3 id="861-profile-relational-store">8.6.1 Profile / Relational Store<a class="headerlink" href="#861-profile-relational-store" title="Permanent link">&para;</a></h3>
 <p>保存：</p>
 <ul>
@@ -11210,10 +11225,11 @@
 <p>Embedding 可能把语义相近内容排在前面，却漏掉精确标识符。全文索引可补充词面召回，但需要测试连字符、大小写、数字和中文分词。例如 <code>E0421</code> 与 <code>E-0421</code> 是否同一错误码，应由业务定义；要求完全相等的订单 ID，宜使用保留原值的字段索引或数据库等值查询。</p>
 <h3 id="864-knowledge-graph">8.6.4 Knowledge Graph<a class="headerlink" href="#864-knowledge-graph" title="Permanent link">&para;</a></h3>
 <p>保存实体及关系：</p>
-<pre class="mermaid"><code>flowchart LR
-    U[User] --&gt;|member_of| TEAM[Risk Team]
-    TEAM --&gt;|owns| SERVICE[Payment Service]
-    SERVICE --&gt;|depends_on| DB[PostgreSQL]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    U["User"] --&gt;|member_of| TEAM["Risk Team"]
+    TEAM --&gt;|owns| SERVICE["Payment Service"]
+    SERVICE --&gt;|depends_on| DB["PostgreSQL"]</code></pre>
 <p>适合关系遍历、多跳查询和来源解释。</p>
 <h3 id="865-event-store">8.6.5 Event Store<a class="headerlink" href="#865-event-store" title="Permanent link">&para;</a></h3>
 <p>记录按时间发生的事件：</p>
@@ -11228,10 +11244,11 @@
 <p>它适合审计、回放和从历史重建状态。</p>
 <h2 id="87-embedding">8.7 Embedding 是怎样工作的<a class="headerlink" href="#87-embedding" title="Permanent link">&para;</a></h2>
 <p>Embedding Model 将文本映射为向量：</p>
-<pre class="mermaid"><code>flowchart LR
-    T[Memory Text] --&gt; E[Embedding Model]
-    E --&gt; V[Vector]
-    V --&gt; DB[Vector Index]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T["Memory Text"] --&gt; E["Embedding Model"]
+    E --&gt; V["Vector"]
+    V --&gt; DB["Vector Index"]</code></pre>
 <p>语义相近的文本通常在向量空间中距离更近。</p>
 <p>这取决于训练目标和输入分布。Query 与文档应使用兼容的模型版本、维度、预处理及 query/document 编码方式；不同模型生成的同维向量也不能直接混搜。迁移时可建立新索引、回填并双读比对，再切换，避免新旧向量混用。</p>
 <h3 id="871-cosine-similarity">8.7.1 Cosine Similarity<a class="headerlink" href="#871-cosine-similarity" title="Permanent link">&para;</a></h3>
@@ -11269,13 +11286,25 @@ S_{cos}(q,m)=\frac{q\cdot m}{\Vert q\Vert_2\Vert m\Vert_2}
 <p>记忆粒度由未来的使用方式决定。</p>
 <p>粒度可以从“可独立理解和更新”出发，但需要用召回与任务效果验证。例如“退款期限 30 天”不是完整事实，还缺产品、地区、起算点及政策版本；拆掉这些条件后，即使命中检索也可能误用。</p>
 <h2 id="89">8.9 多粒度记忆模型<a class="headerlink" href="#89" title="Permanent link">&para;</a></h2>
+<p>将原始事件组织为经历。</p>
 <pre class="mermaid"><code>flowchart TB
-    RAW[Raw Events] --&gt; TURN[Interaction / Turn]
-    TURN --&gt; EP[Episode]
-    EP --&gt; FACT[Atomic Facts]
-    EP --&gt; ENTITY[Entity Updates]
-    EP --&gt; PROC[Procedural Lessons]
-    EP --&gt; SUMMARY[Task Summary]</code></pre>
+    RAW[Raw Events]
+    TURN[Interaction / Turn]
+    EP[Episode]
+    RAW --&gt; TURN
+    TURN --&gt; EP</code></pre>
+<p>从该经历中提取不同表示。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    EP["Episode"]
+    FACT["Atomic Facts"]
+    ENTITY["Entity Updates"]
+    PROC["Procedural Lessons"]
+    SUMMARY["Task Summary"]
+    EP --&gt; FACT
+    EP --&gt; ENTITY
+    EP --&gt; PROC
+    EP --&gt; SUMMARY</code></pre>
 <h3 id="891-raw-event">8.9.1 Raw Event<a class="headerlink" href="#891-raw-event" title="Permanent link">&para;</a></h3>
 <p>按原始事件保存，例如一次 Tool Call 或一条消息。事件是采集边界，不一定是长度最小的记忆单元；一条消息仍可能包含多个独立事实。</p>
 <p>适合：</p>
@@ -11372,14 +11401,8 @@ S_{cos}(q,m)=\frac{q\cdot m}{\Vert q\Vert_2\Vert m\Vert_2}
 </ul>
 <pre class="mermaid"><code>flowchart TB
     INPUT[Interaction Stream] --&gt; DETECT[Boundary Detector]
-    DETECT --&gt; TOPIC[Topic Boundary]
-    DETECT --&gt; TASK[Task Boundary]
-    DETECT --&gt; EVENT[Event Boundary]
-    DETECT --&gt; ENTITY[Entity Boundary]
-    TOPIC --&gt; CHUNK[Memory Units]
-    TASK --&gt; CHUNK
-    EVENT --&gt; CHUNK
-    ENTITY --&gt; CHUNK</code></pre>
+    DETECT --&gt; CHUNK[Memory Units]</code></pre>
+<p>检测器识别主题、任务、事件与实体边界，每类边界都可以划定记忆单元；图中的箭头不意味着用固定长度切块取代这些语义边界。</p>
 <p>长 Episode 可以建立父子层级：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Task Summary
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── Stage 1 Summary
@@ -11392,15 +11415,16 @@ S_{cos}(q,m)=\frac{q\cdot m}{\Vert q\Vert_2\Vert m\Vert_2}
 <p>检索时先命中 Summary，再按需展开原始 Event。</p>
 <p>需要保留直接搜索原始事件的回退路径：若摘要漏掉关键错误码，系统可能连“应该展开哪个父节点”都无法判断。展开原文还需重新检查子记录权限，不能沿摘要链接跨越 ACL。</p>
 <h2 id="812-memory-write-pipeline">8.12 Memory Write Pipeline<a class="headerlink" href="#812-memory-write-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    O[Observation] --&gt; X[Extract]
-    X --&gt; CLASS[Classify]
-    CLASS --&gt; SAFE[Privacy / Trust]
-    SAFE --&gt; DEDUP[Deduplicate]
-    DEDUP --&gt; CONFLICT[Conflict Check]
-    CONFLICT --&gt; SCORE[Value Score]
-    SCORE --&gt; ROUTE[Storage Router]
-    ROUTE --&gt; STORE[Persist + Index]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --&gt; X["Extract"]
+    X --&gt; CLASS["Classify"]
+    CLASS --&gt; SAFE["Privacy / Trust"]
+    SAFE --&gt; DEDUP["Deduplicate"]
+    DEDUP --&gt; CONFLICT["Conflict Check"]
+    CONFLICT --&gt; SCORE["Value Score"]
+    SCORE --&gt; ROUTE["Storage Router"]
+    ROUTE --&gt; STORE["Persist + Index"]</code></pre>
 <h3 id="8121-extract">8.12.1 Extract<a class="headerlink" href="#8121-extract" title="Permanent link">&para;</a></h3>
 <p>从当前交互中提取：</p>
 <ul>
@@ -11494,22 +11518,43 @@ V=\alpha I+\beta N+\gamma R+\delta C-\epsilon S
 <p>删除可用 tombstone（删除标记）或递增删除代次记录。只在后台任务提交前查询一次删除状态不够：查询之后仍可能发生删除。主库对派生记忆的提交要原子校验源版本与删除代次；索引侧还要拒绝乱序旧写，并在返回结果前复核主库状态。删除流程应追踪尚未清理的派生副本，避免已经排队的整理任务把数据重新写回。</p>
 <p>请求“记住这个偏好”若要求本轮确认成功，应等待主记录可靠提交，而不是只把任务放入进程内队列。</p>
 <h2 id="814-memory-retrieval-pipeline">8.14 Memory Retrieval Pipeline<a class="headerlink" href="#814-memory-retrieval-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    TASK[Current Task] --&gt; INTENT[Retrieval Intent]
-    INTENT --&gt; Q[Query Generation]
-    Q --&gt; SCOPE[服务端身份与强制过滤条件]
-    SCOPE --&gt; V[Authorized Vector Search]
-    SCOPE --&gt; K[Authorized Keyword Search]
-    SCOPE --&gt; SQL[Authorized SQL / Metadata]
-    SCOPE --&gt; G[Authorized Graph Query]
-    V --&gt; F[Fusion]
+<p>生成查询并强制限定范围。</p>
+<pre class="mermaid"><code>flowchart TB
+    TASK[Current Task]
+    INTENT[Retrieval Intent]
+    Q[Query Generation]
+    SCOPE[服务端身份与强制过滤条件]
+    TASK --&gt; INTENT
+    INTENT --&gt; Q
+    Q --&gt; SCOPE</code></pre>
+<p>融合授权范围内的检索渠道。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    SCOPE["服务端身份与&lt;br/&gt;强制过滤条件"]
+    V["Authorized&lt;br/&gt;Vector&lt;br/&gt;Search"]
+    K["Authorized&lt;br/&gt;Keyword&lt;br/&gt;Search"]
+    SQL["Authorized&lt;br/&gt;SQL /&lt;br/&gt;Metadata"]
+    G["Authorized&lt;br/&gt;Graph Query"]
+    F["Fusion"]
+    SCOPE --&gt; V
+    SCOPE --&gt; K
+    SCOPE --&gt; SQL
+    SCOPE --&gt; G
+    V --&gt; F
     K --&gt; F
     SQL --&gt; F
-    G --&gt; F
-    F --&gt; ACL[版本与权限复核]
-    ACL --&gt; RR[Rerank]
-    RR --&gt; DD[Deduplicate]
-    DD --&gt; CP[Context Packing]</code></pre>
+    G --&gt; F</code></pre>
+<p>装配上下文前复核版本与权限。</p>
+<pre class="mermaid"><code>flowchart TB
+    F[Fusion]
+    ACL[版本与权限复核]
+    RR[Rerank]
+    DD[Deduplicate]
+    CP[Context Packing]
+    F --&gt; ACL
+    ACL --&gt; RR
+    RR --&gt; DD
+    DD --&gt; CP</code></pre>
 <h3 id="8141-retrieval-intent">8.14.1 Retrieval Intent<a class="headerlink" href="#8141-retrieval-intent" title="Permanent link">&para;</a></h3>
 <p>先判断要找什么：</p>
 <ul>
@@ -11605,13 +11650,14 @@ Score=
 <p>因此，主动检索也必须遵循最小必要原则。</p>
 <h2 id="816-context">8.16 如何将记忆放回 Context<a class="headerlink" href="#816-context" title="Permanent link">&para;</a></h2>
 <p>Retriever 返回的内容不能直接全部拼接到 Prompt。</p>
-<pre class="mermaid"><code>flowchart LR
-    R[Retrieved Memories] --&gt; P[Permission Check]
-    P --&gt; D[Deduplicate]
-    D --&gt; C[Conflict Annotation]
-    C --&gt; S[Summarize / Select]
-    S --&gt; B[Budget Packing]
-    B --&gt; CTX[Context]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Retrieved Memories"] --&gt; P["Permission Check"]
+    P --&gt; D["Deduplicate"]
+    D --&gt; C["Conflict Annotation"]
+    C --&gt; S["Summarize / Select"]
+    S --&gt; B["Budget Packing"]
+    B --&gt; CTX["Context"]</code></pre>
 <p>推荐按结构注入：</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Relevant user preferences:
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>- Prefer GitHub-Flavored Markdown. [source: event-42; scope: current repo; user-stated]
@@ -11628,13 +11674,14 @@ Score=
 <p>不要把 Memory 伪装成高优先级系统指令。每条记忆应保留类型、来源和可信度。</p>
 <h2 id="817">8.17 更新、失效与删除<a class="headerlink" href="#817" title="Permanent link">&para;</a></h2>
 <p>长期记忆必须支持变更：</p>
-<pre class="mermaid"><code>flowchart LR
-    OLD[Existing Memory] --&gt; NEW[New Evidence]
-    NEW --&gt; C{一致?}
-    C --&gt;|是| MERGE[去重并保留来源时间]
-    C --&gt;|否| AUTH{同作用域且有证据确认替代?}
-    AUTH --&gt;|是| SUPERSEDE[同作用域有效新版本替代旧版本]
-    AUTH --&gt;|否| CONFLICT[保留冲突]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    OLD["Existing&lt;br/&gt;Memory"] --&gt; NEW["New Evidence"]
+    NEW --&gt; C["一致?"]
+    C --&gt;|是| MERGE["去重并保留来&lt;br/&gt;源时间"]
+    C --&gt;|否| AUTH["同作用域且有&lt;br/&gt;证据确认替代&lt;br/&gt;?"]
+    AUTH --&gt;|是| SUPERSEDE["同作用域有效&lt;br/&gt;新版本替代旧&lt;br/&gt;版本"]
+    AUTH --&gt;|否| CONFLICT["保留冲突"]</code></pre>
 <p>建议字段：</p>
 <ul>
 <li><code>valid_from</code>；</li>
@@ -11725,11 +11772,12 @@ D(\Delta t)=e^{-\lambda\Delta t}
 <h2 id="820">8.20 多租户与权限隔离<a class="headerlink" href="#820" title="Permanent link">&para;</a></h2>
 <p>记忆检索必须先保证访问控制，再考虑相似度。</p>
 <p><code>tenant_id</code>、<code>user_id</code> 和 <code>thread_id</code> 是标识符，不是授权凭证；知道别人的 ID 不能获得读取权。权限至少在查询入口、候选进入重排/模型前、Artifact 读取及工具执行前检查。缓存键还需包含作用域、权限版本和记忆版本，权限撤销时必须失效或重新鉴权。</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[Query] --&gt; ID[User / Tenant Identity]
-    ID --&gt; ACL[ACL Filter]
-    ACL --&gt; SEARCH[Search Authorized Scope]
-    SEARCH --&gt; R[Results]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    Q["Query"] --&gt; ID["User / Tenant Identity"]
+    ID --&gt; ACL["ACL Filter"]
+    ACL --&gt; SEARCH["Search Authorized Scope"]
+    SEARCH --&gt; R["Results"]</code></pre>
 <p>禁止：</p>
 <ul>
 <li>先跨所有租户向量检索，再在模型侧过滤；</li>
@@ -11870,7 +11918,7 @@ D(\Delta t)=e^{-\lambda\Delta t}
 <h3 id="8245">8.24.5 可复现的失败定位<a class="headerlink" href="#8245" title="Permanent link">&para;</a></h3>
 <p>选取完整用户历史，按时间喂入写入管道，然后在固定提问时点运行读取与回答。对比无记忆、精确事实直读、原始片段检索及摘要检索；固定模型、数据版本和输入预算，同时报告写入/索引成本、查询延迟分位数以及答案正确率。用人工标注的证据直接供给模型，可检查瓶颈究竟在记忆管道还是下游阅读。</p>
 <p>至少注入以下故障：主库成功但索引更新失败、重复消费写入事件、删除与 Consolidation 并发、权限撤销后缓存命中、两个 Agent 更新同一事实，以及工具成功后 checkpoint 尚未提交。对这些测试断言存储版本、可见范围及外部副作用，不要只让 LLM 评价回复“看起来正确”。</p>
-<p>可用 <a href="https://github.com/xiaowu0162/LongMemEval">LongMemEval</a> 的知识更新与弃答问题检验检索，用 <a href="https://github.com/xiaowu0162/LongMemEval-V2">LongMemEval-V2</a> 检验从轨迹提取环境经验；二者均不能代替上述一致性与权限测试，成绩也不能跨数据版本直接比较。</p>
+<p>可用 LongMemEval<sup><a href="../../../book/references/#ref-480">【480】</a></sup> 的知识更新与弃答问题检验检索，用 LongMemEval-V2<sup><a href="../../../book/references/#ref-482">【482】</a></sup> 检验从轨迹提取环境经验；二者均不能代替上述一致性与权限测试，成绩也不能跨数据版本直接比较。</p>
 <h2 id="825">8.25 常见反模式<a class="headerlink" href="#825" title="Permanent link">&para;</a></h2>
 <h3 id="8251-embedding">8.25.1 所有内容都 Embedding<a class="headerlink" href="#8251-embedding" title="Permanent link">&para;</a></h3>
 <p>导致精确事实难以更新、权限难以管理。</p>
@@ -11892,35 +11940,14 @@ D(\Delta t)=e^{-\lambda\Delta t}
 <p>可能形成错误记忆、隐私问题和 Persistent Prompt Injection。</p>
 <h2 id="826">8.26 可按需裁剪的架构<a class="headerlink" href="#826" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    INPUT[User / Tool / Environment] --&gt; RUNTIME[Agent Runtime]
-
-    RUNTIME --&gt; WM[Working Memory&lt;br/&gt;State + Recent Context]
-    RUNTIME --&gt; WRITER[Memory Writer]
-
-    WRITER --&gt; POLICY[Privacy + Importance + Trust]
-    POLICY --&gt; PROFILE[Relational Profile]
-    POLICY --&gt; VECTOR[Vector Store]
-    POLICY --&gt; TEXT[Full-text Index]
-    POLICY --&gt; EVENT[Event Store]
-    POLICY --&gt; ART[Artifact Store]
-
-    RUNTIME --&gt; RET[授权范围内 Retrieval Router]
-    RET --&gt; PROFILE
-    RET --&gt; VECTOR
-    RET --&gt; TEXT
-    RET --&gt; EVENT
-    RET --&gt; ART
-
-    PROFILE --&gt; FUSION[权限与版本复核 + Fusion + Rerank]
-    VECTOR --&gt; FUSION
-    TEXT --&gt; FUSION
-    EVENT --&gt; FUSION
-    ART --&gt; FUSION
-
-    FUSION --&gt; CB[Context Builder]
+    RUNTIME[Agent 运行时] --&gt; WM[工作记忆]
+    RUNTIME --&gt; RET[授权范围内检索]
+    RET --&gt; CB[上下文构建器]
     WM --&gt; CB
-    CB --&gt; MODEL[Model]
+    CB --&gt; MODEL[模型]
     MODEL --&gt; RUNTIME</code></pre>
+<p>用户、工具与环境输入进入运行时。运行时用状态与近期上下文更新工作记忆，并将记忆候选交给写入器；写入器按隐私、重要性与可信度策略管理五类存储：关系型画像、向量、全文索引、事件与产物。</p>
+<p>运行时的检索路由器在授权范围内查询同一组存储。图中检索箭头到达上下文构建器之前，结果须经过权限与版本复核、融合与重排。工作记忆提供另一类上下文输入，模型则将控制权交回运行时。</p>
 <p>图中是可选能力的全景，不是每个项目的默认部署清单。按需求逐项选择：</p>
 <ol>
 <li>Working Memory 使用结构化 State + Recent Messages + Artifact References；</li>
@@ -11964,20 +11991,8 @@ D(\Delta t)=e^{-\lambda\Delta t}
 </ul>
 <p>结构化存储保证的是约束、查询和更新能力，不保证写入事实为真。工程验收要同时检查来源、版本、索引可见性、授权和模型实际使用结果。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2309.02427">CoALA: Cognitive Architectures for Language Agents</a></li>
-<li><a href="https://arxiv.org/abs/2310.08560">MemGPT: Towards LLMs as Operating Systems</a></li>
-<li><a href="https://arxiv.org/abs/2304.03442">Generative Agents: Interactive Simulacra of Human Behavior</a></li>
-<li><a href="https://arxiv.org/abs/2303.11366">Reflexion: Language Agents with Verbal Reinforcement Learning</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a>（<a href="https://github.com/langchain-ai/docs/blob/3edafc8c187b52be4e2196cd0955dda4a7592cba/src/oss/langgraph/persistence.mdx">文档快照 3edafc8</a>）</li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/checkpointers">LangGraph: Checkpointers</a></li>
-<li><a href="https://docs.langchain.com/oss/python/concepts/memory">LangGraph: Memory overview</a>（<a href="https://github.com/langchain-ai/docs/blob/1fa2214237b7a7506c34a30b394c26023d61bf4b/src/oss/concepts/memory.mdx">文档快照 1fa2214</a>）</li>
-<li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html">AWS Prescriptive Guidance：Transactional outbox pattern</a>（用于说明双写、重复投递与顺序问题，不代表任意队列具备端到端 exactly-once）</li>
-<li><a href="https://etcd.io/docs/v3.5/learning/api/">etcd v3.5：事务比较与 revision</a>（一个支持原子条件更新的具体实现；其他数据库需核对各自保证）</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/README.md">LongMemEval 官方说明快照 9e0b455</a>（区分原始版与 2025 年 9 月清洗版）</li>
-<li><a href="https://github.com/xiaowu0162/LongMemEval-V2/blob/2cc8c540bdb87fe6761629b585e727e1c4704520/README.md">LongMemEval-V2 官方说明快照 2cc8c54</a></li>
-</ul>
-<p>资料核对：2026-09-15；一致性、幂等和删除方案是设计建议，并非上述框架或任意向量库自动提供的保证。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-08">集中参考资料章节</a>。</p>
 
 
 
@@ -12000,7 +12015,7 @@ D(\Delta t)=e^{-\lambda\Delta t}
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

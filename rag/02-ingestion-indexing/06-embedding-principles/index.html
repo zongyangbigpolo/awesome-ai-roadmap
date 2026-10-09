@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Embedding Principles and Technical Evolution","description":"Explain retrieval representations from static word vectors to bi-encoders and late interaction, distinguishing BERT backbones, interaction architectures, distance metrics, and compatible encoder contracts.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/06-embedding-principles/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Embedding Principles and Technical Evolution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/06-embedding-principles/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Embedding Principles and Technical Evolution","description":"Explain retrieval representations from static word vectors to bi-encoders and late interaction, distinguishing BERT backbones, interaction architectures, distance metrics, and compatible encoder contracts.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/06-embedding-principles/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Embedding Principles and Technical Evolution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/06-embedding-principles/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Embedding Principles and Technical Evolution","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/06-embedding-principles/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9373,7 +9398,8 @@
 </blockquote>
 <p>One caveat belongs up front: <strong>vector retrieval is not universally better than keyword retrieval</strong>. For exact product model numbers, error codes, personal names, and specialized terminology, keyword retrieval can be more reliable. Chapter 11 explores this distinction.</p>
 <h2 id="63-four-approaches-to-representation"><span id="63" class="legacy-heading-anchor" aria-hidden="true"></span>6.3 Four approaches to representation<a class="headerlink" href="#63-four-approaches-to-representation" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     G1[Static word vectors] --&gt; G2[Contextual word vectors]
     G2 --&gt; G3[Sentence embeddings&lt;br/&gt;Bi-encoders]
     G3 --&gt; G4[Late interaction&lt;br/&gt;Multi-vector representations]</code></pre>
@@ -9396,21 +9422,23 @@
 <p><strong>First, vanilla BERT produces poor sentence embeddings.</strong> Taking the vector at the <code>[CLS]</code> position or averaging all token vectors produces sentence embeddings that perform poorly on semantic similarity tasks, because BERT's pretraining objective, masked language modeling, <strong>does not optimize sentence-level similarity</strong>.</p>
 <p><strong>Second, a cross-encoder cannot cache a whole-document representation offline for direct scoring in the way a bi-encoder can.</strong></p>
 <p>BERT can encode texts separately, or it can be fine-tuned as a cross-encoder over a concatenated query and document. The latter has the following implications:</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph CE[Cross-encoder&lt;br/&gt;Joint interaction]
-        Q1[Query] --&gt; CAT[Concatenate]
-        D1[Document] --&gt; CAT
-        CAT --&gt; M1[Model] --&gt; S1[Similarity score]
-        N1[Score every text pair online&lt;br/&gt;Batchable but compute-intensive]
-    end
-
-    subgraph BE[Bi-encoder&lt;br/&gt;Independent encoding]
-        Q2[Query] --&gt; ME1[Model] --&gt; V1[Query vector]
-        D2[Document] --&gt; ME2[Model] --&gt; V2[Document vector&lt;br/&gt;Precomputed offline]
-        V1 --&gt; SIM[Vector distance]
-        V2 --&gt; SIM
-        N2[Precompute document vectors offline&lt;br/&gt;Encode only the query online]
-    end</code></pre>
+<p><strong>Cross-encoder Joint interaction</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --&gt; CAT[Concatenate]
+    D1[Document] --&gt; CAT
+    CAT --&gt; M1[Model] --&gt; S1[Similarity score]
+</code></pre>
+<p>The cross-encoder scores every query–document pair online. Scoring can be batched but is compute-intensive.</p>
+<p><strong>Bi-encoder Independent encoding</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --&gt; ME1[Model] --&gt; V1[Query vector]
+    D2[Document] --&gt; ME2[Model] --&gt; V2[Document vector&lt;br/&gt;Precomputed offline]
+    V1 --&gt; SIM[Vector distance]
+    V2 --&gt; SIM
+</code></pre>
+<p>The bi-encoder precomputes document vectors offline; only the query needs encoding online. The two vectors meet at the distance calculation, not inside a joint query–document encoder.</p>
 <p><strong>A million candidates require scoring a million text pairs online.</strong> Batching reduces invocation overhead but does not eliminate these interaction computations. A retriever with precomputable document representations therefore usually narrows the candidate set first.</p>
 <h3 id="633-third-generation-purpose-trained-sentence-embedding-models-bi-encoders"><span id="633" class="legacy-heading-anchor" aria-hidden="true"></span>6.3.3 Third generation: purpose-trained sentence embedding models (bi-encoders)<a class="headerlink" href="#633-third-generation-purpose-trained-sentence-embedding-models-bi-encoders" title="Permanent link">&para;</a></h3>
 <p>Examples: Sentence-BERT, SimCSE, BGE, E5, GTE, and Qwen3-Embedding.</p>
@@ -9428,12 +9456,11 @@
 <p>Examples: ColBERT, ColBERTv2, and ColPali.</p>
 <p><strong>Core idea</strong>: take a middle path between a single-vector bi-encoder and a concatenation-based cross-encoder.</p>
 <p>Instead of compressing a document into <strong>one</strong> vector, retain <strong>a vector for each token</strong>. At retrieval time, find each query token's maximum similarity to any document token vector, then sum these maxima.</p>
-<pre class="mermaid"><code>flowchart TB
-    A[Single-vector bi-encoder] --&gt;|Retain more&lt;br/&gt;fine-grained representations| B[Late interaction&lt;br/&gt;Multi-vector representations]
-    B --&gt;|Add online&lt;br/&gt;cross-text interaction| C[Cross-encoder]
-    A -.-&gt;|Compress document&lt;br/&gt;into 1 vector| A1[Fine-grained information lost]
-    B -.-&gt;|Retain N vectors&lt;br/&gt;per document| B1[Storage depends on vector count,&lt;br/&gt;dimensions, data type, and compression]
-    C -.-&gt;|Concatenate query&lt;br/&gt;and document| C1[Cannot precompute&lt;br/&gt;joint representations offline]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[Single-vector bi-encoder] --&gt; B[Multi-vector late interaction]
+    B --&gt; C[Cross-encoder]</code></pre>
+<p>These arrows compare representation and interaction choices, not execution stages. A single-vector bi-encoder compresses each document into one vector and loses fine-grained information. Late interaction retains N vectors per document; storage depends on their count, dimensions, data type, and compression. A cross-encoder adds online cross-text interaction by concatenating query and document, so its joint representations cannot be precomputed offline.</p>
 <p><strong>Benefit</strong>: preserve token-level matching information while still precomputing document representations offline. Papers in the ColBERT family demonstrate gains on their evaluated retrieval tasks, but this does not establish that every multi-vector model beats a single-vector model or necessarily approaches a cross-encoder.</p>
 <p>The cost is storing and matching multiple vectors per document. The actual multiplier depends on token count, dimensions, and compression. ColBERTv2 uses residual compression, so the ratio of uncompressed vector counts is not a valid ratio of total costs.</p>
 <p><strong>An important extension of this generation applies it to vision</strong>: embed document <strong>page images</strong> directly as multiple vectors, bypassing OCR and layout parsing, as discussed in Chapter 3, Section 3.5.</p>
@@ -9472,7 +9499,7 @@
 <h3 id="652-check-input-length-limits"><span id="652" class="legacy-heading-anchor" aria-hidden="true"></span>6.5.2 Check input length limits<a class="headerlink" href="#652-check-input-length-limits" title="Permanent link">&para;</a></h3>
 <p>Input limits vary by model and service configuration; 512 tokens is not a universal limit. Oversized inputs may cause an error or be truncated by the tokenizer. Check the model card for maximum length, prefixes, and special tokens, and monitor truncation during ingestion.</p>
 <h3 id="653-check-instruction-prefixes"><span id="653" class="legacy-heading-anchor" aria-hidden="true"></span>6.5.3 Check instruction prefixes<a class="headerlink" href="#653-check-instruction-prefixes" title="Permanent link">&para;</a></h3>
-<p>Embedding models differ in their query and document input conventions. Models such as E5 and BGE may specify particular prefixes or instructions, such as <code>query:</code> or <code>为这个句子生成表示以用于检索相关文章：</code> (“generate a representation of this sentence for retrieving relevant articles”); documents may take no prefix or a different one. Follow the particular model card. The <a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">official Qwen3-Embedding model card</a> recommends task instructions for queries, but that does not mean an instruction-free call is invalid.</p>
+<p>Embedding models differ in their query and document input conventions. Models such as E5 and BGE may specify particular prefixes or instructions, such as <code>query:</code> or <code>为这个句子生成表示以用于检索相关文章：</code> (“generate a representation of this sentence for retrieving relevant articles”); documents may take no prefix or a different one. Follow the particular model card. The official Qwen3-Embedding model card<sup><a href="../../../book/references/#ref-362">【362】</a></sup> recommends task instructions for queries, but that does not mean an instruction-free call is invalid.</p>
 <p><strong>Omitting an applicable prefix or instruction can reduce performance, but the effect depends on the model and task. Follow the model card and evaluate on the target query set.</strong> Retrieval-quality guidance is not the same as an API input-validity requirement.</p>
 <h3 id="654-symmetric-and-asymmetric-retrieval-are-different-tasks"><span id="654" class="legacy-heading-anchor" aria-hidden="true"></span>6.5.4 Symmetric and asymmetric retrieval are different tasks<a class="headerlink" href="#654-symmetric-and-asymmetric-retrieval-are-different-tasks" title="Permanent link">&para;</a></h3>
 <table>
@@ -9521,16 +9548,8 @@
 <li><strong>Hard constraints</strong> include compatible encoder pairs, actual length budgets, model-specific prefixes and metrics, and the distinction between symmetric and asymmetric tasks.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1301.3781">Efficient Estimation of Word Representations in Vector Space</a></li>
-<li><a href="https://nlp.stanford.edu/projects/glove/">Stanford GloVe: global co-occurrence statistics and a weighted least-squares objective</a></li>
-<li><a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
-<li><a href="https://arxiv.org/abs/1908.10084">Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks</a></li>
-<li><a href="https://arxiv.org/abs/2104.08821">SimCSE: Simple Contrastive Learning of Sentence Embeddings</a></li>
-<li><a href="https://arxiv.org/abs/2004.04906">Dense Passage Retrieval for Open-Domain Question Answering</a></li>
-<li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction</a></li>
-<li><a href="https://arxiv.org/abs/2407.01449">ColPali: Efficient Document Retrieval with Vision Language Models</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9553,7 +9572,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

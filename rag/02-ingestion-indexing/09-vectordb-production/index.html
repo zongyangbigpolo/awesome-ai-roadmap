@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Vector Databases in Production and Performance Tuning","description":"Tune vector databases using capacity estimates, ANN recall, application evidence coverage, and request traces, with attention to parameters, tail latency, write visibility, and quality monitoring.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/09-vectordb-production/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Vector Databases in Production and Performance Tuning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/09-vectordb-production/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Vector Databases in Production and Performance Tuning","description":"Tune vector databases using capacity estimates, ANN recall, application evidence coverage, and request traces, with attention to parameters, tail latency, write visibility, and quality monitoring.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/09-vectordb-production/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Vector Databases in Production and Performance Tuning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/09-vectordb-production/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: Vector Databases in Production and Performance Tuning","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/09-vectordb-production/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9446,13 +9471,12 @@
 <p>The essentials include vector count, dimensionality, index parameters, P50/P99 latency, QPS, memory use, and the actual bottlenecks encountered and how they were addressed.</p>
 <p>This chapter provides a reusable way to organize that information, along with illustrative orders of magnitude. In practice, replace these examples with measurements from your own system.</p>
 <h2 id="92-a-framework-for-discussing-a-production-design"><span id="92" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 A framework for discussing a production design<a class="headerlink" href="#92-a-framework-for-discussing-a-production-design" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S1[1. Scenario and scale] --&gt; S2[2. Reasons for the choice]
-    S2 --&gt; S3[3. Index and parameters]
-    S3 --&gt; S4[4. Performance metrics]
-    S4 --&gt; S5[5. Bottlenecks encountered]
-    S5 --&gt; S6[6. How they were addressed]
-    S6 --&gt; S7[7. Remaining problems]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1[Scenario and choice] --&gt; S2[Index and measurements]
+    S2 --&gt; S3[Bottlenecks and remedies]
+    S3 --&gt; S4[Remaining problems]</code></pre>
+<p>Explain the scenario and scale before the selection rationale. Then give the index and parameters, measured performance, bottlenecks encountered, how they were addressed, and the problems that remain.</p>
 <p>The first four steps describe the current system. The final three determine whether the design is workable: where it gets stuck, how the issue was diagnosed and addressed, and which risks remain.</p>
 <h2 id="93-capacity-planning-calculate-the-costs-first"><span id="93" class="legacy-heading-anchor" aria-hidden="true"></span>9.3 Capacity planning: calculate the costs first<a class="headerlink" href="#93-capacity-planning-calculate-the-costs-first" title="Permanent link">&para;</a></h2>
 <p>Before deployment, you must be able to answer: “How much memory does this system need?”</p>
@@ -9675,14 +9699,8 @@
 <li>Monitor quality on a fixed regression set as well as performance, because quality degradation is usually silent.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1603.09320">Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs</a></li>
-<li><a href="https://github.com/nmslib/hnswlib/blob/v0.8.0/hnswlib/hnswalg.h">hnswlib v0.8.0: internal IDs, base-layer adjacency capacity, and payload layout</a></li>
-<li><a href="https://github.com/pgvector/pgvector">pgvector: exact baselines, filtering, and iterative scans</a></li>
-<li><a href="https://arxiv.org/abs/2105.09613">FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search</a></li>
-<li><a href="https://arxiv.org/abs/2205.13147">Matryoshka Representation Learning</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9705,7 +9723,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

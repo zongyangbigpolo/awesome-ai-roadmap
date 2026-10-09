@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Prompt, Model, and Data Versioning","description":"Link prompt, model snapshot, retrieval, and policy versions in a traceable release manifest, distinguishing version pinning, behavioral reproducibility, and safe rollback.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/09-prompt-model-data-versioning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Prompt, Model, and Data Versioning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/09-prompt-model-data-versioning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Prompt, Model, and Data Versioning","description":"Link prompt, model snapshot, retrieval, and policy versions in a traceable release manifest, distinguishing version pinning, behavioral reproducibility, and safe rollback.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/09-prompt-model-data-versioning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Prompt, Model, and Data Versioning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/09-prompt-model-data-versioning/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: Prompt, Model, and Data Versioning","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/05-release-pipeline/09-prompt-model-data-versioning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9200,11 +9225,18 @@
 <h1 id="chapter-9-prompt-model-and-data-versioning"><span id="prompt" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 9: Prompt, Model, and Data Versioning<a class="headerlink" href="#chapter-9-prompt-model-and-data-versioning" title="Permanent link">&para;</a></h1>
 <h2 id="91-why-should-prompts-be-versioned-like-code"><span id="91-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>9.1 Why should prompts be versioned like code?<a class="headerlink" href="#91-why-should-prompts-be-versioned-like-code" title="Permanent link">&para;</a></h2>
 <p>Prompts shape system behavior, yet many teams treat them as string constants that can be edited casually and take effect immediately. Without version numbers or change records, they cannot identify the last working version when something goes wrong. <strong>A change to the prompt, model selection, or retrieval data can change the system’s output.</strong> All three deserve the same version-control discipline as application code.</p>
-<pre class="mermaid"><code>flowchart LR
-    P["Prompt change"] --&gt; V["Any of the three changes requires a new version"]
-    M["Model / routing change"] --&gt; V
-    D["Data / knowledge base change"] --&gt; V
-    V --&gt; R["New version number + changelog + rollback support"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["Prompt"] --&gt; V["Version each change"]
+    M["Model / routing"] --&gt; V
+    D["Data / knowledge"] --&gt; V
+    V --&gt; R["Release record"]</code></pre>
+<p>Any change to the prompt, model or routing, or data or knowledge base requires a new version. The release record includes the version number, changelog, and rollback support.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Any of the three changes requires a new version</li>
+<li>New version number + changelog + rollback support</li>
+</ul>
 <h2 id="92-prompt-versioning"><span id="92-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 Prompt versioning<a class="headerlink" href="#92-prompt-versioning" title="Permanent link">&para;</a></h2>
 <h3 id="921-version-numbers-are-not-optional"><span id="921" class="legacy-heading-anchor" aria-hidden="true"></span>9.2.1 Version numbers are not optional<a class="headerlink" href="#921-version-numbers-are-not-optional" title="Permanent link">&para;</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">PROMPT_REGISTRY</span> <span class="o">=</span> <span class="p">{</span>
@@ -9308,13 +9340,8 @@
 <li><strong>Collect all three sets of version information in a shared registry</strong> to support diagnosis and release decisions.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/models/gpt-4o">OpenAI: GPT-4o snapshots</a></li>
-<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI: Deprecations</a></li>
-<li><a href="https://dvc.org/doc">DVC: Data Version Control</a></li>
-<li><a href="https://mlflow.org/docs/latest/model-registry.html">MLflow: Model Registry</a></li>
-<li><a href="https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning">Google Cloud: MLOps continuous delivery and automation pipelines</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9337,7 +9364,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：训练、微调与 RAG 数据投毒","description":"区分训练与检索投毒的生效机制，限定少样本后门研究的结论，并建立数据来源、审计和恢复链路。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：训练、微调与 RAG 数据投毒","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第四章：训练、微调与 RAG 数据投毒","description":"区分训练与检索投毒的生效机制，限定少样本后门研究的结论，并建立数据来源、审计和恢复链路。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第四章：训练、微调与 RAG 数据投毒","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第四章：训练、微调与 RAG 数据投毒","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9197,30 +9222,72 @@
 <h1 id="rag">第四章：训练、微调与 RAG 数据投毒<a class="headerlink" href="#rag" title="Permanent link">&para;</a></h1>
 <h2 id="41">4.1 数据投毒的统一视角<a class="headerlink" href="#41" title="Permanent link">&para;</a></h2>
 <p>数据投毒（Data Poisoning）通过污染训练材料或运行时引用的数据影响系统行为。污染不一定成功：训练中还取决于采样、去重、重复曝光和优化过程；RAG 中取决于文档是否入库、召回及被模型采信。要区分攻击者「能写入数据」与「能达成目标」。</p>
-<pre class="mermaid"><code>flowchart TB
-    P[数据投毒] --&gt; P1[预训练语料投毒]
-    P --&gt; P2[微调/RLHF 数据投毒]
-    P --&gt; P3["RAG 语料投毒&lt;br/&gt;见 RAG 安全 20.3.1"]
-    P1 --&gt; E1[改变权重&lt;br/&gt;依赖训练采样与曝光]
-    P2 --&gt; E2[改变权重或偏好&lt;br/&gt;依赖标注与训练入口]
-    P3 --&gt; E3[改变检索上下文&lt;br/&gt;依赖写入和召回权限]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["数据投毒"] --&gt; P1["预训练语料投毒"]
+    P --&gt; P2["微调/RLHF 数据&lt;br/&gt;投毒"]
+    P --&gt; P3["RAG 语料投毒"]
+    P1 --&gt; E1["改变权重"]
+    P2 --&gt; E2["改变权重或偏好"]
+    P3 --&gt; E3["改变检索上下文"]</code></pre>
+<p>三个分支分别指向预训练语料、微调或 RLHF 数据，以及 RAG 语料的投毒。训练阶段的投毒可能影响权重或学到的偏好；RAG 投毒改变的是检索上下文，不需要更新模型权重。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>RAG 语料投毒 见 RAG 安全 20.3.1</li>
+<li>改变权重 依赖训练采样与曝光</li>
+<li>改变权重或偏好 依赖标注与训练入口</li>
+<li>改变检索上下文 依赖写入和召回权限</li>
+</ul>
 <p>三者都需要来源、审核和血缘，但不存在固定的难度排序：开放网页抓取与只读审批知识库的 RAG 风险不同；小量训练污染也可能对窄目标有效。训练投毒影响权重，删除原始文档不能直接消除影响；RAG 通常不改权重，但删除还需传播到索引、缓存和派生记忆。检索侧细节见 <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG 安全</a>。</p>
 <h2 id="42">4.2 训练与微调阶段的投毒形式<a class="headerlink" href="#42" title="Permanent link">&para;</a></h2>
 <h3 id="421">4.2.1 无目标投毒：整体拉低质量或引入偏见<a class="headerlink" href="#421" title="Permanent link">&para;</a></h3>
 <p>无目标投毒以整体质量退化为目标，而不是控制某个指定输出；若攻击专门针对某个人群或结论，则可能属于目标型投毒。异常标签分布、重复模式、与可信来源冲突的内容都可作为筛查信号，但能否发现取决于污染方式和审核覆盖，不能笼统认定它最容易检测。</p>
 <h3 id="422-backdoor-attack">4.2.2 目标型投毒与后门攻击（Backdoor Attack）<a class="headerlink" href="#422-backdoor-attack" title="Permanent link">&para;</a></h3>
 <p>后门攻击试图让模型在特定「触发器」（trigger）出现时偏向攻击者指定行为，同时尽量保持无触发器时的正常表现。是否成功、对其他任务的损害多大，都需要分别测量，不能假定所有后门都完全隐形。</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant A as 攻击者
-    participant D as 训练/微调数据集
-    participant M as 模型
-    participant U as 正常用户
-    A-&gt;&gt;D: 注入带触发器的样本&lt;br/&gt;（如特定短语/格式/罕见 token）
-    D-&gt;&gt;M: 参与训练/微调
-    U-&gt;&gt;M: 正常输入（无触发器）
-    M--&gt;&gt;U: 正常输出，无异常
-    A-&gt;&gt;M: 输入含触发器的 Prompt
-    M--&gt;&gt;A: 触发预设的恶意行为</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["污染训练样本"]
+    S1["训练纳入触发器"]
+    S2["正常输入：正常输出"]
+    S3["触发输入：恶意行为"]
+    S0 --&gt; S1
+    S1 --&gt; S2
+    S1 --&gt; S3</code></pre>
+<p>完整消息顺序（含阶段说明）：</p>
+<table>
+<thead>
+<tr>
+<th>交互双方</th>
+<th>消息或动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>攻击者 → 训练/微调数据集</td>
+<td>注入带触发器的样本；（如特定短语/格式/罕见 token）</td>
+</tr>
+<tr>
+<td>训练/微调数据集 → 模型</td>
+<td>参与训练/微调</td>
+</tr>
+<tr>
+<td>正常用户 → 模型</td>
+<td>正常输入（无触发器）</td>
+</tr>
+<tr>
+<td>模型 → 正常用户（返回）</td>
+<td>正常输出，无异常</td>
+</tr>
+<tr>
+<td>攻击者 → 模型</td>
+<td>输入含触发器的 Prompt</td>
+</tr>
+<tr>
+<td>模型 → 攻击者（返回）</td>
+<td>触发预设的恶意行为</td>
+</tr>
+</tbody>
+</table>
 <p><strong>触发器可以是</strong>：一个不常见的词组、特定的格式指令、特定语言、特定的 Unicode 字符组合，甚至是看似无害的上下文模式。触发器设计得越隐蔽、越不可能在正常评测中被撞到，攻击就越难被发现。</p>
 <p><strong>后门攻击的独特危险性</strong>：</p>
 <ul>
@@ -9258,13 +9325,14 @@
 </tr>
 </tbody>
 </table>
-<p>Anthropic、英国 AI Security Institute 与 Alan Turing Institute 的<a href="https://www.anthropic.com/research/small-samples-poison">联合研究</a>在 600M–13B 参数模型和特定训练设置下，发现约 250 份恶意文档可形成输出乱码的窄后门，效果更接近依赖绝对数量而非污染比例。这不是「任意规模模型只要 250 份文档就能操控」：更大模型、有害目标、真实抓取与清洗管道能否复现，原文明确保留不确定性。</p>
+<p>Anthropic、英国 AI Security Institute 与 Alan Turing Institute 的联合研究<sup><a href="../../../book/references/#ref-746">【746】</a></sup>在 600M–13B 参数模型和特定训练设置下，发现约 250 份恶意文档可形成输出乱码的窄后门，效果更接近依赖绝对数量而非污染比例。这不是「任意规模模型只要 250 份文档就能操控」：更大模型、有害目标、真实抓取与清洗管道能否复现，原文明确保留不确定性。</p>
 <h2 id="44">4.4 防御框架<a class="headerlink" href="#44" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    S[来源治理] --&gt; C[入库前审核]
-    C --&gt; T[训练中监控]
-    T --&gt; A[训练后审计]
-    A --&gt; R[运行时异常检测]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["来源治理"] --&gt; C["入库前审核"]
+    C --&gt; T["训练中监控"]
+    T --&gt; A["训练后审计"]
+    A --&gt; R["运行时异常检测"]</code></pre>
 <table>
 <thead>
 <tr>
@@ -9318,15 +9386,8 @@
 <li>防御需要覆盖来源治理、入库审核、训练中监控、训练后审计和运行时异常检测的完整链路，并对第三方微调服务和众包标注设置来源可审计的合同要求。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2302.10149">Poisoning Web-Scale Training Datasets is Practical</a></li>
-<li><a href="https://www.anthropic.com/research/small-samples-poison">Anthropic / UK AISI / Alan Turing Institute: Small samples can poison language models</a></li>
-<li><a href="https://arxiv.org/abs/1708.06733">BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain</a></li>
-<li><a href="https://arxiv.org/abs/1905.12457">A Backdoor Attack Against LSTM-based Text Classification Systems</a></li>
-<li><a href="https://arxiv.org/abs/2306.17194">On the Exploitability of Instruction Tuning</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm042025-data-and-model-poisoning/">OWASP LLM04:2025 Data and Model Poisoning</a></li>
-<li><a href="https://doi.org/10.6028/NIST.AI.100-2e2025">NIST AI 100-2 E2025: Adversarial Machine Learning Taxonomy</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-04">集中参考资料章节</a>。</p>
 
 
 
@@ -9349,7 +9410,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复","description":"说明 checkpoint 的恢复边界、Temporal 默认重试、分层超时及逻辑操作幂等键，处理工具成功但结果丢失的情况。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/21-checkpoint-persistence-recovery/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复","description":"说明 checkpoint 的恢复边界、Temporal 默认重试、分层超时及逻辑操作幂等键，处理工具成功但结果丢失的情况。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/21-checkpoint-persistence-recovery/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十一章：Checkpoint、持久化、重试、超时、幂等与恢复","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/21-checkpoint-persistence-recovery/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9128,7 +9153,7 @@
 <tr>
 <td>线程内持久化（checkpoint）</td>
 <td>单次会话/单个任务</td>
-<td>LangGraph 的 Checkpointer——"持久化一个线程的图状态，用于短期的、线程范围内的记忆，包括对话连续性、人在环工作流、时间旅行、容错"(<a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a>)</td>
+<td>LangGraph 的 Checkpointer——"持久化一个线程的图状态，用于短期的、线程范围内的记忆，包括对话连续性、人在环工作流、时间旅行、容错"(LangGraph: Persistence<sup><a href="../../../book/references/#ref-483">【483】</a></sup>)</td>
 <td>支撑本章讨论的恢复能力</td>
 </tr>
 <tr>
@@ -9146,7 +9171,7 @@
 <li><strong>可考虑自动重试</strong>：限流或瞬时基础设施故障，前提是操作可安全重发，遵循 <code>Retry-After</code>、退避、尝试次数和总时限。网络超时本身不能证明未执行，有副作用的调用需先查询状态或使用已持久化的幂等键。</li>
 <li><strong>不能原样盲目重试</strong>：参数错误需要先修正；副作用结果未知时，先查状态或按业务幂等契约重发；任务确实不可行时，应解释缺失条件或交接。模型一句“做不到”也不是基础设施错误分类，仍要核对权限、信息与可用工具。</li>
 </ul>
-<p><a href="https://docs.temporal.io/encyclopedia/retry-policies">Temporal 的默认行为</a>是 <strong>Activity 自动重试，Workflow Execution 默认不重试</strong>。业务需覆盖重试上限、不可重试错误与超时，不能假设未配置就不会重试；Workflow Task 的重试又是不同层次。自定义工具客户端常用带抖动的指数退避，第 <span class="arithmatex">\(n\)</span> 次等待可写为：</p>
+<p>Temporal 的默认行为<sup><a href="../../../book/references/#ref-555">【555】</a></sup>是 <strong>Activity 自动重试，Workflow Execution 默认不重试</strong>。业务需覆盖重试上限、不可重试错误与超时，不能假设未配置就不会重试；Workflow Task 的重试又是不同层次。自定义工具客户端常用带抖动的指数退避，第 <span class="arithmatex">\(n\)</span> 次等待可写为：</p>
 <div class="arithmatex">\[
 t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\right)
 \]</div>
@@ -9160,7 +9185,7 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
     S --&gt; T --&gt; C</code></pre>
 <p>子调用应继承父级剩余 deadline，实际可用时长不超过自身上限与父级剩余预算的较小值；仅把三个静态超时配置成递增仍不够。超时后明确记录状态，并尝试取消远端工作；取消是协作请求，不保证远端副作用已撤销。</p>
 <h2 id="216">21.6 幂等：让重试变得安全<a class="headerlink" href="#216" title="Permanent link">&para;</a></h2>
-<p>幂等性要求同一逻辑操作重放不增加额外效果。常见做法是<strong>执行前持久化操作键与参数摘要</strong>，服务端原子记录该键的状态和结果，重复请求返回同一结果，参数变化则拒绝。还要处理并发重复、记录有效期、处理中状态及业务写入与去重记录的原子性；<a href="https://docs.stripe.com/api/idempotent_requests">Stripe 的幂等请求文档</a>是具体 API 的参考，不是所有工具共有的保证。</p>
+<p>幂等性要求同一逻辑操作重放不增加额外效果。常见做法是<strong>执行前持久化操作键与参数摘要</strong>，服务端原子记录该键的状态和结果，重复请求返回同一结果，参数变化则拒绝。还要处理并发重复、记录有效期、处理中状态及业务写入与去重记录的原子性；Stripe 的幂等请求文档<sup><a href="../../../book/references/#ref-556">【556】</a></sup>是具体 API 的参考，不是所有工具共有的保证。</p>
 <p><strong>模型工具调用 ID、JSON-RPC 请求 ID 与业务幂等键不同。</strong> 模型重新规划可能生成新调用 ID；MCP 多轮请求也可能要求新的 JSON-RPC ID。因此应另设稳定的逻辑操作键，并映射多次尝试。若服务不支持幂等或查询，结果未知时可能只能人工核对或执行补偿，不能宣称 checkpoint 带来了 exactly-once 副作用。</p>
 <h2 id="217">21.7 恢复会不会再次执行已经走过的代码？<a class="headerlink" href="#217" title="Permanent link">&para;</a></h2>
 <p>可能会。恢复要保住的是已经确认的状态和业务效果，不是保证每行代码只运行一次。LangGraph 中断恢复会重新进入中断节点；Temporal 则可能重放 Workflow 代码，用历史结果重建决策。重放控制代码与重新执行外部操作是两件事。设计时尤其要区分：</p>
@@ -9179,14 +9204,8 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
 <h2 id="219">21.9 本章总结<a class="headerlink" href="#219" title="Permanent link">&para;</a></h2>
 <p>Checkpoint 保存执行状态，不自动保存外部世界，也不保证副作用只执行一次。恢复需要稳定的逻辑操作键、明确的未知状态和受 deadline 约束的重试。会话 checkpoint 与跨会话记忆要分清语义，但可共用底层数据库。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Interrupts</a>：恢复时重新进入节点，节点内中断之前的代码会再次执行。</li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance">LangGraph: Fault tolerance</a></li>
-<li><a href="https://docs.temporal.io/encyclopedia/retry-policies">Temporal: Retry Policies</a></li>
-<li><a href="https://docs.stripe.com/api/idempotent_requests">Stripe: Idempotent requests</a></li>
-<li><a href="../../../frameworks/01-langchain/04-langgraph/10-langgraph-advantages/">LangGraph 第十章：LangGraph 的核心优势</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-21">集中参考资料章节</a>。</p>
 
 
 
@@ -9209,7 +9228,7 @@ t_n \sim \mathrm{Uniform}\left(0,\ \min\left(t_{max},\ t_0 \cdot 2^{n-1}\right)\
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

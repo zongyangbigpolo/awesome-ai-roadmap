@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: LangChain4j and the Java Ecosystem","description":"Explain Java integration with LangChain4j AI Services, tools, Chat Memory, and RAG, distinguishing the boundaries of model listeners, service events, and guardrails.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/08-langchain4j/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: LangChain4j and the Java Ecosystem","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/08-langchain4j/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: LangChain4j and the Java Ecosystem","description":"Explain Java integration with LangChain4j AI Services, tools, Chat Memory, and RAG, distinguishing the boundaries of model listeners, service events, and guardrails.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/08-langchain4j/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: LangChain4j and the Java Ecosystem","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/08-langchain4j/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: LangChain4j and the Java Ecosystem","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/08-langchain4j/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9823,15 +9848,22 @@
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">SupportReply</span><span class="w"> </span><span class="n">reply</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">assistant</span><span class="p">.</span><span class="na">chat</span><span class="p">(</span><span class="s">"conversation-1001"</span><span class="p">,</span><span class="w"> </span><span class="s">"订单 A1024 到哪了？"</span><span class="p">);</span>
 </span></code></pre></div>
 <p><strong>The entry point is just <code>assistant.chat()</code>, but it connects a complete sequence behind the scenes</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["AI Service proxy&lt;br/&gt;Read prior messages by MemoryId and assemble input"] --&gt; B["Retriever adds knowledge-base content"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["AI Service&lt;br/&gt;proxy"] --&gt; B["Retrieve&lt;br/&gt;context"]
     B --&gt; C["Model decides"]
     C --&gt;|Order lookup needed| D["Call OrderTools"]
     D --&gt; C
-    C --&gt;|Result obtained| E["Update the current memory window"]
-    E --&gt; F["Framework converts model output into SupportReply"]
+    C --&gt;|Result obtained| E["Update the&lt;br/&gt;current memory&lt;br/&gt;window"]
+    E --&gt; F["Convert&lt;br/&gt;SupportReply"]
 
     style F fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>AI Service proxy Read prior messages by MemoryId and assemble input</li>
+<li>Retriever adds knowledge-base content</li>
+<li>Framework converts model output into SupportReply</li>
+</ul>
 <h3 id="832-three-engineering-details-of-structured-output"><span id="832" class="legacy-heading-anchor" aria-hidden="true"></span>8.3.2 Three Engineering Details of Structured Output<a class="headerlink" href="#832-three-engineering-details-of-structured-output" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>When returning a record or POJO</strong>, LangChain4j can generate the schema and parse the response automatically.</li>
@@ -9980,10 +10012,15 @@
 </table>
 <h2 id="88-the-boundaries-of-observability-and-guardrails"><span id="88-guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>8.8 The Boundaries of Observability and Guardrails<a class="headerlink" href="#88-the-boundaries-of-observability-and-guardrails" title="Permanent link">&para;</a></h2>
 <p>When investigating an incorrect support response, do not inspect only the final text. A single invocation may already have passed through RAG retrieval, model decisions, and tool execution.</p>
-<pre class="mermaid"><code>flowchart LR
-    A["What the retriever found"] --&gt; B["Messages sent to the model"] --&gt; C["Tool arguments and results"] --&gt; D["Whether input/output validation caught problematic content"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["What the&lt;br/&gt;retriever found"] --&gt; B["Messages sent&lt;br/&gt;to the model"] --&gt; C["Tool arguments&lt;br/&gt;and results"] --&gt; D["Inspect&lt;br/&gt;validation"]
 
     style A fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Whether input/output validation caught problematic content</li>
+</ul>
 <p>The diagram lists investigative clues, not a rule that all validation runs at the end; checks may occur at several stages. <code>ChatModelListener</code> observes model requests, responses, and errors. It does not automatically create spans across retrieval, tools, approvals, and the rest of the workflow. Observing the whole invocation also requires AI Service events or application-level instrumentation correlated by the same trace ID. Spring Boot or Quarkus integrations can connect to the team's existing metrics and tracing systems.</p>
 <h3 id="881-two-boundaries-of-guardrails"><span id="881-guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>8.8.1 Two Boundaries of Guardrails<a class="headerlink" href="#881-two-boundaries-of-guardrails" title="Permanent link">&para;</a></h3>
 <ol>
@@ -10085,18 +10122,8 @@
 <p>LangChain4j follows Java's conventions for interfaces, types, and dependency injection to bring prompts, tools, memory, RAG, and structured output behind typed service interfaces. But a unified API does not make provider capabilities identical, memory is not history, and guardrails are not an authorization system.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain4j.dev/">LangChain4j official documentation</a></li>
-<li><a href="https://github.com/langchain4j/langchain4j">LangChain4j GitHub repository</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/ai-services">LangChain4j: AI Services tutorial</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/tools">LangChain4j: Tools tutorial</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/chat-memory">LangChain4j: Chat Memory tutorial</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/rag">LangChain4j: RAG tutorial</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/guardrails">LangChain4j: Guardrails and execution order</a></li>
-<li><a href="https://docs.langchain4j.dev/tutorials/observability">LangChain4j: AI Service Observability</a></li>
-<li><a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/">Quarkus LangChain4j</a></li>
-<li><a href="https://docs.spring.io/spring-ai/reference/">Spring AI official documentation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10119,7 +10146,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

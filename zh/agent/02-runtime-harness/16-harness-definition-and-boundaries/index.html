@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：Agent Harness 的定义、边界与分层","description":"准确定义 Agent Harness 与 Runtime，比较 Model、Agent、Workflow、Framework 和 Control Plane，并拆解生产级运行时子系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/16-harness-definition-and-boundaries/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：Agent Harness 的定义、边界与分层","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/16-harness-definition-and-boundaries/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：Agent Harness 的定义、边界与分层","description":"准确定义 Agent Harness 与 Runtime，比较 Model、Agent、Workflow、Framework 和 Control Plane，并拆解生产级运行时子系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/16-harness-definition-and-boundaries/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：Agent Harness 的定义、边界与分层","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/16-harness-definition-and-boundaries/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十六章：Agent Harness 的定义、边界与分层","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/16-harness-definition-and-boundaries/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9218,25 +9243,25 @@
 <h3 id="1621-model">16.2.1 Model<a class="headerlink" href="#1621-model" title="Permanent link">&para;</a></h3>
 <p>对普通推理调用，可以把模型视为“给定有效上下文，生成输出”的计算组件，输出可包含文本、多模态内容或工具请求。跨请求的消息、步数和业务状态由应用或提供商会话服务维护；KV Cache、服务端会话与参数学习不是一回事。模型能根据传入历史判断是否重试，但不会自动保证重试安全。</p>
 <h3 id="1622-agent">16.2.2 Agent<a class="headerlink" href="#1622-agent" title="Permanent link">&para;</a></h3>
-<p>本主题讨论的 LLM Agent 是"模型 + 工具 + 循环"这三者的组合：模型在运行时允许的动作和预算内，动态选择下一步工具调用或提出结束（<a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a>区分了预定义代码路径的 workflow 与由模型动态指挥的 agent）。模型并不独占控制权，Harness 仍可因权限、验收或预算而拒绝动作、要求继续或停止任务。Agent 在这里描述一种<strong>控制关系</strong>，不是说系统的每一个决定都交给模型。</p>
+<p>本主题讨论的 LLM Agent 是"模型 + 工具 + 循环"这三者的组合：模型在运行时允许的动作和预算内，动态选择下一步工具调用或提出结束（Anthropic: Building Effective Agents<sup><a href="../../../book/references/#ref-275">【275】</a></sup>区分了预定义代码路径的 workflow 与由模型动态指挥的 agent）。模型并不独占控制权，Harness 仍可因权限、验收或预算而拒绝动作、要求继续或停止任务。Agent 在这里描述一种<strong>控制关系</strong>，不是说系统的每一个决定都交给模型。</p>
 <h3 id="1623-workflow">16.2.3 Workflow<a class="headerlink" href="#1623-workflow" title="Permanent link">&para;</a></h3>
 <p>Workflow 的控制结构由代码或流程图约束，节点内部可以使用模型、动态分支或 Agent。它通常更便于测试和约束成本，但可靠性仍取决于节点实现、错误处理与覆盖范围；并非天然不能处理新输入。第三章 3.9–3.12 节讨论其形态与五种模式。</p>
 <h3 id="1624-framework">16.2.4 Framework<a class="headerlink" href="#1624-framework" title="Permanent link">&para;</a></h3>
-<p>Framework 从开发者使用的 API、DSL 和组件来组织能力，<strong>不代表只在开发时起作用</strong>。LangGraph 的 Graph API 与 Functional API 共享运行时和持久化能力；OpenAI Agents SDK 内含 Runner；Microsoft Agent Framework 也提供 Harness Agent。框架与 Harness 可以由同一产品提供，区别是观察视角，不是互斥的软件分类（见 <a href="https://docs.langchain.com/oss/python/langgraph/use-graph-api">Graph API</a>、<a href="https://docs.langchain.com/oss/python/langgraph/functional-api">Functional API</a>）。</p>
+<p>Framework 从开发者使用的 API、DSL 和组件来组织能力，<strong>不代表只在开发时起作用</strong>。LangGraph 的 Graph API 与 Functional API 共享运行时和持久化能力；OpenAI Agents SDK 内含 Runner；Microsoft Agent Framework 也提供 Harness Agent。框架与 Harness 可以由同一产品提供，区别是观察视角，不是互斥的软件分类（见 Graph API<sup><a href="../../../book/references/#ref-543">【543】</a></sup>、Functional API<sup><a href="../../../book/references/#ref-544">【544】</a></sup>）。</p>
 <h3 id="1625-runtime-harness">16.2.5 Runtime / Harness<a class="headerlink" href="#1625-runtime-harness" title="Permanent link">&para;</a></h3>
 <p>Runtime/Harness 指执行宿主的职责：驱动循环、装配上下文、执行工具、管理权限与预算、持久化状态、处理中断并记录轨迹。不同项目对 Harness、Runtime、Scaffolding 的边界并不完全一致，本章把它们作为工程术语，而不是标准化产品类别。</p>
-<p><a href="https://arxiv.org/abs/2405.15793">SWE-agent</a> 的 <strong>Agent-Computer Interface（ACI）</strong> 重点研究模型如何使用命令、编辑器和反馈，它是 Harness 的重要组成部分，不等同于整个运行时。<a href="https://arxiv.org/abs/2503.14499">METR 的长任务评测</a>还提醒读者区分人类完成任务的时长与 Agent 自身运行时间；任务时长能力受模型、任务集、成功阈值和 scaffolding 共同影响，不能归结为某个固定倍数。</p>
+<p>SWE-agent<sup><a href="../../../book/references/#ref-538">【538】</a></sup> 的 <strong>Agent-Computer Interface（ACI）</strong> 重点研究模型如何使用命令、编辑器和反馈，它是 Harness 的重要组成部分，不等同于整个运行时。METR 的长任务评测<sup><a href="../../../book/references/#ref-539">【539】</a></sup>还提醒读者区分人类完成任务的时长与 Agent 自身运行时间；任务时长能力受模型、任务集、成功阈值和 scaffolding 共同影响，不能归结为某个固定倍数。</p>
 <h3 id="1626-control-plane">16.2.6 Control Plane<a class="headerlink" href="#1626-control-plane" title="Permanent link">&para;</a></h3>
 <p>Control Plane 负责跨实例的配置、资源调度、策略与治理，Runtime 执行单次任务。两者可以在运行期间交互，例如权限撤销、预算更新和取消任务，并非只有启动前和结束后才能通信。统一托管持久化服务属于平台能力，但仅凭“托管存储”还不足以认定某个服务就是 Control Plane。</p>
 <h2 id="163-model-control-plane">16.3 分层视图：从 Model 到 Control Plane<a class="headerlink" href="#163-model-control-plane" title="Permanent link">&para;</a></h2>
 <p>六个术语回答不同的问题：模型提供什么能力，谁选择下一步，谁执行和治理。它们可以画成职责关系，但不是严格的上下六层：</p>
 <pre class="mermaid"><code>flowchart TB
-    M["Model&lt;br/&gt;根据有效输入生成内容与工具请求"]
-    A["Agent&lt;br/&gt;模型在约束内动态选择下一步"]
-    W["Workflow&lt;br/&gt;代码约束控制结构，节点可含 Agent"]
-    H["Runtime / Harness&lt;br/&gt;驱动循环执行的运行时基础设施"]
-    F["Framework&lt;br/&gt;API 与编排抽象，也可提供运行时"]
-    C["Control Plane&lt;br/&gt;跨会话的配置、调度与治理"]
+    M["Model"]
+    A["Agent"]
+    W["Workflow"]
+    H["Runtime / Harness"]
+    F["Framework"]
+    C["Control Plane"]
 
     M --&gt; A
     M --&gt; W
@@ -9246,6 +9271,7 @@
     F -. 生成/封装 .-&gt; W
     F -. 可提供 .-&gt; H
     H --&gt; C</code></pre>
+<p>模型根据有效输入生成内容与工具请求。在 Agent 中，模型在约束内动态选择下一步；在 Workflow 中，代码约束控制结构，但节点可以包含 Agent。Runtime / Harness 提供驱动循环的运行时基础设施。Framework 提供 API 与编排抽象，也可能提供运行时。Control Plane 负责跨会话的配置、调度与治理。</p>
 <p>Agent 和 Workflow 都需要执行宿主，区别主要在于谁决定下一步。Framework 是横向的开发抽象，也可以附带执行宿主；Control Plane 管理多个运行实例及组织策略。这张图表示职责关系，不是必须分开部署的六层架构。</p>
 <h2 id="164-harness">16.4 Harness 的边界：三条判定规则<a class="headerlink" href="#164-harness" title="Permanent link">&para;</a></h2>
 <p>面对一个具体功能，判断它属于 Harness 还是属于 Agent/Model 层，可以用三条规则：</p>
@@ -9256,24 +9282,17 @@
 </ol>
 <h2 id="165-harness">16.5 Harness 的七类子系统（本模块地图）<a class="headerlink" href="#165-harness" title="Permanent link">&para;</a></h2>
 <p>本模块按七类职责拆解 Harness，对应剩余七章；具体系统可以合并组件：</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Harness["Runtime / Harness"]
-        L["Agent Loop&lt;br/&gt;状态机（17 章）"]
-        CTX["Context Assembly&lt;br/&gt;上下文装配（18 章）"]
-        T["Tool Pipeline&lt;br/&gt;工具执行管线（19 章）"]
-        S["Permission &amp; Sandbox&lt;br/&gt;权限与沙箱（20 章）"]
-        P["Checkpoint &amp; Recovery&lt;br/&gt;持久化与恢复（21 章）"]
-        HI["HITL &amp; Interrupt&lt;br/&gt;人在环与中断（22 章）"]
-        OBS["Tracing &amp; Cost&lt;br/&gt;可观测性与成本（23 章）"]
-    end
-    L --&gt; CTX --&gt; T --&gt; S
-    L --&gt; P
-    L --&gt; HI
-    L --&gt; OBS</code></pre>
+<pre class="mermaid"><code>flowchart TB
+    L["Agent 循环"]
+    CTX["上下文装配"]
+    T["工具执行管线"]
+    S["权限与沙箱"]
+    L --&gt; CTX --&gt; T --&gt; S</code></pre>
+<p>这些组件都属于 Runtime / Harness：循环状态机见第 17 章，上下文装配见第 18 章，工具执行见第 19 章，权限与沙箱见第 20 章。循环还直接连接检查点持久化与恢复（第 21 章）、人在环与中断（第 22 章），以及追踪、可观测性与成本统计（第 23 章）。这些是配套能力的连接，不是沙箱之后额外执行的顺序步骤。</p>
 <p>这些子系统不是严格顺序执行的流水线：装配上下文服务于模型调用，工具管线和权限沙箱在请求执行时触发，checkpoint 和可观测性贯穿生命周期，HITL 提供可恢复的暂停点。</p>
 <h2 id="166-harness">16.6 案例对照：两种 Harness 的分层落地<a class="headerlink" href="#166-harness" title="Permanent link">&para;</a></h2>
-<p><strong>Claude Agent SDK</strong> 把 Claude Code 本身的执行内核暴露为一个可编程的库："The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript"（<a href="https://code.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK: Overview</a>）。它的能力表直接对应 16.5 节的子系统：内置工具与 MCP 对应工具管线，Hooks 和 Permissions 对应权限与沙箱，Sessions 对应持久化，Subagents 对应嵌套的 Agent Loop。</p>
-<p><strong>GitHub Copilot Coding Agent</strong> 则把 harness 落地为一次性的、隔离的 GitHub Actions 运行：模型驱动的循环运行在"由 GitHub Actions 提供的一次性开发环境"里，开发者可以用 <code>copilot-setup-steps.yml</code> 预装依赖、切换 Runner 规格、启用 LFS，但不能改写循环本身的调度逻辑（<a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a>）。这里能清楚看到 harness（一次性环境 + 循环调度）和 control plane（组织级 Runner 与防火墙配置，见 20.8 节）的分工。</p>
+<p><strong>Claude Agent SDK</strong> 把 Claude Code 本身的执行内核暴露为一个可编程的库："The SDK gives you the same tools, agent loop, and context management that power Claude Code, programmable in Python and TypeScript"（Claude Agent SDK: Overview<sup><a href="../../../book/references/#ref-541">【541】</a></sup>）。它的能力表直接对应 16.5 节的子系统：内置工具与 MCP 对应工具管线，Hooks 和 Permissions 对应权限与沙箱，Sessions 对应持久化，Subagents 对应嵌套的 Agent Loop。</p>
+<p><strong>GitHub Copilot Coding Agent</strong> 则把 harness 落地为一次性的、隔离的 GitHub Actions 运行：模型驱动的循环运行在"由 GitHub Actions 提供的一次性开发环境"里，开发者可以用 <code>copilot-setup-steps.yml</code> 预装依赖、切换 Runner 规格、启用 LFS，但不能改写循环本身的调度逻辑（GitHub Docs: Configure the development environment for Copilot cloud agent<sup><a href="../../../book/references/#ref-542">【542】</a></sup>）。这里能清楚看到 harness（一次性环境 + 循环调度）和 control plane（组织级 Runner 与防火墙配置，见 20.8 节）的分工。</p>
 <p>这两个产品都让开发者通过配置和扩展点复用已有循环，不必从零实现调度。但这不是 Harness 的定义限制：自建 Harness 或使用显式图编排时，开发者仍可能直接定义下一步如何选择、何时停止。</p>
 <h2 id="167">16.7 常见混淆与误区<a class="headerlink" href="#167" title="Permanent link">&para;</a></h2>
 <ul>
@@ -9285,16 +9304,8 @@
 <h2 id="168">16.8 本章总结<a class="headerlink" href="#168" title="Permanent link">&para;</a></h2>
 <p>Model 提供推理，Agent/Workflow 描述控制方式，Harness 承担执行职责，Control Plane 负责跨实例治理。Framework 可以同时提供开发抽象和运行时，不是与 Harness 互斥的产品类别。讨论具体系统时，沿着循环、上下文、工具、权限、恢复、审批和观测七类职责检查，比按产品名划边界更可靠。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://arxiv.org/abs/2405.15793">SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering</a></li>
-<li><a href="https://arxiv.org/abs/2503.14499">METR: Measuring AI Ability to Complete Long Software Tasks</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK: Overview</a></li>
-<li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment">GitHub Docs: Configure the development environment for Copilot cloud agent</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework Overview</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-16">集中参考资料章节</a>。</p>
 
 
 
@@ -9317,7 +9328,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

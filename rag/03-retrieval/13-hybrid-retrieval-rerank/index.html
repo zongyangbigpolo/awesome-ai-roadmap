@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","description":"How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","description":"How RRF combines rank contributions, candidate windows, and a smoothing constant; how cross-encoder and listwise reranking differ; and how to calibrate abstention, deduplicate, and select versions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 13: Multi-Path Retrieval, RRF Fusion, and Reranking","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/13-hybrid-retrieval-rerank/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9457,18 +9482,21 @@
 <h3 id="1341-why-use-it"><span id="1341" class="legacy-heading-anchor" aria-hidden="true"></span>13.4.1 Why use it?<a class="headerlink" href="#1341-why-use-it" title="Permanent link">&para;</a></h3>
 <p>Typical dense first-stage retrieval encodes queries and documents independently and compares their compressed representations, with no cross-text attention at query time. Reranking can add finer-grained interaction, though this does not mean dual encoders are worse on every task (Section 6.3.3).</p>
 <p>A common reranker is a cross-encoder: <strong>concatenate the query and candidate document</strong> and feed them into a model that allows full interaction before producing a relevance score. Reranking can also use multi-vector scoring or LLM-based ordering; it is not restricted to one architecture.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph 粗排["First-stage ranking"]
-        Q1[Query] --&gt; E1[Encode]
-        D1[Document] --&gt; E2[Encode&lt;br/&gt;Offline]
-        E1 --&gt; S1[Vector distance]
-        E2 --&gt; S1
-    end
-    subgraph 精排["Reranking"]
-        Q2[Query] --&gt; CAT[Concatenate]
-        D2[Candidate document] --&gt; CAT
-        CAT --&gt; M[Joint-interaction model] --&gt; S2[Relevance score]
-    end</code></pre>
+<p><strong>First-stage ranking</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q1[Query] --&gt; E1[Encode]
+    D1[Document] --&gt; E2[Encode&lt;br/&gt;Offline]
+    E1 --&gt; S1[Vector distance]
+    E2 --&gt; S1
+</code></pre>
+<p><strong>Reranking</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q2[Query] --&gt; CAT[Concatenate]
+    D2[Candidate document] --&gt; CAT
+    CAT --&gt; M[Joint-interaction model] --&gt; S2[Relevance score]
+</code></pre>
 <p><strong>The quality improvement is often substantial</strong>, making reranking a high-return, focused optimization that commonly enters the pipeline before more complex changes.</p>
 <h3 id="1342-three-types-of-reranker"><span id="1342-reranker" class="legacy-heading-anchor" aria-hidden="true"></span>13.4.2 Three types of reranker<a class="headerlink" href="#1342-three-types-of-reranker" title="Permanent link">&para;</a></h3>
 <table>
@@ -9505,19 +9533,19 @@
 <p>Changing the reranker, corpus, language distribution, or retrieval strategy can invalidate calibration. Version the abstention rules and recalibrate against the evaluation set and production samples. Do not directly compare one query's raw scores with another's.</p>
 <p>A reranking timeout can fall back to first-stage results, but it must use evidence rules calibrated for that stage and still enforce ACLs, version checks, and citation validation. If that path has not passed application acceptance tests, report temporary inability to answer. “We still have Top-K” is not a sufficient basis for release.</p>
 <h2 id="135-the-complete-retrieval-and-ranking-pipeline"><span id="135-" class="legacy-heading-anchor" aria-hidden="true"></span>13.5 The complete retrieval-and-ranking pipeline<a class="headerlink" href="#135-the-complete-retrieval-and-ranking-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q[Query] --&gt; RW[Query rewriting]
-    RW --&gt; P1[BM25 retrieval: top-50]
-    RW --&gt; P2[Vector retrieval: top-50]
-    RW --&gt; P3[Optional: other paths]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    RW[Rewritten query] --&gt; P1[BM25 top-50]
+    RW --&gt; P2[Vector top-50]
     P1 --&gt; RRF[RRF fusion]
     P2 --&gt; RRF
-    P3 --&gt; RRF
-    RRF --&gt; DEDUP[Deduplicate and merge]
-    DEDUP --&gt; RR[Rerank: top-50 to top-5]
-    RR --&gt; TH{Sufficient calibrated&lt;br/&gt;confidence?}
+    RRF --&gt; DEDUP[Deduplicate and merge]</code></pre>
+<p>BM25 and vector retrieval are parallel paths; optional additional paths can also join fusion. Deduplicate and merge their candidates before reranking and the release decision:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    RR[Rerank: top-50 to top-5] --&gt; TH{Calibrated confidence sufficient?}
     TH --&gt;|Yes| CTX[Assemble context]
-    TH --&gt;|No| REJ[Abstain, clarify,&lt;br/&gt;or degrade gracefully]</code></pre>
+    TH --&gt;|No| REJ[Abstain, clarify, or degrade]</code></pre>
 <p><strong>Illustrative candidate counts by stage</strong>: 50–100 per retrieval path → 50–150 after fusion and deduplication → 50 reranker inputs → 3–10 final results.</p>
 <p>A larger final count is not always better (Section 2.6); measure it.</p>
 <h2 id="136-deduplication-matters-too"><span id="136" class="legacy-heading-anchor" aria-hidden="true"></span>13.6 Deduplication matters too<a class="headerlink" href="#136-deduplication-matters-too" title="Permanent link">&para;</a></h2>
@@ -9578,14 +9606,8 @@
 <li><strong>Deduplication must cover cross-path duplicates, repeated parents, redundant content, and old/new versions.</strong> Conflicting versions have the most serious consequences.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf">Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR 2009)</a></li>
-<li><a href="https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html">Lucene 9.12: the BM25Similarity scoring implementation</a></li>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-13">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9608,7 +9630,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

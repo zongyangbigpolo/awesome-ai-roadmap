@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：LangChain 的版本演进","description":"解释 LangChain 拆包、Runnable、LangGraph 与 v1 Agent 演进，列出 Python、Pydantic、工具和状态迁移的兼容性检查点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/03-ecosystem/11-version-evolution/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：LangChain 的版本演进","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/03-ecosystem/11-version-evolution/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：LangChain 的版本演进","description":"解释 LangChain 拆包、Runnable、LangGraph 与 v1 Agent 演进，列出 Python、Pydantic、工具和状态迁移的兼容性检查点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/03-ecosystem/11-version-evolution/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：LangChain 的版本演进","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/03-ecosystem/11-version-evolution/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十一章：LangChain 的版本演进","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/03-ecosystem/11-version-evolution/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9407,14 +9432,22 @@
 <h2 id="111">11.1 为什么要不断调整架构<a class="headerlink" href="#111" title="Permanent link">&para;</a></h2>
 <p><strong>LangChain 早期把模型、向量库、工具、Retriever 和大量预制 Chain 都放在相近的包结构中</strong>，快速验证想法很方便。</p>
 <p><strong>但问题是层层叠加的</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    A["第一层：依赖&lt;br/&gt;第三方 SDK 的一次更新&lt;br/&gt;就可能牵动整个依赖树"]
-    B["第二层：API 不统一&lt;br/&gt;不同 Chain 的调用和组合方式不一致&lt;br/&gt;开发者要记住越来越多专用 API"]
-    C["第三层：执行不可控&lt;br/&gt;复杂 Agent 的执行循环藏在执行器内部&lt;br/&gt;很难插入分支、审批和恢复逻辑"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["第一层：依赖"]
+    B["第二层：API 不统&lt;br/&gt;一"]
+    C["第三层：执行不可&lt;br/&gt;控"]
     A --&gt; B --&gt; C
-    C --&gt; D["功能越加越多&lt;br/&gt;核心职责反而越来越模糊"]
+    C --&gt; D["功能越加越多"]
 
     style D fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>第一层：依赖 第三方 SDK 的一次更新 就可能牵动整个依赖树</li>
+<li>第二层：API 不统一 不同 Chain 的调用和组合方式不一致 开发者要记住越来越多专用 API</li>
+<li>第三层：执行不可控 复杂 Agent 的执行循环藏在执行器内部 很难插入分支、审批和恢复逻辑</li>
+<li>功能越加越多 核心职责反而越来越模糊</li>
+</ul>
 <blockquote>
 <p><strong>大版本演进的重点并不是单纯增加功能，而是重新划分边界</strong>：哪些协议需要保持稳定，哪些集成应该独立更新，哪些流程应该由更底层的运行时管理。</p>
 </blockquote>
@@ -9500,13 +9533,20 @@
 <p><strong>LangGraph 并不是把 LangChain 完全替换掉</strong>：LangChain 提供模型、Tool、middleware 和 <code>create_agent</code> 等高层开发体验，LangGraph 提供底层状态与执行能力。</p>
 <h2 id="115-v1-agent">11.5 节点四：v1 重新聚焦 Agent<a class="headerlink" href="#115-v1-agent" title="Permanent link">&para;</a></h2>
 <p><strong>从开发者最常接触的入口看起</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① 高层入口收敛到 create_agent&lt;br/&gt;提供模型、工具和系统提示词&lt;br/&gt;底层由 LangGraph 运行 Agent loop&lt;br/&gt;因此仍能使用持久化、流式输出和人工介入"]
-    A --&gt; B["② middleware 成为主要扩展方式&lt;br/&gt;动态提示词、模型选择、工具筛选&lt;br/&gt;对话摘要、重试、人工审批&lt;br/&gt;插入关键执行阶段而不是复制整套 loop"]
-    B --&gt; C["③ 主命名空间顺势精简&lt;br/&gt;旧 Chain、Retriever、Indexing、Hub&lt;br/&gt;主要迁到 langchain-classic"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["① create_agent"]
+    A --&gt; B["② middleware"]
+    B --&gt; C["③ 主命名空间顺&lt;br/&gt;势精简"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 高层入口收敛到 create_agent 提供模型、工具和系统提示词 底层由 LangGraph 运行 Agent loop 因此仍能使用持久化、流式输出和人工介入</li>
+<li>② middleware 成为主要扩展方式 动态提示词、模型选择、工具筛选 对话摘要、重试、人工审批 插入关键执行阶段而不是复制整套 loop</li>
+<li>③ 主命名空间顺势精简 旧 Chain、Retriever、Indexing、Hub 主要迁到 langchain-classic</li>
+</ul>
 <blockquote>
 <p><strong>易用性留在 LangChain，复杂执行能力则由 LangGraph 承接。</strong></p>
 </blockquote>
@@ -9525,15 +9565,23 @@
 </blockquote>
 <h2 id="117">11.7 升级时要注意什么<a class="headerlink" href="#117" title="Permanent link">&para;</a></h2>
 <p><strong>跨大版本升级不能只执行一次依赖更新。</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    S1["① 动手前&lt;br/&gt;锁定当前依赖和可复现环境&lt;br/&gt;阅读目标版本的迁移指南&lt;br/&gt;否则多个包同时变化，很难判断问题从哪开始"]
-    S2["② 顺着新的分层检查兼容关系&lt;br/&gt;langchain、LangGraph 和模型集成包各有更新节奏&lt;br/&gt;确认版本组合后再替换废弃导入路径和内部 API&lt;br/&gt;小步修改、小步运行"]
-    S3["③ 代码能启动只说明导入问题解决了&lt;br/&gt;工具调用、结构化输出、流式响应、持久化&lt;br/&gt;仍要分别回归"]
-    S4["④ 有副作用的路径&lt;br/&gt;付款、发消息先在隔离环境验证幂等&lt;br/&gt;再做小流量发布"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S1["① 动手前"]
+    S2["② 检查兼容性"]
+    S3["③ 回归测试"]
+    S4["④ 有副作用的路&lt;br/&gt;径"]
     S1 --&gt; S2 --&gt; S3 --&gt; S4
 
     style S3 fill:#fff3cd
     style S4 fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 动手前 锁定当前依赖和可复现环境 阅读目标版本的迁移指南 否则多个包同时变化，很难判断问题从哪开始</li>
+<li>② 顺着新的分层检查兼容关系 langchain、LangGraph 和模型集成包各有更新节奏 确认版本组合后再替换废弃导入路径和内部 API 小步修改、小步运行</li>
+<li>③ 代码能启动只说明导入问题解决了 工具调用、结构化输出、流式响应、持久化 仍要分别回归</li>
+<li>④ 有副作用的路径 付款、发消息先在隔离环境验证幂等 再做小流量发布</li>
+</ul>
 <h3 id="1171">11.7.1 一条容易被忽略的稳定性边界<a class="headerlink" href="#1171" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>不同包的更新节奏并不完全一致。主包的稳定承诺不能自动覆盖社区集成、合作伙伴包和实验性 API。</strong></p>
@@ -9583,14 +9631,23 @@
 <p>升级恢复型系统还要测试旧 checkpoint：节点改名、移除待执行节点或改变 State 字段语义，可能让暂停中的线程无法继续。保留兼容路由或先排空旧任务，再逐步迁移状态；依赖锁文件回滚不等于持久状态已经回滚。</p>
 <h2 id="118">11.8 演进方向是什么<a class="headerlink" href="#118" title="Permanent link">&para;</a></h2>
 <p>把几次架构变化连起来，可以看到一条连续的路线：</p>
-<pre class="mermaid"><code>flowchart LR
-    A["langchain-core&lt;br/&gt;稳定基础协议"] --&gt; B["集成拆包&lt;br/&gt;解决核心与外部 SDK&lt;br/&gt;节奏不一致"]
-    B --&gt; C["Runnable + LCEL&lt;br/&gt;统一确定性流程的组合方式"]
-    C --&gt; D["LangGraph&lt;br/&gt;承接复杂状态和执行流程"]
-    D --&gt; E["create_agent + middleware&lt;br/&gt;提供更易用的 Agent 入口"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["langchain-core"] --&gt; B["集成拆包"]
+    B --&gt; C["Runnable + LCEL"]
+    C --&gt; D["LangGraph"]
+    D --&gt; E["create_agent +&lt;br/&gt;middleware"]
 
     style A fill:#e8f0fe
     style E fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>langchain-core 稳定基础协议</li>
+<li>集成拆包 解决核心与外部 SDK 节奏不一致</li>
+<li>Runnable + LCEL 统一确定性流程的组合方式</li>
+<li>LangGraph 承接复杂状态和执行流程</li>
+<li>create_agent + middleware 提供更易用的 Agent 入口</li>
+</ul>
 <blockquote>
 <p><strong>这套方向让 LangChain 从「封装大量 LLM 功能」，转向「提供清晰分层的 Agent 工程体系」。</strong></p>
 <p><strong>代价</strong>是旧项目升级需要处理依赖和导入路径；<strong>收益</strong>是核心接口更稳定、复杂流程更可控，也更适合生产环境。</p>
@@ -9631,19 +9688,8 @@
 <p>可以把这条演进路线概括为：先把协议稳下来、把集成拆出去，再用 Runnable 统一确定性流程、用 LangGraph 承接复杂执行，最后在高层用 <code>create_agent</code> 和 middleware 收敛 Agent 开发入口。</p>
 </blockquote>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 迁移指南</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain 官方文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/releases/langchain-v1">LangChain v1 发布说明</a></li>
-<li><a href="https://blog.langchain.com/announcing-langchain-v0-3/">LangChain v0.3 官方发布说明（Pydantic 2 迁移）</a></li>
-<li><a href="https://blog.langchain.com/">LangChain 官方博客</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-<li><a href="https://docs.pydantic.dev/latest/migration/">Pydantic 迁移指南</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/structured-output">LangChain Structured output：能力与最低版本</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance">LangGraph Fault tolerance</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/graph-api#graph-migrations">LangGraph Graph API：graph migrations</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/event-streaming">LangChain Event streaming</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-11">集中参考资料章节</a>。</p>
 
 
 
@@ -9666,7 +9712,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

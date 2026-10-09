@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Transformer Architecture","description":"Derive Transformer Q/K/V shapes, scaled dot-product attention, and causal masking, then connect residuals, normalization, and FFNs to training and generation data flow.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/02-transformer-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Transformer Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/02-transformer-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Transformer Architecture","description":"Derive Transformer Q/K/V shapes, scaled dot-product attention, and causal masking, then connect residuals, normalization, and FFNs to training and generation data flow.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/02-transformer-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Transformer Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/02-transformer-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: Transformer Architecture","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/02-transformer-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9134,7 +9159,8 @@
 \mathrm{Var}\left(\sum_{i=1}^{d_k}q_i k_i\right)=d_k
 \]</div>
 <p>Dividing by <code>√d_k</code> keeps the dot-product variance at the same order of magnitude. Dividing by <code>d_k</code> would instead shrink the variance as the dimension increases. Without scaling, larger logits are more likely to saturate the softmax. This explains initialization and scale control; it is not proof that trained Q/K components must remain independent and identically distributed.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A["Dot-product scale grows with dimension"] --&gt; B["Softmax becomes more concentrated"]
     B --&gt; C["Some gradients shrink, making optimization harder"]
     A --&gt; D["Divide by sqrt(d_k)"]
@@ -9158,7 +9184,8 @@
 <p>Self-attention without positional features or asymmetric masks is permutation-equivariant: permuting the inputs permutes the outputs in the same way, rather than leaving the output matrix unchanged. A causal mask already introduces directionality, so “attention has no sense of order” cannot be applied unconditionally to a decoder. Explicit positional schemes usually remain important for modeling relative distance; see <a href="../04-position-encoding/">Chapter 4</a>.</p>
 <h2 id="26-the-complete-block-residuals-normalization-and-the-ffn"><span id="26-block-ffn" class="legacy-heading-anchor" aria-hidden="true"></span>2.6 The complete block: residuals, normalization, and the FFN<a class="headerlink" href="#26-the-complete-block-residuals-normalization-and-the-ffn" title="Permanent link">&para;</a></h2>
 <p>The attention equation alone does not describe a complete Transformer. The following diagram shows a common pre-norm decoder block; individual models may differ:</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     X["Input x"] --&gt; N1["Norm"]
     N1 --&gt; A["Causal attention + output projection"]
     A --&gt; ADD1["Residual addition"]
@@ -9280,16 +9307,8 @@ y=u+\mathrm{FFN}(\mathrm{Norm}(u))
 <p>Architectures and objectives do not have a one-to-one relationship. The widespread use of decoder-only models for general-purpose generation reflects a combination of objectives, data, post-training, and the engineering ecosystem. “Every position has a loss” is not sufficient proof that they outperform MLM on every task.</p>
 <p>If asked to work through a block by hand, first fix the batch size, sequence length, hidden dimension, head count, and FFN width, then write down the shapes step by step. For performance questions, also specify whether the stage is training, prefill, or decode. Otherwise, it is easy to confuse the attention matrix, parameter count, and KV cache.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a></li>
-<li><a href="https://arxiv.org/abs/1810.04805">BERT</a></li>
-<li><a href="https://arxiv.org/abs/1910.10683">Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer (T5)</a></li>
-<li><a href="https://arxiv.org/abs/2002.04745">On Layer Normalization in the Transformer Architecture</a></li>
-<li><a href="https://arxiv.org/abs/1910.07467">Root Mean Square Layer Normalization</a></li>
-<li><a href="https://arxiv.org/abs/2002.05202">GLU Variants Improve Transformer</a></li>
-<li><a href="https://arxiv.org/abs/2010.04245">Query-Key Normalization for Transformers</a></li>
-<li><a href="https://arxiv.org/abs/2012.14913">Transformer Feed-Forward Layers Are Key-Value Memories</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9312,7 +9331,7 @@ y=u+\mathrm{FFN}(\mathrm{Norm}(u))
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

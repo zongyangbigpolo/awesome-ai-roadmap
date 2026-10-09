@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Why Some Reasoning Models Seem Not to Support MCP","description":"Distinguish reasoning models, tool-calling APIs, and MCP support, including state round trips, KV caches, and compatibility checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/07-reasoning-models-and-tools/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Why Some Reasoning Models Seem Not to Support MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/07-reasoning-models-and-tools/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Why Some Reasoning Models Seem Not to Support MCP","description":"Distinguish reasoning models, tool-calling APIs, and MCP support, including state round trips, KV caches, and compatibility checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/07-reasoning-models-and-tools/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Why Some Reasoning Models Seem Not to Support MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/07-reasoning-models-and-tools/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Why Some Reasoning Models Seem Not to Support MCP","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/01-function-calling/07-reasoning-models-and-tools/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9317,24 +9342,36 @@
 <h1 id="chapter-7-why-some-reasoning-models-seem-not-to-support-mcp"><span id="mcp" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 7: Why Some Reasoning Models Seem Not to Support MCP<a class="headerlink" href="#chapter-7-why-some-reasoning-models-seem-not-to-support-mcp" title="Permanent link">&para;</a></h1>
 <h2 id="71-tracing-the-dependency"><span id="71" class="legacy-heading-anchor" aria-hidden="true"></span>7.1 Tracing the dependency<a class="headerlink" href="#71-tracing-the-dependency" title="Permanent link">&para;</a></h2>
 <p>First, separate the links in the chain:</p>
-<pre class="mermaid"><code>flowchart LR
-    A["Reasoning model does not support&lt;br/&gt;a particular function-calling interface"] --&gt; B["This host's FC bridge is unavailable"]
-    B --&gt; C["Use another model interface&lt;br/&gt;or deterministic MCP calls"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Reasoning model&lt;br/&gt;does not&lt;br/&gt;support"] --&gt; B["This host's FC&lt;br/&gt;bridge is&lt;br/&gt;unavailable"]
+    B --&gt; C["Use another&lt;br/&gt;model interface"]
 
     style A fill:#fce8e6</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Reasoning model does not support a particular function-calling interface</li>
+<li>Use another model interface or deterministic MCP calls</li>
+</ul>
 <p>As <a href="../../02-mcp/06-mcp-vs-function-calling/">Chapter 6</a> explains, many hosts convert a server's tool definitions into the model's native function-calling format. This <strong>model-driven</strong> bridge depends on the model interface. If that interface is unavailable, the host can instead use structured output, a rule-based workflow, or a human-triggered <code>tools/call</code>. MCP itself does not require a model with function calling.</p>
 <p>Ask precisely <strong>which model snapshot, API, and host adapter lack which capability</strong>. Do not fill gaps in a provider's unpublished implementation details with an assumed "conflict in the reasoning architecture."</p>
 <h2 id="72-what-is-different-about-reasoning-models"><span id="72" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 What is different about reasoning models?<a class="headerlink" href="#72-what-is-different-about-reasoning-models" title="Permanent link">&para;</a></h2>
 <p>Some models offer an explicit reasoning/thinking mode that performs additional reasoning before a final answer or between tool calls. Internal reasoning, publicly visible thinking text, and API-returned summaries are different things. Their existence does not imply that ordinary models do no reasoning at all.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph NORMAL["Ordinary model"]
-        N1[Question] --&gt; N2[Generate an answer directly]
-    end
-
-    subgraph REASONING["Reasoning model"]
-        R1[Question] --&gt; R2["Additional reasoning&lt;br/&gt;Budget and visibility depend on the interface"]
-        R2 --&gt; R3[Final answer]
-    end</code></pre>
+<p><strong>Ordinary model</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["Question"] --&gt; N2["Generate an&lt;br/&gt;answer directly"]
+</code></pre>
+<p><strong>Reasoning model</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        R1["Question"] --&gt; R2["Additional&lt;br/&gt;reasoning"]
+        R2 --&gt; R3["Final answer"]
+</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Additional reasoning Budget and visibility depend on the interface</li>
+</ul>
 <p>Tool results become part of subsequent input. The central engineering issue is preserving the history items and correlation identifiers required by the model API, not keeping a particular allocation of GPU memory alive indefinitely.</p>
 <h2 id="73-preserving-state-across-tool-round-trips"><span id="73" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 Preserving state across tool round trips<a class="headerlink" href="#73-preserving-state-across-tool-round-trips" title="Permanent link">&para;</a></h2>
 <p>Tool calling naturally spans multiple turns:</p>
@@ -9433,27 +9470,37 @@
 <h2 id="76-how-have-systems-addressed-this"><span id="76" class="legacy-heading-anchor" aria-hidden="true"></span>7.6 How have systems addressed this?<a class="headerlink" href="#76-how-have-systems-addressed-this" title="Permanent link">&para;</a></h2>
 <h3 id="761-approach-one-call-tools-after-thinking-finishes"><span id="761" class="legacy-heading-anchor" aria-hidden="true"></span>7.6.1 Approach one: call tools after thinking finishes<a class="headerlink" href="#761-approach-one-call-tools-after-thinking-finishes" title="Permanent link">&para;</a></h3>
 <p>One common compromise is to <strong>issue tool calls only after the thinking phase has finished</strong>.</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[Question] --&gt; T["Think first in this turn&lt;br/&gt;then issue a tool call"]
-    T --&gt; TC[Output tool_calls]
-    TC --&gt; EX[Execute tool]
-    EX --&gt; A[Generate final answer]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["Question"] --&gt; T["Think first in&lt;br/&gt;this turn"]
+    T --&gt; TC["Output&lt;br/&gt;tool_calls"]
+    TC --&gt; EX["Execute tool"]
+    EX --&gt; A["Generate final&lt;br/&gt;answer"]
 
     style T fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Think first in this turn then issue a tool call</li>
+</ul>
 <p>This is an application-flow choice, not a general guarantee of reasoning quality.</p>
 <p>Reasoning before a call cannot see results that have not yet been retrieved, but reasoning can resume after those results arrive. The process becomes a simple summary only if the application actively prevents further reasoning.</p>
 <p>Tasks requiring external data should obtain evidence before performing reasoning that depends on it, rather than treating assumptions made before the query as final conclusions.</p>
 <h3 id="762-approach-two-interleaved-thinking"><span id="762" class="legacy-heading-anchor" aria-hidden="true"></span>7.6.2 Approach two: interleaved thinking<a class="headerlink" href="#762-approach-two-interleaved-thinking" title="Permanent link">&para;</a></h3>
-<p>Anthropic's <a href="https://www.anthropic.com/news/claude-4">Claude 4 announcement</a> explicitly describes alternating thinking and tool use, introduced in beta at the time. By contrast, the early official Claude 3.7 Cookbook tool example states that no new thinking block appears in the same tool-result round. That old example must not be treated as the behavior of every current model.</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[Question] --&gt; T1[Thinking segment 1]
-    T1 --&gt; C1[Call tool A]
-    C1 --&gt; T2["Thinking segment 2&lt;br/&gt;Based on tool A's result"]
-    T2 --&gt; C2[Call tool B]
-    C2 --&gt; T3[Thinking segment 3]
-    T3 --&gt; A[Final answer]
+<p>Anthropic's Claude 4 announcement<sup><a href="../../../book/references/#ref-298">【298】</a></sup> explicitly describes alternating thinking and tool use, introduced in beta at the time. By contrast, the early official Claude 3.7 Cookbook tool example states that no new thinking block appears in the same tool-result round. That old example must not be treated as the behavior of every current model.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["Question"] --&gt; T1["Thinking&lt;br/&gt;segment 1"]
+    T1 --&gt; C1["Call tool A"]
+    C1 --&gt; T2["Thinking&lt;br/&gt;segment 2"]
+    T2 --&gt; C2["Call tool B"]
+    C2 --&gt; T3["Thinking&lt;br/&gt;segment 3"]
+    T3 --&gt; A["Final answer"]
 
     style T2 fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Thinking segment 2 Based on tool A's result</li>
+</ul>
 <p>This substantially reduces the limitation of a thinking phase that cannot access tool results: the model can retrieve evidence and reason about it in alternation.</p>
 <p>Costs include repeated reasoning, external I/O, and state preservation, but total cost need not increase. Better planning may eliminate unnecessary calls. Rules for retaining thinking blocks, signatures, and token billing depend on the specific model API.</p>
 <h3 id="763-approach-three-train-tool-use-into-reasoning-trajectories"><span id="763" class="legacy-heading-anchor" aria-hidden="true"></span>7.6.3 Approach three: train tool use into reasoning trajectories<a class="headerlink" href="#763-approach-three-train-tool-use-into-reasoning-trajectories" title="Permanent link">&para;</a></h3>
@@ -9522,20 +9569,8 @@
 <li><strong>Today's practical concerns</strong> are cost, the details of support, and model selection—not a single yes-or-no label.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning Models guide</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function Calling and returning reasoning items</a></li>
-<li><a href="https://developers.openai.com/api/docs/models/o1-preview">OpenAI: o1-preview model page</a></li>
-<li><a href="https://developers.openai.com/api/docs/models/o1">OpenAI: o1 model and snapshots</a></li>
-<li><a href="https://github.com/openai/openai-cookbook/blob/main/examples/o1/Using_chained_calls_for_o1_structured_outputs.ipynb">OpenAI Cookbook: Early o1-preview limitations on structured outputs</a></li>
-<li><a href="https://www.anthropic.com/news/claude-4">Anthropic: Claude 4 announcement of interleaved tool use</a></li>
-<li><a href="https://github.com/anthropics/anthropic-cookbook/blob/main/extended_thinking/extended_thinking_with_tool_use.ipynb">Anthropic Cookbook: Early Claude 3.7 example of thinking-block preservation</a></li>
-<li><a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking">Anthropic: Extended Thinking</a></li>
-<li><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a></li>
-<li><a href="https://arxiv.org/abs/2504.11536">ReTool: Reinforcement Learning for Strategic Tool Use in LLMs</a></li>
-<li><a href="https://arxiv.org/abs/2504.13958">ToolRL: Reward is All Tool Learning Needs</a></li>
-<li><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9558,7 +9593,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

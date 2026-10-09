@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Output Handling and Secret Exfiltration","description":"Handle model outputs according to their SQL, shell, HTML, CSV, or tool-argument context, distinguishing sanitization, authorization, and exfiltration controls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Output Handling and Secret Exfiltration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Output Handling and Secret Exfiltration","description":"Handle model outputs according to their SQL, shell, HTML, CSV, or tool-argument context, distinguishing sanitization, authorization, and exfiltration controls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Output Handling and Secret Exfiltration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: Output Handling and Secret Exfiltration","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/02-prompt-content-attacks/03-output-handling-secret-exfiltration/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9215,13 +9240,23 @@
 <h1 id="chapter-3-output-handling-and-secret-exfiltration"><span id="secret-exfiltration" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 3: Output Handling and Secret Exfiltration<a class="headerlink" href="#chapter-3-output-handling-and-secret-exfiltration" title="Permanent link">&para;</a></h1>
 <h2 id="31-why-output-handling-deserves-its-own-chapter"><span id="31" class="legacy-heading-anchor" aria-hidden="true"></span>3.1 Why Output Handling Deserves Its Own Chapter<a class="headerlink" href="#31-why-output-handling-deserves-its-own-chapter" title="Permanent link">&para;</a></h2>
 <p>The first two chapters examined how untrusted content enters a model. This chapter starts from a different principle: <strong>the model's output must itself be treated as untrusted content</strong>. This is the central concern of OWASP LLM05, Improper Output Handling. Teams may carefully validate input yet interpolate model output directly into SQL, shell commands, HTML, Markdown renderers, or downstream API arguments. In effect, they turn the model into a template engine that an attacker can program remotely.</p>
-<pre class="mermaid"><code>flowchart LR
-    U[Attacker-controlled input&lt;br/&gt;Direct or indirect] --&gt; M[Model]
-    M --&gt; O[Model output]
-    O --&gt;|Executed/rendered without handling| D1[SQL/shell/deserialization]
-    O --&gt;|Executed/rendered without handling| D2[Frontend HTML/Markdown]
-    O --&gt;|Used as tool-call arguments| D3[Downstream APIs/filesystem]
-    O --&gt;|Contains credentials or internal information| D4[Externally reachable destination]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    U["Attacker-controlled input"] --&gt; O["Model generates output"]
+    O --&gt; EXEC["Unsafe execution"]
+    O --&gt; LEAK["External disclosure"]</code></pre>
+<p>Direct or indirect attacker-controlled input reaches the model. Its output can become an execution vulnerability when passed without appropriate handling to SQL, a shell, deserialization, or frontend HTML/Markdown rendering; tool-call arguments can similarly reach downstream APIs or a filesystem. A separate disclosure path arises when output containing credentials or internal information reaches an externally accessible destination. The receiving system, not the model's apparent confidence, determines what checks and escaping are required.</p>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Executed/rendered without handling</li>
+<li>Executed/rendered without handling</li>
+<li>Used as tool-call arguments</li>
+<li>Contains credentials or internal information</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Attacker-controlled input Direct or indirect</li>
+</ul>
 <p>Model output is risky because it combines two properties: <strong>attackers can influence its content indirectly</strong>, through prompt injection or jailbreaks, and <strong>downstream systems may scrutinize it less because it looks like a normal AI-generated result</strong>. We will examine the consumption points most prone to failure—execution, rendering, and tool arguments—then address secret exfiltration separately.</p>
 <h2 id="32-common-paths-to-improper-output-handling"><span id="32" class="legacy-heading-anchor" aria-hidden="true"></span>3.2 Common Paths to Improper Output Handling<a class="headerlink" href="#32-common-paths-to-improper-output-handling" title="Permanent link">&para;</a></h2>
 <h3 id="321-injection-treating-output-as-executable-content"><span id="321" class="legacy-heading-anchor" aria-hidden="true"></span>3.2.1 Injection: Treating Output as Executable Content<a class="headerlink" href="#321-injection-treating-output-as-executable-content" title="Permanent link">&para;</a></h3>
@@ -9395,13 +9430,8 @@
 <li>Output defenses are the final layer of defense in depth. They do not replace the architectural isolation discussed in Chapter 2 and <a href="../../../agent/05-production/15-agent-security/">Agent Security</a>, but they remain essential.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/">OWASP LLM05:2025 Improper Output Handling</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">OWASP LLM02:2025 Sensitive Information Disclosure</a></li>
-<li><a href="https://arxiv.org/abs/2410.14923">Imprompter: Tricking LLM Agents into Improper Tool Use</a></li>
-<li><a href="https://arxiv.org/abs/2302.12173">Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</a></li>
-<li><a href="https://owasp.org/www-community/attacks/CSV_Injection">OWASP: CSV Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9424,7 +9454,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

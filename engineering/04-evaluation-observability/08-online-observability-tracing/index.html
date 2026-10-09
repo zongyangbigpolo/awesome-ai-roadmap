@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Production Observability and Tracing","description":"Correlate model and tool calls through tracing, with precise definitions of TTFT, sampling bias, metric denominators, and limits on sensitive-data collection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/08-online-observability-tracing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Production Observability and Tracing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/08-online-observability-tracing/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Production Observability and Tracing","description":"Correlate model and tool calls through tracing, with precise definitions of TTFT, sampling bias, metric denominators, and limits on sensitive-data collection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/08-online-observability-tracing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Production Observability and Tracing","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/08-online-observability-tracing/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: Production Observability and Tracing","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/04-evaluation-observability/08-online-observability-tracing/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9188,14 +9213,20 @@
 <h1 id="chapter-8-production-observability-and-tracing"><span id="tracing" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 8: Production Observability and Tracing<a class="headerlink" href="#chapter-8-production-observability-and-tracing" title="Permanent link">&para;</a></h1>
 <h2 id="81-why-use-traces-as-well-as-logs"><span id="81-trace" class="legacy-heading-anchor" aria-hidden="true"></span>8.1 Why use traces as well as logs?<a class="headerlink" href="#81-why-use-traces-as-well-as-logs" title="Permanent link">&para;</a></h2>
 <p>A single agent request may involve several model, tool, and retrieval calls. Structured logs can also be correlated through a request ID, but tracing shows the timing and dependencies of individual steps more directly. Ordinary calls form a tree of parent and child spans. Asynchronous queues, batch jobs, and fan-in from multiple sources also need span links; not every causal relationship can be forced into a single parent-child relationship.</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT["Root span: one user request"]
-    ROOT --&gt; S1["Span: model call #1 (routing decision)"]
-    ROOT --&gt; S2["Span: tool call (order lookup)"]
-    ROOT --&gt; S3["Span: model call #2 (answer generation)"]
-    ROOT --&gt; S4["Span: output contract validation"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    ROOT["Root span: one&lt;br/&gt;user request"]
+    ROOT --&gt; S1["Model span #1"]
+    ROOT --&gt; S2["Span: tool call&lt;br/&gt;(order lookup)"]
+    ROOT --&gt; S3["Model span #2"]
+    ROOT --&gt; S4["Span: output&lt;br/&gt;contract&lt;br/&gt;validation"]
 
     style ROOT fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Span: model call #1 (routing decision)</li>
+<li>Span: model call #2 (answer generation)</li>
+</ul>
 <h2 id="82-the-roles-of-the-three-observability-signals"><span id="82" class="legacy-heading-anchor" aria-hidden="true"></span>8.2 The roles of the three observability signals<a class="headerlink" href="#82-the-roles-of-the-three-observability-signals" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9225,7 +9256,7 @@
 </table>
 <p>Metrics can tell you that the error rate rose over the past hour; correlated logs and traces help identify the failing step. In this diagram, a model span covers only the model request itself. The orchestration layer performs final validation after the model returns, so validation gets a separate child span under the request. Parent-child relationships should reflect the actual instrumentation scope, not merely who consumes an output.</p>
 <h2 id="83-what-should-a-genai-span-record"><span id="83-genai-span" class="legacy-heading-anchor" aria-hidden="true"></span>8.3 What should a GenAI span record?<a class="headerlink" href="#83-what-should-a-genai-span-record" title="Permanent link">&para;</a></h2>
-<p>OpenTelemetry’s generative AI <a href="https://github.com/open-telemetry/semantic-conventions-genai">semantic conventions</a> define field meanings across implementations, but continuously updated documentation should not be mistaken for a stable, uniform interface. Pin both the convention and instrumentation versions, and check each field’s stability and provider support. The following table lists semantic categories to collect, not standard field names that can be copied directly:</p>
+<p>OpenTelemetry’s generative AI semantic conventions<sup><a href="../../../book/references/#ref-524">【524】</a></sup> define field meanings across implementations, but continuously updated documentation should not be mistaken for a stable, uniform interface. Pin both the convention and instrumentation versions, and check each field’s stability and provider support. The following table lists semantic categories to collect, not standard field names that can be copied directly:</p>
 <table>
 <thead>
 <tr>
@@ -9348,15 +9379,8 @@
 <li><strong>Prefer pre-sampling metrics for SLOs.</strong> Do not calculate the overall error rate directly from a trace sample biased toward failures.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>The original GenAI documentation has moved to a dedicated repository, and the old location is no longer maintained. The Chinese source manuscript records a check of the migration notice on 2026-09-15.</p>
-<ul>
-<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">OpenTelemetry: Semantic conventions for generative AI systems</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry: GenAI semantic conventions repository</a></li>
-<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/">Google SRE Book: Monitoring Distributed Systems</a></li>
-<li><a href="https://docs.langchain.com/langsmith/observability">LangSmith Observability</a></li>
-<li><a href="https://docs.arize.com/phoenix/tracing/llm-traces">Arize Phoenix: Tracing</a></li>
-<li><a href="https://www.honeycomb.io/blog/pillars-observability">Honeycomb: Observability for LLMs</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9379,7 +9403,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

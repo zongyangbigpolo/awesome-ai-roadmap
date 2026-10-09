@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Practical Model Selection","description":"Select models from business acceptance criteria, data-processing boundaries, and deployment options, weighing total cost, tail latency, routing, version regression, and failure fallback.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/22-model-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Practical Model Selection","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/22-model-selection/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Practical Model Selection","description":"Select models from business acceptance criteria, data-processing boundaries, and deployment options, weighing total cost, tail latency, routing, version regression, and failure fallback.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/22-model-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Practical Model Selection","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/22-model-selection/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Practical Model Selection","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/22-model-selection/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9393,17 +9418,11 @@
 <blockquote>
 <p><strong>Model selection matches business requirements against four dimensions—compliance, cost, latency, and capability—not just benchmark scores.</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
-    B["Business requirements"] --&gt; C1["① Compliance&lt;br/&gt;Data classification,&lt;br/&gt;cross-border transfers, approvals"]
-    B --&gt; C2["② Cost&lt;br/&gt;Full-task usage, retries, and operations"]
-    B --&gt; C3["③ Latency&lt;br/&gt;Internal sequential steps&lt;br/&gt;are on the critical path too&lt;br/&gt;Measure full-task tail latency"]
-    B --&gt; C4["④ Capabilities&lt;br/&gt;Reasoning / structured output&lt;br/&gt;Long context / tool calls"]
-    C1 --&gt; S["Selection decision"]
-    C2 --&gt; S
-    C3 --&gt; S
-    C4 --&gt; S
-
-    style C1 fill:#fdecea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["Business requirements"] --&gt; C["Evaluate constraints jointly"]
+    C --&gt; S["Selection decision"]</code></pre>
+<p>Evaluate four dimensions together: <strong>compliance</strong> covers data classification, cross-border transfers, and approvals; <strong>cost</strong> includes full-task usage, retries, and operations; <strong>latency</strong> includes internal sequential steps on the critical path and full-task tail latency; <strong>capability</strong> covers reasoning, structured output, long context, and tool calls.</p>
 <p>Apply hard constraints first, then make tradeoffs among feasible candidates. Beyond data and licensing requirements, minimum accuracy, safety rules, and response deadlines can also be hard constraints. Low cost cannot compensate for unauthorized actions or critical-task failures.</p>
 <h2 id="222-build-a-comparable-candidate-list"><span id="222" class="legacy-heading-anchor" aria-hidden="true"></span>22.2 Build a comparable candidate list<a class="headerlink" href="#222-build-a-comparable-candidate-list" title="Permanent link">&para;</a></h2>
 <p>A brand does not guarantee capability. Snapshots, parameter sizes, reasoning modes, and deployment endpoints can vary substantially within a family. The following dimensions and published technical approaches are not a ranking of which vendor is strongest today.</p>
@@ -9474,23 +9493,24 @@
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      → Synthesize a report in Chinese
 </span></code></pre></div>
 <h3 id="2232-assigning-models-by-node"><span id="2232" class="legacy-heading-anchor" aria-hidden="true"></span>22.3.2 Assigning models by node<a class="headerlink" href="#2232-assigning-models-by-node" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph N1["Main orchestration / strict-format nodes"]
-        A1["Needs: reliable structured output&lt;br/&gt;Accurate tool use&lt;br/&gt;Strong long-context&lt;br/&gt;instruction following"]
-        A2["Why: the agent frequently&lt;br/&gt;calls internal APIs&lt;br/&gt;JSON, function arguments,&lt;br/&gt;and field names must be correct"]
-        A3["→ Reliability matters more than&lt;br/&gt;first place on a leaderboard"]
-    end
-    subgraph N2["Evaluate field extraction&lt;br/&gt;and complex analysis separately"]
-        B1["Needs: each task's success&lt;br/&gt;and latency thresholds"]
-        B2["Try small models or rules&lt;br/&gt;for simple extraction&lt;br/&gt;Compare reasoning models and tools&lt;br/&gt;for complex analysis"]
-        B3["Internal errors reach&lt;br/&gt;the final result too&lt;br/&gt;Quality cannot depend only&lt;br/&gt;on user visibility"]
-    end
-    subgraph N3["Sensitive-data paths"]
-        C1["Select endpoints under&lt;br/&gt;approved data policies&lt;br/&gt;For both primary and fallback models"]
-    end
-
-    style A3 fill:#e6f4ea
-    style B3 fill:#e6f4ea
+<p><strong>Main orchestration / strict-format nodes</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A1["Frequent internal API calls"] --&gt; A2["Correct output contracts"]
+    A2 --&gt; A3["Prioritize reliability"]
+    style A3 fill:#e6f4ea</code></pre>
+<p>Main orchestration and strict-format nodes need reliable structured output, accurate tool use, and strong long-context instruction following. JSON, function arguments, and field names must be correct when calling internal APIs; reliability matters more than first place on a leaderboard.</p>
+<p><strong>Evaluate field extraction and complex analysis separately</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B1["Task-specific thresholds"] --&gt; B2["Compare suitable methods"]
+    B2 --&gt; B3["Check end-to-end effects"]
+    style B3 fill:#e6f4ea</code></pre>
+<p>Measure each task's success and latency thresholds separately. Try small models or rules for simple field extraction; compare reasoning models and tools for complex analysis. Internal errors also reach the final result, so user visibility alone cannot determine the quality requirement.</p>
+<p><strong>Sensitive-data paths</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1["Select endpoints under&lt;br/&gt;approved data policies&lt;br/&gt;For both primary and fallback models"]
     style C1 fill:#fdecea</code></pre>
 <h3 id="2233-routing-cascades-and-failure-fallback-are-different"><span id="2233" class="legacy-heading-anchor" aria-hidden="true"></span>22.3.3 Routing, cascades, and failure fallback are different<a class="headerlink" href="#2233-routing-cascades-and-failure-fallback-are-different" title="Permanent link">&para;</a></h3>
 <table>
@@ -9598,17 +9618,8 @@ C_{\mathrm{success}}
 <p>Usually, selection starts by excluding noncompliant candidates, then comparing capability, latency, and cost by workflow node, and finally deciding with your own tests. A leaderboard is only a reference.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2211.09110">Holistic Evaluation of Language Models (HELM)</a></li>
-<li><a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a></li>
-<li><a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report</a></li>
-<li><a href="https://arxiv.org/abs/2505.09388">Qwen3 Technical Report</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://arxiv.org/abs/2406.18665">RouteLLM: Learning to Route LLMs with Preference Data</a></li>
-<li><a href="https://arxiv.org/abs/2305.05176">FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: Data controls in the OpenAI platform</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-22">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9631,7 +9642,7 @@ C_{\mathrm{success}}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

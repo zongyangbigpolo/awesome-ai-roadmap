@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：A2A 协议","description":"解释 A2A 协议中的 Agent Card、任务生命周期、消息与制品，并比较 A2A、MCP 和应用内部多 Agent 编排。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/04-agent-communication/11-a2a-protocol/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：A2A 协议","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/04-agent-communication/11-a2a-protocol/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：A2A 协议","description":"解释 A2A 协议中的 Agent Card、任务生命周期、消息与制品，并比较 A2A、MCP 和应用内部多 Agent 编排。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/04-agent-communication/11-a2a-protocol/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：A2A 协议","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/04-agent-communication/11-a2a-protocol/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十一章：A2A 协议","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/04-agent-communication/11-a2a-protocol/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9387,23 +9412,30 @@
 <h3 id="1111-agent">11.1.1 多 Agent 在上下文层面的真正收益<a class="headerlink" href="#1111-agent" title="Permanent link">&para;</a></h3>
 <p>有个值得追问的问题：<strong>拆成多个 Agent，上下文压力就真的变小了吗？</strong></p>
 <p>关键在于<strong>中间过程被隔离了</strong>：</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph SINGLE["单 Agent"]
-        S1["上下文里堆着：&lt;br/&gt;几十个网页原文&lt;br/&gt;+ 多版草稿&lt;br/&gt;+ 反思记录&lt;br/&gt;+ 最终结论"]
-    end
-
-    subgraph MULTI["多 Agent"]
-        O["调度 Agent&lt;br/&gt;接收摘要与证据引用&lt;br/&gt;必要时追溯原始材料"]
-        A1["市场 Agent&lt;br/&gt;几十个网页在&lt;br/&gt;它自己的上下文里"]
-        A2["技术 Agent&lt;br/&gt;工具文档在&lt;br/&gt;它自己的上下文里"]
+<p><strong>单 Agent</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["上下文里堆着："]
+    style S1 fill:#fce8e6</code></pre>
+<p><strong>多 Agent</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O["调度 Agent"]
+        A1["市场 Agent"]
+        A2["技术 Agent"]
         O --&gt; A1
         O --&gt; A2
-        A1 -.回传结论与证据.-&gt; O
-        A2 -.回传结论与证据.-&gt; O
-    end
-
-    style S1 fill:#fce8e6
+        A1 -.证据.-&gt; O
+        A2 -.证据.-&gt; O
     style O fill:#e6f4ea</code></pre>
+<p>各专业 Agent 回传结论及支持证据，调度方接收摘要与引用，并在需要时回查原始材料。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>上下文里堆着： 几十个网页原文 + 多版草稿 + 反思记录 + 最终结论</li>
+<li>调度 Agent 接收摘要与证据引用 必要时追溯原始材料</li>
+<li>市场 Agent 几十个网页在 它自己的上下文里</li>
+<li>技术 Agent 工具文档在 它自己的上下文里</li>
+</ul>
 <p>市场 Agent 自己去搜几十个网页、写草稿、反复迭代，这些<strong>中间过程全在它自己的上下文里</strong>。任务完成后只把一份几百字的结论回传。</p>
 <p>调度 Agent 的上下文里只多了一份摘要，而不是几十个网页原文。<strong>这就是多 Agent 协作在上下文层面的核心收益：把调研过程的上下文压力隔离在专业 Agent 内部。</strong></p>
 <p>这是多 Agent 架构可能带来的收益，不是 A2A 协议保证。总 token 可能增加，摘要也可能丢失证据；应回传来源、假设和可取回的原始制品，而不只是一句结论。</p>
@@ -9459,30 +9491,18 @@
 <h2 id="113-task-a2a">11.3 Task 是 A2A 的一等公民<a class="headerlink" href="#113-task-a2a" title="Permanent link">&para;</a></h2>
 <p>A2A 的 <strong>Task</strong> 是有状态的工作单元。Client 发 Message 后，Server 可以直接返回 Message，也可以创建并返回 Task；不是每条消息都创建任务。任务产出用 <strong>Artifact</strong>，消息用于交互、澄清和状态沟通。</p>
 <p><code>taskId</code> 由 Server 创建，<code>contextId</code> 关联同一会话中的多个任务与消息，<code>messageId</code> 标识消息；它们不是用户身份，也不会自动提供业务幂等性。<code>Part</code> 可携带文本、原始/引用文件或结构化数据。</p>
-<pre class="mermaid"><code>stateDiagram-v2
-state "TASK_STATE_SUBMITTED" as submitted
-state "TASK_STATE_WORKING" as working
-state "TASK_STATE_INPUT_REQUIRED" as input_required
-state "TASK_STATE_AUTH_REQUIRED" as auth_required
-state "TASK_STATE_COMPLETED" as completed
-state "TASK_STATE_FAILED" as failed
-state "TASK_STATE_CANCELED" as canceled
-state "TASK_STATE_REJECTED" as rejected
-[*] --&gt; submitted: 调度 Agent 提交
-    submitted --&gt; working: 接收方开始执行
-    working --&gt; input_required: 需要补充信息
-    input_required --&gt; working: 调用方补充后继续
-    working --&gt; auth_required: 需要追加认证
-    auth_required --&gt; working: 完成认证后继续
-    working --&gt; completed: 执行成功
-    working --&gt; failed: 执行失败
-    working --&gt; canceled: 取消获准
-    submitted --&gt; rejected: 接收方拒绝
-    working --&gt; rejected: 无法继续受理
-    completed --&gt; [*]
-    failed --&gt; [*]
-    canceled --&gt; [*]
-    rejected --&gt; [*]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["已提交"] --&gt; W["执行中"]
+    W --&gt; WAIT["等待输入或认证"]
+    WAIT --&gt; W
+    W --&gt; END["已终止"]
+    S --&gt;|拒绝| END</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>终止结果</li>
+</ul>
+<p>图中使用便于阅读的标签，并未替换协议值。提交任务进入 <code>TASK_STATE_SUBMITTED</code>，开始执行进入 <code>TASK_STATE_WORKING</code>。执行中可以转入 <code>TASK_STATE_INPUT_REQUIRED</code> 等待调用方补充信息，也可以转入 <code>TASK_STATE_AUTH_REQUIRED</code> 等待认证完成；两者之后都恢复执行。执行成功、执行失败和取消获准分别进入 <code>TASK_STATE_COMPLETED</code>、<code>TASK_STATE_FAILED</code>、<code>TASK_STATE_CANCELED</code>。接收方既可以在已提交状态拒绝任务，也可以在执行中因无法继续受理而进入 <code>TASK_STATE_REJECTED</code>。这四种终止结果都会结束本次生命周期。</p>
 <p>这是典型路径，不要求每个任务走过全部状态。1.0 的 ProtoJSON 使用图中的 <code>TASK_STATE_*</code> 枚举名；旧文章中的小写或连字符值不能直接用于 1.0 报文。<code>TASK_STATE_UNSPECIFIED</code> 不应作为正常业务状态；完成、失败、取消、拒绝是终态，补充输入和追加认证是中断态。</p>
 <h3 id="1131">11.3.1 为什么需要这么完整的状态机<a class="headerlink" href="#1131" title="Permanent link">&para;</a></h3>
 <p>因为 <strong>A2A 需要支持跨多轮交互、可能长时间运行的任务</strong>，同时也允许简单请求直接返回 Message。</p>
@@ -9590,22 +9610,16 @@ state "TASK_STATE_REJECTED" as rejected
 <p>1.0 JSON-RPC 方法是 <code>SendMessage</code>、<code>GetTask</code>、<code>CancelTask</code>、<code>SubscribeToTask</code> 等；HTTP 路径对应 <code>POST /message:send</code>、<code>GET /tasks/{id}</code>、<code>POST /tasks/{id}:cancel</code>。不要把旧版 <code>message/send</code>、<code>tasks/get</code> 混进新协议。HTTP 客户端显式发送 <code>A2A-Version: 1.0</code>；省略版本按兼容规则解释为 <code>0.3</code>，不是自动使用最新。v1.0.1 HTTP 绑定优先使用 <code>application/a2a+json</code>，SSE 响应仍是 <code>text/event-stream</code>。</p>
 <h2 id="116-a2a-mcp">11.6 A2A 与 MCP：一纵一横<a class="headerlink" href="#116-a2a-mcp" title="Permanent link">&para;</a></h2>
 <p>理清两者关系最简单的方式是<strong>看方向</strong>：</p>
-<pre class="mermaid"><code>flowchart TB
-    A1["市场分析 Agent"]
-    A2["技术研究 Agent"]
-    ORCH["调度 Agent"]
-
-    ORCH &lt;--&gt;|"A2A · 横向"| A1
-    ORCH &lt;--&gt;|"A2A · 横向"| A2
-
-    A1 --&gt;|"MCP · 纵向"| T1[(搜索引擎)]
-    A1 --&gt;|"MCP · 纵向"| T2[(浏览器)]
-    A2 --&gt;|"MCP · 纵向"| T3[(代码执行器)]
-    A2 --&gt;|"MCP · 纵向"| T4[(GitHub)]
-
-    style ORCH fill:#e6f4ea
-    style A1 fill:#e8f0fe
-    style A2 fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    ORCH["调度 Agent"] &lt;--&gt;|A2A| AGENT["专业 Agent"]
+    AGENT --&gt;|MCP| TOOLS["工具"]</code></pre>
+<p>A2A 横向连接调度方与市场分析、技术研究 Agent。各专业 Agent 再通过 MCP 纵向连接工具：市场 Agent 使用搜索和浏览器，技术 Agent 使用代码执行器与 GitHub。两种协议处理的是不同的边界。</p>
+<p>图中条件与标签：</p>
+<ul>
+<li>市场分析 Agent</li>
+<li>技术研究 Agent</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9665,17 +9679,8 @@ state "TASK_STATE_REJECTED" as rejected
 <li><strong>不是所有多 Agent 系统都需要 A2A</strong>，单进程内协作用共享状态更简单，A2A 面向跨团队跨部署的场景。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li>来源核对：2026-09-15 读取 v1.0.1 发布记录、规范和 Proto 定义。该标签内规范页仍有“Latest Released Version 1.0.0”的旧提示；Send Message 概述中的立即返回措辞，也与执行模式小节和 Proto 的默认阻塞定义不一致。本章按后两处明确的 <code>return_immediately</code> 字段定义说明，线上 JSON 使用 <code>returnImmediately</code>。</li>
-<li><a href="https://github.com/a2aproject/A2A/releases/tag/v1.0.1">A2A v1.0.1 发布记录</a></li>
-<li><a href="https://a2a-protocol.org/">A2A 协议官网</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md">A2A v1.0.1 发布规范</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto">A2A v1.0.1 规范数据定义</a></li>
-<li><a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/">Google: Announcing the Agent2Agent Protocol</a></li>
-<li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Linux Foundation: A2A Project</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol 官方文档</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-11">集中参考资料章节</a>。</p>
 
 
 
@@ -9698,7 +9703,7 @@ state "TASK_STATE_REJECTED" as rejected
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

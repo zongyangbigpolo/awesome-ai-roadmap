@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Selecting and Evaluating Embedding Models","description":"Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Selecting and Evaluating Embedding Models","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Selecting and Evaluating Embedding Models","description":"Evaluate embedding models with application-specific evidence labels and a BM25 baseline, accounting for leaderboard limitations, MRL dimension reduction, deployment constraints, and index migration after fine-tuning.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Selecting and Evaluating Embedding Models","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Selecting and Evaluating Embedding Models","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/07-embedding-selection/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9431,16 +9456,11 @@
 <p>Leaderboards help narrow the field, but cannot replace the selection process. The next section explains why.</p>
 <h2 id="72-why-leaderboards-are-not-enough"><span id="72" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 Why leaderboards are not enough<a class="headerlink" href="#72-why-leaderboards-are-not-enough" title="Permanent link">&para;</a></h2>
 <p>MTEB is currently the most widely used text embedding benchmark, covering tasks such as classification, clustering, retrieval, and reranking. It is valuable, but has <strong>four common limitations</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    M[Rely only on&lt;br/&gt;MTEB rankings] --&gt; P1[Leaderboard overfitting]
-    M --&gt; P2[Retrieval scores do not predict&lt;br/&gt;end-to-end quality]
-    M --&gt; P3[Language and text-style bias]
-    M --&gt; P4[Length-distribution bias]
-
-    P1 --&gt; D1[Tuning for public datasets&lt;br/&gt;can inflate scores]
-    P2 --&gt; D2[Good recall does not imply&lt;br/&gt;good answers]
-    P3 --&gt; D3[Languages and domains in a sub-leaderboard&lt;br/&gt;may not match the application]
-    P4 --&gt; D4[Check subtask length distributions,&lt;br/&gt;not just the aggregate score]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    M[MTEB rankings] --&gt; S[Shortlist only]
+    S --&gt; E[Evaluate on application data]</code></pre>
+<p>Rankings have four limitations: tuning for public datasets can inflate scores; good retrieval recall does not guarantee good end-to-end answers; a sub-leaderboard's languages, domains, and text styles may not match the application; and its length distribution may differ. Inspect subtask lengths, not just the aggregate score.</p>
 <h3 id="721-leaderboard-overfitting"><span id="721" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.1 Leaderboard overfitting<a class="headerlink" href="#721-leaderboard-overfitting" title="Permanent link">&para;</a></h3>
 <p>MTEB datasets are public. Model developers can repeatedly tune against them, causing leaderboard scores to <strong>overestimate performance on unseen data</strong>. This is a general problem with public benchmarks, not something unique to MTEB.</p>
 <h3 id="722-retrieval-scores-are-not-end-to-end-quality"><span id="722" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.2 Retrieval scores are not end-to-end quality<a class="headerlink" href="#722-retrieval-scores-are-not-end-to-end-quality" title="Permanent link">&para;</a></h3>
@@ -9452,13 +9472,12 @@
 <h3 id="724-length-and-text-form-bias"><span id="724" class="legacy-heading-anchor" aria-hidden="true"></span>7.2.4 Length and text-form bias<a class="headerlink" href="#724-length-and-text-form-bias" title="Permanent link">&para;</a></h3>
 <p>Inspect the actual sub-leaderboard and datasets you use. MMTEB already includes long-document and code retrieval tasks, so it is inaccurate to say the entire benchmark tests only short text. If the selected tasks have a different length distribution from your application, the aggregate score is insufficient to judge retrieval of long documents or complete error logs.</p>
 <h2 id="73-a-sound-selection-process"><span id="73" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 A sound selection process<a class="headerlink" href="#73-a-sound-selection-process" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S1[1. Use leaderboards to shortlist&lt;br/&gt;3-5 models] --&gt; S2[2. Build an application-specific&lt;br/&gt;evaluation set]
-    S2 --&gt; S3[3. Build a separate index for each model&lt;br/&gt;with the same chunking and settings]
-    S3 --&gt; S4[4. Measure retrieval metrics&lt;br/&gt;Hit@K MRR NDCG]
-    S4 --&gt; S5[5. Evaluate end-to-end&lt;br/&gt;answer quality]
-    S5 --&gt; S6[6. Assess cost, latency,&lt;br/&gt;and deployment constraints]
-    S6 --&gt; S7[7. Decide]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1[Shortlist 3–5 models] --&gt; S2[Build matched evaluations]
+    S2 --&gt; S3[Measure retrieval and answers]
+    S3 --&gt; S4[Assess costs and decide]</code></pre>
+<p>Build an application-specific evaluation set and a separate index per model, holding chunking and settings constant. Measure Hit@K, MRR, and NDCG, then end-to-end answer quality. Assess cost, latency, and deployment constraints before deciding.</p>
 <p><strong>A leaderboard should define the candidate pool, not make the decision.</strong></p>
 <h3 id="731-how-to-build-the-evaluation-set"><span id="731" class="legacy-heading-anchor" aria-hidden="true"></span>7.3.1 How to build the evaluation set<a class="headerlink" href="#731-how-to-build-the-evaluation-set" title="Permanent link">&para;</a></h3>
 <p>This is the most time-consuming step, and the most valuable.</p>
@@ -9520,7 +9539,8 @@
 <p>For a fixed data type, raw vector storage grows linearly with dimensionality, as does approximately the cost of a single distance calculation. Total ANN latency also depends on traversal, caching, and I/O, so doubling dimensions does not simply mean doubling latency.</p>
 <p><strong>An important modern technique is Matryoshka Representation Learning (MRL).</strong></p>
 <p>MRL trains designated prefixes of a vector to satisfy representation objectives too. Only models that explicitly support this use can be shortened according to their contract. Truncation usually requires renormalization, and quality loss must be measured. Arbitrarily taking the first dimensions of an ordinary vector is not equivalent.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     V[3072-dimensional vector] --&gt; C1[First 256 dimensions&lt;br/&gt;Coarse ranking with very low storage]
     V --&gt; C2[First 1024 dimensions&lt;br/&gt;Standard retrieval]
     V --&gt; C3[Full 3072 dimensions&lt;br/&gt;Rescoring comparison]</code></pre>
@@ -9604,16 +9624,8 @@
 <li><strong>Fine-tuning should be driven by failure cases</strong>. Changing document representations brings re-embedding, dual-index migration, and regression costs.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2210.07316">MTEB: Massive Text Embedding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2502.13595">MMTEB: Massive Multilingual Text Embedding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2205.13147">Matryoshka Representation Learning</a></li>
-<li><a href="https://openai.com/index/new-embedding-models-and-api-updates/">OpenAI: New embedding models and API updates (2024-01-25)</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/embeddings">OpenAI: Embedding API and the dimensions parameter</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B model card</a></li>
-<li><a href="https://arxiv.org/abs/2402.03216">M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9636,7 +9648,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

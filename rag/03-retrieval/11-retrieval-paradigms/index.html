@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction","description":"Compare the matching mechanisms, failure modes, and costs of BM25, learned sparse retrieval, dense dual encoders, and late interaction, and choose combinations using measured complementarity.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/11-retrieval-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/11-retrieval-paradigms/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction","description":"Compare the matching mechanisms, failure modes, and costs of BM25, learned sparse retrieval, dense dual encoders, and late interaction, and choose combinations using measured complementarity.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/11-retrieval-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/11-retrieval-paradigms/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 11: Retrieval Paradigms—Sparse, Dense, and Late Interaction","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/11-retrieval-paradigms/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9392,15 +9417,12 @@
 <p>BM25 can add term-level matching for rare words, but it does not inherently understand “without sugar,” numerical ranges, or ambiguous short queries either. Hard constraints involving negation, units, ranges, time, or permissions should be parsed into verifiable predicates. Hybrid retrieval should be justified by measured complementarity, not by claiming that one method fixes every failure of the other.</p>
 <h2 id="114-late-interaction-a-middle-ground"><span id="114" class="legacy-heading-anchor" aria-hidden="true"></span>11.4 Late interaction: a middle ground<a class="headerlink" href="#114-late-interaction-a-middle-ground" title="Permanent link">&para;</a></h2>
 <p>Section 6.3.4 introduced the mechanism. The following places it alongside other matching architectures:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Sparse BM25&lt;br/&gt;Literal matching] --- B[Dense dual encoder&lt;br/&gt;Semantic similarity]
-    B --- C[Late interaction: ColBERT&lt;br/&gt;Token-level semantic matching]
-    C --- D[Cross-encoder&lt;br/&gt;Full interaction]
-
-    A -.-&gt; A1[Fast; no training&lt;br/&gt;No synonym understanding]
-    B -.-&gt; B1[Fast; handles synonyms&lt;br/&gt;Weak fine-grained matching]
-    C -.-&gt; C1[Relatively fast; bridges both&lt;br/&gt;High storage cost]
-    D -.-&gt; D1[Query-time cross-text interaction&lt;br/&gt;No independent document-score cache]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[BM25: lexical] --- B[Dual encoder: semantic]
+    B --- C[ColBERT: token-level]
+    C --- D[Cross-encoder: joint]</code></pre>
+<p>The line compares methods; it is not a required pipeline. BM25 is fast and needs no training, but literal matching does not understand synonyms. Dense dual encoders are fast and handle semantic similarity, including synonyms, but weaker fine-grained matching can miss distinctions. ColBERT uses token-level late interaction, balancing these properties with higher storage cost. Cross-encoders perform full query-time cross-text interaction and cannot cache a query-independent document relevance score.</p>
 <p>Late interaction retains token-level semantic matching and may reduce the loss of detail caused by single-vector compression. Document representations can still be precomputed offline. It does not, however, guarantee exact model numbers, word order, or numerical constraints; quality still depends on training and tokenization.</p>
 <p>The main costs are multi-vector storage, candidate generation, and fine-grained matching. ColBERTv2's residual compression reduces the storage footprint. Compare vector count, dimensions, quantization, and index overhead rather than concluding that “hundreds of vectors” must imply a fixed tens-fold increase in total cost.</p>
 <h3 id="1141-visual-document-retrieval"><span id="1141" class="legacy-heading-anchor" aria-hidden="true"></span>11.4.1 Visual document retrieval<a class="headerlink" href="#1141-visual-document-retrieval" title="Permanent link">&para;</a></h3>
@@ -9415,7 +9437,8 @@
 <li>Each component is mature and can be tuned or given a fallback independently.</li>
 <li>Costs can be controlled.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query] --&gt; B[BM25 retrieval]
     Q --&gt; D[Dense vector retrieval]
     B --&gt; RRF[RRF fusion]
@@ -9461,15 +9484,8 @@
 <li><strong>Measure before adding a third path.</strong> Analyzing queries successfully retrieved by only one of the first two paths is more targeted than applying general advice.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://lucene.apache.org/core/9_12_0/core/org/apache/lucene/search/similarities/BM25Similarity.html">Lucene 9.12 BM25Similarity: term-frequency saturation, length normalization, and IDF implementation</a></li>
-<li><a href="https://arxiv.org/abs/2004.04906">Dense Passage Retrieval for Open-Domain Question Answering</a></li>
-<li><a href="https://arxiv.org/abs/2107.05720">SPLADE: Sparse Lexical and Expansion Model for First Stage Ranking</a></li>
-<li><a href="https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-elser">Elastic: official ELSER documentation</a></li>
-<li><a href="https://arxiv.org/abs/2112.01488">ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction</a></li>
-<li><a href="https://arxiv.org/abs/2407.01449">ColPali: Efficient Document Retrieval with Vision Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-11">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9492,7 +9508,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

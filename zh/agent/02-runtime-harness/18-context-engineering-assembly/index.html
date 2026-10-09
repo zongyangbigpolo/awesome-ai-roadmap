@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十八章：Context Engineering 与上下文装配","description":"解释请求上下文的来源、信任层级、工具调用配对、缓存布局和预算预留，避免压缩或检索改变授权语义。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/18-context-engineering-assembly/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十八章：Context Engineering 与上下文装配","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/18-context-engineering-assembly/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十八章：Context Engineering 与上下文装配","description":"解释请求上下文的来源、信任层级、工具调用配对、缓存布局和预算预留，避免压缩或检索改变授权语义。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/18-context-engineering-assembly/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十八章：Context Engineering 与上下文装配","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/18-context-engineering-assembly/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十八章：Context Engineering 与上下文装配","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/02-runtime-harness/18-context-engineering-assembly/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9148,14 +9173,15 @@
 <p>它要把本轮有效的指令、工具定义、历史消息和新增输入，装配成符合模型 API 契约、又不超预算的请求。内容在存储里存在，不代表模型这一轮真的看到了它；摘要写得再好，若丢了工具调用 ID 或抬高了来源权限，请求仍可能出错。第二章讨论上下文管理的选择，第十章讨论压缩策略，本章展开第 17 章状态机中的实际装配步骤。</p>
 <h2 id="182">18.2 一次请求的上下文由哪些部分拼成<a class="headerlink" href="#182" title="Permanent link">&para;</a></h2>
 <p>一次发给模型的请求，通常由五类互相独立维护的来源拼接而成：</p>
-<pre class="mermaid"><code>flowchart TB
-    SP["System Prompt&lt;br/&gt;身份、总则、输出格式约束"]
-    INST["Instructions / Memory&lt;br/&gt;项目级配置（AGENTS.md、Skill、长期记忆）"]
-    TOOLS["Tool Definitions&lt;br/&gt;本轮可用工具的 Schema"]
-    HIST["Conversation History&lt;br/&gt;Working Memory 中的历史消息"]
-    USER["Current Turn Input&lt;br/&gt;本轮新增的用户输入/工具结果"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    SP["系统提示词"]
+    INST["指令与记忆"]
+    TOOLS["工具定义"]
+    HIST["对话历史"]
+    USER["本轮输入"]
     ASSEMBLE["装配管线"]
-    REQ["最终 Request Payload"]
+    REQ["最终 Request&lt;br/&gt;Payload"]
 
     SP --&gt; ASSEMBLE
     INST --&gt; ASSEMBLE
@@ -9163,13 +9189,14 @@
     HIST --&gt; ASSEMBLE
     USER --&gt; ASSEMBLE
     ASSEMBLE --&gt; REQ</code></pre>
+<p>五类输入各有作用：系统提示词提供身份、总则与输出格式约束；指令与记忆提供 <code>AGENTS.md</code>、Skill、长期记忆等项目级配置；工具定义提供本轮可用工具的 Schema；对话历史提供工作记忆中的历史消息；本轮输入提供新增用户输入或工具结果。装配管线将它们组合为最终请求载荷。</p>
 <p>这五类来源的生命周期不同：System Prompt 通常较稳定；Instructions/Memory 按任务或项目变化；Tool Definitions 可能随本轮上下文动态收缩（第 19 章 19.7 节）；Conversation History 追加或压缩；Current Turn Input 带来新输入。装配管线要保持消息结构和来源层级，不是把这些内容拼成同权限的一段文本。</p>
 <h2 id="183">18.3 装配顺序为什么重要<a class="headerlink" href="#183" title="Permanent link">&para;</a></h2>
 <p>装配顺序不是审美问题，而是同时影响三件事：</p>
 <ol>
 <li><strong>Prompt Cache 命中率。</strong> 对按前缀复用的缓存，易变内容放在前面，会使后面的稳定内容也失去复用机会。例如 OpenAI 的 Prompt Caching 要求渲染后的前缀匹配，并受模型、最小长度、断点和保留策略约束（见参考资料）。在不改变消息语义和信任层级的前提下，优先让稳定内容在前、易变内容在后；其他缓存接口不能直接套用相同参数。</li>
 <li><strong>关键信息能否被有效利用。</strong> 历史中间的约束可能被忽略，但效果取决于模型、任务、长度与消息角色，不能把“越靠后越好”当保证。应通过遗漏约束的回归样例判断布局是否有效，而不是只凭位置猜测。</li>
-<li><strong>工具列表序列化的稳定性。</strong> MCP 2026-07-28 对确定性列表顺序使用的是 <strong>SHOULD</strong>，有助于工具列表与提示缓存；它不是 <strong>MUST</strong>，更不保证模型选择工具具有确定性（<a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Tools</a>）。</li>
+<li><strong>工具列表序列化的稳定性。</strong> MCP 2026-07-28 对确定性列表顺序使用的是 <strong>SHOULD</strong>，有助于工具列表与提示缓存；它不是 <strong>MUST</strong>，更不保证模型选择工具具有确定性（Tools<sup><a href="../../../book/references/#ref-285">【285】</a></sup>）。</li>
 </ol>
 <p>这些是缓存布局原则，不能覆盖信任层级。检索文档、长期记忆、Skill 内容和模型摘要不应仅因“稳定”就被提升为系统级指令；来源与权限标签必须独立保存。不同 API 对工具字段的内部序列化顺序、显式缓存和前缀缓存支持不同，应以对应提供商为准。</p>
 <h2 id="184-system-prompt">18.4 指令有层级，是否就都应放进 System Prompt？<a class="headerlink" href="#184-system-prompt" title="Permanent link">&para;</a></h2>
@@ -9178,7 +9205,7 @@
 <li><strong>产品层默认指令</strong>（表达产品行为与规则；真正不可绕过的安全边界仍由执行器强制实施）；</li>
 <li><strong>组织/项目级配置</strong>（第三章 3.6 节讨论的 AGENTS.md 属于这一层，通常在会话开始时读取一次）；</li>
 <li><strong>技能与命令</strong>（第三章 3.5 节的 Skill，按需渐进式披露，往往只注入摘要而非全文，直到被显式调用）；</li>
-<li><strong>应用传入的系统提示配置</strong>（例如 Claude Agent SDK 的预设、<code>append</code> 和自定义 <code>system_prompt</code>，见 <a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts">Modifying system prompts</a>）。配置系统提示不等于 SDK 支持任意时刻热更新；项目文件的内容也可能作为对话上下文注入，而不是改写 system 字段。</li>
+<li><strong>应用传入的系统提示配置</strong>（例如 Claude Agent SDK 的预设、<code>append</code> 和自定义 <code>system_prompt</code>，见 Modifying system prompts<sup><a href="../../../book/references/#ref-548">【548】</a></sup>）。配置系统提示不等于 SDK 支持任意时刻热更新；项目文件的内容也可能作为对话上下文注入，而不是改写 system 字段。</li>
 </ul>
 <p>这些来源的加载时机也不同：有的在会话启动时读取，有的按需加载。来源层级、加载时机和最终消息角色是三个独立决定，不能用一次字符串拼接代替。</p>
 <h2 id="185">18.5 工具定义注入的代价<a class="headerlink" href="#185" title="Permanent link">&para;</a></h2>
@@ -9221,14 +9248,8 @@
 <h2 id="1811">18.11 本章总结<a class="headerlink" href="#1811" title="Permanent link">&para;</a></h2>
 <p>上下文装配首先保证消息合法、来源可信级别不被抬高、关键约束不丢失，再优化稳定前缀和按需检索。工具定义的窗口占用不等于每轮全价计费；缓存断点也取决于 API。预算超限不能靠静默截掉授权或待执行调用来解决。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">Model Context Protocol: Tools</a></li>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/modifying-system-prompts">Claude Agent SDK: Modifying system prompts</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/prompt-caching">OpenAI: Prompt caching</a>：前缀匹配、模型差异与缓存断点，查阅于 2026-09-15。</li>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic Prompt Caching</a>：保留原技术来源；本轮访问跳转至区域不可用页面，未据此确认当前参数。</li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-18">集中参考资料章节</a>。</p>
 
 
 
@@ -9251,7 +9272,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

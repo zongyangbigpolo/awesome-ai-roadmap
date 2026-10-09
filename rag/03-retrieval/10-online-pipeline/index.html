@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: The Complete Online RAG Pipeline","description":"A walkthrough of online RAG routing, rewriting, retrieval, reranking, context assembly, and citation validation, including latency budgets, fallback paths, and authorization-aware caching.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/10-online-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: The Complete Online RAG Pipeline","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/10-online-pipeline/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: The Complete Online RAG Pipeline","description":"A walkthrough of online RAG routing, rewriting, retrieval, reranking, context assembly, and citation validation, including latency budgets, fallback paths, and authorization-aware caching.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/10-online-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: The Complete Online RAG Pipeline","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/10-online-pipeline/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 10: The Complete Online RAG Pipeline","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/10-online-pipeline/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9461,21 +9486,26 @@
 </table>
 <p>Offline construction also has cost, freshness, and failure constraints; incorrectly ingested data affects users too. The difference is that the online pipeline usually has to produce an explicit result or failure status before the current request's deadline.</p>
 <h2 id="102-the-complete-pipeline"><span id="102" class="legacy-heading-anchor" aria-hidden="true"></span>10.2 The complete pipeline<a class="headerlink" href="#102-the-complete-pipeline" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q[User query] --&gt; S0[0. Initial decision&lt;br/&gt;Is retrieval needed?]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[User query] --&gt; S0{Retrieve?}
     S0 --&gt;|No| DIRECT[Generate directly]
-    S0 --&gt;|Yes| S1[1. Query understanding&lt;br/&gt;and rewriting]
-    S1 --&gt; S2[2. Query embedding]
-    S2 --&gt; S3[3. Multi-path retrieval]
-    S3 --&gt; S4[4. Fusion and deduplication]
-    S4 --&gt; S5[5. Reranking]
-    S5 --&gt; S6[6. Context trimming&lt;br/&gt;and assembly]
-    S6 --&gt; GATE{Sufficient evidence&lt;br/&gt;and authorized use?}
-    GATE --&gt;|No| STOP[Abstain, clarify, or perform&lt;br/&gt;bounded additional retrieval]
-    GATE --&gt;|Yes| S7[7. Prompt assembly]
-    S7 --&gt; S8[8. Generation]
-    S8 --&gt; S9[9. Citation annotation&lt;br/&gt;and validation]
-    S9 --&gt; OUT[Return the answer]</code></pre>
+    S0 --&gt;|Yes| S1[Prepare query]
+    S1 --&gt; S2[Retrieve evidence]</code></pre>
+<p>Query preparation means understanding and rewriting the question, then embedding it. The retrieval branch continues through the following evidence-selection stages:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S3[Multi-path retrieval] --&gt; S4[Fuse and deduplicate]
+    S4 --&gt; S5[Rerank]
+    S5 --&gt; S6[Trim and assemble context]</code></pre>
+<p>The selected context must pass an evidence and authorization gate before generation:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GATE{Evidence usable?} --&gt;|No| STOP[Abstain or recover]
+    GATE --&gt;|Yes| S7[Assemble prompt; generate]
+    S7 --&gt; S9[Annotate and validate citations]
+    S9 --&gt; OUT[Return answer]</code></pre>
+<p>“Usable” requires both sufficient evidence and authorized use. On failure, abstain, ask for clarification, or perform bounded additional retrieval. Citation annotation and validation follow generation; they are not replaced by the pre-generation gate.</p>
 <p>Steps 0 and 9 are often omitted from basic RAG diagrams, but they are frequently necessary in production.</p>
 <h2 id="103-a-step-by-step-breakdown"><span id="103" class="legacy-heading-anchor" aria-hidden="true"></span>10.3 A step-by-step breakdown<a class="headerlink" href="#103-a-step-by-step-breakdown" title="Permanent link">&para;</a></h2>
 <h3 id="1031-step-0-decide-whether-retrieval-is-needed"><span id="1031-0" class="legacy-heading-anchor" aria-hidden="true"></span>10.3.1 Step 0: Decide whether retrieval is needed<a class="headerlink" href="#1031-step-0-decide-whether-retrieval-is-needed" title="Permanent link">&para;</a></h3>
@@ -9694,13 +9724,8 @@
 <li><strong>Optimize the actual critical path</strong>, measuring the time to first token, complete answer, and a validated answer ready for release separately.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts</a></li>
-<li><a href="https://arxiv.org/abs/2310.11511">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-10">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9723,7 +9748,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability","description":"Compare agent frameworks through state ownership, checkpoints, tool execution contracts, evaluation, and telemetry, distinguishing serialization from recovery and business-side-effect guarantees.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/22-cross-framework-technical-taxonomy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/22-cross-framework-technical-taxonomy/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability","description":"Compare agent frameworks through state ownership, checkpoints, tool execution contracts, evaluation, and telemetry, distinguishing serialization from recovery and business-side-effect guarantees.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/22-cross-framework-technical-taxonomy/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/22-cross-framework-technical-taxonomy/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Comparing Framework Internals: State, Persistence, Tool Contracts, and Observability","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/22-cross-framework-technical-taxonomy/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9224,13 +9249,23 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    S1["State channels and merging&lt;br/&gt;LangGraph"]
-    S2["Events + explicit state&lt;br/&gt;LlamaIndex Workflows / CrewAI Flow"]
-    S3["Program parameters and call data&lt;br/&gt;DSPy"]
-    S4["Agent-local state and Teams&lt;br/&gt;AutoGen"]
-    S5["Conversation history / sessions&lt;br/&gt;PydanticAI / MAF"]
-    S6["Steps and events&lt;br/&gt;SK Process"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    S1["State channels&lt;br/&gt;and merging"]
+    S2["Events +&lt;br/&gt;explicit state"]
+    S3["Program&lt;br/&gt;parameters and&lt;br/&gt;call data"]
+    S4["Agent-local&lt;br/&gt;state and Teams"]
+    S5["Conversation&lt;br/&gt;history /&lt;br/&gt;sessions"]
+    S6["Steps and&lt;br/&gt;events"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>State channels and merging LangGraph</li>
+<li>Events + explicit state LlamaIndex Workflows / CrewAI Flow</li>
+<li>Program parameters and call data DSPy</li>
+<li>Agent-local state and Teams AutoGen</li>
+<li>Conversation history / sessions PydanticAI / MAF</li>
+<li>Steps and events SK Process</li>
+</ul>
 <p>These are areas of emphasis, not mutually exclusive categories. Debugging requires both state snapshots and event/message traces: shared state is hard to explain if nobody records who changed it. When evaluating a framework, ask the team to diagram the state owner, concurrent-update merge rules, and final commit point for one request.</p>
 <h2 id="223-dimension-two-persistence"><span id="223" class="legacy-heading-anchor" aria-hidden="true"></span>22.3 Dimension two: persistence<a class="headerlink" href="#223-dimension-two-persistence" title="Permanent link">&para;</a></h2>
 <p>Persistence supplies the data needed for recovery, but a runtime must still interpret that data and decide what to do next. Compare both <strong>what is saved</strong> and <strong>what will run again after recovery</strong>:</p>
@@ -9382,7 +9417,7 @@
 </tr>
 </tbody>
 </table>
-<p><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry's GenAI semantic conventions</a> seek to standardize span names and attributes for model, agent, and tool calls so traces from different frameworks can be analyzed in one backend. <strong>The overall GenAI documentation and agent spans are still marked Development; do not treat the entire set as a stable protocol.</strong> Evaluate the fields actually exported and the semantic-convention version, not just the bundled UI or a claim of OpenTelemetry support.</p>
+<p>OpenTelemetry's GenAI semantic conventions<sup><a href="../../../book/references/#ref-524">【524】</a></sup> seek to standardize span names and attributes for model, agent, and tool calls so traces from different frameworks can be analyzed in one backend. <strong>The overall GenAI documentation and agent spans are still marked Development; do not treat the entire set as a stable protocol.</strong> Evaluate the fields actually exported and the semantic-convention version, not just the bundled UI or a claim of OpenTelemetry support.</p>
 <p>Check convention versions and field stability explicitly. Sharing OTLP transport does not make span names, token accounting, or business attributes identical. Nor is collecting every prompt and response automatically better: define redaction, sampling, and retention policies. Traces explain execution; evaluation judges quality. They complement each other.</p>
 <h2 id="226-common-mistakes"><span id="226" class="legacy-heading-anchor" aria-hidden="true"></span>22.6 Common mistakes<a class="headerlink" href="#226-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="2261-comparing-feature-presence-instead-of-implementation"><span id="2261" class="legacy-heading-anchor" aria-hidden="true"></span>22.6.1 Comparing feature presence instead of implementation<a class="headerlink" href="#2261-comparing-feature-presence-instead-of-implementation" title="Permanent link">&para;</a></h3>
@@ -9414,20 +9449,8 @@
 <p>Compare how frameworks model state, persist and recover execution, generate tool contracts, and support evaluation and observation—not merely which features they list. The constraints created by those choices together determine how maintainable and portable a system will be.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/checkpointers">LangGraph: Checkpointers and super-steps</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/">LlamaIndex: Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/">LlamaIndex: Durable Workflows</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html">AutoGen: State</a></li>
-<li><a href="https://docs.crewai.com/en/concepts/flows">CrewAI: Flows</a></li>
-<li><a href="https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/">PydanticAI: Durable Execution</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework overview</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework">Semantic Kernel: Process Framework</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/README.md">OpenTelemetry Generative AI semantic conventions and status</a></li>
-<li><a href="https://docs.smith.langchain.com/">LangSmith official documentation</a></li>
-</ul>
-<p>Version note: see the fixed sources in Chapters 19 and 20 for the release and maintenance status of Microsoft's frameworks. The OpenTelemetry GenAI Development status was checked on 2026-09-15. Pin and verify the semantic-convention version used by each exporter.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-22">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9450,7 +9473,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

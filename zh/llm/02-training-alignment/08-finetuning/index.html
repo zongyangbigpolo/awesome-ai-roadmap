@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：大模型微调方案","description":"比较全量微调、LoRA 与 QLoRA 的参数和显存预算，区分 SFT、DPO 训练目标，并说明数据评测、遗忘与部署维护的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/08-finetuning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：大模型微调方案","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/08-finetuning/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：大模型微调方案","description":"比较全量微调、LoRA 与 QLoRA 的参数和显存预算，区分 SFT、DPO 训练目标，并说明数据评测、遗忘与部署维护的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/08-finetuning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：大模型微调方案","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/08-finetuning/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第八章：大模型微调方案","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/08-finetuning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9315,16 +9340,19 @@
 <h2 id="81">8.1 前置问题：错误是否适合用微调解决<a class="headerlink" href="#81" title="Permanent link">&para;</a></h2>
 <p>微调不是第一反应，也不是必须最后才允许尝试的方案。应先建立基线，确认问题来自知识访问、任务行为、输出约束还是模型容量，再比较收益与成本。</p>
 <h3 id="811">8.1.1 先做错误归因<a class="headerlink" href="#811" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    NEED["模型表现不达标"] --&gt; Q1{"主要错误是什么？"}
-    Q1 --&gt;|格式不合法| P1["提示与示例&lt;br/&gt;结构化输出或约束解码"]
-    Q1 --&gt;|事实缺失或过时| P2["检索或数据库工具&lt;br/&gt;检查召回和证据使用"]
-    Q1 --&gt;|稳定的任务行为不佳| P3["SFT 候选实验"]
-    Q1 --&gt;|候选质量有可比较差异| P4["偏好数据与 DPO 等方案"]
-    P1 --&gt; E["同一测试集比较质量、成本与延迟"]
-    P2 --&gt; E
-    P3 --&gt; E
-    P4 --&gt; E</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    NEED["模型表现不达标"] --&gt; Q1["诊断主要错误"]
+    Q1 --&gt; P["选择针对性改进"]
+    P --&gt; E["在同一测试集上比较"]</code></pre>
+<p>诊断结果决定改进方法，并不要求依次完成所有训练阶段：</p>
+<ul>
+<li><strong>格式不合法：</strong> 尝试提示与示例、结构化输出或约束解码。</li>
+<li><strong>事实缺失或过时：</strong> 使用检索或数据库工具，检查召回和证据使用。</li>
+<li><strong>稳定任务上的行为不佳：</strong> 开展 SFT 候选实验。</li>
+<li><strong>候选质量存在可比较差异：</strong> 收集偏好数据，测试 DPO 等方法。</li>
+</ul>
+<p>各方案应在同一测试集上比较质量、成本与延迟。</p>
 <p>这些方案可组合。例如，RAG 负责提供最新合同，SFT 教模型基于证据回答并引用出处。若检索没有召回正确条款，继续调生成模型通常解决不了根因。</p>
 <h3 id="812">8.1.2 哪些场景值得微调<a class="headerlink" href="#812" title="Permanent link">&para;</a></h3>
 <ul>
@@ -9572,14 +9600,8 @@ A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
 <h2 id="87">8.7 本章总结<a class="headerlink" href="#87" title="Permanent link">&para;</a></h2>
 <p>先用错误分析确定训练信号，再根据显存和表达需求选择参数方案。全量微调、LoRA、QLoRA 的区别不只是“几张卡”，更包括优化状态、激活、量化与部署约束。<strong>可靠的选型结论来自同口径评测与可回滚产物，而不是固定推荐组合。</strong></p>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2106.09685">LoRA</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers v4.46.3：Model training anatomy</a></li>
-<li><a href="https://huggingface.co/docs/peft/package_reference/lora">PEFT：LoRA 配置与初始化</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO</a></li>
-<li><a href="https://arxiv.org/abs/2305.11206">LIMA</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-08">集中参考资料章节</a>。</p>
 
 
 
@@ -9602,7 +9624,7 @@ A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

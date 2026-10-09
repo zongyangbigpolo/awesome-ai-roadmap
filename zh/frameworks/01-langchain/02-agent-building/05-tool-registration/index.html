@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：Tool 注册与工具契约","description":"区分模型可见工具 Schema 与可信 Runtime 注入，说明参数校验、异步执行、状态更新和重试幂等的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/05-tool-registration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：Tool 注册与工具契约","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/05-tool-registration/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：Tool 注册与工具契约","description":"区分模型可见工具 Schema 与可信 Runtime 注入，说明参数校验、异步执行、状态更新和重试幂等的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/05-tool-registration/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：Tool 注册与工具契约","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/05-tool-registration/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第五章：Tool 注册与工具契约","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/02-agent-building/05-tool-registration/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9498,30 +9523,52 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
-    M["模型生成调用请求&lt;br/&gt;工具名 + 参数"] --&gt; R["运行时执行函数"]
-    R --&gt; T["结果作为 ToolMessage 返回"]
-    T --&gt; M2["模型决定继续调用&lt;br/&gt;还是生成最终回答"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    M["模型生成调用请求"] --&gt; R["运行时执行函数"]
+    R --&gt; T["结果作为&lt;br/&gt;ToolMessage 返回"]
+    T --&gt; M2["模型决定继续调用"]
 
     style M fill:#e8f0fe</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>模型生成调用请求 工具名 + 参数</li>
+<li>模型决定继续调用 还是生成最终回答</li>
+</ul>
 <blockquote>
 <p><strong>工具描述和 Schema 不是普通注释，而是模型与业务代码之间的调用合同。</strong></p>
 <p>描述过于模糊，模型可能<strong>选错工具</strong>；参数缺少约束，模型可能生成<strong>无法执行的数据</strong>。</p>
 </blockquote>
 <h2 id="52">5.2 四种定义方式怎么选<a class="headerlink" href="#52" title="Permanent link">&para;</a></h2>
 <p>不必一开始就继承最底层的类。选择时先判断：<strong>这个工具是否仍然只是一个普通函数？</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"已有函数的名称、类型注解&lt;br/&gt;docstring 能说清用途吗?"}
-    Q1 --&gt;|能| A["直接放入 tools&lt;br/&gt;（普通函数）"]
-    Q1 --&gt;|不能：要改工具名&lt;br/&gt;补参数描述&lt;br/&gt;限制枚举和范围| Q2{"原函数可以修改吗?&lt;br/&gt;需要运行时动态组装&lt;br/&gt;同步与异步实现吗?"}
-    Q2 --&gt;|可以修改，只是要补契约| B["@tool&lt;br/&gt;大多数业务工具的自然选择"]
-    Q2 --&gt;|原函数不能改&lt;br/&gt;或需要动态组装| C["StructuredTool.from_function"]
-    C --&gt; Q3{"工具要长期持有客户端&lt;br/&gt;维护资源、定制完整执行过程?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["契约清晰？"]
+    Q1 --&gt;|能| A["普通函数"]
+    Q1 --&gt;|"否"| Q2["能修改原函数？"]
+    Q2 --&gt;|"仅调整契约"| B["@tool"]
+    Q2 --&gt;|"动态组装或外部函数"| C["StructuredTool.from_function"]
+    C --&gt; Q3["有状态组件？"]
     B --&gt; Q3
-    Q3 --&gt;|是，它已经是一个组件| D["继承 BaseTool"]
+    Q3 --&gt;|"是"| D["继承 BaseTool"]
 
     style B fill:#e6f4ea
     style D fill:#fff3cd</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>不能：要改工具名 补参数描述 限制枚举和范围</li>
+<li>可以修改，只是要补契约</li>
+<li>原函数不能改 或需要动态组装</li>
+<li>是，它已经是一个组件</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>已有函数的名称、类型注解 docstring 能说清用途吗?</li>
+<li>直接放入 tools （普通函数）</li>
+<li>原函数可以修改吗? 需要运行时动态组装 同步与异步实现吗?</li>
+<li>@tool 大多数业务工具的自然选择</li>
+<li>工具要长期持有客户端 维护资源、定制完整执行过程?</li>
+</ul>
 <p>这四种方式对应的是复杂度逐步上升的实现路径：先让函数把用途说清楚，再补充工具契约，接着处理动态组装，最后才管理组件生命周期。</p>
 <h3 id="521">5.2.1 一个例外<a class="headerlink" href="#521" title="Permanent link">&para;</a></h3>
 <p>模型厂商提供的 <strong>Web Search、代码执行器等服务端工具</strong>，有时会使用厂商约定的字典配置。</p>
@@ -9732,13 +9779,20 @@
 </blockquote>
 <h2 id="58">5.8 注册后还要检查什么<a class="headerlink" href="#58" title="Permanent link">&para;</a></h2>
 <p><strong>一个能被 Agent 调用的函数，并不等于一个可以安全上线的工具。</strong> 沿着一次真实调用往下走：</p>
-<pre class="mermaid"><code>flowchart TB
-    P1["① 模型准备调用前&lt;br/&gt;名称/描述会不会与其他工具混淆&lt;br/&gt;Schema 有没有限制枚举、范围、必填"]
-    P2["② 进入执行阶段&lt;br/&gt;身份和权限来自可信 Runtime 而非模型参数&lt;br/&gt;远程调用有超时、重试上限、并发限制&lt;br/&gt;会改外部状态就补幂等、审批、审计"]
-    P3["③ 调用结束后&lt;br/&gt;日志与 Trace 要能排查错误&lt;br/&gt;但不能记录密钥、完整身份凭证或不必要的敏感数据"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    P1["① 模型准备调用&lt;br/&gt;前"]
+    P2["② 进入执行阶段"]
+    P3["③ 调用结束后"]
     P1 --&gt; P2 --&gt; P3
 
     style P2 fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>① 模型准备调用前 名称/描述会不会与其他工具混淆 Schema 有没有限制枚举、范围、必填</li>
+<li>② 进入执行阶段 身份和权限来自可信 Runtime 而非模型参数 远程调用有超时、重试上限、并发限制 会改外部状态就补幂等、审批、审计</li>
+<li>③ 调用结束后 日志与 Trace 要能排查错误 但不能记录密钥、完整身份凭证或不必要的敏感数据</li>
+</ul>
 <h3 id="581">5.8.1 工具数量不是越多越好<a class="headerlink" href="#581" title="Permanent link">&para;</a></h3>
 <p>一次性向模型暴露大量相似工具，会增加选择错误和参数混淆的概率。更合理的做法是<strong>根据用户权限和当前任务动态缩小工具集合</strong>（可用 Middleware 实现，见 <a href="../04-build-agent/">第四章</a>）。</p>
 <p>工具 Schema 本身也占输入 Token。工具裁剪应同时测「目标工具是否仍在候选集」和「候选集内选择是否正确」，否则节省 Token 的代价可能是根本无法完成任务。两次参数相同的调用也不一定是重复业务动作：<code>tool_call_id</code> 用于关联模型消息，支付或发信的幂等键应绑定业务请求，不能只靠模型生成的调用 ID。</p>
@@ -9779,13 +9833,8 @@
 </ol>
 <p>注册工具时，更关键的是把「模型看得见的契约」和「服务端执行的安全边界」彻底分开：前者决定模型能否选对，后者决定系统是否安全。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/tools">LangChain: Tools 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents 概念文档</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/tools/">langchain-core Tools API 参考</a></li>
-<li><a href="https://docs.pydantic.dev/latest/">Pydantic 官方文档</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-05">集中参考资料章节</a>。</p>
 
 
 
@@ -9808,7 +9857,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

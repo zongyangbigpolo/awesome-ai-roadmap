@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: DSPy's Compiler and Optimizers","description":"Compare example, instruction, and weight optimization in DSPy, including MIPROv2 and GEPA metric interfaces, data splits, search budgets, and deployment regression checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/17-compiler-and-optimizers/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: DSPy's Compiler and Optimizers","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/17-compiler-and-optimizers/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: DSPy's Compiler and Optimizers","description":"Compare example, instruction, and weight optimization in DSPy, including MIPROv2 and GEPA metric interfaces, data splits, search budgets, and deployment regression checks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/17-compiler-and-optimizers/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: DSPy's Compiler and Optimizers","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/17-compiler-and-optimizers/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 17: DSPy's Compiler and Optimizers","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/17-compiler-and-optimizers/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9195,15 +9220,27 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart LR
-    P["Unoptimized program"] --&gt; B{"Choose an optimizer"}
-    B --&gt;|"Small dataset, simple task"| BF["BootstrapFewShot"]
-    B --&gt;|"Tune instructions and examples together"| MI["MIPROv2"]
-    B --&gt;|"Iterate by reflecting on failures"| GE["GEPA"]
-    BF --&gt; C["Compilation artifact: optimized program"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["Unoptimized program"] --&gt; B["Choose an optimizer"]
+    B --&gt;|"Small task"| BF["BootstrapFewShot"]
+    B --&gt;|"Joint tuning"| MI["MIPROv2"]
+    B --&gt;|"Reflection"| GE["GEPA"]
+    BF --&gt; C["Optimized program"]
     MI --&gt; C
     GE --&gt; C
-    C --&gt; D["Replace the original program with the same interface"]</code></pre>
+    C --&gt; D["Replace implementation"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Small dataset, simple task</li>
+<li>Tune instructions and examples together</li>
+<li>Iterate by reflecting on failures</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Compilation artifact: optimized program</li>
+<li>Replace the original program with the same interface</li>
+</ul>
 <p>These optimizers usually return a program with the same calling interface. Use the returned value rather than assuming the original object was modified in place. The artifact may contain longer examples, longer instructions, or a new model configuration. An unchanged interface does not imply unchanged latency or cost.</p>
 <p>The following MIPROv2 setup assumes that an LM is configured and the <code>dspy.Example</code> objects in <code>trainset</code> and <code>valset</code> have their inputs marked with <code>.with_inputs("question")</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">exact_answer</span><span class="p">(</span><span class="n">example</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">trace</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -9305,15 +9342,8 @@
 <li><strong>Assess gains alongside compilation, inference, and operational costs</strong>. Prompt optimization does not solve every quality problem.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://dspy.ai/diving-deeper/choosing-an-optimizer/">DSPy: Choosing an optimizer</a></li>
-<li><a href="https://dspy.ai/api/optimizers/MIPROv2/">DSPy: MIPROv2 API and its three-stage mechanism</a></li>
-<li><a href="https://dspy.ai/api/optimizers/GEPA/overview/">DSPy: GEPA API and feedback contract</a></li>
-<li><a href="https://dspy.ai/getting-started/gepa-optimization/">DSPy: GEPA optimization tutorial</a></li>
-<li><a href="https://arxiv.org/abs/2310.03714">DSPy paper: Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"</a></li>
-<li><a href="https://arxiv.org/abs/2507.19457">GEPA paper: Agrawal et al., "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning"</a></li>
-<li><a href="https://docs.smith.langchain.com/">Official LangSmith documentation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-17">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9336,7 +9366,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

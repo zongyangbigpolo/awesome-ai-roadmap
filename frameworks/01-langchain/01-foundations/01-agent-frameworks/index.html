@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: An Overview of Major AI Agent Development Frameworks","description":"Compare agent frameworks by model integration, data pipelines, state recovery, and production constraints, and understand how high-level agents fit with lower-level orchestration.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/01-agent-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: An Overview of Major AI Agent Development Frameworks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/01-agent-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: An Overview of Major AI Agent Development Frameworks","description":"Compare agent frameworks by model integration, data pipelines, state recovery, and production constraints, and understand how high-level agents fit with lower-level orchestration.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/01-agent-frameworks/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: An Overview of Major AI Agent Development Frameworks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/01-agent-frameworks/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: An Overview of Major AI Agent Development Frameworks","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/01-agent-frameworks/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9497,16 +9522,21 @@
 </table>
 <p>LangGraph primarily handles loops, conditional branches, parallel execution, persistence, pausing and resuming, and human intervention.</p>
 <h3 id="131-a-concrete-example"><span id="131" class="legacy-heading-anchor" aria-hidden="true"></span>1.3.1 A concrete example<a class="headerlink" href="#131-a-concrete-example" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    A["Read the payment document"] --&gt; B["Compliance check"]
-    B --&gt; C{"Amount exceeds the limit?"}
-    C --&gt;|Yes| D["Pause&lt;br/&gt;Wait for manager approval"]
-    D --&gt; E{"Approved?"}
-    E --&gt;|Yes| F["Call the payment tool"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Read the&lt;br/&gt;payment&lt;br/&gt;document"] --&gt; B["Compliance&lt;br/&gt;check"]
+    B --&gt; C["Amount exceeds&lt;br/&gt;the limit?"]
+    C --&gt;|Yes| D["Pause"]
+    D --&gt; E["Approved?"]
+    E --&gt;|Yes| F["Call the&lt;br/&gt;payment tool"]
     E --&gt;|No| G["Reject"]
     C --&gt;|No| F
 
     style D fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Pause Wait for manager approval</li>
+</ul>
 <p>This kind of process is usually easier to express as a graph than to squeeze into a single agent loop.</p>
 <h3 id="132-a-more-precise-relationship"><span id="132" class="legacy-heading-anchor" aria-hidden="true"></span>1.3.2 A more precise relationship<a class="headerlink" href="#132-a-more-precise-relationship" title="Permanent link">&para;</a></h3>
 <p><strong>LangChain's high-level agent interface now runs on LangGraph.</strong></p>
@@ -9515,19 +9545,27 @@
 <h2 id="14-where-does-llamaindex-excel"><span id="14-llamaindex" class="legacy-heading-anchor" aria-hidden="true"></span>1.4 Where does LlamaIndex excel?<a class="headerlink" href="#14-where-does-llamaindex-excel" title="Permanent link">&para;</a></h2>
 <p>Treating LlamaIndex as "another LangChain" obscures its emphasis on private-data pipelines. <strong>LlamaIndex focuses on building AI applications over private data</strong>: data connectors, document parsing, splitting, indexing, retrieval, reranking, Query Engines, and structured-data access. It can also package a RAG pipeline as a tool for an agent.</p>
 <h3 id="141-enterprise-knowledge-bases-involve-more-than-tool-calls"><span id="141" class="legacy-heading-anchor" aria-hidden="true"></span>1.4.1 Enterprise knowledge bases involve more than tool calls<a class="headerlink" href="#141-enterprise-knowledge-bases-involve-more-than-tool-calls" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    subgraph IN["When documents enter the system"]
-        I1["Parse PDF tables correctly"]
-        I2["Connect diverse data sources consistently"]
-        I3["Split and index documents"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart LR
+    subgraph IN["Ingestion"]
+        direction LR
+        I1["Parse PDF tables&lt;br/&gt;correctly"]
+        I2["Connect data&lt;br/&gt;sources"]
+        I3["Split and index&lt;br/&gt;documents"]
     end
-    subgraph Q["When users start asking questions"]
-        Q1["Filter and rerank retrieved results"]
-        Q2["Ensure each user sees only&lt;br/&gt;data they are authorized to access"]
+    subgraph Q["Querying"]
+        direction LR
+        Q1["Filter and&lt;br/&gt;rerank retrieved&lt;br/&gt;results"]
+        Q2["Enforce data&lt;br/&gt;access"]
     end
     IN --&gt; Q
 
     style IN fill:#e8f0fe</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Connect diverse data sources consistently</li>
+<li>Ensure each user sees only data they are authorized to access</li>
+</ul>
 <p>Problems in enterprise knowledge bases arise throughout the data pipeline. Registering one more search tool does not solve them.</p>
 <p>These requirements make LlamaIndex a common candidate for enterprise knowledge bases, document agents, research assistants, and complex RAG systems. Metadata filtering, however, is only a way to apply access rules: the framework does not authenticate the signed-in user or automatically enforce tenant authorization for the application.</p>
 <h3 id="142-it-is-not-limited-to-rag"><span id="142-rag" class="legacy-heading-anchor" aria-hidden="true"></span>1.4.2 It is not limited to RAG<a class="headerlink" href="#142-it-is-not-limited-to-rag" title="Permanent link">&para;</a></h3>
@@ -9535,14 +9573,21 @@
 <p><strong>For framework selection</strong>, LangChain offers an entry point oriented toward <strong>general-purpose agent assembly</strong>, while LlamaIndex's strengths are concentrated in <strong>data-intensive applications</strong>.</p>
 <h2 id="15-how-can-the-three-frameworks-work-together"><span id="15" class="legacy-heading-anchor" aria-hidden="true"></span>1.5 How can the three frameworks work together?<a class="headerlink" href="#15-how-can-the-three-frameworks-work-together" title="Permanent link">&para;</a></h2>
 <p><strong>You do not necessarily have to choose just one.</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["LlamaIndex&lt;br/&gt;Process documents and build indexes&lt;br/&gt;Return retrieval results"] --&gt; B["Wrap as a Tool"]
-    B --&gt; C["LangChain agent&lt;br/&gt;Decide when to call it"]
-    C --&gt; D["LangGraph&lt;br/&gt;Coordinate query rewriting, answer validation,&lt;br/&gt;human review, and failure recovery"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LlamaIndex"] --&gt; B["Wrap as a Tool"]
+    B --&gt; C["LangChain agent"]
+    C --&gt; D["LangGraph"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea
     style D fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>LlamaIndex Process documents and build indexes Return retrieval results</li>
+<li>LangChain agent Decide when to call it</li>
+<li>LangGraph Coordinate query rewriting, answer validation, human review, and failure recovery</li>
+</ul>
 <p><strong>This is one possible division of work, not a set of nonoverlapping capabilities.</strong> LlamaIndex also has workflows, and LangChain also has retrieval components. If you introduce all three, avoid having duplicate memory, retry, and tracing mechanisms manage the same request.</p>
 <blockquote>
 <p><strong>Whether all three are needed depends on the project's complexity.</strong> Simple tool calling does not justify adding LlamaIndex merely to complete a technology stack; ordinary knowledge-base question answering does not necessarily need a complex LangGraph workflow either.</p>
@@ -9580,20 +9625,35 @@
 </tbody>
 </table>
 <h2 id="17-a-selection-process-narrow-the-question-step-by-step"><span id="17" class="legacy-heading-anchor" aria-hidden="true"></span>1.7 A selection process: narrow the question step by step<a class="headerlink" href="#17-a-selection-process-narrow-the-question-step-by-step" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"① Does this task&lt;br/&gt;really need an agent?"}
-    Q1 --&gt;|Fixed steps and clear rules| N["Use ordinary functions or workflows&lt;br/&gt;Cheaper and more stable&lt;br/&gt;Handing an if/else process to a model&lt;br/&gt;only adds uncertainty"]
-    Q1 --&gt;|Yes| Q2{"② Which layer is actually&lt;br/&gt;the hardest part of the project?"}
-    Q2 --&gt;|Model and tool integration| A["LangChain is a natural fit"]
-    Q2 --&gt;|Private data, document parsing, retrieval quality| B["LlamaIndex addresses the core problem"]
-    Q2 --&gt;|Complex branches, loops, state recovery| C["LangGraph plays to its strengths"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q1["① Need an agent?"]
+    Q1 --&gt;|"Fixed rules"| N["Use ordinary&lt;br/&gt;functions or&lt;br/&gt;workflows"]
+    Q1 --&gt;|Yes| Q2["② Main&lt;br/&gt;difficulty?"]
+    Q2 --&gt;|"Integration"| A["LangChain"]
+    Q2 --&gt;|"Private data"| B["LlamaIndex"]
+    Q2 --&gt;|"Execution control"| C["LangGraph"]
     A --&gt; Q3
     B --&gt; Q3
     C --&gt; Q3
-    Q3["③ Examine production constraints"]
+    Q3["③ Examine&lt;br/&gt;production&lt;br/&gt;constraints"]
 
     style N fill:#fdecea
     style Q3 fill:#fff3cd</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Fixed steps and clear rules</li>
+<li>Model and tool integration</li>
+<li>Private data, document parsing, retrieval quality</li>
+<li>Complex branches, loops, state recovery</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Does this task really need an agent?</li>
+<li>Use ordinary functions or workflows Cheaper and more stable Handing an if/else process to a model only adds uncertainty</li>
+<li>② Which layer is actually the hardest part of the project?</li>
+<li>LlamaIndex addresses the core problem</li>
+</ul>
 <h3 id="171-step-three-a-working-demo-is-not-a-production-ready-system"><span id="171-demo" class="legacy-heading-anchor" aria-hidden="true"></span>1.7.1 Step three: a working demo is not a production-ready system<a class="headerlink" href="#171-step-three-a-working-demo-is-not-a-production-ready-system" title="Permanent link">&para;</a></h3>
 <p>The longer the workflow, the more important these production constraints become:</p>
 <ul>
@@ -9678,15 +9738,8 @@
 </ol>
 <p>The key to choosing a framework is to establish whether the project's main difficulty lies in model integration, the data pipeline, or flow control, and choose your starting point accordingly.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph documentation</a></li>
-<li><a href="https://docs.llamaindex.ai/">LlamaIndex documentation</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a></li>
-<li><a href="https://docs.crewai.com/">CrewAI documentation</a></li>
-<li><a href="https://github.com/microsoft/autogen">AutoGen repository</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9709,7 +9762,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

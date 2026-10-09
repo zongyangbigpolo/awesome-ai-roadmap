@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：LoRA 深入解析","description":"推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：LoRA 深入解析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第九章：LoRA 深入解析","description":"推导 LoRA 的矩阵形状、初始化和参数预算，说明 rank 与 alpha、合并精度、多适配器切换及能力退化的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第九章：LoRA 深入解析","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第九章：LoRA 深入解析","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/09-lora/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9401,15 +9426,16 @@ P_{\mathrm{LoRA}}=r(d_{\mathrm{in}}+d_{\mathrm{out}})
 </tbody>
 </table>
 <p>对 QLoRA，要区分在反量化后的基座上合并与重新载入原浮点基座后合并；这两者权重不同。合并后再量化也会引入舍入误差，需要重新评估。</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph AD["常见非线性 Adapter"]
-        X1["输入"] --&gt; L1["Transformer 子层"] --&gt; AD1["额外瓶颈网络"] --&gt; O1["输出"]
-    end
-    subgraph LR2["LoRA 合并后"]
-        X2["输入"] --&gt; M1["原线性层&lt;br/&gt;W + ΔW"] --&gt; O2["输出"]
-    end
-
+<p><strong>常见非线性 Adapter</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X1["输入"] --&gt; L1["Transformer 子层"] --&gt; AD1["额外瓶颈网络"] --&gt; O1["输出"]
     style AD1 fill:#fdecea</code></pre>
+<p><strong>LoRA 合并后</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X2["输入"] --&gt; M1["原线性层&lt;br/&gt;W + ΔW"] --&gt; O2["输出"]
+</code></pre>
 <p>常见瓶颈 Adapter 含非线性，通常不能折叠成同一个线性权重。不能据此给出“每层固定多几毫秒”的延迟，必须实际测量。</p>
 <h2 id="95-adapter">9.5 一个基座，多个 adapter<a class="headerlink" href="#95-adapter" title="Permanent link">&para;</a></h2>
 <p>下面是 <strong>PEFT 的顺序切换示例</strong>，本地 adapter 必须基于同一个兼容 checkpoint 训练。路径是占位符，不是可下载的适配器；若配置未记录精确 revision，需要从训练记录补齐：</p>
@@ -9556,16 +9582,8 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
 <h2 id="911">9.11 本章总结<a class="headerlink" href="#911" title="Permanent link">&para;</a></h2>
 <p>LoRA 的关键是<strong>用低秩参数化约束更新，同时保留可冻结、可共享、可合并的基座</strong>。省显存、低延迟和方便切换分别需要不同条件，不能再推导成“不遗忘、无需调参、混合后能力必然叠加”。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2106.09685">LoRA：公式、初始化与 rank 实验</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA</a></li>
-<li><a href="https://arxiv.org/abs/1902.00751">Parameter-Efficient Transfer Learning for NLP</a></li>
-<li><a href="https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora">PEFT v0.17.0：LoRA 配置、初始化与缩放</a></li>
-<li><a href="https://huggingface.co/docs/peft/developer_guides/model_merging">PEFT：Model merging 与 add_weighted_adapter</a></li>
-<li><a href="https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py">PEFT v0.17.0：加权 adapter 的实现与限制</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/lora/">vLLM：LoRA adapters</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers：模型训练的内存组成</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-09">集中参考资料章节</a>。</p>
 
 
 
@@ -9588,7 +9606,7 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit","description":"Introduces PydanticAI's typed outputs, dependency injection, bounded retries, and durable-execution integrations, comparing agent frameworks by their actual state and recovery requirements.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/21-pydanticai-and-decision-matrix/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/21-pydanticai-and-decision-matrix/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit","description":"Introduces PydanticAI's typed outputs, dependency injection, bounded retries, and durable-execution integrations, comparing agent frameworks by their actual state and recovery requirements.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/21-pydanticai-and-decision-matrix/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/21-pydanticai-and-decision-matrix/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 21: PydanticAI's Type-Safe Approach and Where the Three Frameworks Fit","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/05-lightweight-agent-frameworks/21-pydanticai-and-decision-matrix/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9176,12 +9201,23 @@
 <li><strong><code>RunContext</code> is the entry point for dependency injection.</strong> Tool functions use <code>ctx.deps</code> to access dependencies injected at runtime, such as database connections or the current user's identity. Tests can replace these dependencies with mocks, allowing the agent's call logic to be checked without connecting to external systems.</li>
 </ol>
 <h2 id="213-engineering-benefits-of-type-safety"><span id="213" class="legacy-heading-anchor" aria-hidden="true"></span>21.3 Engineering benefits of type safety<a class="headerlink" href="#213-engineering-benefits-of-type-safety" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    A["Raw text from the model"] --&gt; B{"output_type validation"}
-    B --&gt;|"Pass"| C["Strongly typed object&lt;br/&gt;Ready for business logic"]
-    B --&gt;|"Fail with budget remaining"| D["Return validation errors and retry"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 8, "rankSpacing": 12, "padding": 4}}}%%
+flowchart TB
+    A["Raw text from&lt;br/&gt;the model"] --&gt; B["output_type&lt;br/&gt;validation"]
+    B --&gt;|"Pass"| C["Strongly typed&lt;br/&gt;object"]
+    B --&gt;|"Retry allowed"| D["Retry with&lt;br/&gt;errors"]
     D --&gt; B
-    B --&gt;|"Budget exhausted"| E["Return failure / application fallback"]</code></pre>
+    B --&gt;|"Budget exhausted"| E["Failure /&lt;br/&gt;fallback"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Fail with budget remaining</li>
+<li>Return validation errors and retry</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Strongly typed object Ready for business logic</li>
+<li>Return failure / application fallback</li>
+</ul>
 <p>When an output violates constraints, the framework can feed validation errors back to the model and retry within a limit. Exhausting the budget still produces a failure the application must handle. Tool-based output, provider-native structured output, and prompted output have different support requirements; do not assume every model enforces the same strict JSON Schema constraints. Static typing tools can check the calling code, not external facts.</p>
 <p>An output validator can check cross-field business constraints and request a correction with <code>ModelRetry</code>. If the evidence itself is insufficient, however, the agent should decline to answer rather than retry indefinitely. Retries also consume tokens and add latency; they cannot bypass the per-request budget.</p>
 <h2 id="214-what-else-matters-beyond-typed-interfaces"><span id="214" class="legacy-heading-anchor" aria-hidden="true"></span>21.4 What else matters beyond typed interfaces?<a class="headerlink" href="#214-what-else-matters-beyond-typed-interfaces" title="Permanent link">&para;</a></h2>
@@ -9313,17 +9349,8 @@
 </ol>
 <p>Where AutoGen and CrewAI primarily address how multiple agents collaborate, PydanticAI addresses a different layer: whether a single agent's inputs and outputs can have type-safety guarantees resembling those of ordinary Python functions. The three optimize for different concerns rather than being direct substitutes in a single category.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://ai.pydantic.dev/">PydanticAI official documentation</a></li>
-<li><a href="https://pydantic.dev/docs/ai/core-concepts/agent/">PydanticAI: Core Agent concepts</a></li>
-<li><a href="https://ai.pydantic.dev/tools/">PydanticAI: Function Tools</a></li>
-<li><a href="https://ai.pydantic.dev/dependencies/">PydanticAI: Dependency injection</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/">AutoGen official documentation</a></li>
-<li><a href="https://docs.crewai.com/">CrewAI official documentation</a></li>
-<li><a href="https://pydantic.dev/docs/ai/core-concepts/output/">PydanticAI: Output modes and validation</a></li>
-<li><a href="https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/">PydanticAI: Durable Execution</a></li>
-<li><a href="https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/tutorial/state.html">AutoGen: State</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-21">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9346,7 +9373,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

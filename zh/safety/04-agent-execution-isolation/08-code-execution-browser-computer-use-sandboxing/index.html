@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离","description":"按实际权限选择代码与桌面隔离边界，区分浏览器同源保护、任务审批和网络出口策略的作用。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离","description":"按实际权限选择代码与桌面隔离边界，区分浏览器同源保护、任务审批和网络出口策略的作用。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9329,9 +9354,16 @@
 <h1 id="computer-use">第八章：代码执行、浏览器与 Computer Use 沙箱及网络隔离<a class="headerlink" href="#computer-use" title="Permanent link">&para;</a></h1>
 <h2 id="81">8.1 三类执行能力，边界取决于实际授权<a class="headerlink" href="#81" title="Permanent link">&para;</a></h2>
 <p>代码解释器、浏览器自动化和 Computer Use（让模型直接操作图形界面、鼠标键盘）是当前 Agent 能力扩展最快的三类工具，也是攻击面最不容易被完整枚举的三类工具。它们的共同点是：<strong>执行的具体指令由模型运行时生成，无法在设计阶段穷举</strong>，因此防御重心必须放在"限制执行环境本身能造成的最大损害"，而不是"预判模型会生成什么指令"。</p>
-<pre class="mermaid"><code>flowchart LR
-    A[代码执行&lt;br/&gt;进程、文件与网络权限] --&gt; B[浏览器自动化&lt;br/&gt;页面、登录态与下载]
-    B --&gt; C[Computer Use&lt;br/&gt;可见桌面、应用与剪贴板]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["代码执行"] --&gt; B["浏览器自动化"]
+    B --&gt; C["Computer Use"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>代码执行 进程、文件与网络权限</li>
+<li>浏览器自动化 页面、登录态与下载</li>
+<li>Computer Use 可见桌面、应用与剪贴板</li>
+</ul>
 <p>三者没有固定风险排序。带宿主挂载和云凭据的代码容器，可能比一次性虚拟桌面更危险；浏览器和 Computer Use 的影响也受登录账户与操作系统权限限制。评估时先列出可读数据、可写资源、网络目的地与持有凭据，再选择隔离强度。</p>
 <h2 id="82">8.2 代码执行沙箱<a class="headerlink" href="#82" title="Permanent link">&para;</a></h2>
 <h3 id="821">8.2.1 隔离层级选择<a class="headerlink" href="#821" title="Permanent link">&para;</a></h3>
@@ -9429,14 +9461,23 @@
 </ul>
 <h2 id="85">8.5 统一的网络出口控制<a class="headerlink" href="#85" title="Permanent link">&para;</a></h2>
 <p>三类执行环境都需要一致的网络隔离策略，这与 <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全 15.3.1</a> 描述的 SSRF 防护原则相通；放到执行沙箱里，就是下面这套网络设计：</p>
-<pre class="mermaid"><code>flowchart TB
-    E[执行环境&lt;br/&gt;代码/浏览器/Computer Use] --&gt; P[强制走出口代理]
-    P --&gt; W[域名/IP allowlist]
-    P --&gt; N[拒绝 loopback/私网/metadata 地址]
-    P --&gt; R[限制重定向次数与响应大小]
-    P --&gt; L[无凭据网络段&lt;br/&gt;凭据由代理按需注入]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    E["执行环境"] --&gt; P["强制走出口代理"]
+    P --&gt; W["域名/IP&lt;br/&gt;allowlist"]
+    P --&gt; N["阻断内部地址"]
+    P --&gt; R["限制重定向次数&lt;br/&gt;与响应大小"]
+    P --&gt; L["无凭据网络段"]</code></pre>
+<p>图中各项的完整含义：</p>
 <ul>
-<li>执行环境不直连公网，所有出站流量强制经过受控代理；</li>
+<li>执行环境 代码/浏览器/Computer Use</li>
+<li>拒绝 loopback/私网/metadata 地址</li>
+<li>
+<p>无凭据网络段 凭据由代理按需注入</p>
+</li>
+<li>
+<p>执行环境不直连公网，所有出站流量强制经过受控代理；</p>
+</li>
 <li>代理层维护 allowlist 而非 blocklist，默认拒绝一切未声明的目的地；</li>
 <li>代理层负责在需要时按需注入凭据（如访问特定内部 API 需要的 Token），执行环境本身不持有长期凭据，这与<a href="../../02-prompt-content-attacks/03-output-handling-secret-exfiltration/">第三章</a>“凭据不进模型上下文”的原则一致；</li>
 <li>记录目的地、动作、策略决策和用量等必要元数据，不全量记录 URL 查询参数、正文或凭据。</li>
@@ -9471,14 +9512,8 @@
 <li>三类执行环境应共享网络出口控制原则：强制代理，拒绝 metadata、loopback 和非授权私网，业务例外逐服务放行，凭据绑定目标与动作。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/">OWASP LLM06:2025 Excessive Agency</a></li>
-<li><a href="https://gvisor.dev/">gVisor: Application Kernel for Containers</a></li>
-<li><a href="https://firecracker-microvm.io/">Firecracker: Secure and Fast microVMs</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Same-origin_policy">MDN: Same-origin policy</a></li>
-<li><a href="https://github.com/anthropics/claude-quickstarts/tree/main/computer-use-demo">Anthropic: Computer Use Demo — security precautions and isolation limitations</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0051">MITRE ATLAS: Evade ML Model / LLM Prompt Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-08">集中参考资料章节</a>。</p>
 
 
 
@@ -9501,7 +9536,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：Prompt 工程","description":"系统整理 Prompt 的指令、上下文、示例和输出约束，说明如何调试提示词并避免把模型问题误判为 Prompt 问题。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/16-prompt-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：Prompt 工程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/16-prompt-engineering/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十六章：Prompt 工程","description":"系统整理 Prompt 的指令、上下文、示例和输出约束，说明如何调试提示词并避免把模型问题误判为 Prompt 问题。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/16-prompt-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十六章：Prompt 工程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/16-prompt-engineering/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十六章：Prompt 工程","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/04-prompt-reliability/16-prompt-engineering/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9584,14 +9609,11 @@
 <p>下面的五个要素是检查表，不是必须凑齐的模板；简单分类任务可能只需要任务、标签定义和输入。</p>
 <h2 id="162">16.2 怎样把模糊请求改成可执行、可验收的任务？<a class="headerlink" href="#162" title="Permanent link">&para;</a></h2>
 <p>把职责、任务、背景、格式和示例逐项对照，补上真正缺失的信息。下面的五个要素不是固定套话：每增加一项，都应能说明它解决了哪个歧义或验收问题。</p>
-<pre class="mermaid"><code>flowchart LR
-    Q["按任务选择检查项"] --&gt; R["Role&lt;br/&gt;职责与观察角度"]
-    Q --&gt; T["Task&lt;br/&gt;目标与边界"]
-    Q --&gt; C["Context&lt;br/&gt;相关背景与证据"]
-    Q --&gt; F["Format&lt;br/&gt;输出契约"]
-    Q --&gt; E["Examples&lt;br/&gt;必要时提供代表性示例"]
-
-    style E fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["任务需求"] --&gt; C["选择提示检查项"]
+    C --&gt; P["待测提示"]</code></pre>
+<p>按需选择检查项，而非将它们视为顺序步骤：<strong>Role</strong> 明确职责与观察角度；<strong>Task</strong> 明确目标与边界；<strong>Context</strong> 提供背景与证据；<strong>Format</strong> 定义输出契约；<strong>Examples</strong> 在必要时给出代表性示例。</p>
 <h3 id="1621-role">16.2.1 Role：角色设定<a class="headerlink" href="#1621-role" title="Permanent link">&para;</a></h3>
 <p>角色设定可以提示观察角度与表达风格，但「有十年经验」不会赋予模型真实资历或额外知识。优先描述可执行的职责和判断标准。</p>
 <p>❌ <strong>差</strong>：</p>
@@ -9727,17 +9749,13 @@
 <p>应用仍要限制工具权限、校验参数、隔离密钥，并对转账、删除等高影响操作独立审批。分隔符改善可读性，不能把低可信文本变成可信内容，也不能替代授权检查。</p>
 <h2 id="165-prompt">16.5 迭代方法论：Prompt 是工程问题<a class="headerlink" href="#165-prompt" title="Permanent link">&para;</a></h2>
 <p><strong>Prompt 工程更像「提出假设 → 测试 → 优化」的循环，不是一次写完就完事。</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["分离开发集与保留测试集&lt;br/&gt;覆盖正常、边缘和攻击输入"] --&gt; B["提出可检验的修改假设"]
-    B --&gt; C["在开发集上比较&lt;br/&gt;质量、成本与分层指标"]
-    C --&gt; D{"是否达到验收目标?"}
-    D --&gt;|整体变好| E["保留改动"]
-    D --&gt;|有些变好有些变差| F["分析任务分层与失败原因&lt;br/&gt;再决定是否拆分支"]
-    E --&gt; B
-    F --&gt; B
-    E --&gt;|候选冻结后| H["使用保留测试集阶段验收&lt;br/&gt;不反复用于调参"]
-
-    style B fill:#e8f0fe</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["可检验的修改"] --&gt; C["开发集比较"]
+    C --&gt; D["接受或诊断"]
+    D --&gt;|继续迭代| B
+    D --&gt;|冻结候选| H["保留测试集验收"]</code></pre>
+<p>开发集和保留测试集应相互隔离，覆盖正常、边缘和攻击输入。在开发集上比较质量、成本和任务分层指标。整体变好就保留改动；有好有坏时，先分析任务分层与失败原因，再决定是否拆分支。两种决定都可以进入下一轮修改。只有冻结候选后才在保留测试集上做阶段验收，不能反复用它调参。</p>
 <p>固定模型快照、解码参数、输入数据和评分标准。单因素修改便于归因，但不是硬规则；多项修改可以用消融实验或因子实验辨别贡献。保留测试集不能反复用于改 Prompt，否则也会被间接过拟合。</p>
 <p>验收要分开记录任务正确率、格式通过率、无依据断言、拒答率、成本与尾延迟。一个小样本开发集适合定位问题，不足以证明罕见高风险错误已经消失。</p>
 <h2 id="166-prompt">16.6 进阶：Prompt 压缩<a class="headerlink" href="#166-prompt" title="Permanent link">&para;</a></h2>
@@ -9816,17 +9834,8 @@
 <p>写 Prompt 不是堆辞藻，而是把角色、上下文、格式和示例交代清楚，再用测试集验证这些约束能不能稳定产出想要的结果。</p>
 </blockquote>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.14165">Language Models are Few-Shot Learners（GPT-3，Few-shot）</a></li>
-<li><a href="https://arxiv.org/abs/2102.09690">Calibrate Before Use: Improving Few-Shot Performance of Language Models（示例与顺序偏差）</a></li>
-<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.11916">Large Language Models are Zero-Shot Reasoners（Let's think step by step）</a></li>
-<li><a href="https://arxiv.org/abs/2310.05736">LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2310.06839">LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression</a></li>
-<li><a href="https://arxiv.org/abs/2104.08691">The Power of Scale for Parameter-Efficient Prompt Tuning（Soft Prompt）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices（含分隔符与 CoT 提示的适用边界）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-16">集中参考资料章节</a>。</p>
 
 
 
@@ -9849,7 +9858,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Agent 的现代系统架构","description":"给出 AI Agent 的现代系统架构，说明模型、规划、记忆、工具、运行时、安全和可观测性各自承担的职责。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/02-agent-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Agent 的现代系统架构","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/02-agent-architecture/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二章：Agent 的现代系统架构","description":"给出 AI Agent 的现代系统架构，说明模型、规划、记忆、工具、运行时、安全和可观测性各自承担的职责。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/02-agent-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二章：Agent 的现代系统架构","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/02-agent-architecture/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二章：Agent 的现代系统架构","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/02-agent-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9793,40 +9818,13 @@
 <p>需要特别注意：LLM 并不会亲自访问数据库或执行代码。它只能提出一个工具调用请求，真正的执行由 Agent Runtime 完成。</p>
 <h2 id="22">2.2 组件如何协同工作<a class="headerlink" href="#22" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    U[用户目标] --&gt; RT[Agent Runtime / Orchestrator]
-
-    subgraph Context[上下文与状态层]
-        ST[任务状态]
-        WM[工作记忆]
-        LM[长期记忆]
-        CB[Context Builder]
-        ST --&gt; CB
-        WM --&gt; CB
-        LM --&gt; CB
-    end
-
-    RT --&gt; CB
-    CB --&gt; MP[Model + Planner]
-    MP --&gt; DEC{下一步决策}
-
-    DEC --&gt;|回答| OUT[结果验收与输出]
-    DEC --&gt;|调用工具| PG[Policy / Permission Gate]
-    DEC --&gt;|委派任务| DG[委派权限与预算检查]
-    DG --&gt; A2A[其他 Agent]
-
-    PG --&gt; TR[Tool Registry / MCP Client]
-    TR --&gt; TS[Tool / MCP Server]
-    TS --&gt; ENV[搜索、文件、数据库、代码、API]
-    ENV --&gt; OBS[Observation]
-
-    A2A --&gt; OBS
-    OBS --&gt; RT
-    RT --&gt; ST
-    RT --&gt; WM
-    RT --&gt; LM
-
-    RT -.运行轨迹.-&gt; OT[Tracing / Evaluation / Audit]
-    OUT -.结果评估.-&gt; OT</code></pre>
+    RT[运行时] --&gt; CB[上下文构建器]
+    CB --&gt; MP[模型与规划器]
+    MP --&gt; DEC[下一步决策]
+    DEC --&gt;|执行或委派| OBS[观察结果]
+    OBS --&gt; RT</code></pre>
+<p>用户目标进入运行时。运行时更新任务状态、工作记忆和长期记忆，三者共同为上下文构建器提供输入。如果决策是回答，则进入结果验收与输出，而不是再执行一轮。</p>
+<p>图中的执行箭头包含两种不同的门控。工具调用先经过策略与权限检查，再经过 Tool Registry / MCP Client，最后到达工具 / MCP Server；搜索、文件、数据库、代码和 API 产生观察结果。委派则先检查权限与预算，再由其他 Agent 行动，其结果同样成为观察结果。运行时的执行轨迹和输出的结果评估共同进入追踪、评估与审计。</p>
 <p>一次典型执行包含以下步骤：</p>
 <ol>
 <li>Runtime 接收用户目标并初始化任务状态。</li>
@@ -9900,21 +9898,20 @@
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>应用程序随后执行以下流程：</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User
-    participant R as Runtime
-    participant M as Model
-    participant T as Tool
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
+    participant R as 运行时
+    participant M as 模型
+    participant T as 工具
 
-    U-&gt;&gt;R: 提交目标
-    R-&gt;&gt;M: 目标 + 上下文 + 工具定义
-    M--&gt;&gt;R: Tool Call
-    R-&gt;&gt;R: 校验参数与权限
-    R-&gt;&gt;T: 执行工具
-    T--&gt;&gt;R: Tool Result
-    R-&gt;&gt;M: 返回 Observation
-    M--&gt;&gt;R: 下一步动作或最终答案
-    R--&gt;&gt;U: 返回结果</code></pre>
+    R-&gt;&gt;M: 模型输入
+    M--&gt;&gt;R: 工具调用
+    R-&gt;&gt;R: 校验调用
+    R-&gt;&gt;T: 执行
+    T--&gt;&gt;R: 工具结果
+    R-&gt;&gt;M: 观察结果
+    M--&gt;&gt;R: 动作或答案</code></pre>
+<p>这段交互开始前，用户先向运行时提交目标。模型输入包含目标、上下文与工具定义；执行前的调用校验同时检查参数与权限。模型收到观察结果后，选择下一步动作或最终答案，运行时再向用户返回结果。</p>
 <h3 id="242">2.4.2 工具调用的安全边界<a class="headerlink" href="#242" title="Permanent link">&para;</a></h3>
 <p>并非所有工具调用都应该自动执行。生产系统通常按风险等级处理：</p>
 <table>
@@ -9960,13 +9957,14 @@
 <li><strong>Client</strong>：由 Host 创建和管理，维护与某个 MCP Server 的连接；</li>
 <li><strong>Server</strong>：向 Client 暴露 Tools、Resources 和 Prompts 等能力。</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    H[Host&lt;br/&gt;AI Application] --&gt; C1[MCP Client]
-    H --&gt; C2[MCP Client]
-    C1 &lt;--&gt; S1[MCP Server&lt;br/&gt;Files]
-    C2 &lt;--&gt; S2[MCP Server&lt;br/&gt;Database]
-    S1 --&gt; F[文件系统]
-    S2 --&gt; D[数据库]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host&lt;br/&gt;AI Application"] --&gt; C1["MCP Client"]
+    H --&gt; C2["MCP Client"]
+    C1 &lt;--&gt; S1["MCP Server&lt;br/&gt;Files"]
+    C2 &lt;--&gt; S2["MCP Server&lt;br/&gt;Database"]
+    S1 --&gt; F["文件系统"]
+    S2 --&gt; D["数据库"]</code></pre>
 <p>“MCP 是工具世界的 USB-C”是一个有用的类比，但需要补充两个边界：</p>
 <ol>
 <li>MCP Server 通常仍需安装、配置或由 Host 建立连接，并不是自动发现互联网上的所有工具。</li>
@@ -10076,20 +10074,43 @@
 <p>工具集越大、描述越相似，选择和参数生成可能越难，但不存在通用的“几十个工具就失效”阈值。RAG-MCP 的实验支持在其模型与工具集上先检索候选工具；落到业务还要同时测候选召回率、最终调用正确率与额外检索延迟。小而稳定的工具集可以直接全量提供。</p>
 <h3 id="283-write-select-compress-isolate">2.8.3 四类基本操作：Write / Select / Compress / Isolate<a class="headerlink" href="#283-write-select-compress-isolate" title="Permanent link">&para;</a></h3>
 <p>LangChain 的上下文工程文章用四类操作组织常见做法：</p>
+<p>写入上下文。</p>
 <pre class="mermaid"><code>flowchart TB
-    CE[Context Engineering] --&gt; W[Write 写出去]
-    CE --&gt; S[Select 选进来]
-    CE --&gt; C[Compress 压缩]
-    CE --&gt; I[Isolate 隔离]
-
-    W --&gt; W1[Scratchpad / 笔记文件]
-    W --&gt; W2[长期记忆]
-    S --&gt; S1[检索记忆与文档]
-    S --&gt; S2[按需加载工具]
-    C --&gt; C1[摘要 / Compaction]
-    C --&gt; C2[结果裁剪]
-    I --&gt; I1[Sub-Agent 独立上下文]
-    I --&gt; I2[沙箱中处理大对象]</code></pre>
+    CE[Context Engineering]
+    W[Write 写出去]
+    W1[Scratchpad / 笔记文件]
+    W2[长期记忆]
+    CE --&gt; W
+    W --&gt; W1
+    W --&gt; W2</code></pre>
+<p>选择上下文。</p>
+<pre class="mermaid"><code>flowchart TB
+    CE[Context Engineering]
+    S[Select 选进来]
+    S1[检索记忆与文档]
+    S2[按需加载工具]
+    CE --&gt; S
+    S --&gt; S1
+    S --&gt; S2</code></pre>
+<p>压缩上下文。</p>
+<pre class="mermaid"><code>flowchart TB
+    CE[Context Engineering]
+    C[Compress 压缩]
+    C1[摘要 / Compaction]
+    C2[结果裁剪]
+    CE --&gt; C
+    C --&gt; C1
+    C --&gt; C2</code></pre>
+<p>隔离上下文。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    I["Isolate 隔离"]
+    I1["Sub-Agent 独立上下文"]
+    I2["沙箱中处理大对象"]
+    CE --&gt; I
+    I --&gt; I1
+    I --&gt; I2</code></pre>
 <table>
 <thead>
 <tr>
@@ -10277,26 +10298,28 @@ Score(m,q)=
 <p>系统不应依赖模型向用户暴露完整的隐藏思维过程。更可靠的做法是要求模型输出结构化计划、引用证据、工具轨迹和可验证结论。</p>
 <h3 id="2102-tot">2.10.2 ToT：搜索多个候选路径<a class="headerlink" href="#2102-tot" title="Permanent link">&para;</a></h3>
 <p>ToT（Tree of Thoughts）在多个候选推理路径之间进行展开、评估和回溯：</p>
-<pre class="mermaid"><code>flowchart TB
-    S[当前状态] --&gt; A[候选路径 A]
-    S --&gt; B[候选路径 B]
-    S --&gt; C[候选路径 C]
-    A --&gt; EA[评估]
-    B --&gt; EB[评估]
-    C --&gt; EC[评估]
-    EA --&gt; BEST[选择或回溯]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["当前状态"] --&gt; A["候选路径 A"]
+    S --&gt; B["候选路径 B"]
+    S --&gt; C["候选路径 C"]
+    A --&gt; EA["评估"]
+    B --&gt; EB["评估"]
+    C --&gt; EC["评估"]
+    EA --&gt; BEST["选择或回溯"]
     EB --&gt; BEST
     EC --&gt; BEST</code></pre>
 <p>它适合搜索空间较大、存在多种方案的任务，但调用次数、延迟和成本通常高于线性推理。生产系统更常使用受预算约束的候选生成、评分和回退，而不是无限展开完整思维树。</p>
 <h2 id="211">2.11 两类基础执行模式<a class="headerlink" href="#211" title="Permanent link">&para;</a></h2>
 <h3 id="2111-plan-and-execute">2.11.1 Plan-and-Execute<a class="headerlink" href="#2111-plan-and-execute" title="Permanent link">&para;</a></h3>
 <p>Plan-and-Execute 先生成整体计划，再逐步执行：</p>
-<pre class="mermaid"><code>flowchart LR
-    G[目标] --&gt; P[生成完整计划]
-    P --&gt; S1[步骤 1]
-    S1 --&gt; S2[步骤 2]
-    S2 --&gt; S3[步骤 3]
-    S3 --&gt; R[结果]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["目标"] --&gt; P["生成完整计划"]
+    P --&gt; S1["步骤 1"]
+    S1 --&gt; S2["步骤 2"]
+    S2 --&gt; S3["步骤 3"]
+    S3 --&gt; R["结果"]</code></pre>
 <p>优点：</p>
 <ul>
 <li>全局结构清晰；</li>
@@ -10334,14 +10357,15 @@ Score(m,q)=
 <li>遇到失败或关键假设变化时重新规划；</li>
 <li>持续检查目标、预算和终止条件。</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    G[目标] --&gt; HP[高层计划]
-    HP --&gt; M1[里程碑 1]
-    HP --&gt; M2[里程碑 2]
-    HP --&gt; M3[里程碑 3]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["目标"] --&gt; HP["高层计划"]
+    HP --&gt; M1["里程碑 1"]
+    HP --&gt; M2["里程碑 2"]
+    HP --&gt; M3["里程碑 3"]
 
-    M1 --&gt; L1[局部 Reason-Act-Observe 循环]
-    L1 --&gt; C{里程碑完成?}
+    M1 --&gt; L1["局部 Reason-Act-Observe&lt;br/&gt;循环"]
+    L1 --&gt; C["里程碑完成?"]
     C --&gt;|否| L1
     C --&gt;|是| M2
     C --&gt;|假设失效| HP</code></pre>
@@ -10429,21 +10453,8 @@ Score(m,q)=
 </blockquote>
 <p>四组件模型解释了 Agent 的基本能力，而 Runtime、Guardrails 和 Observability 决定了这些能力能否安全、稳定地运行在真实环境中。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function calling（Chat Completions 与 Responses 的工具定义、strict 模式）</a></li>
-<li><a href="https://modelcontextprotocol.io/community/governance">MCP Governance and Stewardship</a></li>
-<li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework Overview</a></li>
-<li><a href="https://github.com/microsoft/autogen">AutoGen Maintenance Mode</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://research.trychroma.com/context-rot">Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance</a></li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-<li><a href="https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html">Drew Breunig: How Contexts Fail and How to Fix Them</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping agents for the real world with Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Anthropic: Code execution with MCP</a></li>
-<li><a href="https://blog.cloudflare.com/code-mode/">Cloudflare: Code Mode — the better way to use MCP</a></li>
-<li><a href="https://arxiv.org/abs/2505.03275">RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-02">集中参考资料章节</a>。</p>
 
 
 
@@ -10466,7 +10477,7 @@ Score(m,q)=
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

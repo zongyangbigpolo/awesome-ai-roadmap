@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention","description":"Separate attention costs in training, prefill, and decode, and compare MQA, GQA, and MLA cache structures with FlashAttention's IO optimizations.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/03-attention-variants/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/03-attention-variants/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention","description":"Separate attention costs in training, prefill, and decode, and compare MQA, GQA, and MLA cache structures with FlashAttention's IO optimizations.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/03-attention-variants/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/03-attention-variants/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: MHA Limitations, MQA, GQA, and FlashAttention","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/03-attention-variants/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9201,13 +9226,13 @@
 <h2 id="35-flashattention-changes-the-implementation"><span id="35-flashattention" class="legacy-heading-anchor" aria-hidden="true"></span>3.5 FlashAttention changes the implementation<a class="headerlink" href="#35-flashattention-changes-the-implementation" title="Permanent link">&para;</a></h2>
 <p>Naive attention first writes <code>S = QKᵀ</code> to GPU device memory, then reads it to compute <code>P = softmax(S)</code>, and finally computes <code>PV</code>. Reading and writing these intermediate matrices can be expensive.</p>
 <p>FlashAttention tiles Q/K/V, computes local scores in on-chip memory, and uses <strong>online softmax</strong> to combine statistics across tiles. This avoids materializing the full <code>N × N</code> matrix in device memory.</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Load a Q tile and a K/V tile"] --&gt; B["Compute local logits"]
-    B --&gt; C["Update row maxima, normalization sums, and weighted-value sums"]
-    C --&gt; D{"More K/V tiles?"}
-    D --&gt;|Yes| A
-    D --&gt;|No| E["Normalize to obtain the output"]
-    E --&gt; F["Recompute local probabilities in the backward pass using saved statistics"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Q tile + K/V tile"] --&gt; B["Local logits"]
+    B --&gt; C["Update row statistics"]
+    C --&gt;|Next K/V tile| A
+    C --&gt;|All tiles processed| E["Normalize output"]</code></pre>
+<p>For each Q tile, accumulate the row maxima, normalization sums, and weighted-value sums across all K/V tiles. In the backward pass, recompute local probabilities from the saved statistics rather than storing the full attention matrix.</p>
 <p>Why not normalize each tile's softmax independently and simply add the results? The denominator must span the entire row. Let the previous tiles have maximum <code>m</code> and exponential sum <code>l</code>, and the new tile have <code>m_b, l_b</code>:</p>
 <div class="arithmatex">\[
 m'=\max(m,m_b),\qquad
@@ -9291,20 +9316,8 @@ l'=e^{m-m'}l+e^{m_b-m'}l_b
 </table>
 <p>In an interview, distinguish changes to connections, cached representations, and operator implementations. This makes it possible to explain where quality losses might originate and which optimizations can be combined.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1911.02150">Fast Transformer Decoding: One Write-Head is All You Need (MQA)</a></li>
-<li><a href="https://arxiv.org/abs/2305.13245">GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints</a></li>
-<li><a href="https://arxiv.org/abs/2307.09288">Llama 2</a></li>
-<li><a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a></li>
-<li><a href="https://github.com/deepseek-ai/DeepSeek-V2">DeepSeek-V2 paper and official implementation</a></li>
-<li><a href="https://arxiv.org/abs/2205.14135">FlashAttention</a></li>
-<li><a href="https://github.com/Dao-AILab/flash-attention/blob/1f7ce2f7cb503473559f3d44d575ae05b1ed8557/README.md">FlashAttention official repository and version requirements (README snapshot, 2026-07-06)</a></li>
-<li><a href="https://arxiv.org/abs/1805.02867">Online normalizer calculation for softmax</a></li>
-<li><a href="https://arxiv.org/abs/2310.06825">Mistral 7B</a></li>
-<li><a href="https://arxiv.org/abs/2006.04768">Linformer</a></li>
-<li><a href="https://arxiv.org/abs/2009.14794">Rethinking Attention with Performers</a></li>
-<li><a href="https://arxiv.org/abs/2312.00752">Mamba: Linear-Time Sequence Modeling with Selective State Spaces</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9327,7 +9340,7 @@ l'=e^{m-m'}l+e^{m_b-m'}l_b
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

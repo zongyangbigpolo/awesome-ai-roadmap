@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Semantic Kernel's Process Framework and Agent Framework","description":"Distinguishes SK Process, SK Agent Orchestration, and the standalone Microsoft Agent Framework, covering release status, API migration, and persistence boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/19-process-and-agent-framework/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Semantic Kernel's Process Framework and Agent Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/19-process-and-agent-framework/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 19: Semantic Kernel's Process Framework and Agent Framework","description":"Distinguishes SK Process, SK Agent Orchestration, and the standalone Microsoft Agent Framework, covering release status, API migration, and persistence boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/19-process-and-agent-framework/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 19: Semantic Kernel's Process Framework and Agent Framework","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/19-process-and-agent-framework/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 19: Semantic Kernel's Process Framework and Agent Framework","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/04-semantic-kernel/19-process-and-agent-framework/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9157,13 +9182,22 @@
 <li><strong>SK Agent Framework / Agent Orchestration</strong>: The agent abstractions and collaboration layer within SK packages. Agents are not only for multi-agent systems. The Agent Orchestration overview still marks it as experimental, but that label must not be extended to mean that every SK API is experimental.</li>
 <li><strong>Microsoft Agent Framework (MAF)</strong>: A standalone successor SDK incorporating lessons from SK and AutoGen. The official repository describes 1.0 as production-ready. The core release status does not imply equal stability for every provider, Workflow extension, or language SDK; check individual packages. The current overview explicitly identifies the Go SDK as public preview.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    C["Sources of process complexity"] --&gt; B1["Business process has stages and state transitions"]
-    C --&gt; B2["Multiple specialist agents must collaborate"]
-    B1 --&gt; PF["SK Process&lt;br/&gt;Experimental Step / Event"]
-    B2 --&gt; AF["SK Agent Orchestration&lt;br/&gt;Experimental collaboration layer"]
-    PF -.Check capabilities before migrating.-&gt; MAF["Standalone Microsoft Agent Framework&lt;br/&gt;Agents / Workflows / Session"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["Sources of&lt;br/&gt;process&lt;br/&gt;complexity"] --&gt; B1["Process stages"]
+    C --&gt; B2["Agent&lt;br/&gt;collaboration"]
+    B1 --&gt; PF["SK Process"]
+    B2 --&gt; AF["SK Agent&lt;br/&gt;Orchestration"]
+    PF -.Check capabilities before migrating.-&gt; MAF["Standalone&lt;br/&gt;Microsoft Agent&lt;br/&gt;Framework"]
     AF -.Migration guide.-&gt; MAF</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Business process has stages and state transitions</li>
+<li>Multiple specialist agents must collaborate</li>
+<li>SK Process Experimental Step / Event</li>
+<li>SK Agent Orchestration Experimental collaboration layer</li>
+<li>Standalone Microsoft Agent Framework Agents / Workflows / Session</li>
+</ul>
 <h2 id="192-process-framework-an-explicit-state-machine-for-business-processes"><span id="192-process-framework" class="legacy-heading-anchor" aria-hidden="true"></span>19.2 Process Framework: an explicit state machine for business processes<a class="headerlink" href="#192-process-framework-an-explicit-state-machine-for-business-processes" title="Permanent link">&para;</a></h2>
 <p>Process Framework models a business process as <strong>Steps + Events</strong>. Each Step is an independent processing unit, which may contain AI calls or ordinary business code. Steps connect by emitting and listening for events:</p>
 <div class="language-csharp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">ProcessBuilder</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">"SupportTicketProcess"</span><span class="p">);</span>
@@ -9287,18 +9321,8 @@
 </ol>
 <p>Understanding SK abstractions remains valuable when maintaining older projects. For a new selection, evaluate MAF alongside actual business constraints rather than relying on historical product categories.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework">Semantic Kernel: Process Framework</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/">Semantic Kernel: Agent Framework overview</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/">Semantic Kernel: Agent Orchestration</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/group-chat">Semantic Kernel: Complete Group Chat runtime example</a></li>
-<li><a href="https://github.com/microsoft/semantic-kernel/blob/ca40aa7226531d28a721d0ca0e451d0aaf86dafc/README.md">Semantic Kernel official repository's MAF 1.0 statement, pinned commit</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework overview</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/">SK → MAF migration guide</a></li>
-<li><a href="https://devblogs.microsoft.com/agent-framework/semantic-kernel-and-microsoft-agent-framework/">Microsoft: Semantic Kernel and MAF support transition announcement</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph official documentation</a></li>
-</ul>
-<p>Version note: MAF 1.0, the Go public preview, the experimental labels for SK Process/Orchestration, and the transition announcement were checked on 2026-09-15. The transition announcement retains its original description of MAF as still in Preview; it must not override the later 1.0 release statement or be used to infer an exact SK EOL date.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-19">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9321,7 +9345,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

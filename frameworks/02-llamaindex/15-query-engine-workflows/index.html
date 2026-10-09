@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: LlamaIndex Query Engines and Workflow Orchestration","description":"Examines LlamaIndex query routing, Workflow Events and shared Context, concurrent joins, and crash recovery to separate retrieval from orchestration responsibilities.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/15-query-engine-workflows/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: LlamaIndex Query Engines and Workflow Orchestration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/15-query-engine-workflows/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: LlamaIndex Query Engines and Workflow Orchestration","description":"Examines LlamaIndex query routing, Workflow Events and shared Context, concurrent joins, and crash recovery to separate retrieval from orchestration responsibilities.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/15-query-engine-workflows/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: LlamaIndex Query Engines and Workflow Orchestration","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/15-query-engine-workflows/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 15: LlamaIndex Query Engines and Workflow Orchestration","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/02-llamaindex/15-query-engine-workflows/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9156,14 +9181,29 @@
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">response</span> <span class="o">=</span> <span class="n">query_engine</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"公司差旅报销的额度上限是多少？"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>When a system has multiple indexes—for example, a <code>VectorStoreIndex</code> for the employee handbook and a <code>PropertyGraphIndex</code> for financial policies—<code>RouterQueryEngine</code> uses a selector to choose one or more Query Engines. Selecting multiple engines also requires combining their results. The diagram shows the single-selection path:</p>
-<pre class="mermaid"><code>flowchart TB
-    Q["User question"] --&gt; R["RouterQueryEngine&lt;br/&gt;Use an LLM to identify the question type"]
-    R --&gt;|"Semantic similarity question"| V["VectorStoreIndex Query Engine"]
-    R --&gt;|"Multi-hop relationship question"| P["PropertyGraphIndex Query Engine"]
-    R --&gt;|"Requires full-text coverage"| S["SummaryIndex Query Engine"]
-    V --&gt; A["Answer + source nodes&lt;br/&gt;Citation accuracy requires validation"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q["User question"] --&gt; R["RouterQueryEngine"]
+    R --&gt;|"Similarity"| V["Vector query"]
+    R --&gt;|"Relationships"| P["Graph query"]
+    R --&gt;|"Full coverage"| S["Summary query"]
+    V --&gt; A["Answer + source nodes"]
     P --&gt; A
     S --&gt; A</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Semantic similarity question</li>
+<li>Multi-hop relationship question</li>
+<li>Requires full-text coverage</li>
+<li>VectorStoreIndex Query Engine</li>
+<li>PropertyGraphIndex Query Engine</li>
+<li>SummaryIndex Query Engine</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>RouterQueryEngine Use an LLM to identify the question type</li>
+<li>Answer + source nodes Citation accuracy requires validation</li>
+</ul>
 <p>The commonly documented LLM/Pydantic selectors add model-based routing overhead; synthesizing answers after multiple selections may add further calls. <code>description</code> matters, but routing quality also depends on the model, the candidate set, the question distribution, and the multiple-selection strategy. Having source nodes does not mean every claim in the answer has an accurate citation. Citation quality needs its own evaluation.</p>
 <h2 id="152-workflows-an-event-driven-orchestration-model"><span id="152-workflows" class="legacy-heading-anchor" aria-hidden="true"></span>15.2 Workflows: an event-driven orchestration model<a class="headerlink" href="#152-workflows-an-event-driven-orchestration-model" title="Permanent link">&para;</a></h2>
 <p>When a question can no longer be answered with a single index query, but instead requires multiple steps, possibly including reflection and retries, LlamaIndex uses <strong>Workflows</strong> to handle that complexity. Two abstractions are central:</p>
@@ -9239,13 +9279,16 @@
 <li><strong>LlamaIndex as a data tool</strong>: Expose <code>query_engine.query()</code> / <code>aquery()</code> and give top-level orchestration to an external agent framework. This suits projects whose data layer can be encapsulated independently or that already have an orchestration or approval system. The external orchestration need not itself be lightweight.</li>
 <li><strong>LlamaIndex Workflows as the runtime</strong>: Orchestrate the entire multi-step process—retrieval → reflection → retry → generation—inside Workflows, with the external framework making a single <code>workflow.run()</code> call at the entry point. This suits projects with substantial data processing and orchestration that want to reduce cross-framework state synchronization.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    subgraph A["LlamaIndex as a tool"]
-        A1["External agent / workflow"] --&gt;|"One call"| A2["LlamaIndex Query Engine"]
-    end
-    subgraph B["LlamaIndex Workflows as the runtime"]
-        B1["External system"] --&gt;|"One trigger"| B2["Multi-step loop inside Workflows"]
-    end</code></pre>
+<p><strong>LlamaIndex as a tool</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        A1["External agent&lt;br/&gt;/ workflow"] --&gt;|"One call"| A2["LlamaIndex&lt;br/&gt;Query Engine"]
+</code></pre>
+<p><strong>LlamaIndex Workflows as the runtime</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        B1["External system"] --&gt;|"One trigger"| B2["Multi-step loop&lt;br/&gt;inside&lt;br/&gt;Workflows"]
+</code></pre>
 <p>The key is who owns intermediate state. If intermediate results—retrieved nodes, reflection feedback, and retry counts—must be shared with an external agent's memory or approval process, the first arrangement lets the external framework retain control. If this state matters only within data processing and the caller wants only the final answer, the second arrangement reduces cross-framework serialization costs. This is also the principle of "state ownership before tool choice" in <a href="../../06-selection-portability/">Framework Selection and Portable Architectures</a>.</p>
 <h2 id="155-common-mistakes"><span id="155" class="legacy-heading-anchor" aria-hidden="true"></span>15.5 Common mistakes<a class="headerlink" href="#155-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="1551-configuring-routerqueryengine-with-a-vague-description"><span id="1551-routerqueryengine" class="legacy-heading-anchor" aria-hidden="true"></span>15.5.1 Configuring <code>RouterQueryEngine</code> with a vague description<a class="headerlink" href="#1551-configuring-routerqueryengine-with-a-vague-description" title="Permanent link">&para;</a></h3>
@@ -9269,16 +9312,8 @@
 </ol>
 <p>LlamaIndex's orchestration layer continues its data-centered design: Query Engines organize answers for individual queries, while Workflows connects multi-step processes. Neither requires developers to draw a complete state graph in advance, but complex flows still require explicit upkeep of their implicit event dependencies.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/">LlamaIndex: Query Engine concepts</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/querying/router/">LlamaIndex: Routers and selectors</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/">LlamaIndex: Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/managing_state/">LlamaIndex: Shared state in Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/">LlamaIndex: Durable Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/deployment/">LlamaIndex: WorkflowServer deployment</a></li>
-<li><a href="https://github.com/run-llama/llama_index/blob/main/llama-index-core/llama_index/core/response_synthesizers/base.py">LlamaIndex: BaseSynthesizer query / nodes interface</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph official documentation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-15">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9301,7 +9336,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

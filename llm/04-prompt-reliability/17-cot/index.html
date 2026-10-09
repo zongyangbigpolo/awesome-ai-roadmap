@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: Chain of Thought","description":"Explain how CoT intermediate steps affect generation, how self-consistency aggregates answers, and where reasoning text reaches its limits in faithfulness, verification, and computational cost.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: Chain of Thought","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: Chain of Thought","description":"Explain how CoT intermediate steps affect generation, how self-consistency aggregates answers, and where reasoning text reaches its limits in faithfulness, verification, and computational cost.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: Chain of Thought","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 17: Chain of Thought","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/17-cot/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9577,33 +9602,23 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 <p>For models already trained to reason, start with clear tasks and constraints, then test reasoning budgets. OpenAI's guidance for reasoning models explicitly says that asking them to “think step by step” may be unnecessary or even detrimental. Early prompting techniques should not become defaults for every model.</p>
 <h2 id="174-why-cot-can-work"><span id="174-cot" class="legacy-heading-anchor" aria-hidden="true"></span>17.4 Why CoT can work<a class="headerlink" href="#174-why-cot-can-work" title="Permanent link">&para;</a></h2>
 <p>Intermediate steps provide an explicit workspace in which the model can reuse learned decomposition patterns through additional sequential computation. Benefits depend on the fit between the task and those computational patterns. External verification can use the steps, but it is not a built-in capability of CoT. The diagram separates these effects:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① Checkable intermediate results&lt;br/&gt;Support external tools or human review&lt;br/&gt;Do not imply automatic self-correction"]
-    B["② A scratchpad&lt;br/&gt;Complex intermediate state&lt;br/&gt;need not stay entirely hidden&lt;br/&gt;Explicit output reduces&lt;br/&gt;the reasoning burden"]
-    C["③ Reuse learned decomposition patterns&lt;br/&gt;Depends on training data, model capability,&lt;br/&gt;and task fit"]
-    A --&gt; R["May improve task accuracy&lt;br/&gt;Requires controlled evaluation"]
-    B --&gt; R
-    C --&gt; R
-
-    style R fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Explicit intermediate steps"] --&gt; R["Potential accuracy gain"]
+    R --&gt; E["Controlled evaluation"]</code></pre>
+<p>Three mechanisms can contribute: intermediate results allow external tools or humans to check the work, without implying automatic self-correction; a scratchpad externalizes complex state instead of keeping it entirely hidden; and learned decomposition patterns can be reused. The last mechanism depends on training data, model capability, and task fit. These are possible benefits, not a guarantee of better accuracy.</p>
 <h2 id="175-self-consistency-aggregating-answers-across-paths"><span id="175-self-consistency" class="legacy-heading-anchor" aria-hidden="true"></span>17.5 Self-consistency: aggregating answers across paths<a class="headerlink" href="#175-self-consistency-aggregating-answers-across-paths" title="Permanent link">&para;</a></h2>
 <p><strong>Method</strong>: stochastically sample several reasoning paths for the same question, normalize their final answers, and select the most frequent answer. Sufficient path diversity is important, but higher temperature is not always better. Strictly speaking, the method takes the mode; the winning answer need not receive more than half the votes.</p>
 <h3 id="1751-the-intuition"><span id="1751" class="legacy-heading-anchor" aria-hidden="true"></span>17.5.1 The intuition<a class="headerlink" href="#1751-the-intuition" title="Permanent link">&para;</a></h3>
 <p>Aggregation may help when several paths lead to the correct answer while errors are dispersed. However, samples from the same model share knowledge and biases. They can all misunderstand the question and repeatedly produce the same wrong answer. Agreement is a signal, not proof of truth.</p>
-<pre class="mermaid"><code>flowchart LR
-    Q["Question"] --&gt; P1["Reasoning path 1 → Answer A"]
-    Q --&gt; P2["Reasoning path 2 → Answer A"]
-    Q --&gt; P3["Reasoning path 3 → Answer B"]
-    Q --&gt; P4["Reasoning path 4 → Answer A"]
-    Q --&gt; P5["Reasoning path 5 → Answer C"]
-    P1 --&gt; V["Normalize answers&lt;br/&gt;and take the mode"]
-    P2 --&gt; V
-    P3 --&gt; V
-    P4 --&gt; V
-    P5 --&gt; V
-    V --&gt; O["Return A: 3 votes"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q["Question"] --&gt; P["Sample five reasoning paths"]
+    P --&gt; V["Normalize answers; take mode"]
+    V --&gt; O["A wins: 3 votes"]
 
     style O fill:#e6f4ea</code></pre>
+<p>The paths are alternative samples, not sequential steps. Paths 1, 2, and 4 produce A, path 3 produces B, and path 5 produces C; the normalized answers are therefore A, A, B, A, C.</p>
 <h3 id="1752-benefits-and-costs"><span id="1752" class="legacy-heading-anchor" aria-hidden="true"></span>17.5.2 Benefits and costs<a class="headerlink" href="#1752-benefits-and-costs" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9729,21 +9744,8 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
 <p>CoT does not create knowledge from nothing. Its value is in laying out intermediate reasoning so that later steps can use earlier results and people have an opportunity to check each step.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.11916">Large Language Models are Zero-Shot Reasoners (Let's think step by step)</a></li>
-<li><a href="https://arxiv.org/abs/2203.11171">Self-Consistency Improves Chain of Thought Reasoning in Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2205.10625">Least-to-Most Prompting Enables Complex Reasoning in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.10601">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2212.10001">Towards Understanding Chain-of-Thought Prompting: An Empirical Study of What Matters</a></li>
-<li><a href="https://arxiv.org/abs/2307.13702">Measuring Faithfulness in Chain-of-Thought Reasoning</a></li>
-<li><a href="https://arxiv.org/abs/2501.19393">s1: Simple test-time scaling</a></li>
-<li><a href="https://arxiv.org/abs/2412.21187">Do NOT Think That Much for 2+3=? On the Overthinking of o1-Like LLMs</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning-best-practices">OpenAI: Reasoning best practices</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning models</a></li>
-<li><a href="https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/thinking_config_enabled_param.py">Anthropic Python SDK: manual thinking configuration</a></li>
-<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-extended-thinking.html">Amazon Bedrock: Extended thinking</a> (covers Bedrock's manual-budget rules, the interleaved-thinking exception, and model differences; it does not imply identical behavior across every Claude access path)</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-17">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9766,7 +9768,7 @@ p(a\mid x)=\sum_r p(r\mid x)p(a\mid x,r)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

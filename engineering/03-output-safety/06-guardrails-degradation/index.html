@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Guardrails and Graceful Degradation","description":"Separate probabilistic content guardrails from deterministic authorization, choose degraded-service responses by the reason for a block, and evaluate false positives, false negatives, and streaming risks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/03-output-safety/06-guardrails-degradation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Guardrails and Graceful Degradation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/03-output-safety/06-guardrails-degradation/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Guardrails and Graceful Degradation","description":"Separate probabilistic content guardrails from deterministic authorization, choose degraded-service responses by the reason for a block, and evaluate false positives, false negatives, and streaming risks.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/03-output-safety/06-guardrails-degradation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Guardrails and Graceful Degradation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/03-output-safety/06-guardrails-degradation/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Guardrails and Graceful Degradation","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/03-output-safety/06-guardrails-degradation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9152,18 +9177,24 @@
 <h1 id="chapter-6-guardrails-and-graceful-degradation"><span id="guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 6: Guardrails and Graceful Degradation<a class="headerlink" href="#chapter-6-guardrails-and-graceful-degradation" title="Permanent link">&para;</a></h1>
 <h2 id="61-guardrails-address-what-contract-validation-cannot"><span id="61-guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>6.1 Guardrails address what contract validation cannot<a class="headerlink" href="#61-guardrails-address-what-contract-validation-cannot" title="Permanent link">&para;</a></h2>
 <p>Contract validation in <a href="../05-structured-output-contracts/">Chapter 5</a> asks whether the output has the right format. Guardrails ask something different: <strong>is the content safe, and is it within what the business permits?</strong> Even text that fully conforms to a JSON Schema can disclose private information, include instructions for unauthorized actions, or simply go off topic.</p>
-<pre class="mermaid"><code>flowchart TB
-    IN["User input"] --&gt; INGUARD["Input guardrails:&lt;br/&gt;Prompt-injection detection · Unauthorized-request detection"]
-    INGUARD --&gt;|Block| REJECT1["Refuse / Human review"]
-    INGUARD --&gt;|Pass| MODEL["Model generation"]
-    MODEL --&gt; OUTGUARD["Output guardrails:&lt;br/&gt;PII filtering · Content safety · Factual checks"]
-    OUTGUARD --&gt;|Block| DEGRADE["Degraded-service path"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    IN["User input"] --&gt; INGUARD["Input&lt;br/&gt;guardrails:"]
+    INGUARD --&gt;|Block| REJECT1["Refuse / Human&lt;br/&gt;review"]
+    INGUARD --&gt;|Pass| MODEL["Model&lt;br/&gt;generation"]
+    MODEL --&gt; OUTGUARD["Output&lt;br/&gt;guardrails:"]
+    OUTGUARD --&gt;|Block| DEGRADE["Degraded-service&lt;br/&gt;path"]
     OUTGUARD --&gt;|Pass| RESP["Return to user"]
     DEGRADE --&gt; RESP
 
     style INGUARD fill:#e8f0fe
     style OUTGUARD fill:#e8f0fe
     style DEGRADE fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Input guardrails: Prompt-injection detection · Unauthorized-request detection</li>
+<li>Output guardrails: PII filtering · Content safety · Factual checks</li>
+</ul>
 <h2 id="62-input-guardrails-intercept-risks-before-the-model-sees-them"><span id="62" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 Input guardrails: intercept risks before the model sees them<a class="headerlink" href="#62-input-guardrails-intercept-risks-before-the-model-sees-them" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9232,14 +9263,23 @@
 <p>Once streamed output has been sent, it cannot be taken back. Reviewing chunks adds latency and may miss information that becomes sensitive only when chunks are combined. Highly sensitive answers should be buffered in full, or released using an evaluated chunk-review policy. Do not send the original text first and label it “blocked” afterward.</p>
 <h2 id="64-graceful-degradation-offers-graduated-options-not-just-an-error"><span id="64" class="legacy-heading-anchor" aria-hidden="true"></span>6.4 Graceful degradation offers graduated options, not just an error<a class="headerlink" href="#64-graceful-degradation-offers-graduated-options-not-just-an-error" title="Permanent link">&para;</a></h2>
 <p>A guardrail block is not necessarily a service failure, and need not start with a 500 response. Depending on the cause, choose a limited retry, a narrower task, a valid cached result, or an explicit refusal or human review. The levels below are options, not a mandatory sequence. Being able to return some text does not mean the original task was completed.</p>
-<pre class="mermaid"><code>flowchart TB
-    CAUSE{"Choose by the reason for the block and the risk"} --&gt; L1["Lv1: Limited retries for permitted tasks&lt;br/&gt;Keep the same policy"]
-    CAUSE --&gt; L2["Lv2: Narrow the task to an authorized scope"]
-    CAUSE --&gt; L3["Lv3: Return a cache entry checked for permission and freshness"]
-    CAUSE --&gt; L4["Lv4: Explicit refusal, template response, or human review"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    CAUSE["Choose safe response"] --&gt; L1["Lv1: Bounded retry"]
+    CAUSE --&gt; L2["Lv2: Narrow scope"]
+    CAUSE --&gt; L3["Lv3: Validated cache"]
+    CAUSE --&gt; L4["Lv4: Refuse / review"]
 
     style L1 fill:#e6f4ea
     style L4 fill:#fce8e6</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Choose by the reason for the block and the risk</li>
+<li>Lv1: Limited retries for permitted tasks Keep the same policy</li>
+<li>Lv2: Narrow the task to an authorized scope</li>
+<li>Lv3: Return a cache entry checked for permission and freshness</li>
+<li>Lv4: Explicit refusal, template response, or human review</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9315,13 +9355,8 @@
 <li><strong>Guardrails need continuous evaluation:</strong> monitor false-positive and false-negative rates, and use red-team test sets to assess effectiveness.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/moderation">OpenAI: Moderation API</a></li>
-<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a></li>
-<li><a href="https://www.anthropic.com/news/expanding-our-model-safety-bug-bounty-program">Anthropic: Guardrails against misuse</a></li>
-<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a></li>
-<li><a href="https://ai.google/responsibility/responsible-ai-practices/">Google Cloud: Responsible AI practices</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9344,7 +9379,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

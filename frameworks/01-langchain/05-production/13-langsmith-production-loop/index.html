@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Building a Production Quality Feedback Loop with LangSmith","description":"Turn redacted traces into versioned datasets and evaluation experiments, with repeated runs, dataset splits, risk auditing, and production sampling.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/13-langsmith-production-loop/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Building a Production Quality Feedback Loop with LangSmith","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/13-langsmith-production-loop/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Building a Production Quality Feedback Loop with LangSmith","description":"Turn redacted traces into versioned datasets and evaluation experiments, with repeated runs, dataset splits, risk auditing, and production sampling.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/13-langsmith-production-loop/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Building a Production Quality Feedback Loop with LangSmith","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/13-langsmith-production-loop/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 13: Building a Production Quality Feedback Loop with LangSmith","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/05-production/13-langsmith-production-loop/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9223,18 +9248,26 @@
 <blockquote>
 <p>A production feedback loop typically follows “trace redaction → root-cause analysis and labeling → dataset → offline experiment → release gate → production evaluation and feedback → regression tests from failed traces,” rather than responding to every failure with a prompt edit.</p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    A["Production traces&lt;br/&gt;Redact and minimize first"] --&gt; B["Select failures, feedback, and samples"]
-    B --&gt; C["Label and add to a dataset"]
-    C --&gt; D["Offline experiments&lt;br/&gt;Compare versions"]
-    D --&gt; E{"Release gate"}
-    E --&gt;|Pass| F["Limited-traffic rollout + online evaluation"]
-    E --&gt;|Fail| G["Fix the agent, tools, or policies"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Production&lt;br/&gt;traces"] --&gt; B["Select examples"]
+    B --&gt; C["Label and add&lt;br/&gt;to a dataset"]
+    C --&gt; D["Offline&lt;br/&gt;experiments"]
+    D --&gt; E["Release gate"]
+    E --&gt;|Pass| F["Roll out and&lt;br/&gt;evaluate"]
+    E --&gt;|Fail| G["Fix the agent,&lt;br/&gt;tools, or&lt;br/&gt;policies"]
     F --&gt; B
     G --&gt; D
 
     style E fill:#fff3cd
     style F fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Production traces Redact and minimize first</li>
+<li>Select failures, feedback, and samples</li>
+<li>Offline experiments Compare versions</li>
+<li>Limited-traffic rollout + online evaluation</li>
+</ul>
 <h2 id="132-define-trace-data-boundaries-first"><span id="132-trace" class="legacy-heading-anchor" aria-hidden="true"></span>13.2 Define trace data boundaries first<a class="headerlink" href="#132-define-trace-data-boundaries-first" title="Permanent link">&para;</a></h2>
 <p>Observability does not mean collecting everything. Minimize inputs, outputs, metadata, and attachments before sending a trace; hiding a field in the console does not mean it was never collected.</p>
 <table>
@@ -9420,12 +9453,17 @@
 <p>Targeted sampling gives scores for the selected population, not the site-wide failure rate. Retain a separate random sample to estimate overall trends, or record inclusion probabilities and apply appropriate weighting. Online judges generally score after execution and cannot replace authorization checks before an action. Nor does creating an experiment automatically make LangSmith block a release: the release gate must be wired into the actual CI/CD decision path.</p>
 <h2 id="136-how-feedback-returns-to-the-loop"><span id="136" class="legacy-heading-anchor" aria-hidden="true"></span>13.6 How feedback returns to the loop<a class="headerlink" href="#136-how-feedback-returns-to-the-loop" title="Permanent link">&para;</a></h2>
 <p>Collect thumbs-up/down feedback, corrected answers, reasons for human takeover, and reasons for denied approval in the product. Link feedback to the trace ID, version, and user-visible output. Redact, deduplicate, check for abuse, and triage feedback manually before deciding whether it belongs in a dataset.</p>
-<pre class="mermaid"><code>flowchart TB
-    U["User/reviewer feedback"] --&gt; T["Link trace ID and version"]
-    T --&gt; R["Redact, deduplicate, and triage by root cause"]
-    R --&gt; D["Add to a dataset slice"]
-    D --&gt; X["Offline experiments and release gate"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["User/reviewer&lt;br/&gt;feedback"] --&gt; T["Link trace ID&lt;br/&gt;and version"]
+    T --&gt; R["Prepare&lt;br/&gt;feedback"]
+    R --&gt; D["Add to a&lt;br/&gt;dataset slice"]
+    D --&gt; X["Offline&lt;br/&gt;experiments and&lt;br/&gt;release gate"]
     X --&gt; P["Gradual rollout"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Redact, deduplicate, and triage by root cause</li>
+</ul>
 <blockquote>
 <p>A single thumbs-up is not proof of quality, and user text must not directly rewrite the system prompt or authorization policy. Feedback is input to evaluation and improvement; it still needs deterministic safety controls and human review.</p>
 </blockquote>
@@ -9453,15 +9491,8 @@
 <p>LangSmith's role here is to continually turn redacted production evidence into datasets, offline experiments, release gates, and production monitoring, so that each real failure can become a regression check before the next release.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/langsmith/observability">LangSmith Observability</a></li>
-<li><a href="https://docs.langchain.com/langsmith/evaluation">LangSmith Evaluation</a></li>
-<li><a href="https://docs.langchain.com/langsmith/manage-datasets">LangSmith dataset management</a></li>
-<li><a href="https://docs.langchain.com/langsmith/online-evaluations-llm-as-judge">LangSmith Online evaluation</a></li>
-<li><a href="https://docs.langchain.com/langsmith/attach-user-feedback">LangSmith user feedback</a></li>
-<li><a href="https://docs.langchain.com/langsmith/mask-inputs-outputs">LangSmith: hide and transform sensitive data before transmission</a></li>
-<li><a href="https://docs.langchain.com/langsmith/experiment-configuration">LangSmith experiment repetitions, concurrency, and caching</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-13">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9484,7 +9515,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

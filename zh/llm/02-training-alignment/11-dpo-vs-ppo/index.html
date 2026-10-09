@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：DPO vs PPO 深度对比","description":"从 KL 正则化目标推导 DPO 偏好损失，对比 PPO 的在线采样、优势估计和 clipping，并澄清参考策略、资源与泛化差异。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/11-dpo-vs-ppo/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：DPO vs PPO 深度对比","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/11-dpo-vs-ppo/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十一章：DPO vs PPO 深度对比","description":"从 KL 正则化目标推导 DPO 偏好损失，对比 PPO 的在线采样、优势估计和 clipping，并澄清参考策略、资源与泛化差异。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/11-dpo-vs-ppo/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十一章：DPO vs PPO 深度对比","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/11-dpo-vs-ppo/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十一章：DPO vs PPO 深度对比","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/02-training-alignment/11-dpo-vs-ppo/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9401,7 +9426,8 @@ J_{\mathrm{clip}}(\theta)=
 \]</div>
 <p>这里按 <code>t = 0,…,T−1</code> 编号，终止状态通常取 <code>V(sT) = 0</code>。<code>γ</code> 为折扣系数，<code>λ</code> 控制优势估计的偏差—方差取舍；截断但未终止的样本如何 bootstrap 需要按实现处理。</p>
 <p>所以“优势永远等于最终奖励减 V”只是一步任务的简化直觉，不能代替一般 token 级公式。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     P["采样旧策略"] --&gt; DATA["回答与旧 log probabilities"]
     DATA --&gt; R["RM 与 KL 奖励"]
     R --&gt; V["价值估计与优势"]
@@ -9531,9 +9557,13 @@ r(x,y)=
 \bar r=\frac{1}{G}\sum_{j=1}^{G}r_j
 \]</div>
 <p>这里的 <code>ε</code> 是数值保护。结果监督版本把同一优势赋给回答中的 token，再结合截断概率比与 KL。全组奖励相同则任务优势为零；组内归一化也可能引入难度加权和噪声敏感问题。</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ONLINE["在线采样与奖励优化"] --&gt; PPO["PPO&lt;br/&gt;学习价值基线"]
-    ONLINE --&gt; GRPO["GRPO&lt;br/&gt;组内相对基线"]
+    ONLINE --&gt; GRPO["GRPO&lt;br/&gt;组内相对基线"]</code></pre>
+<p>离线偏好优化的内部循环不同：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     OFFLINE["固定偏好对"] --&gt; DPO["离线 DPO&lt;br/&gt;直接偏好损失"]
     DPO -.-&gt;|可外接采样与标注循环| OFFLINE</code></pre>
 <p>可验证任务可以用规则奖励，省掉学习 RM，但这一点<strong>不是 GRPO 独有</strong>。R1-Zero 的初版报告使用准确性与格式奖励，并复用了预训练基座，不能称为“只用 0/1 从零学会推理”。</p>
@@ -9557,17 +9587,8 @@ r(x,y)=
 <h2 id="118">11.8 本章总结<a class="headerlink" href="#118" title="Permanent link">&para;</a></h2>
 <p>PPO-RLHF 用在线奖励、优势估计和截断策略更新；DPO 通过特定偏好模型下的奖励重参数化，直接训练偏好对。二者的关键区别是<strong>新反馈如何获得、参考约束如何进入目标，以及为此承担什么系统成本</strong>，而不是谁拥有固定更高的能力上限。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization Algorithms</a></li>
-<li><a href="https://spinningup.openai.com/en/latest/algorithms/ppo.html">OpenAI Spinning Up：PPO-Clip 公式与约束边界</a></li>
-<li><a href="https://arxiv.org/abs/2203.02155">InstructGPT</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO：§4 与附录 A 推导</a></li>
-<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath：GRPO</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1，初版</a></li>
-<li><a href="https://arxiv.org/html/2307.09288v2">Llama 2</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models</a></li>
-<li><a href="https://arxiv.org/abs/1506.02438">High-Dimensional Continuous Control Using Generalized Advantage Estimation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-11">集中参考资料章节</a>。</p>
 
 
 
@@ -9590,7 +9611,7 @@ r(x,y)=
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

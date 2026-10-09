@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: When Chunking Breaks the Meaning","description":"Compares how sentence windows, parent-child chunks, propositions, Contextual Retrieval, and Late Chunking restore context, including citation, authorization, and update costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/05-semantic-truncation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: When Chunking Breaks the Meaning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/05-semantic-truncation/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: When Chunking Breaks the Meaning","description":"Compares how sentence windows, parent-child chunks, propositions, Contextual Retrieval, and Late Chunking restore context, including citation, authorization, and update costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/05-semantic-truncation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: When Chunking Breaks the Meaning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/05-semantic-truncation/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 5: When Chunking Breaks the Meaning","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/05-semantic-truncation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9342,19 +9367,11 @@
 <h2 id="51-two-ways-to-address-the-problem"><span id="51" class="legacy-heading-anchor" aria-hidden="true"></span>5.1 Two Ways to Address the Problem<a class="headerlink" href="#51-two-ways-to-address-the-problem" title="Permanent link">&para;</a></h2>
 <p>The previous chapter discussed the granularity tradeoff. This chapter examines its direct consequence: <strong>once a passage is split, a chunk can lose the context needed to understand it</strong>.</p>
 <p>Common solutions fall into two groups:</p>
-<pre class="mermaid"><code>flowchart TB
-    P[Meaning broken by chunking] --&gt; D1[Approach 1:&lt;br/&gt;Avoid harmful boundaries]
-    P --&gt; D2[Approach 2:&lt;br/&gt;Restore missing context]
-
-    D1 --&gt; M1[Overlapping chunks]
-    D1 --&gt; M2[Semantic boundary splitting]
-    D1 --&gt; M3[Structure-aware chunking]
-
-    D2 --&gt; M4[Sentence-window retrieval]
-    D2 --&gt; M5[Parent-child chunking]
-    D2 --&gt; M6[Proposition rewriting]
-    D2 --&gt; M7[Contextual Retrieval]
-    D2 --&gt; M8[Late Chunking]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    P[Broken meaning] --&gt; D1[Avoid harmful boundaries]
+    P --&gt; D2[Restore missing context]</code></pre>
+<p>Boundary-oriented methods include overlapping chunks, semantic boundary splitting, and structure-aware chunking. Context-oriented methods include sentence-window retrieval, parent-child chunking, proposition rewriting, Contextual Retrieval, and Late Chunking. The two groups describe what is preserved, not a requirement that all context recovery happen after splitting: Late Chunking encodes the larger context before pooling by chunk boundaries.</p>
 <ul>
 <li><strong>The first approach is preventive</strong>: avoid breaking units of meaning during chunking.</li>
 <li><strong>The second supplies missing context</strong>: sentence windows and parent-child chunking expand the material read after retrieval, while proposition rewriting, Contextual Retrieval, and Late Chunking improve chunk representations during indexing. Whether smaller chunks actually retrieve more accurately still requires evaluation.</li>
@@ -9373,7 +9390,8 @@
 <h2 id="53-approach-2-restore-missing-context"><span id="53" class="legacy-heading-anchor" aria-hidden="true"></span>5.3 Approach 2: Restore Missing Context<a class="headerlink" href="#53-approach-2-restore-missing-context" title="Permanent link">&para;</a></h2>
 <h3 id="531-sentence-window-retrieval"><span id="531" class="legacy-heading-anchor" aria-hidden="true"></span>5.3.1 Sentence-Window Retrieval<a class="headerlink" href="#531-sentence-window-retrieval" title="Permanent link">&para;</a></h3>
 <p>Index <strong>small units</strong>, such as sentences or short passages, for retrieval. After a hit, return <strong>several units before and after it</strong> and send them together to the model.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query] --&gt; IDX[Small-chunk index]
     IDX --&gt; HIT[Retrieved chunk N]
     HIT --&gt; EXP[Fetch N-2 through N+2]
@@ -9386,7 +9404,7 @@
 <li><strong>Child chunks</strong>, which are small, are embedded and used for retrieval.</li>
 <li><strong>Parent chunks</strong> are the larger units returned when a child is retrieved. A parent can be the whole source document, a section, or a larger chunk created by a length-based or recursive splitter.</li>
 </ul>
-<p>The source does not need an existing heading hierarchy. For example, <a href="https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py">LangChain's <code>ParentDocumentRetriever</code></a> supports either raw documents or larger split chunks as parents.</p>
+<p>The source does not need an existing heading hierarchy. For example, LangChain's <code>ParentDocumentRetriever</code><sup><a href="../../../book/references/#ref-366">【366】</a></sup> supports either raw documents or larger split chunks as parents.</p>
 <table>
 <thead>
 <tr>
@@ -9437,7 +9455,8 @@
 <h3 id="534-contextual-retrieval">5.3.4 Contextual Retrieval<a class="headerlink" href="#534-contextual-retrieval" title="Permanent link">&para;</a></h3>
 <p>This is one of the approaches commonly used in recent years.</p>
 <p><strong>The idea</strong>: rather than rewriting the source, <strong>prepend a short LLM-generated explanation of the chunk's position and background within the full document</strong>, then embed it and build a keyword index.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     DOC[Full document] --&gt; LLM[LLM generates&lt;br/&gt;context explanation]
     CH[Original chunk] --&gt; LLM
     LLM --&gt; NEW[Context explanation&lt;br/&gt;+ original chunk]
@@ -9483,18 +9502,20 @@
 </blockquote>
 <h3 id="535-late-chunking">5.3.5 Late Chunking<a class="headerlink" href="#535-late-chunking" title="Permanent link">&para;</a></h3>
 <p><strong>This takes the idea a step further</strong>: first encode the document text that fits within the context window to obtain token-level representations, then pool them according to chunk boundaries. The paper's bidirectional encoder lets token representations incorporate both preceding and following context within that window. With causal attention, a position can draw context only from earlier positions, so the explanation that “every token sees the whole document” does not transfer unchanged. Chunk boundaries still need to be determined; pooling simply takes place after encoding.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph TRAD[Traditional approach]
-        D1[Document] --&gt; C1[Split first]
-        C1 --&gt; E1[Encode each&lt;br/&gt;chunk independently]
-        E1 --&gt; V1[Chunk vectors&lt;br/&gt;Cannot see full document]
-    end
-
-    subgraph LATE[Late Chunking]
-        D2[Document] --&gt; E2[Encode full document&lt;br/&gt;with long context]
-        E2 --&gt; C2[Pool token vectors&lt;br/&gt;by chunk boundaries]
-        C2 --&gt; V2[Chunk vectors&lt;br/&gt;Incorporate context&lt;br/&gt;within the encoding window]
-    end</code></pre>
+<p><strong>Traditional approach</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1[Document] --&gt; C1[Split first]
+    C1 --&gt; E1[Encode each&lt;br/&gt;chunk independently]
+    E1 --&gt; V1[Chunk vectors&lt;br/&gt;Cannot see full document]
+</code></pre>
+<p><strong>Late Chunking</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D2[Document] --&gt; E2[Encode full document&lt;br/&gt;with long context]
+    E2 --&gt; C2[Pool token vectors&lt;br/&gt;by chunk boundaries]
+    C2 --&gt; V2[Chunk vectors&lt;br/&gt;Incorporate context&lt;br/&gt;within the encoding window]
+</code></pre>
 <p>The useful insight is that <strong>context enters naturally during encoding, without an extra LLM call to generate an explanation</strong>.</p>
 <p><strong>Limitations</strong>:</p>
 <ul>
@@ -9580,14 +9601,8 @@
 <li><strong>Implementation sequence</strong>: structure-aware chunking → parent-child chunking → Contextual Retrieval → more experimental approaches.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2409.04701">Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models</a></li>
-<li><a href="https://jina.ai/news/late-chunking-in-long-context-embedding-models/">Jina AI: Post-Encoding Pooling and Boundaries in Late Chunking</a></li>
-<li><a href="https://arxiv.org/abs/2312.06648">Dense X Retrieval: What Retrieval Granularity Should We Use?</a></li>
-<li><a href="https://arxiv.org/abs/2401.18059">RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-05">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9610,7 +9625,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

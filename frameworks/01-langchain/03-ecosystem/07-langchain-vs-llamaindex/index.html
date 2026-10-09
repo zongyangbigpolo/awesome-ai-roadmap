@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex","description":"Compare LangChain and LlamaIndex through model and tool integration and the data-to-context pipeline, including citation fidelity, duplicate generation, and evaluation costs when combining them.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/07-langchain-vs-llamaindex/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/07-langchain-vs-llamaindex/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex","description":"Compare LangChain and LlamaIndex through model and tool integration and the data-to-context pipeline, including citation fidelity, duplicate generation, and evaluation costs when combining them.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/07-langchain-vs-llamaindex/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/07-langchain-vs-llamaindex/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Dividing Responsibilities Between LangChain and LlamaIndex","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/07-langchain-vs-llamaindex/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9288,12 +9313,20 @@
 </blockquote>
 <h2 id="73-where-langchain-is-strong"><span id="73-langchain" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 Where LangChain Is Strong<a class="headerlink" href="#73-where-langchain-is-strong" title="Permanent link">&para;</a></h2>
 <p><strong>When a project needs multiple models, search, databases, browsers, MCP servers, and internal company APIs</strong>, the largest engineering cost is often <strong>adapting between different interfaces</strong>.</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Unify Model / Message / Tool / Structured Output interfaces&lt;br/&gt;Abstract away provider differences"] --&gt; B["Assemble models and tools with create_agent"]
-    B --&gt; C["Apply middleware consistently&lt;br/&gt;Authorization, retries, summarization, dynamic model selection, human approval"]
-    C --&gt; D["When workflows need finer control over branching, parallelism, and recovery&lt;br/&gt;Move down to LangGraph&lt;br/&gt;Keep the existing model and tool definitions"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Unify&lt;br/&gt;interfaces"] --&gt; B["Assemble&lt;br/&gt;create_agent"]
+    B --&gt; C["Apply&lt;br/&gt;middleware&lt;br/&gt;consistently"]
+    C --&gt; D["Control&lt;br/&gt;execution"]
 
     style D fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Unify Model / Message / Tool / Structured Output interfaces Abstract away provider differences</li>
+<li>Assemble models and tools with create_agent</li>
+<li>Apply middleware consistently Authorization, retries, summarization, dynamic model selection, human approval</li>
+<li>When workflows need finer control over branching, parallelism, and recovery Move down to LangGraph Keep the existing model and tool definitions</li>
+</ul>
 <p><strong>The main challenge</strong> is getting the model to <strong>choose the right tool and supply the right arguments</strong>, while consistently integrating authorization, retries, and approval into execution.</p>
 <blockquote>
 <p><strong>LangGraph is the underlying runtime for LangChain agents.</strong> Pausing, resuming, and tool approval within the standard loop can be configured directly through <code>create_agent</code>. Write an explicit state graph only when the business workflow's topology needs additional control.</p>
@@ -9325,8 +9358,9 @@
 <blockquote>
 <p><strong>Difficulties propagate through ingestion → indexing → retrieval → context assembly. No single vector database can solve them all.</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    A["Data ingestion"] --&gt; B["Parsing and chunking"] --&gt; C["Indexing"] --&gt; D["Retrieval and reranking"] --&gt; E["Query Engine"] --&gt; F["Agent"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Data ingestion"] --&gt; B["Parsing and&lt;br/&gt;chunking"] --&gt; C["Indexing"] --&gt; D["Retrieval and&lt;br/&gt;reranking"] --&gt; E["Query Engine"] --&gt; F["Agent"]
 
     style B fill:#e8f0fe
     style D fill:#e8f0fe</code></pre>
@@ -9446,15 +9480,8 @@
 <p>Think of the boundary this way: LangChain first addresses how to unify and coordinate models and tools; LlamaIndex first addresses how to turn private data into high-quality context. When both problems exist, connect the two through a tool.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain official documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/retrieval">LangChain: Retrieval</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph official documentation</a></li>
-<li><a href="https://docs.llamaindex.ai/">LlamaIndex official documentation</a></li>
-<li><a href="https://docs.llamaindex.ai/en/stable/understanding/agent/">LlamaIndex: Building an Agent</a></li>
-<li><a href="https://docs.llamaindex.ai/en/stable/understanding/workflows/">LlamaIndex: Workflows</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9477,7 +9504,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

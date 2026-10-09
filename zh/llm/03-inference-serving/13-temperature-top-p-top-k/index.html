@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：Temperature、Top-P、Top-K 调参","description":"用可计算的概率示例解释温度与 Top-K、Top-P 的重归一化、执行顺序、边界值和可复现条件，避免通用调参口诀。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/13-temperature-top-p-top-k/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：Temperature、Top-P、Top-K 调参","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/13-temperature-top-p-top-k/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：Temperature、Top-P、Top-K 调参","description":"用可计算的概率示例解释温度与 Top-K、Top-P 的重归一化、执行顺序、边界值和可复现条件，避免通用调参口诀。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/13-temperature-top-p-top-k/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：Temperature、Top-P、Top-K 调参","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/13-temperature-top-p-top-k/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十三章：Temperature、Top-P、Top-K 调参","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/03-inference-serving/13-temperature-top-p-top-k/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9468,13 +9493,8 @@ p_i(T)=\frac{p_i^{1/T}}{\sum_j p_j^{1/T}}
 <h2 id="138">13.8 本章总结<a class="headerlink" href="#138" title="Permanent link">&para;</a></h2>
 <p>Temperature 改概率比，Top-K 限制候选数，Top-P 限制累计概率质量；截断后都要重新归一化。它们的组合不是禁忌，真正需要确认的是执行顺序、边界值与模型推荐配置。调参结论应来自任务评测，而不是把高温等同于创意、低温等同于正确。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1904.09751">The Curious Case of Neural Text Degeneration</a></li>
-<li><a href="https://huggingface.co/docs/transformers/main/en/internal/generation_utils">Transformers：Generation Utilities，含 Temperature/TopK/TopP LogitsWarper</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.56.2/en/generation_strategies">Transformers v4.56.2：贪心、采样与束搜索的配置条件</a></li>
-<li><a href="https://huggingface.co/Qwen/Qwen3-30B-A3B">Qwen3-30B-A3B 官方模型卡与采样建议</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/batch_invariance/">vLLM：Batch Invariance</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-13">集中参考资料章节</a>。</p>
 
 
 
@@ -9497,7 +9517,7 @@ p_i(T)=\frac{p_i^{1/T}}{\sum_j p_j^{1/T}}
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

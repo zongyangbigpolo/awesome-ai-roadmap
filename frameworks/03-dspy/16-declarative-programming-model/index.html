@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs","description":"Explain DSPy signatures, modules, adapters, and program composition, distinguishing prompt optimization, type validation, control flow, and runtime state.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/16-declarative-programming-model/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/16-declarative-programming-model/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs","description":"Explain DSPy signatures, modules, adapters, and program composition, distinguishing prompt optimization, type validation, control flow, and runtime state.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/16-declarative-programming-model/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/16-declarative-programming-model/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 16: DSPy's Declarative Programming Model: Signatures, Modules, and Programs","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/03-dspy/16-declarative-programming-model/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9153,14 +9178,23 @@
 <h2 id="161-the-limits-of-imperative-prompt-engineering"><span id="161-prompt" class="legacy-heading-anchor" aria-hidden="true"></span>16.1 The limits of imperative prompt engineering<a class="headerlink" href="#161-the-limits-of-imperative-prompt-engineering" title="Permanent link">&para;</a></h2>
 <p>In common uses of the <a href="../../01-langchain/">LangChain ecosystem</a> and <a href="../../02-llamaindex/">LlamaIndex ecosystem</a>, prompts are often still <strong>string constants</strong>: write a template, insert variables, call the model, inspect the output, then edit the string by hand. This loop has a structural problem: <strong>the prompt's intent is tied to its exact wording</strong>. Change the model or task distribution, and carefully tuned wording may immediately stop working, without a systematic engineering method for deciding which adjustments to try.</p>
 <p>DSPy (Declarative Self-improving Python) starts by separating those concerns. Declare the inputs, outputs, and task objective first, then choose modules and program structure so an optimizer can improve instructions, examples, or model weights within a specified search space. Ordinary prompt optimization does not automatically decide how many steps a business process needs; a DSPy program can also run without compilation.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph Old["Imperative prompt engineering"]
-        O1["Handwrite a prompt string"] --&gt; O2["Run it and inspect the result"] --&gt; O3["Guess how to revise the wording"] --&gt; O1
-    end
-    subgraph New["DSPy declarative programming"]
-        N1["Declare a Signature: input/output contract"] --&gt; N2["Choose a Module: Predict / CoT / ReAct"]
-        N2 --&gt; N3["Compile with an optimizer: search for better parameters within budget"]
-    end</code></pre>
+<p><strong>Imperative prompt engineering</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O1["Handwrite a&lt;br/&gt;prompt string"] --&gt; O2["Run it and&lt;br/&gt;inspect the&lt;br/&gt;result"] --&gt; O3["Guess how to&lt;br/&gt;revise the&lt;br/&gt;wording"] --&gt; O1
+</code></pre>
+<p><strong>DSPy declarative programming</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["Declare&lt;br/&gt;Signature"] --&gt; N2["Choose Module"]
+        N2 --&gt; N3["Compile within&lt;br/&gt;budget"]
+</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Declare a Signature: input/output contract</li>
+<li>Choose a Module: Predict / CoT / ReAct</li>
+<li>Compile with an optimizer: search for better parameters within budget</li>
+</ul>
 <h2 id="162-signature-declare-fields-and-task-instructions-not-a-full-request-template"><span id="162-signature" class="legacy-heading-anchor" aria-hidden="true"></span>16.2 Signature: declare fields and task instructions, not a full request template<a class="headerlink" href="#162-signature-declare-fields-and-task-instructions-not-a-full-request-template" title="Permanent link">&para;</a></h2>
 <p>A <code>Signature</code> describes input fields, output fields, and task instructions. Field names, <code>desc</code>, and the class docstring all affect the prompt the model receives; they are not comments unrelated to prompting:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">dspy</span>
@@ -9250,12 +9284,8 @@
 </ol>
 <p>DSPy is therefore more than another way to write prompts. It turns prompt engineering from manual string editing into a program-optimization problem: contract declaration, strategy selection, and automatic compilation.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://dspy.ai/">Official DSPy documentation</a></li>
-<li><a href="https://dspy.ai/getting-started/class-based-signatures/">DSPy: Class-based signatures</a></li>
-<li><a href="https://dspy.ai/getting-started/changing-modules/">DSPy: Changing modules</a></li>
-<li><a href="https://arxiv.org/abs/2310.03714">DSPy paper: Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines"</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-16">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9278,7 +9308,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

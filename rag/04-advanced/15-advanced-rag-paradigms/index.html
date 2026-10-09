@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Advanced RAG Paradigms","description":"Explains the control mechanisms of Self-RAG, Corrective RAG, RAPTOR, and Agentic RAG, distinguishes paper methods from engineering simplifications, and evaluates training, indexing, and multi-round costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/15-advanced-rag-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Advanced RAG Paradigms","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/15-advanced-rag-paradigms/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Advanced RAG Paradigms","description":"Explains the control mechanisms of Self-RAG, Corrective RAG, RAPTOR, and Agentic RAG, distinguishes paper methods from engineering simplifications, and evaluates training, indexing, and multi-round costs.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/15-advanced-rag-paradigms/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Advanced RAG Paradigms","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/15-advanced-rag-paradigms/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 15: Advanced RAG Paradigms","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/04-advanced/15-advanced-rag-paradigms/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9245,7 +9270,8 @@
 <h1 id="chapter-15-advanced-rag-paradigms"><span id="rag" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 15: Advanced RAG Paradigms<a class="headerlink" href="#chapter-15-advanced-rag-paradigms" title="Permanent link">&para;</a></h1>
 <h2 id="151-how-the-three-rag-paradigms-developed"><span id="151-rag" class="legacy-heading-anchor" aria-hidden="true"></span>15.1 How the Three RAG Paradigms Developed<a class="headerlink" href="#151-how-the-three-rag-paradigms-developed" title="Permanent link">&para;</a></h2>
 <p>Naive, Advanced, and Modular are categories used in a survey, not formal version standards or mandatory stages of development. To understand them, examine their control flow, training requirements, and target problems rather than simply listing names.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     N[Naive RAG&lt;br/&gt;Retrieve once, then generate] --&gt; A[Advanced RAG&lt;br/&gt;Optimize before and after retrieval]
     A --&gt; M[Modular RAG&lt;br/&gt;Composable components,&lt;br/&gt;orchestration, and loops]</code></pre>
 <table>
@@ -9310,14 +9336,16 @@
 <p><strong>Corrective RAG, a method, and the CRAG Benchmark, an evaluation benchmark, are two different things. Do not confuse them.</strong></p>
 </blockquote>
 <p>Corrective RAG uses a lightweight evaluator to score retrieval results, then handles them in three categories:</p>
-<pre class="mermaid"><code>flowchart TB
-    R[Retrieval results] --&gt; E[Lightweight evaluator&lt;br/&gt;assigns scores]
-    E --&gt;|Correct| C[Refine: remove irrelevant parts,&lt;br/&gt;retain the core evidence]
-    E --&gt;|Incorrect| W[Discard and use&lt;br/&gt;external search instead]
-    E --&gt;|Ambiguous| A[Combine both approaches]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    R[Retrieval results] --&gt; E[Lightweight evaluator]
+    E --&gt;|Correct| C[Refine]
+    E --&gt;|Incorrect| W[Search externally]
+    E --&gt;|Ambiguous| A[Combine]
     C --&gt; G[Generate]
     W --&gt; G
     A --&gt; G</code></pre>
+<p>For “correct” results, refinement removes irrelevant parts and retains core evidence. For “incorrect” results, discard them and use external search instead. For “ambiguous” results, combine refinement and external search. Each branch then supplies evidence for generation.</p>
 <p><strong>Its value lies in acknowledging a practical fact: retrieval can fail, and the system needs a recovery path.</strong> That is a substantial improvement over simply using whatever retrieval returns.</p>
 <p>In engineering, it is reasonable to borrow the “quality assessment plus recovery” control flow. However, neither a prompt nor a reranking threshold reproduces the original paper or guarantees most of its gains. Abstention rules need calibration. When retrieval over private knowledge fails, external web pages usually cannot fill the gap and may introduce data-disclosure and source risks. External search must remain subject to data and tool authorization.</p>
 <h2 id="154-raptor-organizing-knowledge-into-a-tree"><span id="154-raptor" class="legacy-heading-anchor" aria-hidden="true"></span>15.4 RAPTOR: Organizing Knowledge into a Tree<a class="headerlink" href="#154-raptor-organizing-knowledge-into-a-tree" title="Permanent link">&para;</a></h2>
@@ -9329,14 +9357,16 @@
 <li>Embed the summaries, then <strong>cluster and summarize again</strong>, recursively building upward into a tree.</li>
 <li>The original paper compares two retrieval strategies: tree traversal and collapsed tree. The latter retrieves from nodes across multiple levels together; “traverse every level on every query” is not the only implementation.</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    ROOT[Top-level summary&lt;br/&gt;Global perspective] --&gt; M1[Mid-level summary 1]
-    ROOT --&gt; M2[Mid-level summary 2]
-    M1 --&gt; L1[Original chunk]
-    M1 --&gt; L2[Original chunk]
-    M2 --&gt; L3[Original chunk]
-    M2 --&gt; L4[Original chunk]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    ROOT[Global summary] --&gt; M1[Summary 1]
+    ROOT --&gt; M2[Summary 2]
+    M1 --&gt; L1[Chunk 1]
+    M1 --&gt; L2[Chunk 2]
+    M2 --&gt; L3[Chunk 3]
+    M2 --&gt; L4[Chunk 4]
     M2 -.-&gt; L2</code></pre>
+<p>The top-level summary provides a global perspective over two mid-level summaries. The leaves are original chunks. Chunk 2 contributes to both summaries, as the additional dashed edge shows; membership need not be exclusive.</p>
 <p>The dashed edge indicates that a passage may also contribute to another cluster’s summary. The original paper uses soft clustering, allowing a node to belong to multiple clusters. “Tree” is an intuitive description of the hierarchy, not a guarantee that each passage has exactly one parent. Deduplication and links back to sources must account for this overlap.</p>
 <p><strong>Results</strong>: Published evaluations show substantial improvements on long-document question-answering tasks that require synthesis across multiple passages.</p>
 <p><strong>Costs and limits</strong>:</p>
@@ -9387,7 +9417,8 @@
 <blockquote>
 <p><strong>Retrieval changes from “a step in a fixed workflow” to “a tool whose timing, number of calls, and use of results the agent can decide.”</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[User question] --&gt; AG[Agent reasoning]
     AG --&gt; D{Need more information?}
     D --&gt;|Yes| T[Call retrieval tool]
@@ -9438,13 +9469,12 @@
 <h2 id="157-when-to-adopt-an-advanced-paradigm"><span id="157" class="legacy-heading-anchor" aria-hidden="true"></span>15.7 When to Adopt an Advanced Paradigm<a class="headerlink" href="#157-when-to-adopt-an-advanced-paradigm" title="Permanent link">&para;</a></h2>
 <p>In most cases, there is no need to start with these advanced paradigms.</p>
 <p>As Chapter 14 explained, <strong>getting the five foundational layers right is usually more effective than blindly stacking advanced paradigms</strong>. Consider an advanced paradigm only when the following conditions hold:</p>
-<pre class="mermaid"><code>flowchart TB
-    S{Are all five foundational&lt;br/&gt;layers in good shape?} --&gt;|No| BASE[Return to the foundations&lt;br/&gt;Chapter 14]
-    S --&gt;|Yes| E{Can an evaluation set&lt;br/&gt;quantify the gain?}
-    E --&gt;|No| EVAL[Build an evaluation set first]
-    E --&gt;|Yes| N{Do failures reveal a structural&lt;br/&gt;limitation of the basic approach?}
-    N --&gt;|No| TUNE[Continue tuning&lt;br/&gt;the basic approach]
-    N --&gt;|Yes| ADV[Evaluate the relevant&lt;br/&gt;advanced paradigm]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S[Verify foundations] --&gt; E[Establish measurable gains]
+    E --&gt; N[Diagnose structural limits]
+    N --&gt; ADV[Evaluate a relevant paradigm]</code></pre>
+<p>These are gates, not an instruction to always adopt an advanced design. If any of the five foundational layers is weak, return to Chapter 14. If no evaluation set can quantify gains, build one first. If failures do not reveal structural limitations of the basic approach, continue tuning it. Only after those checks should the relevant advanced paradigm be evaluated.</p>
 <p><strong>The test for a “structural limitation”</strong> is that <strong>parameter tuning cannot solve the problem</strong>. For example:</p>
 <ul>
 <li>Single-round candidates do not adequately cover multi-hop evidence → compare query decomposition, multi-round retrieval, and graph expansion.</li>
@@ -9478,16 +9508,8 @@
 <li><strong>Distinguish paper mechanisms, specific implementations, and business validation.</strong> A method’s name or year is not a substitute for evidence supporting its adoption.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.11511">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</a></li>
-<li><a href="https://arxiv.org/abs/2401.15884">Corrective Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2401.18059">RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-<li><a href="https://arxiv.org/abs/2501.09136">Agentic Retrieval-Augmented Generation: A Survey on Agentic RAG</a></li>
-<li><a href="https://arxiv.org/abs/2305.06983">Active Retrieval Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
-<p>Source checks for this translation covered the original papers’ reflection tokens, corrective branches, RAPTOR soft clustering and retrieval strategies, Adaptive-RAG routing, and the survey’s three organizational categories. The Agentic RAG survey and Active Retrieval Augmented Generation were checked at the abstract level only; their experiments were not reproduced.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-15">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9510,7 +9532,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

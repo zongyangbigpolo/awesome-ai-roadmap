@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: From Large Language Models to AI Agents","description":"Defines AI agents through the limits of model knowledge, state, and action, explaining how models, tools, memory, and control loops form an executable system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: From Large Language Models to AI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-08-31","dateModified":"2026-09-24"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: From Large Language Models to AI Agents","description":"Defines AI agents through the limits of model knowledge, state, and action, explaining how models, tools, memory, and control loops form an executable system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: From Large Language Models to AI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: From Large Language Models to AI Agents","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/01-agent-foundations/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9385,13 +9410,25 @@ S_{t+1}=\mathrm{Update}(S_t,A_t,O_{t+1})
 <p>Anthropic introduced MCP in November 2024. In December 2025, Anthropic donated MCP to the Agentic AI Foundation (AAIF) under the Linux Foundation. Community maintainers oversee MCP's technical governance, while AAIF provides vendor-neutral organizational and infrastructure support.</p>
 <p><strong>MCP = Model Context Protocol</strong></p>
 <p>MCP provides a standard interface for connecting AI applications to external tools and data sources. A useful analogy is a “USB-C port” for the AI tool ecosystem.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[AI application or agent] --&gt; B[MCP Client]
-    B --&gt; C[MCP Server]
-    C --&gt; D[Tools]
-    C --&gt; E[Databases]
-    C --&gt; F[Files and resources]
-    C --&gt; G[External APIs]</code></pre>
+<p>Connection to the server.</p>
+<pre class="mermaid"><code>flowchart TB
+    A[AI application or agent]
+    B[MCP Client]
+    C[MCP Server]
+    A --&gt; B
+    B --&gt; C</code></pre>
+<p>Capabilities exposed by that server.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    C["MCP Server"]
+    D["Tools"]
+    E["Databases"]
+    F["Files and resources"]
+    G["External APIs"]
+    C --&gt; D
+    C --&gt; E
+    C --&gt; F
+    C --&gt; G</code></pre>
 <p>MCP has three main roles:</p>
 <ul>
 <li><strong>Host</strong>: the AI application running the model or agent;</li>
@@ -9420,15 +9457,16 @@ N \times M
 <blockquote>
 <p>An Agent Card is more like a capability profile. Objects such as Task primarily describe what the agent is doing and its execution progress.</p>
 </blockquote>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant A as Orchestrator agent
     participant B as Specialist agent
 
     A-&gt;&gt;B: Read Agent Card
-    B--&gt;&gt;A: Return capabilities and interaction options
-    A-&gt;&gt;B: Send a task request message
-    B--&gt;&gt;A: Return Task and current status
-    B--&gt;&gt;A: Return subsequent status and Artifact through the chosen interaction mode</code></pre>
+    B--&gt;&gt;A: Return capabilities and&lt;br/&gt;interaction options
+    A-&gt;&gt;B: Send a task request&lt;br/&gt;message
+    B--&gt;&gt;A: Return Task and current&lt;br/&gt;status
+    B--&gt;&gt;A: Return subsequent status&lt;br/&gt;and Artifact through&lt;br/&gt;the chosen interaction&lt;br/&gt;mode</code></pre>
 <p>The diagram shows a task that requires ongoing tracking. Under the A2A v1.0.1 release specification, sending a message can also return a <code>Message</code> directly; not every interaction has to create a <code>Task</code>. Check the exact message fields and transports against the A2A versions actually supported by both parties.</p>
 <h2 id="17-how-mcp-and-a2a-relate"><span id="17-mcp-a2a" class="legacy-heading-anchor" aria-hidden="true"></span>1.7 How MCP and A2A Relate<a class="headerlink" href="#17-how-mcp-and-a2a-relate" title="Permanent link">&para;</a></h2>
 <table>
@@ -9472,29 +9510,19 @@ N \times M
 <p>Consider MCP when you need consistent tool and context interfaces. Consider A2A when you need interoperability for a remote agent's tasks, messages, and artifacts.</p>
 </blockquote>
 <p>An MCP tool can run an agent behind the scenes; an A2A service can execute a deterministic workflow. Neither protocol automatically solves task decomposition, delegated authorization, or distributed transactions, and a multi-agent system does not have to adopt both.</p>
-<pre class="mermaid"><code>flowchart TB
-    U[User goal] --&gt; O[Orchestrator agent]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["User goal"] --&gt; O["Orchestrator&lt;br/&gt;agent"]
 
-    O &lt;--&gt;|A2A| R[Research agent]
-    O &lt;--&gt;|A2A| C[Coding agent]
-    O &lt;--&gt;|A2A| W[Writing agent]
-
-    O --&gt;|MCP| T1[Business tools]
-    R --&gt;|MCP| T2[Search and knowledge base]
-    C --&gt;|MCP| T3[Code executor]
-    W --&gt;|MCP| T4[Document system]</code></pre>
+    O &lt;--&gt;|A2A| R["Research&lt;br/&gt;agent"]
+    O &lt;--&gt;|A2A| C["Coding agent"]
+    O &lt;--&gt;|A2A| W["Writing&lt;br/&gt;agent"]
+</code></pre>
+<p>The bidirectional A2A links connect the orchestrator to research, coding, and writing agents. Tool access is separate: through MCP, the orchestrator uses business tools, the research agent uses search and a knowledge base, the coding agent uses a code executor, and the writing agent uses a document system.</p>
 <p>MCP helps individual agents reach for tools, while A2A helps multiple agents communicate and divide the work. Together, they provide an important foundation for standardization and interoperability in multi-agent systems.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/agents/">OpenAI Agents SDK: Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term memory</a></li>
-<li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
-<li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Linux Foundation: Agent2Agent Protocol Project</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto">A2A v1.0.1 release specification: Core objects and message sending</a></li>
-<li><a href="https://a2a-protocol.org/latest/topics/key-concepts/">A2A Protocol: Core Concepts</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9517,7 +9545,7 @@ N \times M
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 24, 2026 09:43:25 CST">2026-09-24</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

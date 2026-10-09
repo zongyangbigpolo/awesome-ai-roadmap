@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：隐私、PII 与记忆泄漏","description":"区分训练数据记忆化、成员推断与应用记忆泄漏，解释差分隐私、数据留存、删除与跨境处理的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：隐私、PII 与记忆泄漏","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：隐私、PII 与记忆泄漏","description":"区分训练数据记忆化、成员推断与应用记忆泄漏，解释差分隐私、数据留存、删除与跨境处理的边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：隐私、PII 与记忆泄漏","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：隐私、PII 与记忆泄漏","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9233,11 +9258,19 @@
 <h1 id="pii">第六章：隐私、PII 与记忆泄漏<a class="headerlink" href="#pii" title="Permanent link">&para;</a></h1>
 <h2 id="61-ai">6.1 AI 系统的隐私攻击面比传统应用更宽<a class="headerlink" href="#61-ai" title="Permanent link">&para;</a></h2>
 <p>传统应用的隐私风险也包括日志、缓存和第三方处理。LLM 场景需区分：权重中的训练数据记忆化，以及应用存储中的会话、摘要和长期记忆。前者可能通过模型输出泄漏，后者往往就是检索授权、租户隔离或生命周期治理失败；不能说记忆泄漏与访问控制无关。</p>
-<pre class="mermaid"><code>flowchart TB
-    P[AI 隐私风险] --&gt; P1[训练数据记忆化&lt;br/&gt;6.2]
-    P --&gt; P2[推理阶段的 PII 处理&lt;br/&gt;6.3]
-    P --&gt; P3[记忆机制泄漏&lt;br/&gt;6.4]
-    P --&gt; P4[数据驻留与跨境合规&lt;br/&gt;6.5]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["AI 隐私风险"] --&gt; P1["训练数据记忆化"]
+    P --&gt; P2["推理阶段的 PII 处理"]
+    P --&gt; P3["记忆机制泄漏"]
+    P --&gt; P4["数据驻留与跨境"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>训练数据记忆化 6.2</li>
+<li>推理阶段的 PII 处理 6.3</li>
+<li>记忆机制泄漏 6.4</li>
+<li>数据驻留与跨境合规 6.5</li>
+</ul>
 <h2 id="62">6.2 训练数据记忆化与抽取攻击<a class="headerlink" href="#62" title="Permanent link">&para;</a></h2>
 <h3 id="621">6.2.1 为什么模型会"背下"训练数据<a class="headerlink" href="#621" title="Permanent link">&para;</a></h3>
 <p>训练优化并不保证只学习可泛化的规律，也可能记住具体序列。相关研究发现，模型规模、重复曝光与提示前缀长度会影响可抽取程度；不能简单断言「参数量远超数据」或「所有低频样本更易被记住」。去重通常降低重复样本风险，但一次出现的敏感材料也不能因此被视为安全。</p>
@@ -9292,10 +9325,16 @@
 </ul>
 <h2 id="64">6.4 记忆机制的跨会话/跨用户泄漏<a class="headerlink" href="#64" title="Permanent link">&para;</a></h2>
 <p>Agent 系统普遍引入了长期记忆机制（见 <a href="../../../agent/03-memory-context/07-agent-memory/">Agent 记忆</a>），这带来了传统无状态问答系统没有的隐私风险：</p>
-<pre class="mermaid"><code>flowchart LR
-    U1[用户 A 的会话] --&gt; W[写入共享记忆存储]
-    W --&gt; R[检索阶段未做用户维度过滤]
-    R --&gt; U2[用户 B 的会话读到 A 的信息]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U1["用户 A 的会话"] --&gt; W["写入共享记忆存储"]
+    W --&gt; R["检索未按用户隔离"]
+    R --&gt; U2["泄露给用户 B"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>检索阶段未做用户维度过滤</li>
+<li>用户 B 的会话读到 A 的信息</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9377,16 +9416,8 @@
 <li>数据驻留与跨境合规需要先做数据分类，再反推架构约束，且必须覆盖日志、缓存、向量索引和记忆存储的完整删除链路，而不只是推理请求本身。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2012.07805">Extracting Training Data from Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2202.07646">Quantifying Memorization Across Neural Language Models</a></li>
-<li><a href="https://arxiv.org/abs/1610.05820">Membership Inference Attacks against Machine Learning Models</a></li>
-<li><a href="https://arxiv.org/abs/1607.00133">Deep Learning with Differential Privacy (DP-SGD)</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">OWASP LLM02:2025 Sensitive Information Disclosure</a></li>
-<li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1: Generative AI Profile — Privacy risks</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: Data controls in the API platform</a></li>
-<li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng">GDPR 原文：第 5、6、17 条及第五章</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-safety-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9409,7 +9440,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

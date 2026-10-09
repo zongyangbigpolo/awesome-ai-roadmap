@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：Function Calling、MCP、Skill 三者关系","description":"从模型输出、任务知识和外部能力连接三个层次比较 Function Calling、Skill 与 MCP，并说明三者如何组合。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/10-fc-skill-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：Function Calling、MCP、Skill 三者关系","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/10-fc-skill-mcp/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：Function Calling、MCP、Skill 三者关系","description":"从模型输出、任务知识和外部能力连接三个层次比较 Function Calling、Skill 与 MCP，并说明三者如何组合。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/10-fc-skill-mcp/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：Function Calling、MCP、Skill 三者关系","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/10-fc-skill-mcp/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十章：Function Calling、MCP、Skill 三者关系","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/10-fc-skill-mcp/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9245,11 +9270,10 @@
 </table>
 <p>主语不同、对话对象不同、粒度不同——这就是三者的本质差异。</p>
 <h3 id="1011">10.1.1 代表性发布节点不等于依赖关系<a class="headerlink" href="#1011" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>timeline
-    title 三种机制的代表性发布时间
-    2023 : Function Calling : 问题「模型只会生成文本&lt;br/&gt;怎么让它触发外部调用」
-    2024 : MCP : 问题「每个应用都在重复&lt;br/&gt;写对接各种工具的代码」
-    2025 : Agent Skill : 问题「工具有了&lt;br/&gt;但 Agent 不知道该按什么流程用」</code></pre>
+<pre class="mermaid"><code>flowchart TB
+    FC["2023 · Function Calling"] --&gt; MCP["2024 · MCP"]
+    MCP --&gt; SK["2025 · Agent Skill"]</code></pre>
+<p>这些代表性发布时间对应不同问题，并不是前后替代关系：Function Calling 让生成文本的模型能够提出外部调用请求；MCP 减少不同应用重复编写集成代码的工作；Agent Skill 为已有工具提供使用流程。</p>
 <p>这条时间线指 OpenAI Function Calling、MCP 和 Anthropic Agent Skills 的发布节点，不是工具调用、接口标准化或流程复用思想的起源。三者分别处理：</p>
 <ul>
 <li>Function Calling 解决<strong>调用协议</strong>问题：模型和程序之间需要一套结构化的表达方式；</li>
@@ -9257,28 +9281,15 @@
 <li>Skill 处理任务步骤和标准的重复维护，组织<strong>知识与流程复用</strong>，并不要求工具先通过 MCP 接入。</li>
 </ul>
 <h2 id="102">10.2 从「谁和谁通信」定位三者<a class="headerlink" href="#102" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    subgraph L3["第三层 · Skill"]
-        direction LR
-        AGENT[Agent] &lt;--&gt;|"扫描 / 加载"| KM["知识模块&lt;br/&gt;SKILL.md + 脚本 + 模板"]
-    end
-
-    subgraph L2["第二层 · MCP"]
-        direction LR
-        CLIENT[MCP Client] &lt;--&gt;|"JSON-RPC&lt;br/&gt;tools/list · tools/call"| SERVER[MCP Server]
-    end
-
-    subgraph L1["第一层 · Function Calling"]
-        direction LR
-        MODEL[模型] &lt;--&gt;|"tool_calls JSON&lt;br/&gt;tool 消息回填"| HOST[宿主程序]
-    end
-
-    L3 -.-&gt;|"可选：流程中使用 MCP"| L2
-    L2 -.-&gt;|"可选：Host 转成 FC 格式&lt;br/&gt;并回传结果"| L1
-
-    style L3 fill:#e6f4ea
-    style L2 fill:#e8f0fe
-    style L1 fill:#fef7e0</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    SK["3 · Skill 操作流程"] -.可选.-&gt; MCP["2 · MCP 集成"]
+    MCP -.可选.-&gt; FC["1 · Function Calling"]</code></pre>
+<p>Skill 层中，Agent 扫描和加载包含 <code>SKILL.md</code>、脚本及模板的知识模块。MCP 层中，Client 与 Server 交换 <code>tools/list</code>、<code>tools/call</code> 等 JSON-RPC 消息。Function Calling 层中，模型输出 <code>tool_calls</code> JSON，宿主回填工具消息。跨层连接是可选的：Skill 可以使用 MCP，Host 也可以把 MCP 定义与结果转换成模型的函数调用格式。每层内部都有双向交互，并不是强制执行的三步流水线。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>知识模块 SKILL.md + 脚本 + 模板</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9312,16 +9323,24 @@
 <p>注意粒度的跨度：「查询订单表」是一个 <strong>MCP 工具</strong>，「代码审查」「数据分析报告」是一个 <strong>Skill</strong>——一个 Skill 内部可能有好几个步骤，每步可调用多个 MCP 工具；由 LLM 驱动时，常以 Function Calling 或结构化输出表达调用意图。</p>
 <h2 id="103">10.3 组合关系不是强制依赖<a class="headerlink" href="#103" title="Permanent link">&para;</a></h2>
 <p>可以用反例检查是否混淆了职责：</p>
-<pre class="mermaid"><code>flowchart TB
-    S["Skill&lt;br/&gt;定义流程"] --&gt; H["Host / Agent&lt;br/&gt;选择与执行"]
-    H --&gt; M["MCP Client&lt;br/&gt;调用 Server"]
-    H --&gt; LOCAL["本地函数 / CLI / API"]
-    F["Function Calling&lt;br/&gt;模型提出调用"] --&gt; H
-    RULE["规则工作流 / 人工操作"] --&gt; H
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["Skill"] --&gt; H["Host / Agent"]
+    H --&gt; M["MCP Client"]
+    H --&gt; LOCAL["本地函数 / CLI /&lt;br/&gt;API"]
+    F["Function Calling"] --&gt; H
+    RULE["规则工作流 / 人&lt;br/&gt;工操作"] --&gt; H
 
     style S fill:#e6f4ea
     style M fill:#e8f0fe
     style F fill:#fef7e0</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>Skill 定义流程</li>
+<li>Host / Agent 选择与执行</li>
+<li>MCP Client 调用 Server</li>
+<li>Function Calling 模型提出调用</li>
+</ul>
 <p>这些路径都能成立：</p>
 <ul>
 <li><strong>没有原生 Function Calling</strong>，Host 仍可用结构化文本、规则或人工选择触发工具；区别在可靠性和适配成本；</li>
@@ -9359,42 +9378,126 @@
 <p>“参数是合法 JSON”“Server 能连接”“Skill 已加载”分别只证明一个环节通过，不能证明整个任务完成。</p>
 <h2 id="105">10.5 一个完整场景串起三层<a class="headerlink" href="#105" title="Permanent link">&para;</a></h2>
 <p>用户说：<strong>「帮我分析最近三个月的销售数据，找出下滑的产品线，给改进建议。」</strong></p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as 用户
-    participant A as Agent
-    participant SK as Skill 层
-    participant MC as MCP Client
-    participant MS as MCP Servers
-    participant M as 模型
-
-    U-&gt;&gt;A: 分析销售数据并给建议
-    A-&gt;&gt;SK: 扫描 Skill 元数据
-    SK--&gt;&gt;A: 匹配到「数据分析报告」Skill
-    A-&gt;&gt;SK: 加载 SKILL.md 正文
-    SK--&gt;&gt;A: 流程：取数 → 趋势分析 → 按模板成文
-
-    Note over A,MS: 第一步：取数
-    A-&gt;&gt;M: 任务 + 流程 + 可用工具定义
-    M--&gt;&gt;A: tool_calls: query_database(sql=...)
-    A-&gt;&gt;A: 校验查询范围、参数与用户权限
-    A-&gt;&gt;MC: 路由调用
-    MC-&gt;&gt;MS: tools/call → 数据库 Server
-    MS--&gt;&gt;MC: 查询结果
-    MC--&gt;&gt;A: 结果
-    A-&gt;&gt;M: tool 消息回填
-
-    Note over A,MS: 第二步：趋势分析
-    M--&gt;&gt;A: tool_calls: run_python(code=...)
-    A-&gt;&gt;A: 检查执行权限、隔离与资源预算
-    A-&gt;&gt;MC: 路由调用
-    MC-&gt;&gt;MS: tools/call → Python 执行器 Server
-    MS--&gt;&gt;MC: 分析结果
-    MC--&gt;&gt;A: 结果
-    A-&gt;&gt;M: tool 消息回填
-
-    Note over A,SK: 第三步：按 Skill 模板成文
-    M--&gt;&gt;A: 结构化分析报告
-    A--&gt;&gt;U: 返回报告</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["加载匹配的 Skill"]
+    S1["授权数据查询"]
+    S2["通过 MCP 取数"]
+    S3["授权代码执行"]
+    S4["通过 MCP 分析"]
+    S5["按模板生成报告"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4 --&gt; S5</code></pre>
+<p>完整消息顺序（含阶段说明）：</p>
+<table>
+<thead>
+<tr>
+<th>交互双方</th>
+<th>消息或动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户 → Agent</td>
+<td>分析销售数据并给建议</td>
+</tr>
+<tr>
+<td>Agent → Skill 层</td>
+<td>扫描 Skill 元数据</td>
+</tr>
+<tr>
+<td>Skill 层 → Agent（返回）</td>
+<td>匹配到「数据分析报告」Skill</td>
+</tr>
+<tr>
+<td>Agent → Skill 层</td>
+<td>加载 SKILL.md 正文</td>
+</tr>
+<tr>
+<td>Skill 层 → Agent（返回）</td>
+<td>流程：取数 → 趋势分析 → 按模板成文</td>
+</tr>
+<tr>
+<td>说明：Agent, MCP Servers</td>
+<td>第一步：取数</td>
+</tr>
+<tr>
+<td>Agent → 模型</td>
+<td>任务 + 流程 + 可用工具定义</td>
+</tr>
+<tr>
+<td>模型 → Agent（返回）</td>
+<td>tool_calls: query_database(sql=...)</td>
+</tr>
+<tr>
+<td>Agent → Agent</td>
+<td>校验查询范围、参数与用户权限</td>
+</tr>
+<tr>
+<td>Agent → MCP Client</td>
+<td>路由调用</td>
+</tr>
+<tr>
+<td>MCP Client → MCP Servers</td>
+<td>tools/call → 数据库 Server</td>
+</tr>
+<tr>
+<td>MCP Servers → MCP Client（返回）</td>
+<td>查询结果</td>
+</tr>
+<tr>
+<td>MCP Client → Agent（返回）</td>
+<td>结果</td>
+</tr>
+<tr>
+<td>Agent → 模型</td>
+<td>tool 消息回填</td>
+</tr>
+<tr>
+<td>说明：Agent, MCP Servers</td>
+<td>第二步：趋势分析</td>
+</tr>
+<tr>
+<td>模型 → Agent（返回）</td>
+<td>tool_calls: run_python(code=...)</td>
+</tr>
+<tr>
+<td>Agent → Agent</td>
+<td>检查执行权限、隔离与资源预算</td>
+</tr>
+<tr>
+<td>Agent → MCP Client</td>
+<td>路由调用</td>
+</tr>
+<tr>
+<td>MCP Client → MCP Servers</td>
+<td>tools/call → Python 执行器 Server</td>
+</tr>
+<tr>
+<td>MCP Servers → MCP Client（返回）</td>
+<td>分析结果</td>
+</tr>
+<tr>
+<td>MCP Client → Agent（返回）</td>
+<td>结果</td>
+</tr>
+<tr>
+<td>Agent → 模型</td>
+<td>tool 消息回填</td>
+</tr>
+<tr>
+<td>说明：Agent, Skill 层</td>
+<td>第三步：按 Skill 模板成文</td>
+</tr>
+<tr>
+<td>模型 → Agent（返回）</td>
+<td>结构化分析报告</td>
+</tr>
+<tr>
+<td>Agent → 用户（返回）</td>
+<td>返回报告</td>
+</tr>
+</tbody>
+</table>
 <p>放到这个流程里看，三层分工分别是：</p>
 <ul>
 <li><strong>Skill 指导流程</strong>——说明先取数、再分析、最后按模板成文。业务告警阈值需声明由谁制定，不能把任意百分比叫作统计显著；</li>
@@ -9427,14 +9530,8 @@
 <li><strong>完整调用链要包含授权、失败恢复与结果证据</strong>，不能只画成功路径。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/function-calling">OpenAI: Function Calling 指南</a></li>
-<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol 官方文档</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP 规范 2026-07-28</a></li>
-<li><a href="https://www.anthropic.com/news/skills">Anthropic: Introducing Agent Skills</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills 规范</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-10">集中参考资料章节</a>。</p>
 
 
 
@@ -9457,7 +9554,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

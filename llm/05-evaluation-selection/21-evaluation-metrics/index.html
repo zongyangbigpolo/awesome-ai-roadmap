@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: Capability Evaluation Metrics","description":"Review evaluations of LLM knowledge, reasoning, coding, factuality, and human preference, and explain the limits of offline leaderboards in practical model selection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/21-evaluation-metrics/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: Capability Evaluation Metrics","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/21-evaluation-metrics/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 21: Capability Evaluation Metrics","description":"Review evaluations of LLM knowledge, reasoning, coding, factuality, and human preference, and explain the limits of offline leaderboards in practical model selection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/21-evaluation-metrics/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 21: Capability Evaluation Metrics","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/21-evaluation-metrics/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 21: Capability Evaluation Metrics","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/05-evaluation-selection/21-evaluation-metrics/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9433,7 +9458,7 @@
 </tr>
 </tbody>
 </table>
-<p>SWE-bench Verified needs an additional validity caveat. OpenAI identified test-design flaws and training-data contamination, stopped reporting its score, and recommended SWE-bench Pro instead; see <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI's statement</a>. This is that organization's evaluation decision, not a claim that every user has stopped using the benchmark. Historical scores should retain their version and limitations and must not be compared directly with scores on a different question set.</p>
+<p>SWE-bench Verified needs an additional validity caveat. OpenAI identified test-design flaws and training-data contamination, stopped reporting its score, and recommended SWE-bench Pro instead; see OpenAI's statement<sup><a href="../../../book/references/#ref-155">【155】</a></sup>. This is that organization's evaluation decision, not a claim that every user has stopped using the benchmark. Historical scores should retain their version and limitations and must not be compared directly with scores on a different question set.</p>
 <h3 id="2121-passk">21.2.1 Pass@k<a class="headerlink" href="#2121-passk" title="Permanent link">&para;</a></h3>
 <p>A common coding metric is the <strong>proportion of problems for which at least 1 of <span class="arithmatex">\(k\)</span> generated candidates passes every test</strong>.</p>
 <p><span class="arithmatex">\(k=1\)</span> measures success from one sample. Larger <code>k</code> measures the chance that repeated attempts contain a successful solution, not the probability that a deployed system actually selects the correct one.</p>
@@ -9484,13 +9509,14 @@
 </table>
 <p>Perplexity (PPL) measures the average difficulty of predicting reference text under the model, not directly whether an answer is true or useful. Comparing PPL across different tokenizers, corpora, or normalization conventions can also mislead.</p>
 <h2 id="213-a-systemic-benchmark-problem-data-contamination"><span id="213-benchmark" class="legacy-heading-anchor" aria-hidden="true"></span>21.3 A systemic benchmark problem: data contamination<a class="headerlink" href="#213-a-systemic-benchmark-problem-data-contamination" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    A["Training or post-training&lt;br/&gt;may use public web data"] --&gt; B["Public questions, answers,&lt;br/&gt;and paraphrases&lt;br/&gt;May enter the data pipeline"]
-    B --&gt; C["The model may already have seen&lt;br/&gt;the answers during pretraining"]
-    C --&gt; D["Generalization to unseen questions&lt;br/&gt;may be overstated"]
-    D --&gt; E["Validate with independent tasks&lt;br/&gt;and held-out data&lt;br/&gt;Do not infer generalization&lt;br/&gt;from rankings alone"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Public web training data"] --&gt; B["Benchmark contamination"]
+    B --&gt; D["Generalization overstated"]
+    D --&gt; E["Independent validation"]
 
     style E fill:#fdecea</code></pre>
+<p>Training or post-training data pipelines may contain public benchmark questions, answers, and paraphrases. A model may therefore have seen answers during pretraining, making apparent generalization to unseen questions too optimistic. Validate with independent tasks and held-out data; rankings alone do not establish generalization.</p>
 <p>Contamination is one risk; mismatched task distributions, saturated tests, scoring errors, and unequal reasoning budgets are others. Disagreement between leaderboard scores and business results does not prove that a model memorized the questions. Confirming contamination requires data or experimental evidence.</p>
 <h3 id="2131-three-responses"><span id="2131" class="legacy-heading-anchor" aria-hidden="true"></span>21.3.1 Three responses<a class="headerlink" href="#2131-three-responses" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9500,17 +9526,12 @@
 </ol>
 <h2 id="214-build-a-task-specific-evaluation-set"><span id="214" class="legacy-heading-anchor" aria-hidden="true"></span>21.4 Build a task-specific evaluation set<a class="headerlink" href="#214-build-a-task-specific-evaluation-set" title="Permanent link">&para;</a></h2>
 <p><strong>The most practical response to benchmark limitations is a test set specific to your tasks.</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["Sample real user requests"] --&gt; B["Human-label expected answers"]
-    B --&gt; C["Stratified development set&lt;br/&gt;For iteration"]
-    B --&gt; H["Isolated held-out test set&lt;br/&gt;For milestone acceptance"]
-    C --&gt; D["Iterate on the model or prompt&lt;br/&gt;Compare on the development set"]
-    D --&gt; E["Compute pass rate or quality score"]
-    E --&gt; D
-    E --&gt;|After freezing the candidate| F["Milestone acceptance&lt;br/&gt;Report statistical uncertainty"]
-    H --&gt; F
-
-    style C fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Sample and label requests"] --&gt; B["Separate development and test"]
+    B --&gt; D["Iterate on development data"]
+    D --&gt;|Freeze candidate| F["Held-out acceptance"]</code></pre>
+<p>Sample real user requests and have humans label expected answers. Use a stratified development set to iterate on the model or prompt, repeatedly comparing pass rates or quality scores. Isolate a held-out set for milestone acceptance only after freezing the candidate, and report statistical uncertainty.</p>
 <h3 id="2141-scoring-two-types-of-task"><span id="2141" class="legacy-heading-anchor" aria-hidden="true"></span>21.4.1 Scoring two types of task<a class="headerlink" href="#2141-scoring-two-types-of-task" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9590,24 +9611,8 @@
 <p>Public benchmarks indicate roughly where a model stands. Your own test set and production metrics should determine whether it is ready to deploy.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2009.03300">Measuring Massive Multitask Language Understanding (MMLU)</a></li>
-<li><a href="https://arxiv.org/abs/2406.01574">MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2107.03374">Evaluating Large Language Models Trained on Code (HumanEval / Pass@k)</a></li>
-<li><a href="https://arxiv.org/abs/2310.06770">SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</a></li>
-<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities</a></li>
-<li><a href="https://arxiv.org/abs/2110.14168">Training Verifiers to Solve Math Word Problems (GSM8K)</a></li>
-<li><a href="https://arxiv.org/abs/2103.03874">Measuring Mathematical Problem Solving With the MATH Dataset</a></li>
-<li><a href="https://arxiv.org/abs/2311.12022">GPQA: A Graduate-Level Google-Proof Q&amp;A Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a></li>
-<li><a href="https://arxiv.org/abs/2211.09110">Holistic Evaluation of Language Models (HELM)</a></li>
-<li><a href="https://arxiv.org/abs/2406.19314">LiveBench: A Challenging, Contamination-Limited LLM Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://github.com/openai/human-eval/blob/master/human_eval/evaluation.py">HumanEval's official Pass@k implementation</a></li>
-<li><a href="https://www.swebench.com/SWE-bench/">Official SWE-bench documentation: Verified subset</a></li>
-<li><a href="https://arxiv.org/abs/2501.14249">Humanity's Last Exam</a></li>
-<li><a href="https://arxiv.org/abs/2005.00661">On Faithfulness and Factuality in Abstractive Summarization (lexical metrics versus faithfulness)</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-21">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9630,7 +9635,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

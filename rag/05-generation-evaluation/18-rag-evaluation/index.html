@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: A Framework for Evaluating RAG","description":"Define retrieval and evidence-coverage metrics, distinguish Ragas reference requirements, and evaluate citation entailment, abstention, freshness, and end-to-end task performance.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/18-rag-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: A Framework for Evaluating RAG","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/18-rag-evaluation/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: A Framework for Evaluating RAG","description":"Define retrieval and evidence-coverage metrics, distinguish Ragas reference requirements, and evaluate citation entailment, abstention, freshness, and end-to-end task performance.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/18-rag-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: A Framework for Evaluating RAG","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/18-rag-evaluation/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 18: A Framework for Evaluating RAG","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/05-generation-evaluation/18-rag-evaluation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9492,11 +9517,12 @@
 <h2 id="181-why-evaluation-must-be-layered"><span id="181" class="legacy-heading-anchor" aria-hidden="true"></span>18.1 Why Evaluation Must Be Layered<a class="headerlink" href="#181-why-evaluation-must-be-layered" title="Permanent link">&para;</a></h2>
 <p>RAG is a multistage pipeline. <strong>A poor final answer could result from a failure at any stage.</strong></p>
 <p>A single end-to-end score tells you that performance is poor, but not <strong>where it is poor</strong>. Layer-specific metrics can identify the responsible layer in the framework introduced in Chapter 14.</p>
-<pre class="mermaid"><code>flowchart TB
-    E[RAG evaluation] --&gt; E1[Retrieval&lt;br/&gt;Was evidence found and ranked highly?]
-    E --&gt; E2[Generation&lt;br/&gt;Is the answer faithful and relevant?]
-    E --&gt; E3[End to end&lt;br/&gt;Was the user's problem solved?]
-    E --&gt; E4[Production&lt;br/&gt;What do real users report?]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    E[Offline evaluation] --&gt; R[Retrieval and generation]
+    R --&gt; T[End-to-end success]
+    T --&gt; P[Production feedback]</code></pre>
+<p>At retrieval, measure whether evidence was found and ranked highly; at generation, whether the answer is faithful and relevant; end to end, whether the user's problem was solved. Production feedback adds what real users report rather than replacing these offline checks.</p>
 <p>End-to-end scores alone detect regression without diagnosing its cause. Retrieval scores alone cannot establish whether the full pipeline completes the task. Both kinds of evaluation are necessary.</p>
 <h2 id="182-retrieval-metrics"><span id="182" class="legacy-heading-anchor" aria-hidden="true"></span>18.2 Retrieval Metrics<a class="headerlink" href="#182-retrieval-metrics" title="Permanent link">&para;</a></h2>
 <p>Prerequisites: fix the corpus snapshot, query time, and scope visible to the user; annotate evidence in the original text and its corresponding chunks. Relevance, support for a particular fact, and sufficiency to answer the entire question are not the same label. Multi-hop questions require evidence sets. Reprints and overlapping passages must not be counted repeatedly as independent evidence.</p>
@@ -9848,13 +9874,13 @@
 </table>
 <p>Thumbs-down feedback is a valuable diagnostic lead, but it may reflect factual errors, permission restrictions, latency, stylistic preferences, or unreasonable expectations. De-identify, triage, spot-check, and annotate it before adding it to the evaluation set. Voluntary feedback is subject to selection bias. Also draw random or stratified samples from all requests, including those with no feedback and positive feedback, and combine them with task-completion evidence to assess overall quality. Negative feedback alone cannot establish the overall error rate.</p>
 <h2 id="188-the-right-order-for-establishing-evaluation"><span id="188" class="legacy-heading-anchor" aria-hidden="true"></span>18.8 The Right Order for Establishing Evaluation<a class="headerlink" href="#188-the-right-order-for-establishing-evaluation" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    S1[1. Collect real questions] --&gt; S2[2. Manually label correct chunks&lt;br/&gt;and reference answers]
-    S2 --&gt; S3[3. Establish retrieval-metric baselines]
-    S3 --&gt; S4[4. Add programmatic assertions]
-    S4 --&gt; S5[5. Introduce and calibrate&lt;br/&gt;an LLM judge]
-    S5 --&gt; S6[6. Feed production feedback&lt;br/&gt;into evaluation]
-    S6 --&gt; S1</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1[Collect and label questions] --&gt; S2[Retrieval baselines]
+    S2 --&gt; S3[Assertions and calibrated judge]
+    S3 --&gt; S4[Production feedback]
+    S4 --&gt; S1</code></pre>
+<p>Humans label correct chunks and reference answers for real questions. Establish retrieval-metric baselines before adding programmatic assertions, then introduce and calibrate an LLM judge. Feed production feedback into the next collection of evaluation questions.</p>
 <p>This is a feedback loop: production feedback supplements development and regression sets, which guide further improvements. Keep the frozen test set isolated and refresh it on an agreed schedule. Questions repeatedly used to choose thresholds or tune prompts are no longer unseen test examples.</p>
 <h2 id="189-common-mistakes"><span id="189" class="legacy-heading-anchor" aria-hidden="true"></span>18.9 Common Mistakes<a class="headerlink" href="#189-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="1891-evaluating-only-end-to-end-without-layers"><span id="1891" class="legacy-heading-anchor" aria-hidden="true"></span>18.9.1 Evaluating Only End to End, Without Layers<a class="headerlink" href="#1891-evaluating-only-end-to-end-without-layers" title="Permanent link">&para;</a></h3>
@@ -9889,19 +9915,8 @@
 <li><strong>Production thumbs-down feedback is a valuable source of failure cases.</strong> De-identify, triage, and annotate it before adding it to the evaluation feedback loop.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2309.15217">Ragas: Automated Evaluation of Retrieval Augmented Generation</a></li>
-<li><a href="https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/">Ragas: Context Recall</a></li>
-<li><a href="https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/">Ragas: Context Precision</a></li>
-<li><a href="https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/">Ragas: Faithfulness</a></li>
-<li><a href="https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/answer_relevance/">Ragas: Answer / Response Relevancy</a></li>
-<li><a href="https://arxiv.org/abs/2305.14627">ALCE: Enabling Large Language Models to Generate Text with Citations</a></li>
-<li><a href="https://arxiv.org/abs/2405.07437">Evaluation of Retrieval-Augmented Generation: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2406.04744">CRAG - Comprehensive RAG Benchmark</a></li>
-<li><a href="https://trec-rag.github.io/">TREC RAG Track</a></li>
-<li><a href="https://arxiv.org/abs/2409.12941">Fact, Fetch, and Reason: A Unified Evaluation of Retrieval-Augmented Generation</a></li>
-</ul>
-<p>The Ragas online metric documentation was consulted on 2026-09-15. API names here distinguish measurement definitions; they do not imply that every historical version provides classes with those names.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-18">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9924,7 +9939,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

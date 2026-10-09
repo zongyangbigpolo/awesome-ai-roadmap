@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Chain Design and LCEL","description":"Understand Runnable and LCEL composition, parallelism, and streaming semantics, along with retry scope, concurrency budgets, and the tradeoffs in migrating legacy Chains.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/02-chain-and-lcel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Chain Design and LCEL","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Chain Design and LCEL","description":"Understand Runnable and LCEL composition, parallelism, and streaming semantics, along with retry scope, concurrency budgets, and the tradeoffs in migrating legacy Chains.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/02-chain-and-lcel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Chain Design and LCEL","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: Chain Design and LCEL","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/02-chain-and-lcel/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9590,10 +9615,11 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>User input → Prompt template → Chat Model → Output parser → String answer
 </span></code></pre></div>
 <p><strong>Real applications can also have parallel and conditional branches</strong>:</p>
-<pre class="mermaid"><code>flowchart LR
-    Q["User question"] --&gt; R["Knowledge-base retrieval"]
-    Q --&gt; P["Pass through unchanged"]
-    R --&gt; M["Merge into the prompt"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["User question"] --&gt; R["Knowledge-base&lt;br/&gt;retrieval"]
+    Q --&gt; P["Pass through&lt;br/&gt;unchanged"]
+    R --&gt; M["Merge into the&lt;br/&gt;prompt"]
     P --&gt; M
     M --&gt; L["Model"]
 
@@ -9759,14 +9785,23 @@
 <p>Retry scope also changes cost and semantics. Applying <code>with_retry</code> to the entire chain may repeat retrieval or external writes that already succeeded. If only the model call should be retried, attach the retry to the model Runnable. The business must explicitly decide whether a failed branch may fall back to reduced functionality; an empty string must not disguise a failure as success.</p>
 <h2 id="26-why-does-a-common-protocol-support-continued-extension"><span id="26" class="legacy-heading-anchor" aria-hidden="true"></span>2.6 Why does a common protocol support continued extension?<a class="headerlink" href="#26-why-does-a-common-protocol-support-continued-extension" title="Permanent link">&para;</a></h2>
 <p>A common protocol does more than make components easy to connect. It also lets the workflow grow incrementally:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① Composability&lt;br/&gt;Each step handles its own inputs and outputs&lt;br/&gt;Small chains compose into larger ones&lt;br/&gt;Replace a model, parser, or retriever&lt;br/&gt;without rebuilding the entire business workflow"]
-    A --&gt; B["② Unified execution&lt;br/&gt;Single, async, batch, and streaming calls share interfaces&lt;br/&gt;Composed workflows can inherit these capabilities"]
-    B --&gt; C["③ Declarative dataflow&lt;br/&gt;Express where data goes first, then next&lt;br/&gt;Keep thread scheduling, callback propagation, and&lt;br/&gt;intermediate-result handling out of business logic"]
-    C --&gt; D["④ Reusable cross-cutting capabilities&lt;br/&gt;Retries, fallbacks, tags, metadata, and tracing&lt;br/&gt;Attach to one Runnable or apply to the entire chain"]
-    D --&gt; E["Production debugging reveals not just the final error&lt;br/&gt;but the actual substeps traversed by this run"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["① Composability"]
+    A --&gt; B["② Unified&lt;br/&gt;execution"]
+    B --&gt; C["③ Declarative&lt;br/&gt;dataflow"]
+    C --&gt; D["④ Reusable&lt;br/&gt;controls"]
+    D --&gt; E["Inspect&lt;br/&gt;execution"]
 
     style E fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Composability Each step handles its own inputs and outputs Small chains compose into larger ones Replace a model, parser, or retriever without rebuilding the entire business workflow</li>
+<li>② Unified execution Single, async, batch, and streaming calls share interfaces Composed workflows can inherit these capabilities</li>
+<li>③ Declarative dataflow Express where data goes first, then next Keep thread scheduling, callback propagation, and intermediate-result handling out of business logic</li>
+<li>④ Reusable cross-cutting capabilities Retries, fallbacks, tags, metadata, and tracing Attach to one Runnable or apply to the entire chain</li>
+<li>Production debugging reveals not just the final error but the actual substeps traversed by this run</li>
+</ul>
 <p>Keep the limitation in view as well: a shared interface only guarantees a consistent way to invoke components. <strong>The actual behavior still depends on whether each component truly supports the corresponding execution mode.</strong></p>
 <h2 id="27-why-were-legacy-chains-deprecated"><span id="27-chain" class="legacy-heading-anchor" aria-hidden="true"></span>2.7 Why were legacy Chains deprecated?<a class="headerlink" href="#27-why-were-legacy-chains-deprecated" title="Permanent link">&para;</a></h2>
 <p>This is one of the most common points of confusion during version migrations.</p>
@@ -9787,18 +9822,32 @@
 <p><strong>The practical approach</strong>: understand what <code>LLMChain</code> solved when you encounter it in old code; prefer Runnable and LCEL when writing new code.</p>
 <h2 id="28-how-do-you-choose-among-three-orchestration-approaches"><span id="28" class="legacy-heading-anchor" aria-hidden="true"></span>2.8 How do you choose among three orchestration approaches?<a class="headerlink" href="#28-how-do-you-choose-among-three-orchestration-approaches" title="Permanent link">&para;</a></h2>
 <p>Chains are suitable for fixed dataflows, not for forcing every process into one enormous LCEL expression.</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"Mostly a fixed dataflow,&lt;br/&gt;or model-selected actions?"}
-    Q1 --&gt;|Fixed dataflow| Q2{"Need cross-invocation recovery&lt;br/&gt;or long waits?"}
-    Q2 --&gt;|No| C["Chain (Runnable + LCEL)&lt;br/&gt;Short retrieval, classification, or summarization flows"]
-    Q2 --&gt;|Yes| G["Explicit LangGraph orchestration&lt;br/&gt;Design state and recovery boundaries"]
-    Q1 --&gt;|Model-selected actions| Q3{"Can the standard agent loop&lt;br/&gt;and middleware express it?"}
-    Q3 --&gt;|Yes| A["create_agent&lt;br/&gt;Configurable checkpointing and tool approval"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    Q1["Fixed or&lt;br/&gt;dynamic?"]
+    Q1 --&gt;|Fixed dataflow| Q2["Durable&lt;br/&gt;execution?"]
+    Q2 --&gt;|No| C["LCEL chain"]
+    Q2 --&gt;|Yes| G["LangGraph"]
+    Q1 --&gt;|"Dynamic actions"| Q3["Standard loop&lt;br/&gt;fits?"]
+    Q3 --&gt;|Yes| A["create_agent"]
     Q3 --&gt;|No| G
 
     style C fill:#e6f4ea
     style A fill:#e8f0fe
     style G fill:#fff3cd</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Model-selected actions</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Mostly a fixed dataflow, or model-selected actions?</li>
+<li>Need cross-invocation recovery or long waits?</li>
+<li>Chain (Runnable + LCEL) Short retrieval, classification, or summarization flows</li>
+<li>Explicit LangGraph orchestration Design state and recovery boundaries</li>
+<li>Can the standard agent loop and middleware express it?</li>
+<li>create_agent Configurable checkpointing and tool approval</li>
+</ul>
 <p>For a short, fixed dataflow, start with a Chain. Consider an agent when the model must decide the next step at runtime. Having known steps does not rule out LangGraph in the diagram: a long deterministic workflow may also need persistence, waits for human input, and recovery boundaries. In that case, choosing LangGraph directly is appropriate.</p>
 <p>LangGraph is not intended to replace every simple Chain. It handles long-running, stateful workflows that Chains cannot express clearly.</p>
 <h2 id="29-common-mistakes"><span id="29" class="legacy-heading-anchor" aria-hidden="true"></span>2.9 Common mistakes<a class="headerlink" href="#29-common-mistakes" title="Permanent link">&para;</a></h2>
@@ -9835,14 +9884,8 @@
 </ol>
 <p>Runnable is the common invocation protocol; a Chain is the dataflow assembled from those components; and LCEL is one way to declare their composition. Distinguishing these concepts helps you decide where retries, streaming, and tracing belong.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain documentation</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/base/RunnableSequence">RunnableSequence: LCEL composition, batching, and streaming semantics</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/base/Runnable">Runnable API</a></li>
-<li><a href="https://reference.langchain.com/python/langchain-core/runnables/">langchain-core Runnables API reference</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 migration guide</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph documentation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9865,7 +9908,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

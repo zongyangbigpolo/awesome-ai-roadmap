@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: A Survey of Post-Training Methods","description":"Distinguish supervision signals, optimization algorithms, and data generation in post-training, explaining PPO-RLHF, DPO, GRPO, rejection sampling, and RLAIF and how they can be combined.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/10-post-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: A Survey of Post-Training Methods","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/10-post-training/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: A Survey of Post-Training Methods","description":"Distinguish supervision signals, optimization algorithms, and data generation in post-training, explaining PPO-RLHF, DPO, GRPO, rejection sampling, and RLAIF and how they can be combined.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/10-post-training/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: A Survey of Post-Training Methods","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/10-post-training/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 10: A Survey of Post-Training Methods","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/10-post-training/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9525,7 +9550,8 @@
 <h2 id="102-ppo-rlhf-the-classic-online-optimization-workflow"><span id="102-ppo-rlhf" class="legacy-heading-anchor" aria-hidden="true"></span>10.2 PPO-RLHF: The Classic Online Optimization Workflow<a class="headerlink" href="#102-ppo-rlhf-the-classic-online-optimization-workflow" title="Permanent link">&para;</a></h2>
 <p>InstructGPT is a representative application of RLHF to language models, not the origin of RLHF. Research in 2017 already learned rewards from human comparisons of trajectories and used them to optimize policies.</p>
 <h3 id="1021-a-three-step-workflow"><span id="1021" class="legacy-heading-anchor" aria-hidden="true"></span>10.2.1 A Three-Step Workflow<a class="headerlink" href="#1021-a-three-step-workflow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     S1["Collect comparisons of answers&lt;br/&gt;to the same question"] --&gt; S2["Train a reward model, RM"]
     S2 --&gt; S3["Policy samples answers&lt;br/&gt;RM scoring and PPO updates"]
     REF["Frozen reference policy"] -.-&gt;|KL regularization| S3
@@ -9610,7 +9636,8 @@ m_\theta =
 \hat A_i=\frac{r_i-\bar r}{s_r+\varepsilon}
 \]</div>
 <p><code>sr</code> is the within-group reward standard deviation. The small positive <code>ε</code> shown here is an implementation safeguard against division by zero. The original outcome-supervised version assigns an answer's normalized reward to each of its tokens, using PPO-style probability-ratio clipping and KL regularization.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q["The same question"] --&gt; G["Sample G answers"]
     G --&gt; R["Score with rules or a reward model"]
     R --&gt; A["Compare within the group&lt;br/&gt;Compute relative advantages"]
@@ -9712,18 +9739,8 @@ m_\theta =
 <h2 id="109-chapter-summary"><span id="109" class="legacy-heading-anchor" aria-hidden="true"></span>10.9 Chapter Summary<a class="headerlink" href="#109-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>Understand post-training through <strong>supervision signals, policy optimizers, and data-generation loops</strong>. The decisive questions are whether feedback is trustworthy, whether examples cover the target distribution, whether online generation is affordable, and whether independent evaluation reproduces the task gains.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2203.02155">InstructGPT</a></li>
-<li><a href="https://arxiv.org/abs/1706.03741">Deep Reinforcement Learning from Human Preferences</a></li>
-<li><a href="https://arxiv.org/html/2305.18290v3">DPO</a></li>
-<li><a href="https://arxiv.org/html/2402.03300v2">DeepSeekMath: GRPO and iterative training</a></li>
-<li><a href="https://arxiv.org/html/2501.12948v1">DeepSeek-R1: initial report, §2</a></li>
-<li><a href="https://arxiv.org/html/2307.09288v2">Llama 2</a></li>
-<li><a href="https://arxiv.org/html/2407.21783v3">The Llama 3 Herd of Models</a></li>
-<li><a href="https://arxiv.org/abs/2212.08073">Constitutional AI</a></li>
-<li><a href="https://arxiv.org/abs/2309.00267">RLAIF vs. RLHF</a></li>
-<li><a href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization Algorithms</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-10">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9746,7 +9763,7 @@ m_\theta =
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

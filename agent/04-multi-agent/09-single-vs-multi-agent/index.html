@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Single-Agent and Multi-Agent Systems","description":"Compare single-agent and multi-agent systems in terms of context isolation, specialization, coordination costs, reliability, and observability.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/04-multi-agent/09-single-vs-multi-agent/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Single-Agent and Multi-Agent Systems","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/04-multi-agent/09-single-vs-multi-agent/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: Single-Agent and Multi-Agent Systems","description":"Compare single-agent and multi-agent systems in terms of context isolation, specialization, coordination costs, reliability, and observability.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/04-multi-agent/09-single-vs-multi-agent/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: Single-Agent and Multi-Agent Systems","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/04-multi-agent/09-single-vs-multi-agent/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: Single-Agent and Multi-Agent Systems","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/04-multi-agent/09-single-vs-multi-agent/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -10623,13 +10648,14 @@
 <blockquote>
 <p><strong>Apart from the main agent, do the invoked execution units independently choose their next actions based on their own observations?</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
-    U[User Goal] --&gt; A[Single Agent]
-    A --&gt; T1[Search Tool]
-    A --&gt; T2[Code Tool]
-    A --&gt; T3[Database Tool]
-    A --&gt; M[Memory]
-    A --&gt; W[Workflow]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    U["User Goal"] --&gt; A["Single Agent"]
+    A --&gt; T1["Search Tool"]
+    A --&gt; T2["Code Tool"]
+    A --&gt; T3["Database&lt;br/&gt;Tool"]
+    A --&gt; M["Memory"]
+    A --&gt; W["Workflow"]</code></pre>
 <p>An agent using ten tools can still be a single-agent system.</p>
 <p>However, “exposed through a tool interface” does not mean there is no agent inside. A search service that executes a supplied query or fixed process is an ordinary tool. If a model uses each round's results to decide what to search next and when to stop before returning an answer, it is a delegated subagent under this chapter's definition. The main agent can retain the global goal while the overall system is still multi-agent.</p>
 <h2 id="92-what-is-a-multi-agent-system"><span id="92-multi-agent" class="legacy-heading-anchor" aria-hidden="true"></span>9.2 What Is a Multi-Agent System?<a class="headerlink" href="#92-what-is-a-multi-agent-system" title="Permanent link">&para;</a></h2>
@@ -10643,13 +10669,14 @@
 <li>Input/output contract.</li>
 </ul>
 <p>They collaborate toward an overall goal through messages, tasks, artifacts, or shared workspaces.</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Global Goal] --&gt; O[Orchestrator Agent]
-    O --&gt; R[Research Agent]
-    O --&gt; C[Coding Agent]
-    O --&gt; V[Review Agent]
-    R --&gt; AR[Research Artifact]
-    C --&gt; AC[Code Artifact]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Global Goal"] --&gt; O["Orchestrator Agent"]
+    O --&gt; R["Research Agent"]
+    O --&gt; C["Coding Agent"]
+    O --&gt; V["Review Agent"]
+    R --&gt; AR["Research Artifact"]
+    C --&gt; AC["Code Artifact"]
     AR --&gt; V
     AC --&gt; V
     V --&gt; O</code></pre>
@@ -10687,11 +10714,12 @@
 <li>Gives each agent only local information;</li>
 <li>Exchanges results through summaries or artifacts.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    FULL[Large Task Context] --&gt; A[Agent A Context]
-    FULL --&gt; B[Agent B Context]
-    FULL --&gt; C[Agent C Context]
-    A --&gt; S[Shared Summary / Artifact]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    FULL["Large Task&lt;br/&gt;Context"] --&gt; A["Agent A&lt;br/&gt;Context"]
+    FULL --&gt; B["Agent B&lt;br/&gt;Context"]
+    FULL --&gt; C["Agent C&lt;br/&gt;Context"]
+    A --&gt; S["Shared&lt;br/&gt;Summary /&lt;br/&gt;Artifact"]
     B --&gt; S
     C --&gt; S</code></pre>
 <p>This can reduce the context burden on an individual agent, but introduces:</p>
@@ -10750,11 +10778,12 @@
 <p>For example, a research agent may have read-only web access, while only a deployment agent can access the deployment system.</p>
 <h3 id="953-parallel-execution"><span id="953" class="legacy-heading-anchor" aria-hidden="true"></span>9.5.3 Parallel Execution<a class="headerlink" href="#953-parallel-execution" title="Permanent link">&para;</a></h3>
 <p>Agents without dependencies on each other can work simultaneously:</p>
-<pre class="mermaid"><code>flowchart LR
-    O[Orchestrator] --&gt; A[Market Agent]
-    O --&gt; B[Technology Agent]
-    O --&gt; C[Risk Agent]
-    A --&gt; J[Join]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    O["Orchestrator"] --&gt; A["Market Agent"]
+    O --&gt; B["Technology&lt;br/&gt;Agent"]
+    O --&gt; C["Risk Agent"]
+    A --&gt; J["Join"]
     B --&gt; J
     C --&gt; J</code></pre>
 <h3 id="954-fault-isolation"><span id="954" class="legacy-heading-anchor" aria-hidden="true"></span>9.5.4 Fault Isolation<a class="headerlink" href="#954-fault-isolation" title="Permanent link">&para;</a></h3>
@@ -10787,16 +10816,17 @@
 <li>Permission management;</li>
 <li>Observability requirements.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    BENEFIT[Benefits of Division of Labor and Parallelism] --&gt; DECISION{Do Benefits Exceed Coordination Costs?}
-    COST[Communication, Integration, Conflicts, and Retries] --&gt; DECISION
-    DECISION --&gt;|Yes| MULTI[Multi-Agent]
-    DECISION --&gt;|No| SINGLE[Single-Agent]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    BENEFIT["Benefits of&lt;br/&gt;Division of Labor&lt;br/&gt;and Parallelism"] --&gt; DECISION["Do Benefits Exceed&lt;br/&gt;Coordination&lt;br/&gt;Costs?"]
+    COST["Communication,&lt;br/&gt;Integration,&lt;br/&gt;Conflicts, and&lt;br/&gt;Retries"] --&gt; DECISION
+    DECISION --&gt;|Yes| MULTI["Multi-Agent"]
+    DECISION --&gt;|No| SINGLE["Single-Agent"]</code></pre>
 <p>A complex task does not automatically call for a multi-agent system. If it cannot be separated cleanly, multiple agents may merely turn one difficult problem into several difficult coordination problems.</p>
 <h3 id="961-different-task-assumptions-in-two-2025-engineering-articles"><span id="961-2025" class="legacy-heading-anchor" aria-hidden="true"></span>9.6.1 Different Task Assumptions in Two 2025 Engineering Articles<a class="headerlink" href="#961-different-task-assumptions-in-two-2025-engineering-articles" title="Permanent link">&para;</a></h3>
 <p>The following accounts describe engineering experience with particular systems. They are not theorems about all multi-agent systems, nor complete descriptions of either company's current product capabilities.</p>
 <p><strong>Cognition's article</strong> focuses mainly on long-running coding tasks. When agents work in parallel, A does not know what decisions B has made. Even if they share the initial requirements, conflicting implicit assumptions can emerge later. The author therefore recommends starting with a single-threaded agent that maintains continuous context, then compressing long trajectories. This warns about risks in tightly coupled tasks; it is not a security requirement to “copy every trace to every agent.” Share relevant decisions, interfaces, and evidence without propagating credentials or unrelated private context.</p>
-<p><strong>Anthropic's research-system article</strong> reports that a Claude Opus 4 lead agent with Sonnet 4 subagents outperformed a single Opus 4 system by 90.2% on its internal research evaluation. In its data, multi-agent systems consumed roughly 15 times as many tokens as ordinary chats, while single agents consumed roughly 4 times as many. The <a href="https://www.anthropic.com/engineering/multi-agent-research-system">original article</a> does not provide all the details needed to reproduce the internal evaluation. The 90.2% figure does not mean a 90.2-percentage-point increase in accuracy, and 15 times is not a universal multiplier “relative to a single agent.” The model combination, additional reasoning budget, and task decomposition changed together, so the entire gain cannot be attributed to topology.</p>
+<p><strong>Anthropic's research-system article</strong> reports that a Claude Opus 4 lead agent with Sonnet 4 subagents outperformed a single Opus 4 system by 90.2% on its internal research evaluation. In its data, multi-agent systems consumed roughly 15 times as many tokens as ordinary chats, while single agents consumed roughly 4 times as many. The original article<sup><a href="../../../book/references/#ref-488">【488】</a></sup> does not provide all the details needed to reproduce the internal evaluation. The 90.2% figure does not mean a 90.2-percentage-point increase in accuracy, and 15 times is not a universal multiplier “relative to a single agent.” The model combination, additional reasoning budget, and task decomposition changed together, so the entire gain cannot be attributed to topology.</p>
 <h3 id="962-understanding-and-reconciling-the-difference"><span id="962" class="legacy-heading-anchor" aria-hidden="true"></span>9.6.2 Understanding and Reconciling the Difference<a class="headerlink" href="#962-understanding-and-reconciling-the-difference" title="Permanent link">&para;</a></h3>
 <p>The articles do not compare the same tasks under equal budgets. Task coupling and isolation boundaries explain part of the difference:</p>
 <table>
@@ -10927,12 +10957,13 @@
 <p>If subtasks are tightly coupled and continually exchange large amounts of context, a single agent or a shared-state workflow may be more suitable.</p>
 <h2 id="910-a-path-from-simple-to-complex"><span id="910" class="legacy-heading-anchor" aria-hidden="true"></span>9.10 A Path from Simple to Complex<a class="headerlink" href="#910-a-path-from-simple-to-complex" title="Permanent link">&para;</a></h2>
 <p>The following is a way to examine whether complexity is necessary, not a mandatory architectural progression. Fixed tasks can use a workflow directly without first implementing an unconstrained agent.</p>
-<pre class="mermaid"><code>flowchart LR
-    L[Single LLM Call] --&gt; T[LLM + Tools]
-    T --&gt; S[Single-Agent]
-    S --&gt; W[Agentic Workflow]
-    W --&gt; PW[Parallel Workers]
-    PW --&gt; M[Multi-Agent]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    L["Single LLM Call"] --&gt; T["LLM + Tools"]
+    T --&gt; S["Single-Agent"]
+    S --&gt; W["Agentic Workflow"]
+    W --&gt; PW["Parallel Workers"]
+    PW --&gt; M["Multi-Agent"]</code></pre>
 <p>If the bottleneck is unclear, investigate in this order. If the process is already known to be fixed, start directly with a workflow:</p>
 <ol>
 <li>Optimize a single call;</li>
@@ -10953,17 +10984,18 @@
 <li>Aggregating results;</li>
 <li>Handling failures and retries.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    U[User] --&gt; O[Orchestrator]
-    O --&gt; T[Task Ledger]
-    O --&gt; W1[Worker A]
-    O --&gt; W2[Worker B]
-    O --&gt; W3[Worker C]
-    W1 --&gt; ART[Shared Artifact Store]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    O["Orchestrator"]
+    O --&gt; T["Task Ledger"]
+    O --&gt; W1["Worker A"]
+    O --&gt; W2["Worker B"]
+    O --&gt; W3["Worker C"]
+    W1 --&gt; ART["Shared Artifact&lt;br/&gt;Store"]
     W2 --&gt; ART
     W3 --&gt; ART
-    ART --&gt; O
-    O --&gt; U</code></pre>
+    ART --&gt; O</code></pre>
+<p>The user submits work to the orchestrator and receives the result from it. Workers A, B, and C independently write into the shared artifact store; its return edge lets the orchestrator collect their work rather than transferring control to the user from each worker.</p>
 <h3 id="9111-advantages"><span id="9111" class="legacy-heading-anchor" aria-hidden="true"></span>9.11.1 Advantages<a class="headerlink" href="#9111-advantages" title="Permanent link">&para;</a></h3>
 <ul>
 <li>One consistent global goal;</li>
@@ -10992,19 +11024,20 @@
 </ul>
 <h2 id="912-hierarchical-multi-agent-systems"><span id="912-multi-agent" class="legacy-heading-anchor" aria-hidden="true"></span>9.12 Hierarchical Multi-Agent Systems<a class="headerlink" href="#912-hierarchical-multi-agent-systems" title="Permanent link">&para;</a></h2>
 <p>A hierarchy fits systems with many agents and clear domain boundaries.</p>
-<pre class="mermaid"><code>flowchart TB
-    O[Global Orchestrator] --&gt; R[Research Lead]
-    O --&gt; E[Engineering Lead]
-    O --&gt; Q[Quality Lead]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    O["Global&lt;br/&gt;Orchestrator"] --&gt; R["Research&lt;br/&gt;Lead"]
+    O --&gt; E["Engineering&lt;br/&gt;Lead"]
+    O --&gt; Q["Quality Lead"]
 
-    R --&gt; R1[Web Researcher]
-    R --&gt; R2[Database Researcher]
+    R --&gt; R1["Web&lt;br/&gt;Researcher"]
+    R --&gt; R2["Database&lt;br/&gt;Researcher"]
 
-    E --&gt; E1[Frontend Worker]
-    E --&gt; E2[Backend Worker]
+    E --&gt; E1["Frontend&lt;br/&gt;Worker"]
+    E --&gt; E2["Backend&lt;br/&gt;Worker"]
 
-    Q --&gt; Q1[Test Worker]
-    Q --&gt; Q2[Security Reviewer]</code></pre>
+    Q --&gt; Q1["Test Worker"]
+    Q --&gt; Q2["Security&lt;br/&gt;Reviewer"]</code></pre>
 <p>Advantages:</p>
 <ul>
 <li>The top-level agent need not manage every detail;</li>
@@ -11021,10 +11054,11 @@
 </ul>
 <h2 id="913-pipeline-architecture"><span id="913-pipeline" class="legacy-heading-anchor" aria-hidden="true"></span>9.13 Pipeline Architecture<a class="headerlink" href="#913-pipeline-architecture" title="Permanent link">&para;</a></h2>
 <p>A pipeline has multiple agents process work in a fixed order:</p>
-<pre class="mermaid"><code>flowchart LR
-    R[Research Agent] --&gt; W[Writer Agent]
-    W --&gt; V[Review Agent]
-    V --&gt; P[Publisher Agent]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Research Agent"] --&gt; W["Writer Agent"]
+    W --&gt; V["Review Agent"]
+    V --&gt; P["Publisher Agent"]</code></pre>
 <p>It is closer to a workflow:</p>
 <ul>
 <li>The developer defines the sequence;</li>
@@ -11041,11 +11075,12 @@
 <p>The risk is that upstream errors propagate downstream, so each stage needs a validation gate and acceptance criteria.</p>
 <h2 id="914-blackboard-shared-workspace">9.14 Blackboard / Shared Workspace<a class="headerlink" href="#914-blackboard-shared-workspace" title="Permanent link">&para;</a></h2>
 <p>Rather than sending all messages directly to one another, agents read and write a shared workspace:</p>
-<pre class="mermaid"><code>flowchart TB
-    B[Shared Blackboard&lt;br/&gt;Tasks + Facts + Artifacts]
-    A1[Agent A] &lt;--&gt; B
-    A2[Agent B] &lt;--&gt; B
-    A3[Agent C] &lt;--&gt; B</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    B["Shared Blackboard&lt;br/&gt;Tasks + Facts +&lt;br/&gt;Artifacts"]
+    A1["Agent A"] &lt;--&gt; B
+    A2["Agent B"] &lt;--&gt; B
+    A3["Agent C"] &lt;--&gt; B</code></pre>
 <p>The workspace can contain:</p>
 <ul>
 <li>A task ledger;</li>
@@ -11074,10 +11109,11 @@
 <p>Distinguish two types of conflict. Two workers overwriting the same field is a storage-concurrency problem, handled through transactions, CAS—an atomic update conditional on a version comparison—or a single writer. Two reports reaching opposite conclusions about the same fact is a semantic conflict that requires checking sources, dates, and applicable conditions. Handling CAS failures correctly prevents lost updates; a retry must not simply force an overwrite. CAS also cannot establish a report's correctness, and agreement by most agents is no substitute for factual verification.</p>
 <h2 id="915-peer-to-peer-architecture"><span id="915-peer-to-peer" class="legacy-heading-anchor" aria-hidden="true"></span>9.15 Peer-to-Peer Architecture<a class="headerlink" href="#915-peer-to-peer-architecture" title="Permanent link">&para;</a></h2>
 <p>In a peer-to-peer architecture, agents can discover and contact one another directly:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Agent A] &lt;--&gt; B[Agent B]
-    B &lt;--&gt; C[Agent C]
-    C &lt;--&gt; D[Agent D]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Agent A"] &lt;--&gt; B["Agent B"]
+    B &lt;--&gt; C["Agent C"]
+    C &lt;--&gt; D["Agent D"]
     D &lt;--&gt; A
     A &lt;--&gt; C</code></pre>
 <h3 id="9151-advantages"><span id="9151" class="legacy-heading-anchor" aria-hidden="true"></span>9.15.1 Advantages<a class="headerlink" href="#9151-advantages" title="Permanent link">&para;</a></h3>
@@ -11125,16 +11161,17 @@
 <li>An owner for the final result.</li>
 </ul>
 <p>The difficulty is the high cost of implementing these mechanisms. For agent systems within one team and one product, centralized or hierarchical orchestration is usually simpler.</p>
-<p>Agent negotiation here is not strong consensus in the Raft/Paxos sense. The former discusses proposals and evidence; the latter ensures that storage replicas agree on log order and committed state under a specified failure model. If a replicated task ledger is needed, use a database or coordination service with the required guarantees rather than asking LLMs to vote for an owner. <a href="https://raft.github.io/">Raft</a> tolerates a certain number of crash failures, but neither validates business facts nor provides Byzantine fault tolerance against malicious agent outputs.</p>
+<p>Agent negotiation here is not strong consensus in the Raft/Paxos sense. The former discusses proposals and evidence; the latter ensures that storage replicas agree on log order and committed state under a specified failure model. If a replicated task ledger is needed, use a database or coordination service with the required guarantees rather than asking LLMs to vote for an owner. Raft<sup><a href="../../../book/references/#ref-491">【491】</a></sup> tolerates a certain number of crash failures, but neither validates business facts nor provides Byzantine fault tolerance against malicious agent outputs.</p>
 <h2 id="916-hybrid-topologies"><span id="916" class="legacy-heading-anchor" aria-hidden="true"></span>9.16 Hybrid Topologies<a class="headerlink" href="#916-hybrid-topologies" title="Permanent link">&para;</a></h2>
 <p>Real systems often combine patterns:</p>
-<pre class="mermaid"><code>flowchart TB
-    W[Deterministic Workflow] --&gt; O[Orchestrator]
-    O --&gt; A[Domain Agent A]
-    O --&gt; B[Domain Agent B]
-    A &lt;--&gt; C[External Partner Agent]
-    B --&gt; P[Worker Pool]
-    A --&gt; S[Shared Workspace]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    W["Deterministic&lt;br/&gt;Workflow"] --&gt; O["Orchestrator"]
+    O --&gt; A["Domain Agent&lt;br/&gt;A"]
+    O --&gt; B["Domain Agent&lt;br/&gt;B"]
+    A &lt;--&gt; C["External&lt;br/&gt;Partner&lt;br/&gt;Agent"]
+    B --&gt; P["Worker Pool"]
+    A --&gt; S["Shared&lt;br/&gt;Workspace"]
     B --&gt; S</code></pre>
 <p>For example:</p>
 <ul>
@@ -11216,28 +11253,30 @@
 <li>Authentication requirements;</li>
 <li>Input and output modes.</li>
 </ul>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant O as Orchestrator
     participant R as Remote Agent
 
     O-&gt;&gt;R: Read Agent Card
-    R--&gt;&gt;O: Return skills and connection details
-    O-&gt;&gt;R: Send message and request processing
-    R--&gt;&gt;O: Return Task, using the task path in this example
+    R--&gt;&gt;O: Return skills and&lt;br/&gt;connection details
+    O-&gt;&gt;R: Send message and request&lt;br/&gt;processing
+    R--&gt;&gt;O: Return Task, using the&lt;br/&gt;task path in this&lt;br/&gt;example
     R--&gt;&gt;O: Status updates
     R--&gt;&gt;O: Return Artifact</code></pre>
 <p>A2A standardizes communication; it does not automatically solve task decomposition, trust, fees, conflicts, or global scheduling. The diagram shows the path in which the server returns a Task and its status is then tracked. A simple request can instead return a Message directly; not every interaction must create a Task.</p>
-<p>This section is pinned to <a href="https://github.com/a2aproject/A2A/releases/tag/v1.0.1">A2A v1.0.1</a>, whose wire-protocol version identifier is <code>1.0</code>. Integration requires choosing a binding supported by both parties: the concrete mapping onto JSON-RPC, HTTP/REST, or gRPC. Application-defined JSON is not automatically a standard message. An Agent Card declares capabilities; it is neither a capability evaluation nor an authorization credential. Cross-organization calls still need verified service identities and separate agreements on timeouts, fees, and result acceptance.</p>
+<p>This section is pinned to A2A v1.0.1<sup><a href="../../../book/references/#ref-309">【309】</a></sup>, whose wire-protocol version identifier is <code>1.0</code>. Integration requires choosing a binding supported by both parties: the concrete mapping onto JSON-RPC, HTTP/REST, or gRPC. Application-defined JSON is not automatically a standard message. An Agent Card declares capabilities; it is neither a capability evaluation nor an authorization credential. Cross-organization calls still need verified service identities and separate agreements on timeouts, fees, and result acceptance.</p>
 <h2 id="919-designing-shared-memory"><span id="919-shared-memory" class="legacy-heading-anchor" aria-hidden="true"></span>9.19 Designing Shared Memory<a class="headerlink" href="#919-designing-shared-memory" title="Permanent link">&para;</a></h2>
 <p>Agents should not share every message.</p>
 <p>A layered design is recommended:</p>
-<pre class="mermaid"><code>flowchart TB
-    A1[Agent A] --&gt; P1[Private Context A]
-    A2[Agent B] --&gt; P2[Private Context B]
-    A1 --&gt; WS[Shared Task Workspace]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    A1["Agent A"] --&gt; P1["Private&lt;br/&gt;Context A"]
+    A2["Agent B"] --&gt; P2["Private&lt;br/&gt;Context B"]
+    A1 --&gt; WS["Shared Task&lt;br/&gt;Workspace"]
     A2 --&gt; WS
-    WS --&gt; VM[Validated Shared Memory]
-    A1 --&gt; AUDIT[Audit Log]
+    WS --&gt; VM["Validated&lt;br/&gt;Shared&lt;br/&gt;Memory"]
+    A1 --&gt; AUDIT["Audit Log"]
     A2 --&gt; AUDIT</code></pre>
 <h3 id="9191-private-context">9.19.1 Private Context<a class="headerlink" href="#9191-private-context" title="Permanent link">&para;</a></h3>
 <p>Store local working notes and task state. Recovery needs available inputs, tool results, decision summaries, and checkpoints. It must not depend on hidden reasoning that the provider does not expose.</p>
@@ -11309,13 +11348,14 @@
 <li>Cancellation of downstream tasks;</li>
 <li>Returning partial results.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    W[Worker Failure] --&gt; O[Orchestrator]
-    O --&gt; C{Error Type}
-    C --&gt;|Transient| R[Retry]
-    C --&gt;|Capability Mismatch| S[Switch Worker]
-    C --&gt;|Invalid Plan| P[Replan]
-    C --&gt;|High Risk| H[Human Handling]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    W["Worker&lt;br/&gt;Failure"] --&gt; O["Orchestrator"]
+    O --&gt; C["Error Type"]
+    C --&gt;|Transient| R["Retry"]
+    C --&gt;|Capability&lt;br/&gt;Mismatch| S["Switch&lt;br/&gt;Worker"]
+    C --&gt;|Invalid Plan| P["Replan"]
+    C --&gt;|High Risk| H["Human&lt;br/&gt;Handling"]</code></pre>
 <h3 id="9212-decentralized-architecture"><span id="9212" class="legacy-heading-anchor" aria-hidden="true"></span>9.21.2 Decentralized Architecture<a class="headerlink" href="#9212-decentralized-architecture" title="Permanent link">&para;</a></h3>
 <p>In a decentralized system, no node inherently owns failure handling. Assign explicit responsibility for:</p>
 <ul>
@@ -11377,17 +11417,32 @@ T_{critical}
 <li>Failure recovery;</li>
 <li>Tracing.</li>
 </ul>
+<p>Plan and select workers.</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; P[Planner]
-    P --&gt; DAG[Task DAG]
-    DAG --&gt; S[Scheduler]
-    S --&gt; CR[Capability Registry]
-    CR --&gt; W[Worker Selection]
-    W --&gt; E[Execution]
-    E --&gt; V[Verifier]
-    V --&gt;|Pass| A[Artifact Store]
-    V --&gt;|Fail| R[Retry / Replan]
-    A --&gt; J[Join / Synthesis]</code></pre>
+    G[Goal]
+    P[Planner]
+    DAG[Task DAG]
+    S[Scheduler]
+    CR[Capability Registry]
+    W[Worker Selection]
+    G --&gt; P
+    P --&gt; DAG
+    DAG --&gt; S
+    S --&gt; CR
+    CR --&gt; W</code></pre>
+<p>Verify execution before joining accepted artifacts.</p>
+<pre class="mermaid"><code>flowchart TB
+    W[Worker Selection]
+    E[Execution]
+    V[Verifier]
+    A[Artifact Store]
+    R[Retry / Replan]
+    J[Join / Synthesis]
+    W --&gt; E
+    E --&gt; V
+    V --&gt;|Pass| A
+    V --&gt;|Fail| R
+    A --&gt; J</code></pre>
 <p>The orchestrator's model-driven decisions must also be constrained by a deterministic runtime.</p>
 <h2 id="925-designing-workers"><span id="925-worker" class="legacy-heading-anchor" aria-hidden="true"></span>9.25 Designing Workers<a class="headerlink" href="#925-designing-workers" title="Permanent link">&para;</a></h2>
 <p>A worker should have a narrow, explicit responsibility:</p>
@@ -11418,12 +11473,13 @@ T_{critical}
 <li>Vary in quality.</li>
 </ul>
 <p>The integration process should include:</p>
-<pre class="mermaid"><code>flowchart LR
-    R[Worker Results] --&gt; S[Schema Validation]
-    S --&gt; D[Deduplicate]
-    D --&gt; C[Conflict Detection]
-    C --&gt; V[Evidence Verification]
-    V --&gt; J[Join / Synthesis]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Worker Results"] --&gt; S["Schema Validation"]
+    S --&gt; D["Deduplicate"]
+    D --&gt; C["Conflict Detection"]
+    C --&gt; V["Evidence Verification"]
+    V --&gt; J["Join / Synthesis"]</code></pre>
 <p>A writer agent should not silently choose between conflicting results. Instead:</p>
 <ul>
 <li>Flag the conflict;</li>
@@ -11499,23 +11555,12 @@ T_{critical}
 <p>Investigate changes at three competitors over the last six months and produce a comparative report with sources.</p>
 </blockquote>
 <pre class="mermaid"><code>flowchart TB
-    U[User Goal] --&gt; O[Research Orchestrator]
-    O --&gt; A[Competitor A Agent]
-    O --&gt; B[Competitor B Agent]
-    O --&gt; C[Competitor C Agent]
-    O --&gt; T[Market Trend Agent]
-
-    A --&gt; STORE[Artifact Store]
-    B --&gt; STORE
-    C --&gt; STORE
-    T --&gt; STORE
-
+    O[Research Orchestrator] --&gt; STORE[Artifact Store]
     STORE --&gt; F[Fact-check Agent]
-    F --&gt; V{Evidence Passes?}
-    V --&gt;|No| O
-    V --&gt;|Yes| W[Writer Agent]
-    W --&gt; O
-    O --&gt; U</code></pre>
+    F --&gt;|Evidence fails| O
+    F --&gt;|Evidence passes| W[Writer Agent]
+    W --&gt; O</code></pre>
+<p>The user goal enters the research orchestrator. The first arrow includes four separate workers—competitor A, B, and C agents plus a market-trend agent—whose artifacts converge on the same store. Their work can proceed independently; the overview does not turn them into a sequential pipeline. Failed evidence returns to orchestration, while accepted evidence goes to writing. The writer returns to the orchestrator, which returns the result to the user.</p>
 <h3 id="9281-why-a-multi-agent-system-fits"><span id="9281-multi-agent" class="legacy-heading-anchor" aria-hidden="true"></span>9.28.1 Why a Multi-Agent System Fits<a class="headerlink" href="#9281-why-a-multi-agent-system-fits" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The three competitors can be researched independently;</li>
@@ -11599,23 +11644,46 @@ T_{critical}
 </tbody>
 </table>
 <h2 id="930-selection-decision-tree"><span id="930" class="legacy-heading-anchor" aria-hidden="true"></span>9.30 Selection Decision Tree<a class="headerlink" href="#930-selection-decision-tree" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    G[New Task] --&gt; S{Single Agent Meets Quality, Cost, and Latency Targets?}
-    S --&gt;|Yes| SINGLE[Use a Single Agent]
-    S --&gt;|No| D{Can Subtasks Be Clearly Separated?}
-    D --&gt;|No| IMPROVE[Improve Context, Tools, Memory, or Workflow]
-    D --&gt;|Yes| H{Benefits from Isolation, Heterogeneity, or Parallelism?}
-    H --&gt;|No| WORKFLOW[Single-Agent + Workflow]
-    H --&gt;|Yes| C{Are Coordination Costs Acceptable?}
-    C --&gt;|No| LIMITED[A Few Parallel Workers]
-    C --&gt;|Yes| M[Multi-Agent]
-    M --&gt; T{Open-Ended Peer Collaboration Needed?}
-    T --&gt;|No| O[Orchestrator / Hierarchical]
-    T --&gt;|Yes| P[Hybrid / Peer-to-Peer]</code></pre>
+<p>First test whether a single agent is sufficient.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["New Task"]
+    S["Single Agent Meets&lt;br/&gt;Quality, Cost, and&lt;br/&gt;Latency Targets?"]
+    SINGLE["Use a Single Agent"]
+    D["Can Subtasks Be Clearly&lt;br/&gt;Separated?"]
+    IMPROVE["Improve Context, Tools,&lt;br/&gt;Memory, or Workflow"]
+    G --&gt; S
+    S --&gt;|Yes| SINGLE
+    S --&gt;|No| D
+    D --&gt;|No| IMPROVE</code></pre>
+<p>Only separable tasks proceed to the benefit and cost checks.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    D["Can Subtasks Be&lt;br/&gt;Clearly Separated?"]
+    H["Benefits from&lt;br/&gt;Isolation,&lt;br/&gt;Heterogeneity, or&lt;br/&gt;Parallelism?"]
+    WORKFLOW["Single-Agent +&lt;br/&gt;Workflow"]
+    C["Are Coordination&lt;br/&gt;Costs Acceptable?"]
+    LIMITED["A Few Parallel&lt;br/&gt;Workers"]
+    M["Multi-Agent"]
+    D --&gt;|Yes| H
+    H --&gt;|No| WORKFLOW
+    H --&gt;|Yes| C
+    C --&gt;|No| LIMITED
+    C --&gt;|Yes| M</code></pre>
+<p>Choose the topology after choosing multiple agents.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    M["Multi-Agent"]
+    T["Open-Ended Peer&lt;br/&gt;Collaboration Needed?"]
+    O["Orchestrator /&lt;br/&gt;Hierarchical"]
+    P["Hybrid / Peer-to-Peer"]
+    M --&gt; T
+    T --&gt;|No| O
+    T --&gt;|Yes| P</code></pre>
 <p>This tree starts from a measured single-agent baseline. It does not require rule-based or fixed-workflow tasks to adopt an agent first. Whichever branch is chosen, return to the same task set to measure quality, total cost, and latency. “Acceptable” in the diagram means business constraints, not a score the model assigns to itself.</p>
 <h2 id="931-evaluating-whether-multiple-agents-are-worthwhile"><span id="931-multi-agent" class="legacy-heading-anchor" aria-hidden="true"></span>9.31 Evaluating Whether Multiple Agents Are Worthwhile<a class="headerlink" href="#931-evaluating-whether-multiple-agents-are-worthwhile" title="Permanent link">&para;</a></h2>
 <p>First establish a baseline using the same tasks, tool permissions, and acceptance criteria. Then compare under two constraints: which system provides better quality at the same total budget, and which is cheaper and faster at the same quality target. Total budget includes the main agent, subagents, verification, failed attempts, tool fees, and retries—not just the final response. If the multi-agent system uses stronger models or more tokens, run separate ablations to avoid mistaking additional compute for collaboration benefits.</p>
-<p>Stratify evaluation by task decomposability, dependency density, context length, and side-effect risk. Retain failed and timed-out samples, repeat the same tasks, and report variation or confidence intervals. Removing parallelism, role prompts, or independent context one at a time helps identify what actually contributes. <a href="https://arxiv.org/abs/2503.13657">MAST</a> offers ways to analyze failures in task specification, cross-agent alignment, verification, and termination. Its taxonomy is useful for annotation, not a universal system success rate.</p>
+<p>Stratify evaluation by task decomposability, dependency density, context length, and side-effect risk. Retain failed and timed-out samples, repeat the same tasks, and report variation or confidence intervals. Removing parallelism, role prompts, or independent context one at a time helps identify what actually contributes. MAST<sup><a href="../../../book/references/#ref-490">【490】</a></sup> offers ways to analyze failures in task specification, cross-agent alignment, verification, and termination. Its taxonomy is useful for annotation, not a universal system success rate.</p>
 <h3 id="9311-quality"><span id="9311" class="legacy-heading-anchor" aria-hidden="true"></span>9.31.1 Quality<a class="headerlink" href="#9311-quality" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Overall task success rate;</li>
@@ -11705,19 +11773,8 @@ R_{coord}=\frac{C_{coord}}{C_{total}}
 </blockquote>
 <p>Architectural complexity should be driven by bottlenecks exposed in evaluation. Leave strongly consistent task-ledger commits to storage systems. Resolve disagreements between agents through evidence, acceptance criteria, and clear responsibility. Neither can substitute for the other.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: How we built our multi-agent research system</a></li>
-<li><a href="https://cognition.com/blog/dont-build-multi-agents">Cognition: Don't Build Multi-Agents</a></li>
-<li><a href="https://arxiv.org/abs/2503.13657">Why Do Multi-Agent LLM Systems Fail? (MAST)</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md">Agent2Agent (A2A) v1.0.1 Specification</a></li>
-<li><a href="https://raft.github.io/">Raft: Algorithm and papers maintained by the authors</a></li>
-<li><a href="https://etcd.io/docs/v3.5/learning/api/">etcd v3.5: Revisions, conditional transactions, and leases</a></li>
-<li><a href="https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html">Martin Kleppmann: How to do distributed locking (2016)</a> (cited for its analysis of process pauses, leases, and fencing tokens, without generalizing its Redis-version conclusions to current products)</li>
-<li><a href="https://arxiv.org/abs/2308.08155">AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation</a></li>
-<li><a href="https://arxiv.org/abs/2303.17760">CAMEL: Communicative Agents for Mind Exploration of Large Language Model Society</a></li>
-</ul>
-<p>Source review recorded in the original manuscript: 2026-09-15. The Anthropic–Cognition comparison is limited to the 2025 systems and models described in those articles; their internal evaluations were not reproduced. A2A was checked against the v1.0.1 release tag, not the stale <code>Latest Released Version 1.0.0</code> wording at the top of the specification page.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -11740,7 +11797,7 @@ R_{coord}=\frac{C_{coord}}{C_{total}}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

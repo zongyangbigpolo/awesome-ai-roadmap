@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Tokenizers","description":"Distinguish BPE, WordPiece, Unigram, and SentencePiece, and examine byte fallback, vocabulary costs, Chinese tokenization, and chat-template compatibility.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/05-tokenizer/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Tokenizers","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/05-tokenizer/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 5: Tokenizers","description":"Distinguish BPE, WordPiece, Unigram, and SentencePiece, and examine byte fallback, vocabulary costs, Chinese tokenization, and chat-template compatibility.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/05-tokenizer/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 5: Tokenizers","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/05-tokenizer/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 5: Tokenizers","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/01-foundations/05-tokenizer/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9502,7 +9527,8 @@
 <p>For the autoregressive text models discussed in this chapter, a tokenizer converts a string into a sequence of token IDs. The model computes a probability distribution for the next token, and the selected token sequence is decoded back into text.</p>
 <p>IDs are used to look up embeddings; the Transformer itself operates on continuous vectors. Multimodal models may also receive image or audio features, so “accepts only integers” is not a definition of all large models.</p>
 <p>The Chinese example “你好，世界” below means “Hello, world.”</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     TXT["Human-readable text&lt;br/&gt;「你好，世界」"] --&gt;|encode| IDS["Token ID sequence&lt;br/&gt;Values depend on the tokenizer"]
     IDS --&gt; MODEL["Embedding + model"]
     MODEL --&gt; OUT["Probability distribution&lt;br/&gt;for the next token"]
@@ -9565,14 +9591,16 @@
 <p>BPE, Unigram, and WordPiece are subword algorithms. <strong>SentencePiece is a library and processing framework that supports algorithms including BPE and Unigram.</strong> These four names are not mutually exclusive alternatives at the same level. Byte- and character-level models also have suitable applications, with costs primarily in sequence length and training efficiency.</p>
 <h2 id="53-the-bpe-algorithm"><span id="53-bpe" class="legacy-heading-anchor" aria-hidden="true"></span>5.3 The BPE algorithm<a class="headerlink" href="#53-the-bpe-algorithm" title="Permanent link">&para;</a></h2>
 <p>BPE, or Byte Pair Encoding, has a simple three-step principle:</p>
-<pre class="mermaid"><code>flowchart TB
-    S1["① Initialize&lt;br/&gt;Split the corpus into minimal units: bytes or characters&lt;br/&gt;Each character is a base token"]
-    S1 --&gt; S2["② Merge repeatedly&lt;br/&gt;Count frequencies of all adjacent token pairs&lt;br/&gt;Merge the most frequent pair into a new token"]
-    S2 --&gt; S3{"Has the vocabulary reached&lt;br/&gt;the target size?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S1["Initialize base tokens"]
+    S1 --&gt; S2["Merge most frequent pair"]
+    S2 --&gt; S3{"Target size reached?"}
     S3 --&gt;|No| S2
-    S3 --&gt;|Yes| S4["③ Finish&lt;br/&gt;Obtain a vocabulary + merge rules"]
+    S3 --&gt;|Yes| S4["Vocabulary + merge rules"]
 
     style S4 fill:#e6f4ea</code></pre>
+<p>Initialization splits the corpus into base units: bytes for byte-level BPE, or characters for character-level BPE. At each merge, count all adjacent token-pair frequencies and replace the most frequent pair with a new token. Repeat until the vocabulary reaches its target size; retain both the vocabulary and the merge rules.</p>
 <p><strong>An example of merging:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>"t" and "h" frequently occur together   → merge into "th" and add it to the vocabulary
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>"th" and "e" frequently occur together  → merge into "the" and add it to the vocabulary
@@ -9734,18 +9762,8 @@
 <li><strong>Vocabulary size, sequence length, and output-layer cost constrain one another.</strong> Replacing a tokenizer is more than swapping a preprocessing function.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units (BPE)</a></li>
-<li><a href="https://arxiv.org/abs/1808.06226">SentencePiece: A simple and language independent subword tokenizer</a></li>
-<li><a href="https://arxiv.org/abs/1804.10959">Subword Regularization: Improving NMT Models with Multiple Subword Candidates (Unigram)</a></li>
-<li><a href="https://huggingface.co/learn/nlp-course/chapter6/1">Hugging Face: Tokenizers tutorial</a></li>
-<li><a href="https://github.com/openai/tiktoken">OpenAI tiktoken</a></li>
-<li><a href="https://arxiv.org/abs/2407.21783">The Llama 3 Herd of Models</a></li>
-<li><a href="https://github.com/meta-llama/llama3/blob/main/llama/tokenizer.py">Meta Llama 3 tokenizer implementation</a></li>
-<li><a href="https://github.com/google/sentencepiece">Google SentencePiece implementation and configuration</a></li>
-<li><a href="https://huggingface.co/docs/transformers/tokenizer_summary">Hugging Face Transformers: Tokenization algorithms</a></li>
-<li><a href="https://huggingface.co/docs/transformers/chat_templating">Hugging Face Transformers: Chat templates</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-05">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9768,7 +9786,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十一章：能力评测指标","description":"整理大语言模型的知识、推理、代码、事实性和人类偏好评测指标，并说明离线榜单在真实选型中的局限。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/21-evaluation-metrics/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十一章：能力评测指标","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/21-evaluation-metrics/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十一章：能力评测指标","description":"整理大语言模型的知识、推理、代码、事实性和人类偏好评测指标，并说明离线榜单在真实选型中的局限。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/21-evaluation-metrics/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十一章：能力评测指标","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/21-evaluation-metrics/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十一章：能力评测指标","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/21-evaluation-metrics/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9433,7 +9458,7 @@
 </tr>
 </tbody>
 </table>
-<p>SWE-bench Verified 还需要额外留意基准有效性：OpenAI 指出其测试设计缺陷与训练数据污染问题，已停止报告该分数，并建议改报 SWE-bench Pro，见 <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI 声明</a>。这是该机构的评测决定，不代表所有使用者都已停止使用；保留历史成绩时，应说明其版本与局限，不能直接与另一套题目的分数比较。</p>
+<p>SWE-bench Verified 还需要额外留意基准有效性：OpenAI 指出其测试设计缺陷与训练数据污染问题，已停止报告该分数，并建议改报 SWE-bench Pro，见 OpenAI 声明<sup><a href="../../../book/references/#ref-155">【155】</a></sup>。这是该机构的评测决定，不代表所有使用者都已停止使用；保留历史成绩时，应说明其版本与局限，不能直接与另一套题目的分数比较。</p>
 <h3 id="2121-passk">21.2.1 Pass@k<a class="headerlink" href="#2121-passk" title="Permanent link">&para;</a></h3>
 <p>代码评测的常见指标：<strong>生成 <span class="arithmatex">\(k\)</span> 个候选代码，至少 1 个能通过所有测试的比例</strong>。</p>
 <p><span class="arithmatex">\(k=1\)</span> 衡量一次采样成功的能力；更大的 <code>k</code> 衡量多次尝试中存在成功解的概率，不能当作系统实际选中正确解的概率。</p>
@@ -9484,13 +9509,14 @@
 </table>
 <p>困惑度（PPL）衡量参考文本在模型下的平均预测难度，不直接衡量回答是否真实或有用；跨 tokenizer、语料和归一化口径比较 PPL 也容易误判。</p>
 <h2 id="213-benchmark">21.3 Benchmark 的系统性缺陷：数据污染<a class="headerlink" href="#213-benchmark" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    A["训练或后训练可能使用公开网络数据"] --&gt; B["公开题目、答案和改写版本&lt;br/&gt;也可能进入数据流水线"]
-    B --&gt; C["模型预训练时可能已经『见过』这些题的答案"]
-    C --&gt; D["可能高估未见题泛化能力"]
-    D --&gt; E["需要独立任务与保留数据验证&lt;br/&gt;不能仅凭榜单反推泛化能力"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["公开网络训练数据"] --&gt; B["评测集污染"]
+    B --&gt; D["泛化能力被高估"]
+    D --&gt; E["独立验证"]
 
     style E fill:#fdecea</code></pre>
+<p>训练或后训练的数据流水线可能包含公开评测题目、答案及改写版本。模型因此可能在预训练时已经见过答案，使未见题泛化能力的估计过于乐观。需要使用独立任务与保留数据验证，不能仅凭排名判断泛化能力。</p>
 <p>污染是一个风险，任务分布不匹配、测试饱和、评分错误和推理预算不同也是风险。榜单与业务结果不一致，不足以证明某模型「背过题」；确认污染需要数据或实验依据。</p>
 <h3 id="2131">21.3.1 三个应对方向<a class="headerlink" href="#2131" title="Permanent link">&para;</a></h3>
 <ol>
@@ -9500,17 +9526,12 @@
 </ol>
 <h2 id="214">21.4 建自己的业务评估集<a class="headerlink" href="#214" title="Permanent link">&para;</a></h2>
 <p><strong>面对 Benchmark 的局限，最务实的做法是建任务特定测试集。</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    A["从真实用户请求里采样"] --&gt; B["人工标注期望答案"]
-    B --&gt; C["分层开发集&lt;br/&gt;用于迭代"]
-    B --&gt; H["隔离的保留测试集&lt;br/&gt;用于阶段验收"]
-    C --&gt; D["迭代模型或 Prompt&lt;br/&gt;在开发集上比较"]
-    D --&gt; E["计算通过率或质量分"]
-    E --&gt; D
-    E --&gt;|候选冻结后| F["阶段性验收&lt;br/&gt;报告统计不确定性"]
-    H --&gt; F
-
-    style C fill:#e6f4ea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["采样并标注请求"] --&gt; B["分离开发集与测试集"]
+    B --&gt; D["在开发集上迭代"]
+    D --&gt;|冻结候选| F["保留测试集验收"]</code></pre>
+<p>从真实用户请求中采样，由人工标注期望答案。使用分层开发集迭代模型或 Prompt，反复比较通过率或质量分。隔离保留测试集，只有在候选冻结后才做阶段验收，并报告统计不确定性。</p>
 <h3 id="2141">21.4.1 两类任务的评分方式<a class="headerlink" href="#2141" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9590,24 +9611,8 @@
 <p>公开 Benchmark 适合看模型大致区间，真正决定上线的还是你自己的测试集和线上指标。</p>
 </blockquote>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2009.03300">Measuring Massive Multitask Language Understanding（MMLU）</a></li>
-<li><a href="https://arxiv.org/abs/2406.01574">MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2107.03374">Evaluating Large Language Models Trained on Code（HumanEval / Pass@k）</a></li>
-<li><a href="https://arxiv.org/abs/2310.06770">SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</a></li>
-<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities</a></li>
-<li><a href="https://arxiv.org/abs/2110.14168">Training Verifiers to Solve Math Word Problems（GSM8K）</a></li>
-<li><a href="https://arxiv.org/abs/2103.03874">Measuring Mathematical Problem Solving With the MATH Dataset</a></li>
-<li><a href="https://arxiv.org/abs/2311.12022">GPQA: A Graduate-Level Google-Proof Q&amp;A Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a></li>
-<li><a href="https://arxiv.org/abs/2211.09110">Holistic Evaluation of Language Models（HELM）</a></li>
-<li><a href="https://arxiv.org/abs/2406.19314">LiveBench: A Challenging, Contamination-Limited LLM Benchmark</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://github.com/openai/human-eval/blob/master/human_eval/evaluation.py">HumanEval 官方 Pass@k 实现</a></li>
-<li><a href="https://www.swebench.com/SWE-bench/">SWE-bench 官方文档（Verified 子集）</a></li>
-<li><a href="https://arxiv.org/abs/2501.14249">Humanity's Last Exam</a></li>
-<li><a href="https://arxiv.org/abs/2005.00661">On Faithfulness and Factuality in Abstractive Summarization（词面指标与忠实性的区别）</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-21">集中参考资料章节</a>。</p>
 
 
 
@@ -9630,7 +9635,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

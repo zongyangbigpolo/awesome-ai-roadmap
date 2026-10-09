@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: LoRA in Depth","description":"Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: LoRA in Depth","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: LoRA in Depth","description":"Derive LoRA matrix shapes, initialization, and parameter budgets, then examine rank and alpha, merge precision, multi-adapter switching, and capability regressions.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: LoRA in Depth","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: LoRA in Depth","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/02-training-alignment/09-lora/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9401,15 +9426,16 @@ P_{\mathrm{LoRA}}=r(d_{\mathrm{in}}+d_{\mathrm{out}})
 </tbody>
 </table>
 <p>For QLoRA, distinguish merging into a dequantized base from reloading the original floating-point base and merging into that. These bases have different weights. Quantizing after merging introduces further rounding error and requires reevaluation.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph AD["Typical nonlinear adapter"]
-        X1["Input"] --&gt; L1["Transformer sublayer"] --&gt; AD1["Additional bottleneck network"] --&gt; O1["Output"]
-    end
-    subgraph LR2["Merged LoRA"]
-        X2["Input"] --&gt; M1["Original linear layer&lt;br/&gt;W + ΔW"] --&gt; O2["Output"]
-    end
-
+<p><strong>Typical nonlinear adapter</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X1["Input"] --&gt; L1["Transformer sublayer"] --&gt; AD1["Additional bottleneck network"] --&gt; O1["Output"]
     style AD1 fill:#fdecea</code></pre>
+<p><strong>Merged LoRA</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    X2["Input"] --&gt; M1["Original linear layer&lt;br/&gt;W + ΔW"] --&gt; O2["Output"]
+</code></pre>
 <p>Typical bottleneck adapters contain nonlinearities and generally cannot be folded into the same linear weight matrix. This does not establish a fixed number of extra milliseconds per layer; latency must be measured.</p>
 <h2 id="95-one-base-multiple-adapters"><span id="95-adapter" class="legacy-heading-anchor" aria-hidden="true"></span>9.5 One Base, Multiple Adapters<a class="headerlink" href="#95-one-base-multiple-adapters" title="Permanent link">&para;</a></h2>
 <p>The following is a <strong>sequential switching example using PEFT</strong>. The local adapters must have been trained from the same compatible checkpoint. The paths are placeholders, not downloadable adapters. If the configuration lacks the exact revision, retrieve it from the training records:</p>
@@ -9556,16 +9582,8 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
 <h2 id="911-chapter-summary"><span id="911" class="legacy-heading-anchor" aria-hidden="true"></span>9.11 Chapter Summary<a class="headerlink" href="#911-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>LoRA's central idea is to <strong>constrain updates through low-rank parameterization while retaining a base that can be frozen, shared, and merged</strong>. Memory savings, low latency, and convenient switching each require different conditions. They do not imply no forgetting, no tuning, or guaranteed additive capabilities when adapters are mixed.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2106.09685">LoRA: equations, initialization, and rank experiments</a></li>
-<li><a href="https://arxiv.org/abs/2305.14314">QLoRA</a></li>
-<li><a href="https://arxiv.org/abs/1902.00751">Parameter-Efficient Transfer Learning for NLP</a></li>
-<li><a href="https://huggingface.co/docs/peft/v0.17.0/en/developer_guides/lora">PEFT v0.17.0: LoRA configuration, initialization, and scaling</a></li>
-<li><a href="https://huggingface.co/docs/peft/developer_guides/model_merging">PEFT: Model merging and add_weighted_adapter</a></li>
-<li><a href="https://github.com/huggingface/peft/blob/v0.17.0/src/peft/tuners/lora/model.py">PEFT v0.17.0: weighted-adapter implementation and limitations</a></li>
-<li><a href="https://docs.vllm.ai/en/stable/features/lora/">vLLM: LoRA adapters</a></li>
-<li><a href="https://huggingface.co/docs/transformers/v4.46.3/model_memory_anatomy">Transformers: memory components of model training</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9588,7 +9606,7 @@ W' = W+\lambda_1\Delta W_1+\lambda_2\Delta W_2
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

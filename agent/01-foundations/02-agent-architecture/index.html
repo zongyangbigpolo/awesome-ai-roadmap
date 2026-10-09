@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Modern Agent System Architecture","description":"Presents a modern AI agent architecture and explains the responsibilities of the model, planning, memory, tools, runtime, safety controls, and observability.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/02-agent-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Modern Agent System Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/02-agent-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: Modern Agent System Architecture","description":"Presents a modern AI agent architecture and explains the responsibilities of the model, planning, memory, tools, runtime, safety controls, and observability.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/02-agent-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: Modern Agent System Architecture","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/02-agent-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: Modern Agent System Architecture","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/01-foundations/02-agent-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9793,40 +9818,13 @@
 <p>One distinction is essential: the LLM does not personally access a database or execute code. It proposes a tool call; the agent runtime performs the actual execution.</p>
 <h2 id="22-how-the-components-work-together"><span id="22" class="legacy-heading-anchor" aria-hidden="true"></span>2.2 How the Components Work Together<a class="headerlink" href="#22-how-the-components-work-together" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    U[User goal] --&gt; RT[Agent Runtime / Orchestrator]
-
-    subgraph Context[Context and state layer]
-        ST[Task state]
-        WM[Working memory]
-        LM[Long-term memory]
-        CB[Context Builder]
-        ST --&gt; CB
-        WM --&gt; CB
-        LM --&gt; CB
-    end
-
-    RT --&gt; CB
+    RT[Runtime] --&gt; CB[Context Builder]
     CB --&gt; MP[Model + Planner]
-    MP --&gt; DEC{Next decision}
-
-    DEC --&gt;|Answer| OUT[Result acceptance and output]
-    DEC --&gt;|Call a tool| PG[Policy / Permission Gate]
-    DEC --&gt;|Delegate a task| DG[Delegation permission and budget checks]
-    DG --&gt; A2A[Other agents]
-
-    PG --&gt; TR[Tool Registry / MCP Client]
-    TR --&gt; TS[Tool / MCP Server]
-    TS --&gt; ENV[Search, files, databases, code, APIs]
-    ENV --&gt; OBS[Observation]
-
-    A2A --&gt; OBS
-    OBS --&gt; RT
-    RT --&gt; ST
-    RT --&gt; WM
-    RT --&gt; LM
-
-    RT -.Execution traces.-&gt; OT[Tracing / Evaluation / Audit]
-    OUT -.Result evaluation.-&gt; OT</code></pre>
+    MP --&gt; DEC[Next decision]
+    DEC --&gt;|Execute or delegate| OBS[Observation]
+    OBS --&gt; RT</code></pre>
+<p>The user goal enters the runtime. The runtime updates task state, working memory, and long-term memory; all three supply the Context Builder. An answer decision goes to result acceptance and output instead of another execution round.</p>
+<p>The execution arrow includes two distinct gates. A tool call passes the policy/permission gate, then the Tool Registry / MCP Client, then the tool / MCP Server. Search, files, databases, code, and APIs produce the observation. Delegation instead checks permissions and budget before another agent acts; its result also becomes an observation. Runtime execution traces and output evaluations feed tracing, evaluation, and audit.</p>
 <p>A typical execution proceeds as follows:</p>
 <ol>
 <li>The runtime receives the user's goal and initializes task state.</li>
@@ -9902,21 +9900,20 @@
 </span></code></pre></div>
 <p>The sample query is Chinese for “the latest advances in agent technology in 2026.”</p>
 <p>The application then follows this flow:</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant R as Runtime
     participant M as Model
     participant T as Tool
 
-    U-&gt;&gt;R: Submit goal
-    R-&gt;&gt;M: Goal + context + tool definitions
+    R-&gt;&gt;M: Model input
     M--&gt;&gt;R: Tool Call
-    R-&gt;&gt;R: Validate arguments and permissions
-    R-&gt;&gt;T: Execute tool
+    R-&gt;&gt;R: Validate call
+    R-&gt;&gt;T: Execute
     T--&gt;&gt;R: Tool Result
-    R-&gt;&gt;M: Return Observation
-    M--&gt;&gt;R: Next action or final answer
-    R--&gt;&gt;U: Return result</code></pre>
+    R-&gt;&gt;M: Observation
+    M--&gt;&gt;R: Action or answer</code></pre>
+<p>The user submits the goal to the runtime before this exchange. Model input contains the goal, context, and tool definitions. Call validation checks both arguments and permissions before execution. After receiving the observation, the model chooses the next action or final answer; the runtime returns the result to the user.</p>
 <h3 id="242-safety-boundaries-for-tool-calls"><span id="242" class="legacy-heading-anchor" aria-hidden="true"></span>2.4.2 Safety Boundaries for Tool Calls<a class="headerlink" href="#242-safety-boundaries-for-tool-calls" title="Permanent link">&para;</a></h3>
 <p>Not every tool call should execute automatically. Production systems typically apply different controls by risk level:</p>
 <table>
@@ -9962,13 +9959,14 @@
 <li><strong>Client</strong>: created and managed by the host to maintain a connection to a particular MCP server;</li>
 <li><strong>Server</strong>: exposes capabilities such as Tools, Resources, and Prompts to the client.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    H[Host&lt;br/&gt;AI Application] --&gt; C1[MCP Client]
-    H --&gt; C2[MCP Client]
-    C1 &lt;--&gt; S1[MCP Server&lt;br/&gt;Files]
-    C2 &lt;--&gt; S2[MCP Server&lt;br/&gt;Database]
-    S1 --&gt; F[File system]
-    S2 --&gt; D[Database]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    H["Host&lt;br/&gt;AI Application"] --&gt; C1["MCP Client"]
+    H --&gt; C2["MCP Client"]
+    C1 &lt;--&gt; S1["MCP Server&lt;br/&gt;Files"]
+    C2 &lt;--&gt; S2["MCP Server&lt;br/&gt;Database"]
+    S1 --&gt; F["File system"]
+    S2 --&gt; D["Database"]</code></pre>
 <p>“MCP is USB-C for tools” is a useful analogy, with two qualifications:</p>
 <ol>
 <li>MCP servers typically still need to be installed, configured, or connected by the host. MCP does not automatically discover every tool on the internet.</li>
@@ -10078,20 +10076,46 @@
 <p>Larger tool sets and more similar descriptions can make tool selection and argument generation harder, but there is no universal threshold at which “a few dozen tools cause failure.” RAG-MCP's experiments support retrieving candidate tools first for the models and tool sets it tested. A business deployment must also measure candidate recall, final call accuracy, and the additional retrieval latency. Small, stable tool sets can be provided in full.</p>
 <h3 id="283-four-basic-operations-write-select-compress-isolate"><span id="283-write-select-compress-isolate" class="legacy-heading-anchor" aria-hidden="true"></span>2.8.3 Four Basic Operations: Write / Select / Compress / Isolate<a class="headerlink" href="#283-four-basic-operations-write-select-compress-isolate" title="Permanent link">&para;</a></h3>
 <p>LangChain's context engineering article organizes common techniques into four operations:</p>
-<pre class="mermaid"><code>flowchart TB
-    CE[Context Engineering] --&gt; W[Write]
-    CE --&gt; S[Select]
-    CE --&gt; C[Compress]
-    CE --&gt; I[Isolate]
-
-    W --&gt; W1[Scratchpad / note files]
-    W --&gt; W2[Long-term memory]
-    S --&gt; S1[Retrieve memories and documents]
-    S --&gt; S2[Load tools on demand]
-    C --&gt; C1[Summarization / Compaction]
-    C --&gt; C2[Result trimming]
-    I --&gt; I1[Separate sub-agent contexts]
-    I --&gt; I2[Process large objects in a sandbox]</code></pre>
+<p>Write context.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    W["Write"]
+    W1["Scratchpad / note files"]
+    W2["Long-term memory"]
+    CE --&gt; W
+    W --&gt; W1
+    W --&gt; W2</code></pre>
+<p>Select context.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    S["Select"]
+    S1["Retrieve memories and&lt;br/&gt;documents"]
+    S2["Load tools on demand"]
+    CE --&gt; S
+    S --&gt; S1
+    S --&gt; S2</code></pre>
+<p>Compress context.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    C["Compress"]
+    C1["Summarization /&lt;br/&gt;Compaction"]
+    C2["Result trimming"]
+    CE --&gt; C
+    C --&gt; C1
+    C --&gt; C2</code></pre>
+<p>Isolate context.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    CE["Context Engineering"]
+    I["Isolate"]
+    I1["Separate sub-agent&lt;br/&gt;contexts"]
+    I2["Process large objects in&lt;br/&gt;a sandbox"]
+    CE --&gt; I
+    I --&gt; I1
+    I --&gt; I2</code></pre>
 <table>
 <thead>
 <tr>
@@ -10279,26 +10303,28 @@ Score(m,q)=
 <p>A system should not depend on the model exposing its complete hidden reasoning to users. A more reliable approach is to request structured plans, evidence citations, tool traces, and verifiable conclusions.</p>
 <h3 id="2102-tot-searching-multiple-candidate-paths"><span id="2102-tot" class="legacy-heading-anchor" aria-hidden="true"></span>2.10.2 ToT: Searching Multiple Candidate Paths<a class="headerlink" href="#2102-tot-searching-multiple-candidate-paths" title="Permanent link">&para;</a></h3>
 <p>ToT (Tree of Thoughts) expands, evaluates, and backtracks among multiple candidate reasoning paths:</p>
-<pre class="mermaid"><code>flowchart TB
-    S[Current state] --&gt; A[Candidate path A]
-    S --&gt; B[Candidate path B]
-    S --&gt; C[Candidate path C]
-    A --&gt; EA[Evaluate]
-    B --&gt; EB[Evaluate]
-    C --&gt; EC[Evaluate]
-    EA --&gt; BEST[Select or backtrack]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Current&lt;br/&gt;state"] --&gt; A["Candidate&lt;br/&gt;path A"]
+    S --&gt; B["Candidate&lt;br/&gt;path B"]
+    S --&gt; C["Candidate&lt;br/&gt;path C"]
+    A --&gt; EA["Evaluate"]
+    B --&gt; EB["Evaluate"]
+    C --&gt; EC["Evaluate"]
+    EA --&gt; BEST["Select or&lt;br/&gt;backtrack"]
     EB --&gt; BEST
     EC --&gt; BEST</code></pre>
 <p>It suits tasks with large search spaces and multiple possible solutions, but typically requires more calls, latency, and cost than linear reasoning. Production systems more often use budget-constrained candidate generation, scoring, and fallback than unbounded expansion of a complete thought tree.</p>
 <h2 id="211-two-basic-execution-patterns"><span id="211" class="legacy-heading-anchor" aria-hidden="true"></span>2.11 Two Basic Execution Patterns<a class="headerlink" href="#211-two-basic-execution-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="2111-plan-and-execute">2.11.1 Plan-and-Execute<a class="headerlink" href="#2111-plan-and-execute" title="Permanent link">&para;</a></h3>
 <p>Plan-and-Execute generates an overall plan first, then executes it step by step:</p>
-<pre class="mermaid"><code>flowchart LR
-    G[Goal] --&gt; P[Generate a complete plan]
-    P --&gt; S1[Step 1]
-    S1 --&gt; S2[Step 2]
-    S2 --&gt; S3[Step 3]
-    S3 --&gt; R[Result]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --&gt; P["Generate a complete plan"]
+    P --&gt; S1["Step 1"]
+    S1 --&gt; S2["Step 2"]
+    S2 --&gt; S3["Step 3"]
+    S3 --&gt; R["Result"]</code></pre>
 <p>Advantages:</p>
 <ul>
 <li>A clear global structure;</li>
@@ -10336,17 +10362,18 @@ Score(m,q)=
 <li>Replan after failures or changes to critical assumptions;</li>
 <li>Continually check the goal, budget, and stopping conditions.</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    G[Goal] --&gt; HP[High-level plan]
-    HP --&gt; M1[Milestone 1]
-    HP --&gt; M2[Milestone 2]
-    HP --&gt; M3[Milestone 3]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Goal"] --&gt; HP["High-level plan"]
+    HP --&gt; M1["Milestone 1"]
+    HP --&gt; M2["Milestone 2"]
+    HP --&gt; M3["Milestone 3"]
 
-    M1 --&gt; L1[Local Reason-Act-Observe loop]
-    L1 --&gt; C{Milestone complete?}
+    M1 --&gt; L1["Local&lt;br/&gt;Reason-Act-Observe&lt;br/&gt;loop"]
+    L1 --&gt; C["Milestone&lt;br/&gt;complete?"]
     C --&gt;|No| L1
     C --&gt;|Yes| M2
-    C --&gt;|Assumption invalidated| HP</code></pre>
+    C --&gt;|Assumption&lt;br/&gt;invalidated| HP</code></pre>
 <p>This preserves global direction and local adaptability, but adds plan maintenance overhead. Short tasks may not benefit. Compare it against plain ReAct or deterministic workflows under the same budget.</p>
 <h2 id="212-runtime-and-guardrails"><span id="212-runtime-guardrails" class="legacy-heading-anchor" aria-hidden="true"></span>2.12 Runtime and Guardrails<a class="headerlink" href="#212-runtime-and-guardrails" title="Permanent link">&para;</a></h2>
 <p>The runtime is the execution layer that turns model capabilities into a reliable system. Its responsibilities typically include:</p>
@@ -10431,21 +10458,8 @@ Score(m,q)=
 </blockquote>
 <p>The four-component model explains an agent's basic capabilities. Runtime controls, guardrails, and observability determine whether those capabilities can operate safely and reliably in real environments.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function calling—Chat Completions and Responses tool definitions, strict mode</a></li>
-<li><a href="https://modelcontextprotocol.io/community/governance">MCP Governance and Stewardship</a></li>
-<li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework Overview</a></li>
-<li><a href="https://github.com/microsoft/autogen">AutoGen Maintenance Mode</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective context engineering for AI agents</a></li>
-<li><a href="https://research.trychroma.com/context-rot">Chroma Research: Context Rot — How Increasing Input Tokens Impacts LLM Performance</a></li>
-<li><a href="https://blog.langchain.com/context-engineering-for-agents/">LangChain: Context Engineering for Agents</a></li>
-<li><a href="https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html">Drew Breunig: How Contexts Fail and How to Fix Them</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping agents for the real world with Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Anthropic: Code execution with MCP</a></li>
-<li><a href="https://blog.cloudflare.com/code-mode/">Cloudflare: Code Mode — the better way to use MCP</a></li>
-<li><a href="https://arxiv.org/abs/2505.03275">RAG-MCP: Mitigating Prompt Bloat in LLM Tool Selection via Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10468,7 +10482,7 @@ Score(m,q)=
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

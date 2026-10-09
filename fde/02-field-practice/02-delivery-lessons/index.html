@@ -83,7 +83,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: FDE Delivery Pitfalls and Lessons","description":"FDE delivery lessons from four open-source projects: who approves requirement changes, how to track unknowns, what a PoC should leave behind, how to maintain project memory, and how customers accept and take over a system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/02-delivery-lessons/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: FDE Delivery Pitfalls and Lessons","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/02-delivery-lessons/"},"datePublished":"2026-09-10","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 2: FDE Delivery Pitfalls and Lessons","description":"FDE delivery lessons from four open-source projects: who approves requirement changes, how to track unknowns, what a PoC should leave behind, how to maintain project memory, and how customers accept and take over a system.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/02-delivery-lessons/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 2: FDE Delivery Pitfalls and Lessons","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/02-delivery-lessons/"},"datePublished":"2026-09-10","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 2: FDE Delivery Pitfalls and Lessons","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/fde/02-field-practice/02-delivery-lessons/"}]}</script>
     
@@ -633,6 +633,8 @@
       
         
       
+        
+      
     
     
     
@@ -760,6 +762,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9055,7 +9080,7 @@
 <p>Some customer projects are not especially difficult to code, yet remain difficult to deliver. The customer believes they bought automatic processing; the engineer builds assisted review. Tests pass, but the business owner says the system is not usable. The original developer leaves, and the next person cannot even discover why a feature was disabled.</p>
 <p>This chapter draws useful practices from four public projects: FDEOps, FDEstack, OpenFDE, and Applied AI Field Guide. It continues the order-assistant case from <a href="../../01-foundations/01-forward-deployed-engineering/">Chapter 1</a>, focusing on how to handle the work rather than requiring installation of those tools.</p>
 <h2 id="21-on-site-you-discover-the-original-requirement-cannot-be-followed"><span id="21" class="legacy-heading-anchor" aria-hidden="true"></span>2.1 On Site, You Discover the Original Requirement Cannot Be Followed<a class="headerlink" href="#21-on-site-you-discover-the-original-requirement-cannot-be-followed" title="Permanent link">&para;</a></h2>
-<p>Applied AI Field Guide's <a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/field-evidence.md">invoice-exception teaching case</a> begins with a conflict: the original promise was automatic resolution and posting, but the observed process and policy require approval by a designated person first. The project therefore changes to preparing recommendations and staged corrections, leaving approval and posting to authorized people.</p>
+<p>Applied AI Field Guide's invoice-exception teaching case<sup><a href="../../../book/references/#ref-808">【808】</a></sup> begins with a conflict: the original promise was automatic resolution and posting, but the observed process and policy require approval by a designated person first. The project therefore changes to preparing recommendations and staged corrections, leaving approval and posting to authorized people.</p>
 <p>The lesson is not simply "add human review when there is risk." It is <strong>how to reach a new agreement with the customer when the original requirement cannot be delivered</strong>. Do not silently change the requirement, or assume that the person funding the project has authority to relax business policy.</p>
 <p>In the order-assistant case, the operations lead originally requested automatic email replies. After observing support, the engineer proposes starting with drafts. The customer may reasonably ask:</p>
 <blockquote>
@@ -9094,18 +9119,25 @@
 </tbody>
 </table>
 <p>Mark the decision as pending, agreed, rejected, or deferred. A completed meeting does not imply customer acceptance. A scope change also requires reviewing acceptance criteria, the delivery plan, and commercial terms.</p>
-<pre class="mermaid"><code>flowchart LR
-    A["Preserve the original agreement"] --&gt; B["Record the conflict found on site"]
-    B --&gt; C["Explain impact and alternatives"]
-    C --&gt; D{"Authorized owner&lt;br/&gt;confirms new scope?"}
-    D --&gt;|No| E["Keep the decision pending&lt;br/&gt;Do not execute new actions"]
-    D --&gt;|Yes| F["Update scope,&lt;br/&gt;acceptance criteria, and plan"]
-    F --&gt; G["Implement the confirmed scope"]</code></pre>
-<p>Another common problem is "just one more small thing." FDEOps's <a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/hold-scope.md">hold-scope</a> recommends recording who requested an addition, its impact, and the decision, then discussing whether it belongs in this release, a later release, or a separate project.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Preserve the original&lt;br/&gt;agreement"] --&gt; B["Record the conflict&lt;br/&gt;found on site"]
+    B --&gt; C["Explain impact and&lt;br/&gt;alternatives"]
+    C --&gt; D["Authorized owner"]
+    D --&gt;|No| E["Keep the decision&lt;br/&gt;pending"]
+    D --&gt;|Yes| F["Update the agreement"]
+    F --&gt; G["Implement the&lt;br/&gt;confirmed scope"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Authorized owner confirms new scope?</li>
+<li>Keep the decision pending Do not execute new actions</li>
+<li>Update scope, acceptance criteria, and plan</li>
+</ul>
+<p>Another common problem is "just one more small thing." FDEOps's hold-scope<sup><a href="../../../book/references/#ref-809">【809】</a></sup> recommends recording who requested an addition, its impact, and the decision, then discussing whether it belongs in this release, a later release, or a separate project.</p>
 <p>For example, if the customer asks the assistant to reserve inventory as well, the engineer needs to explain that this introduces write permissions, concurrent allocation, and reconciliation after failures. It is reasonable to discuss implementation, but not to promise to "just add it" and explain the work only after the schedule slips.</p>
 <h2 id="22-waiting-for-customer-confirmation-cannot-stay-on-the-board-forever"><span id="22" class="legacy-heading-anchor" aria-hidden="true"></span>2.2 "Waiting for Customer Confirmation" Cannot Stay on the Board Forever<a class="headerlink" href="#22-waiting-for-customer-confirmation-cannot-stay-on-the-board-forever" title="Permanent link">&para;</a></h2>
 <p>"ERP access is not enabled yet," "the inventory field needs confirmation," and "business will review it when they have time" sound like progress updates, but do not say who must do what.</p>
-<p>FDEstack keeps unresolved questions in <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/templates/unknowns.md"><code>unknowns.md</code></a>, repeatedly surfacing them through customer-context, triage, and retrospective processes. The useful principle is simple: <strong>when an important question has no answer, do not let it disappear into chat history.</strong></p>
+<p>FDEstack keeps unresolved questions in <code>unknowns.md</code><sup><a href="../../../book/references/#ref-810">【810】</a></sup>, repeatedly surfacing them through customer-context, triage, and retrospective processes. The useful principle is simple: <strong>when an important question has no answer, do not let it disappear into chat history.</strong></p>
 <p>Write something more specific than "pending confirmation":</p>
 <table>
 <thead>
@@ -9142,7 +9174,7 @@
 <p>Separate customer statements from interpretations too. "The system is too slow" is observed feedback from the owner. "They are really worried about their quarterly performance review" is the engineer's hypothesis. It may suggest a follow-up question, but must not become a fact in the customer record.</p>
 <h2 id="23-a-successful-poc-should-leave-more-than-code"><span id="23-poc" class="legacy-heading-anchor" aria-hidden="true"></span>2.3 A Successful PoC Should Leave More Than Code<a class="headerlink" href="#23-a-successful-poc-should-leave-more-than-code" title="Permanent link">&para;</a></h2>
 <p>At the end of a PoC, the easiest artifact to retain is a directory that supports a demo. The easiest thing to lose is what the engineer discovered while making it work.</p>
-<p>FDEstack's <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/poc/SKILL.md"><code>/poc</code></a> requires technical findings, design decisions, and reusable lessons to be written back separately into project records. Its <a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/skills/integrate/SKILL.md"><code>/integrate</code></a> goes further: it specifies rebuilding the production version from those records without reading the PoC directory.</p>
+<p>FDEstack's <code>/poc</code><sup><a href="../../../book/references/#ref-811">【811】</a></sup> requires technical findings, design decisions, and reusable lessons to be written back separately into project records. Its <code>/integrate</code><sup><a href="../../../book/references/#ref-812">【812】</a></sup> goes further: it specifies rebuilding the production version from those records without reading the PoC directory.</p>
 <p>You do not need to adopt "rewrite every PoC," but you should preserve the conclusions. After the order-assistant experiment, the next engineer should at least be able to understand:</p>
 <table>
 <thead>
@@ -9178,7 +9210,7 @@
 <blockquote>
 <p>"Why can the system only generate drafts? Who decided that? Does the restriction still apply?"</p>
 </blockquote>
-<p>OpenFDE's <a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md">design</a> stores source material, facts, and tasks separately. Interviews and documents are sources. Extracted goals, constraints, and decisions enter project memory, and tasks use the relevant context. Facts retain their origins; new records supersede old ones rather than erasing history.</p>
+<p>OpenFDE's design<sup><a href="../../../book/references/#ref-805">【805】</a></sup> stores source material, facts, and tasks separately. Interviews and documents are sources. Extracted goals, constraints, and decisions enter project memory, and tasks use the relevant context. Facts retain their origins; new records supersede old ones rather than erasing history.</p>
 <p>You can use this approach without first building a knowledge graph. A useful project record should answer:</p>
 <table>
 <thead>
@@ -9219,7 +9251,7 @@
 <p>Sources help with traceability, but do not prove correctness by themselves. A sales promise and a business policy may both have sources; resolving a conflict still requires someone with authority to decide.</p>
 <h2 id="25-the-tests-passedwho-says-delivery-is-complete"><span id="25" class="legacy-heading-anchor" aria-hidden="true"></span>2.5 The Tests Passed—Who Says Delivery Is Complete?<a class="headerlink" href="#25-the-tests-passedwho-says-delivery-is-complete" title="Permanent link">&para;</a></h2>
 <p>"It is deployed," "it works well," and "the customer accepted it" often appear in the same status report, but answer different questions.</p>
-<p>FDEOps's <a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/close.md">handoff process</a> distinguishes promises, measured results, and results accepted by the customer. Use that distinction directly in project communication:</p>
+<p>FDEOps's handoff process<sup><a href="../../../book/references/#ref-813">【813】</a></sup> distinguishes promises, measured results, and results accepted by the customer. Use that distinction directly in project communication:</p>
 <table>
 <thead>
 <tr>
@@ -9248,10 +9280,10 @@
 </table>
 <p>In the order-assistant case, the engineer can demonstrate correct draft generation while support still spends more time checking the draft. Even if the pilot appears to save time, explain which tickets were counted, whether failed generations and human handoffs were excluded, and whether the business acceptance owner agrees with the measurement definition.</p>
 <p>If the customer says, "Let's try it in production and look at the benefits next month," record a conditional trial decision, specifying what will be reviewed next and who decides whether to continue. Do not label it "project value accepted." A project owner's approval of a trial also does not replace approvals required for data, permissions, or business policy.</p>
-<p>Tool status can cause confusion too. The OpenFDE version cited here already has an <a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/apps/cli/src/commands/eval.ts"><code>eval</code> command</a> that records judgments. However, its <a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/dispatch/tasks.ts">task transitions</a> do not make a passing evaluation a mandatory condition for entering <code>accepted</code>. Even when a task is marked accepted, you still need to know who confirmed it and on what evidence.</p>
+<p>Tool status can cause confusion too. The OpenFDE version cited here already has an <code>eval</code> command<sup><a href="../../../book/references/#ref-814">【814】</a></sup> that records judgments. However, its task transitions<sup><a href="../../../book/references/#ref-815">【815】</a></sup> do not make a passing evaluation a mandatory condition for entering <code>accepted</code>. Even when a task is marked accepted, you still need to know who confirmed it and on what evidence.</p>
 <h2 id="26-during-handoff-let-someone-else-handle-the-failure"><span id="26" class="legacy-heading-anchor" aria-hidden="true"></span>2.6 During Handoff, Let Someone Else Handle the Failure<a class="headerlink" href="#26-during-handoff-let-someone-else-handle-the-failure" title="Permanent link">&para;</a></h2>
 <p>Clear documentation and a smooth demonstration by the original developer do not prove that the receiving team can operate the system.</p>
-<p>Applied AI Field Guide's <a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/examples/invoice-exception/engagement/adoption-and-handoff.md">handoff case</a> explicitly lists what the receiving team must do: add evaluation cases, release and roll back, handle exceptions, and support users. FDEOps likewise emphasizes instructions that help the person responding to an alert solve the problem, not merely describe the architecture.</p>
+<p>Applied AI Field Guide's handoff case<sup><a href="../../../book/references/#ref-816">【816】</a></sup> explicitly lists what the receiving team must do: add evaluation cases, release and roll back, handle exceptions, and support users. FDEOps likewise emphasizes instructions that help the person responding to an alert solve the problem, not merely describe the architecture.</p>
 <p>For the order assistant, arrange three exercises in a test environment. The receiving colleague operates the system; the original engineer only observes.</p>
 <p><strong>First, make ERP temporarily unavailable.</strong> Can the colleague understand the alert, locate the failed request, disable the affected feature, and let support continue with the original process? If they still need to call the original engineer to ask where the switch is, add that step to the runbook and repeat the exercise.</p>
 <p><strong>Second, change a policy.</strong> Ask the colleague to update a test policy, confirm retrieval uses the new version, and add a regression case prohibiting an unconfirmed delivery promise. This shows whether they understand the relationship among policy, index, prompt, and tests—not just how to restart a service.</p>
@@ -9259,46 +9291,15 @@
 <p>For each exercise, record only three things: who performed it, where they got stuck, and what would remove dependence on the original engineer next time. If the receiving team lacks production accounts, permissions, or support time, both parties must agree how to supply them. More pages of documentation cannot solve those problems.</p>
 <p>By formal handoff, the records should identify the day-to-day maintainer, backup contact, escalation path, and obligations still owned by the original delivery team. The customer knows whom to contact, and the receiving team knows what it is responsible for.</p>
 <h2 id="27-a-second-customer-does-not-need-a-copy-of-everything-from-the-first"><span id="27" class="legacy-heading-anchor" aria-hidden="true"></span>2.7 A Second Customer Does Not Need a Copy of Everything from the First<a class="headerlink" href="#27-a-second-customer-does-not-need-a-copy-of-everything-from-the-first" title="Permanent link">&para;</a></h2>
-<p>FDEstack's cross-customer lesson records and FDEOps's <a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/skills/fde/references/encode-pattern.md">pattern capture</a> both aim to avoid starting each project from scratch. The useful assets are investigation methods, interface designs, and testing approaches—not raw customer material.</p>
+<p>FDEstack's cross-customer lesson records and FDEOps's pattern capture<sup><a href="../../../book/references/#ref-817">【817】</a></sup> both aim to avoid starting each project from scratch. The useful assets are investigation methods, interface designs, and testing approaches—not raw customer material.</p>
 <p>For example, "Inventory fields with the same name may have different meanings" is a reusable lesson. The first customer's orders, prices, and internal policies must not enter a shared knowledge store. Phrase the lesson as "Before connecting an inventory API, check whether reserved quantities have been deducted"; the next customer still needs to confirm it using its own data.</p>
 <p>Do not turn one observation into an industry rule. "This authentication method is unavailable under customer A's current gateway configuration" has a clear scope. "This ERP never supports that authentication method" overstates the evidence. Preserve the environment, source, and conditions still needing validation so reuse does not spread old misunderstandings.</p>
 <p>Where project records are stored must also follow customer requirements. FDEstack uses private Git repositories, FDEOps defaults to local files, and OpenFDE uses a local database. None of those choices automatically means data stays on the machine. A coding assistant may send files it reads to a model service, and the computer may have cloud synchronization enabled.</p>
-<p>OpenFDE's <a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/packages/core/src/extraction/anthropic.ts">Claude extraction implementation</a> sends the text or attachments to be extracted. FDEOps's <a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md">privacy notes</a> likewise distinguish the local CLI from data transmission to model services. Seeing "local-first" is not sufficient reason to import customer meeting notes.</p>
+<p>OpenFDE's Claude extraction implementation<sup><a href="../../../book/references/#ref-818">【818】</a></sup> sends the text or attachments to be extracted. FDEOps's privacy notes<sup><a href="../../../book/references/#ref-819">【819】</a></sup> likewise distinguish the local CLI from data transmission to model services. Seeing "local-first" is not sufficient reason to import customer meeting notes.</p>
 <p>At the start, a scope agreement, a table of unresolved questions, a record of decisions and experiments, and acceptance and handoff notes are usually enough to connect the work. Consider automatic extraction, graphs, and task workspaces when the volume becomes difficult to navigate—not by filling every template merely to adopt a tool.</p>
 <h2 id="28-sources-and-further-reading"><span id="28" class="legacy-heading-anchor" aria-hidden="true"></span>2.8 Sources and Further Reading<a class="headerlink" href="#28-sources-and-further-reading" title="Permanent link">&para;</a></h2>
-<p>Sources were compiled on <strong>2026-09-10</strong>. On 2026-09-15, OpenFDE's evaluation records, task-acceptance conditions, and Claude extraction data flow were additionally checked at the cited commit. This chapter adapts working methods to the order scenario; it does not treat any project's complete process as a universal standard. Links are pinned to the commits read so readers can compare them.</p>
-<table>
-<thead>
-<tr>
-<th>Project</th>
-<th>Suggested starting point</th>
-<th>Cited version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://github.com/davidahmann/applied-ai-field-guide">Applied AI Field Guide</a></td>
-<td><a href="https://github.com/davidahmann/applied-ai-field-guide/blob/6b557eb74ae1cc8dd82ab8048991c8fa54ce6a02/guide/field-guide-in-five-minutes.md">Five-minute introduction</a>, scope changes and handoff exercises in the invoice case</td>
-<td><code>6b557eb</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/Dan-Cleary/fdestack">FDEstack</a></td>
-<td><a href="https://github.com/Dan-Cleary/fdestack/blob/552446066986969c789d3f44beb42b0cc4d6ad66/README.md">Overview of eight skills</a>, especially the connection between unresolved questions, PoC findings, and production implementation</td>
-<td><code>5524460</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/memovai/openfde">OpenFDE</a></td>
-<td><a href="https://github.com/memovai/openfde/blob/e2dec1608f7cdebd8cfe587cd94fc0c346bff6bb/ARCHITECTURE.md">Architecture</a>: how sources, facts, tasks, and context connect</td>
-<td><code>e2dec16</code></td>
-</tr>
-<tr>
-<td><a href="https://github.com/suboss87/fdeops">FDEOps</a></td>
-<td><a href="https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/README.md">Project overview</a>, requirement-change and handoff skills</td>
-<td><code>cc96340</code></td>
-</tr>
-</tbody>
-</table>
-<p>For technical implementation, continue with <a href="../../../engineering/02-request-reliability/04-retry-timeout-idempotency-circuit-breaker/">Retries and Idempotency</a>, <a href="../../../engineering/05-release-pipeline/09-prompt-model-data-versioning/">Versioning</a>, and <a href="../../../engineering/06-performance-operations/13-feedback-loop-data-flywheel/">Feedback Data Processing</a>.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-fde-02">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 <p>Back to the <a href="../">field practice module</a>.</p>
 
 
@@ -9322,7 +9323,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

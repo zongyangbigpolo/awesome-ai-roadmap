@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Computer Use and GUI Agents","description":"Explain GUI agents from screenshot grounding to stateful execution, covering coordinate transforms, retries, completion checks, product history, task evaluation, and action authorization.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/02-vision-document/04-computer-use/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Computer Use and GUI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/02-vision-document/04-computer-use/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Computer Use and GUI Agents","description":"Explain GUI agents from screenshot grounding to stateful execution, covering coordinate transforms, retries, completion checks, product history, task evaluation, and action authorization.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/02-vision-document/04-computer-use/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Computer Use and GUI Agents","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/02-vision-document/04-computer-use/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: Computer Use and GUI Agents","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/multimodal/02-vision-document/04-computer-use/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9153,7 +9178,8 @@
 <h2 id="41-what-is-computer-use"><span id="41-computer-use" class="legacy-heading-anchor" aria-hidden="true"></span>4.1 What is computer use?<a class="headerlink" href="#41-what-is-computer-use" title="Permanent link">&para;</a></h2>
 <p>Computer use lets a model observe screenshots and generate actions such as clicking, dragging, scrolling, and typing. An executor operates the interface and returns new observations. This extends the range of possible actions when no business API exists, but does not guarantee every task a person can perform: hidden state, CAPTCHAs, permissions, asynchronous loading, and errors in long action sequences can block execution. GUI actions themselves are usually submitted through tool calls. Their distinction from business APIs is the level of action abstraction, not whether function calling is used. When a reliable, authorized business API exists, its verifiability and cost should usually be considered first.</p>
 <h2 id="42-the-perceptiondecisionaction-loop"><span id="42-" class="legacy-heading-anchor" aria-hidden="true"></span>4.2 The perception–decision–action loop<a class="headerlink" href="#42-the-perceptiondecisionaction-loop" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     A[Screenshot / accessibility tree] --&gt; B[Understand screen state]
     B --&gt; C[Plan the next action]
     C --&gt; D["Execute action&lt;br/&gt;Click / type / scroll"]
@@ -9246,17 +9272,8 @@
 <li>Evaluate end-to-end task success with benchmarks such as OSWorld and WebArena, not just individual localization accuracy.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/news/developing-computer-use">Anthropic: Developing a computer use model</a></li>
-<li><a href="https://www.anthropic.com/news/3-5-models-and-computer-use">Anthropic: Upgraded Claude 3.5 Sonnet and computer use public beta</a></li>
-<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic Computer Use documentation</a></li>
-<li><a href="https://openai.com/index/computer-using-agent/">OpenAI: Computer-Using Agent</a></li>
-<li><a href="https://openai.com/index/introducing-operator/">OpenAI Operator</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/tools-computer-use/">OpenAI: Computer use tools and execution environments</a></li>
-<li><a href="https://arxiv.org/abs/2501.12326">UI-TARS: Pioneering Automated GUI Interaction with Native Agents</a></li>
-<li><a href="https://arxiv.org/abs/2404.07972">OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments</a></li>
-<li><a href="https://arxiv.org/abs/2307.13854">WebArena: A Realistic Web Environment for Building Autonomous Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-multimodal-04">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9279,7 +9296,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

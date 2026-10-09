@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: SSE, WebSocket, and WebRTC","description":"Distinguish SSE event streams and EventSource, WebSocket messaging, and the WebRTC media and data stack, including cancellation, reconnection, ICE, and transport selection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/13-sse-websocket-webrtc/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: SSE, WebSocket, and WebRTC","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/13-sse-websocket-webrtc/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: SSE, WebSocket, and WebRTC","description":"Distinguish SSE event streams and EventSource, WebSocket messaging, and the WebRTC media and data stack, including cancellation, reconnection, ICE, and transport selection.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/13-sse-websocket-webrtc/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: SSE, WebSocket, and WebRTC","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/13-sse-websocket-webrtc/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 13: SSE, WebSocket, and WebRTC","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/13-sse-websocket-webrtc/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9688,18 +9713,24 @@
 <p>Classic RFC 6455 WebSocket runs over TCP and organizes full-duplex communication into messages and frames; <code>wss</code> adds TLS.</p>
 <p>The HTTP/1.1 path uses an Upgrade request and <code>101 Switching Protocols</code>. RFC 8441 for HTTP/2 and RFC 9220 for HTTP/3 use extended CONNECT instead. Do not describe the 101 upgrade as a mandatory step for every WebSocket connection.</p>
 <p>On the HTTP/1.1 path, the upgraded TCP connection carries WebSocket frames. On the HTTP/2/3 path, an extended CONNECT stream carries them, while other HTTP streams can remain active. Both paths provide <strong>a full-duplex channel in which either side can send messages independently</strong>.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph SSE_M["SSE"]
-        C1[Client] --&gt;|"HTTP request&lt;br/&gt;GET or POST, depending on the API"| S1[Server]
-        S1 --&gt;|"SSE response stream for that request"| C1
-    end
-
-    subgraph WS_M["WebSocket"]
-        C2[Client] &lt;--&gt;|"One connection&lt;br/&gt;Either side can send at any time"| S2[Server]
-    end
-
-    style SSE_M fill:#fef7e0
-    style WS_M fill:#e8f0fe</code></pre>
+<p><strong>SSE</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C1["Client"] --&gt;|"HTTP request"| S1["Server"]
+        S1 --&gt;|"SSE response"| C1</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>HTTP request GET or POST, depending on the API</li>
+<li>SSE response stream for that request</li>
+</ul>
+<p><strong>WebSocket</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        C2["Client"] &lt;--&gt;|"Bidirectional"| S2["Server"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>One connection Either side can send at any time</li>
+</ul>
 <p>An SSE response flows in one direction, but the client can send other HTTP requests in parallel while reading it. It is not a half-duplex “walkie-talkie” that requires the server to finish speaking before the client can respond.</p>
 <h3 id="1332-see-the-difference-through-interruption"><span id="1332" class="legacy-heading-anchor" aria-hidden="true"></span>13.3.2 See the Difference through Interruption<a class="headerlink" href="#1332-see-the-difference-through-interruption" title="Permanent link">&para;</a></h3>
 <p>Suppose a user wants to interrupt the model while it is speaking:</p>
@@ -9746,7 +9777,7 @@
 <p>WebSocket often carries bidirectional commands, rooms, and broadcasts, so it usually needs more application-level coordination. SSE implementations are often simpler when they only push server-to-client events. Still, SSE does not let an arbitrary instance write directly to a TCP connection held by another instance.</p>
 <p>Redis Pub/Sub is only one option. A dedicated gateway, broker, or platform-provided WebSocket/SSE service can also work. Load-test candidates against requirements for connection counts, broadcast patterns, ordering, reconnection, and latency.</p>
 <h3 id="1352-getting-through-proxies-and-firewalls"><span id="1352" class="legacy-heading-anchor" aria-hidden="true"></span>13.5.2 Getting through Proxies and Firewalls<a class="headerlink" href="#1352-getting-through-proxies-and-firewalls" title="Permanent link">&para;</a></h3>
-<p>Some older proxies and enterprise gateway configurations <strong>block or strip WebSocket Upgrade requests</strong>. Support depends on the deployed version and policy. For example, <a href="https://www.squid-cache.org/Versions/v5/cfgman/http_upgrade_request_protocols.html">Squid v5 supports controlled upgrades</a>, although its default configuration drops the Upgrade header. A default restriction is not the same as a missing protocol capability.</p>
+<p>Some older proxies and enterprise gateway configurations <strong>block or strip WebSocket Upgrade requests</strong>. Support depends on the deployed version and policy. For example, Squid v5 supports controlled upgrades<sup><a href="../../../book/references/#ref-331">【331】</a></sup>, although its default configuration drops the Upgrade header. A default restriction is not the same as a missing protocol capability.</p>
 <p>SSE usually avoids this particular class of Upgrade rejection: it remains an ordinary HTTP request that most proxies can forward. It is still subject to access policies, buffering, and idle timeouts.</p>
 <p>This is a deployment tradeoff. Without a first-party design record, it should not be asserted as the sole reason MCP chose its transports.</p>
 <h3 id="1353-no-built-in-requestresponse-pairing"><span id="1353-" class="legacy-heading-anchor" aria-hidden="true"></span>13.5.3 No Built-In Request–Response Pairing<a class="headerlink" href="#1353-no-built-in-requestresponse-pairing" title="Permanent link">&para;</a></h3>
@@ -9761,38 +9792,51 @@
 <p>WebRTC favors UDP for real-time media and combines congestion control, jitter buffering, codecs, packet-loss recovery, and encryption. In restricted networks, it can also relay traffic through TURN over TCP/TLS.</p>
 <p>UDP itself does not guarantee delivery, but a WebRTC media path can combine NACKs (negative acknowledgments) to request retransmission, FEC (forward error correction) to recover data, and PLC (packet-loss concealment) to estimate missing audio. These are retransmission, recovery from redundancy, and signal concealment respectively—not the same reliability guarantee. DataChannel uses SCTP/DTLS and can provide reliable, ordered delivery or be configured for partial reliability or unordered delivery. Calling WebRTC “entirely unreliable” is therefore incorrect.</p>
 <h3 id="1362-when-tcp-retransmission-slows-real-time-voice"><span id="1362-tcp" class="legacy-heading-anchor" aria-hidden="true"></span>13.6.2 When TCP Retransmission Slows Real-Time Voice<a class="headerlink" href="#1362-when-tcp-retransmission-slows-real-time-voice" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph TCP_W["TCP · WebSocket"]
-        T1["Audio frame 5 is lost"] --&gt; T2["TCP waits for retransmission"]
-        T2 --&gt; T3["Frames 6, 7, 8…&lt;br/&gt;are all blocked in the buffer"]
-        T3 --&gt; T4["Head-of-line blocking&lt;br/&gt;May exceed the playback deadline"]
-    end
-
-    subgraph UDP_W["UDP · WebRTC"]
-        U1["Audio frame 5 is lost"] --&gt; U2["Assess recovery against the playback deadline"]
-        U2 --&gt; U3["Timely retransmission / FEC&lt;br/&gt;or decoder PLC"]
-        U3 --&gt; U4["Control latency&lt;br/&gt;Quality depends on loss patterns and codecs"]
-    end
-
-    style TCP_W fill:#fce8e6
-    style UDP_W fill:#e6f4ea</code></pre>
+<p><strong>TCP · WebSocket</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        T1["Audio frame 5&lt;br/&gt;is lost"] --&gt; T2["TCP waits for&lt;br/&gt;retransmission"]
+        T2 --&gt; T3["Frames 6, 7, 8…"]
+        T3 --&gt; T4["Head-of-line&lt;br/&gt;blocking"]</code></pre>
+<p><strong>UDP · WebRTC</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        U1["Audio frame 5&lt;br/&gt;is lost"] --&gt; U2["Assess recovery"]
+        U2 --&gt; U3["Timely&lt;br/&gt;retransmission&lt;br/&gt;/ FEC"]
+        U3 --&gt; U4["Control latency"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Frames 6, 7, 8… are all blocked in the buffer</li>
+<li>Head-of-line blocking May exceed the playback deadline</li>
+<li>Assess recovery against the playback deadline</li>
+<li>Timely retransmission / FEC or decoder PLC</li>
+<li>Control latency Quality depends on loss patterns and codecs</li>
+</ul>
 <p>If audio travels in one TCP byte stream, retransmitting missing bytes blocks delivery of later data in that stream. The impact depends on RTT, packet loss, buffering, and the playback budget; one lost packet does not inevitably freeze playback.</p>
 <p>PLC usually estimates a signal in the codec or decoder when audio is missing. It is not one universal “interpolation algorithm between adjacent frames.” Consecutive losses or severe congestion can still cause obvious distortion; inaudibility cannot be promised.</p>
 <p>The tradeoff is to <strong>recover as much as possible before the playback deadline, then discard or conceal what cannot arrive in time</strong>, rather than wait unconditionally for complete data. This does not guarantee consistently low latency or only minor distortion when the network deteriorates.</p>
 <p>Real-time voice balances latency against audio quality. Audio tasks such as offline transcription and file uploads still place more weight on complete, reliable delivery.</p>
 <h3 id="1363-webrtc-is-a-whole-protocol-stack"><span id="1363-webrtc" class="legacy-heading-anchor" aria-hidden="true"></span>13.6.3 WebRTC Is a Whole Protocol Stack<a class="headerlink" href="#1363-webrtc-is-a-whole-protocol-stack" title="Permanent link">&para;</a></h3>
 <p>Media and data channels follow different paths. DTLS negotiates SRTP keys; it does not wrap every SRTP packet in another DTLS layer:</p>
-<pre class="mermaid"><code>flowchart TB
-    ICE["ICE / STUN / TURN&lt;br/&gt;Connection setup and NAT traversal"]
-    SRTP["SRTP / SRTCP&lt;br/&gt;Media and control packet protection"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    ICE["ICE / STUN /&lt;br/&gt;TURN"]
+    SRTP["SRTP / SRTCP"]
     DTLS["DTLS handshake"]
-    DATA["DataChannel&lt;br/&gt;SCTP over DTLS"]
-    PATH["ICE-selected network path&lt;br/&gt;Usually UDP, with TURN relay when needed"]
+    DATA["DataChannel"]
+    PATH["ICE-selected&lt;br/&gt;network path"]
     ICE --&gt; PATH
     DTLS -.exports keys.-&gt; SRTP
     SRTP --&gt; PATH
     DATA --&gt; PATH
     DTLS --&gt; PATH</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>ICE / STUN / TURN Connection setup and NAT traversal</li>
+<li>SRTP / SRTCP Media and control packet protection</li>
+<li>DataChannel SCTP over DTLS</li>
+<li>ICE-selected network path Usually UDP, with TURN relay when needed</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9840,15 +9884,19 @@
 <p><strong>They serve different purposes rather than replacing one another.</strong> The common mistake is to treat them as mutually exclusive choices.</p>
 <h3 id="1365-ice-candidate-gathering-and-connectivity-checks"><span id="1365-ice" class="legacy-heading-anchor" aria-hidden="true"></span>13.6.5 ICE Candidate Gathering and Connectivity Checks<a class="headerlink" href="#1365-ice-candidate-gathering-and-connectivity-checks" title="Permanent link">&para;</a></h3>
 <p>ICE gathers host, server-reflexive, relay, and other candidates, forms candidate pairs, and performs paced connectivity checks and nomination. It is not a strictly sequential three-stage fallback of “local fails → STUN fails → TURN”:</p>
-<pre class="mermaid"><code>flowchart TB
-    P1["Host candidates&lt;br/&gt;Local interface addresses"] --&gt; CHECK["Candidate-pair priorities&lt;br/&gt;STUN connectivity checks and nomination"]
-    P2["Server-reflexive candidates&lt;br/&gt;STUN discovers mapped addresses"] --&gt; CHECK
-    P3["Relay candidates&lt;br/&gt;TURN allocates relay addresses"] --&gt; CHECK
-    CHECK --&gt; SELECT["Select a working path&lt;br/&gt;ICE restart is possible on failure"]
-
-    style P1 fill:#e6f4ea
-    style P2 fill:#fef7e0
-    style P3 fill:#fce8e6</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    CAND["Gather ICE candidates"] --&gt; CHECK["Prioritize and test pairs"]
+    CHECK --&gt; SELECT["Nominate a working path"]</code></pre>
+<p>Candidate gathering includes host addresses from local interfaces, server-reflexive addresses discovered with STUN, and relay addresses allocated by TURN. ICE prioritizes candidate pairs, performs STUN connectivity checks, and nominates a usable pair. Failure may require an ICE restart rather than assuming the original path remains usable.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Host candidates Local interface addresses</li>
+<li>Candidate-pair priorities STUN connectivity checks and nomination</li>
+<li>Server-reflexive candidates STUN discovers mapped addresses</li>
+<li>Relay candidates TURN allocates relay addresses</li>
+<li>Select a working path ICE restart is possible on failure</li>
+</ul>
 <p>NAT mapping and filtering behavior, blocked UDP, firewalls, and candidate reachability can all prevent a direct connection. Labels such as “enterprise network” or “carrier NAT” alone do not establish a particular behavior. Some deployments deliberately use relays for privacy or network-policy reasons.</p>
 <p>TURN relaying adds bandwidth and deployment costs, but preserves WebRTC's media, encryption, and congestion-control semantics; it does not turn WebRTC into WebSocket. A TCP/TLS path to TURN can reintroduce head-of-line blocking and should be measured on the target network.</p>
 <h3 id="1366-built-in-audio-processing"><span id="1366" class="legacy-heading-anchor" aria-hidden="true"></span>13.6.6 Built-In Audio Processing<a class="headerlink" href="#1366-built-in-audio-processing" title="Permanent link">&para;</a></h3>
@@ -9971,14 +10019,20 @@
 </table>
 <p>Reliable delivery in this table refers only to transport semantics while the connection is functioning. Redelivery, deduplication, and business recovery after disconnection remain application responsibilities. For all three, measure network, buffering, and processing overhead in end-to-end latency; for WebRTC, also include codecs and any relay costs.</p>
 <p>A selection guide:</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"Need real-time interactive&lt;br/&gt;audio or video?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["Need real-time&lt;br/&gt;interactive"]
     Q1 --&gt;|Yes| RTC["WebRTC"]
-    Q1 --&gt;|No| Q2{"Need continuous bidirectional messages&lt;br/&gt;rather than occasional HTTP control?"}
+    Q1 --&gt;|No| Q2["Bidirectional&lt;br/&gt;traffic?"]
     Q2 --&gt;|No| SSE["SSE"]
     Q2 --&gt;|Yes| WS["WebSocket"]
 
     style SSE fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Need real-time interactive audio or video?</li>
+<li>Need continuous bidirectional messages rather than occasional HTTP control?</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -10051,23 +10105,8 @@
 <li><strong>Distinguish specifications from implementations when choosing a protocol</strong>: MCP's standard transports are stdio and Streamable HTTP; A2A's core bindings are JSON-RPC, HTTP/REST, and gRPC. WebSocket and WebRTC need separate agreement or design.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">MDN: Using Server-Sent Events</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API">MDN: The WebSocket API</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API">MDN: WebRTC API</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc6455">RFC 6455: The WebSocket Protocol</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8445">RFC 8445: Interactive Connectivity Establishment (ICE)</a></li>
-<li><a href="https://webrtc.org/">WebRTC Official Site</a></li>
-<li><a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">WHATWG HTML: Server-Sent Events</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8835">RFC 8835: WebRTC Transports</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8834">RFC 8834: WebRTC Media and Packet-Loss Recovery</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8831">RFC 8831: WebRTC Data Channels</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8441">RFC 8441: WebSocket over HTTP/2</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc9220">RFC 9220: WebSocket over HTTP/3</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/voice-webrtc?api=realtime">OpenAI: WebRTC Connections (Realtime API Section)</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports">MCP Specification: Transports</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/docs/specification.md">A2A v1.0.1 Released Specification</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-13">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10090,7 +10129,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

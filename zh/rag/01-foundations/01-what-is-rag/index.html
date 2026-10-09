@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：RAG 是什么，解决什么问题","description":"解释 RAG 如何通过检索外部证据缓解知识过期、私有知识缺失和幻觉，并拆解索引、检索与生成流程。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/01-foundations/01-what-is-rag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：RAG 是什么，解决什么问题","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/01-foundations/01-what-is-rag/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：RAG 是什么，解决什么问题","description":"解释 RAG 如何通过检索外部证据缓解知识过期、私有知识缺失和幻觉，并拆解索引、检索与生成流程。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/01-foundations/01-what-is-rag/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：RAG 是什么，解决什么问题","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/01-foundations/01-what-is-rag/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：RAG 是什么，解决什么问题","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/01-foundations/01-what-is-rag/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9208,16 +9233,12 @@
 <h2 id="12">1.2 根因：知识被冻结在参数里<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
 <p>模型的参数化知识来自训练，部署后不会自动随现实更新。可以通过继续训练或模型编辑改变部分知识，但它不像数据库记录那样容易逐条检查、可靠修改和撤销；推理时还可以从上下文或工具获得非参数化知识。</p>
 <p>参数知识不会自动更新，也不一定覆盖私有资料。这两类缺口会增加无依据作答的风险，但不是幻觉的全部原因。</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT[只依赖参数知识] --&gt; P1[知识可能过期]
-    ROOT --&gt; P2[可能缺少私有知识]
-    P1 --&gt; P3[无依据作答风险]
-    P2 --&gt; P3
-    OTHER[误读、推理与生成失误] --&gt; P3
-
-    P1 --&gt; D1[训练数据有截止日期]
-    P2 --&gt; D2[企业内部数据从未进入训练集]
-    P3 --&gt; D3[缺少依据时仍然生成流畅答案]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    ROOT[只依赖参数知识] --&gt; GAP[证据缺失或过时]
+    GAP --&gt; P3[无依据作答风险]
+    OTHER[推理或阅读错误] --&gt; P3</code></pre>
+<p>训练数据有截止日期，企业内部数据也可能从未进入训练集。缺少证据时，模型仍然可以生成流畅答案。知识缺失或过时并非唯一原因：误读、推理失误和生成错误同样会造成问题。</p>
 <h3 id="121">1.2.1 知识过期<a class="headerlink" href="#121" title="Permanent link">&para;</a></h3>
 <p>训练数据有时间范围。截止日之后的新产品、政策和财报不能仅靠参数知识可靠回答；若应用提供了更新的上下文或工具，模型仍可利用这些信息。</p>
 <p>而且模型往往<strong>不知道自己不知道</strong>，它会用过时的信息自信作答。</p>
@@ -9236,7 +9257,8 @@
 <p><strong>保留模型的参数知识，同时检索外部材料作为生成依据，而不是把已有知识从参数里“搬走”。</strong></p>
 </blockquote>
 <p>常见的工程实现不需要改动生成模型，主要让它阅读与组织材料。但“不训练”不是 RAG 的定义：原始 RAG 论文联合微调了检索器与生成器；也可以单独训练检索或生成组件。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[用户问题] --&gt; R[检索相关材料]
     KB[(外部知识库)] --&gt; R
     R --&gt; P[材料 + 问题 拼成 Prompt]
@@ -9268,23 +9290,25 @@
 <p>权限不能交给模型自行判断。共享模型中已经学入参数的敏感知识，很难按文档可靠撤销；RAG 可以在材料进入模型前执行 ACL，但缓存、引用和工具也必须执行相同规则（详见第十九、二十章）。</p>
 <h2 id="14">1.4 完整工作流：离线与在线两个阶段<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
 <p>常见工作流分为建库与查询两个阶段。建库负责随文档变化维护索引，可以批处理，也可以持续摄取；查询阶段处理每次提问，并可能复用有效缓存。“离线”主要指不在当前用户请求的关键路径上，不是只能定期运行。</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph OFF[离线阶段 文档变化时执行]
-        D[原始文档] --&gt; PARSE[解析与清洗]
-        PARSE --&gt; CHUNK[切分 Chunking]
-        CHUNK --&gt; EMB[向量化 Embedding]
-        EMB --&gt; IDX[(写入索引)]
-    end
-
-    subgraph ON[在线阶段 每次提问执行]
-        Q[用户 Query] --&gt; RW[Query 改写]
-        RW --&gt; QEMB[Query 向量化]
-        QEMB --&gt; SEARCH[多路召回 粗排]
-        IDX --&gt; SEARCH
-        SEARCH --&gt; RERANK[Rerank 精排]
-        RERANK --&gt; PROMPT[Prompt 拼装]
-        PROMPT --&gt; GEN[生成 + 溯源]
-    end</code></pre>
+<p><strong>离线阶段 文档变化时执行</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[原始文档] --&gt; PARSE[解析与清洗]
+    PARSE --&gt; CHUNK[切分 Chunking]
+    CHUNK --&gt; EMB[向量化 Embedding]
+    EMB --&gt; IDX[(写入索引)]
+</code></pre>
+<p><strong>在线阶段 每次提问执行</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[用户 Query] --&gt; RW[Query 改写]
+    RW --&gt; QEMB[Query 向量化]
+    QEMB --&gt; SEARCH[多路召回 粗排]
+    IDX[(离线文档索引)] --&gt; SEARCH
+    SEARCH --&gt; RERANK[Rerank 精排]
+    RERANK --&gt; PROMPT[Prompt 拼装]
+    PROMPT --&gt; GEN[生成 + 溯源]
+</code></pre>
 <h3 id="141">1.4.1 离线阶段<a class="headerlink" href="#141" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9379,7 +9403,8 @@
 <li><strong>精排（Rerank）</strong>：对 100 个候选计算 100 个 Query—片段对，可以批处理，不等于 100 次串行 API 调用。计算量还取决于候选长度、模型和批大小。</li>
 </ul>
 <p>如果用这种成对重排直接扫全库，百万个候选就有百万个 Query—文档对需要评分。虽然可以批处理，但在交互式延迟和成本预算下通常不划算。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     ALL[(百万级文档)] --&gt;|索引召回| C[Top-100 候选]
     C --&gt;|批量重排| F[Top-5 结果]</code></pre>
 <blockquote>
@@ -9438,13 +9463,8 @@
 <li>RAG 能降低但不能消除幻觉；单轮片段检索不是全量统计或完整多跳推理器，需按任务接入计算与多步取证。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></li>
-<li><a href="https://arxiv.org/abs/2004.04906">Dense Passage Retrieval for Open-Domain Question Answering</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-01">集中参考资料章节</a>。</p>
 
 
 
@@ -9467,7 +9487,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

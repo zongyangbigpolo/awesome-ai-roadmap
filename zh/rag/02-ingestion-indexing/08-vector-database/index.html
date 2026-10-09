@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：向量数据库与 ANN 索引","description":"比较 FLAT、HNSW、IVF 和 DiskANN 的搜索机制，说明量化、过滤检索、删除回收及向量库选型的资源约束。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/08-vector-database/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：向量数据库与 ANN 索引","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/08-vector-database/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：向量数据库与 ANN 索引","description":"比较 FLAT、HNSW、IVF 和 DiskANN 的搜索机制，说明量化、过滤检索、删除回收及向量库选型的资源约束。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/08-vector-database/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：向量数据库与 ANN 索引","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/08-vector-database/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第八章：向量数据库与 ANN 索引","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/08-vector-database/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9378,7 +9403,8 @@
 </blockquote>
 <p>近似误差必须测量，不能只看延迟。ANN 是索引算法，不要求部署独立向量数据库；索引库、关系库扩展和独立服务都可以承载它。</p>
 <h2 id="82-ann">8.2 主流 ANN 索引<a class="headerlink" href="#82-ann" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     ANN[向量搜索方案] --&gt; HNSW[HNSW&lt;br/&gt;图索引]
     ANN --&gt; IVF[IVF&lt;br/&gt;倒排聚类]
     ANN --&gt; DISK[DiskANN&lt;br/&gt;磁盘图索引]
@@ -9503,7 +9529,8 @@
 <p>这是生产环境中最容易踩、也最少被讨论的坑。</p>
 <p><strong>场景</strong>：检索时要加条件——只在当前用户有权限的文档里搜、只搜今年的文档、只搜某个部门的资料。</p>
 <p>看起来只是加个 <code>WHERE</code>，但它会和 ANN 索引产生<strong>严重的交互问题</strong>。</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     F[带过滤的向量检索] --&gt; PRE[预过滤]
     F --&gt; POST[后过滤]
 
@@ -9554,16 +9581,11 @@
 <p>按租户分区可缩小搜索域并明确隔离边界，但大量小租户会增加索引管理成本，大租户还可能形成热点；部门、时间和文档 ACL 等过滤依然存在。应比较独立分区、共享索引加过滤以及分层路由，不能说分区就彻底解决过滤问题。</p>
 <h2 id="85">8.5 选型：怎么挑向量数据库<a class="headerlink" href="#85" title="Permanent link">&para;</a></h2>
 <p>选型时比产品名单更重要的是判断维度。</p>
-<pre class="mermaid"><code>flowchart TB
-    SEL[选型] --&gt; D1[数据规模]
-    SEL --&gt; D2[部署形态]
-    SEL --&gt; D3[功能需求]
-    SEL --&gt; D4[运维能力]
-
-    D1 --&gt; A1[十万以下 / 百万级 / 亿级]
-    D2 --&gt; A2[嵌入式 / 自托管 / 托管服务]
-    D3 --&gt; A3[混合检索 / 元数据过滤 / 多租户]
-    D4 --&gt; A4[团队能否承担独立组件的运维]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    SEL[业务需求] --&gt; D[规模、功能与运维]
+    D --&gt; A[选择部署形态]</code></pre>
+<p>比较十万以下、百万级和亿级数据规模，结合混合检索、元数据过滤与多租户需求，评估嵌入式、自托管和托管服务。还要问团队能否运维另一个独立组件；不能仅凭数据规模决定部署形态。</p>
 <table>
 <thead>
 <tr>
@@ -9634,14 +9656,8 @@
 <li><strong>按当前规模选型，把接口抽象好</strong>，不要为想象中的规模过度设计。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1603.09320">Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs</a></li>
-<li><a href="https://github.com/pgvector/pgvector">pgvector 官方 README：过滤、迭代扫描、VACUUM 与扩展</a></li>
-<li><a href="https://arxiv.org/abs/2105.09613">FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search</a></li>
-<li><a href="https://arxiv.org/abs/2403.04871">ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data</a></li>
-<li><a href="https://arxiv.org/abs/1702.08734">Billion-scale similarity search with GPUs</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-08">集中参考资料章节</a>。</p>
 
 
 
@@ -9664,7 +9680,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

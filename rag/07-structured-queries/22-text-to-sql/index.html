@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-09-29"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9138,7 +9163,7 @@
 <h2 id="221-order-statistics-require-more-than-a-few-retrieved-passages"><span id="221" class="legacy-heading-anchor" aria-hidden="true"></span>22.1 Order statistics require more than a few retrieved passages<a class="headerlink" href="#221-order-statistics-require-more-than-a-few-retrieved-passages" title="Permanent link">&para;</a></h2>
 <p>When a support representative asks, “How many orders from last week are still incomplete?”, retrieving a few orders and asking the model to add them up leaves every missed order out of the calculation. The problem is not poor model arithmetic: the input does not cover the population being counted.</p>
 <p><a href="../../02-ingestion-indexing/03-document-parsing/">Chapter 3</a>, §3.4, distinguishes locating a table from aggregating all its rows. <a href="../../04-advanced/16-graphrag/">Chapter 16</a>, §16.6, also explains that reliable relational tables can be queried directly without first extracting a knowledge graph. Text-to-SQL follows that route: <strong>the model translates the question into SQL, the database performs the computation, and the application delivers the result.</strong></p>
-<p>The <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md">“Generating SQL Queries” discussion</a> in Chapter 5 of Bojie Li's <em>AI Agents in Depth</em> has the model generate a query and the application execute it and present the result, rather than asking the model to carry data row by row. Its companion ERP example uses two SQLite tables, for employees and salaries, generates a query in a single model call, and compares the result with an independent Python reference answer.</p>
+<p>The “Generating SQL Queries” discussion<sup><a href="../../../book/references/#ref-420">【420】</a></sup> in Chapter 5 of Bojie Li's <em>AI Agents in Depth</em> has the model generate a query and the application execute it and present the result, rather than asking the model to carry data row by row. Its companion ERP example uses two SQLite tables, for employees and salaries, generates a query in a single model call, and compares the result with an independent Python reference answer.</p>
 <p>This chapter keeps that division of responsibility but uses an order-aggregation case. It does not require a multi-turn agent. If an existing report meets the need, let the model select the report and supply validated parameters first. Allow it to generate SQL structure only when users genuinely need new combinations of queries.</p>
 <h2 id="222-ask-the-business-team-what-incomplete-means"><span id="222" class="legacy-heading-anchor" aria-hidden="true"></span>22.2 Ask the business team what “incomplete” means<a class="headerlink" href="#222-ask-the-business-team-what-incomplete-means" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -9422,8 +9447,8 @@
 </tr>
 </tbody>
 </table>
-<p>After choosing anchor tables, expand them through a <strong>trusted schema graph</strong>: add the primary and foreign key columns needed for an approved join path, along with intermediate tables that the path actually crosses. Expansion must stay within the same authorized scope; it must not reintroduce a table or column excluded by the initial permission check. <a href="https://aclanthology.org/2026.findings-eacl.134/">SchemaGraphSQL</a> studies this graph-and-pathfinding approach for large schemas. It also treats missing or inconsistent foreign keys as a separate joinability-discovery problem; an inferred edge is therefore a query-planning candidate, not authoritative database metadata. Even a declared foreign-key path needs a business check: confirm what each relationship means and its cardinality, especially whether a many-to-many join would multiply quantities before aggregation. The shortest connected path is not necessarily the right one. If several join paths remain plausible, or no declared path connects the anchors, expand the authorized candidates, consult curated relationship metadata, or ask for clarification instead of inventing a join.</p>
-<p>Evaluate this stage separately from SQL generation. A useful test set records the tables, columns, and relationship paths required by accepted query strategies, then measures required-element recall, candidate-set size, and downstream execution and business correctness. <a href="https://aclanthology.org/2026.findings-eacl.236/">Context-aware bidirectional retrieval research</a> likewise treats schema linking as a separate retrieval problem and examines both recall and false positives. Equivalent SQL need not match one reference string, so labels should allow more than one valid strategy where the data model permits it. Compute recall against each accepted strategy separately and report the best-covered one; complete coverage means retaining every required element of at least one valid strategy, not the union of all alternatives. Security tests remain separate: schema selection reduces context and confusion, but only trusted authorization and the restricted execution layer can prevent access to excluded data.</p>
+<p>After choosing anchor tables, expand them through a <strong>trusted schema graph</strong>: add the primary and foreign key columns needed for an approved join path, along with intermediate tables that the path actually crosses. Expansion must stay within the same authorized scope; it must not reintroduce a table or column excluded by the initial permission check. SchemaGraphSQL<sup><a href="../../../book/references/#ref-432">【432】</a></sup> studies this graph-and-pathfinding approach for large schemas. It also treats missing or inconsistent foreign keys as a separate joinability-discovery problem; an inferred edge is therefore a query-planning candidate, not authoritative database metadata. Even a declared foreign-key path needs a business check: confirm what each relationship means and its cardinality, especially whether a many-to-many join would multiply quantities before aggregation. The shortest connected path is not necessarily the right one. If several join paths remain plausible, or no declared path connects the anchors, expand the authorized candidates, consult curated relationship metadata, or ask for clarification instead of inventing a join.</p>
+<p>Evaluate this stage separately from SQL generation. A useful test set records the tables, columns, and relationship paths required by accepted query strategies, then measures required-element recall, candidate-set size, and downstream execution and business correctness. Context-aware bidirectional retrieval research<sup><a href="../../../book/references/#ref-433">【433】</a></sup> likewise treats schema linking as a separate retrieval problem and examines both recall and false positives. Equivalent SQL need not match one reference string, so labels should allow more than one valid strategy where the data model permits it. Compute recall against each accepted strategy separately and report the best-covered one; complete coverage means retaining every required element of at least one valid strategy, not the union of all alternatives. Security tests remain separate: schema selection reduces context and confusion, but only trusted authorization and the restricted execution layer can prevent access to excluded data.</p>
 <h3 id="2242-bind-dates-and-authorization-values-on-the-trusted-server"><span id="2242" class="legacy-heading-anchor" aria-hidden="true"></span>22.4.2 Bind dates and authorization values on the trusted server<a class="headerlink" href="#2242-bind-dates-and-authorization-values-on-the-trusted-server" title="Permanent link">&para;</a></h3>
 <p>The model outputs SQL containing named placeholders. The trusted server converts confirmed dates to UTC and binds authorization values derived from the current signed-in identity:</p>
 <table>
@@ -9459,15 +9484,19 @@
 </table>
 <p>Convert “September 1 through 7” into <code>[start, end)</code> rather than constructing a <code>23:59:59</code> endpoint that could miss fractional seconds. The server handles the Shanghai time zone; the SQL does not depend on SQLite's <code>now</code> or the machine's local time zone. In a region with daylight saving time, calculate both endpoints using the local calendar rather than always adding a fixed number of hours.</p>
 <p>For a larger authorized customer set, use a controlled relation or a collection of bound parameters constructed by the server, not a concatenated customer list returned by the model. A user may request a narrower scope, but saying “query all tenants” cannot expand the scope granted by the server.</p>
-<pre class="mermaid"><code>flowchart TD
-    A["Business question&lt;br/&gt;and definitions"] --&gt; B["Model proposes SQL"]
-    B --&gt; C["Trusted service&lt;br/&gt;validates and binds"]
-    I["Signed-in identity&lt;br/&gt;and authorized scope"] --&gt; C
-    C --&gt; D["Restricted database&lt;br/&gt;execution"]
-    D --&gt; E["Application displays&lt;br/&gt;data and scope directly"]
-    F["Independent&lt;br/&gt;reference answer"] --&gt; G["Offline acceptance&lt;br/&gt;evaluation"]
-    D --&gt; G</code></pre>
-<p><a href="../../../tools/01-function-calling/03-tool-schema-design/">Tools Chapter 3</a>, §3.2.3, warns that a description saying “SELECT only” cannot replace read-only credentials, object permissions, and query limits. The upstream <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py#L31-L87"><code>agent.py</code></a> also restricts the prompt to SELECT, but <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py#L119-L165"><code>demo.py</code></a> directly calls <code>cur.execute(sql)</code>. That execution pattern must not be mistaken for enforced database read-only access.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TD
+    A["Question and definitions"] --&gt; B["Model proposes SQL"]
+    B --&gt; C["Trusted validation and binding"]
+    I["Identity and scope"] --&gt; C
+    C --&gt; D["Restricted execution"]
+    D --&gt; E["Display data and scope"]</code></pre>
+<p>The trusted service binds the signed-in identity and authorized scope; the model does not supply that authority. The application displays execution data and scope directly. Offline acceptance separately compares the execution result against an independent reference answer:</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D["Execution result"] --&gt; G["Offline acceptance"]
+    F["Independent reference answer"] --&gt; G</code></pre>
+<p><a href="../../../tools/01-function-calling/03-tool-schema-design/">Tools Chapter 3</a>, §3.2.3, warns that a description saying “SELECT only” cannot replace read-only credentials, object permissions, and query limits. The upstream <code>agent.py</code><sup><a href="../../../book/references/#ref-434">【434】</a></sup> also restricts the prompt to SELECT, but <code>demo.py</code><sup><a href="../../../book/references/#ref-435">【435】</a></sup> directly calls <code>cur.execute(sql)</code>. That execution pattern must not be mistaken for enforced database read-only access.</p>
 <h2 id="225-a-complete-query-aggregates-by-order-first"><span id="225" class="legacy-heading-anchor" aria-hidden="true"></span>22.5 A complete query aggregates by order first<a class="headerlink" href="#225-a-complete-query-aggregates-by-order-first" title="Permanent link">&para;</a></h2>
 <p>The following query proposal reflects the agreed business definitions. It first reduces the lines to one row per order, then aggregates by customer. Its filters illustrate the query semantics. <strong>The execution layer must prevent unauthorized access even if a filter is missing</strong>; it cannot depend on the model always writing every predicate correctly.</p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">WITH</span><span class="w"> </span><span class="n">per_order</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
@@ -9526,9 +9555,9 @@
 </table>
 <p>On first reviewing the draft, Lin notices that <code>COUNT(*)</code> immediately after the join would count O101 as two orders. <code>SUM(o.total_amount_cents)</code> would also count its 10000 fen twice.</p>
 <p><code>SUM(DISTINCT amount)</code> is not a general remedy: if O102 and O106 were summed across customers in one aggregate, their equal contract values of 4000 fen would turn an 8000-fen total into 4000 fen. They belong to different customers, so this does not happen between their separate groups in the query above; aggregate <code>DISTINCT</code> removes duplicates within each group. A regression case for that query should include two distinct orders with equal unshipped totals for the same customer. Establish the row granularity first rather than adding <code>DISTINCT</code> whenever a number looks too large.</p>
-<p>This request displays only customers with unshipped quantities, so customers with none have no result row. To list every authorized customer, including those with zero outstanding shipments, start from the authorized customer set, left-join the aggregates, and fill in zeros according to the business definition. <a href="https://www.sqlite.org/lang_aggfunc.html">SQLite's <code>SUM</code></a> returns <code>NULL</code> when there are no non-null inputs. An empty result, unknown data, and zero must not be treated as the same thing.</p>
+<p>This request displays only customers with unshipped quantities, so customers with none have no result row. To list every authorized customer, including those with zero outstanding shipments, start from the authorized customer set, left-join the aggregates, and fill in zeros according to the business definition. SQLite's <code>SUM</code><sup><a href="../../../book/references/#ref-424">【424】</a></sup> returns <code>NULL</code> when there are no non-null inputs. An empty result, unknown data, and zero must not be treated as the same thing.</p>
 <h2 id="226-what-must-the-execution-service-restrict-before-running-a-query"><span id="226" class="legacy-heading-anchor" aria-hidden="true"></span>22.6 What must the execution service restrict before running a query?<a class="headerlink" href="#226-what-must-the-execution-service-restrict-before-running-a-query" title="Permanent link">&para;</a></h2>
-<p>Read-only access does not mean unrestricted reading, and SELECT is not inherently free of side effects. SQLite supports application-defined functions. If one can write files or access the network, invoking it in SELECT may still have side effects; see the <a href="https://www.sqlite.org/appfunc.html#security_implications">official function security guidance</a>.</p>
+<p>Read-only access does not mean unrestricted reading, and SELECT is not inherently free of side effects. SQLite supports application-defined functions. If one can write files or access the network, invoking it in SELECT may still have side effects; see the official function security guidance<sup><a href="../../../book/references/#ref-428">【428】</a></sup>.</p>
 <table>
 <thead>
 <tr>
@@ -9566,13 +9595,13 @@
 </tbody>
 </table>
 <p>Parameterization separates <strong>bound values</strong> from SQL syntax. Table names, sort expressions, and the overall query structure still require validation. Do not pass an unvalidated query to <code>executescript</code>, or retry a failed query through a more privileged connection.</p>
-<p>SQLite does not have the built-in user roles and row-level authorization of a database server. If this case is extended to open-ended queries, a trusted service can first create a consistent snapshot containing only the authorized customers and necessary columns for the request. An isolated process can open it with <a href="https://www.sqlite.org/uri.html"><code>mode=ro</code></a>, combined with file permissions, a ban on attaching databases, function restrictions, and an <a href="https://www.sqlite.org/c3ref/set_authorizer.html">authorizer</a> that rejects unapproved operations. The authorizer checks operations and objects; it does not automatically filter rows by tenant. Opening a shared multitenant file read-only is not tenant isolation either.</p>
+<p>SQLite does not have the built-in user roles and row-level authorization of a database server. If this case is extended to open-ended queries, a trusted service can first create a consistent snapshot containing only the authorized customers and necessary columns for the request. An isolated process can open it with <code>mode=ro</code><sup><a href="../../../book/references/#ref-425">【425】</a></sup>, combined with file permissions, a ban on attaching databases, function restrictions, and an authorizer<sup><a href="../../../book/references/#ref-426">【426】</a></sup> that rejects unapproved operations. The authorizer checks operations and objects; it does not automatically filter rows by tenant. Opening a shared multitenant file read-only is not tenant isolation either.</p>
 <p>The teaching data retains out-of-scope records so that filtering and join mistakes can be caught. That does not mean the model's query process should receive a database containing every tenant. Authorized snapshots incur copying costs and freshness tradeoffs. For large datasets, real-time requirements, or frequently changing permissions, prefer an established data-access service or fixed templates rather than improvising a “general-purpose SQL sandbox.”</p>
-<p>Before execution, <a href="https://www.sqlite.org/eqp.html"><code>EXPLAIN QUERY PLAN</code></a> can show whether composite keys are used and whether large-table scans or temporary sorts appear. Evaluate indexes at realistic data volumes—for example, an index organized by tenant, customer, and order time. Scanning a small table is not necessarily a problem. A query plan is not a runtime or cost guarantee, and its textual format is not a stable interface.</p>
-<p>During execution, enforce deadlines through progress callbacks or interruption, with separate budgets for result rows, bytes, and concurrency. SQLite does not offer a cloud-warehouse-style scan-cost cap; a local demonstration's runtime cannot be turned into a production cost promise. The <a href="https://www.sqlite.org/security.html">SQLite security guide</a> describes limiting and interruption interfaces. Report a timeout as “not completed” and truncated output as “incomplete”; never call partial results a complete aggregate.</p>
+<p>Before execution, <code>EXPLAIN QUERY PLAN</code><sup><a href="../../../book/references/#ref-429">【429】</a></sup> can show whether composite keys are used and whether large-table scans or temporary sorts appear. Evaluate indexes at realistic data volumes—for example, an index organized by tenant, customer, and order time. Scanning a small table is not necessarily a problem. A query plan is not a runtime or cost guarantee, and its textual format is not a stable interface.</p>
+<p>During execution, enforce deadlines through progress callbacks or interruption, with separate budgets for result rows, bytes, and concurrency. SQLite does not offer a cloud-warehouse-style scan-cost cap; a local demonstration's runtime cannot be turned into a production cost promise. The SQLite security guide<sup><a href="../../../book/references/#ref-427">【427】</a></sup> describes limiting and interruption interfaces. Report a timeout as “not completed” and truncated output as “incomplete”; never call partial results a complete aggregate.</p>
 <h2 id="227-validate-results-not-the-appearance-of-the-sql"><span id="227-sql" class="legacy-heading-anchor" aria-hidden="true"></span>22.7 Validate results, not the appearance of the SQL<a class="headerlink" href="#227-validate-results-not-the-appearance-of-the-sql" title="Permanent link">&para;</a></h2>
 <p>The engineer runs the two tables and query above using Python's standard-library <code>sqlite3</code>. A separate computation, without SQL, walks the lines of each order, excludes cancelled and out-of-scope orders, and adds the remaining quantities and amounts. Both produce <code>C1: (2, 10, 7000)</code> and <code>C2: (1, 2, 4000)</code>. The reference logic is written from the business agreement; the same model generation must not serve as both question setter and judge.</p>
-<p>This validates the query result on a fixed snapshot, not any model's SQL-generation accuracy, and it does not establish that authorization isolation has been implemented. The upstream <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py#L40-L165"><code>demo.py</code> comparison flow</a> also separates database execution from Python reference answers, but tolerances and ordering rules must be defined for this business case.</p>
+<p>This validates the query result on a fixed snapshot, not any model's SQL-generation accuracy, and it does not establish that authorization isolation has been implemented. The upstream <code>demo.py</code> comparison flow<sup><a href="../../../book/references/#ref-436">【436】</a></sup> also separates database execution from Python reference answers, but tolerances and ordering rules must be defined for this business case.</p>
 <table>
 <thead>
 <tr>
@@ -9614,15 +9643,8 @@
 <p>This table establishes “how much of these orders remained unshipped as of this snapshot.” It does not establish “how much customers have not received,” still less “everything can be delivered tomorrow.” If the user also needs an explanation of split-shipment policy, retrieve the applicable documents. If a natural-language summary is needed, send only the necessary results and evidence to the model and recheck numbers, units, and promised dates. Keeping result rows away from the model is not a missing feature; it is a deliberate way to reduce transcription errors and data exposure.</p>
 <p>When explaining this design in an interview, the point is not to recite complex SQL. Explain who defines the business meaning, which keys govern joins, where authorization is enforced, and what independent evidence confirms the answer. Do not expose arbitrary queries merely to demonstrate an agent when a fixed report solves the problem.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Bojie Li, <em>AI Agents in Depth</em>, <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md">Chapter 5: Code as an Interaction Interface and Generating SQL Queries</a>. This chapter adopts the separation of query generation from execution; the business case, data, SQL, and diagram were designed separately.</li>
-<li>ERP example at the same pinned commit: <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/README.md">README</a>, <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py">agent.py</a>, and <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py">demo.py</a>. The book's experiment description uses PostgreSQL, while the runnable companion uses SQLite. The review here inspects source code without running the upstream program; its reported pass rates are not presented as this chapter's experimental results or customer benefits.</li>
-<li>Official SQLite documentation: <a href="https://www.sqlite.org/lang_aggfunc.html">aggregate functions</a>, <a href="https://www.sqlite.org/uri.html">read-only URI mode</a>, <a href="https://www.sqlite.org/c3ref/set_authorizer.html">authorization callbacks</a>, <a href="https://www.sqlite.org/security.html">defenses for untrusted SQL</a>, <a href="https://www.sqlite.org/appfunc.html#security_implications">application-defined function security</a>, and <a href="https://www.sqlite.org/eqp.html">query plans</a>.</li>
-<li>Official SQLite documentation: <a href="https://www.sqlite.org/datatype3.html">type affinity</a> and <a href="https://www.sqlite.org/stricttables.html">STRICT tables and version requirements</a>.</li>
-<li>Safdarian et al., <a href="https://aclanthology.org/2026.findings-eacl.134/">“SchemaGraphSQL: Efficient Schema Linking with Pathfinding Graph Algorithms for Text-to-SQL on Large-Scale Databases”</a>, Findings of EACL 2026. This chapter uses its distinction between schema-graph pathfinding and joinability discovery, not its benchmark results as a production guarantee.</li>
-<li>Nahid et al., <a href="https://aclanthology.org/2026.findings-eacl.236/">“Rethinking Schema Linking: A Context-Aware Bidirectional Retrieval Approach for Text-to-SQL”</a>, Findings of EACL 2026. It motivates evaluating schema retrieval as a separate stage with both recall and false positives.</li>
-</ul>
-<p>Sources were consulted on 2026-09-14; the pinned commit and SQLite typing, aggregation, and execution limits were rechecked on 2026-09-15. The English migration was checked on 2026-09-20; the schema-linking sources were rechecked on 2026-09-29.</p>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-22">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9645,7 +9667,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 29, 2026 12:24:30 CST">2026-09-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：反馈闭环与数据飞轮","description":"将显式与隐式反馈转化为经授权的评测或训练数据，避免选择偏差、标签污染、测试泄漏和错误自强化。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/06-performance-operations/13-feedback-loop-data-flywheel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：反馈闭环与数据飞轮","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：反馈闭环与数据飞轮","description":"将显式与隐式反馈转化为经授权的评测或训练数据，避免选择偏差、标签污染、测试泄漏和错误自强化。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/06-performance-operations/13-feedback-loop-data-flywheel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：反馈闭环与数据飞轮","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十三章：反馈闭环与数据飞轮","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9170,17 +9195,25 @@
 <h1 id="_1">第十三章：反馈闭环与数据飞轮<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <h2 id="131">13.1 反馈闭环是整个生产架构图的最后一环,也是第一环<a class="headerlink" href="#131" title="Permanent link">&para;</a></h2>
 <p>回到<a href="../../01-foundations/02-production-architecture-overview/">第 2 章</a>的架构全景图:所有环节最终都指向反馈闭环,而反馈闭环产出的数据又重新流回评测集和训练数据,成为下一轮迭代的起点。<strong>这里不是再加一个新组件,而是把第 7–12 章那些已经搭好的评测、发布和训练数据入口真正接起来。</strong></p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     PROD["生产系统运行"] --&gt; SIGNAL["收集反馈信号"]
-    SIGNAL --&gt; TRIAGE["核对使用授权 · 脱敏 · 去重 · 归因"]
-    TRIAGE --&gt; EVALSET["加入评测数据集&lt;br/&gt;(第7章)"]
-    TRIAGE --&gt; FINETUNE["加入微调/对齐数据&lt;br/&gt;任务适配与数据条件满足后"]
-    EVALSET --&gt; RELEASE["下一轮发布门禁&lt;br/&gt;(第10章)"]
-    FINETUNE --&gt; MODEL["下一代模型/适配层"]
+    SIGNAL --&gt; TRIAGE["整理反馈"]
+    TRIAGE --&gt; EVALSET["加入评测数据集"]
+    TRIAGE --&gt; FINETUNE["加入微调/对齐数&lt;br/&gt;据"]
+    EVALSET --&gt; RELEASE["下一轮发布门禁"]
+    FINETUNE --&gt; MODEL["下一代模型/适配&lt;br/&gt;层"]
     RELEASE --&gt; PROD
     MODEL --&gt; RELEASE
 
     style TRIAGE fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>核对使用授权 · 脱敏 · 去重 · 归因</li>
+<li>加入评测数据集 (第7章)</li>
+<li>加入微调/对齐数据 任务适配与数据条件满足后</li>
+<li>下一轮发布门禁 (第10章)</li>
+</ul>
 <h2 id="132">13.2 反馈信号的来源:显式与隐式<a class="headerlink" href="#132" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9224,15 +9257,23 @@
 <p>短周期闭环不必训练模型，但修复可能落在检索、工具、数据或权限代码，而非总是改 Prompt。发现问题与证明修复要用不同证据：从失败案例生成的回归用例有价值，却不能同时进入训练集和独立留出集，近重复用户、文档与会话也要隔离。</p>
 <h2 id="134">13.4 从反馈到训练数据:长周期闭环(数据飞轮)<a class="headerlink" href="#134" title="Permanent link">&para;</a></h2>
 <p>当反馈数据积累到一定规模,且短周期的 Prompt 调整已经无法进一步提升某类任务的表现时,才需要考虑更重的手段——用积累的数据做微调或偏好对齐(RLHF/DPO,见 <a href="../../../llm/02-training-alignment/">LLM · 训练与对齐</a>)。</p>
-<pre class="mermaid"><code>flowchart TB
-    A["生产反馈持续积累"] --&gt; B["确认任务适合训练&lt;br/&gt;授权、标签质量与学习曲线达标"]
-    B --&gt; C["构建微调/偏好数据集"]
-    C --&gt; D["微调或对齐出新版本"]
-    D --&gt; E["经过与第7-10章相同的&lt;br/&gt;评测门禁与灰度发布"]
-    E --&gt; F["新版本上线,产生新的反馈"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["生产反馈持续积累"] --&gt; B["确认任务适合训练"]
+    B --&gt; C["构建训练数据集"]
+    C --&gt; D["微调或对齐出新版&lt;br/&gt;本"]
+    D --&gt; E["经过与第7-10章相&lt;br/&gt;同的"]
+    E --&gt; F["部署并收集反馈"]
     F --&gt; A
 
     style B fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>确认任务适合训练 授权、标签质量与学习曲线达标</li>
+<li>构建微调/偏好数据集</li>
+<li>经过与第7-10章相同的 评测门禁与灰度发布</li>
+<li>新版本上线,产生新的反馈</li>
+</ul>
 <p>没有通用的「数千到数万条即可微调」门槛。先做小规模实验和学习曲线，比较训练收益与 Prompt、检索、工具修复的收益。偏好对要对应相同任务与上下文，并确认差异来自答案质量而不是版本、曝光和用户群；模型生成的答案不能未经核验当作事实标签。</p>
 <p>反馈只来自已展示答案，路由和推荐策略会改变可观察的数据分布。反复用自身高分输出训练可能放大已有偏差并遗忘长尾任务。保留经授权的代表性样本、长期留出集和必要的受控探索，监控不同切片的性能，而非只看总体点赞率形成「飞轮变好」的叙事。</p>
 <h2 id="135">13.5 反馈闭环的治理边界<a class="headerlink" href="#135" title="Permanent link">&para;</a></h2>
@@ -9287,13 +9328,8 @@
 <li><strong>反馈数据的治理边界和 Trace 数据一致</strong>:脱敏、去重、授权,且不能让单次反馈未经验证直接改变系统行为。</li>
 </ol>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/fine-tuning">OpenAI: Fine-tuning</a></li>
-<li><a href="https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback">Anthropic: Constitutional AI and RLHF</a></li>
-<li><a href="https://docs.langchain.com/langsmith/attach-user-feedback">LangSmith: Attach user feedback</a></li>
-<li><a href="https://netflixtechblog.com/artwork-personalization-c589f074ad76">Netflix Tech Blog: Recommendation systems and the data flywheel</a></li>
-<li><a href="https://pair.withgoogle.com/guidebook/">Google: People + AI Guidebook - Feedback + Control</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-engineering-13">集中参考资料章节</a>。</p>
 
 
 
@@ -9316,7 +9352,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

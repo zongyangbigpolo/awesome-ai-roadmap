@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Forward Deployed Engineering：从业务问题到可复用生产系统","description":"FDE 怎样从客户的一句话做到上线交付：结合产品协作、一线工程分享和订单异常助手案例，讲清需求取舍、评测、权限、试点与成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/01-foundations/01-forward-deployed-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：Forward Deployed Engineering：从业务问题到可复用生产系统","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/01-foundations/01-forward-deployed-engineering/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Forward Deployed Engineering：从业务问题到可复用生产系统","description":"FDE 怎样从客户的一句话做到上线交付：结合产品协作、一线工程分享和订单异常助手案例，讲清需求取舍、评测、权限、试点与成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/01-foundations/01-forward-deployed-engineering/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：Forward Deployed Engineering：从业务问题到可复用生产系统","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/01-foundations/01-forward-deployed-engineering/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：Forward Deployed Engineering：从业务问题到可复用生产系统","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/fde/01-foundations/01-forward-deployed-engineering/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9737,13 +9762,23 @@
 </ul>
 <p>OpenAI 等 AI 公司也有 FDE，但组织归属和职责并不完全相同。看招聘信息时，尤其要确认是否需要写生产代码、上线后负责到什么程度、现场需求怎样进入产品开发。</p>
 <p>FDE 做完一个项目，还要回答另一个问题：下次遇到类似客户，哪些东西可以直接用，哪些必须重做？</p>
-<pre class="mermaid"><code>flowchart LR
-    D["Discover&lt;br/&gt;发现真实问题"] --&gt; M["Model&lt;br/&gt;定义任务与约束"]
-    M --&gt; P["Prove&lt;br/&gt;用 Eval 验证价值"]
-    P --&gt; I["Integrate&lt;br/&gt;接入数据与系统"]
-    I --&gt; O["Operate&lt;br/&gt;生产运行"]
-    O --&gt; G["Generalize&lt;br/&gt;沉淀可复用能力"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    D["Discover"] --&gt; M["Model"]
+    M --&gt; P["Prove"]
+    P --&gt; I["Integrate"]
+    I --&gt; O["Operate"]
+    O --&gt; G["Generalize"]
     G -.新基线.-&gt; D</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>Discover 发现真实问题</li>
+<li>Model 定义任务与约束</li>
+<li>Prove 用 Eval 验证价值</li>
+<li>Integrate 接入数据与系统</li>
+<li>Operate 生产运行</li>
+<li>Generalize 沉淀可复用能力</li>
+</ul>
 <p>FDE 的关键不在“离客户近”，而在同时具备三种责任：</p>
 <ol>
 <li><strong>结果责任</strong>：成功标准是业务或任务结果，而不是完成一份方案；</li>
@@ -9882,20 +9917,19 @@
 <p>这里的 Eval 指工程方法，不是某个供应商产品名。测试输入、评分器和结果格式应当可导出，避免某个平台停止服务后，连验收依据也一并丢失。</p>
 <h2 id="15-agentrag-harness">1.5 Agent、RAG 与 Harness 方案选型<a class="headerlink" href="#15-agentrag-harness" title="Permanent link">&para;</a></h2>
 <p>FDE 的目标不是使用最多的 AI 组件，而是选择<strong>满足验收条件的最小系统</strong>。</p>
-<pre class="mermaid"><code>flowchart TD
-    START["明确任务与 Eval"] --&gt; KNOW{"需要私有或动态知识?"}
-    KNOW --&gt;|否| CALL["单次模型调用&lt;br/&gt;+ 结构化输出"]
-    KNOW --&gt;|是| RAG["RAG / 查询工具"]
-    CALL --&gt; PATH{"步骤是否固定?"}
-    RAG --&gt; PATH
-    PATH --&gt;|是| FLOW["确定性 Workflow"]
-    PATH --&gt;|否| ACTION{"是否需要自主选择动作?"}
-    ACTION --&gt;|否| FLOW
-    ACTION --&gt;|是| AGENT["Agent"]
-    FLOW --&gt; DURABLE
-    AGENT --&gt; DURABLE{"任务是否长时、有副作用&lt;br/&gt;或需要人工审批?"}
-    DURABLE --&gt;|否| LOOP["轻量运行时&lt;br/&gt;Workflow 或 Agent Loop"]
-    DURABLE --&gt;|是| HARNESS["持久化 Harness&lt;br/&gt;Checkpoint / 权限 / HITL"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TD
+    TASK["明确任务与评估"] --&gt; DATA["选择知识访问方式"]
+    DATA --&gt; CONTROL["选择控制流程"]
+    CONTROL --&gt; RUNTIME["选择运行时"]</code></pre>
+<p>这几项决策要分别判断。需要私有或动态知识时使用 RAG 或查询工具，否则先从单次模型调用和结构化输出开始。步骤固定时采用确定性工作流；即使步骤不固定，也只有需要自主选择动作时才采用 Agent。无论是工作流还是 Agent，只要任务长时运行、有副作用或需要等待人工审批，就需要带检查点、权限控制和 HITL 的持久化 Harness；否则轻量运行时可能已经足够。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>单次模型调用 + 结构化输出</li>
+<li>任务是否长时、有副作用 或需要人工审批?</li>
+<li>轻量运行时 Workflow 或 Agent Loop</li>
+<li>持久化 Harness Checkpoint / 权限 / HITL</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9934,7 +9968,7 @@
 </table>
 <p>先做规则、单次调用或 Workflow 基线，再证明 Agent 的额外质量收益足以覆盖时延、成本和风险。库存、余额和订单状态应查实时业务接口，不宜当作静态文档切块后等待索引更新。RAG 用来找证据，Agent 用来动态选步骤，两者并不互斥。</p>
 <p>图中的持久化判断也适用于固定 Workflow：只要有跨天审批或业务写入，就可能需要状态存储、幂等和恢复；反过来，短请求也必须有鉴权、超时和审计。Harness 不是 Agent 框架的同义词，其运行时边界详见 <a href="../../../agent/02-runtime-harness/16-harness-definition-and-boundaries/">Agent Harness 第十六章</a>。</p>
-<p>不要把早期博客里的工具清单当成今天的采购建议。Anthropic 的 <a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a> 已提醒读者工具环境发生变化，并指向 <a href="https://www.anthropic.com/engineering/managed-agents">Managed Agents 工程文章</a>。后者将会话记录、Harness 与执行沙箱分离；可以借鉴这种故障和凭据边界，但是否采用托管服务仍要看客户的网络、数据留存、成本和迁移要求。</p>
+<p>不要把早期博客里的工具清单当成今天的采购建议。Anthropic 的 Building Effective Agents<sup><a href="../../../book/references/#ref-275">【275】</a></sup> 已提醒读者工具环境发生变化，并指向 Managed Agents 工程文章<sup><a href="../../../book/references/#ref-791">【791】</a></sup>。后者将会话记录、Harness 与执行沙箱分离；可以借鉴这种故障和凭据边界，但是否采用托管服务仍要看客户的网络、数据留存、成本和迁移要求。</p>
 <h2 id="16">1.6 客户数据、权限和既有系统集成<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <p>接客户系统时，经常先卡在模型之外：同一个字段在两个部门里意思不同，服务账号能读全库但用户不能，旧接口偶尔不返回结果，出了问题又不知道该找谁。这些事情得逐个问清楚。</p>
 <h3 id="161">1.6.1 数据先治理，再进入模型<a class="headerlink" href="#161" title="Permanent link">&para;</a></h3>
@@ -9947,17 +9981,20 @@
 <li>检索结果是否继承原始对象的访问控制。</li>
 </ul>
 <p>“拿到 API Key 就算完成集成”是典型错误。身份应从用户、Agent、工具一直传播到目标资源，授权在数据与动作执行点再次校验。MCP/A2A 等协议层风险见 <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol 安全</a>，跨系统身份治理见 <a href="../../../safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/">AI 安全第七章</a>。</p>
-<p>“API 数据不用于训练”也不等于“不留存”。OpenAI 当前<a href="https://developers.openai.com/api/docs/guides/your-data">数据控制文档</a>分别说明滥用监控日志和应用状态：默认滥用监控日志通常保留最多 30 天，并有文档列出的例外；ZDR 需要批准，也有端点、能力和其他适用限制。<code>store=false</code> 不是覆盖文件、向量库、第三方工具和日志的总开关。面试中应说清楚要逐项核对哪些数据流，而不是承诺“用了企业 API 就天然合规”。</p>
+<p>“API 数据不用于训练”也不等于“不留存”。OpenAI 当前数据控制文档<sup><a href="../../../book/references/#ref-170">【170】</a></sup>分别说明滥用监控日志和应用状态：默认滥用监控日志通常保留最多 30 天，并有文档列出的例外；ZDR 需要批准，也有端点、能力和其他适用限制。<code>store=false</code> 不是覆盖文件、向量库、第三方工具和日志的总开关。面试中应说清楚要逐项核对哪些数据流，而不是承诺“用了企业 API 就天然合规”。</p>
 <p>权限也不会因为检索成功就自动继承到所有下游。检索前需要租户和资源过滤，结果进入上下文前要确认有效授权；草稿、缓存和导出同样要控制接收者。源文档撤权或删除后，索引、缓存和已存草稿怎么失效，是比“向量库支持 metadata filter”更具体的问题。</p>
 <h3 id="162">1.6.2 用适配层隔离客户差异<a class="headerlink" href="#162" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
-    CORE["共享领域能力&lt;br/&gt;任务 / Eval / 策略"] --&gt; PORT["稳定 Port&lt;br/&gt;检索 / 动作 / 身份"]
-    PORT --&gt; A1["客户 A Adapter"]
-    PORT --&gt; A2["客户 B Adapter"]
-    PORT --&gt; A3["客户 C Adapter"]
-    A1 --&gt; S1["CRM / ERP / 文档库"]
-    A2 --&gt; S2["私有 API / 数据仓库"]
-    A3 --&gt; S3["Legacy / On-prem"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    CORE["共享领域能力"] --&gt; PORT["稳定端口"]
+    PORT --&gt; ADAPTER["客户专属适配器"]
+    ADAPTER --&gt; SYSTEM["客户系统"]</code></pre>
+<p>共享的任务、评估和策略通过稳定的检索、动作与身份端口工作。各客户的适配器实现这些端口：客户 A 连接 CRM、ERP 和文档库，客户 B 连接私有 API 与数据仓库，客户 C 连接遗留或本地部署系统。这些是不同客户的集成方案，不是三个依次执行的阶段。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>共享领域能力 任务 / Eval / 策略</li>
+<li>稳定 Port 检索 / 动作 / 身份</li>
+</ul>
 <p>核心流程只调用约定好的接口。不同客户的字段映射、认证方式和旧接口处理放进各自的 Adapter，避免每接一家客户，就在主流程里增加一批条件分支。</p>
 <h2 id="17-poc">1.7 从 PoC 到生产的交付过程<a class="headerlink" href="#17-poc" title="Permanent link">&para;</a></h2>
 <p>PoC 证明“某些样本上可以工作”；生产系统必须证明“在权限、规模、异常和持续变化下仍可运营”。</p>
@@ -10009,18 +10046,14 @@
 <p>生产化方法详见 <a href="../../../engineering/">AI Engineering</a>。FDE 不应长期成为人工运维代理；交付完成的标志之一，是客户和平台团队能够通过文档、自动化和观测独立运营系统。</p>
 <h2 id="18">1.8 线上问题怎样进入下一版改进<a class="headerlink" href="#18" title="Permanent link">&para;</a></h2>
 <p>用户说“不好用”还不够。要找到具体是哪张工单、哪一步出了错，再决定是改检索、接口、提示词，还是业务流程。</p>
-<pre class="mermaid"><code>flowchart LR
-    EVENT["线上事件 / 用户纠正"] --&gt; TRIAGE["去敏、归因、风险分级"]
-    TRIAGE --&gt; EVAL["加入 Eval 与回归集"]
-    TRIAGE --&gt; PATTERN["聚类跨客户共性"]
-    PATTERN --&gt; DECIDE{"复用层级?"}
-    DECIDE --&gt;|配置| TEMPLATE["模板 / Playbook"]
-    DECIDE --&gt;|能力| PLATFORM["平台组件 / API"]
-    DECIDE --&gt;|模型| DATA["训练或优化数据"]
-    EVAL --&gt; RELEASE["验证并灰度发布"]
-    TEMPLATE --&gt; RELEASE
-    PLATFORM --&gt; RELEASE
-    DATA --&gt; RELEASE</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    EVENT["线上反馈"] --&gt; TRIAGE["去敏并归因"]
+    TRIAGE --&gt; EVAL["补充回归用例"]
+    TRIAGE --&gt; REUSE["选择可复用的改进"]
+    EVAL --&gt; RELEASE["验证并发布"]
+    REUSE --&gt; RELEASE</code></pre>
+<p>先对线上事件或用户纠正去敏、归因并进行风险分级。一条分支补充评估和回归用例，另一条分支聚类跨客户的共性，再决定复用层级：配置形成模板或 Playbook，共享能力形成平台组件或 API，模型改进形成训练或优化数据。两条分支最终都要经过验证和灰度发布。</p>
 <p>每条反馈至少应带有：</p>
 <ul>
 <li>场景、输入分布和客户环境；</li>
@@ -10084,35 +10117,35 @@
 <h2 id="110">1.10 一线团队是怎么做的<a class="headerlink" href="#110" title="Permanent link">&para;</a></h2>
 <p>下面几份公开分享，值得看的不是用了什么模型，而是工程师在客户现场碰到了什么麻烦，又怎样调整做法。</p>
 <h3 id="1101-palantir">1.10.1 Palantir：读得到数据，不等于能把它发出去<a class="headerlink" href="#1101-palantir" title="Permanent link">&para;</a></h3>
-<p>Palantir 的 <a href="https://www.palantir.com/docs/foundry/chatbot-studio/overview/">AIP Chatbot Studio</a>把 Ontology、文档和工具接到对话里，既能查询，也能参与业务操作。接入之后，权限检查并没有结束。</p>
-<p>它的<a href="https://www.palantir.com/docs/foundry/security/overview/">安全文档</a>专门区分了不同控制方式：自主设置的行列读取权限，不会自动延伸到下游输出和导出。换成客服场景，就是客服能查看某份内部政策，不代表助手可以把整段政策发给客户。</p>
+<p>Palantir 的 AIP Chatbot Studio<sup><a href="../../../book/references/#ref-786">【786】</a></sup>把 Ontology、文档和工具接到对话里，既能查询，也能参与业务操作。接入之后，权限检查并没有结束。</p>
+<p>它的安全文档<sup><a href="../../../book/references/#ref-787">【787】</a></sup>专门区分了不同控制方式：自主设置的行列读取权限，不会自动延伸到下游输出和导出。换成客服场景，就是客服能查看某份内部政策，不代表助手可以把整段政策发给客户。</p>
 <p>设计这类系统时，要沿着数据走一遍：谁能查询，模型能看到哪些字段，草稿保存在哪里，最后又会发给谁。只在检索入口做一次过滤，覆盖不了后面的流转。</p>
 <h3 id="1102-descript-bolt">1.10.2 Descript 与 Bolt：先说清楚什么叫“做对了”<a class="headerlink" href="#1102-descript-bolt" title="Permanent link">&para;</a></h3>
-<p>Anthropic 在 <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Agent 评测文章</a>中介绍了 Descript 的做法。对视频编辑助手来说，“效果好不好”太笼统，团队把它拆成三个问题：有没有破坏原来的内容，有没有完成用户要求，完成得怎么样。早期由人评分，再逐步引入模型评分，并定期用人工检查校准。</p>
+<p>Anthropic 在 Agent 评测文章<sup><a href="../../../book/references/#ref-526">【526】</a></sup>中介绍了 Descript 的做法。对视频编辑助手来说，“效果好不好”太笼统，团队把它拆成三个问题：有没有破坏原来的内容，有没有完成用户要求，完成得怎么样。早期由人评分，再逐步引入模型评分，并定期用人工检查校准。</p>
 <p>同一篇文章里的 Bolt 用静态分析、浏览器操作和模型评分一起检查生成的应用。程序能不能运行、按钮点下去有没有反应、页面是否符合要求，本来就适合用不同方式判断。</p>
 <p>这也解释了为什么要分开两类测试：一类专门找系统还不会做的任务，另一类守住已经做好的功能。前者允许失败，后者一旦退步就得查原因，混成一个总分反而看不出问题。</p>
 <h3 id="1103-microsoft">1.10.3 Microsoft：别把一大篇回答扔给专家<a class="headerlink" href="#1103-microsoft" title="Permanent link">&para;</a></h3>
-<p>Microsoft 工程师在 <a href="https://devblogs.microsoft.com/all-things-azure/only-believe-what-you-can-validate/">Only Believe What You Can Validate</a> 里讲了一个现场片段：客户选了一个较独立的 COBOL 模块，Agent 五分钟生成了超过 2,500 个英文单词的分析文档。工程师请业务专家看看对不对，得到的反馈却只是“乍看还行”。</p>
+<p>Microsoft 工程师在 Only Believe What You Can Validate<sup><a href="../../../book/references/#ref-793">【793】</a></sup> 里讲了一个现场片段：客户选了一个较独立的 COBOL 模块，Agent 五分钟生成了超过 2,500 个英文单词的分析文档。工程师请业务专家看看对不对，得到的反馈却只是“乍看还行”。</p>
 <p>不是专家不愿意配合。这份文档看起来完整，但要分辨哪些规则提取正确、哪些理解有误、哪些被漏掉，需要回头核对大量代码。生成只花五分钟，检查却远不止五分钟。</p>
 <p>作者建议换一种问法：把提取出的业务规则逐条列出来，请专家分别确认或纠正。这样留下的就不只是一句“看着不错”，而是一份具体的修改清单。</p>
 <p>订单助手也可以这样验收。不要问客服“这封邮件专业吗”，而是请他确认：欠货数量对不对，采购到货和客户收货有没有混淆，这句话是否擅自承诺了交期。</p>
 <h3 id="1104-openai">1.10.4 OpenAI：项目结束后，还要留下什么<a class="headerlink" href="#1104-openai" title="Permanent link">&para;</a></h3>
-<p><a href="https://deploy.co/">OpenAI Deployment Company</a>用 <strong>build → prove → generalize</strong> 描述工作方式：围绕客户流程做系统，确认它有效，再把通用部分带回 SDK、评测工具或产品。</p>
+<p>OpenAI Deployment Company<sup><a href="../../../book/references/#ref-788">【788】</a></sup>用 <strong>build → prove → generalize</strong> 描述工作方式：围绕客户流程做系统，确认它有效，再把通用部分带回 SDK、评测工具或产品。</p>
 <p>可以把最后一步理解成一次交接检查：这个项目写的连接器，下一个客户能不能接着用？新发现的错误，是否已经有回归测试？某个功能如果需要长期维护，有没有产品团队接手？这些事情决定了现场经验能否留在公司，而不只留在某位工程师脑子里。</p>
 <h3 id="1105-baseten">1.10.5 Baseten：别让客户项目变成一堆没人维护的旁支<a class="headerlink" href="#1105-baseten" title="Permanent link">&para;</a></h3>
-<p>Baseten 的 FDE 负责人在<a href="https://www.baseten.co/blog/forward-deployed-engineering/">团队复盘</a>中提到，团队成立时讨论过是否把 FDE 放进市场与销售组织，最后还是留在了工程部门。这样做增加了一些协调工作，但 FDE 可以继续深入核心代码，也更容易把客户需求做进产品。</p>
+<p>Baseten 的 FDE 负责人在团队复盘<sup><a href="../../../book/references/#ref-794">【794】</a></sup>中提到，团队成立时讨论过是否把 FDE 放进市场与销售组织，最后还是留在了工程部门。这样做增加了一些协调工作，但 FDE 可以继续深入核心代码，也更容易把客户需求做进产品。</p>
 <p>招聘上，他们也调整过方向：最初很看重 ML 专家背景，后来发现软件工程基础扎实、愿意跨技术栈解决问题的人，同样能很快补上模型知识。</p>
 <p>文章给团队设了一个目标：70% 的 FDE 构建成果应回到主产品。这里的 70% 是目标，不是已经达成的统计结果。更值得借鉴的是它背后的组织安排——客户问题解决后，FDE 仍然有时间和责任把代码整理好，而不是立刻被派去下一个项目。</p>
 <h3 id="1106-aws-inrix">1.10.6 AWS 与 INRIX：先看清楚谁在等谁<a class="headerlink" href="#1106-aws-inrix" title="Permanent link">&para;</a></h3>
-<p><a href="https://aws.amazon.com/blogs/machine-learning/how-inrix-accelerates-transportation-planning-with-amazon-bedrock/">AWS 与 INRIX 的交通规划案例</a>先介绍了原来的协作过程：交通工程、城市规划、景观设计、CAD 和公共工程等角色，需要反复交换意见。团队随后用 RAG 辅助生成建议，再用图像生成展示改造后的概念效果。</p>
+<p>AWS 与 INRIX 的交通规划案例<sup><a href="../../../book/references/#ref-795">【795】</a></sup>先介绍了原来的协作过程：交通工程、城市规划、景观设计、CAD 和公共工程等角色，需要反复交换意见。团队随后用 RAG 辅助生成建议，再用图像生成展示改造后的概念效果。</p>
 <p>文本建议和概念图各有用途：前者帮助找依据，后者让讨论更直观。两者都不能代替道路工程验算或正式设计审批。文章提到周期可能由数周缩短到数天，这是预期收益，不能当成已经测出的交付结果。</p>
 <p>对 FDE 来说，这个案例提醒的是：先找出流程里的等待和返工，再决定模型应该帮哪一段。生成速度快了，不代表整个项目就一定更快。</p>
 <h3 id="1107-x">1.10.7 X 上的现场经验：跟着用户做一遍，再决定自动化哪一步<a class="headerlink" href="#1107-x" title="Permanent link">&para;</a></h3>
-<p>Varick Agents 从业者 <a href="https://x.com/vasuman/article/2057177266984226892">@vasuman 的 X 长文</a>把工作分成 Audit、Evals、Deployment 三部分。最有用的建议很具体：坐到一线团队旁边，看他们怎样完成任务；挑发生得足够频繁、确实耗时的事情；接入现有数据系统，而不是为了 AI 再做一次大迁移。</p>
+<p>Varick Agents 从业者 @vasuman 的 X 长文<sup><a href="../../../book/references/#ref-796">【796】</a></sup>把工作分成 Audit、Evals、Deployment 三部分。最有用的建议很具体：坐到一线团队旁边，看他们怎样完成任务；挑发生得足够频繁、确实耗时的事情；接入现有数据系统，而不是为了 AI 再做一次大迁移。</p>
 <p>上线也从小事开始。比如先让系统调查问题、起草工单，确认这部分可用后，再考虑给它修改代码或提交 PR 的权限。前一步没做好，就不急着开放下一步。</p>
 <p>原文也有不能照搬的地方。邮件、PDF 和图片混在一起，不必然需要 Agent，先解析输入再走固定流程也可能够用。评测更该看结果和关键操作是否正确，而不是要求模型复刻人的思考过程。接口能否重试，则要看会不会重复写入，不能一律失败就重试。</p>
 <h3 id="1108-hamel">1.10.8 Hamel：先翻失败记录，别急着加组件<a class="headerlink" href="#1108-hamel" title="Permanent link">&para;</a></h3>
-<p>Hamel Husain 在 <a href="https://hamel.dev/blog/posts/field-guide/">A Field Guide to Rapidly Improving AI Products</a> 中写到，NurtureBoss 团队把租房助手的对话放进一个简单的查看界面，一条条记下问题，才逐渐看清预约日期、转人工和重新安排时间等常见错误。</p>
+<p>Hamel Husain 在 A Field Guide to Rapidly Improving AI Products<sup><a href="../../../book/references/#ref-797">【797】</a></sup> 中写到，NurtureBoss 团队把租房助手的对话放进一个简单的查看界面，一条条记下问题，才逐渐看清预约日期、转人工和重新安排时间等常见错误。</p>
 <p>这个做法不复杂，但很容易被跳过。只盯着一个总分，团队可能一直讨论该换哪个模型；把出错的对话、用户背景和工具结果放在一起，才知道究竟是哪一步出了问题。</p>
 <p>下面的订单助手也沿用这种做法：让客服同时看到订单事实、引用的政策和草稿，直接指出哪句话不能发。比起请客服填写一张抽象的“智能程度评分表”，这样的反馈更容易变成下一版修改。</p>
 <h2 id="111">1.11 项目案例：给客服做一个订单异常助手<a class="headerlink" href="#111" title="Permanent link">&para;</a></h2>
@@ -10242,18 +10275,20 @@
 <h3 id="1115">1.11.5 步骤固定，就用普通工作流<a class="headerlink" href="#1115" title="Permanent link">&para;</a></h3>
 <p>做到这里，流程已经很清楚：确认身份和订单，查业务数据，找政策，起草，再由客服审核。找不到订单就追问，接口失败就提示暂时查不到，没必要让模型临时规划路线。</p>
 <p>团队采用固定工作流（Workflow）。订单查询和数量核对由代码完成，政策通过 RAG 检索，模型只生成一次回复；校验不通过，就交回客服处理。</p>
-<pre class="mermaid"><code>flowchart TD
-    UI["客服打开工单"] --&gt; AUTH["检查客户归属和权限"]
-    AUTH --&gt; LIVE["查 ERP&lt;br/&gt;订单、发货、库存"]
-    AUTH --&gt; DOC["检索当前适用的政策"]
-    LIVE --&gt; GATE["核对数量和所需信息"]
-    DOC --&gt; GATE
-    GATE --&gt;|信息齐全| DRAFT["生成并检查草稿"]
-    GATE --&gt;|缺失或冲突| HUMAN["追问或交给客服"]
-    DRAFT --&gt;|检查通过| REVIEW["客服审核"]
-    DRAFT --&gt;|检查失败| HUMAN
-    REVIEW --&gt; SAVE["再查权限和数据版本&lt;br/&gt;保存时防止重复写入"]
-    SAVE --&gt; CRM["CRM 确认保存&lt;br/&gt;客服自行发送"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TD
+    AUTH["工单授权检查"] --&gt; EVIDENCE["汇合 ERP 与政策"]
+    EVIDENCE --&gt; DRAFT["校验证据与草稿"]
+    DRAFT --&gt;|通过| REVIEW["客服审核"]
+    DRAFT --&gt;|失败| HUMAN["追问或交回客服"]
+    REVIEW --&gt; SAVE["复查并保存"]</code></pre>
+<p>客服打开工单后，先检查客户归属和权限。ERP 中订单、发货和库存的查询可以与当前适用政策的检索并行；汇合两类结果后，再核对数量和所需信息。证据缺失或冲突时追问或交回客服，不能直接生成。信息齐全后生成并检查草稿，草稿检查失败也走同一交回路径。客服审核通过的草稿后，写入前仍需复查权限和数据版本，并防止重复写入。只有 CRM 确认保存后，客服才能发送邮件。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>查 ERP 订单、发货、库存</li>
+<li>再查权限和数据版本 保存时防止重复写入</li>
+<li>CRM 确认保存 客服自行发送</li>
+</ul>
 <p>保存草稿不交给模型执行。小陈点击按钮后，由后端服务写 CRM，并记录“待审核、已保存、失败、状态待确认”。每次保存带一个幂等键，绑定工单、草稿内容哈希和证据版本，重复点击不能创建多份草稿。相同键带了不同内容，要拒绝处理。</p>
 <p>如果写入请求超时，先查这个键对应的回执。CRM 没有可靠的去重和查询能力时，就显示“保存状态待确认”，让客服核对，不自动再写一遍。</p>
 <p>这一期没有需要多个 Agent 分头调查的任务，也不需要先建知识图谱。库存和政策更不适合靠微调记进模型。以后若要追查多个仓库、跨天等待回复，再考虑更复杂的调度和恢复机制。</p>
@@ -10397,31 +10432,8 @@
 <p>订单助手最后没有变成一个自动采购平台。它保留了客服熟悉的工单入口，把分散的信息放到一起，帮客服写第一稿，遇到拿不准的交期就留下待确认事项。</p>
 <p>工程师花时间最多的地方，也不只是模型调用：要问清“到货”到底指什么，请客服指出哪句话不能发，处理旧系统超时，再确认少查几次系统究竟省了多少时间。这些工作加起来，才是一项客户能接着用的交付。</p>
 <h2 id="114">1.14 参考资料<a class="headerlink" href="#114" title="Permanent link">&para;</a></h2>
-<p>原资料整理日期：2026-09-08。当时 Palantir 的三篇 Medium / 工程博客链接返回 403，保留作延伸阅读，正文不依赖其中的项目细节；OpenAI Gov 招聘链接仅作为岗位入口。</p>
-<p>2026-09-15 复核了正文涉及的 Evals 退役、API 数据控制，以及 Microsoft、Baseten、AWS/INRIX 的具体案例表述。OpenAI 的公告仍列明：Evals 平台将于 2026-10-31 转为只读，并计划于 2026-11-30 关闭仪表盘和 API。旧指南中的评测方法与托管平台操作需分开使用；这不代表开源评测方法失效。</p>
-<ul>
-<li><a href="https://medium.com/palantir/dev-versus-delta-demystifying-engineering-roles-at-palantir-ad44c2a6e87">Palantir：Dev versus Delta——工程角色的区别</a></li>
-<li><a href="https://medium.com/palantir/a-day-in-the-life-of-a-palantir-forward-deployed-software-engineer-45ef2de257b1">Palantir：A Day in the Life of a Forward Deployed Software Engineer</a></li>
-<li><a href="https://www.palantir.com/docs/foundry/chatbot-studio/overview/">Palantir：AIP Chatbot Studio 概览</a></li>
-<li><a href="https://www.palantir.com/docs/foundry/security/overview/">Palantir：Security and governance</a></li>
-<li><a href="https://deploy.co/">OpenAI Deployment Company：Build, Prove, Generalize</a></li>
-<li><a href="https://jobs.ashbyhq.com/openai/db5a708d-1d7a-4aa3-8dd3-0d0423b6b69f">OpenAI：Forward Deployed Engineer, Gov</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/evaluation-best-practices">OpenAI：Evaluation best practices（方法与托管平台需区分）</a></li>
-<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI：Deprecations（含 Evals 平台时间表）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/production-best-practices">OpenAI：Production best practices</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI：Data controls</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic：Building Effective AI Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/managed-agents">Anthropic：How we built Claude Managed Agents</a></li>
-<li><a href="https://blog.palantir.com/securing-software-at-the-speed-of-ai-0b1d7ddd2bf0">Palantir：Securing Software at the Speed of AI（官方工程案例，2026）</a></li>
-<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic：Demystifying evals for AI agents（官方工程文章）</a></li>
-<li><a href="https://devblogs.microsoft.com/all-things-azure/only-believe-what-you-can-validate/">Microsoft：Only Believe What You Can Validate（客户现场工程分享，2026）</a></li>
-<li><a href="https://www.baseten.co/blog/forward-deployed-engineering/">Baseten：Forward Deployed Engineering on the Frontier of AI（官方团队实践，2025）</a></li>
-<li><a href="https://aws.amazon.com/blogs/machine-learning/how-inrix-accelerates-transportation-planning-with-amazon-bedrock/">AWS 与 INRIX：交通规划 PoC 实践（客户与厂商共同撰写，2025）</a></li>
-<li><a href="https://x.com/vasuman/article/2057177266984226892">@vasuman：Forward Deployed Engineering 101（X 一线从业者长文）</a></li>
-<li><a href="https://hamel.dev/blog/posts/field-guide/">Hamel Husain：A Field Guide to Rapidly Improving AI Products</a></li>
-<li><a href="https://www.varickagents.com/careers">Varick Agents：Careers</a></li>
-<li><a href="https://x.com/run_maotui/status/2100157320944881776">run_maotui：产品工作中的 AI 协作分享</a>（1.2.1 节的参考：调研核实、需求取舍、PRD 交接与项目决策维护；查阅于 2026-09-17）</li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-fde-01">集中参考资料章节</a>。</p>
 <p>返回 <a href="../">FDE 模块目录</a>。</p>
 
 
@@ -10445,7 +10457,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

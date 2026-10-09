@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: The Underlying Architecture of LangChain v1","description":"Follow messages, tool calls, and state through LangChain v1 to understand the responsibilities of its protocols, providers, middleware, and LangGraph runtime.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/03-langchain-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: The Underlying Architecture of LangChain v1","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/03-langchain-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: The Underlying Architecture of LangChain v1","description":"Follow messages, tool calls, and state through LangChain v1 to understand the responsibilities of its protocols, providers, middleware, and LangGraph runtime.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/03-langchain-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: The Underlying Architecture of LangChain v1","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/03-langchain-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: The Underlying Architecture of LangChain v1","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/01-foundations/03-langchain-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9463,17 +9488,26 @@
 </tbody>
 </table>
 <p><strong>Observability spans every layer</strong>, recording model calls, tool calls, durations, and exceptions through execution events and traces.</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Core protocol layer&lt;br/&gt;Message / Runnable / Model / Tool"]
-    B["Integration adapter layer&lt;br/&gt;Separate provider packages"]
-    C["Agent development layer&lt;br/&gt;create_agent / Middleware / Structured Output"]
-    D["Orchestration runtime layer&lt;br/&gt;LangGraph Runtime"]
-    O["Observability&lt;br/&gt;Execution events and traces"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Core protocol&lt;br/&gt;layer"]
+    B["Integration&lt;br/&gt;adapter layer"]
+    C["Agent&lt;br/&gt;development&lt;br/&gt;layer"]
+    D["Orchestration&lt;br/&gt;runtime layer"]
+    O["Observability"]
     A --- B --- C --- D
     O -.spans.- A
     O -.spans.- D
 
     style O fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Core protocol layer Message / Runnable / Model / Tool</li>
+<li>Integration adapter layer Separate provider packages</li>
+<li>Agent development layer create_agent / Middleware / Structured Output</li>
+<li>Orchestration runtime layer LangGraph Runtime</li>
+<li>Observability Execution events and traces</li>
+</ul>
 <p>The diagram shows responsibility boundaries, not a strict one-way call sequence. For example, models and compiled agents both follow the Runnable invocation interface, but they serve different architectural roles.</p>
 <h2 id="33-how-do-protocols-unify-data-and-execution"><span id="33" class="legacy-heading-anchor" aria-hidden="true"></span>3.3 How do protocols unify data and execution?<a class="headerlink" href="#33-how-do-protocols-unify-data-and-execution" title="Permanent link">&para;</a></h2>
 <p>Rather than memorize class names, follow a piece of data from the user to the model and then into the business system.</p>
@@ -9519,16 +9553,21 @@
 </blockquote>
 <h2 id="34-how-does-the-agent-loop-run"><span id="34-agent-loop" class="legacy-heading-anchor" aria-hidden="true"></span>3.4 How does the agent loop run?<a class="headerlink" href="#34-how-does-the-agent-loop-run" title="Permanent link">&para;</a></h2>
 <p>Unlike an ordinary single call, an agent may execute multiple rounds between the model and tools.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
     H["HumanMessage"] --&gt; M["Model"]
     M --&gt; A["AIMessage"]
-    A --&gt; D{"Contains tool_calls?"}
+    A --&gt; D["Contains&lt;br/&gt;tool_calls?"]
     D --&gt;|No| F["Final answer"]
     D --&gt;|Yes| T["Tool Runtime"]
-    T --&gt; TM["ToolMessage&lt;br/&gt;with tool_call_id"]
+    T --&gt; TM["ToolMessage"]
     TM --&gt; M
 
     style F fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>ToolMessage with tool_call_id</li>
+</ul>
 <h3 id="341-why-does-tool_call_id-matter"><span id="341-tool_call_id" class="legacy-heading-anchor" aria-hidden="true"></span>3.4.1 Why does <code>tool_call_id</code> matter?<a class="headerlink" href="#341-why-does-tool_call_id-matter" title="Permanent link">&para;</a></h3>
 <p><strong>A model may request several tools in one round.</strong> Each result must be <strong>matched to its original request by call ID</strong>, so the model knows which result belongs to which call.</p>
 <h3 id="342-what-does-create_agent-return"><span id="342-create_agent" class="legacy-heading-anchor" aria-hidden="true"></span>3.4.2 What does <code>create_agent</code> return?<a class="headerlink" href="#342-what-does-create_agent-return" title="Permanent link">&para;</a></h3>
@@ -9569,15 +9608,23 @@
 <h2 id="36-what-does-middleware-do"><span id="36-middleware" class="legacy-heading-anchor" aria-hidden="true"></span>3.6 What does middleware do?<a class="headerlink" href="#36-what-does-middleware-do" title="Permanent link">&para;</a></h2>
 <p>Real applications commonly need <strong>dynamic prompts, model switching, tool filtering, retries, conversation summarization, sensitive-information handling, and human approval</strong>.</p>
 <p><strong>Putting all of this logic into prompts or tools quickly tangles the code.</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    R["Request"] --&gt; M1["Before the model call&lt;br/&gt;Build a system prompt for the user's identity&lt;br/&gt;Summarize if the history is too long"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    R["Request"] --&gt; M1["Before the&lt;br/&gt;model call"]
     M1 --&gt; LLM["Model"]
-    LLM --&gt; M2["After tool selection&lt;br/&gt;Check permissions&lt;br/&gt;Pause sensitive actions for approval"]
-    M2 --&gt; T["Execute the tool&lt;br/&gt;Use bounded retries for transient network failures"]
-    T --&gt; M3["After results return&lt;br/&gt;Add format or safety checks"]
+    LLM --&gt; M2["After tool&lt;br/&gt;selection"]
+    M2 --&gt; T["Execute the&lt;br/&gt;tool"]
+    T --&gt; M3["After results&lt;br/&gt;return"]
     M3 --&gt; O["Output"]
 
     style M2 fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Before the model call Build a system prompt for the user's identity Summarize if the history is too long</li>
+<li>After tool selection Check permissions Pause sensitive actions for approval</li>
+<li>Execute the tool Use bounded retries for transient network failures</li>
+<li>After results return Add format or safety checks</li>
+</ul>
 <blockquote>
 <p><strong>Middleware is not a separate runtime.</strong> It runs inside the LangGraph graph compiled by <code>create_agent</code>, providing <strong>composable extensions</strong> to execution behavior.</p>
 </blockquote>
@@ -9671,16 +9718,8 @@
 </ol>
 <p>Follow a single request to understand LangChain v1: the protocol layer standardizes what to pass and how to execute it; the agent layer assembles the model–tool loop; LangGraph gives that loop state, checkpoints, and recovery capabilities; and middleware supplies extension points at key positions.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/messages">LangChain: Messages concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/tools">LangChain: Tools concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware concepts</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 migration guide</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/checkpointers">LangGraph Checkpointers: super-steps and pending writes</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9703,7 +9742,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

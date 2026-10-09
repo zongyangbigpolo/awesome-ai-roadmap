@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Vector Databases and ANN Indexes","description":"Compare FLAT, HNSW, IVF, and DiskANN search mechanisms, covering quantization, filtered retrieval, deletion and space reclamation, and resource constraints when choosing a vector database.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/08-vector-database/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Vector Databases and ANN Indexes","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/08-vector-database/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Vector Databases and ANN Indexes","description":"Compare FLAT, HNSW, IVF, and DiskANN search mechanisms, covering quantization, filtered retrieval, deletion and space reclamation, and resource constraints when choosing a vector database.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/08-vector-database/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Vector Databases and ANN Indexes","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/08-vector-database/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: Vector Databases and ANN Indexes","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/02-ingestion-indexing/08-vector-database/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9378,7 +9403,8 @@
 </blockquote>
 <p>Approximation error must be measured alongside latency. ANN is an indexing technique, not a requirement to deploy a separate vector database. An indexing library, a relational database extension, or an independent service can all host it.</p>
 <h2 id="82-common-ann-indexes"><span id="82-ann" class="legacy-heading-anchor" aria-hidden="true"></span>8.2 Common ANN indexes<a class="headerlink" href="#82-common-ann-indexes" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
     ANN[Vector search approaches] --&gt; HNSW[HNSW&lt;br/&gt;Graph index]
     ANN --&gt; IVF[IVF&lt;br/&gt;Inverted lists of clusters]
     ANN --&gt; DISK[DiskANN&lt;br/&gt;Disk-based graph index]
@@ -9503,7 +9529,8 @@
 <p>This is one of the easiest production problems to encounter and one of the least discussed.</p>
 <p><strong>Scenario</strong>: retrieval must apply conditions—search only documents the current user is authorized to access, only this year's documents, or only material from a particular department.</p>
 <p>It looks like adding a <code>WHERE</code> clause, but filters can <strong>interact badly with ANN indexes</strong>.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     F[Filtered vector retrieval] --&gt; PRE[Pre-filtering]
     F --&gt; POST[Post-filtering]
 
@@ -9554,16 +9581,11 @@
 <p>Tenant partitioning reduces the search space and clarifies isolation boundaries, but many small tenants increase index-management costs, while large tenants can become hotspots. Department, time, and document ACL filters still apply. Compare separate partitions, shared indexes with filters, and hierarchical routing; partitioning does not completely solve filtering.</p>
 <h2 id="85-how-to-choose-a-vector-database"><span id="85" class="legacy-heading-anchor" aria-hidden="true"></span>8.5 How to choose a vector database<a class="headerlink" href="#85-how-to-choose-a-vector-database" title="Permanent link">&para;</a></h2>
 <p>Selection criteria matter more than a list of products.</p>
-<pre class="mermaid"><code>flowchart TB
-    SEL[Selection] --&gt; D1[Data scale]
-    SEL --&gt; D2[Deployment model]
-    SEL --&gt; D3[Functional requirements]
-    SEL --&gt; D4[Operational capacity]
-
-    D1 --&gt; A1[Below 100,000 / Millions /&lt;br/&gt;Hundreds of millions]
-    D2 --&gt; A2[Embedded / Self-hosted /&lt;br/&gt;Managed service]
-    D3 --&gt; A3[Hybrid retrieval / Metadata filtering /&lt;br/&gt;Multi-tenancy]
-    D4 --&gt; A4[Can the team operate&lt;br/&gt;another independent component?]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    SEL[Application requirements] --&gt; D[Scale, features, operations]
+    D --&gt; A[Choose deployment model]</code></pre>
+<p>Compare data scales below 100,000, in the millions, and in the hundreds of millions. Consider embedded, self-hosted, and managed deployments against required hybrid retrieval, metadata filtering, and multi-tenancy. Ask whether the team can operate another independent component; scale alone does not decide the deployment model.</p>
 <table>
 <thead>
 <tr>
@@ -9634,14 +9656,8 @@
 <li><strong>Select for current scale and abstract the interface well</strong>. Do not overengineer for imagined growth.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/1603.09320">Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs</a></li>
-<li><a href="https://github.com/pgvector/pgvector">pgvector official README: filtering, iterative scans, VACUUM, and scaling</a></li>
-<li><a href="https://arxiv.org/abs/2105.09613">FreshDiskANN: A Fast and Accurate Graph-Based ANN Index for Streaming Similarity Search</a></li>
-<li><a href="https://arxiv.org/abs/2403.04871">ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data</a></li>
-<li><a href="https://arxiv.org/abs/1702.08734">Billion-scale similarity search with GPUs</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9664,7 +9680,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

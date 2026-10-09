@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: The Layered Relationship Between LangChain and LangGraph","description":"Distinguish LangChain's high-level agents from LangGraph orchestration, including dependencies, control granularity, state merging, persistence, and incremental composition.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: The Layered Relationship Between LangChain and LangGraph","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 9: The Layered Relationship Between LangChain and LangGraph","description":"Distinguish LangChain's high-level agents from LangGraph orchestration, including dependencies, control granularity, state merging, persistence, and incremental composition.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 9: The Layered Relationship Between LangChain and LangGraph","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 9: The Layered Relationship Between LangChain and LangGraph","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/04-langgraph/09-langchain-vs-langgraph/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9628,12 +9653,18 @@
 </table>
 <p><strong>LangGraph does not require the high-level <code>langchain</code> package or its model wrappers</strong>: it can call other model SDKs or ordinary Python functions directly. However, the Python <code>langgraph</code> package depends on foundational libraries such as <code>langchain-core</code>. “Usable independently” does not mean its dependency tree contains no LangChain ecosystem components.</p>
 <h3 id="911-the-key-layering-relationship"><span id="911" class="legacy-heading-anchor" aria-hidden="true"></span>9.1.1 The key layering relationship<a class="headerlink" href="#911-the-key-layering-relationship" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    A["LangChain high-level agent API&lt;br/&gt;create_agent"] --&gt; B["Compiled LangGraph"]
-    B --&gt; C["Checkpoints, streaming events,&lt;br/&gt;interrupts, and execution runtime"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["LangChain&lt;br/&gt;high-level&lt;br/&gt;agent API"] --&gt; B["Compiled&lt;br/&gt;LangGraph"]
+    B --&gt; C["Runtime services"]
 
     style A fill:#e8f0fe
     style C fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>LangChain high-level agent API create_agent</li>
+<li>Checkpoints, streaming events, interrupts, and execution runtime</li>
+</ul>
 <p><strong><code>create_agent</code> builds a graph runtime based on LangGraph</strong>: the agent loops between model and tool nodes until the model produces a final answer or a stopping condition is reached.</p>
 <blockquote>
 <p><strong>This explains why their capabilities appear to overlap without making them interchangeable</strong>:</p>
@@ -9732,18 +9763,29 @@
 </blockquote>
 <h3 id="933-the-real-distinction-is-making-business-topology-a-first-class-concern"><span id="933" class="legacy-heading-anchor" aria-hidden="true"></span>9.3.3 The real distinction is making business topology a first-class concern<a class="headerlink" href="#933-the-real-distinction-is-making-business-topology-a-first-class-concern" title="Permanent link">&para;</a></h3>
 <p><strong>Consider this workflow</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Authorization check"] --&gt; B1["Research node 1"] &amp; B2["Research node 2"] &amp; B3["Research node 3"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Authorization&lt;br/&gt;check"] --&gt; B1["Research 1"] &amp; B2["Research 2"] &amp; B3["Research 3"]
     B1 &amp; B2 &amp; B3 --&gt; C["Aggregate"]
-    C --&gt; D{"High amount?"}
+    C --&gt; D["High amount?"]
     D --&gt;|Yes| E["Human review"]
     D --&gt;|No| F["Continue"]
-    F --&gt; G{"Failed?"}
-    G --&gt;|Yes| H["Compensation node"]
-    G --&gt;|No| I["Wait for the next day's&lt;br/&gt;task to continue"]
+    F --&gt; G["Failed?"]
+    G --&gt;|Yes| H["Compensation&lt;br/&gt;node"]
+    G --&gt;|No| I["Wait until&lt;br/&gt;tomorrow"]
 
     style C fill:#e8f0fe
     style H fill:#fff3cd</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Research node 1</li>
+<li>Research node 2</li>
+<li>Research node 3</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Wait for the next day's task to continue</li>
+</ul>
 <p><strong>Here, developers need a clear view of every node, state field, and routing condition.</strong> This is where graph orchestration becomes valuable.</p>
 <blockquote>
 <p><strong>A more accurate boundary</strong>: LangChain can express branches and loops, but its high-level agent API primarily organizes work around a <strong>general-purpose model/tool loop</strong>. <strong>LangGraph lets developers directly control the topology of the entire workflow.</strong></p>
@@ -9947,15 +9989,27 @@
 <p>Separate two questions: using a managed platform is a <strong>deployment choice</strong>; using LangChain's high-level agent API is a <strong>development abstraction choice</strong>.</p>
 </blockquote>
 <h2 id="910-when-should-you-move-down-to-langgraph"><span id="910-langgraph" class="legacy-heading-anchor" aria-hidden="true"></span>9.10 When should you move down to LangGraph?<a class="headerlink" href="#910-when-should-you-move-down-to-langgraph" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"Does the requirement naturally fit&lt;br/&gt;'Give a model tools and let it&lt;br/&gt;call them until done'?"}
-    Q1 --&gt;|Yes| A["Start with create_agent&lt;br/&gt;Support Q&amp;A, database query assistants,&lt;br/&gt;internal knowledge assistants"]
-    A --&gt; A2["Dynamic prompts, model switching, tool selection&lt;br/&gt;Summaries, retries, guardrails,&lt;br/&gt;sensitive-tool approval&lt;br/&gt;Try middleware first"]
-    Q1 --&gt;|The central concern is a business&lt;br/&gt;workflow, not a single agent loop| B["Consider LangGraph"]
-    B --&gt; B2["Typical signals:&lt;br/&gt;Rules alternate with model decisions&lt;br/&gt;Parallel paths later join&lt;br/&gt;Pauses lasting hours or days&lt;br/&gt;Several agents collaborate&lt;br/&gt;Precise control of compensation&lt;br/&gt;and human-review nodes"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q1["Does the&lt;br/&gt;requirement&lt;br/&gt;naturally fit"]
+    Q1 --&gt;|Yes| A["Start with&lt;br/&gt;create_agent"]
+    A --&gt; A2["Extend&lt;br/&gt;middleware"]
+    Q1 --&gt;|"Business workflow"| B["Consider&lt;br/&gt;LangGraph"]
+    B --&gt; B2["Typical&lt;br/&gt;signals:"]
 
     style A fill:#e6f4ea
     style B fill:#fff3cd</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>The central concern is a business workflow, not a single agent loop</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Does the requirement naturally fit 'Give a model tools and let it call them until done'?</li>
+<li>Start with create_agent Support Q&amp;A, database query assistants, internal knowledge assistants</li>
+<li>Dynamic prompts, model switching, tool selection Summaries, retries, guardrails, sensitive-tool approval Try middleware first</li>
+<li>Typical signals: Rules alternate with model decisions Parallel paths later join Pauses lasting hours or days Several agents collaborate Precise control of compensation and human-review nodes</li>
+</ul>
 <h3 id="9101-incremental-composition-is-the-more-common-approach"><span id="9101" class="legacy-heading-anchor" aria-hidden="true"></span>9.10.1 Incremental composition is the more common approach<a class="headerlink" href="#9101-incremental-composition-is-the-more-common-approach" title="Permanent link">&para;</a></h3>
 <p><strong>Build one useful agent with LangChain first. When the business topology becomes complex, use that agent as a LangGraph node or subgraph.</strong></p>
 <blockquote>
@@ -10004,19 +10058,8 @@
 </ol>
 <p>LangChain supplies the high-level agent entry point and standard model/tool loop; LangGraph offers finer-grained state and workflow control. You can build an agent first and compose it into a business graph as needed. This is a migration path, not a statistical claim about the architecture of all projects.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain: Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/streaming">LangChain: Streaming</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/use-graph-api">LangGraph: Graph API</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/interrupts">LangGraph: Human-in-the-loop</a></li>
-<li><a href="https://docs.langchain.com/langsmith/observability">LangSmith documentation</a></li>
-<li><a href="https://github.com/langchain-ai/langgraph/blob/main/libs/langgraph/pyproject.toml">LangGraph Python package dependencies</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE">LangGraph concurrent state-update error</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-09">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10039,7 +10082,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

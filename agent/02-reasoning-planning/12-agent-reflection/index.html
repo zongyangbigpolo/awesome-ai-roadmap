@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Agent Reflection, Verification, and Self-improvement","description":"Examine feedback in Self-Refine, Reflexion, critics, and LATS; distinguish self-evaluation from external verification; and design revision loops with hard acceptance checks and budget limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/12-agent-reflection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Agent Reflection, Verification, and Self-improvement","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/12-agent-reflection/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Agent Reflection, Verification, and Self-improvement","description":"Examine feedback in Self-Refine, Reflexion, critics, and LATS; distinguish self-evaluation from external verification; and design revision loops with hard acceptance checks and budget limits.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/12-agent-reflection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Agent Reflection, Verification, and Self-improvement","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/12-agent-reflection/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 12: Agent Reflection, Verification, and Self-improvement","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-reasoning-planning/12-agent-reflection/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -10493,12 +10518,13 @@
 <blockquote>
 <p><strong>Generate or execute → Evaluate → Locate problems → Make targeted revisions → Verify again</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    G[Generate / Execute] --&gt; E[Evaluate]
-    E --&gt; D{Meets the criteria?}
-    D --&gt;|Yes| DONE[Finish]
-    D --&gt;|No| F[Structured Feedback]
-    F --&gt; R[Refine / Retry / Replan]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate / Execute"] --&gt; E["Evaluate"]
+    E --&gt; D["Meets the criteria?"]
+    D --&gt;|Yes| DONE["Finish"]
+    D --&gt;|No| F["Structured Feedback"]
+    F --&gt; R["Refine / Retry / Replan"]
     R --&gt; G</code></pre>
 <p>Reflection requires a sufficiently useful correction signal, but not necessarily new external evidence in every round: checking explicit criteria again can also reveal omissions. Feedback can come from:</p>
 <ul>
@@ -10529,15 +10555,17 @@
 <p>A separate evaluation stage can focus attention on these dimensions.</p>
 <h3 id="1222-stop-errors-from-propagating"><span id="1222" class="legacy-heading-anchor" aria-hidden="true"></span>12.2.2 Stop Errors from Propagating<a class="headerlink" href="#1222-stop-errors-from-propagating" title="Permanent link">&para;</a></h3>
 <p>In tasks with strong dependencies, an early error can become the input to later steps:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Wrong search terms] --&gt; B[Wrong material]
-    B --&gt; C[Wrong analysis]
-    C --&gt; D[Wrong conclusion]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Wrong search terms"] --&gt; B["Wrong material"]
+    B --&gt; C["Wrong analysis"]
+    C --&gt; D["Wrong conclusion"]</code></pre>
 <p>Verification at key points creates an opportunity to intervene:</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Search results] --&gt; V{Sources and relevance pass?}
-    V --&gt;|Yes| B[Continue analysis]
-    V --&gt;|No| R[Revise query and retry]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Search results"] --&gt; V["Sources and relevance&lt;br/&gt;pass?"]
+    V --&gt;|Yes| B["Continue analysis"]
+    V --&gt;|No| R["Revise query and retry"]</code></pre>
 <p>This can stop an error before it enters downstream analysis, provided that the verifier actually checks sources and relevance rather than merely checking whether the search interface returned success.</p>
 <h3 id="1223-improve-outputs-that-are-hard-to-get-right-in-one-attempt"><span id="1223" class="legacy-heading-anchor" aria-hidden="true"></span>12.2.3 Improve Outputs That Are Hard to Get Right in One Attempt<a class="headerlink" href="#1223-improve-outputs-that-are-hard-to-get-right-in-one-attempt" title="Permanent link">&para;</a></h3>
 <p>Suitable tasks include:</p>
@@ -10632,28 +10660,31 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    RESULT[Candidate Result] --&gt; DET[Deterministic Verifier]
-    DET --&gt;|Verifiable| DECISION[Pass / Fail]
-    DET --&gt;|Cannot fully verify| HUMAN[Human or Domain Review]
-    HUMAN --&gt;|Further assistance needed| JUDGE[LLM Judge]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    RESULT["Candidate Result"] --&gt; DET["Deterministic Verifier"]
+    DET --&gt;|Verifiable| DECISION["Pass / Fail"]
+    DET --&gt;|Cannot fully verify| HUMAN["Human or Domain Review"]
+    HUMAN --&gt;|Further assistance&lt;br/&gt;needed| JUDGE["LLM Judge"]</code></pre>
 <p>Language-model evaluation is useful for quality dimensions that are difficult to formalize completely, but should not replace available objective verification.</p>
 <p>HTTP 200 may mean only that a request was accepted, and a real system may return stale state. Successful compilation does not guarantee business correctness, and generated tests may contain incorrect expected values. When choosing a verifier, explain what it checks, what it misses, and whether a failure can block delivery. Irreversible actions require approval before execution; reflection afterward cannot supply missing authorization retroactively.</p>
 <h2 id="125-four-levels-for-triggering-reflection"><span id="125" class="legacy-heading-anchor" aria-hidden="true"></span>12.5 Four Levels for Triggering Reflection<a class="headerlink" href="#125-four-levels-for-triggering-reflection" title="Permanent link">&para;</a></h2>
 <p>Beyond step-level and task-level reflection, a system can include milestone-level checks and cross-task consolidation.</p>
-<pre class="mermaid"><code>flowchart TB
-    R[Reflection Granularity] --&gt; S[Step-level]
-    R --&gt; M[Milestone-level]
-    R --&gt; T[Task-level]
-    R --&gt; C[Cross-task Consolidation]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection&lt;br/&gt;Granularity"] --&gt; S["Step-level"]
+    R --&gt; M["Milestone-level"]
+    R --&gt; T["Task-level"]
+    R --&gt; C["Cross-task&lt;br/&gt;Consolidation"]</code></pre>
 <h2 id="126-step-level-reflection">12.6 Step-level Reflection<a class="headerlink" href="#126-step-level-reflection" title="Permanent link">&para;</a></h2>
 <p>Step-level reflection checks results after a tool call, reasoning step, or state transition.</p>
-<pre class="mermaid"><code>flowchart LR
-    S[Execute Step] --&gt; O[Observation]
-    O --&gt; V{Step Valid?}
-    V --&gt;|Yes| N[Next Step]
-    V --&gt;|No| F[Feedback]
-    F --&gt; R[Retry or Replan]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Execute Step"] --&gt; O["Observation"]
+    O --&gt; V["Step Valid?"]
+    V --&gt;|Yes| N["Next Step"]
+    V --&gt;|No| F["Feedback"]
+    F --&gt; R["Retry or Replan"]
     R --&gt; S</code></pre>
 <h3 id="1261-suitable-scenarios"><span id="1261" class="legacy-heading-anchor" aria-hidden="true"></span>12.6.1 Suitable Scenarios<a class="headerlink" href="#1261-suitable-scenarios" title="Permanent link">&para;</a></h3>
 <ul>
@@ -10702,11 +10733,12 @@
 <p>The call count may approach twice the original only when an LLM critic is invoked separately for every step.</p>
 <h2 id="127-milestone-level-reflection">12.7 Milestone-level Reflection<a class="headerlink" href="#127-milestone-level-reflection" title="Permanent link">&para;</a></h2>
 <p>Milestone-level reflection evaluates a completed phase rather than checking every microstep.</p>
-<pre class="mermaid"><code>flowchart LR
-    S1[Stage Steps] --&gt; M[Milestone Artifact]
-    M --&gt; V{Milestone Valid?}
-    V --&gt;|Yes| NEXT[Next Milestone]
-    V --&gt;|No| FIX[Repair Affected Stage]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S1["Stage Steps"] --&gt; M["Milestone Artifact"]
+    M --&gt; V["Milestone Valid?"]
+    V --&gt;|Yes| NEXT["Next Milestone"]
+    V --&gt;|No| FIX["Repair Affected Stage"]</code></pre>
 <p>This reduces the number of checks but does not guarantee lower total cost: discovering an error at the end of a phase may require repeating more steps. It generally catches deviations earlier than checking only the final result, provided that the phase has a clear artifact that can be accepted or repaired as a whole.</p>
 <p>Suitable when:</p>
 <ul>
@@ -10723,12 +10755,13 @@
 </ul>
 <h2 id="128-task-level-reflection">12.8 Task-level Reflection<a class="headerlink" href="#128-task-level-reflection" title="Permanent link">&para;</a></h2>
 <p>Task-level reflection evaluates the whole task after it is complete.</p>
-<pre class="mermaid"><code>flowchart LR
-    TASK[Complete Task] --&gt; OUT[Final Candidate]
-    OUT --&gt; E[Holistic Evaluation]
-    E --&gt; D{Pass?}
-    D --&gt;|Yes| DONE[Deliver]
-    D --&gt;|No| R[Revise Result or Replan]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    TASK["Complete Task"] --&gt; OUT["Final Candidate"]
+    OUT --&gt; E["Holistic Evaluation"]
+    E --&gt; D["Pass?"]
+    D --&gt;|Yes| DONE["Deliver"]
+    D --&gt;|No| R["Revise Result or Replan"]</code></pre>
 <h3 id="1281-suitable-scenarios"><span id="1281" class="legacy-heading-anchor" aria-hidden="true"></span>12.8.1 Suitable Scenarios<a class="headerlink" href="#1281-suitable-scenarios" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Steps are relatively independent;</li>
@@ -10766,13 +10799,14 @@
 <li>Which rules deserve long-term retention;</li>
 <li>Which tools or prompts need improvement.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    T1[Task 1] --&gt; C[Consolidation]
-    T2[Task 2] --&gt; C
-    T3[Task N] --&gt; C
-    C --&gt; M[Validated Memory]
-    C --&gt; S[Skill / Workflow Update]
-    C --&gt; E[Evaluation Set]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    T1["Task 1"] --&gt; C["Consolidation"]
+    T2["Task 2"] --&gt; C
+    T3["Task N"] --&gt; C
+    C --&gt; M["Validated&lt;br/&gt;Memory"]
+    C --&gt; S["Skill /&lt;br/&gt;Workflow&lt;br/&gt;Update"]
+    C --&gt; E["Evaluation&lt;br/&gt;Set"]</code></pre>
 <p>Cross-task lessons must be validated, deduplicated, and checked for applicability. A model's one-time self-evaluation must not automatically become a permanent rule.</p>
 <h2 id="1210-choosing-reflection-granularity"><span id="1210" class="legacy-heading-anchor" aria-hidden="true"></span>12.10 Choosing Reflection Granularity<a class="headerlink" href="#1210-choosing-reflection-granularity" title="Permanent link">&para;</a></h2>
 <table>
@@ -10810,12 +10844,13 @@
 </tbody>
 </table>
 <p>Production systems usually combine these approaches:</p>
-<pre class="mermaid"><code>flowchart TB
-    STEP[Low-risk Steps] --&gt; MILESTONE[Milestone Verification]
-    RISK[High-risk Step] --&gt; IMMEDIATE[Immediate Verification]
-    MILESTONE --&gt; TASK[Task-level Review]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    STEP["Low-risk Steps"] --&gt; MILESTONE["Milestone&lt;br/&gt;Verification"]
+    RISK["High-risk Step"] --&gt; IMMEDIATE["Immediate&lt;br/&gt;Verification"]
+    MILESTONE --&gt; TASK["Task-level Review"]
     IMMEDIATE --&gt; TASK
-    TASK --&gt; CONS[Optional Consolidation]</code></pre>
+    TASK --&gt; CONS["Optional&lt;br/&gt;Consolidation"]</code></pre>
 <h2 id="1211-adaptive-reflection">12.11 Adaptive Reflection<a class="headerlink" href="#1211-adaptive-reflection" title="Permanent link">&para;</a></h2>
 <p>Reflection need not run after every step. It can be triggered dynamically by risks and anomalies.</p>
 <p>Trigger signals include:</p>
@@ -10830,11 +10865,12 @@
 <li>Unusual phase duration or cost;</li>
 <li>A low verifier score.</li>
 </ul>
-<pre class="mermaid"><code>flowchart LR
-    O[Observation] --&gt; R[Risk / Anomaly Detector]
-    R --&gt;|Normal| NEXT[Continue]
-    R --&gt;|Anomaly| REFLECT[Reflect / Verify]
-    REFLECT --&gt; FIX[Repair / Replan]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    O["Observation"] --&gt; R["Risk / Anomaly Detector"]
+    R --&gt;|Normal| NEXT["Continue"]
+    R --&gt;|Anomaly| REFLECT["Reflect / Verify"]
+    REFLECT --&gt; FIX["Repair / Replan"]</code></pre>
 <p>Compared with a fixed “one critic call per step” policy, adaptive triggering usually makes costs easier to control.</p>
 <h2 id="1212-the-basic-components-of-a-reflection-system"><span id="1212" class="legacy-heading-anchor" aria-hidden="true"></span>12.12 The Basic Components of a Reflection System<a class="headerlink" href="#1212-the-basic-components-of-a-reflection-system" title="Permanent link">&para;</a></h2>
 <p>A complete implementation usually includes:</p>
@@ -10846,18 +10882,33 @@
 <li>A stop controller;</li>
 <li>An optional memory writer.</li>
 </ol>
+<p>Produce evidence and structured feedback.</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    G["Generator / Executor"]
+    A["Artifact + Trace"]
+    V["Verifier / Critic"]
+    F["Structured Feedback"]
+    S["Stop Controller"]
+    G --&gt; A
+    A --&gt; V
+    V --&gt; F
+    F --&gt; S</code></pre>
+<p>The stop controller selects revision or an exit.</p>
 <pre class="mermaid"><code>flowchart TB
-    G[Generator / Executor] --&gt; A[Artifact + Trace]
-    A --&gt; V[Verifier / Critic]
-    V --&gt; F[Structured Feedback]
-    F --&gt; S{Stop Controller}
-    S --&gt;|Revision allowed| R[Refiner]
-    R --&gt; G
-    S --&gt;|Pass| DONE[Finish]
-    S --&gt;|Budget Exhausted| PARTIAL[Report Incomplete]
-    S --&gt;|Human judgment needed| HUMAN[Human Review]
-    DONE --&gt; MV[Validate Reusable Experience]
-    MV --&gt;|Pass| MW[Optional Memory Writer]</code></pre>
+    S{Stop Controller}
+    R[Refiner]
+    G[Generator / Executor]
+    S --&gt;|Revision allowed| R
+    R --&gt; G</code></pre>
+<p>The other controller outcomes exit this revision path: a pass finishes; budget exhaustion reports incompleteness; a case requiring human judgment goes to human review.</p>
+<p>Validate reusable experience before an optional write.</p>
+<pre class="mermaid"><code>flowchart TB
+    DONE[Finish]
+    MV[Validate Reusable Experience]
+    MW[Optional Memory Writer]
+    DONE --&gt; MV
+    MV --&gt;|Pass| MW</code></pre>
 <p>The stop controller decides whether continuation is allowed before invoking the refiner, preventing revisions from being triggered after a stop signal. Raw feedback can remain in task-local diagnostic records. Long-term memory should receive validated lessons with an explicit scope of applicability, not every critic opinion.</p>
 <h2 id="1213-separate-evaluation-from-refinement"><span id="1213-evaluate-refine" class="legacy-heading-anchor" aria-hidden="true"></span>12.13 Separate Evaluation from Refinement<a class="headerlink" href="#1213-separate-evaluation-from-refinement" title="Permanent link">&para;</a></h2>
 <p>Reflection requires at least two logical stages:</p>
@@ -11044,15 +11095,16 @@ C_{eval,r}
 <li>Changes may be superficial.</li>
 </ul>
 <p>Self-reflection can serve as an initial screen, but should not be treated as objective verification.</p>
-<p>Experimental conclusions need their scope attached. <a href="https://arxiv.org/abs/2310.01798">Huang et al.</a> found that, for the models tested at the time, attempts to correct reasoning without external feedback often produced no gains or even degraded performance. This is not a theorem that “models can never self-correct.” <a href="https://arxiv.org/abs/2409.12917">SCoRe</a> subsequently used multi-turn online RL specifically to train self-correction, without requiring external corrective feedback at test time. That differs from merely adding “check your answer” to a frozen model's prompt: rewards were used and parameters were updated during training.</p>
+<p>Experimental conclusions need their scope attached. Huang et al.<sup><a href="../../../book/references/#ref-503">【503】</a></sup> found that, for the models tested at the time, attempts to correct reasoning without external feedback often produced no gains or even degraded performance. This is not a theorem that “models can never self-correct.” SCoRe<sup><a href="../../../book/references/#ref-505">【505】</a></sup> subsequently used multi-turn online RL specifically to train self-correction, without requiring external corrective feedback at test time. That differs from merely adding “check your answer” to a frozen model's prompt: rewards were used and parameters were updated during training.</p>
 <h2 id="1219-critic-agent">12.19 Critic Agent<a class="headerlink" href="#1219-critic-agent" title="Permanent link">&para;</a></h2>
 <p>A critic agent specializes in checking an executor's artifacts or trajectories.</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant E as Executor Agent
     participant C as Critic Agent
     participant V as Verifier
 
-    E-&gt;&gt;C: Candidate + Rubric + Evidence
+    E-&gt;&gt;C: Candidate + Rubric +&lt;br/&gt;Evidence
     C--&gt;&gt;E: Structured Findings
     E-&gt;&gt;E: Refine
     E-&gt;&gt;V: Revised Candidate
@@ -11097,12 +11149,13 @@ C_{eval,r}
 <li>Format;</li>
 <li>Domain compliance.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    OUT[Candidate] --&gt; F[Fact Critic]
-    OUT --&gt; S[Safety Critic]
-    OUT --&gt; L[Logic Critic]
-    OUT --&gt; D[Domain Critic]
-    F --&gt; J[Finding Aggregator]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    OUT["Candidate"] --&gt; F["Fact Critic"]
+    OUT --&gt; S["Safety&lt;br/&gt;Critic"]
+    OUT --&gt; L["Logic Critic"]
+    OUT --&gt; D["Domain&lt;br/&gt;Critic"]
+    F --&gt; J["Finding&lt;br/&gt;Aggregator"]
     S --&gt; J
     L --&gt; J
     D --&gt; J</code></pre>
@@ -11121,13 +11174,14 @@ C_{eval,r}
 </ul>
 <h2 id="1221-debate">12.21 Debate<a class="headerlink" href="#1221-debate" title="Permanent link">&para;</a></h2>
 <p>Debate has multiple agents challenge one another's candidate proposals.</p>
-<pre class="mermaid"><code>flowchart LR
-    P[Proposer] --&gt; O[Opponent]
-    O --&gt; R[Rebuttal]
-    R --&gt; J[Judge / Verifier]
-    J --&gt; D{Pass?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P["Proposer"] --&gt; O["Opponent"]
+    O --&gt; R["Rebuttal"]
+    R --&gt; J["Judge / Verifier"]
+    J --&gt; D["Pass?"]
     D --&gt;|No| P
-    D --&gt;|Yes| OUT[Final Decision]</code></pre>
+    D --&gt;|Yes| OUT["Final Decision"]</code></pre>
 <p>Suitable when:</p>
 <ul>
 <li>Several reasonable viewpoints exist;</li>
@@ -11150,12 +11204,13 @@ C_{eval,r}
 <blockquote>
 <p><strong>Generate → Feedback → Refine</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    G[Generate] --&gt; F[Self Feedback]
-    F --&gt; R[Refine]
-    R --&gt; V{Pass?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate"] --&gt; F["Self Feedback"]
+    F --&gt; R["Refine"]
+    R --&gt; V["Pass?"]
     V --&gt;|No| F
-    V --&gt;|Yes| OUT[Output]</code></pre>
+    V --&gt;|Yes| OUT["Output"]</code></pre>
 <p>The original Self-Refine method uses the same LLM for generation, feedback, and refinement. It requires no additional training or RL and primarily improves the current candidate rather than model weights. The paper reports gains across seven types of tasks, but evaluation criteria, models, and stopping methods vary by task. Its average gain should not be treated as a universal improvement for any business application.</p>
 <p>Self-feedback can reveal problems in style, format, or explicit constraints, but does not guarantee that missing facts will be supplied. Outputs may improve without external feedback, yet the effectiveness of factual and logical correction still needs independent testing.</p>
 <p>Suitable for:</p>
@@ -11174,14 +11229,15 @@ C_{eval,r}
 <li>Self-reflection;</li>
 <li>Episodic memory.</li>
 </ul>
-<pre class="mermaid"><code>flowchart TB
-    A[Actor] --&gt; ENV[Environment]
-    ENV --&gt; TRAJ[Trajectory + Reward]
-    TRAJ --&gt; E[Evaluator]
-    E --&gt; D{Success?}
-    D --&gt;|Yes| DONE[Finish]
-    D --&gt;|No| SR[Self-Reflection]
-    SR --&gt; MEM[Episodic Memory]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    A["Actor"] --&gt; ENV["Environment"]
+    ENV --&gt; TRAJ["Trajectory + Reward"]
+    TRAJ --&gt; E["Evaluator"]
+    E --&gt; D["Success?"]
+    D --&gt;|Yes| DONE["Finish"]
+    D --&gt;|No| SR["Self-Reflection"]
+    SR --&gt; MEM["Episodic Memory"]
     MEM --&gt; A</code></pre>
 <h3 id="12231-memory-scope-in-the-original-reflexion"><span id="12231-reflexion" class="legacy-heading-anchor" aria-hidden="true"></span>12.23.1 Memory Scope in the Original Reflexion<a class="headerlink" href="#12231-memory-scope-in-the-original-reflexion" title="Permanent link">&para;</a></h3>
 <p>The original method focuses on retaining verbal reflections across trials of the same task so that the next attempt can avoid repeating mistakes.</p>
@@ -11227,23 +11283,24 @@ C_{eval,r}
 <li>Reflection;</li>
 </ul>
 <p>Selection balances exploring less-visited branches against exploiting branches with high estimated value. Expansion generates actions; simulated trajectories (rollouts) or execution in the environment produce feedback; value estimates and returns are then propagated back through the tree nodes. This is not neural-network gradient backpropagation, and the original method does not update LLM parameters through online fine-tuning.</p>
-<pre class="mermaid"><code>flowchart TB
-    ROOT[Current State] --&gt; A[Action A]
-    ROOT --&gt; B[Action B]
-    ROOT --&gt; C[Action C]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    ROOT["Current&lt;br/&gt;State"] --&gt; A["Action A"]
+    ROOT --&gt; B["Action B"]
+    ROOT --&gt; C["Action C"]
 
-    A --&gt; OA[Observation A]
-    B --&gt; OB[Observation B]
-    C --&gt; OC[Observation C]
+    A --&gt; OA["Observation&lt;br/&gt;A"]
+    B --&gt; OB["Observation&lt;br/&gt;B"]
+    C --&gt; OC["Observation&lt;br/&gt;C"]
 
-    OA --&gt; VA[Value + Reflection]
-    OB --&gt; VB[Value + Reflection]
-    OC --&gt; VC[Value + Reflection]
+    OA --&gt; VA["Value +&lt;br/&gt;Reflection"]
+    OB --&gt; VB["Value +&lt;br/&gt;Reflection"]
+    OC --&gt; VC["Value +&lt;br/&gt;Reflection"]
 
-    VA --&gt; SELECT[Tree Policy]
+    VA --&gt; SELECT["Tree Policy"]
     VB --&gt; SELECT
     VC --&gt; SELECT
-    SELECT --&gt; EXPAND[Expand Promising Path]</code></pre>
+    SELECT --&gt; EXPAND["Expand&lt;br/&gt;Promising&lt;br/&gt;Path"]</code></pre>
 <h3 id="12241-main-benefits"><span id="12241" class="legacy-heading-anchor" aria-hidden="true"></span>12.24.1 Main Benefits<a class="headerlink" href="#12241-main-benefits" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Explore multiple action paths;</li>
@@ -11274,12 +11331,13 @@ C_{eval,r}
 <p>If a request's latency budget cannot accommodate multibranch execution, first compare bounded beam search, best-of-N, verifiers, and local retries. Whether full MCTS plus reflection is necessary should be decided through equal-budget comparisons, not by the architecture's name.</p>
 <h2 id="1225-reflection-and-planning"><span id="1225" class="legacy-heading-anchor" aria-hidden="true"></span>12.25 Reflection and Planning<a class="headerlink" href="#1225-reflection-and-planning" title="Permanent link">&para;</a></h2>
 <p>Reflection can target different objects:</p>
-<pre class="mermaid"><code>flowchart TB
-    R[Reflection] --&gt; OUT[Output Reflection]
-    R --&gt; STEP[Step Reflection]
-    R --&gt; PLAN[Plan Reflection]
-    R --&gt; TRACE[Trajectory Reflection]
-    R --&gt; MEMORY[Memory Reflection]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    R["Reflection"] --&gt; OUT["Output Reflection"]
+    R --&gt; STEP["Step Reflection"]
+    R --&gt; PLAN["Plan Reflection"]
+    R --&gt; TRACE["Trajectory Reflection"]
+    R --&gt; MEMORY["Memory Reflection"]</code></pre>
 <ul>
 <li>Output reflection: is the result correct?</li>
 <li>Step reflection: is the current step valid?</li>
@@ -11290,19 +11348,44 @@ C_{eval,r}
 <p>In Plan-and-Execute, reflection may trigger a replanner rather than merely rewrite the current answer.</p>
 <h2 id="1226-reflection-and-agentic-workflows"><span id="1226-agentic-workflow" class="legacy-heading-anchor" aria-hidden="true"></span>12.26 Reflection and Agentic Workflows<a class="headerlink" href="#1226-reflection-and-agentic-workflows" title="Permanent link">&para;</a></h2>
 <p>Production systems usually confine reflection to workflow nodes:</p>
-<pre class="mermaid"><code>flowchart LR
-    IN[Input] --&gt; G[Generate]
-    G --&gt; DET[Deterministic Checks]
-    DET --&gt;|Pass| C[Critic]
-    DET --&gt;|Fail| FIX[Direct Repair]
-    FIX --&gt; DET
-    C --&gt; D{Verdict}
-    D --&gt;|PASS| OUT[Output]
-    D --&gt;|REVISE| R[Refiner]
-    D --&gt;|REPLAN| P[Planner]
-    D --&gt;|HUMAN| H[Human Review]
-    R --&gt; DET
+<p>Deterministic failures go directly to repair.</p>
+<pre class="mermaid"><code>flowchart TB
+    IN[Input]
+    G[Generate]
+    DET[Deterministic Checks]
+    FIX[Direct Repair]
+    C[Critic]
+    IN --&gt; G
+    G --&gt; DET
+    DET --&gt;|Pass| C
+    DET --&gt;|Fail| FIX
+    FIX --&gt; DET</code></pre>
+<p>Revision returns to deterministic checks.</p>
+<pre class="mermaid"><code>flowchart TB
+    DET[Deterministic Checks]
+    C[Critic]
+    D{Verdict}
+    R[Refiner]
+    DET --&gt;|Pass| C
+    C --&gt; D
+    D --&gt;|REVISE| R
+    R --&gt; DET</code></pre>
+<p>Replanning returns to generation.</p>
+<pre class="mermaid"><code>flowchart TB
+    C[Critic]
+    D{Verdict}
+    P[Planner]
+    G[Generate]
+    C --&gt; D
+    D --&gt;|REPLAN| P
     P --&gt; G</code></pre>
+<p>The other verdicts return output or request human review.</p>
+<pre class="mermaid"><code>flowchart TB
+    D{Verdict}
+    OUT[Output]
+    H[Human Review]
+    D --&gt;|PASS| OUT
+    D --&gt;|HUMAN| H</code></pre>
 <p>Both repair and replanning in the diagram are constrained by the same stop controller. Required checks must run again after revision and cannot be skipped because a critic returns PASS. Actions such as sending, deploying, and paying need separate pre-execution authorization gates; they cannot rely solely on this quality loop after the fact.</p>
 <p>The workflow controls:</p>
 <ul>
@@ -11325,15 +11408,16 @@ C_{eval,r}
 <p>Fix a function that crashes on empty input.</p>
 </blockquote>
 <p>First reproduce the <code>IndexError</code> with an empty list, then inspect where it fails. If the exception comes from directly accessing the first element, the next step is still not to immediately decide that “empty input should return 0.” Check the function's contract first: should it return an empty result, raise a specified exception, or use a default value? Reflection proposes a root cause and a repair hypothesis; tests check whether that hypothesis satisfies the requirements.</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Generate Patch] --&gt; T[Run Tests]
-    T --&gt; D{Tests Pass?}
-    D --&gt;|Yes| R[Code Review]
-    D --&gt;|No| F[Extract Failure]
-    F --&gt; REF[Reflect on Root Cause]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    G["Generate Patch"] --&gt; T["Run Tests"]
+    T --&gt; D["Tests Pass?"]
+    D --&gt;|Yes| R["Code Review"]
+    D --&gt;|No| F["Extract Failure"]
+    F --&gt; REF["Reflect on Root Cause"]
     REF --&gt; G
-    R --&gt; Q{Review Pass?}
-    Q --&gt;|Yes| DONE[Finish]
+    R --&gt; Q["Review Pass?"]
+    Q --&gt;|Yes| DONE["Finish"]
     Q --&gt;|No| G</code></pre>
 <p>Key points:</p>
 <ul>
@@ -11402,15 +11486,16 @@ C_{eval,r}
 <li>Retention.</li>
 </ul>
 <h2 id="1230-preventing-endless-reflection-loops"><span id="1230-reflection-loop" class="legacy-heading-anchor" aria-hidden="true"></span>12.30 Preventing Endless Reflection Loops<a class="headerlink" href="#1230-preventing-endless-reflection-loops" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    R[Reflection Round] --&gt; V[Verify]
-    V --&gt; P{Pass?}
-    P --&gt;|Yes| DONE[Finish]
-    P --&gt;|No| B{Budget Remaining?}
-    B --&gt;|No| STOP[Stop and Report]
-    B --&gt;|Yes| I{Finding Changed?}
-    I --&gt;|No| ESC[Escalate / Human]
-    I --&gt;|Yes| FIX[Refine]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    R["Reflection&lt;br/&gt;Round"] --&gt; V["Verify"]
+    V --&gt; P["Pass?"]
+    P --&gt;|Yes| DONE["Finish"]
+    P --&gt;|No| B["Budget&lt;br/&gt;Remaining?"]
+    B --&gt;|No| STOP["Stop and&lt;br/&gt;Report"]
+    B --&gt;|Yes| I["Finding&lt;br/&gt;Changed?"]
+    I --&gt;|No| ESC["Escalate /&lt;br/&gt;Human"]
+    I --&gt;|Yes| FIX["Refine"]
     FIX --&gt; R</code></pre>
 <p>Hard controls include:</p>
 <ul>
@@ -11529,36 +11614,15 @@ C_{eval,r}
 <p>Discussion among multiple agents cannot replace authoritative data.</p>
 <h2 id="1234-a-recommended-production-architecture"><span id="1234" class="legacy-heading-anchor" aria-hidden="true"></span>12.34 A Recommended Production Architecture<a class="headerlink" href="#1234-a-recommended-production-architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
-    TASK[Task] --&gt; BUDGET{Budget remains and continuation allowed?}
-    BUDGET --&gt;|Yes| GATE{Permissions and approval pass before execution?}
-    BUDGET --&gt;|No| PARTIAL[Report Incomplete]
-    GATE --&gt;|Yes| EXEC[Executor]
-    GATE --&gt;|No| HUMAN[Human Review / Denial]
-    HUMAN --&gt;|Authorization obtained again| GATE
-    EXEC --&gt; ART[Artifact + Trace]
-
-    ART --&gt; DV[Deterministic Verifiers]
-    DV --&gt; HARD{Required checks pass?}
-    HARD --&gt;|No| FAILURE[Record hard failure and generate repair feedback]
-    HARD --&gt;|Yes| NEED{Subjective quality evaluation needed?}
-    NEED --&gt;|No| DONE[Finish]
-    NEED --&gt;|Yes| CRITIC[Critic]
-
-    CRITIC --&gt; VERDICT{Verdict}
-    VERDICT --&gt;|PASS| DONE
-    VERDICT --&gt;|REVISE| REFINE[Refiner]
-    VERDICT --&gt;|REPLAN| PLAN[Replanner]
-    VERDICT --&gt;|BLOCKED| HUMAN
-    FAILURE --&gt; REFINE
-
-    REFINE --&gt; BUDGET
-    PLAN --&gt; BUDGET
-
-    DONE --&gt; CONS{Lesson worth retaining?}
-    CONS --&gt;|No| END[End]
-    CONS --&gt;|Yes| VALIDATE[Validate Reflection]
-    VALIDATE --&gt;|Pass| MEMORY[Memory / Skill Candidate]
-    VALIDATE --&gt;|Unverified| END</code></pre>
+    EXEC[Executor] --&gt; DV[Required checks]
+    DV --&gt;|Pass, subjective review needed| CRITIC[Critic]
+    DV --&gt;|Hard failure| REFINE[Refiner]
+    CRITIC --&gt;|REVISE| REFINE
+    REFINE --&gt; GATE[Budget and permissions]
+    GATE --&gt;|Revalidated| EXEC</code></pre>
+<p>Every task starts with the budget/continuation check, followed by execution-time permission and approval checks. No remaining budget or permission to continue means reporting incompleteness. Missing authorization goes to human review or denial; newly obtained authorization must pass the permission gate again.</p>
+<p>The executor supplies an artifact and trace to deterministic verifiers. A hard failure is recorded with repair feedback for the refiner. Passing required checks finishes the task if subjective quality review is unnecessary; otherwise the critic issues <code>PASS</code> (finish), <code>REVISE</code> (refiner), <code>REPLAN</code> (replanner), or <code>BLOCKED</code> (human review). Both refinement and replanning return to the budget check, then the permission gate, before execution.</p>
+<p>After finishing, retain a lesson only if it is worth keeping and reflection validation passes. A validated lesson becomes a memory/skill candidate; an unverified or unneeded lesson ends the process without a memory write.</p>
 <p>There is no shortcut from a hard failure to a critic's PASS in this diagram. The entry point shows the overall gate, but the runtime must also check remaining budget before every model or tool call, including calls to the critic, refiner, and replanner. Every change must be bound to a new candidate version and pass acceptance checks again. The executor here consumes the current candidate or plan; it should not unconditionally discard the refiner's changes and generate from scratch.</p>
 <p>Recommended principles:</p>
 <ol>
@@ -11595,15 +11659,8 @@ C_{eval,r}
 </ul>
 <p>Self-Refine, Reflexion, critic agents, debate, and LATS provide feedback mechanisms of different depths. They can be useful, but all add cost, and none replaces real environments, tests, authoritative data, or human accountability.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2303.17651">Self-Refine: Iterative Refinement with Self-Feedback</a></li>
-<li><a href="https://arxiv.org/abs/2303.11366v4">Reflexion: Language Agents with Verbal Reinforcement Learning (v4)</a></li>
-<li><a href="https://arxiv.org/abs/2310.04406v3">Language Agent Tree Search Unifies Reasoning, Acting, and Planning (v3)</a></li>
-<li><a href="https://arxiv.org/abs/2305.14325">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://arxiv.org/abs/2310.01798">Large Language Models Cannot Self-Correct Reasoning Yet</a></li>
-<li><a href="https://arxiv.org/abs/2409.12917v1">Training Language Models to Self-Correct via Reinforcement Learning (SCoRe, v1)</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-12">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -11626,7 +11683,7 @@ C_{eval,r}
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

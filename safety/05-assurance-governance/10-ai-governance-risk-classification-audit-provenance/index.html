@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance","description":"Distinguish internal risk classifications from AI Act obligations, check applicable dates and roles, and understand the limits of auditing, human oversight, and C2PA provenance verification.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/10-ai-governance-risk-classification-audit-provenance/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/10-ai-governance-risk-classification-audit-provenance/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance","description":"Distinguish internal risk classifications from AI Act obligations, check applicable dates and roles, and understand the limits of auditing, human oversight, and C2PA provenance verification.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/10-ai-governance-risk-classification-audit-provenance/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/10-ai-governance-risk-classification-audit-provenance/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/05-assurance-governance/10-ai-governance-risk-classification-audit-provenance/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9317,13 +9342,23 @@
 <h1 id="chapter-10-ai-governance-risk-classification-auditing-and-content-provenance"><span id="ai" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 10: AI Governance, Risk Classification, Auditing, and Content Provenance<a class="headerlink" href="#chapter-10-ai-governance-risk-classification-auditing-and-content-provenance" title="Permanent link">&para;</a></h1>
 <h2 id="101-governance-makes-technical-controls-an-organizational-responsibility"><span id="101" class="legacy-heading-anchor" aria-hidden="true"></span>10.1 Governance Makes Technical Controls an Organizational Responsibility<a class="headerlink" href="#101-governance-makes-technical-controls-an-organizational-responsibility" title="Permanent link">&para;</a></h2>
 <p>The preceding nine chapters cover specific technical defenses. Keeping those controls effective over time requires organizational arrangements: who approves the release of a high-risk agent, who is accountable for model behavior, which process applies when an incident occurs, and how regulatory requirements become internal checklists. This is the role of the <strong>Govern</strong> function in the NIST AI RMF: establish those responsibilities, processes, and checks.</p>
-<pre class="mermaid"><code>flowchart TB
-    G[Governance] --&gt; G1[Risk classification&lt;br/&gt;10.2]
-    G --&gt; G2[Auditing and traceability&lt;br/&gt;10.3]
-    G --&gt; G3[Transparency documentation&lt;br/&gt;10.4]
-    G --&gt; G4[Content provenance&lt;br/&gt;10.5]
-    G --&gt; G5[Incident response and disclosure&lt;br/&gt;10.6]
-    G --&gt; G6[Vendor and third-party risk&lt;br/&gt;10.7]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    G["Governance"] --&gt; G1["Risk classification"]
+    G --&gt; G2["Auditing and&lt;br/&gt;traceability"]
+    G --&gt; G3["Transparency&lt;br/&gt;documentation"]
+    G --&gt; G4["Content provenance"]
+    G --&gt; G5["Incident response and&lt;br/&gt;disclosure"]
+    G --&gt; G6["Vendor and third-party&lt;br/&gt;risk"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Risk classification 10.2</li>
+<li>Auditing and traceability 10.3</li>
+<li>Transparency documentation 10.4</li>
+<li>Content provenance 10.5</li>
+<li>Incident response and disclosure 10.6</li>
+<li>Vendor and third-party risk 10.7</li>
+</ul>
 <h2 id="102-risk-classification"><span id="102" class="legacy-heading-anchor" aria-hidden="true"></span>10.2 Risk Classification<a class="headerlink" href="#102-risk-classification" title="Permanent link">&para;</a></h2>
 <p>Not every AI application needs the same intensity of controls. Risk classification directs limited security resources toward genuinely high-risk situations.</p>
 <h3 id="1021-classifying-risk-by-use-case-with-regulatory-practice-in-mind"><span id="1021" class="legacy-heading-anchor" aria-hidden="true"></span>10.2.1 Classifying Risk by Use Case, with Regulatory Practice in Mind<a class="headerlink" href="#1021-classifying-risk-by-use-case-with-regulatory-practice-in-mind" title="Permanent link">&para;</a></h3>
@@ -9411,15 +9446,24 @@
 <p>Transparency documents are not static artifacts to publish once and forget. Model fine-tuning, system prompt changes, and new tool integrations should all trigger updates. This follows the same governance cadence as reproducible builds in Chapter 5 and version-triggered security regression testing in Chapter 9.</p>
 <h2 id="105-content-provenance-and-verifiability"><span id="105" class="legacy-heading-anchor" aria-hidden="true"></span>10.5 Content Provenance and Verifiability<a class="headerlink" href="#105-content-provenance-and-verifiability" title="Permanent link">&para;</a></h2>
 <p>As generative AI becomes widespread, questions such as “Was this content AI-generated?” and “Has this image been altered?” become distinct matters of trust. Content provenance addresses this problem space.</p>
-<pre class="mermaid"><code>flowchart LR
-    C[Content creation/editing] --&gt; M[Attach verifiable provenance metadata]
-    M --&gt; D[Distribution]
-    D --&gt; V[Downstream verifier checks metadata signatures]
-    V --&gt; T{Is integrity preserved?}
-    T --&gt;|Yes| TRUST[Display signature-verified provenance claims&lt;br/&gt;Not proof of factual truth]
-    T --&gt;|No| WARN[Mark as unverifiable]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    C["Content&lt;br/&gt;creation/editing"] --&gt; M["Attach&lt;br/&gt;provenance"]
+    M --&gt; D["Distribution"]
+    D --&gt; V["Verify&lt;br/&gt;signatures"]
+    V --&gt; T["Integrity intact?"]
+    T --&gt;|Yes| TRUST["Show verified&lt;br/&gt;claims"]
+    T --&gt;|No| WARN["Mark as&lt;br/&gt;unverifiable"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
 <ul>
-<li><strong>Digitally signed provenance standards, such as C2PA:</strong> bind claims about origin and editing to an asset, and validate signatures, asset binding, and the trust chain. Signing is not encryption and does not ensure metadata confidentiality. A valid signature also does not establish the truth of the claimed facts or the completeness of the editing history.</li>
+<li>Attach verifiable provenance metadata</li>
+<li>Downstream verifier checks metadata signatures</li>
+<li>
+<p>Display signature-verified provenance claims Not proof of factual truth</p>
+</li>
+<li>
+<p><strong>Digitally signed provenance standards, such as C2PA:</strong> bind claims about origin and editing to an asset, and validate signatures, asset binding, and the trust chain. Signing is not encryption and does not ensure metadata confidentiality. A valid signature also does not establish the truth of the claimed facts or the completeness of the editing history.</p>
+</li>
 <li><strong>Visible and invisible watermarks:</strong> visible watermarks are easily cropped out. Invisible watermarks aim to embed detectable marks without noticeably changing the content, but both remain susceptible to removal or forgery by particular attack methods. Treat them as a layer of defense in depth, not the sole assurance.</li>
 <li><strong>Provenance is not content moderation:</strong> provenance addresses whether a source can be verified, not whether the content itself is harmful. These are separate governance concerns, and neither replaces the other.</li>
 </ul>
@@ -9467,18 +9511,8 @@
 <li>C2PA verifies the binding and integrity of provenance claims and trust in their signer; it does not prove that content is true. Watermarks, fact-checking, incident response, and vendor governance each address different problems.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p>Regulatory review date: 2026-09-15. Regulation 2026/1744 was published in the Official Journal of the European Union on 2026-07-24 and, under Article 4, entered into force on the third day after publication, 2026-07-27. Article 1, point (40), amends Article 113 of the AI Act; point (39) concerns transitional arrangements for existing systems. The discussion above cites an amendment already in force, not a proposal or political agreement. The description of C2PA's capabilities uses version 2.2 below and does not claim that it is the latest version.</p>
-<ul>
-<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF: Govern Function</a></li>
-<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng">EU AI Act: original text of Regulation (EU) 2024/1689</a></li>
-<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744: Article 1, points (39) and (40), and Article 4</a></li>
-<li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng">GDPR: Articles 33 and 34, breach notification conditions and deadlines</a></li>
-<li><a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">European Commission: AI Act policy overview</a></li>
-<li><a href="https://spec.c2pa.org/specifications/specifications/2.2/explainer/Explainer.html">C2PA 2.2: Explainer, verification capabilities and non-goals</a></li>
-<li><a href="https://arxiv.org/abs/1810.03993">Model Cards for Model Reporting</a></li>
-<li><a href="https://openai.com/index/system-card/">System Cards: A New Resource for Understanding How AI Systems Work</a></li>
-<li><a href="https://genai.owasp.org/resource/llm-ai-cybersecurity-governance-checklist/">OWASP LLM Applications Cybersecurity and Governance Checklist</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-10">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9501,7 +9535,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

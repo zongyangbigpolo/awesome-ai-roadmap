@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Query Understanding and Rewriting","description":"When to use reference resolution, multi-query expansion, HyDE, step-back questions, query decomposition, and routing, with attention to semantic drift, original-query fallbacks, and evidence boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/12-query-rewriting/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Query Understanding and Rewriting","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/12-query-rewriting/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 12: Query Understanding and Rewriting","description":"When to use reference resolution, multi-query expansion, HyDE, step-back questions, query decomposition, and routing, with attention to semantic drift, original-query fallbacks, and evidence boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/12-query-rewriting/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 12: Query Understanding and Rewriting","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/12-query-rewriting/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 12: Query Understanding and Rewriting","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/03-retrieval/12-query-rewriting/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9308,16 +9333,11 @@
 </tbody>
 </table>
 <p>These four rows illustrate <strong>four different gaps</strong>. Query-rewriting methods address different parts of this mismatch:</p>
-<pre class="mermaid"><code>flowchart TB
-    G[The gap between&lt;br/&gt;queries and documents] --&gt; G1[Wording gap&lt;br/&gt;Same meaning, different phrasing]
-    G --&gt; G2[Reference gap&lt;br/&gt;Omitted context across turns]
-    G --&gt; G3[Granularity gap&lt;br/&gt;Broad or compound questions]
-    G --&gt; G4[Abstraction gap&lt;br/&gt;Too specific or too abstract]
-
-    G1 --&gt; M1[Direct rewriting /&lt;br/&gt;multi-query expansion / HyDE]
-    G2 --&gt; M2[Reference resolution]
-    G3 --&gt; M3[Query decomposition]
-    G4 --&gt; M4[Step-back questions]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    G[Query–document gap] --&gt; D[Diagnose the mismatch]
+    D --&gt; M[Choose a rewrite method]</code></pre>
+<p>Match the method to the gap: different wording for the same meaning calls for direct rewriting, multi-query expansion, or HyDE; omitted multi-turn context calls for reference resolution; broad or compound questions call for decomposition; an inappropriate abstraction level calls for step-back questions.</p>
 <blockquote>
 <p><strong>Understand which gap each method addresses, rather than just memorizing method names.</strong></p>
 </blockquote>
@@ -9349,11 +9369,13 @@
 <p>The costs are clear: an LLM call, N times the retrieval work—which can run in parallel—and subsequent fusion and deduplication. This is more suitable when recall takes priority and some additional latency is acceptable.</p>
 <h2 id="125-hyde-hypothetical-document-embeddings"><span id="125-hyde" class="legacy-heading-anchor" aria-hidden="true"></span>12.5 HyDE: hypothetical document embeddings<a class="headerlink" href="#125-hyde-hypothetical-document-embeddings" title="Permanent link">&para;</a></h2>
 <p>Instead of searching directly with the query, HyDE <strong>first asks an LLM to generate a hypothetical answer document, then uses that document for vector retrieval</strong>.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q["Query: How do I&lt;br/&gt;request annual leave?"] --&gt; LLM[LLM generates&lt;br/&gt;a hypothetical answer]
-    LLM --&gt; H["Hypothetical document:&lt;br/&gt;Submit an annual leave request&lt;br/&gt;in the system 3 working days ahead,&lt;br/&gt;with direct manager approval..."]
+    LLM --&gt; H[Hypothetical leave policy]
     H --&gt; EMB[Embed]
     EMB --&gt; SEARCH[Retrieve real documents]</code></pre>
+<p>For “How do I request annual leave?”, the hypothetical text might say “Submit an annual leave request in the system 3 working days ahead, with direct manager approval…”. This is a generated retrieval aid, not verified company policy; embedding it is a way to retrieve real documents.</p>
 <p>The diagram translates the sample query “年假怎么请” and hypothetical text “员工申请年休假需提前 3 个工作日在系统提交经直属主管审批...”. The sample document says employees must submit an annual leave request in the system 3 working days in advance, with approval from their direct manager.</p>
 <p>The intuition is that vector retrieval compares the similarity of two texts, yet <strong>a question and an answer are not inherently close in semantic space</strong>: the question is interrogative and usually short; the document is declarative and usually longer.</p>
 <p>Retrieving with a <strong>hypothetical answer that looks more like a document</strong> changes the comparison from “question versus document” to “document versus document,” which <strong>often places the texts closer together in semantic space</strong>.</p>
@@ -9499,13 +9521,8 @@
 <li><strong>Keep the original query as a fallback.</strong> Before combining methods, compare newly gained hits, lost hits, and actual costs.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2212.10496">Precise Zero-Shot Dense Retrieval without Relevance Labels</a></li>
-<li><a href="https://arxiv.org/abs/2310.06117">Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2305.14283">Query Rewriting for Retrieval-Augmented Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-12">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9528,7 +9545,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

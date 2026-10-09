@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Agent Security and Prompt Injection","description":"Examine prompt injection, tool abuse, privilege escalation, and data-exfiltration risks in agents, with layered defenses and least-privilege strategies.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/15-agent-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Agent Security and Prompt Injection","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/15-agent-security/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 15: Agent Security and Prompt Injection","description":"Examine prompt injection, tool abuse, privilege escalation, and data-exfiltration risks in agents, with layered defenses and least-privilege strategies.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/15-agent-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 15: Agent Security and Prompt Injection","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/15-agent-security/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 15: Agent Security and Prompt Injection","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/15-agent-security/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9932,12 +9957,13 @@
 <li><strong>External content.</strong> Web pages, emails, documents, tool results, and messages from other agents can enter the context.</li>
 <li><strong>Multistep propagation.</strong> Greater autonomy makes it less feasible to rely on a person catching every error. Contamination can propagate through summaries, memory, and delegation.</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    LLM[LLM content safety] --&gt; R1[Risk: inappropriate text output]
-    LLM --&gt; M1[Mitigation: content filtering]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    LLM["LLM content safety"] --&gt; R1["Risk:&lt;br/&gt;inappropriate text&lt;br/&gt;output"]
+    LLM --&gt; M1["Mitigation:&lt;br/&gt;content filtering"]
 
-    AG[Agent security] --&gt; R2[Risk: inappropriate actions / data exfiltration]
-    AG --&gt; M2[Mitigation: permissions + isolation + architectural constraints]</code></pre>
+    AG["Agent security"] --&gt; R2["Risk:&lt;br/&gt;inappropriate&lt;br/&gt;actions / data&lt;br/&gt;exfiltration"]
+    AG --&gt; M2["Mitigation:&lt;br/&gt;permissions +&lt;br/&gt;isolation +&lt;br/&gt;architectural&lt;br/&gt;constraints"]</code></pre>
 <p>Model training and detection can reduce risk, but they should not be the sole basis for authorizing privileged actions. Architecture, permissions, and data-flow controls provide execution boundaries independent of the model's judgment.</p>
 <h2 id="152-the-root-cause-semantic-boundaries-are-not-authorization-boundaries"><span id="152" class="legacy-heading-anchor" aria-hidden="true"></span>15.2 The Root Cause: Semantic Boundaries Are Not Authorization Boundaries<a class="headerlink" href="#152-the-root-cause-semantic-boundaries-are-not-authorization-boundaries" title="Permanent link">&para;</a></h2>
 <p>Parameterized SQL queries separate statement structure from parameter values at the level of parsing semantics; they do not require two physical channels. Dynamically concatenated table names, sort clauses, and similar fragments still need additional constraints.</p>
@@ -9948,29 +9974,21 @@
 </blockquote>
 <p>Using natural language for both instructions and data makes the maintenance of semantic boundaries depend on model behavior. Training can improve that behavior, but stronger general capabilities do not guarantee isolation. Passing a set of tests does not establish that “one prompt can eliminate injection completely.”</p>
 <h2 id="153-threat-modeling-where-is-the-attack-surface"><span id="153" class="legacy-heading-anchor" aria-hidden="true"></span>15.3 Threat Modeling: Where Is the Attack Surface?<a class="headerlink" href="#153-threat-modeling-where-is-the-attack-surface" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    A[Agent attack surface] --&gt; IN[Input channels]
-    A --&gt; TOOL[Tool layer]
-    A --&gt; MEM[Memory layer]
-    A --&gt; MULTI[Multi-agent layer]
-    A --&gt; OUT[Output channels]
-
-    IN --&gt; IN1[Direct user input]
-    IN --&gt; IN2[Web pages / emails / documents]
-    IN --&gt; IN3[Tool results]
-
-    TOOL --&gt; T1[Poisoned tool descriptions]
-    TOOL --&gt; T2[Excessive tool permissions]
-    TOOL --&gt; T3[Untrusted MCP servers]
-
-    MEM --&gt; ME1[Malicious content written to long-term memory]
-    MEM --&gt; ME2[Poisoned RAG corpus]
-
-    MULTI --&gt; MU1[Injection in inter-agent messages]
-    MULTI --&gt; MU2[Privileged agent used as a confused deputy]
-
-    OUT --&gt; OU1[Data leaked through outbound tools]
-    OU1 --&gt; OU2[Exfiltration through Markdown images / links]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    A["Agent attack surface"] --&gt; IN["Input channels"]
+    A --&gt; TOOL["Tool layer"]
+    A --&gt; MEM["Memory layer"]
+    A --&gt; MULTI["Multi-agent layer"]
+    A --&gt; OUT["Output channels"]
+</code></pre>
+<ul>
+<li><strong>Input channels:</strong> direct user input, web pages, emails, documents, and tool results.</li>
+<li><strong>Tool layer:</strong> poisoned descriptions, excessive permissions, and untrusted MCP servers.</li>
+<li><strong>Memory layer:</strong> malicious content persisted in long-term memory or a poisoned RAG corpus.</li>
+<li><strong>Multi-agent layer:</strong> injected inter-agent messages or a privileged agent acting as a confused deputy.</li>
+<li><strong>Output channels:</strong> data leakage through outbound tools, including exfiltration through Markdown images or links.</li>
+</ul>
 <p><strong>Tool results also require source checks.</strong> Filtering only user input while treating search results, web page bodies, or database query results as trusted instructions leaves an opening for indirect injection. A trusted tool may faithfully return content written by an attacker. “The tool call succeeded” does not mean “the returned text is trustworthy.”</p>
 <h2 id="154-two-forms-of-prompt-injection"><span id="154-prompt-injection" class="legacy-heading-anchor" aria-hidden="true"></span>15.4 Two Forms of Prompt Injection<a class="headerlink" href="#154-two-forms-of-prompt-injection" title="Permanent link">&para;</a></h2>
 <h3 id="1541-direct-injection"><span id="1541" class="legacy-heading-anchor" aria-hidden="true"></span>15.4.1 Direct Injection<a class="headerlink" href="#1541-direct-injection" title="Permanent link">&para;</a></h3>
@@ -9979,29 +9997,28 @@
 <h3 id="1542-indirect-prompt-injection">15.4.2 Indirect Prompt Injection<a class="headerlink" href="#1542-indirect-prompt-injection" title="Permanent link">&para;</a></h3>
 <p>Indirect injection is particularly difficult to defend against in agents. The payload is hidden in third-party content that the agent will read, often without the user's knowledge.</p>
 <p>A typical sequence:</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as User
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant A as Agent
-    participant W as Compromised web page
+    participant W as Web page
     participant T as Email tool
 
-    U-&gt;&gt;A: Summarize this page for me
-    A-&gt;&gt;W: Fetch the page content
-    W--&gt;&gt;A: Page body + hidden injection instructions
-    Note over A: The model incorrectly follows the page's instructions&lt;br/&gt;and the execution layer fails to block an unauthorized action
-    A-&gt;&gt;T: Send the user's address book to attacker@evil.com
-    T--&gt;&gt;A: Sent successfully
-    A-&gt;&gt;U: Here is the page summary, which looks entirely normal</code></pre>
+    A-&gt;&gt;W: Fetch content
+    W--&gt;&gt;A: Body + injection
+    A-&gt;&gt;T: Unauthorized send
+    T--&gt;&gt;A: Sent</code></pre>
+<p>The user asked only for a page summary. The compromised page contains hidden injection instructions alongside its body. In this failure case, the model incorrectly follows those instructions and the execution layer fails to block the unauthorized action: sending the user's address book to <code>attacker@evil.com</code>. The email tool reports success, while the agent returns a seemingly normal page summary to the user.</p>
 <p>The user requested a page summary, but data was exfiltrated instead. The summary returned to the user looks entirely normal: <strong>the attack is invisible from the user's perspective</strong>.</p>
 <p>Payloads can be hidden in white text on a white background, CSS-hidden elements, HTML comments, image alt text, PDF metadata, code comments, or invisible Unicode characters such as Tag characters. Whether these reach the model's context depends on the fetcher, parser, or visual-input path. A text extractor may retain visually hidden content, and the reverse can also occur. <strong>Do not judge content as safe merely because it “looks normal.”</strong></p>
 <h2 id="155-the-lethal-trifecta">15.5 The Lethal Trifecta<a class="headerlink" href="#155-the-lethal-trifecta" title="Permanent link">&para;</a></h2>
 <p>This is a practical framework for identifying <strong>high-risk preconditions</strong> for agent data exfiltration. When all three conditions below are present, the attack surface and potential impact increase substantially. That does not mean compromise is inevitable: isolation, egress policy, authorization, and confirmation still affect exploitability and consequences.</p>
-<pre class="mermaid"><code>flowchart TB
-    T1[① Access to private data] --&gt; RISK{All three present?}
-    T2[② Exposure to untrusted content] --&gt; RISK
-    T3[③ Ability to communicate externally] --&gt; RISK
-    RISK --&gt;|Yes| BREACH[High risk: assess and add controls]
-    RISK --&gt;|No| SAFE[This exfiltration path may be curtailed; auditing is still needed]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    T1["① Access to&lt;br/&gt;private data"] --&gt; RISK["All three&lt;br/&gt;present?"]
+    T2["② Exposure to&lt;br/&gt;untrusted&lt;br/&gt;content"] --&gt; RISK
+    T3["③ Ability to&lt;br/&gt;communicate&lt;br/&gt;externally"] --&gt; RISK
+    RISK --&gt;|Yes| BREACH["High risk:&lt;br/&gt;assess and add&lt;br/&gt;controls"]
+    RISK --&gt;|No| SAFE["This&lt;br/&gt;exfiltration&lt;br/&gt;path may be&lt;br/&gt;curtailed;&lt;br/&gt;auditing is&lt;br/&gt;still needed"]</code></pre>
 <table>
 <thead>
 <tr>
@@ -10097,13 +10114,14 @@
 <li><strong>Quarantined LLM:</strong> processes untrusted content but <strong>has no tool permissions</strong>.</li>
 </ul>
 <p>After the quarantined LLM finishes processing, its result is stored in a variable rather than returned as natural-language text. The privileged LLM receives only an opaque reference, such as <code>$VAR_1</code>, for subsequent orchestration.</p>
-<pre class="mermaid"><code>flowchart LR
-    U[User request] --&gt; P[Privileged LLM&lt;br/&gt;Tools available; no untrusted input]
-    P --&gt;|Dispatch| Q[Quarantined LLM&lt;br/&gt;No tools; processes untrusted content]
-    W[Web pages / emails] --&gt; Q
-    Q --&gt;|Store result in a variable| V[(Variable store)]
-    V --&gt;|Opaque reference| P
-    P --&gt; T[Execute tools]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 10, "padding": 6}}}%%
+flowchart TB
+    U["User request"] --&gt; P["Privileged&lt;br/&gt;LLM&lt;br/&gt;Tools available;&lt;br/&gt;no untrusted&lt;br/&gt;input"]
+    P --&gt;|Dispatch| Q["Quarantined&lt;br/&gt;LLM&lt;br/&gt;No tools;&lt;br/&gt;processes&lt;br/&gt;untrusted&lt;br/&gt;content"]
+    W["Web pages /&lt;br/&gt;emails"] --&gt; Q
+    Q --&gt;|Store result&lt;br/&gt;in a&lt;br/&gt;variable| V[("Variable&lt;br/&gt;store")]
+    V --&gt;|Opaque&lt;br/&gt;reference| P
+    P --&gt; T["Execute&lt;br/&gt;tools"]</code></pre>
 <p>For example, the user explicitly asks, “Summarize this email and save it to my drafts.” The quarantined model produces a summary, and the execution layer stores it as a variable. The privileged model only arranges for that variable to be written to the authorized draft. It does not reread the summary to choose recipients or add actions. An opaque reference does not automatically sanitize its contents: the execution layer must still restrict which tool parameters the variable can flow into. Its text must not be treated as a shell command, code, or unapproved outbound content.</p>
 <p>The cost is substantially more complex orchestration, and not every task can be decomposed this way.</p>
 <h3 id="1582-plan-then-execute">15.8.2 Plan-Then-Execute<a class="headerlink" href="#1582-plan-then-execute" title="Permanent link">&para;</a></h3>
@@ -10119,13 +10137,12 @@
 <p>CaMeL runs a program generated by a high-level model in a <strong>restricted interpreter</strong>, rather than repeatedly having a privileged model read raw tool results to choose the next step. The interpreter tracks capability metadata and dependencies for data, such as its source and which principals may read a value. Before each tool call, it checks security policies to determine whether the data may flow to the corresponding arguments and destinations. It constrains data and control dependencies; it does not merely put a “safe” label on model output.</p>
 <p>CaMeL is a capability/information-flow control approach described in a paper and prototype, not a universal deployment standard. Its guarantees depend on a correct interpreter, tool wrappers, data labels, and policies. The model cannot automatically compensate for uncovered external side effects, incorrect policies, or side channels. It provides stronger structural constraints than prompt-only defenses, at the cost of development complexity and task compatibility.</p>
 <h3 id="1587-choosing-a-pattern"><span id="1587" class="legacy-heading-anchor" aria-hidden="true"></span>15.8.7 Choosing a Pattern<a class="headerlink" href="#1587-choosing-a-pattern" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    Q{Must the task read untrusted content?} --&gt;|No| N[Conventional agent + least privilege]
-    Q --&gt;|Yes| Q2{Are high-risk actions needed afterward?}
-    Q2 --&gt;|No| CM[Context-Minimization]
-    Q2 --&gt;|Yes| Q3{Can the action set be determined in advance?}
-    Q3 --&gt;|Yes| PE[Plan-Then-Execute / Action-Selector]
-    Q3 --&gt;|No| DL[Dual LLM / CaMeL + human confirmation]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    Q3["Action set known in&lt;br/&gt;advance?"]
+    Q3 --&gt;|Yes| PE["Plan-Then-Execute /&lt;br/&gt;Action-Selector"]
+    Q3 --&gt;|No| DL["Dual LLM / CaMeL + human&lt;br/&gt;confirmation"]</code></pre>
+<p>First ask whether the task must read untrusted content. If not, use a conventional agent with least privilege. If it must read such content but needs no high-risk actions afterward, use Context-Minimization. Only when both untrusted reading and subsequent high-risk actions are required does the diagram's action-set question apply.</p>
 <p>This diagram helps shortlist designs; it is not a security ranking. Even when “no high-risk action follows,” check whether final output, image loading, or synchronized files could leak data. Context minimization cannot replace policy checks at these egress points.</p>
 <h2 id="159-effective-defense-ii-least-privilege"><span id="159" class="legacy-heading-anchor" aria-hidden="true"></span>15.9 Effective Defense II: Least Privilege<a class="headerlink" href="#159-effective-defense-ii-least-privilege" title="Permanent link">&para;</a></h2>
 <p>Architectural patterns constrain how input affects control and data flows. Least privilege reduces the impact when the model makes a bad decision. Both depend on concrete policies; adopting a named pattern alone does not establish that harm has been ruled out.</p>
@@ -10316,21 +10333,8 @@
 <p>Message roles and source markers can help a model distinguish instructions from data, but they are not strong execution-authorization boundaries. Engineering should assume that untrusted content can affect decisions, then use least privilege, data-flow constraints, isolation, and approvals to limit the impact. Structured extraction, hashes, or sandboxes alone cannot prove the security of the entire system.</p>
 <p>In implementation, start with the lethal trifecta to identify high-risk preconditions. Choose mechanisms such as Plan-Then-Execute, Dual LLM, Context-Minimization, or CaMeL according to the task, and be explicit about whether each constrains control flow, data flow, or exposure. Irreversible actions need human confirmation or bounded preauthorization. Execution must respect isolation and budget limits, and tool results and agent messages must not automatically acquire the authority of instructions. Continuously track ASR and Utility under both attack-free and attack conditions, scoring unauthorized actions and data exfiltration separately.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: The lethal trifecta for AI agents</a></li>
-<li><a href="https://simonwillison.net/2023/Apr/25/dual-llm-pattern/">Simon Willison: The Dual LLM pattern for building AI assistants that can resist prompt injection</a></li>
-<li><a href="https://arxiv.org/abs/2506.08837v1">Design Patterns for Securing LLM Agents against Prompt Injections (v1)</a></li>
-<li><a href="https://arxiv.org/abs/2503.18813v2">Defeating Prompt Injections by Design (CaMeL, v2)</a></li>
-<li><a href="https://arxiv.org/abs/2302.12173">Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</a></li>
-<li><a href="https://arxiv.org/abs/2406.13352">AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents</a></li>
-<li><a href="https://arxiv.org/abs/2412.16682">The Task Shield: Enforcing Task Alignment to Defend Against Indirect Prompt Injection in LLM Agents</a></li>
-<li><a href="https://arxiv.org/abs/2409.19091">System-Level Defense against Indirect Prompt Injection Attacks: An Information Flow Control Perspective</a></li>
-<li><a href="https://arxiv.org/abs/2504.11168v3">Bypassing LLM Guardrails: An Empirical Analysis of Evasion Attacks against Prompt Injection and Jailbreak Detection Systems (v3)</a></li>
-<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a></li>
-<li><a href="https://docs.docker.com/engine/security/seccomp/">Docker Engine: seccomp configuration and boundaries for Linux containers</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping agents for the real world with Agent Skills</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices">MCP 2026-07-28: Security Best Practices</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-15">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10353,7 +10357,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

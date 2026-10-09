@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: LLM Gateways","description":"Explain model adaptation, rate limits, cost accounting, and cache governance in LLM gateways, including cross-provider failover, streaming retries, and API-key security boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/14-llm-gateway/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: LLM Gateways","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/14-llm-gateway/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: LLM Gateways","description":"Explain model adaptation, rate limits, cost accounting, and cache governance in LLM gateways, including cross-provider failover, streaming retries, and API-key security boundaries.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/14-llm-gateway/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: LLM Gateways","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/14-llm-gateway/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 14: LLM Gateways","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/05-transport-gateway/14-llm-gateway/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9491,27 +9516,20 @@
 <h1 id="chapter-14-llm-gateways"><span id="llm" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 14: LLM Gateways<a class="headerlink" href="#chapter-14-llm-gateways" title="Permanent link">&para;</a></h1>
 <h2 id="141-what-a-gateway-is-and-where-it-fits"><span id="141" class="legacy-heading-anchor" aria-hidden="true"></span>14.1 What a Gateway Is and Where It Fits<a class="headerlink" href="#141-what-a-gateway-is-and-where-it-fits" title="Permanent link">&para;</a></h2>
 <p>Start with its position in the system.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph NO["Without a gateway"]
-        A1[Order service] --&gt; O1[OpenAI API]
-        A1 --&gt; O2[Anthropic API]
-        A2[Customer support service] --&gt; O1
-        A2 --&gt; O3[Chinese model provider API]
-        A3[Data service] --&gt; O2
-        A3 --&gt; O3
-    end
-
-    subgraph YES["With a gateway"]
-        B1[Order service] --&gt; GW[LLM gateway]
-        B2[Customer support service] --&gt; GW
-        B3[Data service] --&gt; GW
-        GW --&gt; P1[OpenAI]
-        GW --&gt; P2[Anthropic]
-        GW --&gt; P3[Chinese model providers]
-    end
-
-    style NO fill:#fce8e6
-    style YES fill:#e6f4ea</code></pre>
+<p><strong>Without a gateway</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        A1["Order service"] --&gt; O1["OpenAI API"]
+        A1 --&gt; O2["Anthropic API"]
+        A2["Customer support&lt;br/&gt;service"] --&gt; O1
+        A2 --&gt; O3["Chinese model&lt;br/&gt;provider API"]
+        A3["Data service"] --&gt; O2
+        A3 --&gt; O3</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["Application services"] --&gt; GW["LLM gateway"]
+    GW --&gt; PROVIDERS["Model providers"]</code></pre>
+<p>Order, customer-support, and data services call the same gateway rather than maintaining separate provider connections. The gateway connects to OpenAI, Anthropic, and Chinese model providers as configured; the diagram groups these alternatives rather than prescribing one provider.</p>
 <p>A gateway is <strong>an intermediary between applications and model APIs</strong>. Applications know the gateway rather than integrating directly with multiple providers.</p>
 <p>That position determines what it is best suited to handle: <strong>because all traffic passes through it, cross-cutting concerns such as authentication, routing, rate limiting, and observability can be managed centrally.</strong></p>
 <h2 id="142-five-problems-without-a-gateway"><span id="142" class="legacy-heading-anchor" aria-hidden="true"></span>14.2 Five Problems without a Gateway<a class="headerlink" href="#142-five-problems-without-a-gateway" title="Permanent link">&para;</a></h2>
@@ -9629,22 +9647,24 @@
 <p>These Chinese questions ask “Is Beijing hot today?”, “What is the weather like in Beijing now?”, and “What is the temperature in Beijing today?”</p>
 </blockquote>
 <p>The questions look similar, but different cities, times, user preferences, or data versions can make reuse invalid. Semantic similarity only identifies candidates; it cannot determine a cache hit by itself.</p>
-<pre class="mermaid"><code>flowchart TB
-    Q[Receive a new question] --&gt; P{"Caching allowed?&lt;br/&gt;Permissions and data partitions established?"}
-    P --&gt;|No| MISS[Call the LLM]
-    P --&gt;|Yes| E[Embed the question]
-    E --&gt; S[Run similarity search in the vector store]
-    S --&gt; H{"Permissions, time, and versions match&lt;br/&gt;and semantic validation passes?"}
-    H --&gt;|Yes| HIT["Return a previous answer&lt;br/&gt;Skip answer generation"]
-    H --&gt;|No| MISS
-    MISS --&gt; C{"Are both the request and&lt;br/&gt;new result cacheable?"}
-    C --&gt;|Yes| W["Store question, answer,&lt;br/&gt;permissions, and version metadata"]
-    C --&gt;|No| R[Return]
-    W --&gt; R[Return]
-    HIT --&gt; R
-
-    style HIT fill:#e6f4ea
-    style MISS fill:#fef7e0</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["Check cache permission"] --&gt;|Allowed| LOOK["Find valid match"]
+    P --&gt;|Denied| MODEL["Call model"]
+    LOOK --&gt;|Hit| R["Return answer"]
+    LOOK --&gt;|Miss| MODEL
+    MODEL --&gt; WRITE["Store only if allowed"]
+    WRITE --&gt; R</code></pre>
+<p>Establish permissions and data partitions before embedding a cache-eligible question and searching the vector store. A semantic match is a hit only when permissions, time, versions, and semantic validation all pass; then return the previous answer without generating another. A miss or forbidden lookup calls the LLM. Store the question, answer, permissions, and version metadata only if both the request and the new result are cacheable; otherwise skip storage and return.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Caching allowed? Permissions and data partitions established?</li>
+<li>Run similarity search in the vector store</li>
+<li>Permissions, time, and versions match and semantic validation passes?</li>
+<li>Return a previous answer Skip answer generation</li>
+<li>Are both the request and new result cacheable?</li>
+<li>Store question, answer, permissions, and version metadata</li>
+</ul>
 <p><strong>Two engineering details matter especially:</strong></p>
 <p><strong>First, false-hit risk.</strong> Do not copy another system's threshold without evaluation:</p>
 <table>
@@ -9790,18 +9810,8 @@
 <li><strong>Its primary scope is cross-cutting concerns</strong>; even when prompt hosting or retrieval is integrated, avoid tight coupling to business decisions and task state.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.litellm.ai/">LiteLLM Documentation</a></li>
-<li><a href="https://github.com/BerriAI/litellm">LiteLLM GitHub</a></li>
-<li><a href="https://github.com/maximhq/bifrost">Bifrost Official Repository (Go Implementation)</a></li>
-<li><a href="https://docs.litellm.ai/docs/proxy/reliability">LiteLLM Retries and Failover</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc9111">RFC 9111: HTTP Caching</a></li>
-<li><a href="https://github.com/Portkey-AI/gateway">Portkey AI Gateway</a></li>
-<li><a href="https://konghq.com/products/kong-ai-gateway">Kong AI Gateway</a></li>
-<li><a href="https://aigateway.envoyproxy.io/">Envoy AI Gateway</a></li>
-<li><a href="https://langfuse.com/docs">Langfuse: LLM Observability</a></li>
-<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-tools-14">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9824,7 +9834,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:19:18 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

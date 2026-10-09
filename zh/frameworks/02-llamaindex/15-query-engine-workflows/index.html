@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：LlamaIndex 的查询引擎与 Workflows 编排","description":"分析 LlamaIndex 查询路由、Workflows 的 Event 与共享 Context、并发汇合和崩溃恢复，明确检索与编排的责任边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/02-llamaindex/15-query-engine-workflows/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：LlamaIndex 的查询引擎与 Workflows 编排","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/02-llamaindex/15-query-engine-workflows/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十五章：LlamaIndex 的查询引擎与 Workflows 编排","description":"分析 LlamaIndex 查询路由、Workflows 的 Event 与共享 Context、并发汇合和崩溃恢复，明确检索与编排的责任边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/02-llamaindex/15-query-engine-workflows/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十五章：LlamaIndex 的查询引擎与 Workflows 编排","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/02-llamaindex/15-query-engine-workflows/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十五章：LlamaIndex 的查询引擎与 Workflows 编排","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/02-llamaindex/15-query-engine-workflows/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9156,14 +9181,29 @@
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">response</span> <span class="o">=</span> <span class="n">query_engine</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"公司差旅报销的额度上限是多少？"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>当系统里同时存在多个索引（比如员工手册的 <code>VectorStoreIndex</code> 和财务制度的 <code>PropertyGraphIndex</code>），<code>RouterQueryEngine</code> 通过 selector 选择一个或多个 Query Engine；多选还需要汇总结果。下面画的是单选路径：</p>
-<pre class="mermaid"><code>flowchart TB
-    Q["用户问题"] --&gt; R["RouterQueryEngine&lt;br/&gt;用 LLM 判断问题类型"]
-    R --&gt;|"语义相似度问题"| V["VectorStoreIndex 的 Query Engine"]
-    R --&gt;|"多跳关系问题"| P["PropertyGraphIndex 的 Query Engine"]
-    R --&gt;|"需要全文覆盖"| S["SummaryIndex 的 Query Engine"]
-    V --&gt; A["答案 + 来源节点&lt;br/&gt;引用正确性需验证"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["用户问题"] --&gt; R["RouterQueryEngine"]
+    R --&gt;|"语义相似"| V["向量查询"]
+    R --&gt;|"多跳关系"| P["图查询"]
+    R --&gt;|"全文覆盖"| S["摘要查询"]
+    V --&gt; A["答案 + 来源节点"]
     P --&gt; A
     S --&gt; A</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>语义相似度问题</li>
+<li>多跳关系问题</li>
+<li>需要全文覆盖</li>
+<li>VectorStoreIndex 的 Query Engine</li>
+<li>PropertyGraphIndex 的 Query Engine</li>
+<li>SummaryIndex 的 Query Engine</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>RouterQueryEngine 用 LLM 判断问题类型</li>
+<li>答案 + 来源节点 引用正确性需验证</li>
+</ul>
 <p>使用官方常见的 LLM/Pydantic selector 会增加模型路由开销，多选后的答案合成还可能增加调用。<code>description</code> 很重要，但路由质量也取决于模型、候选集合、问题分布和多选策略。来源节点不等于答案中每个断言都有准确引用，需要单独做引用评测。</p>
 <h2 id="152-workflows">15.2 Workflows：事件驱动的编排模型<a class="headerlink" href="#152-workflows" title="Permanent link">&para;</a></h2>
 <p>当问题不再是「查一次索引就能回答」，而是「需要多步骤、可能包含反思和重试」时，LlamaIndex 用 <strong>Workflows</strong> 承接这部分复杂度。这里主要涉及两个抽象：</p>
@@ -9239,13 +9279,16 @@
 <li><strong>把 LlamaIndex 当「数据工具」</strong>：暴露 <code>query_engine.query()</code> / <code>aquery()</code>，把顶层编排交给外部 Agent 框架。适合数据层可独立封装、外部已有编排或审批系统的项目，外部编排本身不必很轻。</li>
 <li><strong>把 LlamaIndex Workflows 当「运行时」</strong>：整个多步骤流程（检索 → 反思 → 重试 → 生成）都用 Workflows 编排，外部框架只在入口处调用一次 <code>workflow.run()</code>。适合「数据和编排都很重，且希望减少跨框架状态同步」的项目。</li>
 </ol>
-<pre class="mermaid"><code>flowchart LR
-    subgraph A["把 LlamaIndex 当工具"]
-        A1["外部 Agent / 工作流"] --&gt;|"调用一次"| A2["LlamaIndex Query Engine"]
-    end
-    subgraph B["把 LlamaIndex Workflows 当运行时"]
-        B1["外部系统"] --&gt;|"触发一次"| B2["Workflows 内部多步骤循环"]
-    end</code></pre>
+<p><strong>把 LlamaIndex 当工具</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        A1["外部 Agent / 工&lt;br/&gt;作流"] --&gt;|"调用一次"| A2["LlamaIndex Query&lt;br/&gt;Engine"]
+</code></pre>
+<p><strong>把 LlamaIndex Workflows 当运行时</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        B1["外部系统"] --&gt;|"触发一次"| B2["Workflows 内部多&lt;br/&gt;步骤循环"]
+</code></pre>
 <p>选择的关键在于中间状态由谁持有：如果多步骤的中间状态（检索结果、反思意见、重试次数）需要和外部 Agent 的记忆、审批流程共享，适合选方案一，把控制权交给外部框架；如果这些中间状态只在数据加工内部有意义，外部只关心最终答案，适合选方案二，以减少跨框架序列化成本。这也对应 <a href="../../06-selection-portability/">框架选型与可移植架构</a> 中的「状态归属先于工具选择」。</p>
 <h2 id="155">15.5 常见错误<a class="headerlink" href="#155" title="Permanent link">&para;</a></h2>
 <h3 id="1551-routerqueryengine">15.5.1 用一句模糊描述配置 <code>RouterQueryEngine</code><a class="headerlink" href="#1551-routerqueryengine" title="Permanent link">&para;</a></h3>
@@ -9269,16 +9312,8 @@
 </ol>
 <p>LlamaIndex 的编排层延续了它以数据为中心的设计：Query Engine 负责单次查询如何组织答案，Workflows 负责多步骤流程如何串联；两者都不要求开发者预先画出完整状态图，但流程复杂后需要额外维护隐性的事件依赖关系。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/deploying/query_engine/">LlamaIndex: Query Engine 概念</a></li>
-<li><a href="https://developers.llamaindex.ai/python/framework/module_guides/querying/router/">LlamaIndex: Routers 与 selector</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/">LlamaIndex: Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/managing_state/">LlamaIndex: Workflows 共享状态</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/durable_workflows/">LlamaIndex: Durable Workflows</a></li>
-<li><a href="https://developers.llamaindex.ai/python/llamaagents/workflows/deployment/">LlamaIndex: WorkflowServer 部署</a></li>
-<li><a href="https://github.com/run-llama/llama_index/blob/main/llama-index-core/llama_index/core/response_synthesizers/base.py">LlamaIndex: BaseSynthesizer 的 query / nodes 接口</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph 官方文档</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-frameworks-15">集中参考资料章节</a>。</p>
 
 
 
@@ -9301,7 +9336,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

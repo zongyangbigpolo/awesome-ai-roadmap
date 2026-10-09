@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: LangChain's Version Evolution","description":"Explain LangChain's package split, Runnable, LangGraph, and v1 agent architecture, with compatibility checks for Python, Pydantic, tools, and state migration.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/11-version-evolution/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: LangChain's Version Evolution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/11-version-evolution/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: LangChain's Version Evolution","description":"Explain LangChain's package split, Runnable, LangGraph, and v1 agent architecture, with compatibility checks for Python, Pydantic, tools, and state migration.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/11-version-evolution/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: LangChain's Version Evolution","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/11-version-evolution/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 11: LangChain's Version Evolution","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/03-ecosystem/11-version-evolution/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9407,14 +9432,22 @@
 <h2 id="111-why-keep-changing-the-architecture"><span id="111" class="legacy-heading-anchor" aria-hidden="true"></span>11.1 Why Keep Changing the Architecture?<a class="headerlink" href="#111-why-keep-changing-the-architecture" title="Permanent link">&para;</a></h2>
 <p><strong>Early LangChain placed models, vector stores, tools, retrievers, and many prebuilt chains in closely related packages.</strong> This made it convenient to test ideas quickly.</p>
 <p><strong>But problems accumulated at several layers</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Layer 1: Dependencies&lt;br/&gt;One third-party SDK update&lt;br/&gt;could affect the entire dependency tree"]
-    B["Layer 2: Inconsistent APIs&lt;br/&gt;Chains differed in invocation and composition&lt;br/&gt;Developers had to learn more and more specialized APIs"]
-    C["Layer 3: Limited execution control&lt;br/&gt;Complex agent loops were hidden inside executors&lt;br/&gt;Branching, approval, and recovery were hard to insert"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Layer 1:&lt;br/&gt;Dependencies"]
+    B["Layer 2:&lt;br/&gt;Inconsistent&lt;br/&gt;APIs"]
+    C["Layer 3:&lt;br/&gt;Limited&lt;br/&gt;execution&lt;br/&gt;control"]
     A --&gt; B --&gt; C
-    C --&gt; D["More and more features&lt;br/&gt;Less clarity about core responsibilities"]
+    C --&gt; D["More and more&lt;br/&gt;features"]
 
     style D fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Layer 1: Dependencies One third-party SDK update could affect the entire dependency tree</li>
+<li>Layer 2: Inconsistent APIs Chains differed in invocation and composition Developers had to learn more and more specialized APIs</li>
+<li>Layer 3: Limited execution control Complex agent loops were hidden inside executors Branching, approval, and recovery were hard to insert</li>
+<li>More and more features Less clarity about core responsibilities</li>
+</ul>
 <blockquote>
 <p><strong>Major-version changes are not simply about adding features; they redefine boundaries</strong>: which protocols should stay stable, which integrations should evolve independently, and which workflows belong in a lower-level runtime.</p>
 </blockquote>
@@ -9501,13 +9534,20 @@
 <p><strong>LangGraph does not replace LangChain outright.</strong> LangChain provides high-level development interfaces such as models, tools, middleware, and <code>create_agent</code>; LangGraph supplies the underlying state and execution capabilities.</p>
 <h2 id="115-milestone-four-v1-refocuses-on-agents"><span id="115-v1-agent" class="legacy-heading-anchor" aria-hidden="true"></span>11.5 Milestone Four: v1 Refocuses on Agents<a class="headerlink" href="#115-milestone-four-v1-refocuses-on-agents" title="Permanent link">&para;</a></h2>
 <p><strong>Start with the entry points developers use most often</strong>:</p>
-<pre class="mermaid"><code>flowchart TB
-    A["① High-level entry point converges on create_agent&lt;br/&gt;Supply a model, tools, and a system prompt&lt;br/&gt;LangGraph runs the agent loop underneath&lt;br/&gt;Persistence, streaming, and human intervention remain available"]
-    A --&gt; B["② middleware becomes the main extension mechanism&lt;br/&gt;Dynamic prompts, model selection, tool filtering&lt;br/&gt;Conversation summarization, retries, human approval&lt;br/&gt;Extend key execution stages instead of copying the whole loop"]
-    B --&gt; C["③ The main namespace is streamlined&lt;br/&gt;Legacy Chain, Retriever, Indexing, and Hub functionality&lt;br/&gt;Moves primarily to langchain-classic"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["① create_agent"]
+    A --&gt; B["② middleware"]
+    B --&gt; C["③ The main&lt;br/&gt;namespace is&lt;br/&gt;streamlined"]
 
     style A fill:#e8f0fe
     style C fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① High-level entry point converges on create_agent Supply a model, tools, and a system prompt LangGraph runs the agent loop underneath Persistence, streaming, and human intervention remain available</li>
+<li>② middleware becomes the main extension mechanism Dynamic prompts, model selection, tool filtering Conversation summarization, retries, human approval Extend key execution stages instead of copying the whole loop</li>
+<li>③ The main namespace is streamlined Legacy Chain, Retriever, Indexing, and Hub functionality Moves primarily to langchain-classic</li>
+</ul>
 <blockquote>
 <p><strong>LangChain retains the easy-to-use interface; LangGraph handles complex execution.</strong></p>
 </blockquote>
@@ -9526,15 +9566,23 @@
 </blockquote>
 <h2 id="117-what-should-you-check-when-upgrading"><span id="117" class="legacy-heading-anchor" aria-hidden="true"></span>11.7 What Should You Check When Upgrading?<a class="headerlink" href="#117-what-should-you-check-when-upgrading" title="Permanent link">&para;</a></h2>
 <p><strong>A major-version upgrade takes more than one dependency update.</strong></p>
-<pre class="mermaid"><code>flowchart TB
-    S1["① Before making changes&lt;br/&gt;Lock current dependencies and a reproducible environment&lt;br/&gt;Read the target version's migration guide&lt;br/&gt;Otherwise simultaneous package changes obscure the source of failures"]
-    S2["② Check compatibility along the new layers&lt;br/&gt;langchain, LangGraph, and model integrations have separate release cadences&lt;br/&gt;Confirm version combinations before replacing deprecated imports and internal APIs&lt;br/&gt;Change and run in small steps"]
-    S3["③ Starting successfully only proves imports are resolved&lt;br/&gt;Tool calling, structured output, streaming responses, and persistence&lt;br/&gt;Each still needs regression testing"]
-    S4["④ Paths with side effects&lt;br/&gt;Verify idempotency for payments and messages in an isolated environment&lt;br/&gt;Then roll out to a small share of traffic"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S1["① Before making&lt;br/&gt;changes"]
+    S2["② Check&lt;br/&gt;compatibility"]
+    S3["③ Regression&lt;br/&gt;tests"]
+    S4["④ Paths with&lt;br/&gt;side effects"]
     S1 --&gt; S2 --&gt; S3 --&gt; S4
 
     style S3 fill:#fff3cd
     style S4 fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Before making changes Lock current dependencies and a reproducible environment Read the target version's migration guide Otherwise simultaneous package changes obscure the source of failures</li>
+<li>② Check compatibility along the new layers langchain, LangGraph, and model integrations have separate release cadences Confirm version combinations before replacing deprecated imports and internal APIs Change and run in small steps</li>
+<li>③ Starting successfully only proves imports are resolved Tool calling, structured output, streaming responses, and persistence Each still needs regression testing</li>
+<li>④ Paths with side effects Verify idempotency for payments and messages in an isolated environment Then roll out to a small share of traffic</li>
+</ul>
 <h3 id="1171-an-easily-overlooked-stability-boundary"><span id="1171" class="legacy-heading-anchor" aria-hidden="true"></span>11.7.1 An Easily Overlooked Stability Boundary<a class="headerlink" href="#1171-an-easily-overlooked-stability-boundary" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>Packages do not all evolve at the same pace. The main package's stability commitments do not automatically cover community integrations, partner packages, or experimental APIs.</strong></p>
@@ -9584,14 +9632,23 @@
 <p>Upgrading a resumable system also requires testing old checkpoints. Renaming nodes, removing a node that is pending execution, or changing the meaning of state fields can prevent paused threads from continuing. Keep compatible routes or drain old tasks before migrating state incrementally. Rolling back a dependency lockfile does not roll back persisted state.</p>
 <h2 id="118-what-direction-does-this-evolution-take"><span id="118" class="legacy-heading-anchor" aria-hidden="true"></span>11.8 What Direction Does This Evolution Take?<a class="headerlink" href="#118-what-direction-does-this-evolution-take" title="Permanent link">&para;</a></h2>
 <p>Taken together, these architectural changes form a continuous path:</p>
-<pre class="mermaid"><code>flowchart LR
-    A["langchain-core&lt;br/&gt;Stable foundational protocols"] --&gt; B["Separate integration packages&lt;br/&gt;Decouple the release cadences&lt;br/&gt;of the core and external SDKs"]
-    B --&gt; C["Runnable + LCEL&lt;br/&gt;Unify composition of deterministic workflows"]
-    C --&gt; D["LangGraph&lt;br/&gt;Manage complex state and execution"]
-    D --&gt; E["create_agent + middleware&lt;br/&gt;Provide an easier agent entry point"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["langchain-core"] --&gt; B["Separate&lt;br/&gt;integration&lt;br/&gt;packages"]
+    B --&gt; C["Runnable + LCEL"]
+    C --&gt; D["LangGraph"]
+    D --&gt; E["create_agent +&lt;br/&gt;middleware"]
 
     style A fill:#e8f0fe
     style E fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>langchain-core Stable foundational protocols</li>
+<li>Separate integration packages Decouple the release cadences of the core and external SDKs</li>
+<li>Runnable + LCEL Unify composition of deterministic workflows</li>
+<li>LangGraph Manage complex state and execution</li>
+<li>create_agent + middleware Provide an easier agent entry point</li>
+</ul>
 <blockquote>
 <p><strong>This direction moves LangChain from wrapping many LLM features toward a clearly layered approach to agent engineering.</strong></p>
 <p><strong>The cost</strong> is handling dependencies and import paths when upgrading existing projects. <strong>The benefits</strong> are more stable core interfaces and better control of complex workflows, making them better suited to production.</p>
@@ -9632,19 +9689,8 @@
 <p>The trajectory is to stabilize protocols and separate integrations, use Runnable to unify deterministic workflows and LangGraph to handle complex execution, then consolidate high-level agent development around <code>create_agent</code> and middleware.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 migration guide</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/overview">LangChain official documentation</a></li>
-<li><a href="https://docs.langchain.com/oss/python/releases/langchain-v1">LangChain v1 release notes</a></li>
-<li><a href="https://blog.langchain.com/announcing-langchain-v0-3/">LangChain v0.3 official release notes: Pydantic 2 migration</a></li>
-<li><a href="https://blog.langchain.com/">LangChain official blog</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph official documentation</a></li>
-<li><a href="https://docs.pydantic.dev/latest/migration/">Pydantic migration guide</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/structured-output">LangChain Structured output: capabilities and minimum versions</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance">LangGraph Fault tolerance</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/graph-api#graph-migrations">LangGraph Graph API: graph migrations</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/event-streaming">LangChain Event streaming</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-11">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9667,7 +9713,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

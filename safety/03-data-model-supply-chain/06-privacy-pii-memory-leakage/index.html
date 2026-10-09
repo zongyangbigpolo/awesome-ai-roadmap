@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Privacy, PII, and Memory Leakage","description":"Distinguish training data memorization, membership inference, and application memory leakage, and explain the limits of differential privacy, retention, deletion, and cross-border processing.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Privacy, PII, and Memory Leakage","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Privacy, PII, and Memory Leakage","description":"Distinguish training data memorization, membership inference, and application memory leakage, and explain the limits of differential privacy, retention, deletion, and cross-border processing.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Privacy, PII, and Memory Leakage","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Privacy, PII, and Memory Leakage","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/06-privacy-pii-memory-leakage/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9233,11 +9258,19 @@
 <h1 id="chapter-6-privacy-pii-and-memory-leakage"><span id="pii" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 6: Privacy, PII, and Memory Leakage<a class="headerlink" href="#chapter-6-privacy-pii-and-memory-leakage" title="Permanent link">&para;</a></h1>
 <h2 id="61-ai-systems-have-a-broader-privacy-attack-surface"><span id="61-ai" class="legacy-heading-anchor" aria-hidden="true"></span>6.1 AI Systems Have a Broader Privacy Attack Surface<a class="headerlink" href="#61-ai-systems-have-a-broader-privacy-attack-surface" title="Permanent link">&para;</a></h2>
 <p>Privacy risks in traditional applications also include logs, caches, and third-party processing. In LLM systems, distinguish training data memorized in model weights from conversations, summaries, and long-term memories kept in application storage. The former may leak through model output; the latter often reflects failures in retrieval authorization, tenant isolation, or lifecycle governance. Memory leakage is not separate from access control.</p>
-<pre class="mermaid"><code>flowchart TB
-    P[AI privacy risks] --&gt; P1[Training data memorization&lt;br/&gt;6.2]
-    P --&gt; P2[PII handling during inference&lt;br/&gt;6.3]
-    P --&gt; P3[Memory mechanism leakage&lt;br/&gt;6.4]
-    P --&gt; P4[Data residency and cross-border compliance&lt;br/&gt;6.5]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    P["AI privacy&lt;br/&gt;risks"] --&gt; P1["Training data&lt;br/&gt;memorization"]
+    P --&gt; P2["PII handling&lt;br/&gt;during&lt;br/&gt;inference"]
+    P --&gt; P3["Memory&lt;br/&gt;mechanism&lt;br/&gt;leakage"]
+    P --&gt; P4["Residency /&lt;br/&gt;transfers"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Training data memorization 6.2</li>
+<li>PII handling during inference 6.3</li>
+<li>Memory mechanism leakage 6.4</li>
+<li>Data residency and cross-border compliance 6.5</li>
+</ul>
 <h2 id="62-training-data-memorization-and-extraction-attacks"><span id="62" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 Training Data Memorization and Extraction Attacks<a class="headerlink" href="#62-training-data-memorization-and-extraction-attacks" title="Permanent link">&para;</a></h2>
 <h3 id="621-why-models-memorize-training-data"><span id="621" class="legacy-heading-anchor" aria-hidden="true"></span>6.2.1 Why Models Memorize Training Data<a class="headerlink" href="#621-why-models-memorize-training-data" title="Permanent link">&para;</a></h3>
 <p>Training optimization does not guarantee that a model learns only generalizable patterns; it may also memorize specific sequences. Research has found that model size, repeated exposure, and prompt-prefix length affect extractability. It is not enough to claim that a model has far more parameters than data, or that all rare examples are easier to memorize. Deduplication generally reduces the risk from repeated examples, but that does not make sensitive material safe simply because it appears only once.</p>
@@ -9292,10 +9325,16 @@
 </ul>
 <h2 id="64-cross-session-and-cross-user-leakage-through-memory"><span id="64" class="legacy-heading-anchor" aria-hidden="true"></span>6.4 Cross-Session and Cross-User Leakage Through Memory<a class="headerlink" href="#64-cross-session-and-cross-user-leakage-through-memory" title="Permanent link">&para;</a></h2>
 <p>Agent systems commonly introduce long-term memory (see <a href="../../../agent/03-memory-context/07-agent-memory/">Agent Memory</a>), creating privacy risks absent from traditional stateless question-answering systems:</p>
-<pre class="mermaid"><code>flowchart LR
-    U1[User A's conversation] --&gt; W[Write to shared memory storage]
-    W --&gt; R[Retrieval without user-level filtering]
-    R --&gt; U2[User B's conversation receives A's information]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U1["User A's&lt;br/&gt;conversation"] --&gt; W["Write to shared&lt;br/&gt;memory storage"]
+    W --&gt; R["Unscoped&lt;br/&gt;retrieval"]
+    R --&gt; U2["Leak to user B"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Retrieval without user-level filtering</li>
+<li>User B's conversation receives A's information</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9377,16 +9416,8 @@
 <li>Data residency and cross-border compliance begin with data classification, from which architectural constraints follow. Deletion must cover logs, caches, vector indexes, and memory stores—not just inference requests.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2012.07805">Extracting Training Data from Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2202.07646">Quantifying Memorization Across Neural Language Models</a></li>
-<li><a href="https://arxiv.org/abs/1610.05820">Membership Inference Attacks against Machine Learning Models</a></li>
-<li><a href="https://arxiv.org/abs/1607.00133">Deep Learning with Differential Privacy (DP-SGD)</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/">OWASP LLM02:2025 Sensitive Information Disclosure</a></li>
-<li><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1: Generative AI Profile — Privacy risks</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: Data controls in the API platform</a></li>
-<li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng">GDPR original text: Articles 5, 6, 17, and Chapter V</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9409,7 +9440,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

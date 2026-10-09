@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：语义被切断怎么办","description":"比较句子窗口、父子块、命题化、Contextual Retrieval 与 Late Chunking 如何补充片段语境，以及其引用、权限和更新成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/05-semantic-truncation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：语义被切断怎么办","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/05-semantic-truncation/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第五章：语义被切断怎么办","description":"比较句子窗口、父子块、命题化、Contextual Retrieval 与 Late Chunking 如何补充片段语境，以及其引用、权限和更新成本。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/05-semantic-truncation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第五章：语义被切断怎么办","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/05-semantic-truncation/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第五章：语义被切断怎么办","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/02-ingestion-indexing/05-semantic-truncation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9342,19 +9367,11 @@
 <h2 id="51">5.1 问题的两个方向<a class="headerlink" href="#51" title="Permanent link">&para;</a></h2>
 <p>上一章讨论的是粒度权衡。这一章关注它的直接后果：<strong>一段话被切开后，片段丢失了理解它所必需的上下文</strong>。</p>
 <p>常见解法可以分成两个方向：</p>
-<pre class="mermaid"><code>flowchart TB
-    P[语义被切断] --&gt; D1[方向一: 切的时候别切错]
-    P --&gt; D2[方向二: 切完了把上下文补回来]
-
-    D1 --&gt; M1[重叠切分]
-    D1 --&gt; M2[语义边界切分]
-    D1 --&gt; M3[结构化切分]
-
-    D2 --&gt; M4[句子窗口检索]
-    D2 --&gt; M5[父子切分]
-    D2 --&gt; M6[命题化改写]
-    D2 --&gt; M7[上下文增强 Contextual Retrieval]
-    D2 --&gt; M8[Late Chunking]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart LR
+    P[语义被切断] --&gt; D1[避免有害边界]
+    P --&gt; D2[补足缺失语境]</code></pre>
+<p>边界类方法包括重叠切分、语义边界切分和结构化切分。语境类方法包括句子窗口检索、父子切分、命题化改写、上下文增强（Contextual Retrieval）和 Late Chunking。两组方法按保护的内容分类，并非要求语境恢复都在切分后发生：Late Chunking 先编码较大的上下文，再按块边界池化。</p>
 <ul>
 <li><strong>方向一是预防</strong>：在切分时尽量不破坏语义单元；</li>
 <li><strong>方向二是补足语境</strong>：句子窗口和父子切分在命中后扩展阅读材料；命题化、上下文增强和 Late Chunking 则在建库时改善片段表示。小片段是否检索更准仍需评测。</li>
@@ -9373,7 +9390,8 @@
 <h2 id="53">5.3 方向二：切完了把上下文补回来<a class="headerlink" href="#53" title="Permanent link">&para;</a></h2>
 <h3 id="531">5.3.1 句子窗口检索<a class="headerlink" href="#531" title="Permanent link">&para;</a></h3>
 <p>做法是用<strong>小单元</strong>（句子或短片段）建索引参与检索，命中后返回它<strong>前后若干个单元</strong>一起送给模型。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     Q[Query] --&gt; IDX[小片段索引]
     IDX --&gt; HIT[命中片段 N]
     HIT --&gt; EXP[取 N-2 到 N+2]
@@ -9386,7 +9404,7 @@
 <li><strong>子片段</strong>（小）：参与向量化和检索；</li>
 <li><strong>父片段</strong>（大）：命中子片段后实际返回的单元，可以是整篇原文、一个章节，也可以是按长度或递归分隔生成的大块。</li>
 </ul>
-<p>原文不必已有标题层级。例如，<a href="https://github.com/langchain-ai/langchain/blob/langchain%3D%3D0.3.27/libs/langchain/langchain/retrievers/parent_document_retriever.py">LangChain 的 <code>ParentDocumentRetriever</code></a> 既支持直接以原文档为父片段，也支持先切出较大的父块。</p>
+<p>原文不必已有标题层级。例如，LangChain 的 <code>ParentDocumentRetriever</code><sup><a href="../../../book/references/#ref-366">【366】</a></sup> 既支持直接以原文档为父片段，也支持先切出较大的父块。</p>
 <table>
 <thead>
 <tr>
@@ -9436,7 +9454,8 @@
 <h3 id="534-contextual-retrieval">5.3.4 上下文增强（Contextual Retrieval）<a class="headerlink" href="#534-contextual-retrieval" title="Permanent link">&para;</a></h3>
 <p>这是近年常用的方案之一。</p>
 <p><strong>思路</strong>：不改写原文，而是在每个 chunk 前<strong>拼接一段由 LLM 生成的、说明该片段在整篇文档中位置和背景的短说明</strong>，然后再做向量化和关键词索引。</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     DOC[整篇文档] --&gt; LLM[LLM 生成上下文说明]
     CH[原始 chunk] --&gt; LLM
     LLM --&gt; NEW[上下文说明 + 原始 chunk]
@@ -9482,18 +9501,20 @@
 </blockquote>
 <h3 id="535-late-chunking">5.3.5 Late Chunking<a class="headerlink" href="#535-late-chunking" title="Permanent link">&para;</a></h3>
 <p><strong>思路更进一步</strong>：先编码能装进窗口的文档文本，得到 Token 级表示，再按 chunk 边界做池化。论文采用的双向编码器让 Token 表示能够结合窗口内前后文；如果使用因果注意力，每个位置只能读取此前内容，不能照搬“每个 Token 都看到全文”的解释。块边界仍需确定，只是池化放到编码之后。</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph TRAD[传统方式]
-        D1[文档] --&gt; C1[先切分]
-        C1 --&gt; E1[各片段独立编码]
-        E1 --&gt; V1[片段向量&lt;br/&gt;看不到全文]
-    end
-
-    subgraph LATE[Late Chunking]
-        D2[文档] --&gt; E2[整篇长上下文编码]
-        E2 --&gt; C2[按边界池化 Token 向量]
-        C2 --&gt; V2[片段向量&lt;br/&gt;融合编码窗口内语境]
-    end</code></pre>
+<p><strong>传统方式</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1[文档] --&gt; C1[先切分]
+    C1 --&gt; E1[各片段独立编码]
+    E1 --&gt; V1[片段向量&lt;br/&gt;看不到全文]
+</code></pre>
+<p><strong>Late Chunking</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D2[文档] --&gt; E2[整篇长上下文编码]
+    E2 --&gt; C2[按边界池化 Token 向量]
+    C2 --&gt; V2[片段向量&lt;br/&gt;融合编码窗口内语境]
+</code></pre>
 <p>它的巧妙之处在于：<strong>上下文信息是在编码阶段自然注入的，不需要额外调用 LLM 生成说明。</strong></p>
 <p><strong>局限</strong>：</p>
 <ul>
@@ -9579,14 +9600,8 @@
 <li><strong>实施顺序</strong>：结构化切分 → 父子切分 → 上下文增强 → 更前沿方案。</li>
 </ol>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/engineering/contextual-retrieval">Anthropic: Introducing Contextual Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2409.04701">Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models</a></li>
-<li><a href="https://jina.ai/news/late-chunking-in-long-context-embedding-models/">Jina AI：Late Chunking 的编码后池化与边界说明</a></li>
-<li><a href="https://arxiv.org/abs/2312.06648">Dense X Retrieval: What Retrieval Granularity Should We Use?</a></li>
-<li><a href="https://arxiv.org/abs/2401.18059">RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-05">集中参考资料章节</a>。</p>
 
 
 
@@ -9609,7 +9624,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

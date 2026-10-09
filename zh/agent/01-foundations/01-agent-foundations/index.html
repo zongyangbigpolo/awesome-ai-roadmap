@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：从大模型到 AI Agent","description":"从大模型的知识、状态和行动限制出发定义 AI Agent，解释模型、工具、记忆与控制循环如何组成可执行系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：从大模型到 AI Agent","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-09-20","dateModified":"2026-09-24"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：从大模型到 AI Agent","description":"从大模型的知识、状态和行动限制出发定义 AI Agent，解释模型、工具、记忆与控制循环如何组成可执行系统。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：从大模型到 AI Agent","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：从大模型到 AI Agent","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/agent/01-foundations/01-agent-foundations/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9385,13 +9410,25 @@ S_{t+1}=\mathrm{Update}(S_t,A_t,O_{t+1})
 <p>Anthropic 在 2024 年 11 月提出了 MCP。2025 年 12 月，Anthropic 将 MCP 捐赠给 Linux 基金会旗下的 Agentic AI Foundation（AAIF）；MCP 由社区维护者负责技术治理，AAIF 提供厂商中立的组织与基础设施支持。</p>
 <p><strong>MCP = Model Context Protocol（模型上下文协议）</strong></p>
 <p>MCP 为 AI 应用连接外部工具和数据源提供了标准接口，可以将它类比为 AI 工具生态中的“USB-C 接口”。</p>
-<pre class="mermaid"><code>flowchart LR
-    A[AI 应用或 Agent] --&gt; B[MCP Client]
-    B --&gt; C[MCP Server]
-    C --&gt; D[工具]
-    C --&gt; E[数据库]
-    C --&gt; F[文件与资源]
-    C --&gt; G[外部 API]</code></pre>
+<p>连接到服务端。</p>
+<pre class="mermaid"><code>flowchart TB
+    A[AI 应用或 Agent]
+    B[MCP Client]
+    C[MCP Server]
+    A --&gt; B
+    B --&gt; C</code></pre>
+<p>该服务端提供的能力。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    C["MCP Server"]
+    D["工具"]
+    E["数据库"]
+    F["文件与资源"]
+    G["外部 API"]
+    C --&gt; D
+    C --&gt; E
+    C --&gt; F
+    C --&gt; G</code></pre>
 <p>MCP 主要包含三个角色：</p>
 <ul>
 <li><strong>Host</strong>：运行模型或 Agent 的 AI 应用；</li>
@@ -9420,7 +9457,8 @@ N \times M
 <blockquote>
 <p>Agent Card 更像一份“能力名片”，而“正在做什么”和执行进度主要由 Task 等对象表达。</p>
 </blockquote>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"width": 75, "height": 45, "actorMargin": 10, "diagramMarginX": 5, "messageMargin": 18, "wrap": true, "wrapPadding": 5}}}%%
+sequenceDiagram
     participant A as 调度 Agent
     participant B as 专业 Agent
 
@@ -9428,7 +9466,7 @@ N \times M
     B--&gt;&gt;A: 返回能力与协作方式
     A-&gt;&gt;B: 发送任务请求消息
     B--&gt;&gt;A: 返回 Task 及当前状态
-    B--&gt;&gt;A: 按所选交互方式返回后续状态与 Artifact</code></pre>
+    B--&gt;&gt;A: 按所选交互方式返回后续状&lt;br/&gt;态与 Artifact</code></pre>
 <p>图中展示的是需要持续跟踪的任务。A2A v1.0.1 发布规范中的消息发送也允许直接返回 <code>Message</code>，不是每次交互都必须创建 <code>Task</code>；具体消息字段和传输方式应按双方实际支持的 A2A 版本核对。</p>
 <h2 id="17-mcp-a2a">1.7 MCP 与 A2A 的关系<a class="headerlink" href="#17-mcp-a2a" title="Permanent link">&para;</a></h2>
 <table>
@@ -9472,29 +9510,19 @@ N \times M
 <p>需要统一工具与上下文接口时考虑 MCP；需要远程 Agent 的任务、消息和产物互操作时考虑 A2A。</p>
 </blockquote>
 <p>一个 MCP Tool 的背后也可以运行 Agent；A2A 服务也可以执行确定性工作流。二者都不自动解决任务分解、权限委派或分布式事务，多 Agent 系统也不必须同时采用这两个协议。</p>
-<pre class="mermaid"><code>flowchart TB
-    U[用户目标] --&gt; O[调度 Agent]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    U["用户目标"] --&gt; O["调度 Agent"]
 
-    O &lt;--&gt;|A2A| R[研究 Agent]
-    O &lt;--&gt;|A2A| C[编程 Agent]
-    O &lt;--&gt;|A2A| W[写作 Agent]
-
-    O --&gt;|MCP| T1[业务工具]
-    R --&gt;|MCP| T2[搜索与知识库]
-    C --&gt;|MCP| T3[代码执行器]
-    W --&gt;|MCP| T4[文档系统]</code></pre>
+    O &lt;--&gt;|A2A| R["研究 Agent"]
+    O &lt;--&gt;|A2A| C["编程 Agent"]
+    O &lt;--&gt;|A2A| W["写作 Agent"]
+</code></pre>
+<p>双向 A2A 连接将调度 Agent 与研究、编程、写作 Agent 连接起来。工具访问是另一层关系：通过 MCP，调度 Agent 使用业务工具，研究 Agent 使用搜索与知识库，编程 Agent 使用代码执行器，写作 Agent 使用文档系统。</p>
 <p>MCP 让每个 Agent 能够方便地“伸手拿工具”，A2A 则让多个 Agent 能够“相互沟通与分工”。二者共同构成多 Agent 系统走向标准化和互操作的重要基础。</p>
 <h2 id="_3">参考资料<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic: Introducing the Model Context Protocol</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/agents/">OpenAI Agents SDK: Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term memory</a></li>
-<li><a href="https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/">MCP joins the Agentic AI Foundation</a></li>
-<li><a href="https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents">Linux Foundation: Agent2Agent Protocol Project</a></li>
-<li><a href="https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto">A2A v1.0.1 发布规范：核心对象与消息发送</a></li>
-<li><a href="https://a2a-protocol.org/latest/topics/key-concepts/">A2A Protocol: Core Concepts</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-agent-01">集中参考资料章节</a>。</p>
 
 
 
@@ -9517,7 +9545,7 @@ N \times M
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月24日 09:43:25 CST">2026-09-24</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","description":"用可手算的订单快照讲解 Text-to-SQL，从未发货口径、SQLite 关联聚合，到可信权限、资源限制和独立结果验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：Text-to-SQL：从业务问题到可验证查询","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-20","dateModified":"2026-09-29"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","description":"用可手算的订单快照讲解 Text-to-SQL，从未发货口径、SQLite 关联聚合，到可信权限、资源限制和独立结果验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：Text-to-SQL：从业务问题到可验证查询","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9138,7 +9163,7 @@
 <h2 id="221">22.1 订单统计不是多找几段文档<a class="headerlink" href="#221" title="Permanent link">&para;</a></h2>
 <p>客服问“上周还有多少订单没完成”，如果系统只检索到几张订单，再让模型加总，遗漏的订单根本不会进入计算。问题不是模型算术差，而是输入没有覆盖统计范围。</p>
 <p><a href="../../02-ingestion-indexing/03-document-parsing/">第三章</a> §3.4 已经区分了定位表格与全表聚合；<a href="../../04-advanced/16-graphrag/">第十六章</a> §16.6 也提出，已有可靠关系表时可以直接查询，不必先抽成知识图谱。Text-to-SQL 接上这条路径：<strong>模型把问题翻译成 SQL，数据库计算，应用交付结果。</strong></p>
-<p>李博杰《深入理解 AI Agent》第五章的<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md">“生成 SQL 查询”</a>让模型生成查询，由应用执行和展示结果，而不是要求模型逐行搬运数据。配套 ERP 示例用 SQLite 员工、工资两表，单次模型调用生成查询，再与独立 Python 参考答案比较。</p>
+<p>李博杰《深入理解 AI Agent》第五章的“生成 SQL 查询”<sup><a href="../../../book/references/#ref-420">【420】</a></sup>让模型生成查询，由应用执行和展示结果，而不是要求模型逐行搬运数据。配套 ERP 示例用 SQLite 员工、工资两表，单次模型调用生成查询，再与独立 Python 参考答案比较。</p>
 <p>本章沿用这种分工，换成订单统计案例，不要求增加多轮 Agent。已有固定报表时，先让模型选择报表并填写经过校验的参数；只有用户确实需要新的组合查询，才开放 SQL 结构生成。</p>
 <h2 id="222">22.2 先请业务同事把“未完成”说清楚<a class="headerlink" href="#222" title="Permanent link">&para;</a></h2>
 <blockquote>
@@ -9422,8 +9447,8 @@
 </tr>
 </tbody>
 </table>
-<p>选出锚点表后，还要沿<strong>可信 Schema 图</strong>扩展：补入已批准关联路径需要的主外键列，以及路径实际经过的中间表。扩展必须保持在同一授权范围内，不能重新引入初始权限检查已排除的表或列。<a href="https://aclanthology.org/2026.findings-eacl.134/">SchemaGraphSQL</a>研究了面向大规模 Schema 的图搜索与路径发现，也把外键缺失或不一致时的可关联性发现单独处理。因此，推断出的边只能作为查询规划候选，不能当作权威数据库元数据。即使路径由已声明的外键组成，也要核对每段关系的业务含义与基数，尤其是多对多关联是否会在聚合前把数量重复展开。最短连通路径不一定就是正确路径。若仍存在多条合理路径，或锚点之间没有已声明关系，应在授权范围内扩大候选集合、查询经过维护的关系元数据，或请人澄清，不能凭字段名臆造关联。</p>
-<p>这一步要和 SQL 生成分开评测。测试集可记录可接受查询策略需要的表、列和关系路径，再衡量必要元素召回、候选集合大小，以及下游执行正确率和业务正确率。<a href="https://aclanthology.org/2026.findings-eacl.236/">上下文感知双向检索研究</a>也把 Schema Linking 作为独立检索问题，同时考察召回与误选。等价 SQL 不必匹配同一个参考字符串；如果数据模型允许多种正确策略，标签也要容纳它们。应分别按各个可接受策略计算召回率，报告覆盖最好的一种；完整覆盖是指保留至少一种有效策略的全部必要元素，不是要求覆盖所有备选策略的并集。安全测试仍应独立进行：Schema 选择能减少上下文和混淆，只有可信授权与受限执行层才能阻止访问被排除的数据。</p>
+<p>选出锚点表后，还要沿<strong>可信 Schema 图</strong>扩展：补入已批准关联路径需要的主外键列，以及路径实际经过的中间表。扩展必须保持在同一授权范围内，不能重新引入初始权限检查已排除的表或列。SchemaGraphSQL<sup><a href="../../../book/references/#ref-432">【432】</a></sup>研究了面向大规模 Schema 的图搜索与路径发现，也把外键缺失或不一致时的可关联性发现单独处理。因此，推断出的边只能作为查询规划候选，不能当作权威数据库元数据。即使路径由已声明的外键组成，也要核对每段关系的业务含义与基数，尤其是多对多关联是否会在聚合前把数量重复展开。最短连通路径不一定就是正确路径。若仍存在多条合理路径，或锚点之间没有已声明关系，应在授权范围内扩大候选集合、查询经过维护的关系元数据，或请人澄清，不能凭字段名臆造关联。</p>
+<p>这一步要和 SQL 生成分开评测。测试集可记录可接受查询策略需要的表、列和关系路径，再衡量必要元素召回、候选集合大小，以及下游执行正确率和业务正确率。上下文感知双向检索研究<sup><a href="../../../book/references/#ref-433">【433】</a></sup>也把 Schema Linking 作为独立检索问题，同时考察召回与误选。等价 SQL 不必匹配同一个参考字符串；如果数据模型允许多种正确策略，标签也要容纳它们。应分别按各个可接受策略计算召回率，报告覆盖最好的一种；完整覆盖是指保留至少一种有效策略的全部必要元素，不是要求覆盖所有备选策略的并集。安全测试仍应独立进行：Schema 选择能减少上下文和混淆，只有可信授权与受限执行层才能阻止访问被排除的数据。</p>
 <h3 id="2242">22.4.2 由可信服务端绑定日期和权限值<a class="headerlink" href="#2242" title="Permanent link">&para;</a></h3>
 <p>模型输出含命名占位符的 SQL。可信服务端负责把已确认的日期转为 UTC，并根据当前登录身份绑定权限值：</p>
 <table>
@@ -9459,15 +9484,19 @@
 </table>
 <p>“9 月 1 日至 7 日”转成 <code>[开始, 结束)</code>，避免拼一个会漏掉小数秒的 <code>23:59:59</code>。这里由服务端处理上海时区，SQL 不依赖 SQLite <code>now</code> 或机器的本地时区；换到有夏令时的地区，也应按当地日历计算两端，不能一律加固定小时数。</p>
 <p>权限客户较多时，用受控关系或服务端构造的绑定参数集合，不拼接模型返回的客户列表。用户可以申请缩小范围，但不能通过一句“查所有租户”扩大服务端授予的范围。</p>
-<pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TD
     A[业务问题与口径] --&gt; B[模型生成 SQL 草案]
     B --&gt; C[可信服务校验与绑定]
-    I[登录身份与授权范围] --&gt; C
-    C --&gt; D[受限数据库执行]
-    D --&gt; E[应用直接展示数据与范围]
-    F[独立参考答案] --&gt; G[离线验收]
-    D --&gt; G</code></pre>
-<p><a href="../../../tools/01-function-calling/03-tool-schema-design/">Tools 第三章</a> §3.2.3 提醒过：“只支持 SELECT”的描述不能代替只读凭据、对象权限和查询限制。上游 <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py#L31-L87"><code>agent.py</code></a>也在提示词里限定 SELECT，但 <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py#L119-L165"><code>demo.py</code></a>直接调用 <code>cur.execute(sql)</code>；不能把这种执行方式当作已落实数据库只读权限。</p>
+    I[身份与授权范围] --&gt; C
+    C --&gt; D[受限执行]
+    D --&gt; E[展示数据与范围]</code></pre>
+<p>可信服务绑定登录身份与授权范围，权限并非由模型提供。应用直接展示执行结果与范围。离线验收则单独将执行结果与独立参考答案比较：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D[执行结果] --&gt; G[离线验收]
+    F[独立参考答案] --&gt; G</code></pre>
+<p><a href="../../../tools/01-function-calling/03-tool-schema-design/">Tools 第三章</a> §3.2.3 提醒过：“只支持 SELECT”的描述不能代替只读凭据、对象权限和查询限制。上游 <code>agent.py</code><sup><a href="../../../book/references/#ref-434">【434】</a></sup>也在提示词里限定 SELECT，但 <code>demo.py</code><sup><a href="../../../book/references/#ref-435">【435】</a></sup>直接调用 <code>cur.execute(sql)</code>；不能把这种执行方式当作已落实数据库只读权限。</p>
 <h2 id="225">22.5 一条完整查询，先按订单汇总<a class="headerlink" href="#225" title="Permanent link">&para;</a></h2>
 <p>下面是确认业务口径后的查询草案。它先把明细折回“一单一行”，再统计客户。过滤条件用于说明查询语义，<strong>即使条件遗漏，也必须由执行层阻止越权</strong>，不能靠模型总能写对它们。</p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">WITH</span><span class="w"> </span><span class="n">per_order</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
@@ -9526,9 +9555,9 @@
 </table>
 <p>小林第一次看草案时发现，直接关联后 <code>COUNT(*)</code> 会把 O101 算成两单；<code>SUM(o.total_amount_cents)</code> 也会把它的 10000 分算两遍。</p>
 <p><code>SUM(DISTINCT 金额)</code> 不是通用补救办法：如果把 O102 与 O106 跨客户放进同一组汇总合同额，两单恰好都是 4000 分，去重金额会把 8000 分变成 4000 分。两单属于不同客户，因此上面的按客户分组查询不会在它们之间发生这种去重；聚合中的 <code>DISTINCT</code> 只在各组内部去重。要为本题覆盖这一回归场景，应另加入同一客户两笔不同订单未发货金额相等的用例。应该先确认粒度，而不是看数字偏大就加 <code>DISTINCT</code>。</p>
-<p>本次只显示有欠发的客户，所以无欠发客户没有结果行。若要列出所有授权客户，包括欠发为零的客户，应从授权客户集合出发左连接聚合结果，再按业务定义补零。<a href="https://www.sqlite.org/lang_aggfunc.html">SQLite 的 <code>SUM</code></a> 在没有非空输入时返回 <code>NULL</code>；空结果、未知数据和零不能混成一种含义。</p>
+<p>本次只显示有欠发的客户，所以无欠发客户没有结果行。若要列出所有授权客户，包括欠发为零的客户，应从授权客户集合出发左连接聚合结果，再按业务定义补零。SQLite 的 <code>SUM</code><sup><a href="../../../book/references/#ref-424">【424】</a></sup> 在没有非空输入时返回 <code>NULL</code>；空结果、未知数据和零不能混成一种含义。</p>
 <h2 id="226">22.6 放行之前，执行服务还要拦住什么<a class="headerlink" href="#226" title="Permanent link">&para;</a></h2>
-<p>只读不等于可以随便读，SELECT 也不天然没有副作用。SQLite 可注册应用自定义函数；函数若能写文件或访问网络，出现在 SELECT 中仍可能产生副作用，参见<a href="https://www.sqlite.org/appfunc.html#security_implications">官方函数安全说明</a>。</p>
+<p>只读不等于可以随便读，SELECT 也不天然没有副作用。SQLite 可注册应用自定义函数；函数若能写文件或访问网络，出现在 SELECT 中仍可能产生副作用，参见官方函数安全说明<sup><a href="../../../book/references/#ref-428">【428】</a></sup>。</p>
 <table>
 <thead>
 <tr>
@@ -9566,13 +9595,13 @@
 </tbody>
 </table>
 <p>参数化只隔离<strong>绑定值</strong>与 SQL 语法；表名、排序表达式和整个查询结构仍需验证。不要把未经校验的查询塞进 <code>executescript</code>，也不要失败后改用高权限连接重试。</p>
-<p>SQLite 没有服务型数据库那样的内置用户角色和行级授权。本案例若用于开放查询，可以由可信服务先生成只含本次授权客户及必要列的一致快照，在隔离进程中用 <a href="https://www.sqlite.org/uri.html"><code>mode=ro</code></a> 打开，配合文件权限、禁止附加库、函数限制和 <a href="https://www.sqlite.org/c3ref/set_authorizer.html">authorizer</a> 拒绝未批准操作。authorizer 检查操作与对象，不会自动按租户逐行过滤；只读打开共享多租户文件也不构成租户隔离。</p>
+<p>SQLite 没有服务型数据库那样的内置用户角色和行级授权。本案例若用于开放查询，可以由可信服务先生成只含本次授权客户及必要列的一致快照，在隔离进程中用 <code>mode=ro</code><sup><a href="../../../book/references/#ref-425">【425】</a></sup> 打开，配合文件权限、禁止附加库、函数限制和 authorizer<sup><a href="../../../book/references/#ref-426">【426】</a></sup> 拒绝未批准操作。authorizer 检查操作与对象，不会自动按租户逐行过滤；只读打开共享多租户文件也不构成租户隔离。</p>
 <p>教学数据保留越权记录，是为了验收筛选和关联错误，不代表应把全租户库交给模型查询进程。授权快照有复制成本和新鲜度代价；数据量大、要求实时或权限频繁变化时，优先采用成熟数据访问服务或固定模板，不要临时拼一个“通用 SQL 沙箱”。</p>
-<p>执行前可用 <a href="https://www.sqlite.org/eqp.html"><code>EXPLAIN QUERY PLAN</code></a> 看联合键是否被使用、是否出现大表扫描或临时排序；对真实数据规模再评估索引，如按租户、客户和下单时间组织索引。小表扫描未必有问题，执行计划也不是运行时间或费用的保证，且其文本格式不是稳定接口。</p>
-<p>执行期间使用进度回调或中断机制落实截止时间，另设结果行数、字节数与并发预算；SQLite 没有云仓库式扫描费用上限，不能把本地演示耗时换算成生产费用承诺。<a href="https://www.sqlite.org/security.html">SQLite 安全指南</a>给出了限制与中断接口。超时要返回“未完成”，截断要标明“不完整”，不能把部分结果称为完整统计。</p>
+<p>执行前可用 <code>EXPLAIN QUERY PLAN</code><sup><a href="../../../book/references/#ref-429">【429】</a></sup> 看联合键是否被使用、是否出现大表扫描或临时排序；对真实数据规模再评估索引，如按租户、客户和下单时间组织索引。小表扫描未必有问题，执行计划也不是运行时间或费用的保证，且其文本格式不是稳定接口。</p>
+<p>执行期间使用进度回调或中断机制落实截止时间，另设结果行数、字节数与并发预算；SQLite 没有云仓库式扫描费用上限，不能把本地演示耗时换算成生产费用承诺。SQLite 安全指南<sup><a href="../../../book/references/#ref-427">【427】</a></sup>给出了限制与中断接口。超时要返回“未完成”，截断要标明“不完整”，不能把部分结果称为完整统计。</p>
 <h2 id="227-sql">22.7 验收结果，不验收 SQL 长得像不像<a class="headerlink" href="#227-sql" title="Permanent link">&para;</a></h2>
 <p>工程师用 Python 标准库 <code>sqlite3</code> 把上面的两表数据与查询执行一遍，再让另一段不使用 SQL 的计算按订单遍历明细、排除取消与范围外订单、累加剩余量和金额，得到同样的 <code>C1: (2, 10, 7000)</code>、<code>C2: (1, 2, 4000)</code>。参考逻辑根据业务约定编写，不让同一次模型生成同时充当出题人和裁判。</p>
-<p>这样的校验验证的是固定快照上的查询结果，不是某个模型的生成准确率，也没有证明权限隔离已经实现。上游 <a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py#L40-L165"><code>demo.py</code> 的比较流程</a>也区分数据库执行和 Python 参考答案，但具体容差、排序规则要按本业务重新规定。</p>
+<p>这样的校验验证的是固定快照上的查询结果，不是某个模型的生成准确率，也没有证明权限隔离已经实现。上游 <code>demo.py</code> 的比较流程<sup><a href="../../../book/references/#ref-436">【436】</a></sup>也区分数据库执行和 Python 参考答案，但具体容差、排序规则要按本业务重新规定。</p>
 <table>
 <thead>
 <tr>
@@ -9614,15 +9643,8 @@
 <p>本次表格说明“这些订单截至该快照尚有多少未发”，不说明“客户尚未收到多少”，更不能推出“明天能全部交付”。如果还要解释拆单政策，再检索适用文档；如果要生成自然语言总结，只把必要结果与证据交给模型，并重新核对数字、单位和承诺日期。模型可以不看结果行，这不是功能缺失，而是减少抄写错误和数据暴露的一种选择。</p>
 <p>面试中解释这套设计，关键不是背出一条复杂 SQL，而是说清楚：谁确定口径，哪个键决定关联，权限在哪里强制生效，以及用什么独立证据确认答案。固定报表能解决的问题，不应为了展示 Agent 而开放任意查询。</p>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li>李博杰，《深入理解 AI Agent》<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/book/chapter5.md">第五章：代码作为交互接口与生成 SQL 查询</a>。本章借鉴查询生成与执行的分工，业务、数据、SQL 与图为重新设计。</li>
-<li>同一固定提交的 ERP 示例：<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/README.md">README</a>、<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/agent.py">agent.py</a>、<a href="https://github.com/bojieli/ai-agent-book/blob/985a49d35b9f50937f1f757cf25867672991ded7/chapter5/erp-agent/demo.py">demo.py</a>。书中实验描述使用 PostgreSQL，配套运行示例使用 SQLite；这里核读源码，不运行上游程序，不引用其通过率为本章实验结论或客户收益。</li>
-<li>SQLite 官方：<a href="https://www.sqlite.org/lang_aggfunc.html">聚合函数</a>、<a href="https://www.sqlite.org/uri.html">URI 只读模式</a>、<a href="https://www.sqlite.org/c3ref/set_authorizer.html">授权回调</a>、<a href="https://www.sqlite.org/security.html">不可信 SQL 的安全措施</a>、<a href="https://www.sqlite.org/appfunc.html#security_implications">应用函数安全</a>、<a href="https://www.sqlite.org/eqp.html">执行计划</a>。</li>
-<li>SQLite 官方：<a href="https://www.sqlite.org/datatype3.html">类型亲和性</a>、<a href="https://www.sqlite.org/stricttables.html">STRICT 表及版本要求</a>。</li>
-<li>Safdarian 等，<a href="https://aclanthology.org/2026.findings-eacl.134/">《SchemaGraphSQL：使用寻路图算法高效完成大规模数据库 Text-to-SQL Schema Linking》</a>，Findings of EACL 2026。本章采用它对 Schema 图寻路与可关联性发现的区分，不把论文基准结果当作生产保证。</li>
-<li>Nahid 等，<a href="https://aclanthology.org/2026.findings-eacl.236/">《重新思考 Schema Linking：面向 Text-to-SQL 的上下文感知双向检索方法》</a>，Findings of EACL 2026。该研究支持把 Schema 检索单独评测，同时关注召回和误选。</li>
-</ul>
-<p>资料查阅于 2026-09-14，2026-09-15 复核固定提交与 SQLite 类型、聚合及执行限制；英译于 2026-09-20 核查，Schema Linking 资料于 2026-09-29 复核。</p>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-22">集中参考资料章节</a>。</p>
 
 
 
@@ -9645,7 +9667,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月29日 12:24:30 CST">2026-09-29</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

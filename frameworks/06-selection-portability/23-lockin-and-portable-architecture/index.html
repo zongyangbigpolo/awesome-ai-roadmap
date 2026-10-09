@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations","description":"Identify agent-framework lock-in and design reversible migrations with business contracts, state ownership, shadow runs, and staged task draining, accounting for the shift to MAF.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/23-lockin-and-portable-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/23-lockin-and-portable-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations","description":"Identify agent-framework lock-in and design reversible migrations with business contracts, state ownership, shadow runs, and staged task draining, accounting for the shift to MAF.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/23-lockin-and-portable-architecture/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/23-lockin-and-portable-architecture/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 23: Identifying Lock-in, Designing Portable Architectures, and Planning Migrations","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/06-selection-portability/23-lockin-and-portable-architecture/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9157,28 +9182,35 @@
 <li><strong>Tool-contract and orchestration lock-in</strong>: tool definitions are often portable (see <a href="../22-cross-framework-technical-taxonomy/">Chapter 22, Section 22.4</a>), but decisions such as which tool to call and what to do when it fails are frequently coupled to the framework's execution engine.</li>
 <li><strong>Observability and operational lock-in</strong>: if trace formats, alert rules, and evaluation datasets depend on the framework's proprietary toolchain rather than open standards, switching frameworks means rebuilding those operational assets.</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    L["Lock-in risks"] --&gt; L1["State-format lock-in&lt;br/&gt;Proprietary serialization"]
-    L --&gt; L2["Orchestration lock-in&lt;br/&gt;Call ordering and failure handling&lt;br/&gt;coupled to the execution engine"]
-    L --&gt; L3["Operational lock-in&lt;br/&gt;Proprietary trace formats&lt;br/&gt;and evaluation tools"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    L["Lock-in risks"] --&gt; L1["State-format lock-in"]
+    L --&gt; L2["Orchestration lock-in"]
+    L --&gt; L3["Operational lock-in"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>State-format lock-in Proprietary serialization</li>
+<li>Orchestration lock-in Call ordering and failure handling coupled to the execution engine</li>
+<li>Operational lock-in Proprietary trace formats and evaluation tools</li>
+</ul>
 <p>Begin with a concrete question: "If we switched frameworks today, which of these three asset groups would cost the most to migrate?" Teams instinctively worry about rewriting code. In practice, moving <strong>historical state data</strong> and <strong>operational assets</strong> is often more expensive than rewriting the business logic itself.</p>
 <h2 id="232-portable-architecture-isolate-framework-details-behind-adapters"><span id="232" class="legacy-heading-anchor" aria-hidden="true"></span>23.2 Portable architecture: isolate framework details behind adapters<a class="headerlink" href="#232-portable-architecture-isolate-framework-details-behind-adapters" title="Permanent link">&para;</a></h2>
 <p>A common architectural response borrows from <strong>hexagonal architecture, or ports and adapters</strong>: put the business logic in a core that does not depend on a particular framework, and confine framework-specific code to adapters.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph Core["Business core: framework-independent"]
-        BL["Domain logic: task definitions,&lt;br/&gt;business rules, evaluation criteria"]
-    end
-    subgraph Adapters["Adapter layer"]
-        A1["LangGraph adapter"]
-        A2["SK / MAF adapter"]
-        A3["Other agent-runtime adapters"]
-    end
-    A1 --&gt;|Depends on domain interfaces| BL
-    A2 --&gt;|Depends on domain interfaces| BL
-    A3 --&gt;|Depends on domain interfaces| BL
-    A1 --&gt; R1["Runtime 1"]
-    A2 --&gt; R2["Runtime 2"]
-    A3 --&gt; R3["Runtime 3"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Framework adapter"] --&gt;|Depends on| CORE["Domain interfaces"]
+    A --&gt; RUN["Selected runtime"]</code></pre>
+<p>Keep task definitions, business rules, and evaluation criteria in a framework-independent core. LangGraph, SK/MAF, and other runtime adapters depend on its domain interfaces, not the reverse. Each adapter connects to its corresponding runtime; a framework migration should replace the adapter and runtime without rewriting the domain rules.</p>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Depends on domain interfaces</li>
+<li>Depends on domain interfaces</li>
+<li>Depends on domain interfaces</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Domain logic: task definitions, business rules, evaluation criteria</li>
+</ul>
 <p>The arrows represent code dependencies. Adapters depend on domain interfaces and concrete runtimes; the domain core does not import a framework in return. For an agent system, this means:</p>
 <ul>
 <li><strong>Keep business tool implementations in the core.</strong> Preserve domain inputs and outputs, authorization rules, and idempotency semantics. Adapters handle framework registration, invocation context, error mapping, and cancellation—not merely a different decorator.</li>
@@ -9189,24 +9221,33 @@
 <p>A useful minimum contract generally includes a business request/operation ID, tenant and authorization context, input version, deadline, idempotency key, structured result, and retryable error categories. Do not pass a framework's Message or Context directly into domain services. Equally, do not erase required semantics such as streaming, approval, and cancellation in pursuit of a supposedly universal interface.</p>
 <h2 id="233-a-framework-selection-decision-process"><span id="233" class="legacy-heading-anchor" aria-hidden="true"></span>23.3 A framework-selection decision process<a class="headerlink" href="#233-a-framework-selection-decision-process" title="Permanent link">&para;</a></h2>
 <p>The preceding analysis can be organized into a decision process:</p>
-<pre class="mermaid"><code>flowchart TB
-    Q1{"What is the team's primary stack?"}
-    Q1 --&gt;|".NET"| SK["Evaluate MAF for new agents&lt;br/&gt;Check migration and support&lt;br/&gt;for existing SK systems"]
-    Q1 --&gt;|"JVM"| JV["Evaluate LangChain4j / Spring AI&lt;br/&gt;Keep the existing service framework"]
-    Q1 --&gt;|"Python or no mandated stack"| Q2{"Is the main difficulty private-data quality&lt;br/&gt;or model/tool orchestration?"}
-    Q2 --&gt;|"Data quality"| LI["Evaluate LlamaIndex first"]
-    Q2 --&gt;|"Model/tool orchestration"| Q3{"Need long-running execution,&lt;br/&gt;human approval, or fine-grained&lt;br/&gt;state recovery?"}
-    Q3 --&gt;|"Yes"| LG["Evaluate LangGraph / MAF&lt;br/&gt;or an already-integrated&lt;br/&gt;durable workflow engine"]
-    Q3 --&gt;|"No"| Q4{"Need several specialist agents&lt;br/&gt;to collaborate?"}
-    Q4 --&gt;|"Yes, with distributed execution"| AG["Compare runtime and message boundaries&lt;br/&gt;Consider AutoGen only for&lt;br/&gt;maintaining existing systems"]
-    Q4 --&gt;|"Yes, with rapid role-based setup"| CR["Evaluate CrewAI"]
-    Q4 --&gt;|"No; prioritize types and testability"| PA["Evaluate PydanticAI"]
-    Q4 --&gt;|"No; standard tool loop"| LC["LangChain create_agent&lt;br/&gt;or a native SDK"]
-    Q5{"Do prompts have explicit evaluation metrics&lt;br/&gt;and need to transfer across models?"}
-    LC -.Optional addition.-&gt; Q5
-    LI -.Can also optimize subtasks.-&gt; Q5
-    LG -.Can also optimize subtasks.-&gt; Q5
-    Q5 --&gt;|"Yes"| DS["Also evaluate DSPy&lt;br/&gt;for compiling and optimizing subtasks"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    STACK["Check team stack"] --&gt; NEED["Find main difficulty"]
+    NEED --&gt; CONTROL["Check execution needs"]
+    CONTROL --&gt; TEST["Evaluate candidates"]
+    TEST -.Optional.-&gt; DSPY["Optimize subtasks"]</code></pre>
+<p>Apply the decision criteria in that order:</p>
+<ul>
+<li>For .NET, evaluate MAF for new agents and check migration and support for existing SK systems. For JVM, evaluate LangChain4j or Spring AI while retaining the service framework.</li>
+<li>For Python or an unconstrained stack, start with LlamaIndex when private-data quality is the main difficulty. For model/tool orchestration, check whether long-running execution, human approval, or fine-grained recovery requires LangGraph, MAF, or an already-integrated durable workflow engine.</li>
+<li>Without that durability requirement, ask whether several specialist agents must collaborate. Distributed collaboration calls for comparing runtime and message boundaries; consider AutoGen only for maintaining existing systems. CrewAI is a candidate for rapid role-based collaboration.</li>
+<li>Without multi-agent collaboration, prioritize PydanticAI for types and testability, or LangChain <code>create_agent</code> or a native SDK for a standard tool loop.</li>
+<li>DSPy is an optional addition when prompts have explicit evaluation metrics and must transfer across models. It can optimize subtasks in LangChain, LlamaIndex, or durable orchestration; it does not replace their runtime responsibilities.</li>
+</ul>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Evaluate MAF for new agents Check migration and support for existing SK systems</li>
+<li>Evaluate LangChain4j / Spring AI Keep the existing service framework</li>
+<li>Is the main difficulty private-data quality or model/tool orchestration?</li>
+<li>Need long-running execution, human approval, or fine-grained state recovery?</li>
+<li>Evaluate LangGraph / MAF or an already-integrated durable workflow engine</li>
+<li>Need several specialist agents to collaborate?</li>
+<li>Compare runtime and message boundaries Consider AutoGen only for maintaining existing systems</li>
+<li>LangChain create_agent or a native SDK</li>
+<li>Do prompts have explicit evaluation metrics and need to transfer across models?</li>
+<li>Also evaluate DSPy for compiling and optimizing subtasks</li>
+</ul>
 <p>This diagram narrows the candidate set; it is not a brand-recommendation algorithm. Language affects integration cost, but every branch must still satisfy state, recovery, and permission requirements. MAF succeeds SK and AutoGen, and AutoGen is in maintenance mode. PydanticAI already has durable-execution integrations; Workflows and CrewAI Flow also deserve consideration when their runtimes fit the requirements.</p>
 <p>Combining frameworks is an option, not an inevitable answer to complexity. If one runtime meets the requirements, one fewer layer is usually easier to manage. When nesting is necessary, designate a single top-level state owner and have subprocesses return through bounded requests. Assign responsibility for retries, cancellation, and approvals so two layers do not both replay the same write tool.</p>
 <h2 id="234-migration-strategy-from-a-single-framework-to-a-portable-architecture"><span id="234" class="legacy-heading-anchor" aria-hidden="true"></span>23.4 Migration strategy: from a single framework to a portable architecture<a class="headerlink" href="#234-migration-strategy-from-a-single-framework-to-a-portable-architecture" title="Permanent link">&para;</a></h2>
@@ -9217,14 +9258,24 @@
 <li><strong>Align observability while both implementations run.</strong> Compare quality, cost, latency, and errors using the same data, model configuration, and metrics. Shadow runs should default to read-only operations, recorded replay, or simulated tools; the old and new implementations must not both send emails, charge accounts, or create orders.</li>
 <li><strong>Design state migration separately.</strong> Distinguish completed history, active tasks, and externally hosted sessions. Active tasks can often finish on the old runtime. If they must move, re-enter from confirmed business state and check approvals, idempotency keys, and pending events. A format-conversion script alone does not make migration safe.</li>
 </ol>
-<pre class="mermaid"><code>flowchart TB
-    A["Old implementation&lt;br/&gt;Handles all traffic"] --&gt; B["Capture the behavior baseline&lt;br/&gt;in contract tests"]
-    B --&gt; C["Implement one capability&lt;br/&gt;behind a facade or adapter"]
-    C --&gt; D["Validate and release that capability&lt;br/&gt;Use canary traffic if appropriate"]
-    D --&gt; E["Route the accepted capability to the new system&lt;br/&gt;Keep unmigrated capabilities on the old system"]
-    E --&gt; G{"More capabilities to migrate?"}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Old implementation"] --&gt; B["Capture the behavior&lt;br/&gt;baseline"]
+    B --&gt; C["Implement one&lt;br/&gt;capability"]
+    C --&gt; D["Validate and release&lt;br/&gt;that capability"]
+    D --&gt; E["Switch accepted&lt;br/&gt;traffic"]
+    E --&gt; G["More capabilities to&lt;br/&gt;migrate?"]
     G --&gt;|Yes| C
-    G --&gt;|No| F["Drain or migrate active tasks under control&lt;br/&gt;Retire old dependencies only when&lt;br/&gt;acceptance and rollback conditions are satisfied"]</code></pre>
+    G --&gt;|No| F["Retire safely"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Old implementation Handles all traffic</li>
+<li>Capture the behavior baseline in contract tests</li>
+<li>Implement one capability behind a facade or adapter</li>
+<li>Validate and release that capability Use canary traffic if appropriate</li>
+<li>Route the accepted capability to the new system Keep unmigrated capabilities on the old system</li>
+<li>Drain or migrate active tasks under control Retire old dependencies only when acceptance and rollback conditions are satisfied</li>
+</ul>
 <h2 id="235-common-mistakes"><span id="235" class="legacy-heading-anchor" aria-hidden="true"></span>23.5 Common mistakes<a class="headerlink" href="#235-common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="2351-making-a-framework-independent-adapter-architecture-the-default"><span id="2351" class="legacy-heading-anchor" aria-hidden="true"></span>23.5.1 Making a framework-independent adapter architecture the default<a class="headerlink" href="#2351-making-a-framework-independent-adapter-architecture-the-default" title="Permanent link">&para;</a></h3>
 <p>For short-lived experiments with uncertain requirements, building a complete adapter layer upfront is overengineering that slows prototype validation. Start with one framework, learn quickly, and invest in portability once the system demonstrates lasting value.</p>
@@ -9255,18 +9306,8 @@
 <p>Long-term portability depends on managing assets separately: keep tool definitions, evaluation criteria, and business rules independent, and prefer staged migration to a big-bang rewrite. That makes switching frameworks a controllable engineering task.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/process/process-framework">Semantic Kernel: Process Framework</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Microsoft Agent Framework overview and successor relationship</a></li>
-<li><a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-semantic-kernel/">SK → MAF migration guide</a></li>
-<li><a href="https://github.com/microsoft/autogen">AutoGen official maintenance-mode notice</a></li>
-<li><a href="https://pydantic.dev/docs/ai/capabilities/durable_execution/overview/">PydanticAI: Durable Execution</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry Generative AI semantic-conventions repository</a></li>
-<li><a href="https://martinfowler.com/bliki/StranglerFigApplication.html">Martin Fowler: StranglerFigApplication</a></li>
-<li><a href="https://martinfowler.com/bliki/CanaryRelease.html">Martin Fowler: CanaryRelease</a></li>
-<li><a href="https://alistair.cockburn.us/hexagonal-architecture/">Alistair Cockburn: Hexagonal Architecture</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-frameworks-23">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9289,7 +9330,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

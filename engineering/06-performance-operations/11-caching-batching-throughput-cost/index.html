@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Caching, Batching, Throughput, and Cost Optimization","description":"Distinguish answer caching from prefix caching, account for batching, concurrency, and retry costs, and preserve tenant isolation, invalidation rules, and latency budgets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/11-caching-batching-throughput-cost/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Caching, Batching, Throughput, and Cost Optimization","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/11-caching-batching-throughput-cost/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 11: Caching, Batching, Throughput, and Cost Optimization","description":"Distinguish answer caching from prefix caching, account for batching, concurrency, and retry costs, and preserve tenant isolation, invalidation rules, and latency budgets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/11-caching-batching-throughput-cost/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 11: Caching, Batching, Throughput, and Cost Optimization","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/11-caching-batching-throughput-cost/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 11: Caching, Batching, Throughput, and Cost Optimization","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/11-caching-batching-throughput-cost/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9206,11 +9231,19 @@
 <h1 id="chapter-11-caching-batching-throughput-and-cost-optimization"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 11: Caching, Batching, Throughput, and Cost Optimization<a class="headerlink" href="#chapter-11-caching-batching-throughput-and-cost-optimization" title="Permanent link">&para;</a></h1>
 <h2 id="111-four-levers-for-cost-optimization"><span id="111" class="legacy-heading-anchor" aria-hidden="true"></span>11.1 Four levers for cost optimization<a class="headerlink" href="#111-four-levers-for-cost-optimization" title="Permanent link">&para;</a></h2>
 <p>For usage-priced model APIs, token usage, tool usage, and call counts directly affect the bill. Self-hosting also requires accounting for compute utilization and operations. Four common levers are <strong>avoiding repeated computation through caching, sending delay-tolerant tasks to asynchronous batch processing, routing to cheaper models, and compressing context to reduce tokens</strong>. We begin with the first two application-level levers. Cost-aware routing is covered in <a href="../../02-request-reliability/03-model-gateway-routing-fallback/">Chapter 3</a>; inference-engine techniques such as quantization and KV caching are covered in <a href="../../../llm/03-inference-serving/">LLM · Inference and Serving</a>.</p>
-<pre class="mermaid"><code>flowchart TB
-    COST["Call cost"] --&gt; CACHE["Caching:&lt;br/&gt;avoid repeated computation"]
-    COST --&gt; BATCH["Batching:&lt;br/&gt;amortize per-item overhead"]
-    COST --&gt; ROUTE["Cost-aware routing:&lt;br/&gt;see Chapter 3"]
-    COST --&gt; CTX["Context compression:&lt;br/&gt;reduce input tokens"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    COST["Call cost"] --&gt; CACHE["Caching:"]
+    COST --&gt; BATCH["Batching:"]
+    COST --&gt; ROUTE["Cost-aware&lt;br/&gt;routing:"]
+    COST --&gt; CTX["Context&lt;br/&gt;compression:"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Caching: avoid repeated computation</li>
+<li>Batching: amortize per-item overhead</li>
+<li>Cost-aware routing: see Chapter 3</li>
+<li>Context compression: reduce input tokens</li>
+</ul>
 <h2 id="112-semantic-caching-a-direct-way-to-reduce-application-costs"><span id="112" class="legacy-heading-anchor" aria-hidden="true"></span>11.2 Semantic caching: a direct way to reduce application costs<a class="headerlink" href="#112-semantic-caching-a-direct-way-to-reduce-application-costs" title="Permanent link">&para;</a></h2>
 <p>Semantic caching uses vector similarity to find answers that might be reusable; see <a href="../../../tools/05-transport-gateway/14-llm-gateway/">Tools · LLM Gateways</a> for the mechanism. Similarity is not the probability that two answers are equivalent. Thresholds such as 0.85–0.95 are experimental values for a particular embedding model, not general rules. “Refundable” and “non-refundable,” different dates, or different orders may be highly similar yet cannot share an answer.</p>
 <p>Start with exact-match caching, then evaluate whether semantic reuse is worth the tradeoff. Cache keys or filters should account for tenant, user permissions, prompt/model/knowledge-base/policy versions, and business freshness requirements. Recheck resource permissions even after a cache hit. Requests involving payments or real-time balances generally cannot reuse old answers. For each use case, track hit rate, false-hit rate, cost savings, and stale-answer rate together. Invalidate affected entries when documents are deleted or permissions are revoked, rather than optimizing only for a higher hit rate.</p>
@@ -9335,13 +9368,8 @@
 <li><strong>Cost observability is a prerequisite for optimization.</strong> Report costs by use case, team, and model version.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic: Prompt caching</a></li>
-<li><a href="https://platform.openai.com/docs/guides/prompt-caching">OpenAI: Prompt caching</a></li>
-<li><a href="https://platform.openai.com/docs/guides/batch">OpenAI: Batch API</a></li>
-<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/batch-processing">Anthropic: Message Batches API</a></li>
-<li><a href="https://cloud.google.com/architecture/framework/cost-optimization/ai-ml">Google Cloud: Cost optimization for AI and ML workloads</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-11">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9364,7 +9392,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

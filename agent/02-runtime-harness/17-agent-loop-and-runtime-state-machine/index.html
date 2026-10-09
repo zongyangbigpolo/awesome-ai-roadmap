@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: The Agent Loop and Runtime State Machine","description":"Models an agent loop as a recoverable state machine, distinguishing stopping from success and explaining approval resumption, streaming calls, handoffs, and root-task budgets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: The Agent Loop and Runtime State Machine","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 17: The Agent Loop and Runtime State Machine","description":"Models an agent loop as a recoverable state machine, distinguishing stopping from success and explaining approval resumption, streaming calls, handoffs, and root-task budgets.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 17: The Agent Loop and Runtime State Machine","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 17: The Agent Loop and Runtime State Machine","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/02-runtime-harness/17-agent-loop-and-runtime-state-machine/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9155,26 +9180,16 @@
 </table>
 <p>This is a minimal teaching example, not a field specification shared by every framework. Production systems may also store structured plans, acceptance status, identity, approvals, and operation idempotency keys. The runtime should validate dependencies, invariants, and completion conditions, not merely move messages and update counters.</p>
 <h2 id="173-state-transitions-within-a-turn"><span id="173-turn" class="legacy-heading-anchor" aria-hidden="true"></span>17.3 State transitions within a turn<a class="headerlink" href="#173-state-transitions-within-a-turn" title="Permanent link">&para;</a></h2>
-<p>The Claude Agent SDK describes the internal cycle as four steps: “Receive prompt → Evaluate and respond → Execute tools → Repeat.” Steps 2 and 3 repeat until the model produces a final response without tool calls (<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK: How the agent loop works</a>). The OpenAI Agents SDK's <code>Runner</code> describes the same basic loop: call the model; exit if the output is final; switch the current agent and re-enter the loop if a handoff is requested; or execute requested tool calls, append their results, and call the model again (<a href="https://openai.github.io/openai-agents-python/running_agents/">OpenAI Agents SDK: Running agents</a>). Abstracted as a state machine:</p>
-<pre class="mermaid"><code>stateDiagram-v2
-    [*] --&gt; Init
-    Init --&gt; ModelCall: Assemble context (Chapter 18)
-    ModelCall --&gt; Deciding: Receive model output
-    Deciding --&gt; FinalOutput: Output contract satisfied; no pending calls
-    Deciding --&gt; ToolExecution: Tool calls requested
-    Deciding --&gt; HandoffSwitch: Agent switch requested
-    ToolExecution --&gt; PermissionCheck: Each tool call (Chapter 20)
-    PermissionCheck --&gt; ToolRunning: Allowed
-    PermissionCheck --&gt; Blocked: Denied
-    PermissionCheck --&gt; Interrupted: Human input required
-    ToolRunning --&gt; CollectResults: Record call result
-    CollectResults --&gt; ModelCall: All calls in this turn handled
-    HandoffSwitch --&gt; ModelCall: Update current agent/input
-    Blocked --&gt; CollectResults: Return denial result (or terminate by policy)
-    Interrupted --&gt; PermissionCheck: Approval received; revalidate bound operation
-    Interrupted --&gt; Stopped: Rejected/expired; no further continuation
-    Stopped --&gt; [*]
-    FinalOutput --&gt; [*]</code></pre>
+<p>The Claude Agent SDK describes the internal cycle as four steps: “Receive prompt → Evaluate and respond → Execute tools → Repeat.” Steps 2 and 3 repeat until the model produces a final response without tool calls (Claude Agent SDK: How the agent loop works<sup><a href="../../../book/references/#ref-545">【545】</a></sup>). The OpenAI Agents SDK's <code>Runner</code> describes the same basic loop: call the model; exit if the output is final; switch the current agent and re-enter the loop if a handoff is requested; or execute requested tool calls, append their results, and call the model again (OpenAI Agents SDK: Running agents<sup><a href="../../../book/references/#ref-546">【546】</a></sup>). Abstracted as a state machine:</p>
+<pre class="mermaid"><code>flowchart TB
+    M[ModelCall] --&gt; D[Deciding]
+    D --&gt;|Tools requested| P[PermissionCheck]
+    P --&gt;|Allowed| T[ToolRunning]
+    T --&gt; C[CollectResults]
+    C --&gt;|Turn calls handled| M</code></pre>
+<p>Start in <code>Init</code>, assemble context (Chapter 18), and enter <code>ModelCall</code>. Received model output enters <code>Deciding</code>. If the output contract is satisfied and no calls remain, <code>FinalOutput</code> ends the run. An agent-switch request instead enters <code>HandoffSwitch</code>, updates the current agent/input, and returns to <code>ModelCall</code>.</p>
+<p>A tool request enters <code>ToolExecution</code>; <strong>each</strong> call then passes <code>PermissionCheck</code> (Chapter 20). Allowed calls run and record their results in <code>CollectResults</code>. Denied calls enter <code>Blocked</code>, which writes a denial result into that same collection unless policy terminates the run. Only after every call in the turn is handled does collection return to the model.</p>
+<p>Human input suspends the permission check in <code>Interrupted</code>. Approval returns to <code>PermissionCheck</code> to revalidate the bound operation, never directly to <code>ToolRunning</code>. Rejection or expiry with no further continuation enters <code>Stopped</code> and ends the run.</p>
 <p>The tool branch abstracts a batch of calls: each call must pass its own permission check and have its result recorded. One tool returning does not justify abandoning the others. Ordinary tool requests and a handoff can also appear in the same model output. Whether to handle tools first, transfer control first, or reject mixed output is a contract of the particular runtime; it cannot be inferred from the order of branches in this diagram. An absence of tool calls does not necessarily imply a valid final output either: empty responses, truncation, and malformed output need separate handling.</p>
 <h2 id="174-termination-conditions-and-protective-limits"><span id="174-loop" class="legacy-heading-anchor" aria-hidden="true"></span>17.4 Termination conditions and protective limits<a class="headerlink" href="#174-termination-conditions-and-protective-limits" title="Permanent link">&para;</a></h2>
 <p>A state machine needs explicit, enumerable exit paths. Otherwise, both “the agent never stops” and “the agent continues when it should stop” can become production incidents. At least four types of termination conditions are needed:</p>
@@ -9197,7 +9212,7 @@
 <p>From a state-machine perspective, the multi-agent collaboration discussed in Chapter 13 takes two forms:</p>
 <ul>
 <li><strong>Handoff:</strong> another agent configuration takes over subsequent decisions. The OpenAI Agents SDK updates the current agent and input within the same Runner loop; it does not necessarily terminate an old process or create a new state machine. This corresponds to <code>HandoffSwitch</code> in Section 17.3.</li>
-<li><strong>Subagent:</strong> within one of its own steps, the current state machine starts a new, independent child state machine with its own <code>turn_index</code>, <code>budget</code>, and <code>messages</code>. Once the child finishes, its result is inserted into the parent as a tool result, and the parent continues. The Claude Agent SDK calls this pattern subagents: “Spawn specialized agents for focused subtasks” (the capability table in <a href="https://code.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK: Overview</a>).</li>
+<li><strong>Subagent:</strong> within one of its own steps, the current state machine starts a new, independent child state machine with its own <code>turn_index</code>, <code>budget</code>, and <code>messages</code>. Once the child finishes, its result is inserted into the parent as a tool result, and the parent continues. The Claude Agent SDK calls this pattern subagents: “Spawn specialized agents for focused subtasks” (the capability table in Claude Agent SDK: Overview<sup><a href="../../../book/references/#ref-541">【541】</a></sup>).</li>
 </ul>
 <p>The key difference is the calling relationship. A subagent normally returns a result to its caller, which resumes decision-making; a handoff transfers the subsequent conversation to the receiving agent. Both should count toward the same root task's total budget, with costs then allocated by agent. Switching roles must not reset total steps, costs, or permission boundaries.</p>
 <h2 id="177-comparing-three-state-machine-implementations"><span id="177" class="legacy-heading-anchor" aria-hidden="true"></span>17.7 Comparing three state-machine implementations<a class="headerlink" href="#177-comparing-three-state-machine-implementations" title="Permanent link">&para;</a></h2>
@@ -9227,7 +9242,7 @@
 <td>Nesting / transfer</td>
 <td>Subagents: nesting</td>
 <td>Handoffs: changing the current agent</td>
-<td>Subgraphs; see <a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph: Subgraphs</a></td>
+<td>Subgraphs; see LangGraph: Subgraphs<sup><a href="../../../book/references/#ref-547">【547】</a></sup></td>
 </tr>
 <tr>
 <td>State visibility</td>
@@ -9249,13 +9264,8 @@
 <h2 id="179-chapter-summary"><span id="179" class="legacy-heading-anchor" aria-hidden="true"></span>17.9 Chapter summary<a class="headerlink" href="#179-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>A state machine must distinguish the end of a model turn, business success, suspension, failure, and cancellation. Resuming after approval should continue the specific bound operation, not ask the model to guess again. Streamed arguments must be complete before execution. Subagents return results and handoffs transfer subsequent decisions, but neither may bypass the root task's budget, authorization, or audit requirements.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://code.claude.com/docs/en/agent-sdk/agent-loop">Claude Agent SDK: How the agent loop works</a></li>
-<li><a href="https://openai.github.io/openai-agents-python/running_agents/">OpenAI Agents SDK: Running agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/use-subgraphs">LangGraph: Subgraphs</a></li>
-<li><a href="https://simonwillison.net/2025/Sep/30/designing-agentic-loops/">Simon Willison: Designing agentic loops</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-17">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9278,7 +9288,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:06 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

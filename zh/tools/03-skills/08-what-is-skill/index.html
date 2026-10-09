@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：Skill 是什么","description":"解释 Agent Skill 的文件结构、触发条件、渐进披露和执行方式，并说明它与普通 Prompt 和工具调用的区别。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：Skill 是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第八章：Skill 是什么","description":"解释 Agent Skill 的文件结构、触发条件、渐进披露和执行方式，并说明它与普通 Prompt 和工具调用的区别。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第八章：Skill 是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第八章：Skill 是什么","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/03-skills/08-what-is-skill/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9338,16 +9363,25 @@
 <p>假设你有 20 个 Skill，每个的指令加参考文档平均 2000 token，全量加载就是 <strong>40,000 token 打底</strong>。</p>
 <p>在一个 200K 上下文的模型上，光 Skill 就吃掉了五分之一，剩下的要分给系统提示、对话历史、用户文件。更糟的是这 20 个里大部分在当前任务用不上——<strong>加载了纯属浪费</strong>。</p>
 <h3 id="832">8.3.2 三层加载<a class="headerlink" href="#832" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    L1["第一层 · 发现阶段&lt;br/&gt;读取 Skill 的 name + description"]
-    L1 --&gt; Q{"当前任务匹配&lt;br/&gt;某个 Skill 吗?"}
-    Q --&gt;|否| SKIP["不加载正文&lt;br/&gt;发现元数据仍有成本"]
-    Q --&gt;|是| L2["第二层 · 匹配时&lt;br/&gt;加载该 Skill 的 SKILL.md 正文"]
-    L2 --&gt; L3["第三层 · 执行中&lt;br/&gt;指令提到某个模板/脚本时&lt;br/&gt;才去读那个文件"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    L1["第一层 · 发现阶&lt;br/&gt;段"]
+    L1 --&gt; Q["当前任务匹配"]
+    Q --&gt;|否| SKIP["不加载正文"]
+    Q --&gt;|是| L2["第二层 · 匹配时"]
+    L2 --&gt; L3["第三层 · 执行中"]
 
     style L1 fill:#e8f0fe
     style L2 fill:#e6f4ea
     style L3 fill:#fef7e0</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>第一层 · 发现阶段 读取 Skill 的 name + description</li>
+<li>当前任务匹配 某个 Skill 吗?</li>
+<li>不加载正文 发现元数据仍有成本</li>
+<li>第二层 · 匹配时 加载该 Skill 的 SKILL.md 正文</li>
+<li>第三层 · 执行中 指令提到某个模板/脚本时 才去读那个文件</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9394,15 +9428,27 @@
 <p>这和<a href="../../01-function-calling/03-tool-schema-design/">工具描述设计</a>类似：写清能力和边界，并用任务集评估触发质量；两者的描述都不是唯一信息源或强制执行规则。</p>
 <h2 id="84-skill">8.4 Skill 与相邻概念的关系<a class="headerlink" href="#84-skill" title="Permanent link">&para;</a></h2>
 <p>这几个概念经常被混淆，用一个公司类比就能分清：</p>
-<pre class="mermaid"><code>flowchart TB
-    TOOL["Tool / MCP&lt;br/&gt;可调用的外部能力&lt;br/&gt;权限由执行端校验"]
-    SKILL["Skill&lt;br/&gt;操作手册与 SOP&lt;br/&gt;教 Agent 拿到工具后「怎么做」"]
-    PROMPT["Prompt&lt;br/&gt;模型指令&lt;br/&gt;可以临时也可以版本化"]
-    SLASH["Slash Command&lt;br/&gt;写死的快捷指令&lt;br/&gt;需要人工触发"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    TOOL["Tool / MCP"]
+    SKILL["Skill"]
+    PROMPT["Prompt"]
+    SLASH["Slash Command"]
 
-    SKILL --&gt;|Host 可按流程调用| TOOL
+    SKILL --&gt;|"Host 调用工具"| TOOL
     PROMPT -.沉淀为.-&gt; SKILL
     SLASH -.可作为加载入口.-&gt; SKILL</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>Host 可按流程调用</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>Tool / MCP 可调用的外部能力 权限由执行端校验</li>
+<li>Skill 操作手册与 SOP 教 Agent 拿到工具后「怎么做」</li>
+<li>Prompt 模型指令 可以临时也可以版本化</li>
+<li>Slash Command 写死的快捷指令 需要人工触发</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9455,7 +9501,7 @@
 <p>Agent Skills 是 Anthropic 在 2025 年 10 月推出的，最初只覆盖 Claude Code、Claude API 和 claude.ai 三个入口。</p>
 <p>两个月后，Anthropic 把规范作为<strong>开放标准</strong>发布出来，任何 Agent 平台都可以按规范实现。</p>
 <p>文件格式不要求独立网络服务；真正使用仍需要宿主发现、加载和执行，脚本还需要相应解释器、依赖与权限。这是开放内容格式，不是远程调用协议。</p>
-<p>已有多种客户端采用，见<a href="https://agentskills.io/clients">官方客户端列表</a>。跨平台迁移要核对触发方式、工具名称、文件路径、许可字段和执行环境，不能由“都能读 Markdown”推导出行为完全一致。</p>
+<p>已有多种客户端采用，见官方客户端列表<sup><a href="../../../book/references/#ref-308">【308】</a></sup>。跨平台迁移要核对触发方式、工具名称、文件路径、许可字段和执行环境，不能由“都能读 Markdown”推导出行为完全一致。</p>
 <h2 id="87">8.7 常见错误<a class="headerlink" href="#87" title="Permanent link">&para;</a></h2>
 <h3 id="871-skill-prompt">8.7.1 把 Skill 说成「高级 Prompt 模板」<a class="headerlink" href="#871-skill-prompt" title="Permanent link">&para;</a></h3>
 <p>Skill 的最小形态可以只有 <code>SKILL.md</code>，正文也可以是一段写作规范。与普通 Prompt 的区别是约定了目录入口、发现元数据和按需加载方式，并可附带脚本、参考文档或模板；这些附加文件并非必需。</p>
@@ -9481,16 +9527,8 @@
 <li><strong>开放格式利于复用</strong>，但脚本、许可和宿主扩展影响兼容性。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li>格式核查保留原有固定提交 <code>69ef37e9424c0a7ea9dd2293b559e43ec8176379</code> 作为历史基准，并于 2026-09-15 复核官方格式页中的必填字段、实验性字段和加载建议；官方页没有独立的语义版本号。</li>
-<li><a href="https://www.anthropic.com/news/skills">Anthropic: Introducing Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic: Equipping Agents for the Real World with Agent Skills</a></li>
-<li><a href="https://agentskills.io/specification">Agent Skills 规范</a></li>
-<li><a href="https://github.com/agentskills/agentskills/tree/69ef37e9424c0a7ea9dd2293b559e43ec8176379">Agent Skills 本次核查的固定提交</a></li>
-<li><a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview">Claude Docs: Agent Skills</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: Effective Context Engineering for AI Agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-08">集中参考资料章节</a>。</p>
 
 
 
@@ -9513,7 +9551,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

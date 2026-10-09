@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A","description":"Distinguish agent workload identities from delegated user identities, and prevent privilege amplification with validated tokens, action-bound approvals, and authorization at every hop.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A","description":"Distinguish agent workload identities from delegated user identities, and prevent privilege amplification with validated tokens, action-bound approvals, and authorization at every hop.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/07-agent-tool-mcp-a2a-least-privilege-identity/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9197,18 +9222,28 @@
 <h1 id="chapter-7-least-privilege-and-identity-governance-for-agents-tools-mcp-and-a2a"><span id="agenttoolmcpa2a" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 7: Least Privilege and Identity Governance for Agents, Tools, MCP, and A2A<a class="headerlink" href="#chapter-7-least-privilege-and-identity-governance-for-agents-tools-mcp-and-a2a" title="Permanent link">&para;</a></h1>
 <h2 id="71-from-individual-protocols-to-organization-wide-identity-governance"><span id="71" class="legacy-heading-anchor" aria-hidden="true"></span>7.1 From Individual Protocols to Organization-Wide Identity Governance<a class="headerlink" href="#71-from-individual-protocols-to-organization-wide-identity-governance" title="Permanent link">&para;</a></h2>
 <p><a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security</a> covers authentication, token audiences, and protocol trust boundaries. This chapter addresses three cross-system questions: who may act on whose behalf, how permissions narrow along a delegation chain, and who is responsible for onboarding tools and revoking access. Even if every interface individually conforms to its protocol, that does not establish that the entire delegation chain respects authorization.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph L1["Protocol layer — see Tool Protocol Security"]
-        OAUTH[OAuth 2.1 / PKCE / audience]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6, "subGraphTitleMargin": {"top": 6, "bottom": 22}}}}%%
+flowchart TB
+    subgraph L1["Protocol layer"]
+        direction TB
+        OAUTH["OAuth 2.1 / PKCE /&lt;br/&gt;audience"]
     end
-    subgraph L2["Identity federation layer — Sections 7.2-7.3"]
-        WI[Workload identity] --&gt; DC[Delegation chain]
+    subgraph L2["Identity federation"]
+        direction TB
+        WI["Workload identity"] --&gt; DC["Delegation chain"]
     end
-    subgraph L3["Governance layer — Sections 7.4-7.5"]
-        REG[Tool registry] --&gt; POL[Policy as code]
-        POL --&gt; AUDIT[Fleet-wide auditing]
+    subgraph L3["Governance"]
+        direction TB
+        REG["Tool registry"] --&gt; POL["Policy as code"]
+        POL --&gt; AUDIT["Fleet-wide auditing"]
     end
     L1 --&gt; L2 --&gt; L3</code></pre>
+<p>The protocol layer is covered in Tool Protocol Security; identity federation is developed in Sections 7.2–7.3, and governance in Sections 7.4–7.5.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Protocol layer — see Tool Protocol Security</li>
+<li>Identity federation layer — Sections 7.2-7.3</li>
+</ul>
 <p>MCP and A2A do not share an identical authorization specification. The MCP 2026-07-28 authorization specification cited here applies to HTTP transports and references the OAuth 2.1 draft; credential handling for STDIO is different. Check A2A's specification and the service configuration for its particular authentication scheme rather than applying every MCP requirement unchanged.</p>
 <h2 id="72-the-agent-identity-model-who-acts-on-whose-behalf"><span id="72-agent" class="legacy-heading-anchor" aria-hidden="true"></span>7.2 The Agent Identity Model: Who Acts on Whose Behalf?<a class="headerlink" href="#72-the-agent-identity-model-who-acts-on-whose-behalf" title="Permanent link">&para;</a></h2>
 <p>Conventional systems already have user, service, device, and delegated identities; an agent does not inherently introduce a new kind of cryptographic identity. In an implementation, distinguish the workload running the agent, the user or automated-task principal initiating the task, the party authorizing the action, and the IDs of the executing agent and task. Agent and task IDs are often audit attributes, not substitutes for verifiable principal credentials.</p>
@@ -9243,10 +9278,16 @@
 <p>In a real deployment spanning multiple clouds and services, giving every agent or tool static, long-lived credentials is neither scalable nor secure. A better approach is <strong>workload identity federation</strong>: the agent's runtime environment, such as a container or serverless function instance, has a verifiable identity and uses short-lived token exchange to obtain temporary credentials for downstream resources, rather than relying on secrets hardcoded in configuration. This follows the short-lived access token principle in <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security, Section 15.2</a>, extending it from an individual protocol call to credential management across the deployment.</p>
 <h2 id="73-confused-deputy-a-general-pattern-not-an-mcp-specific-problem"><span id="73-confused-deputy-mcp" class="legacy-heading-anchor" aria-hidden="true"></span>7.3 Confused Deputy: A General Pattern, Not an MCP-Specific Problem<a class="headerlink" href="#73-confused-deputy-a-general-pattern-not-an-mcp-specific-problem" title="Permanent link">&para;</a></h2>
 <p>The confused deputy problem originated in conventional operating-system security: a privileged program is induced to perform an operation on behalf of a less-privileged caller that the caller is not authorized to perform. In agent systems, this pattern recurs at several layers. Token passthrough, discussed in <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security, Section 15.2.1</a>, is just one manifestation.</p>
-<pre class="mermaid"><code>flowchart LR
-    U[Low-privilege caller] --&gt;|Request| D[High-privilege agent/proxy]
-    D --&gt;|Acts using its own privileged credentials| R[Resource]
-    R --&gt;|Cannot distinguish&lt;br/&gt;whose intent is being served| X[Unauthorized access]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["Low-privilege&lt;br/&gt;caller"] --&gt;|Request| D["High-privilege&lt;br/&gt;agent/proxy"]
+    D --&gt;|"Own credentials"| R["Resource"]
+    R --&gt;|"No caller context"| X["Unauthorized&lt;br/&gt;access"]</code></pre>
+<p>Figure conditions and labels:</p>
+<ul>
+<li>Acts using its own privileged credentials</li>
+<li>Cannot distinguish whose intent is being served</li>
+</ul>
 <p>Other common variants include:</p>
 <ul>
 <li><strong>Privilege amplification in a multi-agent delegation chain:</strong> Agent A invokes Agent B under A's own privileged identity to perform a subtask but fails to pass along the fact that a low-privilege user initiated it. B then acts with A's permissions rather than the user's.</li>
@@ -9292,14 +9333,25 @@
 <p>For multi-agent collaboration patterns, routing, and architectural approaches to the confused deputy problem, see <a href="../../../agent/05-production/15-agent-security/">Agent Security, Section 15.12</a> and <a href="../../../agent/04-multi-agent/13-multi-agent-coordination/">Multi-Agent Coordination and Routing</a>. This chapter takes the identity and permission-governance perspective; read the two perspectives together.</p>
 <h2 id="75-tool-permission-governance-across-an-agent-fleet"><span id="75" class="legacy-heading-anchor" aria-hidden="true"></span>7.5 Tool Permission Governance Across an Agent Fleet<a class="headerlink" href="#75-tool-permission-governance-across-an-agent-fleet" title="Permanent link">&para;</a></h2>
 <p>Once an organization's agents and tools reach sufficient scale, individual manual approvals are no longer sustainable. Governance needs a systematic approach:</p>
-<pre class="mermaid"><code>flowchart TB
-    REG[Central tool/MCP server registry] --&gt; META[Record publisher/version/requested permissions/data classification]
-    META --&gt; POLICY[Policy as code&lt;br/&gt;Define available tools by role/environment/data sensitivity]
-    POLICY --&gt; DEPLOY[Generate an allowlist from policy at agent deployment]
-    DEPLOY --&gt; AUDIT[Central audit: who called what, when, and under which identity]
-    AUDIT --&gt; REVIEW[Periodic review: are these permissions still necessary?]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    REG["Central&lt;br/&gt;tool/MCP server&lt;br/&gt;registry"] --&gt; META["Record tool&lt;br/&gt;metadata"]
+    META --&gt; POLICY["Policy as code"]
+    POLICY --&gt; DEPLOY["Deploy with&lt;br/&gt;allowlist"]
+    DEPLOY --&gt; AUDIT["Audit calls"]
+    AUDIT --&gt; REVIEW["Review&lt;br/&gt;permissions"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
 <ul>
-<li><strong>Central registry:</strong> before integration, every tool or MCP server available to agents must register its publisher, version, requested permissions, and relevant data classifications. Teams must not simply connect an unregistered tool to an agent.</li>
+<li>Record publisher/version/requested permissions/data classification</li>
+<li>Policy as code Define available tools by role/environment/data sensitivity</li>
+<li>Generate an allowlist from policy at agent deployment</li>
+<li>Central audit: who called what, when, and under which identity</li>
+<li>
+<p>Periodic review: are these permissions still necessary?</p>
+</li>
+<li>
+<p><strong>Central registry:</strong> before integration, every tool or MCP server available to agents must register its publisher, version, requested permissions, and relevant data classifications. Teams must not simply connect an unregistered tool to an agent.</p>
+</li>
 <li><strong>Policy as code:</strong> describe tool availability—which agents, environments, and data sensitivity levels permit its use—in versioned, reviewable policies rather than scattered agent configuration files.</li>
 <li><strong>Automatically tighten permissions by environment:</strong> use stricter default policies in production than in testing. This extends the context-dependent restriction principle in <a href="../../../agent/05-production/15-agent-security/">Agent Security, Section 15.9.2</a> into an organization-wide default.</li>
 <li><strong>Centralized auditing and periodic review:</strong> audit logs must correlate an entire task across agents and tools, consistent with the requirements in <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security, Section 15.4</a>. Review permissions on a fixed schedule and revoke grants that are no longer needed. This directly addresses the common organizational problem of permissions only ever accumulating.</li>
@@ -9332,15 +9384,8 @@
 <li>At organizational scale, fleet-wide governance requires a tool registry, policy as code, centralized auditing, and periodic permission reviews—not individual manual approvals alone.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://cap-lore.com/CapTheory/ConfusedDeputy.html">Confused Deputy Problem (Norm Hardy, 1988)</a></li>
-<li><a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization">MCP 2026-07-28 Authorization: Confused Deputy Considerations</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc8693.html">RFC 8693: OAuth 2.0 Token Exchange, especially Sections 1.1 and 4.1</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc7662.html">RFC 7662: OAuth 2.0 Token Introspection</a></li>
-<li><a href="https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/">OWASP Agentic AI Threats and Mitigations: Identity and Authorization</a></li>
-<li><a href="https://csrc.nist.gov/pubs/sp/800/207/final">NIST SP 800-207: Zero Trust Architecture</a></li>
-<li><a href="https://spiffe.io/">SPIFFE/SPIRE: Workload Identity Framework</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-07">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9363,7 +9408,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

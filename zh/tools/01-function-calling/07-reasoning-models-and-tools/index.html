@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：为什么有些推理模型不支持 MCP","description":"区分推理模型、工具调用 API 和 MCP 支持，解释工具往返时的状态回传、KV Cache 与兼容性排查。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/07-reasoning-models-and-tools/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：为什么有些推理模型不支持 MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/07-reasoning-models-and-tools/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第七章：为什么有些推理模型不支持 MCP","description":"区分推理模型、工具调用 API 和 MCP 支持，解释工具往返时的状态回传、KV Cache 与兼容性排查。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/07-reasoning-models-and-tools/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第七章：为什么有些推理模型不支持 MCP","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/07-reasoning-models-and-tools/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第七章：为什么有些推理模型不支持 MCP","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/07-reasoning-models-and-tools/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9317,24 +9342,36 @@
 <h1 id="mcp">第七章：为什么有些推理模型不支持 MCP<a class="headerlink" href="#mcp" title="Permanent link">&para;</a></h1>
 <h2 id="71">7.1 问题的传导链<a class="headerlink" href="#71" title="Permanent link">&para;</a></h2>
 <p>先把这条传导链拆开看：</p>
-<pre class="mermaid"><code>flowchart LR
-    A["推理模型不支持&lt;br/&gt;某个 Function Calling 接口"] --&gt; B["该 Host 的 FC 桥接不可用"]
-    B --&gt; C["改用其他模型接口&lt;br/&gt;或确定性 MCP 调用"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["推理模型不支持"] --&gt; B["该 Host 的 FC 桥&lt;br/&gt;接不可用"]
+    B --&gt; C["改用其他模型接口"]
 
     style A fill:#fce8e6</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>推理模型不支持 某个 Function Calling 接口</li>
+<li>改用其他模型接口 或确定性 MCP 调用</li>
+</ul>
 <p><a href="../../02-mcp/06-mcp-vs-function-calling/">第六章</a> 讲过，很多 Host 会把 Server 的工具定义转换成模型原生的 Function Calling 格式。这条<strong>模型驱动</strong>的桥接路径依赖模型接口；若该接口不可用，Host 可以改用结构化输出、规则工作流或人工触发 <code>tools/call</code>。MCP 本身并未要求模型具备 Function Calling。</p>
 <p>需要核查的是：<strong>哪个模型快照、哪个 API、哪个 Host 适配器不支持什么能力</strong>。厂商未公开的实现原因，不能用“推理架构冲突”自行补全。</p>
 <h2 id="72">7.2 推理模型特殊在哪<a class="headerlink" href="#72" title="Permanent link">&para;</a></h2>
 <p>部分模型提供显式的 reasoning/thinking 模式，在最终输出前或工具调用之间进行额外推理。内部推理、公开思考文本和 API 返回的摘要不是同一物；也不能据此认为普通模型“完全没有推理”。</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph NORMAL["普通模型"]
-        N1[问题] --&gt; N2[直接生成答案]
-    end
-
-    subgraph REASONING["推理模型"]
-        R1[问题] --&gt; R2["额外推理&lt;br/&gt;预算和可见性依接口而定"]
-        R2 --&gt; R3[最终答案]
-    end</code></pre>
+<p><strong>普通模型</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["问题"] --&gt; N2["直接生成答案"]
+</code></pre>
+<p><strong>推理模型</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        R1["问题"] --&gt; R2["额外推理"]
+        R2 --&gt; R3["最终答案"]
+</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>额外推理 预算和可见性依接口而定</li>
+</ul>
 <p>工具返回值是后续输入的一部分。关键工程问题是如何保留模型 API 要求的历史项和关联标识，而非保证某块 GPU 显存一直不释放。</p>
 <h2 id="73">7.3 工具往返中的状态保存<a class="headerlink" href="#73" title="Permanent link">&para;</a></h2>
 <p>工具调用天然是多轮的：</p>
@@ -9433,27 +9470,37 @@
 <h2 id="76">7.6 后来是怎么解决的<a class="headerlink" href="#76" title="Permanent link">&para;</a></h2>
 <h3 id="761">7.6.1 方案一：思考结束后再调工具<a class="headerlink" href="#761" title="Permanent link">&para;</a></h3>
 <p>一种常见折中是：<strong>让工具调用发生在思考阶段完全结束之后</strong>。</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[问题] --&gt; T["本轮先思考&lt;br/&gt;再输出工具调用"]
-    T --&gt; TC[输出 tool_calls]
-    TC --&gt; EX[执行工具]
-    EX --&gt; A[生成最终答案]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["问题"] --&gt; T["本轮先思考"]
+    T --&gt; TC["输出 tool_calls"]
+    TC --&gt; EX["执行工具"]
+    EX --&gt; A["生成最终答案"]
 
     style T fill:#e8f0fe</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>本轮先思考 再输出工具调用</li>
+</ul>
 <p>这是一个应用流程选择，不是保证推理质量的通用方案。</p>
 <p>调用前的推理当然看不到尚未取得的结果，但结果返回后可以再次推理；只有应用主动禁止后续推理时，才退化成简单总结。</p>
 <p>需要外部数据的任务应先获取证据，再做依赖该证据的推理，避免把查询前的假设直接当成最终结论。</p>
 <h3 id="762">7.6.2 方案二：交错思考<a class="headerlink" href="#762" title="Permanent link">&para;</a></h3>
-<p>Anthropic 的 <a href="https://www.anthropic.com/news/claude-4">Claude 4 发布说明</a>明确描述了思考与工具交替的能力，当时以 beta 发布。相较之下，早期 Claude 3.7 官方 Cookbook 的工具示例注明同一工具结果轮次不再输出新的 thinking 块；不能把旧示例当作当前所有模型的行为。</p>
-<pre class="mermaid"><code>flowchart LR
-    Q[问题] --&gt; T1[思考片段 1]
-    T1 --&gt; C1[调工具 A]
-    C1 --&gt; T2["思考片段 2&lt;br/&gt;基于工具 A 的结果"]
-    T2 --&gt; C2[调工具 B]
-    C2 --&gt; T3[思考片段 3]
-    T3 --&gt; A[最终答案]
+<p>Anthropic 的 Claude 4 发布说明<sup><a href="../../../book/references/#ref-298">【298】</a></sup>明确描述了思考与工具交替的能力，当时以 beta 发布。相较之下，早期 Claude 3.7 官方 Cookbook 的工具示例注明同一工具结果轮次不再输出新的 thinking 块；不能把旧示例当作当前所有模型的行为。</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Q["问题"] --&gt; T1["思考片段 1"]
+    T1 --&gt; C1["调工具 A"]
+    C1 --&gt; T2["思考片段 2"]
+    T2 --&gt; C2["调工具 B"]
+    C2 --&gt; T3["思考片段 3"]
+    T3 --&gt; A["最终答案"]
 
     style T2 fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>思考片段 2 基于工具 A 的结果</li>
+</ul>
 <p>这在很大程度上缓解了「思考阶段感知不到工具结果」的局限——模型可以边查边想。</p>
 <p>代价包括多轮推理、外部 I/O 和状态保存，但总成本不一定更高：更合理的规划也可能减少无用调用。具体 thinking 块的保留、签名与 token 计费规则以模型 API 为准。</p>
 <h3 id="763">7.6.3 方案三：把工具调用训进推理链<a class="headerlink" href="#763" title="Permanent link">&para;</a></h3>
@@ -9522,20 +9569,8 @@
 <li><strong>现在的实际关注点</strong>是成本、支持粒度和选型，而不是「支不支持」。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning Models 指南</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function Calling 与 reasoning 项回传</a></li>
-<li><a href="https://developers.openai.com/api/docs/models/o1-preview">OpenAI: o1-preview 模型页</a></li>
-<li><a href="https://developers.openai.com/api/docs/models/o1">OpenAI: o1 模型与快照</a></li>
-<li><a href="https://github.com/openai/openai-cookbook/blob/main/examples/o1/Using_chained_calls_for_o1_structured_outputs.ipynb">OpenAI Cookbook：o1-preview 初期结构化输出限制</a></li>
-<li><a href="https://www.anthropic.com/news/claude-4">Anthropic：Claude 4 交错工具使用发布说明</a></li>
-<li><a href="https://github.com/anthropics/anthropic-cookbook/blob/main/extended_thinking/extended_thinking_with_tool_use.ipynb">Anthropic Cookbook：早期 Claude 3.7 thinking 块保留示例</a></li>
-<li><a href="https://docs.claude.com/en/docs/build-with-claude/extended-thinking">Anthropic: Extended Thinking</a></li>
-<li><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a></li>
-<li><a href="https://arxiv.org/abs/2504.11536">ReTool: Reinforcement Learning for Strategic Tool Use in LLMs</a></li>
-<li><a href="https://arxiv.org/abs/2504.13958">ToolRL: Reward is All Tool Learning Needs</a></li>
-<li><a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-07">集中参考资料章节</a>。</p>
 
 
 
@@ -9558,7 +9593,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

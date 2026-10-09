@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps","description":"Understand the overlapping responsibilities of DevOps, MLOps, and LLMOps, and the additional evaluation, versioning, and runtime authorization requirements of generative applications.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/01-llmops-vs-mlops-devops/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/01-llmops-vs-mlops-devops/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps","description":"Understand the overlapping responsibilities of DevOps, MLOps, and LLMOps, and the additional evaluation, versioning, and runtime authorization requirements of generative applications.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/01-llmops-vs-mlops-devops/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/01-llmops-vs-mlops-devops/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/01-foundations/01-llmops-vs-mlops-devops/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9134,19 +9159,32 @@
 <h1 id="chapter-1-what-is-llmops-how-it-relates-to-mlops-and-devops"><span id="llmops-mlopsdevops" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 1: What Is LLMOps? How It Relates to MLOps and DevOps<a class="headerlink" href="#chapter-1-what-is-llmops-how-it-relates-to-mlops-and-devops" title="Permanent link">&para;</a></h1>
 <h2 id="11-why-are-these-three-terms-so-often-confused"><span id="11" class="legacy-heading-anchor" aria-hidden="true"></span>1.1 Why are these three terms so often confused?<a class="headerlink" href="#11-why-are-these-three-terms-so-often-confused" title="Permanent link">&para;</a></h2>
 <p>DevOps, MLOps, and LLMOps are not mutually exclusive roles, and the industry has no universally agreed dividing lines between them. The assets they primarily manage offer a useful distinction, but all three share release management, monitoring, data governance, and incident response capabilities. LLMOps can also include self-hosting, fine-tuning, and training; it is not limited to calling third-party APIs.</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph DevOps["DevOps"]
-        D1["Assets: application code"]
-        D2["Concerns: builds, tests, releases, rollbacks"]
-    end
-    subgraph MLOps["MLOps"]
-        M1["Assets: data, models, and ML pipelines"]
-        M2["Concerns: training, evaluation, deployment, drift monitoring"]
-    end
-    subgraph LLMOps["LLMOps"]
-        L1["Assets: models, prompts, context, and tool configuration"]
-        L2["Concerns: prompts, routing, evaluation, cost, hallucination management"]
-    end</code></pre>
+<p><strong>DevOps</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        D1["Assets: application&lt;br/&gt;code"]
+        D2["DevOps concerns"]
+</code></pre>
+<p><strong>MLOps</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        M1["MLOps assets"]
+        M2["MLOps concerns"]
+</code></pre>
+<p><strong>LLMOps</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        L1["LLMOps assets"]
+        L2["LLMOps concerns"]
+</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Concerns: builds, tests, releases, rollbacks</li>
+<li>Assets: data, models, and ML pipelines</li>
+<li>Concerns: training, evaluation, deployment, drift monitoring</li>
+<li>Assets: models, prompts, context, and tool configuration</li>
+<li>Concerns: prompts, routing, evaluation, cost, hallucination management</li>
+</ul>
 <p>DevOps focuses on software delivery and operations. MLOps brings the data and model lifecycle into engineering management. LLMOps emphasizes prompts, context, open-ended outputs, and tool execution in generative applications. Managed APIs introduce constraints around provider versions, quotas, and where and how data is processed. Self-hosted models remove some external dependencies, but leave the team responsible for inference scheduling, compute resources, and model updates.</p>
 <h2 id="12-what-requires-extra-attention-in-generative-applications"><span id="12" class="legacy-heading-anchor" aria-hidden="true"></span>1.2 What requires extra attention in generative applications?<a class="headerlink" href="#12-what-requires-extra-attention-in-generative-applications" title="Permanent link">&para;</a></h2>
 <p>Data versioning, training pipelines, model registries, and A/B testing from MLOps still apply. The following are common differences in emphasis, not defining distinctions between the two:</p>
@@ -9184,17 +9222,23 @@
 <p>Service quality can deteriorate without a code change: the input distribution, knowledge base, upstream services, or model version may have changed. First distinguish “the inputs changed” from “the system behaves differently on the same inputs,” then identify the specific asset responsible. The version records in Chapter 9 and production monitoring in Chapter 12 support this investigation together. Provider upgrades are not the only possible cause.</p>
 <h2 id="13-llmops-extends-devops-rather-than-replacing-it"><span id="13-llmops-devops" class="legacy-heading-anchor" aria-hidden="true"></span>1.3 LLMOps extends DevOps rather than replacing it<a class="headerlink" href="#13-llmops-extends-devops-rather-than-replacing-it" title="Permanent link">&para;</a></h2>
 <p>LLMOps does not discard DevOps and start over. It builds on established DevOps infrastructure, such as CI/CD and observability, and <strong>adds quality gates specific to models and prompts</strong>.</p>
-<pre class="mermaid"><code>flowchart TB
-    Code["Code change"] --&gt; UnitTest["Unit / integration tests"]
-    Prompt["Prompt / model / routing change"] --&gt; EvalGate["Offline evaluation gate (added by LLMOps)"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    Code["Code change"] --&gt; UnitTest["Unit /&lt;br/&gt;integration&lt;br/&gt;tests"]
+    Prompt["Prompt / model&lt;br/&gt;/ routing&lt;br/&gt;change"] --&gt; EvalGate["Offline&lt;br/&gt;evaluation"]
     UnitTest --&gt; Build["Build image"]
     EvalGate --&gt; Build
     Build --&gt; Deploy["Gradual rollout"]
-    Deploy --&gt; Observe["Observability: logs / metrics / traces"]
+    Deploy --&gt; Observe["Observability"]
     Observe -.Feedback.-&gt; Prompt
     Observe -.Feedback.-&gt; Code
 
     style EvalGate fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Offline evaluation gate (added by LLMOps)</li>
+<li>Observability: logs / metrics / traces</li>
+</ul>
 <p>Schemas, authorization, monetary calculations, idempotency, and state machines should still have deterministic tests. Open-ended generation additionally needs quality evaluations that account for sampling error. Traditional ML evaluation also has statistical uncertainty; an additional difficulty with LLMs is that more than one answer may be acceptable. Repeated samples for the same question reveal variability, but must not be presented as additional independent business examples.</p>
 <h2 id="14-comparing-the-three-perspectives"><span id="14" class="legacy-heading-anchor" aria-hidden="true"></span>1.4 Comparing the three perspectives<a class="headerlink" href="#14-comparing-the-three-perspectives" title="Permanent link">&para;</a></h2>
 <p>Even for a problem such as “model inference is slow,” the three perspectives emphasize different questions:</p>
@@ -9241,13 +9285,8 @@
 <h2 id="16-chapter-summary"><span id="16" class="legacy-heading-anchor" aria-hidden="true"></span>1.6 Chapter summary<a class="headerlink" href="#16-chapter-summary" title="Permanent link">&para;</a></h2>
 <p>LLMOps extends existing software and ML engineering practices to generative applications. Whether a team trains its own models is not the defining criterion. In an interview, explaining which assets a change affects is more useful than reciting job definitions: which behaviors can be verified deterministically, which quality dimensions require statistical evaluation, and whether failures can be diagnosed and recovered from.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning">Google Cloud: MLOps: Continuous delivery and automation pipelines in machine learning</a></li>
-<li><a href="https://a16z.com/emerging-architectures-for-llm-applications/">a16z: What Is LLMOps?</a></li>
-<li><a href="https://huyenchip.com/2023/04/11/llm-engineering.html">Chip Huyen: Building LLM applications for production</a></li>
-<li><a href="https://platform.openai.com/docs/guides/production-best-practices">OpenAI: Best practices for production deployments</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building effective agents</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-01">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9270,7 +9309,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

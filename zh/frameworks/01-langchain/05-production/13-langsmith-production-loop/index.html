@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：用 LangSmith 建立生产质量闭环","description":"将脱敏 Trace 转为版本化数据集和评测实验，解释重复运行、样本切分、风险审计与在线采样的生产质量闭环。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/05-production/13-langsmith-production-loop/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：用 LangSmith 建立生产质量闭环","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/05-production/13-langsmith-production-loop/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十三章：用 LangSmith 建立生产质量闭环","description":"将脱敏 Trace 转为版本化数据集和评测实验，解释重复运行、样本切分、风险审计与在线采样的生产质量闭环。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/05-production/13-langsmith-production-loop/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十三章：用 LangSmith 建立生产质量闭环","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/05-production/13-langsmith-production-loop/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十三章：用 LangSmith 建立生产质量闭环","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/frameworks/01-langchain/05-production/13-langsmith-production-loop/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9223,18 +9248,26 @@
 <blockquote>
 <p>生产闭环通常沿着「Trace 脱敏 → 归因与标注 → 数据集 → 离线实验 → 发布门禁 → 线上评测与反馈 → 失败 Trace 回归」推进，而不是看到失败就只改 Prompt。</p>
 </blockquote>
-<pre class="mermaid"><code>flowchart LR
-    A["线上 Trace&lt;br/&gt;先脱敏、最小化"] --&gt; B["筛选失败/反馈/抽样"]
-    B --&gt; C["标注后加入 Dataset"]
-    C --&gt; D["离线实验&lt;br/&gt;比较版本"]
-    D --&gt; E{"Release gate"}
-    E --&gt;|通过| F["小流量发布 + 在线评测"]
-    E --&gt;|不通过| G["修复 Agent/Tool/策略"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["线上 Trace"] --&gt; B["筛选样本"]
+    B --&gt; C["标注后加入&lt;br/&gt;Dataset"]
+    C --&gt; D["离线实验"]
+    D --&gt; E["Release gate"]
+    E --&gt;|通过| F["小流量发布并评估"]
+    E --&gt;|不通过| G["修复 Agent/Tool/&lt;br/&gt;策略"]
     F --&gt; B
     G --&gt; D
 
     style E fill:#fff3cd
     style F fill:#e6f4ea</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>线上 Trace 先脱敏、最小化</li>
+<li>筛选失败/反馈/抽样</li>
+<li>离线实验 比较版本</li>
+<li>小流量发布 + 在线评测</li>
+</ul>
 <h2 id="132-trace">13.2 先定义 Trace 数据边界<a class="headerlink" href="#132-trace" title="Permanent link">&para;</a></h2>
 <p>可观测不等于收集一切。发送 Trace 前就应最小化输入、输出、metadata 和附件；不要把控制台隐藏字段当成“未采集”。</p>
 <table>
@@ -9419,12 +9452,17 @@
 <p>定向抽样得到的是被选中人群的分数，不是全站失败率。保留独立随机样本估计总体趋势，或记录纳入概率后做适当加权。线上 judge 通常在运行后评分，不能代替操作执行前的授权拦截；LangSmith 也不会仅因为创建了 experiment 就自动阻断发布，Release gate 必须接入实际 CI/CD 决策路径。</p>
 <h2 id="136">13.6 反馈如何回流<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <p>在产品中收集点赞/点踩、纠正答案、人工接管原因和审批拒绝原因，并把反馈关联到 Trace ID、版本和用户可见输出。反馈应经过脱敏、去重、滥用检测和人工分诊后，再决定是否进入 Dataset。</p>
-<pre class="mermaid"><code>flowchart TB
-    U["用户/审核员反馈"] --&gt; T["关联 Trace ID 与版本"]
-    T --&gt; R["脱敏、去重、按根因分诊"]
-    R --&gt; D["加入 Dataset 切片"]
-    D --&gt; X["离线实验与 Release gate"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    U["用户/审核员反馈"] --&gt; T["关联 Trace ID 与&lt;br/&gt;版本"]
+    T --&gt; R["整理反馈"]
+    R --&gt; D["加入 Dataset 切&lt;br/&gt;片"]
+    D --&gt; X["离线实验与&lt;br/&gt;Release gate"]
     X --&gt; P["灰度发布"]</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>脱敏、去重、按根因分诊</li>
+</ul>
 <blockquote>
 <p>单次点赞不能直接当成质量证明，用户文本也不应直接改写系统 Prompt 或授权策略。反馈是评测与改进的输入，仍要经过确定性安全控制和人工审核。</p>
 </blockquote>
@@ -9452,15 +9490,8 @@
 <p>可以把 LangSmith 在这里的作用概括为：把经过脱敏的生产证据持续转成 Dataset、离线实验、发布门禁和线上监测，让每一次真实失败都能在下一次发布前进入回归验证。</p>
 </blockquote>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/langsmith/observability">LangSmith Observability</a></li>
-<li><a href="https://docs.langchain.com/langsmith/evaluation">LangSmith Evaluation</a></li>
-<li><a href="https://docs.langchain.com/langsmith/manage-datasets">LangSmith 管理 Dataset</a></li>
-<li><a href="https://docs.langchain.com/langsmith/online-evaluations-llm-as-judge">LangSmith Online evaluation</a></li>
-<li><a href="https://docs.langchain.com/langsmith/attach-user-feedback">LangSmith 用户反馈</a></li>
-<li><a href="https://docs.langchain.com/langsmith/mask-inputs-outputs">LangSmith 发送前隐藏与转换敏感数据</a></li>
-<li><a href="https://docs.langchain.com/langsmith/experiment-configuration">LangSmith 实验重复次数、并发与缓存</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../../book/references/#reading-frameworks-13">集中参考资料章节</a>。</p>
 
 
 
@@ -9483,7 +9514,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

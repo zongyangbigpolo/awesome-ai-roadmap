@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Function Calling 是什么，原理是什么","description":"解释 Function Calling 的工作流程、工具 Schema、模型决策和执行闭环，并给出参数约束与错误处理的工程要点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/01-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：Function Calling 是什么，原理是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/01-function-calling/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第一章：Function Calling 是什么，原理是什么","description":"解释 Function Calling 的工作流程、工具 Schema、模型决策和执行闭环，并给出参数约束与错误处理的工程要点。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/01-function-calling/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第一章：Function Calling 是什么，原理是什么","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/01-function-calling/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第一章：Function Calling 是什么，原理是什么","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/01-function-calling/01-function-calling/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9512,34 +9537,53 @@
 <p>例如用户问“你能查天气吗”，模型可能只是介绍 <code>get_weather</code>，不应仅因出现工具名就执行。显式动作语法也能区分两者，但解析器和停止条件需要专门设计。</p>
 <h3 id="123-function-calling">1.2.3 Function Calling 解决了什么<a class="headerlink" href="#123-function-calling" title="Permanent link">&para;</a></h3>
 <p>它把这件事从<strong>文本解析问题</strong>变成了<strong>协议问题</strong>：</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph OLD["旧方案"]
-        O1[模型输出自然语言] --&gt; O2[正则 / 格式约定解析]
-        O2 --&gt; O3{解析成功?}
-        O3 --&gt;|失败| O4[静默降级]
-        O3 --&gt;|成功| O5[调用工具]
-    end
-
-    subgraph NEW["Function Calling"]
-        N1[模型输出 tool_calls 结构] --&gt; N2[解析字段并校验参数与权限]
-        N2 --&gt; N3[调用工具]
-    end</code></pre>
+<p><strong>旧方案</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        O1["模型输出自然语言"] --&gt; O2["正则 / 格式约定解析"]
+        O2 --&gt; O3["解析成功?"]
+        O3 --&gt;|失败| O4["静默降级"]
+        O3 --&gt;|成功| O5["调用工具"]
+</code></pre>
+<p><strong>Function Calling</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        N1["模型输出 tool_calls 结&lt;br/&gt;构"] --&gt; N2["校验调用"]
+        N2 --&gt; N3["调用工具"]
+</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>解析字段并校验参数与权限</li>
+</ul>
 <p>在 OpenAI <strong>Chat Completions</strong> 中，<code>tool_calls</code> 与 <code>finish_reason: "tool_calls"</code> 明确标记调用，而不是让应用从普通文本猜意图。Responses 则使用 <code>output</code> 中的 <code>function_call</code> 项，并以 <code>function_call_output.call_id</code> 回传；不能套用 <code>finish_reason</code>。这些字段是 API 设计，不代表模型内部直接生成了整个响应对象。</p>
 <h2 id="13">1.3 三个角色与职责边界<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
 <p>把整个流程理解成一次任务委托，三个角色的分工就很清楚了。</p>
-<pre class="mermaid"><code>flowchart TB
-    DEV["开发者&lt;br/&gt;写工具说明书（JSON Schema）"] --&gt;|注册 tools| MODEL
-    USER["用户&lt;br/&gt;提出需求"] --&gt;|messages| MODEL
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    DEV["开发者"] --&gt;|注册 tools| MODEL
+    USER["用户"] --&gt;|messages| MODEL
 
-    MODEL["模型&lt;br/&gt;只做决策"] --&gt;|输出 tool_calls| HOST
+    MODEL["模型"] --&gt;|输出 tool_calls| HOST
 
-    HOST["宿主程序&lt;br/&gt;校验、批准并执行"] --&gt;|真正调用| EXT["外部系统&lt;br/&gt;API / DB / 文件"]
+    HOST["宿主程序"] --&gt;|真正调用| EXT["外部系统"]
     EXT --&gt;|返回结果| HOST
     HOST --&gt;|role: tool 消息| MODEL
-    MODEL --&gt;|最终自然语言答案| USER
+    MODEL --&gt;|"最终回答"| USER
 
     style MODEL fill:#e8f0fe
     style HOST fill:#fce8e6</code></pre>
+<p>图中条件与标签：</p>
+<ul>
+<li>最终自然语言答案</li>
+</ul>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>开发者 写工具说明书（JSON Schema）</li>
+<li>用户 提出需求</li>
+<li>模型 只做决策</li>
+<li>宿主程序 校验、批准并执行</li>
+<li>外部系统 API / DB / 文件</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9628,21 +9672,61 @@
 </span></code></pre></div>
 <p><code>enum</code> 既可用于服务端校验，也可被支持约束解码的运行时用于屏蔽非法 token。只有实际启用并支持该 Schema 的 strict/structured-output 路径才有此约束；仅注册 Schema 不能保证值合法，更不能保证优先级选得合理。上面的 Chat Completions 示例未开启 strict，严格模式见<a href="../03-tool-schema-design/">第三章</a>。</p>
 <h2 id="15">1.5 完整调用流程：两轮对话加中间执行<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant U as 用户
-    participant H as 宿主程序
-    participant M as 模型
-    participant T as 天气 API
-
-    U-&gt;&gt;H: 北京今天天气怎么样？
-    H-&gt;&gt;M: messages + tools（第一轮）
-    M--&gt;&gt;H: finish_reason=tool_calls&lt;br/&gt;get_weather(city="北京")
-    Note over M: 模型在这里停下，&lt;br/&gt;没有输出最终答案
-    H-&gt;&gt;T: 真正的 HTTP 请求
-    T--&gt;&gt;H: 晴，15°C，东北风 3 级
-    H-&gt;&gt;M: 追加 role=tool 消息（第二轮）
-    M--&gt;&gt;H: 北京今天晴，气温 15°C……
-    H-&gt;&gt;U: 最终答案</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["用户请求"]
+    S1["模型提出调用"]
+    S2["Host 调用天气 API"]
+    S3["模型使用结果"]
+    S4["最终回答"]
+    S0 --&gt; S1 --&gt; S2 --&gt; S3 --&gt; S4</code></pre>
+<p>完整消息顺序（含阶段说明）：</p>
+<table>
+<thead>
+<tr>
+<th>交互双方</th>
+<th>消息或动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户 → 宿主程序</td>
+<td>北京今天天气怎么样？</td>
+</tr>
+<tr>
+<td>宿主程序 → 模型</td>
+<td>messages + tools（第一轮）</td>
+</tr>
+<tr>
+<td>模型 → 宿主程序（返回）</td>
+<td>finish_reason=tool_calls；get_weather(city="北京")</td>
+</tr>
+<tr>
+<td>说明：模型</td>
+<td>模型在这里停下，；没有输出最终答案</td>
+</tr>
+<tr>
+<td>宿主程序 → 天气 API</td>
+<td>真正的 HTTP 请求</td>
+</tr>
+<tr>
+<td>天气 API → 宿主程序（返回）</td>
+<td>晴，15°C，东北风 3 级</td>
+</tr>
+<tr>
+<td>宿主程序 → 模型</td>
+<td>追加 role=tool 消息（第二轮）</td>
+</tr>
+<tr>
+<td>模型 → 宿主程序（返回）</td>
+<td>北京今天晴，气温 15°C……</td>
+</tr>
+<tr>
+<td>宿主程序 → 用户</td>
+<td>最终答案</td>
+</tr>
+</tbody>
+</table>
 <p>下面是单次查询的教学片段，不是独立可运行的客户端。<code>registry</code> 是应用的工具白名单；<code>validate_and_authorize</code> 需由应用实现，检查 Schema、业务参数和当前用户权限，失败时抛出明确错误。示例使用兼容 Chat Completions 的模型，不代表所有新模型支持该接口。</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
@@ -9837,15 +9921,21 @@
 <h2 id="16">1.6 并行工具调用<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <p><code>tool_calls</code> 是数组而不是单个对象，这是一个刻意的设计。</p>
 <p>用户问「帮我查北京、上海、广州的天气」，模型可以在<strong>一次响应</strong>里返回三个调用请求：</p>
-<pre class="mermaid"><code>flowchart LR
-    subgraph SER["串行：4 轮模型调用，含最终总结"]
-        S1[模型] --&gt; S2[查北京] --&gt; S3[模型] --&gt; S4[查上海] --&gt; S5[模型] --&gt; S6[查广州] --&gt; S7[模型]
-    end
-
-    subgraph PAR["并行：2 轮模型调用"]
-        P1[模型一次输出 3 个 tool_calls] --&gt; P2[并发执行三个查询]
-        P2 --&gt; P3[一次性回填三条结果] --&gt; P4[模型]
-    end</code></pre>
+<p><strong>串行调用</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        S1["模型"] --&gt; S2["查北京"] --&gt; S3["模型"] --&gt; S4["查上海"] --&gt; S5["模型"] --&gt; S6["查广州"] --&gt; S7["模型"]
+</code></pre>
+<p><strong>并行：2 轮模型调用</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+        P1["模型一次输出 3&lt;br/&gt;个 tool_calls"] --&gt; P2["并发执行三个查询"]
+        P2 --&gt; P3["一次性回填三条结&lt;br/&gt;果"] --&gt; P4["模型"]
+</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>串行：4 轮模型调用，含最终总结</li>
+</ul>
 <p>在三个查询彼此独立、每轮推理耗时均近似为 <code>T</code>、不计排队和调度开销的教学模型下：逐次查询加总结约为 <code>4T + IO₁ + IO₂ + IO₃</code>，一批并发加总结约为 <code>2T + max(IO₁, IO₂, IO₃)</code>。实际收益取决于生成长度、并发限制和 API 延迟。</p>
 <p>下面只展示并发调度，输入须已完成解析、参数校验和授权。<code>validated_calls</code> 中每项包含 <code>name</code> 与 <code>arguments</code>，应用另行保留它与原调用 ID 的映射。</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
@@ -9923,16 +10013,8 @@
 <li><strong>它只解决了表达问题</strong>，工具发现、跨进程接入可由 MCP 等机制补齐，两者不是强制上下层关系。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://developers.openai.com/api/docs/guides/function-calling">OpenAI: Function Calling 指南（2026-09-08 核查）</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/migrate-to-responses">OpenAI: Responses API 迁移指南（本节字段与示例于 2026-09-16 对照此页及 Function Calling 指南核查）</a></li>
-<li><a href="https://openai.com/index/function-calling-and-other-api-updates/">OpenAI: 2023 年 Function Calling 发布</a></li>
-<li><a href="https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview">Anthropic: Tool Use with Claude</a></li>
-<li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Anthropic: Writing Effective Tools for Agents</a></li>
-<li><a href="https://arxiv.org/abs/2302.04761">Toolformer: Language Models Can Teach Themselves to Use Tools</a></li>
-<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
-<li><a href="https://json-schema.org/">JSON Schema 规范</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-01">集中参考资料章节</a>。</p>
 
 
 
@@ -9955,7 +10037,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

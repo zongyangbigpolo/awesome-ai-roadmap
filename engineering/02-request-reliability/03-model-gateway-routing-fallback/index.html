@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Model Gateways, Routing, and Fallback","description":"Design model routing and fallback under quality, data-residency, and capacity constraints, avoiding correlated failures, retry amplification, and safety-policy bypasses.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/02-request-reliability/03-model-gateway-routing-fallback/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Model Gateways, Routing, and Fallback","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/02-request-reliability/03-model-gateway-routing-fallback/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 3: Model Gateways, Routing, and Fallback","description":"Design model routing and fallback under quality, data-residency, and capacity constraints, avoiding correlated failures, retry amplification, and safety-policy bypasses.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/02-request-reliability/03-model-gateway-routing-fallback/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 3: Model Gateways, Routing, and Fallback","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/02-request-reliability/03-model-gateway-routing-fallback/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 3: Model Gateways, Routing, and Fallback","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/02-request-reliability/03-model-gateway-routing-fallback/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9284,21 +9309,21 @@
 <h1 id="chapter-3-model-gateways-routing-and-fallback"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 3: Model Gateways, Routing, and Fallback<a class="headerlink" href="#chapter-3-model-gateways-routing-and-fallback" title="Permanent link">&para;</a></h1>
 <h2 id="31-routing-decisions-a-policy-layer-above-the-gateway"><span id="31" class="legacy-heading-anchor" aria-hidden="true"></span>3.1 Routing decisions: a policy layer above the gateway<a class="headerlink" href="#31-routing-decisions-a-policy-layer-above-the-gateway" title="Permanent link">&para;</a></h2>
 <p><a href="../../../tools/05-transport-gateway/14-llm-gateway/">Tools · LLM Gateways</a> covers the capabilities of <strong>the gateway component itself</strong>: a unified interface, load balancing, rate limits, quotas, and so on. The harder question arises after a request reaches the gateway: <strong>what policy should decide which model receives it, and when to abandon that model and try another?</strong> This <strong>routing policy</strong> sits on top of gateway infrastructure and is among the configurations LLMOps teams adjust most frequently.</p>
-<pre class="mermaid"><code>flowchart TB
-    REQ["Request enters gateway"] --&gt; POLICY{"Routing policy"}
-    POLICY --&gt;|Cost| CHEAP["Prefer a lower-cost model"]
-    POLICY --&gt;|Capability| CAPABLE["Strong reasoning needed → flagship model"]
-    POLICY --&gt;|Latency| FAST["Latency-sensitive → fastest provider"]
-    POLICY --&gt;|Canary rollout| CANARY["Send a share of traffic to the new version"]
-    CHEAP --&gt; CALL["Make the call"]
-    CAPABLE --&gt; CALL
-    FAST --&gt; CALL
-    CANARY --&gt; CALL
-    CALL --&gt;|Failure| CHECK{"Fallback allowed, with&lt;br/&gt;budget and eligible candidates remaining?"}
-    CHECK --&gt;|Yes| FALLBACK["Try the next candidate in the fallback chain"]
-    CHECK --&gt;|No| STOP["Explicit failure or limited service"]
-    FALLBACK --&gt; CALL
-    CALL --&gt;|Success| DONE["Return"]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    POLICY["Choose candidate"] --&gt; CALL["Call model"]
+    CALL --&gt;|Success| DONE["Return result"]
+    CALL --&gt;|Failure| CHECK["Check fallback"]
+    CHECK --&gt;|Allowed| CALL
+    CHECK --&gt;|Stop| STOP["Fail or limit service"]</code></pre>
+<p>The routing policy chooses a candidate by cost, capability, latency, or canary allocation: prefer a lower-cost model for suitable tasks, a flagship model when strong reasoning is required, the fastest provider for latency-sensitive requests, or the new version for its allocated traffic. On failure, retry the call with the next eligible fallback candidate only if policy permits fallback and both budget and candidates remain. Otherwise return an explicit failure or limited service; the loop is not unbounded.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Strong reasoning needed → flagship model</li>
+<li>Send a share of traffic to the new version</li>
+<li>Fallback allowed, with budget and eligible candidates remaining?</li>
+<li>Try the next candidate in the fallback chain</li>
+</ul>
 <h2 id="32-three-common-routing-policies"><span id="32" class="legacy-heading-anchor" aria-hidden="true"></span>3.2 Three common routing policies<a class="headerlink" href="#32-three-common-routing-policies" title="Permanent link">&para;</a></h2>
 <h3 id="321-cost-first-routing"><span id="321" class="legacy-heading-anchor" aria-hidden="true"></span>3.2.1 Cost-first routing<a class="headerlink" href="#321-cost-first-routing" title="Permanent link">&para;</a></h3>
 <p>Classify tasks by complexity. Route simple tasks, such as classification, format conversion, and short summaries, to small models; reserve flagship models for complex reasoning tasks.</p>
@@ -9411,13 +9436,8 @@
 <li><strong>Make routing decisions observable:</strong> record the actual destination, policy name, fallback count, and latency.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.litellm.ai/docs/routing">LiteLLM: Routing</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/reasoning">OpenAI: Reasoning models</a></li>
-<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/intelligent-prompt-routing.html">Amazon Bedrock: Model routing (intelligent prompt routing)</a></li>
-<li><a href="https://martinfowler.com/bliki/CanaryRelease.html">Martin Fowler: CanaryRelease</a></li>
-<li><a href="https://netflixtechblog.com/fault-tolerance-in-a-high-volume-distributed-system-91ab4faae74a">Netflix Tech Blog: Fault Tolerance in a High Volume, Distributed System</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-03">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9440,7 +9460,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

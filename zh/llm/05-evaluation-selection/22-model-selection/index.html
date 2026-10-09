@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：模型选型实践","description":"从业务验收、数据处理边界和部署形态出发选择模型，说明总成本、尾延迟、模型路由、版本回归与故障降级的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/22-model-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：模型选型实践","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/22-model-selection/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：模型选型实践","description":"从业务验收、数据处理边界和部署形态出发选择模型，说明总成本、尾延迟、模型路由、版本回归与故障降级的取舍。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/22-model-selection/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：模型选型实践","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/22-model-selection/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十二章：模型选型实践","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/llm/05-evaluation-selection/22-model-selection/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9393,17 +9418,11 @@
 <blockquote>
 <p><strong>选型看的是「合规、成本、延迟、能力特征」四个维度和业务需求的匹配，不是跑分。</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
-    B["业务需求"] --&gt; C1["① 合规&lt;br/&gt;数据分类分级、出境、审批"]
-    B --&gt; C2["② 成本&lt;br/&gt;完整任务用量、重试与运维"]
-    B --&gt; C3["③ 延迟&lt;br/&gt;内部串行步骤也计入关键路径&lt;br/&gt;测量完整任务尾延迟"]
-    B --&gt; C4["④ 能力特征&lt;br/&gt;推理 / 结构化输出 / 长上下文 / 工具调用"]
-    C1 --&gt; S["选型决策"]
-    C2 --&gt; S
-    C3 --&gt; S
-    C4 --&gt; S
-
-    style C1 fill:#fdecea</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    B["业务需求"] --&gt; C["联合评估约束"]
+    C --&gt; S["选型决策"]</code></pre>
+<p>同时评估四个维度：<strong>合规</strong>包括数据分类分级、出境与审批；<strong>成本</strong>包括完整任务用量、重试与运维；<strong>延迟</strong>包括关键路径上的内部串行步骤以及完整任务尾延迟；<strong>能力</strong>包括推理、结构化输出、长上下文和工具调用。</p>
 <p>先筛选硬约束，再在可行候选中权衡。除了数据与许可要求，必须达到的正确率、安全规则和响应时限也可能是硬约束；不能用低成本补偿越权或关键任务失败。</p>
 <h2 id="222">22.2 建立可比较的候选清单<a class="headerlink" href="#222" title="Permanent link">&para;</a></h2>
 <p>品牌不是能力保证，同一系列不同快照、参数规模、推理模式和部署端点可能差异很大。以下介绍选型维度与已公开技术路线，不给出「截至今日某家最强」的排行榜。</p>
@@ -9474,23 +9493,24 @@
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      → 汇总生成中文报告
 </span></code></pre></div>
 <h3 id="2232">22.3.2 按节点分配<a class="headerlink" href="#2232" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TB
-    subgraph N1["主调度节点 / 格式严格的节点"]
-        A1["需求：结构化输出稳定&lt;br/&gt;Tool Use 准确率高&lt;br/&gt;长上下文指令遵循好"]
-        A2["原因：Agent 频繁调用内部 API&lt;br/&gt;JSON、函数参数、字段名都不能乱"]
-        A3["→ 『稳定』比『榜单第一』更重要"]
-    end
-    subgraph N2["字段提取与复杂分析分别评测"]
-        B1["需求：满足各自成功率与延迟门槛"]
-        B2["简单提取先试小模型或规则&lt;br/&gt;复杂分析比较推理模型与工具"]
-        B3["内部错误也会传递到最终结果&lt;br/&gt;不能只按是否展示给用户定质量"]
-    end
-    subgraph N3["敏感数据链路"]
-        C1["按获批数据策略选择端点&lt;br/&gt;主模型与兜底模型均适用"]
-    end
-
-    style A3 fill:#e6f4ea
-    style B3 fill:#e6f4ea
+<p><strong>主调度节点 / 格式严格的节点</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    A1["频繁调用内部 API"] --&gt; A2["正确的输出契约"]
+    A2 --&gt; A3["优先考虑可靠性"]
+    style A3 fill:#e6f4ea</code></pre>
+<p>主编排与严格格式节点需要稳定的结构化输出、准确的工具调用和良好的长上下文指令遵循。调用内部 API 时，JSON、函数参数和字段名都必须正确；可靠性比榜单第一更重要。</p>
+<p><strong>字段提取与复杂分析分别评测</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 16, "padding": 8, "wrappingWidth": 110}}}%%
+flowchart TB
+    B1["按任务设定门槛"] --&gt; B2["比较适合的方法"]
+    B2 --&gt; B3["检查端到端影响"]
+    style B3 fill:#e6f4ea</code></pre>
+<p>分别测量各任务的成功率与延迟门槛。简单字段提取先试小模型或规则，复杂分析则比较推理模型与工具。内部错误也会传递到最终结果，不能只按是否展示给用户来决定质量要求。</p>
+<p><strong>敏感数据链路</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    C1["按获批数据策略选择端点&lt;br/&gt;主模型与兜底模型均适用"]
     style C1 fill:#fdecea</code></pre>
 <h3 id="2233">22.3.3 路由、级联与降级不是一回事<a class="headerlink" href="#2233" title="Permanent link">&para;</a></h3>
 <table>
@@ -9598,17 +9618,8 @@ C_{\mathrm{success}}
 <p>选型通常先排掉不合规的候选，再按链路节点比能力、延迟和成本，最后用自己的测试集做决定；排行榜最多只能当参考。</p>
 </blockquote>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2211.09110">Holistic Evaluation of Language Models（HELM）</a></li>
-<li><a href="https://arxiv.org/abs/2306.05685">Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</a></li>
-<li><a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report</a></li>
-<li><a href="https://arxiv.org/abs/2505.09388">Qwen3 Technical Report</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://arxiv.org/abs/2406.18665">RouteLLM: Learning to Route LLMs with Preference Data</a></li>
-<li><a href="https://arxiv.org/abs/2305.05176">FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI: Data controls in the OpenAI platform</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-llm-22">集中参考资料章节</a>。</p>
 
 
 
@@ -9631,7 +9642,7 @@ C_{\mathrm{success}}
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

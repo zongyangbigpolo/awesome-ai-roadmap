@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Feedback Loops and the Data Flywheel","description":"Turn explicit and implicit feedback into authorized evaluation or training data while avoiding selection bias, label contamination, test leakage, and self-reinforcing errors.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/13-feedback-loop-data-flywheel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Feedback Loops and the Data Flywheel","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 13: Feedback Loops and the Data Flywheel","description":"Turn explicit and implicit feedback into authorized evaluation or training data while avoiding selection bias, label contamination, test leakage, and self-reinforcing errors.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/13-feedback-loop-data-flywheel/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 13: Feedback Loops and the Data Flywheel","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 13: Feedback Loops and the Data Flywheel","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/engineering/06-performance-operations/13-feedback-loop-data-flywheel/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9170,17 +9195,25 @@
 <h1 id="chapter-13-feedback-loops-and-the-data-flywheel"><span id="_1" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 13: Feedback Loops and the Data Flywheel<a class="headerlink" href="#chapter-13-feedback-loops-and-the-data-flywheel" title="Permanent link">&para;</a></h1>
 <h2 id="131-feedback-ends-one-production-cycle-and-starts-the-next"><span id="131" class="legacy-heading-anchor" aria-hidden="true"></span>13.1 Feedback ends one production cycle and starts the next<a class="headerlink" href="#131-feedback-ends-one-production-cycle-and-starts-the-next" title="Permanent link">&para;</a></h2>
 <p>Return to the architecture overview in <a href="../../01-foundations/02-production-architecture-overview/">Chapter 2</a>. Every stage ultimately feeds into feedback collection, and the resulting data returns to evaluation and training datasets as the starting point for the next iteration. <strong>The goal is not to add another component, but to connect the evaluation, release, and training-data entry points established across Chapters 7–12.</strong></p>
-<pre class="mermaid"><code>flowchart LR
-    PROD["System runs in production"] --&gt; SIGNAL["Collect feedback signals"]
-    SIGNAL --&gt; TRIAGE["Verify permitted use · sanitize · deduplicate · identify causes"]
-    TRIAGE --&gt; EVALSET["Add to evaluation datasets&lt;br/&gt;(Chapter 7)"]
-    TRIAGE --&gt; FINETUNE["Add to fine-tuning / alignment data&lt;br/&gt;once task and data requirements are met"]
-    EVALSET --&gt; RELEASE["Next release gate&lt;br/&gt;(Chapter 10)"]
-    FINETUNE --&gt; MODEL["Next model / adaptation layer"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    PROD["System runs in&lt;br/&gt;production"] --&gt; SIGNAL["Collect&lt;br/&gt;feedback&lt;br/&gt;signals"]
+    SIGNAL --&gt; TRIAGE["Prepare&lt;br/&gt;feedback"]
+    TRIAGE --&gt; EVALSET["Add to&lt;br/&gt;evaluation&lt;br/&gt;datasets"]
+    TRIAGE --&gt; FINETUNE["Add to&lt;br/&gt;fine-tuning /&lt;br/&gt;alignment data"]
+    EVALSET --&gt; RELEASE["Next release&lt;br/&gt;gate"]
+    FINETUNE --&gt; MODEL["Next model /&lt;br/&gt;adaptation&lt;br/&gt;layer"]
     RELEASE --&gt; PROD
     MODEL --&gt; RELEASE
 
     style TRIAGE fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Verify permitted use · sanitize · deduplicate · identify causes</li>
+<li>Add to evaluation datasets (Chapter 7)</li>
+<li>Add to fine-tuning / alignment data once task and data requirements are met</li>
+<li>Next release gate (Chapter 10)</li>
+</ul>
 <h2 id="132-sources-of-feedback-explicit-and-implicit-signals"><span id="132" class="legacy-heading-anchor" aria-hidden="true"></span>13.2 Sources of feedback: explicit and implicit signals<a class="headerlink" href="#132-sources-of-feedback-explicit-and-implicit-signals" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9224,15 +9257,23 @@
 <p>This short cycle does not require model training. The fix may belong in retrieval, tools, data, or authorization code rather than always in the prompt. Use different evidence to discover a problem and to demonstrate that it has been fixed. A regression case derived from a failure is valuable, but it cannot go into both the training set and an independent holdout set. Also keep near-duplicate examples associated with the same users, documents, and conversations from leaking across those sets.</p>
 <h2 id="134-from-feedback-to-training-data-the-longer-cycle-or-data-flywheel"><span id="134" class="legacy-heading-anchor" aria-hidden="true"></span>13.4 From feedback to training data: the longer cycle, or data flywheel<a class="headerlink" href="#134-from-feedback-to-training-data-the-longer-cycle-or-data-flywheel" title="Permanent link">&para;</a></h2>
 <p>Once feedback data has accumulated and short-cycle prompt adjustments no longer improve a particular task, consider a more substantial intervention: fine-tuning or preference alignment with the collected data, such as RLHF or DPO (see <a href="../../../llm/02-training-alignment/">LLM · Training and Alignment</a>).</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Production feedback accumulates"] --&gt; B["Confirm training suits the task;&lt;br/&gt;permissions, label quality, and learning curves are adequate"]
-    B --&gt; C["Build a fine-tuning / preference dataset"]
-    C --&gt; D["Fine-tune or align a new version"]
-    D --&gt; E["Apply the same evaluation gates&lt;br/&gt;and staged rollout as Chapters 7-10"]
-    E --&gt; F["Deploy the new version and collect new feedback"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    A["Production feedback&lt;br/&gt;accumulates"] --&gt; B["Check training suitability"]
+    B --&gt; C["Build training dataset"]
+    C --&gt; D["Fine-tune or align a&lt;br/&gt;new version"]
+    D --&gt; E["Apply the same&lt;br/&gt;evaluation gates"]
+    E --&gt; F["Deploy and collect"]
     F --&gt; A
 
     style B fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Confirm training suits the task; permissions, label quality, and learning curves are adequate</li>
+<li>Build a fine-tuning / preference dataset</li>
+<li>Apply the same evaluation gates and staged rollout as Chapters 7-10</li>
+<li>Deploy the new version and collect new feedback</li>
+</ul>
 <p>There is no universal threshold of “a few thousand to tens of thousands of examples is enough for fine-tuning.” Begin with small experiments and learning curves, comparing gains from training with gains from prompt, retrieval, or tool fixes. Preference pairs must correspond to the same task and context. Verify that the preference reflects answer quality rather than differences in version, exposure, or user population. Model-generated answers must not become factual labels without verification.</p>
 <p>Feedback is available only for answers that were actually shown, and routing and recommendation policies change the observable data distribution. Repeatedly training on the system’s own high-scoring outputs can amplify existing biases and lead it to forget long-tail tasks. Retain representative samples with permission for their use, long-term holdouts, and any necessary controlled exploration. Monitor performance across slices rather than using an overall thumbs-up rate to tell a story of an ever-improving flywheel.</p>
 <h2 id="135-governing-feedback-use"><span id="135" class="legacy-heading-anchor" aria-hidden="true"></span>13.5 Governing feedback use<a class="headerlink" href="#135-governing-feedback-use" title="Permanent link">&para;</a></h2>
@@ -9287,13 +9328,8 @@
 <li><strong>Feedback data needs the same controls as trace data:</strong> sanitization, deduplication, permission for use, and no direct change to system behavior from an unvalidated feedback item.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/fine-tuning">OpenAI: Fine-tuning</a></li>
-<li><a href="https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback">Anthropic: Constitutional AI and RLHF</a></li>
-<li><a href="https://docs.langchain.com/langsmith/attach-user-feedback">LangSmith: Attach user feedback</a></li>
-<li><a href="https://netflixtechblog.com/artwork-personalization-c589f074ad76">Netflix Tech Blog: Recommendation systems and the data flywheel</a></li>
-<li><a href="https://pair.withgoogle.com/guidebook/">Google: People + AI Guidebook - Feedback + Control</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-engineering-13">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9316,7 +9352,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

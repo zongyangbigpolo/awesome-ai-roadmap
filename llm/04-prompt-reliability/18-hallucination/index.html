@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Hallucinations—Causes and Mitigation","description":"Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Hallucinations—Causes and Mitigation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 18: Hallucinations—Causes and Mitigation","description":"Distinguish factuality, source faithfulness, and reasoning errors; explain the effects of data and learning objectives; and compare RAG, evidence verification, confidence calibration, and selective answering.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 18: Hallucinations—Causes and Mitigation","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 18: Hallucinations—Causes and Mitigation","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/llm/04-prompt-reliability/18-hallucination/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9513,17 +9538,17 @@
 <li>A medical review cites “Smith et al., 2018,” but no such reference exists in PubMed.</li>
 </ul>
 <h2 id="182-generation-probability-is-not-fact-verification"><span id="182" class="legacy-heading-anchor" aria-hidden="true"></span>18.2 Generation probability is not fact verification<a class="headerlink" href="#182-generation-probability-is-not-fact-verification" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    subgraph DB["Database"]
-        D1["Input query"] --&gt; D2["Return exact-match records"]
-        D2 --&gt; D3["Return records or an empty result&lt;br/&gt;under the API contract&lt;br/&gt;The records themselves may be outdated"]
-    end
-    subgraph LLM["LLM"]
-        L1["Input context"] --&gt; L2["Generate tokens from a learned&lt;br/&gt;conditional distribution"]
-        L2 --&gt; L3["May answer or decline&lt;br/&gt;Probability is not factual truth"]
-    end
-
-    style D3 fill:#e6f4ea
+<p><strong>Database</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    D1["Input query"] --&gt; D2["Return exact-match records"]
+    D2 --&gt; D3["Return records or an empty result&lt;br/&gt;under the API contract&lt;br/&gt;The records themselves may be outdated"]
+    style D3 fill:#e6f4ea</code></pre>
+<p><strong>LLM</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    L1["Input context"] --&gt; L2["Generate tokens from a learned&lt;br/&gt;conditional distribution"]
+    L2 --&gt; L3["May answer or decline&lt;br/&gt;Probability is not factual truth"]
     style L3 fill:#fdecea</code></pre>
 <p>Autoregressive generation has no built-in proof of external facts. Yet a model can learn to say “I don't know” or call tools, and an application can block generation when evidence is insufficient. “Predicts the next token” does not imply “always makes up an answer.”</p>
 <p>Distinguish three stages: what the model knows, what the generation objective encourages, and which unverified conclusions the system allows to reach the user. Training data or sampling mechanisms alone cannot explain every failure.</p>
@@ -9589,13 +9614,14 @@
 <p>RAG adds updatable, traceable evidence to generation; it does not completely replace parametric memory. A model may still prioritize internal knowledge, so assess both retrieval recall and answer faithfulness to the evidence.</p>
 <h2 id="185-root-cause-three-side-effects-of-alignment-objectives"><span id="185" class="legacy-heading-anchor" aria-hidden="true"></span>18.5 Root cause three: side effects of alignment objectives<a class="headerlink" href="#185-root-cause-three-side-effects-of-alignment-objectives" title="Permanent link">&para;</a></h2>
 <p>Alignment training can improve truthfulness and refusals, or amplify undesirable preferences, depending on examples, rewards, and evaluation. It is inaccurate to claim that SFT or RLHF necessarily increases hallucinations.</p>
-<pre class="mermaid"><code>flowchart TB
-    A["Training or evaluation&lt;br/&gt;Under-rewards evidence&lt;br/&gt;and appropriate abstention"]
-    A --&gt; B["Fluent but incorrect answers&lt;br/&gt;that agree with the user&lt;br/&gt;Sometimes receive higher&lt;br/&gt;preference scores"]
-    B --&gt; C["Reward or preference optimization&lt;br/&gt;May reinforce these proxy features"]
-    C --&gt; F["On some tasks&lt;br/&gt;Sycophancy or unsupported assertions"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A["Misaligned scoring"] --&gt; B["Wrong answers score well"]
+    B --&gt; C["Proxy features reinforced"]
+    C --&gt; F["Sycophancy or unsupported claims"]
 
     style F fill:#fdecea</code></pre>
+<p>When training or evaluation under-rewards evidence and appropriate abstention, fluent but incorrect answers that agree with the user may receive higher preference scores. Reward or preference optimization can reinforce those proxy features, leading on some tasks to sycophancy or unsupported assertions—not inevitably on every task.</p>
 <p><em>Towards Understanding Sycophancy in Language Models</em> observed that humans and preference models sometimes prefer answers that agree with users' views even when those answers are wrong. This supports the existence of a risk—not the claim that cautious answers almost always score poorly, or that a particular optimization algorithm inevitably causes hallucinations.</p>
 <h3 id="1851-calibration-and-selective-answering"><span id="1851" class="legacy-heading-anchor" aria-hidden="true"></span>18.5.1 Calibration and selective answering<a class="headerlink" href="#1851-calibration-and-selective-answering" title="Permanent link">&para;</a></h3>
 <p><em>Language Models (Mostly) Know What They Know</em> studied <code>P(True)</code>, the probability that a candidate answer is correct, and <code>P(IK)</code>, the probability of knowing the answer independently of a specific candidate. Useful self-evaluation signals appeared in some settings, but calibration on new tasks remained difficult. The paper does not define a universal production workflow specifically named “Calibrated Refusal.”</p>
@@ -9628,7 +9654,8 @@
 </tbody>
 </table>
 <h2 id="187-mitigation-at-three-levels"><span id="187" class="legacy-heading-anchor" aria-hidden="true"></span>18.7 Mitigation at three levels<a class="headerlink" href="#187-mitigation-at-three-levels" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
     T["Training&lt;br/&gt;Improve data&lt;br/&gt;and learning objectives"] --&gt; I["Inference&lt;br/&gt;Allocate sampling&lt;br/&gt;and verification budgets"] --&gt; S["System&lt;br/&gt;Retrieval, evidence checks,&lt;br/&gt;and risk controls"]
 
     style S fill:#e6f4ea</code></pre>
@@ -9776,19 +9803,8 @@
 <p>When an answer is wrong, identify the unsupported claim and the point where evidence was lost before deciding whether to change the data, reasoning process, or system checks.</p>
 </blockquote>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2005.00661">On Faithfulness and Factuality in Abstractive Summarization</a></li>
-<li><a href="https://arxiv.org/abs/2202.03629">Survey of Hallucination in Natural Language Generation</a></li>
-<li><a href="https://arxiv.org/abs/2311.05232">A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions</a></li>
-<li><a href="https://arxiv.org/abs/2207.05221">Language Models (Mostly) Know What They Know</a></li>
-<li><a href="https://arxiv.org/abs/2109.07958">TruthfulQA: Measuring How Models Mimic Human Falsehoods</a></li>
-<li><a href="https://arxiv.org/abs/2005.11401">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></li>
-<li><a href="https://arxiv.org/abs/2303.08896">SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2309.11495">Chain-of-Verification Reduces Hallucination in Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2212.08073">Constitutional AI: Harmlessness from AI Feedback</a></li>
-<li><a href="https://arxiv.org/abs/2310.13548">Towards Understanding Sycophancy in Language Models</a></li>
-<li><a href="https://developers.openai.com/api/docs/guides/structured-outputs">OpenAI: Structured Outputs (structural guarantees versus content errors)</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-llm-18">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9811,7 +9827,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:22:16 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

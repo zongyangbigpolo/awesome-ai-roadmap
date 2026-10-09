@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Short-Term and Long-Term Memory in LangChain","description":"Design memory around thread-scoped state and cross-thread stores, distinguishing context trimming, state deletion, historical checkpoint cleanup, and authorization for long-term memory.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/06-memory/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Short-Term and Long-Term Memory in LangChain","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/06-memory/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 6: Short-Term and Long-Term Memory in LangChain","description":"Design memory around thread-scoped state and cross-thread stores, distinguishing context trimming, state deletion, historical checkpoint cleanup, and authorization for long-term memory.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/06-memory/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 6: Short-Term and Long-Term Memory in LangChain","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/06-memory/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 6: Short-Term and Long-Term Memory in LangChain","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/frameworks/01-langchain/02-agent-building/06-memory/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9512,12 +9537,18 @@
 </tr>
 </tbody>
 </table>
-<pre class="mermaid"><code>flowchart TB
-    A["How far the current thread has progressed"] --&gt; B["State + Checkpointer"]
-    C["User preferences and facts&lt;br/&gt;that future threads may need"] --&gt; D["Store"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Current thread"] --&gt; B["State +&lt;br/&gt;Checkpointer"]
+    C["User&lt;br/&gt;preferences and&lt;br/&gt;facts"] --&gt; D["Store"]
 
     style B fill:#e8f0fe
     style D fill:#e6f4ea</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>How far the current thread has progressed</li>
+<li>User preferences and facts that future threads may need</li>
+</ul>
 <h2 id="62-how-is-short-term-memory-implemented"><span id="62" class="legacy-heading-anchor" aria-hidden="true"></span>6.2 How Is Short-Term Memory Implemented?<a class="headerlink" href="#62-how-is-short-term-memory-implemented" title="Permanent link">&para;</a></h2>
 <p><code>create_agent</code> runs on LangGraph. <strong>Agent State includes <code>messages</code> by default</strong> and can be extended with business fields such as an order ID, current step, or tool-call count.</p>
 <h3 id="621-state-alone-is-not-enough"><span id="621-state" class="legacy-heading-anchor" aria-hidden="true"></span>6.2.1 State Alone Is Not Enough<a class="headerlink" href="#621-state-alone-is-not-enough" title="Permanent link">&para;</a></h3>
@@ -9713,14 +9744,22 @@
 <p><strong>Whether writing immediately or in the background, record the source, time, and confidence</strong>, and support updates, corrections, and deletion.</p>
 <p>Current facts such as order amounts, account balances, and inventory must still be queried from authoritative business systems. Long-term memory is not a replacement for the actual database.</p>
 <h2 id="67-what-matters-in-production"><span id="67" class="legacy-heading-anchor" aria-hidden="true"></span>6.7 What Matters in Production?<a class="headerlink" href="#67-what-matters-in-production" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    P1["① Can data be saved reliably?&lt;br/&gt;In-memory data disappears when the process exits&lt;br/&gt;Production needs database-backed&lt;br/&gt;checkpointers and stores&lt;br/&gt;Include schemas and migrations in deployment"]
-    P2["② Whose memory is this?&lt;br/&gt;thread_id / tenant_id / user_id&lt;br/&gt;must come from a trusted identity system&lt;br/&gt;Do not trust model-generated identities&lt;br/&gt;Do not let clients choose another user's namespace"]
-    P3["③ Memories become stale, conflict, and need correction&lt;br/&gt;Deduplicate, update, and expire records&lt;br/&gt;Let users view, correct, export, and delete&lt;br/&gt;Do not remember sensitive information by default;&lt;br/&gt;encrypt and restrict access to what must be retained&lt;br/&gt;Logs and traces must not become another leak"]
-    P4["④ Does memory actually improve results?&lt;br/&gt;Counting written records is not enough"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    P1["① Can data be&lt;br/&gt;saved reliably?"]
+    P2["② Whose memory&lt;br/&gt;is this?"]
+    P3["③ Maintain&lt;br/&gt;memories"]
+    P4["④ Evaluate&lt;br/&gt;benefit"]
     P1 --&gt; P2 --&gt; P3 --&gt; P4
 
     style P2 fill:#fff3cd</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>① Can data be saved reliably? In-memory data disappears when the process exits Production needs database-backed checkpointers and stores Include schemas and migrations in deployment</li>
+<li>② Whose memory is this? thread_id / tenant_id / user_id must come from a trusted identity system Do not trust model-generated identities Do not let clients choose another user's namespace</li>
+<li>③ Memories become stale, conflict, and need correction Deduplicate, update, and expire records Let users view, correct, export, and delete Do not remember sensitive information by default; encrypt and restrict access to what must be retained Logs and traces must not become another leak</li>
+<li>④ Does memory actually improve results? Counting written records is not enough</li>
+</ul>
 <h3 id="671-evaluate-the-entire-memory-process"><span id="671" class="legacy-heading-anchor" aria-hidden="true"></span>6.7.1 Evaluate the Entire Memory Process<a class="headerlink" href="#671-evaluate-the-entire-memory-process" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -9811,14 +9850,8 @@
 </ol>
 <p>LangChain divides memory into two mechanisms by scope: within a thread, state and a persistent checkpointer save execution progress; beyond a thread, a store accumulates selected information. Namespaces locate data; server-side authorization prevents cross-user access. Trimming, summarization, and retention policies control the model's context and storage growth at their respective layers.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.langchain.com/oss/python/langchain/short-term-memory">LangChain: Short-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/long-term-memory">LangChain: Long-term Memory</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph: Persistence</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langgraph/stores">LangGraph: Stores</a></li>
-<li><a href="https://docs.langchain.com/oss/python/langchain/middleware">LangChain: Middleware</a></li>
-<li><a href="https://docs.langchain.com/oss/python/migrate/langchain-v1">LangChain v1 Migration Guide</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../../book/references/#reading-frameworks-06">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9841,7 +9874,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:21:02 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

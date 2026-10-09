@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：RAG 在线链路全流程","description":"拆解 RAG 在线路由、改写、召回、重排、上下文装配与引用校验，说明延迟预算、降级以及权限感知缓存。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/10-online-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：RAG 在线链路全流程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/10-online-pipeline/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十章：RAG 在线链路全流程","description":"拆解 RAG 在线路由、改写、召回、重排、上下文装配与引用校验，说明延迟预算、降级以及权限感知缓存。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/10-online-pipeline/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十章：RAG 在线链路全流程","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/10-online-pipeline/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十章：RAG 在线链路全流程","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/03-retrieval/10-online-pipeline/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9461,21 +9486,26 @@
 </table>
 <p>离线构建也有成本、时效和失败约束，错误入库同样会影响用户；区别是在线链路通常必须在当前请求截止时间内给出明确结果或失败状态。</p>
 <h2 id="102">10.2 完整链路<a class="headerlink" href="#102" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TB
-    Q[用户 Query] --&gt; S0[0. 前置判断&lt;br/&gt;要不要检索]
-    S0 --&gt;|不需要| DIRECT[直接生成]
-    S0 --&gt;|需要| S1[1. Query 理解与改写]
-    S1 --&gt; S2[2. Query 向量化]
-    S2 --&gt; S3[3. 多路召回]
-    S3 --&gt; S4[4. 融合去重]
-    S4 --&gt; S5[5. Rerank 精排]
-    S5 --&gt; S6[6. 上下文裁剪与组装]
-    S6 --&gt; GATE{证据充分且有权使用?}
-    GATE --&gt;|否| STOP[拒答、澄清或受控补检]
-    GATE --&gt;|是| S7[7. Prompt 拼装]
-    S7 --&gt; S8[8. 生成]
-    S8 --&gt; S9[9. 引用标注与校验]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    Q[用户 Query] --&gt; S0{需要检索？}
+    S0 --&gt;|否| DIRECT[直接生成]
+    S0 --&gt;|是| S1[准备查询]
+    S1 --&gt; S2[检索证据]</code></pre>
+<p>查询准备包括理解与改写问题，再进行向量化。检索分支继续经过以下证据筛选阶段：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    S3[多路召回] --&gt; S4[融合去重]
+    S4 --&gt; S5[Rerank 精排]
+    S5 --&gt; S6[裁剪并组装上下文]</code></pre>
+<p>筛选出的上下文必须先通过证据与授权检查，才能进入生成：</p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    GATE{证据可用？} --&gt;|否| STOP[拒答或补救]
+    GATE --&gt;|是| S7[拼装 Prompt；生成]
+    S7 --&gt; S9[引用标注与校验]
     S9 --&gt; OUT[返回答案]</code></pre>
+<p>“可用”同时要求证据充分且有权使用。不通过时，拒答、请求澄清或进行受控补检。引用标注与校验在生成后执行，不能用生成前的检查替代。</p>
 <p>第 0 步和第 9 步在基础版 RAG 的示意图里常被省略，但在生产系统里往往必需。</p>
 <h2 id="103">10.3 逐步拆解<a class="headerlink" href="#103" title="Permanent link">&para;</a></h2>
 <h3 id="1031-0">10.3.1 第 0 步：判断要不要检索<a class="headerlink" href="#1031-0" title="Permanent link">&para;</a></h3>
@@ -9694,13 +9724,8 @@
 <li><strong>按实际关键路径优化</strong>，分别度量首 Token、完整答案和校验后可发布的时间。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts</a></li>
-<li><a href="https://arxiv.org/abs/2310.11511">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</a></li>
-<li><a href="https://arxiv.org/abs/2403.14403">Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-rag-10">集中参考资料章节</a>。</p>
 
 
 
@@ -9723,7 +9748,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: RAG Deployment Challenges and Security","description":"Examine engineering challenges in RAG preprocessing, retrieval, and evaluation, along with corpus poisoning, indirect injection, unauthorized access, resource exhaustion, and production safeguards.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/20-rag-challenges-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: RAG Deployment Challenges and Security","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/20-rag-challenges-security/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 20: RAG Deployment Challenges and Security","description":"Examine engineering challenges in RAG preprocessing, retrieval, and evaluation, along with corpus poisoning, indirect injection, unauthorized access, resource exhaustion, and production safeguards.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/20-rag-challenges-security/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 20: RAG Deployment Challenges and Security","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/20-rag-challenges-security/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 20: RAG Deployment Challenges and Security","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/06-operations-security/20-rag-challenges-security/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9377,10 +9402,11 @@
 <h1 id="chapter-20-rag-deployment-challenges-and-security"><span id="rag" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 20: RAG Deployment Challenges and Security<a class="headerlink" href="#chapter-20-rag-deployment-challenges-and-security" title="Permanent link">&para;</a></h1>
 <h2 id="201-three-main-challenges"><span id="201" class="legacy-heading-anchor" aria-hidden="true"></span>20.1 Three Main Challenges<a class="headerlink" href="#201-three-main-challenges" title="Permanent link">&para;</a></h2>
 <p>The recurring challenges in deploying RAG usually fall into three categories.</p>
-<pre class="mermaid"><code>flowchart TB
-    H[Three challenges&lt;br/&gt;in deploying RAG] --&gt; H1[Challenge 1: Document preprocessing&lt;br/&gt;Labor-intensive work&lt;br/&gt;that sets the quality ceiling]
-    H --&gt; H2[Challenge 2: Retrieval quality tuning&lt;br/&gt;Many variables require&lt;br/&gt;a systematic approach]
-    H --&gt; H3[Challenge 3: Evaluation&lt;br/&gt;Without objective criteria,&lt;br/&gt;judgment rests on intuition]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    H1[Document preprocessing] --&gt; H2[Retrieval quality tuning]
+    H2 --&gt; H3[Objective evaluation]</code></pre>
+<p>Preprocessing is labor-intensive and limits the quality achievable downstream. Retrieval tuning involves many variables and needs a systematic approach. Evaluation needs objective criteria; without them, decisions rest on intuition. These are connected challenges, not substitutes for one another.</p>
 <h3 id="2011-challenge-1-document-preprocessing"><span id="2011" class="legacy-heading-anchor" aria-hidden="true"></span>20.1.1 Challenge 1: Document Preprocessing<a class="headerlink" href="#2011-challenge-1-document-preprocessing" title="Permanent link">&para;</a></h3>
 <p>The difficulty lies in the volume of work and its strong dependence on the particular corpus.</p>
 <p>Enterprise documents are far messier than expected: scans, merged cells, multiple columns, nested tables, charts, and internal abbreviations. Each requires specific handling, and <strong>no universal solution covers every case</strong> (Chapter 3).</p>
@@ -9446,16 +9472,11 @@
 <blockquote>
 <p><strong>Retrieved content enters the model's context, and that content may be controlled by an attacker.</strong></p>
 </blockquote>
-<pre class="mermaid"><code>flowchart TB
-    A[RAG attack surface:&lt;br/&gt;external content] --&gt; A1[Corpus poisoning]
-    A --&gt; A2[Indirect prompt injection]
-    A --&gt; A3[Data leakage]
-    A --&gt; A4[Resource exhaustion]
-
-    A1 --&gt; B1[Add misleading content&lt;br/&gt;to the knowledge base;&lt;br/&gt;manipulate answers to specific questions]
-    A2 --&gt; B2[Hide instructions in documents;&lt;br/&gt;hijack model behavior]
-    A3 --&gt; B3[Retrieve content&lt;br/&gt;without authorization]
-    A4 --&gt; B4[Create costly queries]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 22, "padding": 8, "wrappingWidth": 160}}}%%
+flowchart TB
+    A[External content] --&gt; C[Content and instruction attacks]
+    A --&gt; R[Access and resource abuse]</code></pre>
+<p>Content attacks include <strong>corpus poisoning</strong>, which adds misleading material to manipulate answers to particular questions, and <strong>indirect prompt injection</strong>, which hides instructions in documents to hijack model behavior. Access and resource abuse include <strong>data leakage</strong> through unauthorized retrieval and <strong>resource exhaustion</strong> through costly queries.</p>
 <h3 id="2031-corpus-poisoning"><span id="2031" class="legacy-heading-anchor" aria-hidden="true"></span>20.3.1 Corpus Poisoning<a class="headerlink" href="#2031-corpus-poisoning" title="Permanent link">&para;</a></h3>
 <p><strong>Attack mechanism</strong>: add carefully constructed content to the knowledge base so that retrieval for particular questions selects it, allowing the content to influence the answers.</p>
 <p>Under the threat model evaluated in PoisonedRAG, an attacker able to add text to the knowledge base can sometimes manipulate answers using only a small amount of text crafted for target questions. The result depends on the attacker's knowledge, the insertion location, the retriever, and the generation model; it does not imply reliable success against an arbitrary production knowledge base.</p>
@@ -9623,13 +9644,8 @@
 <li>For evaluating citations, time validity, and robustness, see <a href="../../05-generation-evaluation/18-rag-evaluation/">RAG Evaluation</a>.</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2402.07867">PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models</a></li>
-<li><a href="https://arxiv.org/abs/2302.12173">Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</a></li>
-<li><a href="https://arxiv.org/abs/2405.07437">Evaluation of Retrieval-Augmented Generation: A Survey</a></li>
-<li><a href="https://arxiv.org/abs/2407.01219">Searching for Best Practices in Retrieval-Augmented Generation</a></li>
-<li><a href="https://arxiv.org/abs/2312.10997">Retrieval-Augmented Generation for Large Language Models: A Survey</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-rag-20">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9652,7 +9668,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:23:15 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

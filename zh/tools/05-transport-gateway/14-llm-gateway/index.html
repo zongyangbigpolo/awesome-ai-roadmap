@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十四章：LLM 网关","description":"解释 LLM 网关的模型适配、限流、成本与缓存治理，以及跨厂商故障转移、流式重试和密钥安全边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/14-llm-gateway/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十四章：LLM 网关","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/14-llm-gateway/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第十四章：LLM 网关","description":"解释 LLM 网关的模型适配、限流、成本与缓存治理，以及跨厂商故障转移、流式重试和密钥安全边界。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/14-llm-gateway/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第十四章：LLM 网关","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/14-llm-gateway/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第十四章：LLM 网关","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/tools/05-transport-gateway/14-llm-gateway/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9491,27 +9516,20 @@
 <h1 id="llm">第十四章：LLM 网关<a class="headerlink" href="#llm" title="Permanent link">&para;</a></h1>
 <h2 id="141">14.1 网关是什么，放在哪<a class="headerlink" href="#141" title="Permanent link">&para;</a></h2>
 <p>先看它在系统里的位置。</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph NO["没有网关"]
-        A1[订单服务] --&gt; O1[OpenAI API]
-        A1 --&gt; O2[Anthropic API]
-        A2[客服服务] --&gt; O1
-        A2 --&gt; O3[国产模型 API]
-        A3[数据服务] --&gt; O2
-        A3 --&gt; O3
-    end
-
-    subgraph YES["有网关"]
-        B1[订单服务] --&gt; GW[LLM 网关]
-        B2[客服服务] --&gt; GW
-        B3[数据服务] --&gt; GW
-        GW --&gt; P1[OpenAI]
-        GW --&gt; P2[Anthropic]
-        GW --&gt; P3[国产模型]
-    end
-
-    style NO fill:#fce8e6
-    style YES fill:#e6f4ea</code></pre>
+<p><strong>没有网关</strong></p>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+        A1["订单服务"] --&gt; O1["OpenAI API"]
+        A1 --&gt; O2["Anthropic API"]
+        A2["客服服务"] --&gt; O1
+        A2 --&gt; O3["国产模型 API"]
+        A3["数据服务"] --&gt; O2
+        A3 --&gt; O3</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    APP["应用服务"] --&gt; GW["LLM 网关"]
+    GW --&gt; PROVIDERS["模型供应商"]</code></pre>
+<p>订单、客服和数据服务调用同一网关，不再各自维护与供应商的连接。网关按配置连接 OpenAI、Anthropic 和国产模型供应商；图中把这些候选合并展示，并不规定必须选择某一家。</p>
 <p>网关就是<strong>坐在应用和各模型 API 之间的中间人</strong>。应用只认识网关，不直接对接多个厂商。</p>
 <p>位置决定了它最适合处理什么问题：<strong>所有流量都会经过这里，所以认证、路由、限流、观测这类横切关注点适合集中收口。</strong></p>
 <h2 id="142">14.2 没有网关时的五个痛点<a class="headerlink" href="#142" title="Permanent link">&para;</a></h2>
@@ -9628,22 +9646,24 @@
 <p>「北京今天热吗」/「北京现在天气怎样」/「今天北京气温多少」</p>
 </blockquote>
 <p>这些问题看似接近，但城市、时间、用户偏好或数据版本不同就未必可复用。语义相似只是候选条件，不能单独决定命中。</p>
-<pre class="mermaid"><code>flowchart TB
-    Q[收到新问题] --&gt; P{"是否允许缓存&lt;br/&gt;权限与数据分区已确定?"}
-    P --&gt;|否| MISS[调用 LLM]
-    P --&gt;|是| E[问题向量化 embedding]
-    E --&gt; S[在向量库里做相似度搜索]
-    S --&gt; H{"权限、时间与版本一致&lt;br/&gt;且语义校验通过?"}
-    H --&gt;|是| HIT["返回历史答案&lt;br/&gt;跳过答案生成"]
-    H --&gt;|否| MISS
-    MISS --&gt; C{"请求与新结果&lt;br/&gt;均允许缓存?"}
-    C --&gt;|是| W["写入问题、答案&lt;br/&gt;权限与版本元数据"]
-    C --&gt;|否| R[返回]
-    W --&gt; R[返回]
-    HIT --&gt; R
-
-    style HIT fill:#e6f4ea
-    style MISS fill:#fef7e0</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    P["检查缓存权限"] --&gt;|允许| LOOK["查找有效匹配"]
+    P --&gt;|禁止| MODEL["调用模型"]
+    LOOK --&gt;|命中| R["返回答案"]
+    LOOK --&gt;|未命中| MODEL
+    MODEL --&gt; WRITE["仅在允许时写缓存"]
+    WRITE --&gt; R</code></pre>
+<p>先建立权限和数据分区，再对允许缓存的问题生成 embedding，并检索向量库。只有权限、时间、版本和语义校验全部通过，相似条目才算命中，才能直接返回历史答案而不重新生成。未命中或不允许查询缓存时调用 LLM。只有请求与新结果都可缓存，才写入问题、答案、权限和版本元数据；否则跳过写入，直接返回。</p>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>是否允许缓存 权限与数据分区已确定?</li>
+<li>在向量库里做相似度搜索</li>
+<li>权限、时间与版本一致 且语义校验通过?</li>
+<li>返回历史答案 跳过答案生成</li>
+<li>请求与新结果 均允许缓存?</li>
+<li>写入问题、答案 权限与版本元数据</li>
+</ul>
 <p><strong>两个关键工程细节：</strong></p>
 <p><strong>一是误命中风险</strong>，不应照抄其他系统的阈值：</p>
 <table>
@@ -9789,18 +9809,8 @@
 <li><strong>主要边界是横切关注点</strong>，即使集成 Prompt 托管或检索，也要避免与业务决策和任务状态紧耦合。</li>
 </ol>
 <h2 id="_2">参考资料<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://docs.litellm.ai/">LiteLLM 文档</a></li>
-<li><a href="https://github.com/BerriAI/litellm">LiteLLM GitHub</a></li>
-<li><a href="https://github.com/maximhq/bifrost">Bifrost 官方仓库（Go 实现）</a></li>
-<li><a href="https://docs.litellm.ai/docs/proxy/reliability">LiteLLM 重试与故障转移</a></li>
-<li><a href="https://www.rfc-editor.org/rfc/rfc9111">RFC 9111：HTTP 缓存</a></li>
-<li><a href="https://github.com/Portkey-AI/gateway">Portkey AI Gateway</a></li>
-<li><a href="https://konghq.com/products/kong-ai-gateway">Kong AI Gateway</a></li>
-<li><a href="https://aigateway.envoyproxy.io/">Envoy AI Gateway</a></li>
-<li><a href="https://langfuse.com/docs">Langfuse: LLM 可观测性</a></li>
-<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-tools-14">集中参考资料章节</a>。</p>
 
 
 
@@ -9823,7 +9833,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

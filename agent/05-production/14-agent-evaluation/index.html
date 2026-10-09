@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: Agent Evaluation and Benchmarks","description":"Evaluate agent task success, trajectory quality, tool use, cost, and safety, and understand the differences between offline benchmarks and production evaluation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/14-agent-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: Agent Evaluation and Benchmarks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/14-agent-evaluation/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 14: Agent Evaluation and Benchmarks","description":"Evaluate agent task success, trajectory quality, tool use, cost, and safety, and understand the differences between offline benchmarks and production evaluation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/14-agent-evaluation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 14: Agent Evaluation and Benchmarks","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/14-agent-evaluation/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 14: Agent Evaluation and Benchmarks","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/agent/05-production/14-agent-evaluation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9764,14 +9789,15 @@
 <p><strong>Second, the result is more than text.</strong> An agent may modify a database, commit code, or send an email. Correctness must be verified against <strong>the state of the environment</strong>, not just the output text.</p>
 <p><strong>Third, behavior is nondeterministic.</strong> Two runs of the same task may take different paths and produce different results. A single run can reveal a failure, but it cannot estimate repeatability for that task. Repeated trials and task coverage are two separate dimensions.</p>
 <p><strong>Fourth, failures take different forms.</strong> Task failure, malformed tool calls, infinite loops, budget overruns, and unauthorized actions are distinct failures. They should not be collapsed into a single “error rate.”</p>
-<pre class="mermaid"><code>flowchart TB
-    LLM[Single-turn text evaluation] --&gt; L1[Input: prompt]
-    LLM --&gt; L2[Output: text]
-    LLM --&gt; L3[Comparison: reference answer]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart LR
+    LLM["Single-turn text&lt;br/&gt;evaluation"] --&gt; L1["Input: prompt"]
+    LLM --&gt; L2["Output: text"]
+    LLM --&gt; L3["Comparison: reference&lt;br/&gt;answer"]
 
-    AG[Agent evaluation] --&gt; A1[Input: goal + environment]
-    AG --&gt; A2[Output: trajectory + environment state changes]
-    AG --&gt; A3[Comparison: state assertions + repeated sampling]</code></pre>
+    AG["Agent evaluation"] --&gt; A1["Input: goal +&lt;br/&gt;environment"]
+    AG --&gt; A2["Output: trajectory +&lt;br/&gt;environment state&lt;br/&gt;changes"]
+    AG --&gt; A3["Comparison: state&lt;br/&gt;assertions + repeated&lt;br/&gt;sampling"]</code></pre>
 <h2 id="142-four-levels-of-evaluation"><span id="142" class="legacy-heading-anchor" aria-hidden="true"></span>14.2 Four Levels of Evaluation<a class="headerlink" href="#142-four-levels-of-evaluation" title="Permanent link">&para;</a></h2>
 <p>A complete agent evaluation system should cover four levels, from the bottom up:</p>
 <pre class="mermaid"><code>flowchart BT
@@ -9817,19 +9843,15 @@
 <p>In practice, it is easy to focus only on L3 end-to-end success. The problem is that success then tells you little about why the agent succeeded, and failure tells you little about where it got stuck. L1 and L2 provide <strong>attribution</strong>: they let you break “task failed” down into “retrieval missed the relevant material at step 3” or “the tool arguments were wrong at step 5.”</p>
 <h2 id="143-an-overview-of-major-agent-benchmarks"><span id="143-agent-benchmark" class="legacy-heading-anchor" aria-hidden="true"></span>14.3 An Overview of Major Agent Benchmarks<a class="headerlink" href="#143-an-overview-of-major-agent-benchmarks" title="Permanent link">&para;</a></h2>
 <p>The value of understanding academic benchmarks is not in chasing scores. Each benchmark <strong>defines a category of capability</strong>, and its evaluation design can inform a test set for your own application.</p>
-<pre class="mermaid"><code>flowchart TB
-    B[Agent benchmarks] --&gt; CODE[Software engineering]
-    B --&gt; WEB[Web and retrieval]
-    B --&gt; GUI[Operating systems and GUIs]
-    B --&gt; TOOL[Tools and conversation]
-    B --&gt; GEN[General assistants]
-
-    CODE --&gt; SWE[SWE-bench / SWE-Lancer / Terminal-Bench]
-    WEB --&gt; WA[WebArena / BrowseComp]
-    GUI --&gt; OS[OSWorld]
-    TOOL --&gt; TAU[tau-bench / tau2-bench]
-    GEN --&gt; GA[GAIA / AgentBench]
-    B -.Supplementary knowledge evaluation.-&gt; HLE[HLE: not agent-specific]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart LR
+    B["Agent benchmarks"] --&gt; CODE["Software engineering"]
+    B --&gt; WEB["Web and retrieval"]
+    B --&gt; GUI["Operating systems and&lt;br/&gt;GUIs"]
+    B --&gt; TOOL["Tools and conversation"]
+    B --&gt; GEN["General assistants"]
+</code></pre>
+<p>Examples by category are SWE-bench, SWE-Lancer, and Terminal-Bench for software engineering; WebArena and BrowseComp for web/retrieval; OSWorld for operating systems and GUIs; tau-bench and tau2-bench for tools/conversation; and GAIA and AgentBench for general assistants. HLE provides supplementary knowledge evaluation and is <strong>not agent-specific</strong>.</p>
 <h3 id="1431-software-engineering"><span id="1431" class="legacy-heading-anchor" aria-hidden="true"></span>14.3.1 Software Engineering<a class="headerlink" href="#1431-software-engineering" title="Permanent link">&para;</a></h3>
 <p><strong>SWE-bench</strong> draws issues and fixes from real GitHub repositories and asks the agent to produce a patch against a specified repository baseline. Evaluation uses a test patch and existing tests to check both tests that should change from failing to passing (FAIL_TO_PASS) and tests that should continue to pass (PASS_TO_PASS). It does not merely run whatever tests happen to be present after the agent's modifications.</p>
 <p>Two aspects of its design are worth borrowing:</p>
@@ -9837,11 +9859,11 @@
 <li><strong>Use executable tests rather than text similarity to judge success.</strong> This reduces subjective scoring, although tests can still miss requirements, be brittle, or reward solutions that game them.</li>
 <li><strong>Provide a complete repository rather than isolated files.</strong> This requires the agent to retrieve information and navigate the codebase.</li>
 </ol>
-<p>Some instances in the original dataset had underspecified issue descriptions or unreliable tests. This led to <strong>SWE-bench Verified</strong>, a human-screened subset of 500 tasks. OpenAI has identified flaws in test design and training-data contamination in this benchmark, stopped reporting its scores, and recommended reporting SWE-bench Pro instead; see <a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">Why SWE-bench Verified no longer measures frontier coding capabilities</a>. <strong>Always identify the subset when citing a score.</strong> Full, Lite, and Verified scores are not directly comparable, and these limitations matter when citing Verified results.</p>
+<p>Some instances in the original dataset had underspecified issue descriptions or unreliable tests. This led to <strong>SWE-bench Verified</strong>, a human-screened subset of 500 tasks. OpenAI has identified flaws in test design and training-data contamination in this benchmark, stopped reporting its scores, and recommended reporting SWE-bench Pro instead; see Why SWE-bench Verified no longer measures frontier coding capabilities<sup><a href="../../../book/references/#ref-155">【155】</a></sup>. <strong>Always identify the subset when citing a score.</strong> Full, Lite, and Verified scores are not directly comparable, and these limitations matter when citing Verified results.</p>
 <p><strong>SWE-Lancer</strong> uses software tasks from a real freelance marketplace, including both independent-contributor tasks and managerial tasks that require choosing an implementation proposal. Amounts aggregated from historical task payments are a proxy for value within the benchmark, not actual agent earnings, and cannot be directly extrapolated to production ROI.</p>
 <p><strong>Terminal-Bench</strong> evaluates task completion in terminal-only environments, covering scenarios such as compilation, debugging, and system configuration.</p>
 <h3 id="1432-web-and-retrieval"><span id="1432" class="legacy-heading-anchor" aria-hidden="true"></span>14.3.2 Web and Retrieval<a class="headerlink" href="#1432-web-and-retrieval" title="Permanent link">&para;</a></h3>
-<p><strong>WebArena</strong> provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Its <a href="https://github.com/web-arena-x/webarena/blob/73d9de71c25af3f5037c722ede9cabe25a8c77c2/evaluation_harness/evaluators.py">official evaluators</a> check answers, URLs, or page content according to the task. Information-seeking tasks can use exact answer matching, required phrases, or model-based fuzzy matching. An answer is a legitimate task output to grade; an agent merely saying “I completed the action” is not evidence that the required website state changed.</p>
+<p><strong>WebArena</strong> provides reproducible, self-hosted website environments, including e-commerce, forums, and code hosting. Its official evaluators<sup><a href="../../../book/references/#ref-529">【529】</a></sup> check answers, URLs, or page content according to the task. Information-seeking tasks can use exact answer matching, required phrases, or model-based fuzzy matching. An answer is a legitimate task output to grade; an agent merely saying “I completed the action” is not evidence that the required website state changed.</p>
 <p><strong>BrowseComp</strong> takes a different approach: answers are short and easy to verify, but finding them requires <strong>deep, multi-hop web retrieval</strong>. It specifically measures the ability to keep searching and cross-check information.</p>
 <h3 id="1433-operating-systems-and-guis"><span id="1433-gui" class="legacy-heading-anchor" aria-hidden="true"></span>14.3.3 Operating Systems and GUIs<a class="headerlink" href="#1433-operating-systems-and-guis" title="Permanent link">&para;</a></h3>
 <p><strong>OSWorld</strong> evaluates multimodal agents in real operating systems. Tasks involve operations across applications, and evaluation checks the resulting files and system state. This adds challenges in visual grounding, action execution, and asynchronous interfaces, but it does not justify claiming that OSWorld is necessarily harder than every text-only benchmark across different models and task sets.</p>
@@ -9958,12 +9980,13 @@
 \]</div>
 <p>This is not <span class="arithmatex">\(\mathrm{pass@}k\)</span>. The original tau-bench paper calls it “pass hat k.” When citing <code>pass^k</code>, explain that all k runs must succeed; do not rely on a spoken shorthand alone to distinguish it from <code>pass@k</code>. For unattended production agents, <span class="arithmatex">\(\mathrm{pass}^{k}\)</span> provides a complementary measure of reliability under repeated execution. The tau-bench experiments show that even when <span class="arithmatex">\(\mathrm{pass@}1\)</span> looks reasonable, <span class="arithmatex">\(\mathrm{pass}^{k}\)</span> can fall sharply as <span class="arithmatex">\(k\)</span> increases. A single-run average is not a promise of consistent performance over repeated runs.</p>
 <p>Both estimators use the convention that the numerator is zero when fewer than <code>k</code> elements are available to choose from. Sharing reflection memory across runs, changing strategies, or not resetting the environment violates the independent, identically distributed assumption. Such stateful operation must be evaluated separately rather than by applying these estimators directly.</p>
-<pre class="mermaid"><code>flowchart LR
-    P1["pass@k&lt;br/&gt;At least one success in k runs"] --&gt; U1[Measures an upper bound on capability]
-    U1 --&gt; S1[Suited to: human-reviewed settings]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    P1["pass@k&lt;br/&gt;At least one&lt;br/&gt;success in k runs"] --&gt; U1["Measures an upper&lt;br/&gt;bound on&lt;br/&gt;capability"]
+    U1 --&gt; S1["Suited to:&lt;br/&gt;human-reviewed&lt;br/&gt;settings"]
 
-    P2["pass^k&lt;br/&gt;All k runs succeed"] --&gt; U2[Measures behavioral consistency]
-    U2 --&gt; S2[Suited to: unattended automation]</code></pre>
+    P2["pass^k&lt;br/&gt;All k runs succeed"] --&gt; U2["Measures&lt;br/&gt;behavioral&lt;br/&gt;consistency"]
+    U2 --&gt; S2["Suited to:&lt;br/&gt;unattended&lt;br/&gt;automation"]</code></pre>
 <p>Why are long action sequences fragile? Under the teaching assumptions that “each step is independent, every step has the same probability of being correct, and any failed step is unrecoverable,” the success probability for <span class="arithmatex">\(m\)</span> steps is <span class="arithmatex">\(p^m\)</span>. For <span class="arithmatex">\(p = 0.95\)</span> and <span class="arithmatex">\(m = 20\)</span>, it is about <span class="arithmatex">\(0.36\)</span>. Real agents have correlated errors, retries, and verification, so this formula cannot be applied directly. Still less does it imply that “reducing variance is always more important than improving capability.” Moreover, <span class="arithmatex">\(p_i^k\)</span> decreases with the number of repetitions even for a single-step task.</p>
 <p>When reporting pass@k, explain how a successful result is selected from the candidates. Without a reliable acceptance mechanism in production, the offline finding that “at least one candidate succeeded” does not mean the system can deliver it. When comparing pass^k, reset the environment, hold budgets fixed, and distinguish repeated execution of one task from consecutive execution of different tasks.</p>
 <h3 id="1444-trajectory-level-metrics"><span id="1444" class="legacy-heading-anchor" aria-hidden="true"></span>14.4.4 Trajectory-Level Metrics<a class="headerlink" href="#1444-trajectory-level-metrics" title="Permanent link">&para;</a></h3>
@@ -10053,14 +10076,15 @@
 <p>This allocates total cost across successful tasks; the ratio has no finite definition when success rate is zero. In a teaching example, an option with 90% success at USD 0.5 per task costs about USD 0.56 per successful task, whereas an option with 95% success at USD 2 per task costs about USD 2.11. The first is cheaper only under this cost definition. Different failure losses or SLAs prevent an unqualified claim that it is better. Full costs must also include failed attempts, tools, compute, and human handling. At a minimum, report P50 latency, P95 latency, and timeout rate together.</p>
 <h2 id="145-grading-what-makes-a-run-successful"><span id="145" class="legacy-heading-anchor" aria-hidden="true"></span>14.5 Grading: What Makes a Run Successful?<a class="headerlink" href="#145-grading-what-makes-a-run-successful" title="Permanent link">&para;</a></h2>
 <p>This is the most important design decision when constructing an evaluation set.</p>
-<pre class="mermaid"><code>flowchart TB
-    J[Grading methods] --&gt; E[Programmatic assertions]
-    J --&gt; L[LLM-as-Judge]
-    J --&gt; H[Human evaluation]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    J["Grading&lt;br/&gt;methods"] --&gt; E["Programmatic&lt;br/&gt;assertions"]
+    J --&gt; L["LLM-as-Judge"]
+    J --&gt; H["Human&lt;br/&gt;evaluation"]
 
-    E --&gt; E1[Repeatable; depends on assertion coverage]
-    L --&gt; L1[Covers subjective tasks; needs calibration]
-    H --&gt; H1[Domain judgment; needs agreement calibration]</code></pre>
+    E --&gt; E1["Repeatable;&lt;br/&gt;depends on&lt;br/&gt;assertion&lt;br/&gt;coverage"]
+    L --&gt; L1["Covers&lt;br/&gt;subjective&lt;br/&gt;tasks; needs&lt;br/&gt;calibration"]
+    H --&gt; H1["Domain&lt;br/&gt;judgment;&lt;br/&gt;needs&lt;br/&gt;agreement&lt;br/&gt;calibration"]</code></pre>
 <h3 id="1451-programmatic-assertions-first-choice"><span id="1451" class="legacy-heading-anchor" aria-hidden="true"></span>14.5.1 Programmatic Assertions: First Choice<a class="headerlink" href="#1451-programmatic-assertions-first-choice" title="Permanent link">&para;</a></h3>
 <p>Use code to check whether the final state meets the requirements:</p>
 <ul>
@@ -10111,13 +10135,14 @@
 <h2 id="146-building-an-evaluation-set"><span id="146" class="legacy-heading-anchor" aria-hidden="true"></span>14.6 Building an Evaluation Set<a class="headerlink" href="#146-building-an-evaluation-set" title="Permanent link">&para;</a></h2>
 <h3 id="1461-a-tiered-design"><span id="1461" class="legacy-heading-anchor" aria-hidden="true"></span>14.6.1 A Tiered Design<a class="headerlink" href="#1461-a-tiered-design" title="Permanent link">&para;</a></h3>
 <p>An evaluation set can be organized into tiers. The sizes and frequencies below are teaching examples, not industry standards; adjust them to risk coverage, statistical precision, and execution cost:</p>
-<pre class="mermaid"><code>flowchart LR
-    S[Smoke: 10-20 cases] --&gt; R[Regression: 100-300 cases]
-    R --&gt; F[Full: 1000+ cases]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 16, "rankSpacing": 16, "padding": 10}}}%%
+flowchart TB
+    S["Smoke: 10-20 cases"] --&gt; R["Regression:&lt;br/&gt;100-300 cases"]
+    R --&gt; F["Full: 1000+ cases"]
 
-    S --&gt; S1[Every commit]
-    R --&gt; R1[Every release]
-    F --&gt; F1[Weekly / major changes]</code></pre>
+    S --&gt; S1["Every commit"]
+    R --&gt; R1["Every release"]
+    F --&gt; F1["Weekly / major&lt;br/&gt;changes"]</code></pre>
 <table>
 <thead>
 <tr>
@@ -10238,15 +10263,16 @@
 <p>OpenTelemetry's GenAI semantic conventions cover information such as model and agent spans and work alongside tool-call conventions. As of 2026-09-15, the GenAI conventions were still marked <strong>Development</strong>. Pin the convention and SDK versions, verify backend field mappings, and redact sensitive content. Do not assume that every platform can consume all of the information without adaptation.</p>
 <h2 id="148-evaluation-driven-development"><span id="148" class="legacy-heading-anchor" aria-hidden="true"></span>14.8 Evaluation-Driven Development<a class="headerlink" href="#148-evaluation-driven-development" title="Permanent link">&para;</a></h2>
 <p>Put evaluation before development changes, not after them.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Identify a problematic scenario] --&gt; B[Turn it into an evaluation case]
-    B --&gt; C[Confirm the current failure]
-    C --&gt; D[Change the prompt/tool/workflow]
-    D --&gt; E[Run the evaluation set]
-    E --&gt; F{Passes without regressions?}
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 16, "padding": 6}}}%%
+flowchart TB
+    A["Identify a problematic&lt;br/&gt;scenario"] --&gt; B["Turn it into an&lt;br/&gt;evaluation case"]
+    B --&gt; C["Confirm the current&lt;br/&gt;failure"]
+    C --&gt; D["Change the&lt;br/&gt;prompt/tool/workflow"]
+    D --&gt; E["Run the evaluation set"]
+    E --&gt; F["Passes without&lt;br/&gt;regressions?"]
     F --&gt;|No| D
-    F --&gt;|Yes| G[Staged rollout]
-    G --&gt; H[Production monitoring]
+    F --&gt;|Yes| G["Staged rollout"]
+    G --&gt; H["Production monitoring"]
     H --&gt; A</code></pre>
 <p>For a case intended to verify a fix, first confirm that it reproduces the target failure, then compare behavior before and after the fix. Nondeterministic failures may require multiple trials. Cases that already pass can still protect existing capabilities and safety invariants; an initial pass is not a reason to exclude a case from the regression set.</p>
 <h2 id="149-common-mistakes"><span id="149" class="legacy-heading-anchor" aria-hidden="true"></span>14.9 Common Mistakes<a class="headerlink" href="#149-common-mistakes" title="Permanent link">&para;</a></h2>
@@ -10270,29 +10296,8 @@
 <p>For unattended systems, look beyond <span class="arithmatex">\(\mathrm{pass@}k\)</span> to <span class="arithmatex">\(\mathrm{pass}^{k}\)</span>, cost per success, P95 latency, and the soundness of authorization, state transitions, and recovery within the trajectory. Run evaluation tiers at appropriate frequencies—Smoke, Regression, and Full—and continually add production failures. After deployment, retain redacted, auditable trajectories and termination reasons. Score unauthorized actions and other safety violations separately rather than averaging them into success rate.</p>
 <p>Academic benchmarks are best used as sources of evaluation design ideas. Decisions about releases still require your own application-specific evaluation set.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2310.06770">SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</a></li>
-<li><a href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/">OpenAI: Why SWE-bench Verified no longer measures frontier coding capabilities</a></li>
-<li><a href="https://arxiv.org/abs/2502.12115">SWE-Lancer: Can Frontier LLMs Earn $1 Million from Real-World Freelance Software Engineering?</a></li>
-<li><a href="https://www.tbench.ai/">Terminal-Bench: Official tasks and versions</a></li>
-<li><a href="https://arxiv.org/abs/2311.12983">GAIA: a benchmark for General AI Assistants</a></li>
-<li><a href="https://arxiv.org/abs/2406.12045">tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains</a></li>
-<li><a href="https://arxiv.org/abs/2506.07982">tau^2-Bench: Evaluating Conversational Agents in a Dual-Control Environment</a></li>
-<li><a href="https://arxiv.org/abs/2404.07972">OSWorld: Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments</a></li>
-<li><a href="https://arxiv.org/abs/2307.13854">WebArena: A Realistic Web Environment for Building Autonomous Agents</a></li>
-<li><a href="https://arxiv.org/abs/2504.12516">BrowseComp: A Simple Yet Challenging Benchmark for Browsing Agents</a></li>
-<li><a href="https://arxiv.org/abs/2308.03688">AgentBench: Evaluating LLMs as Agents</a></li>
-<li><a href="https://arxiv.org/abs/2410.07095">MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering</a></li>
-<li><a href="https://arxiv.org/abs/2501.14249">Humanity's Last Exam</a></li>
-<li><a href="https://arxiv.org/abs/2406.13352">AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai">OpenTelemetry: Generative AI Semantic Conventions</a></li>
-<li><a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/0c87594975195608dc91b3f702e250a7b240c151/docs/gen-ai/README.md">OpenTelemetry: GenAI convention status (Development, pinned commit 0c87594)</a></li>
-<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic: Building Effective Agents</a></li>
-<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: Demystifying evals for AI agents</a></li>
-<li><a href="https://www.swebench.com/SWE-bench/guides/evaluation/">SWE-bench: Evaluation harness</a></li>
-<li><a href="https://github.com/openai/simple-evals/blob/main/browsecomp_eval.py">OpenAI: BrowseComp reference implementation</a></li>
-<li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: How we built our multi-agent research system</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-agent-14">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -10315,7 +10320,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

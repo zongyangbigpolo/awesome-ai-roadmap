@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：Guardrails 与降级策略","description":"将概率性内容护栏与确定性授权分离，按拦截原因设计降级，评估误报、漏报和流式输出风险。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/03-output-safety/06-guardrails-degradation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：Guardrails 与降级策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/03-output-safety/06-guardrails-degradation/"},"datePublished":"2026-09-20","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第六章：Guardrails 与降级策略","description":"将概率性内容护栏与确定性授权分离，按拦截原因设计降级，评估误报、漏报和流式输出风险。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/03-output-safety/06-guardrails-degradation/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第六章：Guardrails 与降级策略","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/03-output-safety/06-guardrails-degradation/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第六章：Guardrails 与降级策略","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/engineering/03-output-safety/06-guardrails-degradation/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     致谢
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    参考资料与延伸阅读
     
   </span>
   
@@ -9152,11 +9177,12 @@
 <h1 id="guardrails">第六章：Guardrails 与降级策略<a class="headerlink" href="#guardrails" title="Permanent link">&para;</a></h1>
 <h2 id="61-guardrails">6.1 Guardrails 解决的是契约校验管不到的问题<a class="headerlink" href="#61-guardrails" title="Permanent link">&para;</a></h2>
 <p><a href="../05-structured-output-contracts/">第 5 章</a>的契约校验回答"输出格式对不对",Guardrails 回答的是另一件事:<strong>输出内容是否安全、是否符合业务允许的边界</strong>——即使一段文本完全符合 JSON Schema,它仍然可能包含泄露的隐私信息、越权的操作指令,或者只是单纯地跑题了。</p>
-<pre class="mermaid"><code>flowchart TB
-    IN["用户输入"] --&gt; INGUARD["输入护栏:&lt;br/&gt;Prompt 注入检测 · 越权请求识别"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    IN["用户输入"] --&gt; INGUARD["输入护栏:"]
     INGUARD --&gt;|拦截| REJECT1["拒绝 / 转人工"]
     INGUARD --&gt;|通过| MODEL["模型生成"]
-    MODEL --&gt; OUTGUARD["输出护栏:&lt;br/&gt;PII 过滤 · 内容安全 · 事实边界"]
+    MODEL --&gt; OUTGUARD["输出护栏:"]
     OUTGUARD --&gt;|拦截| DEGRADE["降级路径"]
     OUTGUARD --&gt;|通过| RESP["返回用户"]
     DEGRADE --&gt; RESP
@@ -9164,6 +9190,11 @@
     style INGUARD fill:#e8f0fe
     style OUTGUARD fill:#e8f0fe
     style DEGRADE fill:#fff3cd</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>输入护栏: Prompt 注入检测 · 越权请求识别</li>
+<li>输出护栏: PII 过滤 · 内容安全 · 事实边界</li>
+</ul>
 <h2 id="62">6.2 输入护栏:在模型看到之前拦下风险<a class="headerlink" href="#62" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -9232,14 +9263,23 @@
 <p>流式输出一旦发出就无法撤回。逐段审核会增加延迟，也可能漏掉跨段组合的信息；高敏感回答应缓冲完整内容，或使用经过评估的分段放行策略。不要先发送原文、事后才打上「已拦截」标签。</p>
 <h2 id="64">6.4 降级不是"报错",而是一个有梯度的策略阶梯<a class="headerlink" href="#64" title="Permanent link">&para;</a></h2>
 <p>护栏拦截不一定是服务故障，也不必先返回 500。应按原因选择受限重试、缩小任务、有效缓存或明确拒绝/转人工；下列层级是可选处置，不是必须依次尝试的链路。能返回一段文字，也不代表原任务已经完成。</p>
-<pre class="mermaid"><code>flowchart TB
-    CAUSE{"按拦截原因和风险选处置"} --&gt; L1["Lv1: 允许的任务有限重试&lt;br/&gt;政策不变"]
-    CAUSE --&gt; L2["Lv2: 缩小到仍获授权的任务范围"]
-    CAUSE --&gt; L3["Lv3: 返回经权限和时效核对的缓存"]
-    CAUSE --&gt; L4["Lv4: 明确拒绝、模板兜底或转人工"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    CAUSE["选择安全处理方式"] --&gt; L1["Lv1：有限重试"]
+    CAUSE --&gt; L2["Lv2：缩小任务范围"]
+    CAUSE --&gt; L3["Lv3：已校验缓存"]
+    CAUSE --&gt; L4["Lv4：拒绝或人工复核"]
 
     style L1 fill:#e6f4ea
     style L4 fill:#fce8e6</code></pre>
+<p>图中各项的完整含义：</p>
+<ul>
+<li>按拦截原因和风险选处置</li>
+<li>Lv1: 允许的任务有限重试 政策不变</li>
+<li>Lv2: 缩小到仍获授权的任务范围</li>
+<li>Lv3: 返回经权限和时效核对的缓存</li>
+<li>Lv4: 明确拒绝、模板兜底或转人工</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -9315,13 +9355,8 @@
 <li><strong>护栏本身需要持续评测</strong>:监控误报率、漏报率,并用红队测试集验证有效性。</li>
 </ol>
 <h2 id="_1">参考资料<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://platform.openai.com/docs/guides/moderation">OpenAI: Moderation API</a></li>
-<li><a href="https://genai.owasp.org/llm-top-10/">OWASP Top 10 for LLM Applications</a></li>
-<li><a href="https://www.anthropic.com/news/expanding-our-model-safety-bug-bounty-program">Anthropic: Guardrails against misuse</a></li>
-<li><a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a></li>
-<li><a href="https://ai.google/responsibility/responsible-ai-practices/">Google Cloud: Responsible AI practices</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>本章的参考资料、阅读建议与来源说明见<a href="../../../book/references/#reading-engineering-06">集中参考资料章节</a>。</p>
 
 
 
@@ -9344,7 +9379,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年9月20日 11:50:17 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
   </span>
 
     

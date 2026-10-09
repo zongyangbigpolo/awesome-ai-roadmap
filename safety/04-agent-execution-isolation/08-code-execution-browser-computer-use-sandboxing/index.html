@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use","description":"Choose code and desktop isolation according to actual privileges, and distinguish the roles of browser same-origin protections, task approvals, and network egress policies.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use","description":"Choose code and desktop isolation according to actual privileges, and distinguish the roles of browser same-origin protections, task approvals, and network egress policies.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/04-agent-execution-isolation/08-code-execution-browser-computer-use-sandboxing/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9329,9 +9354,16 @@
 <h1 id="chapter-8-sandboxing-and-network-isolation-for-code-execution-browsers-and-computer-use"><span id="computer-use" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 8: Sandboxing and Network Isolation for Code Execution, Browsers, and Computer Use<a class="headerlink" href="#chapter-8-sandboxing-and-network-isolation-for-code-execution-browsers-and-computer-use" title="Permanent link">&para;</a></h1>
 <h2 id="81-three-execution-capabilities-constrained-by-their-actual-permissions"><span id="81" class="legacy-heading-anchor" aria-hidden="true"></span>8.1 Three Execution Capabilities, Constrained by Their Actual Permissions<a class="headerlink" href="#81-three-execution-capabilities-constrained-by-their-actual-permissions" title="Permanent link">&para;</a></h2>
 <p>Code interpreters, browser automation, and computer use—letting a model operate a graphical interface with a mouse and keyboard—are three of the fastest-growing categories of agent tools. They are also among the hardest to enumerate completely in an attack-surface analysis. All three share a defining characteristic: <strong>the model generates the specific instructions at runtime, so they cannot be exhaustively enumerated at design time</strong>. Defenses must therefore focus on limiting the maximum harm the execution environment can cause, not on predicting every instruction the model might generate.</p>
-<pre class="mermaid"><code>flowchart LR
-    A[Code execution&lt;br/&gt;Process, file, and network permissions] --&gt; B[Browser automation&lt;br/&gt;Pages, login sessions, and downloads]
-    B --&gt; C[Computer use&lt;br/&gt;Visible desktop, applications, and clipboard]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    A["Code execution"] --&gt; B["Browser&lt;br/&gt;automation"]
+    B --&gt; C["Computer use"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>Code execution Process, file, and network permissions</li>
+<li>Browser automation Pages, login sessions, and downloads</li>
+<li>Computer use Visible desktop, applications, and clipboard</li>
+</ul>
 <p>There is no fixed risk ranking among the three. A code container with host mounts and cloud credentials may be more dangerous than a disposable virtual desktop; the impact of browser automation and computer use is likewise constrained by logged-in accounts and operating-system privileges. First inventory the readable data, writable resources, network destinations, and available credentials, then choose the strength of isolation.</p>
 <h2 id="82-code-execution-sandboxes"><span id="82" class="legacy-heading-anchor" aria-hidden="true"></span>8.2 Code Execution Sandboxes<a class="headerlink" href="#82-code-execution-sandboxes" title="Permanent link">&para;</a></h2>
 <h3 id="821-choosing-an-isolation-level"><span id="821" class="legacy-heading-anchor" aria-hidden="true"></span>8.2.1 Choosing an Isolation Level<a class="headerlink" href="#821-choosing-an-isolation-level" title="Permanent link">&para;</a></h3>
@@ -9429,14 +9461,23 @@
 </ul>
 <h2 id="85-consistent-network-egress-controls"><span id="85" class="legacy-heading-anchor" aria-hidden="true"></span>8.5 Consistent Network Egress Controls<a class="headerlink" href="#85-consistent-network-egress-controls" title="Permanent link">&para;</a></h2>
 <p>All three execution environments need consistent network isolation policies. These follow the same principles as the SSRF defenses in <a href="../../../tools/02-mcp/15-tool-protocol-security/">Tool Protocol Security, Section 15.3.1</a>. Applied to an execution sandbox, they yield the following network design:</p>
-<pre class="mermaid"><code>flowchart TB
-    E[Execution environment&lt;br/&gt;Code/browser/computer use] --&gt; P[Mandatory egress proxy]
-    P --&gt; W[Domain/IP allowlist]
-    P --&gt; N[Deny loopback/private-network/metadata addresses]
-    P --&gt; R[Limit redirects and response size]
-    P --&gt; L[Credential-free network segment&lt;br/&gt;Proxy injects credentials as needed]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart LR
+    E["Execution"] --&gt; P["Mandatory&lt;br/&gt;egress proxy"]
+    P --&gt; W["Domain/IP&lt;br/&gt;allowlist"]
+    P --&gt; N["Deny internal&lt;br/&gt;addresses"]
+    P --&gt; R["Limit redirects&lt;br/&gt;and response&lt;br/&gt;size"]
+    P --&gt; L["Credential-free&lt;br/&gt;network segment"]</code></pre>
+<p>Details of the illustrated steps and components:</p>
 <ul>
-<li>Execution environments have no direct internet connectivity; all outbound traffic must pass through a controlled proxy.</li>
+<li>Execution environment Code/browser/computer use</li>
+<li>Deny loopback/private-network/metadata addresses</li>
+<li>
+<p>Credential-free network segment Proxy injects credentials as needed</p>
+</li>
+<li>
+<p>Execution environments have no direct internet connectivity; all outbound traffic must pass through a controlled proxy.</p>
+</li>
 <li>The proxy maintains an allowlist rather than a blocklist, denying every undeclared destination by default.</li>
 <li>The proxy injects credentials when needed, such as a token required for a particular internal API. The execution environment itself holds no long-lived credentials, consistent with <a href="../../02-prompt-content-attacks/03-output-handling-secret-exfiltration/">Chapter 3</a>'s principle of keeping credentials out of model context.</li>
 <li>Record necessary metadata such as the destination, action, policy decision, and usage. Do not indiscriminately log complete URL query parameters, bodies, or credentials.</li>
@@ -9471,14 +9512,8 @@
 <li>All three environments should follow shared egress principles: mandatory proxies; denial of metadata endpoints, loopback, and unauthorized private networks; per-service business exceptions; and credentials bound to destinations and actions.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/">OWASP LLM06:2025 Excessive Agency</a></li>
-<li><a href="https://gvisor.dev/">gVisor: Application Kernel for Containers</a></li>
-<li><a href="https://firecracker-microvm.io/">Firecracker: Secure and Fast microVMs</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Same-origin_policy">MDN: Same-origin policy</a></li>
-<li><a href="https://github.com/anthropics/claude-quickstarts/tree/main/computer-use-demo">Anthropic: Computer Use Demo — security precautions and isolation limitations</a></li>
-<li><a href="https://atlas.mitre.org/techniques/AML.T0051">MITRE ATLAS: Evade ML Model / LLM Prompt Injection</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-08">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9501,7 +9536,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 14:47:08 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

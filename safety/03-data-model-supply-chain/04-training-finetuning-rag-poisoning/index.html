@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning","description":"Distinguish how training and retrieval poisoning take effect, qualify findings on small-sample backdoors, and establish data provenance, auditing, and recovery processes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"},"datePublished":"2026-08-31","dateModified":"2026-09-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning","description":"Distinguish how training and retrieval poisoning take effect, qualify findings on small-sample backdoors, and establish data provenance, auditing, and recovery processes.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/safety/03-data-model-supply-chain/04-training-finetuning-rag-poisoning/"}]}</script>
     
@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -762,6 +764,29 @@
   
   <span class="md-ellipsis">
     Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../book/references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References and Further Reading
     
   </span>
   
@@ -9197,30 +9222,72 @@
 <h1 id="chapter-4-training-fine-tuning-and-rag-data-poisoning"><span id="rag" class="legacy-heading-anchor" aria-hidden="true"></span>Chapter 4: Training, Fine-Tuning, and RAG Data Poisoning<a class="headerlink" href="#chapter-4-training-fine-tuning-and-rag-data-poisoning" title="Permanent link">&para;</a></h1>
 <h2 id="41-a-unified-view-of-data-poisoning"><span id="41" class="legacy-heading-anchor" aria-hidden="true"></span>4.1 A Unified View of Data Poisoning<a class="headerlink" href="#41-a-unified-view-of-data-poisoning" title="Permanent link">&para;</a></h2>
 <p>Data poisoning attempts to influence system behavior by contaminating training material or data consulted at runtime. Contamination does not necessarily succeed. In training, the outcome also depends on sampling, deduplication, repeated exposure, and optimization. In RAG, it depends on whether a document is ingested, retrieved, and accepted by the model. Distinguish an attacker's <strong>ability to write data</strong> from the <strong>ability to achieve the intended outcome</strong>.</p>
-<pre class="mermaid"><code>flowchart TB
-    P[Data poisoning] --&gt; P1[Pretraining corpus poisoning]
-    P --&gt; P2[Fine-tuning/RLHF data poisoning]
-    P --&gt; P3["RAG corpus poisoning&lt;br/&gt;See RAG Security 20.3.1"]
-    P1 --&gt; E1[Changes weights&lt;br/&gt;Depends on training sampling and exposure]
-    P2 --&gt; E2[Changes weights or preferences&lt;br/&gt;Depends on access to labeling and training inputs]
-    P3 --&gt; E3[Changes retrieved context&lt;br/&gt;Depends on write and retrieval permissions]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 8, "rankSpacing": 12, "padding": 4}}}%%
+flowchart TB
+    P["Data poisoning"] --&gt; P1["Pretraining"]
+    P --&gt; P2["Fine-tuning /&lt;br/&gt;RLHF"]
+    P --&gt; P3["RAG"]
+    P1 --&gt; E1["Changes weights"]
+    P2 --&gt; E2["Changes weights&lt;br/&gt;or preferences"]
+    P3 --&gt; E3["Changes&lt;br/&gt;retrieved&lt;br/&gt;context"]</code></pre>
+<p>The three branches refer respectively to poisoning the pretraining corpus, fine-tuning or RLHF data, and the RAG corpus. Training-stage poisoning can affect weights or learned preferences; RAG poisoning changes retrieved context without requiring a weight update.</p>
+<p>Details of the illustrated steps and components:</p>
+<ul>
+<li>RAG corpus poisoning See RAG Security 20.3.1</li>
+<li>Changes weights Depends on training sampling and exposure</li>
+<li>Changes weights or preferences Depends on access to labeling and training inputs</li>
+<li>Changes retrieved context Depends on write and retrieval permissions</li>
+</ul>
 <p>All three require provenance, review, and lineage tracking, but there is no fixed ranking of their difficulty. RAG based on open web crawling has a different risk profile from a read-only, approval-controlled knowledge base; a small amount of contaminated training data may also be effective for a narrow objective. Training poisoning affects weights, so deleting the source document does not directly remove its influence. RAG usually leaves weights unchanged, but deletions still need to propagate to indexes, caches, and derived memories. For retrieval-specific details, see <a href="../../../rag/06-operations-security/20-rag-challenges-security/">RAG Security</a>.</p>
 <h2 id="42-forms-of-poisoning-during-training-and-fine-tuning"><span id="42" class="legacy-heading-anchor" aria-hidden="true"></span>4.2 Forms of Poisoning During Training and Fine-Tuning<a class="headerlink" href="#42-forms-of-poisoning-during-training-and-fine-tuning" title="Permanent link">&para;</a></h2>
 <h3 id="421-untargeted-poisoning-degrading-overall-quality-or-introducing-bias"><span id="421" class="legacy-heading-anchor" aria-hidden="true"></span>4.2.1 Untargeted Poisoning: Degrading Overall Quality or Introducing Bias<a class="headerlink" href="#421-untargeted-poisoning-degrading-overall-quality-or-introducing-bias" title="Permanent link">&para;</a></h3>
 <p>Untargeted poisoning aims to degrade overall quality rather than control a particular output. An attack directed at a specific population or conclusion may instead be targeted poisoning. Unusual label distributions, repetitive patterns, and content that conflicts with trusted sources can all serve as screening signals. Detection depends on how the data was poisoned and how much of it is reviewed; untargeted poisoning cannot simply be called the easiest type to detect.</p>
 <h3 id="422-targeted-poisoning-and-backdoor-attacks"><span id="422-backdoor-attack" class="legacy-heading-anchor" aria-hidden="true"></span>4.2.2 Targeted Poisoning and Backdoor Attacks<a class="headerlink" href="#422-targeted-poisoning-and-backdoor-attacks" title="Permanent link">&para;</a></h3>
 <p>A backdoor attack tries to make a model favor an attacker-chosen behavior when a particular trigger appears, while preserving normal behavior as much as possible when it is absent. Success and damage to other tasks must be measured separately. Not every backdoor is completely invisible.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant A as Attacker
-    participant D as Training/fine-tuning dataset
-    participant M as Model
-    participant U as Legitimate user
-    A-&gt;&gt;D: Inject examples containing a trigger&lt;br/&gt;(such as a phrase, format, or rare token)
-    D-&gt;&gt;M: Included in training/fine-tuning
-    U-&gt;&gt;M: Normal input without the trigger
-    M--&gt;&gt;U: Normal output with no anomaly
-    A-&gt;&gt;M: Prompt containing the trigger
-    M--&gt;&gt;A: Preset malicious behavior is triggered</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 12, "padding": 6}}}%%
+flowchart TB
+    S0["Poison examples"]
+    S1["Train on triggers"]
+    S2["Normal input: normal"]
+    S3["Trigger: malicious"]
+    S0 --&gt; S1
+    S1 --&gt; S2
+    S1 --&gt; S3</code></pre>
+<p>Complete exchange, including phase notes:</p>
+<table>
+<thead>
+<tr>
+<th>Participants</th>
+<th>Message or action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attacker → Training/fine-tuning dataset</td>
+<td>Inject examples containing a trigger; (such as a phrase, format, or rare token)</td>
+</tr>
+<tr>
+<td>Training/fine-tuning dataset → Model</td>
+<td>Included in training/fine-tuning</td>
+</tr>
+<tr>
+<td>Legitimate user → Model</td>
+<td>Normal input without the trigger</td>
+</tr>
+<tr>
+<td>Model → Legitimate user (return)</td>
+<td>Normal output with no anomaly</td>
+</tr>
+<tr>
+<td>Attacker → Model</td>
+<td>Prompt containing the trigger</td>
+</tr>
+<tr>
+<td>Model → Attacker (return)</td>
+<td>Preset malicious behavior is triggered</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Possible triggers include</strong> an uncommon phrase, a particular formatting instruction, a specific language, a combination of Unicode characters, or even an apparently harmless contextual pattern. A trigger that is more inconspicuous and less likely to occur in normal evaluation is harder to discover.</p>
 <p><strong>What makes backdoor attacks particularly dangerous:</strong></p>
 <ul>
@@ -9258,13 +9325,14 @@
 </tr>
 </tbody>
 </table>
-<p>A <a href="https://www.anthropic.com/research/small-samples-poison">joint study</a> by Anthropic, the UK AI Security Institute, and the Alan Turing Institute found that around 250 malicious documents could introduce a narrow backdoor that produced gibberish in models with 600M–13B parameters under particular training settings. The effect depended more on the absolute number of poisoned documents than on their proportion. This does <strong>not</strong> mean that 250 documents can control a model of any size. The original study explicitly leaves uncertainty about larger models, harmful objectives, and reproduction through real-world crawling and cleaning pipelines.</p>
+<p>A joint study<sup><a href="../../../book/references/#ref-746">【746】</a></sup> by Anthropic, the UK AI Security Institute, and the Alan Turing Institute found that around 250 malicious documents could introduce a narrow backdoor that produced gibberish in models with 600M–13B parameters under particular training settings. The effect depended more on the absolute number of poisoned documents than on their proportion. This does <strong>not</strong> mean that 250 documents can control a model of any size. The original study explicitly leaves uncertainty about larger models, harmful objectives, and reproduction through real-world crawling and cleaning pipelines.</p>
 <h2 id="44-a-defense-framework"><span id="44" class="legacy-heading-anchor" aria-hidden="true"></span>4.4 A Defense Framework<a class="headerlink" href="#44-a-defense-framework" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    S[Source governance] --&gt; C[Review before ingestion]
-    C --&gt; T[Monitoring during training]
-    T --&gt; A[Post-training audit]
-    A --&gt; R[Runtime anomaly detection]</code></pre>
+<pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
+flowchart TB
+    S["Source&lt;br/&gt;governance"] --&gt; C["Review before&lt;br/&gt;ingestion"]
+    C --&gt; T["Monitoring&lt;br/&gt;during training"]
+    T --&gt; A["Post-training&lt;br/&gt;audit"]
+    A --&gt; R["Runtime anomaly&lt;br/&gt;detection"]</code></pre>
 <table>
 <thead>
 <tr>
@@ -9318,15 +9386,8 @@
 <li>Defenses need to cover source governance, ingestion review, training-time monitoring, post-training auditing, and runtime anomaly detection. Contracts for third-party fine-tuning and crowdsourced labeling should require auditable provenance.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://arxiv.org/abs/2302.10149">Poisoning Web-Scale Training Datasets is Practical</a></li>
-<li><a href="https://www.anthropic.com/research/small-samples-poison">Anthropic / UK AISI / Alan Turing Institute: Small samples can poison language models</a></li>
-<li><a href="https://arxiv.org/abs/1708.06733">BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain</a></li>
-<li><a href="https://arxiv.org/abs/1905.12457">A Backdoor Attack Against LSTM-based Text Classification Systems</a></li>
-<li><a href="https://arxiv.org/abs/2306.17194">On the Exploitability of Instruction Tuning</a></li>
-<li><a href="https://genai.owasp.org/llmrisk/llm042025-data-and-model-poisoning/">OWASP LLM04:2025 Data and Model Poisoning</a></li>
-<li><a href="https://doi.org/10.6028/NIST.AI.100-2e2025">NIST AI 100-2 E2025: Adversarial Machine Learning Taxonomy</a></li>
-</ul>
+<!-- centralized-bibliography -->
+<p>See the <a href="../../../book/references/#reading-safety-04">central bibliography</a> for this chapter’s sources, reading suggestions, and source notes.</p>
 
 
 
@@ -9349,7 +9410,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 20, 2026 11:20:53 CST">2026-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
   </span>
 
     

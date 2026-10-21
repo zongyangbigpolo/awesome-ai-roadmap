@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","description":"用可手算的订单快照讲解 Text-to-SQL，从未发货口径、SQLite 关联聚合，到可信权限、资源限制和独立结果验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：Text-to-SQL：从业务问题到可验证查询","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-20","dateModified":"2026-10-09"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","description":"用可手算的订单快照讲解 Text-to-SQL，从未发货口径、SQLite 关联聚合，到可信权限、资源限制和独立结果验收。","inLanguage":"zh-CN","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"AI 工程学习路线","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},"headline":"第二十二章：Text-to-SQL：从业务问题到可验证查询","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-20","dateModified":"2026-10-14"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AI 工程学习路线","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/"},{"@type":"ListItem","position":2,"name":"第二十二章：Text-to-SQL：从业务问题到可验证查询","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/zh/rag/07-structured-queries/22-text-to-sql/"}]}</script>
     
@@ -9554,7 +9554,35 @@ flowchart TB
 </tbody>
 </table>
 <p>小林第一次看草案时发现，直接关联后 <code>COUNT(*)</code> 会把 O101 算成两单；<code>SUM(o.total_amount_cents)</code> 也会把它的 10000 分算两遍。</p>
-<p><code>SUM(DISTINCT 金额)</code> 不是通用补救办法：如果把 O102 与 O106 跨客户放进同一组汇总合同额，两单恰好都是 4000 分，去重金额会把 8000 分变成 4000 分。两单属于不同客户，因此上面的按客户分组查询不会在它们之间发生这种去重；聚合中的 <code>DISTINCT</code> 只在各组内部去重。要为本题覆盖这一回归场景，应另加入同一客户两笔不同订单未发货金额相等的用例。应该先确认粒度，而不是看数字偏大就加 <code>DISTINCT</code>。</p>
+<p><code>SUM(DISTINCT 金额)</code> 不是通用补救办法：如果把 O102 与 O106 跨客户放进同一组汇总合同额，两单恰好都是 4000 分，去重金额会把 8000 分变成 4000 分。两单属于不同客户，因此上面的按客户分组查询不会在它们之间发生这种去重；聚合中的 <code>DISTINCT</code> 只在各组内部去重。</p>
+<p>要在 C1 的分组内暴露同样的错误，可以扩展这个快照：为 C1 增加 T1/O108，日期和状态与 O102 相同，只有一条明细，订购 4 件、每件 1000 分，尚未发货。上面的原始快照及其结果保持不变；扩展场景如下：</p>
+<table>
+<thead>
+<tr>
+<th>C1 的订单</th>
+<th>未发件数</th>
+<th>未发金额（分）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O101</td>
+<td>6</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>O102</td>
+<td>4</td>
+<td>4000</td>
+</tr>
+<tr>
+<td>O108</td>
+<td>4</td>
+<td>4000</td>
+</tr>
+</tbody>
+</table>
+<p>C1 此时有 3 单、14 件未发，未发金额为 11000 分。若把外层的 <code>SUM(remaining_amount_cents)</code> 换成 <code>SUM(DISTINCT remaining_amount_cents)</code>，订单数和件数仍是 3 和 14，金额却只累加不同的值 3000 与 4000，得到 7000 分。它删掉的是另一笔订单恰好相等的金额，并非重复订单。正确做法是先按 <code>(tenant_id, order_id)</code> 将明细聚合为每单一行，再按客户累加每笔订单的未发金额，正如上面的查询所做。</p>
 <p>本次只显示有欠发的客户，所以无欠发客户没有结果行。若要列出所有授权客户，包括欠发为零的客户，应从授权客户集合出发左连接聚合结果，再按业务定义补零。SQLite 的 <code>SUM</code><sup><a href="../../../book/references/#ref-424">【424】</a></sup> 在没有非空输入时返回 <code>NULL</code>；空结果、未知数据和零不能混成一种含义。</p>
 <h2 id="226">22.6 放行之前，执行服务还要拦住什么<a class="headerlink" href="#226" title="Permanent link">&para;</a></h2>
 <p>只读不等于可以随便读，SELECT 也不天然没有副作用。SQLite 可注册应用自定义函数；函数若能写文件或访问网络，出现在 SELECT 中仍可能产生副作用，参见官方函数安全说明<sup><a href="../../../book/references/#ref-428">【428】</a></sup>。</p>
@@ -9667,7 +9695,7 @@ flowchart TB
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月9日 14:22:24 CST">2026-10-09</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="2026年10月14日 14:38:32 CST">2026-10-14</span>
   </span>
 
     

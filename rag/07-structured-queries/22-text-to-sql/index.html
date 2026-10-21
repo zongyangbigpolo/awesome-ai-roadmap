@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-10-09"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","description":"Explain Text-to-SQL with an order snapshot small enough to calculate by hand, covering unshipped-order definitions, SQLite joins and aggregation, trusted authorization, resource limits, and independent result validation.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"},"datePublished":"2026-09-14","dateModified":"2026-10-14"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 22: Text-to-SQL: From Business Questions to Verifiable Queries","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/rag/07-structured-queries/22-text-to-sql/"}]}</script>
     
@@ -9554,7 +9554,35 @@ flowchart TB
 </tbody>
 </table>
 <p>On first reviewing the draft, Lin notices that <code>COUNT(*)</code> immediately after the join would count O101 as two orders. <code>SUM(o.total_amount_cents)</code> would also count its 10000 fen twice.</p>
-<p><code>SUM(DISTINCT amount)</code> is not a general remedy: if O102 and O106 were summed across customers in one aggregate, their equal contract values of 4000 fen would turn an 8000-fen total into 4000 fen. They belong to different customers, so this does not happen between their separate groups in the query above; aggregate <code>DISTINCT</code> removes duplicates within each group. A regression case for that query should include two distinct orders with equal unshipped totals for the same customer. Establish the row granularity first rather than adding <code>DISTINCT</code> whenever a number looks too large.</p>
+<p><code>SUM(DISTINCT amount)</code> is not a general remedy: if O102 and O106 were summed across customers in one aggregate, their equal contract values of 4000 fen would turn an 8000-fen total into 4000 fen. They belong to different customers, so this does not happen between their separate groups in the query above; aggregate <code>DISTINCT</code> removes duplicates within each group.</p>
+<p>To expose the same mistake within C1's group, consider an extension of the snapshot: add T1/O108 for C1, with the same dates and status as O102 and one line of 4 units at 1000 fen each, none shipped. The original snapshot and its result above remain unchanged; this extended case has:</p>
+<table>
+<thead>
+<tr>
+<th>C1 order</th>
+<th>Unshipped units</th>
+<th>Unshipped amount (fen)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O101</td>
+<td>6</td>
+<td>3000</td>
+</tr>
+<tr>
+<td>O102</td>
+<td>4</td>
+<td>4000</td>
+</tr>
+<tr>
+<td>O108</td>
+<td>4</td>
+<td>4000</td>
+</tr>
+</tbody>
+</table>
+<p>C1 now has 3 orders, 14 unshipped units, and 11000 fen outstanding. Replacing the outer <code>SUM(remaining_amount_cents)</code> with <code>SUM(DISTINCT remaining_amount_cents)</code> still counts 3 orders and 14 units, but sums only the distinct amounts 3000 and 4000, giving 7000 fen. It removes an equal value belonging to a different order, not a duplicate order. Aggregate the lines once per <code>(tenant_id, order_id)</code>, then sum every order's remaining amount by customer, as the query above does.</p>
 <p>This request displays only customers with unshipped quantities, so customers with none have no result row. To list every authorized customer, including those with zero outstanding shipments, start from the authorized customer set, left-join the aggregates, and fill in zeros according to the business definition. SQLite's <code>SUM</code><sup><a href="../../../book/references/#ref-424">【424】</a></sup> returns <code>NULL</code> when there are no non-null inputs. An empty result, unknown data, and zero must not be treated as the same thing.</p>
 <h2 id="226-what-must-the-execution-service-restrict-before-running-a-query"><span id="226" class="legacy-heading-anchor" aria-hidden="true"></span>22.6 What must the execution service restrict before running a query?<a class="headerlink" href="#226-what-must-the-execution-service-restrict-before-running-a-query" title="Permanent link">&para;</a></h2>
 <p>Read-only access does not mean unrestricted reading, and SELECT is not inherently free of side effects. SQLite supports application-defined functions. If one can write files or access the network, invoking it in SELECT may still have side effects; see the official function security guidance<sup><a href="../../../book/references/#ref-428">【428】</a></sup>.</p>
@@ -9667,7 +9695,7 @@ flowchart TB
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 14, 2026 14:38:32 CST">2026-10-14</span>
   </span>
 
     

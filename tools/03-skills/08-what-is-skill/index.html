@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-10-09"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-10-20"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: What Is a Skill?","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"}]}</script>
     
@@ -3257,6 +3257,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#835-keep-referenced-resources-shallow-and-portable" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3.5 Keep referenced resources shallow and portable
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3277,6 +3286,21 @@
       8.5 Skills can contain executable scripts
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="8.5 Skills can contain executable scripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#851-validate-format-activation-resources-and-outcomes-separately" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.1 Validate format, activation, resources, and outcomes separately
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9166,6 +9190,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#835-keep-referenced-resources-shallow-and-portable" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3.5 Keep referenced resources shallow and portable
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -9186,6 +9219,21 @@
       8.5 Skills can contain executable scripts
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="8.5 Skills can contain executable scripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#851-validate-format-activation-resources-and-outcomes-separately" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.5.1 Validate format, activation, resources, and outcomes separately
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9430,6 +9478,9 @@ flowchart TB
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"对</span><span class="nv"> </span><span class="s">Python/Go</span><span class="nv"> </span><span class="s">代码做安全与性能审查，输出含风险等级的结构化报告。适用于</span><span class="nv"> </span><span class="s">PR</span><span class="nv"> </span><span class="s">review</span><span class="nv"> </span><span class="s">和上线前检查。"</span>
 </span></code></pre></div>
 <p>As with <a href="../../01-function-calling/03-tool-schema-design/">tool description design</a>, describe capabilities and boundaries clearly, then evaluate selection quality on a task set. Neither kind of description is the sole source of information or an enforcement rule.</p>
+<h3 id="835-keep-referenced-resources-shallow-and-portable"><span id="835" class="legacy-heading-anchor" aria-hidden="true"></span>8.3.5 Keep referenced resources shallow and portable<a class="headerlink" href="#835-keep-referenced-resources-shallow-and-portable" title="Permanent link">&para;</a></h3>
+<p>The official format recommends paths relative to the Skill root, such as <code>references/review_standards.md</code>, and keeping references one level deep from <code>SKILL.md</code><sup><a href="../../../book/references/#ref-304">【304】</a></sup>. Relative paths keep the directory movable. Shallow links also let the agent see from the entry file which resource answers a question, instead of following a chain from one reference file to another before reaching the needed material.</p>
+<p>This is an authoring convention, not a permission boundary. The host still decides how paths are resolved and whether a file may be read. Test the packaged directory in the target host: an absolute path that worked on the author's machine, a renamed file, or an undeclared interpreter can leave valid front matter attached to a Skill that fails only after activation.</p>
 <h2 id="84-skills-and-related-concepts"><span id="84-skill" class="legacy-heading-anchor" aria-hidden="true"></span>8.4 Skills and related concepts<a class="headerlink" href="#84-skills-and-related-concepts" title="Permanent link">&para;</a></h2>
 <p>These concepts are often confused. An analogy with work in a company helps separate them:</p>
 <pre class="mermaid"><code>%%{init: {"flowchart": {"nodeSpacing": 12, "rankSpacing": 18, "padding": 8}}}%%
@@ -9502,6 +9553,40 @@ flowchart TB
 </span></code></pre></div>
 <p>This is a division of engineering work: <strong>use code for the parts that can be performed deterministically, and the model for the parts that require judgment</strong>. A Skill provides a place to package both.</p>
 <p>Before installing a third-party Skill, review its scripts, dependency installation steps, external links, and permission requirements. Scripts run through the host's tool runtime and may read files, access the network, or cause side effects. The Skill body can also contain prompt injection. A simple format does not imply trustworthiness, freedom from dependencies, or automatic portability.</p>
+<h3 id="851-validate-format-activation-resources-and-outcomes-separately"><span id="851" class="legacy-heading-anchor" aria-hidden="true"></span>8.5.1 Validate format, activation, resources, and outcomes separately<a class="headerlink" href="#851-validate-format-activation-resources-and-outcomes-separately" title="Permanent link">&para;</a></h3>
+<p>The official <code>skills-ref validate</code> command checks front matter and naming conventions. That is a useful packaging gate, but it does not show that the right task activates the Skill, that referenced resources can be loaded, or that following the instructions produces an acceptable result.</p>
+<table>
+<thead>
+<tr>
+<th>Validation layer</th>
+<th>A representative check</th>
+<th>What passing establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Format</td>
+<td>Run the reference validator on the Skill directory</td>
+<td>Required metadata and naming rules are satisfied</td>
+</tr>
+<tr>
+<td>Activation</td>
+<td>Test matching, non-matching, and overlapping requests in the target host</td>
+<td>The host selects the Skill in the intended cases</td>
+</tr>
+<tr>
+<td>Resources</td>
+<td>Load each referenced file and run scripts with declared dependencies</td>
+<td>Paths and runtime assumptions work in the packaged environment</td>
+</tr>
+<tr>
+<td>Outcome</td>
+<td>Execute representative tasks, including failure and permission cases</td>
+<td>The procedure meets its task-specific acceptance criteria</td>
+</tr>
+</tbody>
+</table>
+<p>Keep evidence from each layer distinct. A validator success is not a security review; successful activation is not task completion; and one good output does not establish that negative cases or side effects are handled correctly.</p>
 <h2 id="86-from-an-anthropic-feature-to-an-open-standard"><span id="86-anthropic" class="legacy-heading-anchor" aria-hidden="true"></span>8.6 From an Anthropic feature to an open standard<a class="headerlink" href="#86-from-an-anthropic-feature-to-an-open-standard" title="Permanent link">&para;</a></h2>
 <p>Anthropic introduced Agent Skills in October 2025, initially through three entry points: Claude Code, the Claude API, and claude.ai.</p>
 <p>Two months later, Anthropic published the specification as an <strong>open standard</strong>, allowing any agent platform to implement it.</p>
@@ -9529,6 +9614,8 @@ flowchart TB
 <li><strong><code>name</code> and <code>description</code> contribute to discovery</strong>. Selection also depends on the user request and host routing.</li>
 <li><strong>Tools provide capabilities; Skills provide methods</strong>. They can be combined, but a writing-only Skill need not call tools.</li>
 <li><strong>Activation depends on the host</strong>. Slash commands and automatic loading can coexist.</li>
+<li><strong>Relative, shallow resource references improve portability and loading reliability</strong>, while the host still enforces file access.</li>
+<li><strong>Validate each layer separately</strong>: format, activation, resource loading, and task outcomes establish different facts.</li>
 <li><strong>An open format supports reuse</strong>, but scripts, permissions, and host extensions affect compatibility.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
@@ -9556,7 +9643,7 @@ flowchart TB
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 9, 2026 14:22:24 CST">2026-10-09</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 20, 2026 16:06:26 CST">2026-10-20</span>
   </span>
 
     

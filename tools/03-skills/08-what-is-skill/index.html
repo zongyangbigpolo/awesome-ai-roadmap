@@ -85,7 +85,7 @@
     
     
     
-      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-10-20"}</script>
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Chapter 8: What Is a Skill?","description":"Understand the Agent Skills file structure, activation conditions, progressive disclosure, and execution model, and how Skills differ from ordinary prompts and tool calls.","inLanguage":"en","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/","author":{"@type":"Person","name":"Polo Li","url":"https://github.com/zongyangbigpolo"},"isPartOf":{"@type":"WebSite","name":"Awesome AI Roadmap","url":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},"headline":"Chapter 8: What Is a Skill?","mainEntityOfPage":{"@type":"WebPage","@id":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"},"datePublished":"2026-08-31","dateModified":"2026-10-27"}</script>
     
       <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome AI Roadmap","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/"},{"@type":"ListItem","position":2,"name":"Chapter 8: What Is a Skill?","item":"https://zongyangbigpolo.github.io/awesome-ai-roadmap/tools/03-skills/08-what-is-skill/"}]}</script>
     
@@ -9586,6 +9586,8 @@ flowchart TB
 </tr>
 </tbody>
 </table>
+<p>Activation and outcome quality need different comparisons. For activation, label realistic requests as should-trigger or should-not-trigger. Strong negative cases are near misses that share terms with the Skill but require a different workflow; completely unrelated requests make the router look accurate without testing its actual boundary. Vary phrasing, explicitness, detail, and task complexity, and repeat cases because model-based selection can vary between runs. See the official Agent Skills guidance on optimizing descriptions<sup><a href="../../../book/references/#ref-820">【820】</a></sup>.</p>
+<p>For outcome quality, run the same task from a clean context with the Skill and without it, or compare the new version with the previous one. Start with a realistic prompt and a human-readable expected result, then add objective, task-specific assertions after seeing the first outputs; keep subjective qualities for human review. Compare artifacts and execution traces as well as failures, duration, and token use. The Skill adds value only when the quality gain justifies its cost; valid packaging or frequent activation alone is not enough. See the official Agent Skills guidance on evaluating output quality<sup><a href="../../../book/references/#ref-821">【821】</a></sup>.</p>
 <p>Keep evidence from each layer distinct. A validator success is not a security review; successful activation is not task completion; and one good output does not establish that negative cases or side effects are handled correctly.</p>
 <h2 id="86-from-an-anthropic-feature-to-an-open-standard"><span id="86-anthropic" class="legacy-heading-anchor" aria-hidden="true"></span>8.6 From an Anthropic feature to an open standard<a class="headerlink" href="#86-from-an-anthropic-feature-to-an-open-standard" title="Permanent link">&para;</a></h2>
 <p>Anthropic introduced Agent Skills in October 2025, initially through three entry points: Claude Code, the Claude API, and claude.ai.</p>
@@ -9615,7 +9617,7 @@ flowchart TB
 <li><strong>Tools provide capabilities; Skills provide methods</strong>. They can be combined, but a writing-only Skill need not call tools.</li>
 <li><strong>Activation depends on the host</strong>. Slash commands and automatic loading can coexist.</li>
 <li><strong>Relative, shallow resource references improve portability and loading reliability</strong>, while the host still enforces file access.</li>
-<li><strong>Validate each layer separately</strong>: format, activation, resource loading, and task outcomes establish different facts.</li>
+<li><strong>Validate each layer separately</strong>: format, activation, resource loading, and task outcomes establish different facts. Evaluate activation with realistic near misses, and evaluate outcomes against a no-Skill or previous-version baseline.</li>
 <li><strong>An open format supports reuse</strong>, but scripts, permissions, and host extensions affect compatibility.</li>
 </ol>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
@@ -9643,7 +9645,7 @@ flowchart TB
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 20, 2026 16:06:26 CST">2026-10-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="October 27, 2026 16:08:41 CST">2026-10-27</span>
   </span>
 
     

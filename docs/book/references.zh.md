@@ -3284,6 +3284,14 @@ description: 全书统一编号的参考资料、版本与访问说明，以及�
 
 **【819】** [隐私说明](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md)
 
+<a id="ref-820"></a>
+
+**【820】** [Agent Skills：优化 Skill 描述](https://agentskills.io/skill-creation/optimizing-descriptions)
+
+<a id="ref-821"></a>
+
+**【821】** [Agent Skills：评测 Skill 输出质量](https://agentskills.io/skill-creation/evaluating-skills)
+
 ## 各章阅读说明
 
 <a id="reading-llm-01"></a>

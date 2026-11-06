@@ -3284,6 +3284,14 @@ Both language editions use the same reference numbers. Superscript 【numbers】
 
 **【819】** [privacy notes](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md)
 
+<a id="ref-820"></a>
+
+**【820】** [Agent Skills: Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
+
+<a id="ref-821"></a>
+
+**【821】** [Agent Skills: Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)
+
 ## Chapter reading notes
 
 <a id="reading-llm-01"></a>

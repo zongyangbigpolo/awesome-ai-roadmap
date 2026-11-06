@@ -9822,6 +9822,30 @@
         "en": "[privacy notes](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md)",
         "zh-CN": "[隐私说明](https://github.com/suboss87/fdeops/blob/cc96340955b8a1de1aac8d5f971f794c4f8e6d6c/PRIVACY.md)"
       }
+    },
+    {
+      "number": 820,
+      "url": "https://agentskills.io/skill-creation/optimizing-descriptions",
+      "labels": {
+        "en": "Agent Skills: Optimizing skill descriptions",
+        "zh-CN": "Agent Skills：优化 Skill 描述"
+      },
+      "links": {
+        "en": "[Agent Skills: Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)",
+        "zh-CN": "[Agent Skills：优化 Skill 描述](https://agentskills.io/skill-creation/optimizing-descriptions)"
+      }
+    },
+    {
+      "number": 821,
+      "url": "https://agentskills.io/skill-creation/evaluating-skills",
+      "labels": {
+        "en": "Agent Skills: Evaluating skill output quality",
+        "zh-CN": "Agent Skills：评测 Skill 输出质量"
+      },
+      "links": {
+        "en": "[Agent Skills: Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)",
+        "zh-CN": "[Agent Skills：评测 Skill 输出质量](https://agentskills.io/skill-creation/evaluating-skills)"
+      }
     }
   ],
   "chapters": {

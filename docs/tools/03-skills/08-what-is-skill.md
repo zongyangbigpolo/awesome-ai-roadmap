@@ -208,6 +208,10 @@ The official `skills-ref validate` command checks front matter and naming conven
 | Resources | Load each referenced file and run scripts with declared dependencies | Paths and runtime assumptions work in the packaged environment |
 | Outcome | Execute representative tasks, including failure and permission cases | The procedure meets its task-specific acceptance criteria |
 
+Activation and outcome quality need different comparisons. For activation, label realistic requests as should-trigger or should-not-trigger. Strong negative cases are near misses that share terms with the Skill but require a different workflow; completely unrelated requests make the router look accurate without testing its actual boundary. Vary phrasing, explicitness, detail, and task complexity, and repeat cases because model-based selection can vary between runs. See the official Agent Skills guidance on optimizing descriptions<sup>[【820】](../../book/references.md#ref-820)</sup>.
+
+For outcome quality, run the same task from a clean context with the Skill and without it, or compare the new version with the previous one. Start with a realistic prompt and a human-readable expected result, then add objective, task-specific assertions after seeing the first outputs; keep subjective qualities for human review. Compare artifacts and execution traces as well as failures, duration, and token use. The Skill adds value only when the quality gain justifies its cost; valid packaging or frequent activation alone is not enough. See the official Agent Skills guidance on evaluating output quality<sup>[【821】](../../book/references.md#ref-821)</sup>.
+
 Keep evidence from each layer distinct. A validator success is not a security review; successful activation is not task completion; and one good output does not establish that negative cases or side effects are handled correctly.
 
 ## 8.6 From an Anthropic feature to an open standard
@@ -256,7 +260,7 @@ The same Skill can have both explicit and automatic entry points. Unattended ope
 6. **Tools provide capabilities; Skills provide methods**. They can be combined, but a writing-only Skill need not call tools.
 7. **Activation depends on the host**. Slash commands and automatic loading can coexist.
 8. **Relative, shallow resource references improve portability and loading reliability**, while the host still enforces file access.
-9. **Validate each layer separately**: format, activation, resource loading, and task outcomes establish different facts.
+9. **Validate each layer separately**: format, activation, resource loading, and task outcomes establish different facts. Evaluate activation with realistic near misses, and evaluate outcomes against a no-Skill or previous-version baseline.
 10. **An open format supports reuse**, but scripts, permissions, and host extensions affect compatibility.
 
 ## References

@@ -309,11 +309,11 @@
       "translation_sha256": "f8f7e288a4dd68d7fc025dd7677f95a6fef6bf833ff5a347bc3d673f955664ae"
     },
     "docs/book/references.md": {
-      "note": "Reviewed the four paired bibliography/navigation surfaces: shared 819 exact-URL reference IDs, complete preserved EN/ZH chapter reading notes and source/access/version qualifications, localized citation/index links, and current RC2 reading order. Verified lossless source migration separately; chapter synchronization remains with the coordinating publication review.",
-      "reviewed_at": "2026-10-09T06:16:58+00:00",
-      "source_sha256": "8e60f9ff052c2f99ad1c8f4ab50a9b8d86bc089e5698385a52df1f7f2e2bbd0e",
+      "note": "Reviewed paired generated bibliography entries 820-821 for the official Agent Skills description-optimization and output-evaluation guides; URLs and localized labels match the registry.",
+      "reviewed_at": "2026-10-27T08:06:58+00:00",
+      "source_sha256": "8925619e6693d7b1aa7552ff17065482315de0966ddbcbf38e6487f62be0cb32",
       "translation": "docs/book/references.zh.md",
-      "translation_sha256": "e331abdefb73262acb5c5d4e30a77eab18431fdd81f10c3d797bfa4c775b6f61"
+      "translation_sha256": "cefca70b333907102ae5971980b2dff8e7b7576ae6595a7b41a096ebb938c775"
     },
     "docs/book/title-page.md": {
       "note": "Reviewed English/Chinese publication-page pairs: Polo Li title-page attribution, standalone edition wording, ebook navigation and offline/external-link boundaries, and removal of author-facing acknowledgment placeholders. Existing title, descriptive line and centralized licensing retained; no technical chapters changed.",
@@ -1471,11 +1471,11 @@
       "translation_sha256": "c95e87b1cdf20533b593365976dfb0736db16437ae9726282b5671ea8d635a0a"
     },
     "docs/tools/03-skills/08-what-is-skill.md": {
-      "note": "Reviewed paired English/Chinese additions on portable Skill resource references and distinct validation layers against the official Agent Skills specification accessed 2026-10-20.",
-      "reviewed_at": "2026-10-20T08:05:41+00:00",
-      "source_sha256": "c4c5165c92127856daa96358cedb7d7b8c2e28a2992ebf5bc210007326720d94",
+      "note": "Reviewed paired English/Chinese guidance on trigger and output-quality evaluation against the official Agent Skills description-optimization and evaluation guides, accessed 2026-10-27.",
+      "reviewed_at": "2026-10-27T08:06:27+00:00",
+      "source_sha256": "885f9af35e0f102eae8c78417a87ca6685add80a698e7a5a8d6d3f68430ba710",
       "translation": "docs/tools/03-skills/08-what-is-skill.zh.md",
-      "translation_sha256": "db90901cd3ed0ef00083cd51a4af4319c6d9dc0e02b5b816e9e5db85e89c2962"
+      "translation_sha256": "d31406797df3615ff5553bd2aa6705e70337e7d501c34322be795fedd6039267"
     },
     "docs/tools/03-skills/09-skill-vs-mcp.md": {
       "note": "Reviewed paired English/Chinese compact diagrams and adjacent explanations across all nine topics; preserved conditions, sequence, failures, code and math. Applied and verified lossless shared-reference migration in both languages. Reviewed updated reading and exporter guidance. Rendering and source preservation reports retained with the RC2 review artifacts.",
